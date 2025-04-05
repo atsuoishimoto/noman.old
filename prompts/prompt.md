@@ -9,26 +9,25 @@ Instructions
 - Avoid lengthy, man-page-level detail. Keep it simple and focus on the features people use most frequently.
 - Use minimal technical jargon. If you use any terms that may be unfamiliar, provide a brief explanation so beginners can understand.
 
-## Command to Explain**: {command}
+## Output Requests
 
-## Output Format Requests
+- Begin with a 1–2 line overview of what the command does.  
+- List the frequently used options and describe how to use them (bullet points recommended).  
+- Provide simple and practical input/output examples for each option or a combined set of examples.  
+- Include FAQs of the command.
+- Include additional tips or notes if necessary (e.g., common pitfalls or time-saving tricks).
 
-1. Write in {langname}.
-2. Begin with a 1–2 line overview of what the command does.  
-3. List the frequently used options and describe how to use them (bullet points recommended).  
-4. Provide simple and practical input/output examples for each option or a combined set of examples.  
-5. Include FAQs of the command.
-6. Include additional tips or notes if necessary (e.g., common pitfalls or time-saving tricks).
-7. Output the explanation in Markdown, with the following structure (or a similar well-organized layout):
+## Output format
+- Output the explanation in Markdown, with the following structure (or a similar well-organized layout):
 
 ```
 # Command Overview
 
-(Provide a 1–2 line overview of the command in {lang}.)
+Provide a 1–2 line overview of the command.
 
 ## Options
 
-### **Option 1**:
+### **Option 1**
 
 A brief explanation of the option  
 
@@ -78,3 +77,4 @@ A. Use `ls -l` to see permissions, owner, size, and last modified time.
 
 - Keep it concise, focusing on the most common use cases.  
 - Omit advanced or rarely used options unless they are crucial for everyday tasks.
+```

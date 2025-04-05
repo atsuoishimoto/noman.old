@@ -20,40 +20,41 @@ COMMAND_DIR = Path("commands")
 
 
 def get_lang_prompt(lang):
-    path = Path("prompts", lang, "prompt.md")
+    path = Path("prompts", "langs", lang, "prompt.md")
     if path.is_file():
         return path.read_text()
     return ""
 
 
-def get_base_prompt(lang):
+def get_base_prompt():
     prompt = Path("prompts/prompt.md").read_text()
-    langprompt = Path("prompts/langs", lang, "prompt.md")
-    if langprompt.is_file():
-        prompt = prompt + "\n\n" + langprompt.read_text()
     return prompt
 
+def get_command_prompt(command):
+    prompt = Path("commands", command, "prompt.md")
+    if prompt.is_file():
+        return prompt.read_text()
+    return ""
 
-def get_prompt(dir, conf, command, lang, langname):
-    prompt = get_base_prompt(lang)
 
-    lang_prompt = get_lang_prompt(lang)
+def generate_document(command_name, langname, prompt, lang_prompt, command_prompt, max_tokens):
+    prompt = f"""
+{prompt}
+
+------
+- Command to Explain: {command_name}
+- Write in {langname}
+------
+"""
+
+    if command_prompt:
+        prompt += "\n\n"+"-"*10 +"\n" + command_prompt
+        
     if lang_prompt:
-        prompt = prompt + "\n" + lang_prompt
-
-    commandname = conf.get("command", command)
-    prompt = prompt.format(command=commandname, lang=lang, langname=langname)
-
-    promptfile = dir / "prompt.md"
-
-    if promptfile.is_file():
-        command_prompt = promptfile.read_text()
-        prompt = prompt + "\n" + command_prompt
-
-    return prompt
-
-
-def generate_document(topic, max_tokens):
+        prompt += "\n\n"+"-"*10 +"\n" + lang_prompt
+    
+    print(prompt)
+    
     response = client.messages.create(
         model="claude-3-7-sonnet-20250219",
         max_tokens=max_tokens,
@@ -62,14 +63,12 @@ def generate_document(topic, max_tokens):
     )
     return response.content[0].text, response.stop_reason, response.usage
 
-
-if __name__ == "__main__":
+def main():
     lang, command = sys.argv[1:]
     lang = lang.lower()
     command = command.lower()
     langname = pycountry.languages.get(alpha_2=lang).name
 
-    docdir = COMMAND_DIR / command
     langdir = COMMAND_DIR / command / lang
     langdir.mkdir(parents=True, exist_ok=True)
 
@@ -77,10 +76,12 @@ if __name__ == "__main__":
     commandconf = COMMAND_DIR / command / "command.yaml"
     if commandconf.is_file():
         conf = safe_load(commandconf.read_text())
-
-    prompt = get_prompt(docdir, conf, command, lang, langname)
-    print(prompt)
-    doc, stop_reason, usage = generate_document(prompt, 10000)
+    
+    prompt = get_base_prompt()
+    lang_prompt = get_lang_prompt(lang)
+    command_name = conf.get("command", command)
+    command_prompt = get_command_prompt(command_name)
+    doc, stop_reason, usage = generate_document(command_name, langname, prompt, lang_prompt, command_prompt, 10000)
 
     md = langdir / "noman.md"
     md.write_text(doc)
@@ -95,3 +96,6 @@ if __name__ == "__main__":
     resultfile.write_text(result)
 
     os.system(f"less '{md}'")
+    
+if __name__ == "__main__":
+    main()
