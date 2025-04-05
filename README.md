@@ -18,8 +18,7 @@
 ## Installation
 
 1. **Prerequisites**  
-   - Python 3.8+ (recommended)  
-   - A working internet connection if the AI generation happens via online APIs (depending on your setup).
+   - Python 3.10+ (recommended)  
 
 2. **Install via pip (example)**  
    ```bash
