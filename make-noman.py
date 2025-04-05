@@ -83,7 +83,9 @@ def main():
     command_prompt = get_command_prompt(command_name)
     doc, stop_reason, usage = generate_document(command_name, langname, prompt, lang_prompt, command_prompt, 10000)
 
-    md = langdir / "noman.md"
+    pagedir = Path("pages", lang)
+    pagedir.mkdir(parents=True, exist_ok=True)
+    md = pagedir / (command+".md")
     md.write_text(doc)
 
     resultfile = langdir / "result.json"
