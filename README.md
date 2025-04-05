@@ -4,16 +4,17 @@
 
 ## Features
 
-- **AI-Generated Help**  
-  noman uses AI to generate concise explanations and examples for various Unix commands.
-- **Simplified Language**  
+- **AI-Generated Help**
+  `noman` uses AI to generate concise explanations and examples for various Unix commands. Given the AI's strong training in programming-related topics, it provides reliable descriptions for established UNIX commands.
+- **Simplified Language**
   We minimize jargon and explain things in everyday terms, so you don’t have to dig through long or confusing docs.
-- **Practical Examples**  
+- **Practical Examples**
   Each command’s page focuses on real-world use cases and common options.
 - **Freqentry Asked Questions(FAQ)**
-  noman includes a section for frequently asked questions, addressing common pitfalls and best practices.
-- **Dynamic Updates**  
-  As commands or usage patterns evolve, noman’s AI-based approach can keep the help pages fresh.
+  `noman` includes a section for frequently asked questions, addressing common pitfalls and best practices.
+- **Pre-Generated Pages**
+  `noman` includes pre-generated pages, allowing for immediate display of help information at no cost. Currently, **noman** covers over 100 core commands, with emphasis on those found in GNU coreutils.
+
 
 ## Installation
 
@@ -121,10 +122,6 @@ This project is licensed under the [MIT License](LICENSE) — you’re free to u
 ## Disclaimer
 
 - AI-generated content can sometimes contain inaccuracies. Always verify critical commands or options, especially in production environments.  
-
-**Get rid of outdated man pages. Embrace noman for an AI-driven, easy-to-read approach to Unix commands!**
-
-
 
 
 

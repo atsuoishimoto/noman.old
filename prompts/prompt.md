@@ -13,16 +13,17 @@ Instructions
 
 ## Output Format Requests
 
-1. Write in {langname}
+1. Write in {langname}.
 2. Begin with a 1–2 line overview of what the command does.  
 3. List the frequently used options and describe how to use them (bullet points recommended).  
-4. Provide simple input/output examples for each option or a combined set of examples.  
-5. Include additional tips or notes if necessary (e.g., common pitfalls or time-saving tricks).
-6. Include FAQs of the command.
+4. Provide simple and practical input/output examples for each option or a combined set of examples.  
+5. Include FAQs of the command.
+6. Include additional tips or notes if necessary (e.g., common pitfalls or time-saving tricks).
 7. Output the explanation in Markdown, with the following structure (or a similar well-organized layout):
 
 ```
 # Command Overview
+
 (Provide a 1–2 line overview of the command in {lang}.)
 
 ## Options
@@ -31,22 +32,36 @@ Instructions
 
 A brief explanation of the option  
 
-Example: `ls -l`, etc.
+```bash
+$ ls -l
+total 16
+-rw-r--r--  1 user  staff  1024 Apr 10 15:30 document.txt
+drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects
+```
 
 ### **Option 2**:
 
 A brief explanation of the option  
 
-Example: `ls -a`, etc.
+```bash
+$ ls -l
+total 16
+-rw-r--r--  1 user  staff  1024 Apr 10 15:30 document.txt
+drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects
+```
 
 ## Usage Examples
+
 Below is an example of how to show a command and its output:
+
+### Example command
+
 ```bash
-# Example command
-ls -l
-# Example output
-total 8
--rw-r--r--   1 user  staff   0 Apr  1 00:00 file1
+$ ls -l
+total 16
+-rw-r--r--  1 user  staff  1024 Apr 10 15:30 document.txt
+drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects
+```
 
 ## Frequently Asked Questions
 
@@ -60,5 +75,6 @@ A. Use `ls -a`. This displays files starting with a dot (`.`).
 A. Use `ls -l` to see permissions, owner, size, and last modified time.
 
 ## Additional Notes
+
 - Keep it concise, focusing on the most common use cases.  
 - Omit advanced or rarely used options unless they are crucial for everyday tasks.

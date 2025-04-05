@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Command Detail | noman</title>
+  <!-- メタ情報など適宜追加 -->
+  <style>
+    /* ======== CSSリセット的に最低限 ======== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ======== カラーテーマ変数 ======== */
+    :root {
+      --primary-color: #2b2d42;    /* 見出しや強調色 */
+      --accent-color: #ef233c;     /* アクセント (ボタンなど) */
+      --bg-color: #f8f9fa;         /* 背景色 */
+      --text-color: #333;          /* メインテキスト */
+      --max-width: 900px;          /* コンテンツ横幅の上限 */
+    }
+
+    /* ======== 全体のスタイル ======== */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* ======== ヘッダー ======== */
+    header {
+      background-color: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 1rem;
+    }
+    .header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .site-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+    .nav-links a {
+      margin-left: 1rem;
+      font-size: 0.9rem;
+    }
+
+    /* ======== メインコンテンツ ======== */
+    main {
+      max-width: var(--max-width);
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .command-header {
+      margin-bottom: 2rem;
+    }
+    .command-header h1 {
+      font-size: 2rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+    .command-header p {
+      font-size: 1rem;
+      color: #666;
+    }
+
+    /* ======== セクション見出し ======== */
+    .section-title {
+      font-size: 1.3rem;
+      margin: 2rem 0 1rem;
+      color: var(--primary-color);
+      position: relative;
+    }
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: var(--accent-color);
+      margin-top: 0.5rem;
+    }
+
+    /* ======== Usage, Options などのリスト ======== */
+    .usage-block, .options-block, .examples-block {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .usage-block code,
+    .examples-block code {
+      display: inline-block;
+      background-color: #f3f3f3;
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      font-family: monospace;
+      color: #000;
+    }
+
+    /* ======== Options（オプション一覧） ======== */
+    .option-item {
+      margin-bottom: 0.8rem;
+    }
+    .option-item strong {
+      display: inline-block;
+      min-width: 70px;
+      color: var(--accent-color);
+    }
+
+    /* ======== FAQ ======== */
+    .faq-block {
+      margin-top: 1rem;
+    }
+    .faq-item {
+      background-color: #fff;
+      margin-bottom: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 0.8rem;
+    }
+    .faq-item h4 {
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
+      font-size: 1rem;
+    }
+    .faq-item p {
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    /* ======== フィードバックセクション ======== */
+    .feedback-section {
+      margin-top: 2rem;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 1rem;
+    }
+    .feedback-section h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+    .feedback-form textarea {
+      width: 100%;
+      height: 80px;
+      padding: 0.5rem;
+      font-family: sans-serif;
+      margin-bottom: 0.5rem;
+    }
+    .feedback-form button {
+      background-color: var(--accent-color);
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .feedback-form button:hover {
+      opacity: 0.9;
+    }
+
+    /* ======== フッター ======== */
+    footer {
+      background-color: #fff;
+      border-top: 1px solid #e0e0e0;
+      padding: 1rem 0;
+      text-align: center;
+      margin-top: 2rem;
+    }
+    footer p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <div class="header-inner">
+      <div class="site-title">noman</div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Commands</a>
+        <a href="#">Forum</a>
+        <a href="#">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- メインコンテンツ -->
+  <main>
+    <!-- コマンド情報 ヘッダー部 -->
+    <div class="command-header">
+      <h1>grep</h1>
+      <p>A powerful pattern matching tool for text filtering.</p>
+    </div>
+
+    <!-- Usageセクション -->
+    <h2 class="section-title">Usage</h2>
+    <div class="usage-block">
+      <p>Basic usage:</p>
+      <code>grep [OPTIONS] PATTERN [FILE...]</code>
+      <p>Example:</p>
+      <code>grep -i "error" /var/log/syslog</code>
+    </div>
+
+    <!-- Optionsセクション -->
+    <h2 class="section-title">Common Options</h2>
+    <div class="options-block">
+      <div class="option-item">
+        <strong>-i</strong> Case-insensitive search
+      </div>
+      <div class="option-item">
+        <strong>-r</strong> Recursive search in subdirectories
+      </div>
+      <div class="option-item">
+        <strong>-n</strong> Show line numbers
+      </div>
+      <div class="option-item">
+        <strong>--color</strong> Highlight matched patterns
+      </div>
+    </div>
+
+    <!-- Examplesセクション -->
+    <h2 class="section-title">Examples</h2>
+    <div class="examples-block">
+      <p>Search for the word "ERROR" in all log files, ignoring case:</p>
+      <code>grep -i "error" /var/log/*.log</code>
+    </div>
+
+    <!-- FAQセクション -->
+    <h2 class="section-title">FAQ / Tips</h2>
+    <div class="faq-block">
+      <div class="faq-item">
+        <h4>Q: How to invert match?</h4>
+        <p>Use the <code>-v</code> option. Example: <code>grep -v "pattern" file</code></p>
+      </div>
+      <div class="faq-item">
+        <h4>Q: How do I search multiple files?</h4>
+        <p>Simply list them after the pattern: <code>grep "TODO" file1 file2 file3</code></p>
+      </div>
+    </div>
+
+    <!-- フィードバックセクション -->
+    <div class="feedback-section">
+      <h3>Feedback</h3>
+      <p>If you found an error or want to suggest improvements, let us know:</p>
+      <form class="feedback-form">
+        <textarea placeholder="Your message..."></textarea>
+        <br />
+        <button type="submit">Submit Feedback</button>
+      </form>
+    </div>
+
+  </main>
+
+  <!-- フッター -->
+  <footer>
+    <p>&copy; 2025 noman. AI-Generated Man Pages. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
