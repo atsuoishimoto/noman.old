@@ -1,8 +1,6 @@
-# noman
+# noman - Man pages without the man
 
-**noman** is a command-line tool that provides AI-generated, human-friendly “man pages.” Unlike traditional man pages (often seen as too verbose or cryptic), **noman** uses AI to summarize and clarify command usage, making it easier to understand.
-
-> **Note:** “No man behind these man pages—pure AI at work.”
+**noman** is a command-line tool that provides AI-generated, human-friendly “man pages.” Unlike traditional man pages (often seen as too verbose or cryptic), **noman** uses AI to summarize and clarify command usage, making it easier to understand. No man behind these man pages.
 
 ## Features
 
@@ -12,6 +10,8 @@
   We minimize jargon and explain things in everyday terms, so you don’t have to dig through long or confusing docs.
 - **Practical Examples**  
   Each command’s page focuses on real-world use cases and common options.
+- **Freqentry Asked Questions(FAQ)**
+  noman includes a section for frequently asked questions, addressing common pitfalls and best practices.
 - **Dynamic Updates**  
   As commands or usage patterns evolve, noman’s AI-based approach can keep the help pages fresh.
 
@@ -113,12 +113,6 @@ We welcome all contributions! Feel free to:
    ```bash
    pytest
    ```
-
-## Roadmap
-
-- **Better Offline Support**: Local model integration for situations without internet access.  
-- **Localization**: Additional language support (e.g., `noman ja` → Japanese output).  
-- **Plugin Support**: Let the community define custom prompts or specialized documentation sets for advanced usage.
 
 ## License
 
