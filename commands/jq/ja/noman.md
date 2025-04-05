@@ -1,94 +1,134 @@
-# jqコマンド概要
+# jq コマンド概要
 
-jqは、JSONデータを処理・操作するための軽量で柔軟なコマンドラインツールです。JSONデータのフィルタリング、変換、整形などを簡単に行うことができます。
+`jq`は、JSONデータを処理・操作するためのコマンドラインツールです。JSONデータのフィルタリング、変換、整形を簡単に行うことができます。
 
-## 主なオプション
+## オプション
 
-- **-r, --raw-output**: 出力結果から引用符を取り除きます
-  - 例: `jq -r '.name' data.json`
+### **-r, --raw-output**
 
-- **-c, --compact-output**: 出力を1行にまとめます（整形なし）
-  - 例: `jq -c '.' data.json`
+出力時に引用符を取り除き、生のテキストとして表示します。
 
-- **-s, --slurp**: 複数のJSONオブジェクトを配列として読み込みます
-  - 例: `jq -s '.' file1.json file2.json`
-
-- **-f, --from-file**: ファイルからjqフィルタを読み込みます
-  - 例: `jq -f filter.jq data.json`
-
-## 基本的な使い方
-
-### 整形（Pretty Print）
 ```bash
-# 整形されたJSONを表示
-echo '{"name":"田中","age":30}' | jq '.'
-# 出力結果
+$ echo '{"name": "Taro"}' | jq '.name'
+"Taro"
+
+$ echo '{"name": "Taro"}' | jq -r '.name'
+Taro
+```
+
+### **-c, --compact-output**
+
+JSONを整形せず、コンパクトな形式で出力します。
+
+```bash
+$ echo '{"name": "Taro", "age": 30}' | jq '.'
 {
-  "name": "田中",
+  "name": "Taro",
+  "age": 30
+}
+
+$ echo '{"name": "Taro", "age": 30}' | jq -c '.'
+{"name":"Taro","age":30}
+```
+
+### **-f, --from-file**
+
+フィルタをファイルから読み込みます。
+
+```bash
+$ echo 'select(.age > 25)' > filter.jq
+$ echo '[{"name": "Taro", "age": 30}, {"name": "Hanako", "age": 20}]' | jq -f filter.jq
+{
+  "name": "Taro",
   "age": 30
 }
 ```
 
-### 特定のフィールドを抽出
-```bash
-# nameフィールドのみを抽出
-echo '{"name":"田中","age":30}' | jq '.name'
-# 出力結果
-"田中"
+### **-s, --slurp**
 
-# 引用符なしで抽出
-echo '{"name":"田中","age":30}' | jq -r '.name'
-# 出力結果
-田中
+複数のJSONオブジェクトを配列として扱います。
+
+```bash
+$ echo '{"name": "Taro"} {"name": "Hanako"}' | jq -s '.'
+[
+  {
+    "name": "Taro"
+  },
+  {
+    "name": "Hanako"
+  }
+]
 ```
 
-### 配列の操作
-```bash
-# 配列の最初の要素を取得
-echo '[{"name":"田中"},{"name":"佐藤"}]' | jq '.[0]'
-# 出力結果
-{
-  "name": "田中"
-}
+## 使用例
 
-# 配列内の全ての要素から特定のフィールドを抽出
-echo '[{"name":"田中"},{"name":"佐藤"}]' | jq '.[].name'
-# 出力結果
-"田中"
-"佐藤"
+### 基本的なフィルタリング
+
+```bash
+$ echo '{"user": {"name": "Taro", "age": 30, "email": "taro@example.com"}}' | jq '.user.name'
+"Taro"
 ```
 
-### フィルタリング
+### 配列の処理
+
 ```bash
-# 条件に合う要素のみを抽出
-echo '[{"name":"田中","age":25},{"name":"佐藤","age":30}]' | jq '.[] | select(.age > 28)'
-# 出力結果
+$ echo '{"users": [{"name": "Taro"}, {"name": "Hanako"}, {"name": "Jiro"}]}' | jq '.users[].name'
+"Taro"
+"Hanako"
+"Jiro"
+```
+
+### 条件フィルタリング
+
+```bash
+$ echo '[{"name": "Taro", "age": 30}, {"name": "Hanako", "age": 25}, {"name": "Jiro", "age": 35}]' | jq '.[] | select(.age > 28)'
 {
-  "name": "佐藤",
+  "name": "Taro",
   "age": 30
+}
+{
+  "name": "Jiro",
+  "age": 35
 }
 ```
 
 ### データ変換
+
 ```bash
-# オブジェクトの構造を変更
-echo '{"name":"田中","age":30}' | jq '{user: .name, years: .age}'
-# 出力結果
-{
-  "user": "田中",
-  "years": 30
-}
+$ echo '[{"name": "Taro", "age": 30}, {"name": "Hanako", "age": 25}]' | jq 'map({名前: .name, 年齢: .age})'
+[
+  {
+    "名前": "Taro",
+    "年齢": 30
+  },
+  {
+    "名前": "Hanako",
+    "年齢": 25
+  }
+]
 ```
 
-## 追加のヒント
+## よくある質問
 
-- パイプ演算子 `|` を使って複数のフィルタを連結できます
-  ```bash
-  cat data.json | jq '.users[] | select(.active == true) | .name'
-  ```
+### Q1. jqの基本的な使い方は？
+A. パイプ（`|`）を使ってJSONデータを渡し、フィルタ式を指定します。例：`cat data.json | jq '.fieldname'`
 
-- 複雑なJSONを扱う場合は、まず `jq '.'` で全体構造を確認すると便利です
+### Q2. 特定のキーだけを抽出するには？
+A. ドット表記を使います。例えば、`jq '.name'`は「name」キーの値を抽出します。
 
-- `jq`のフィルタは強力ですが、複雑になりがちです。頻繁に使うフィルタはシェルの関数やエイリアスとして保存しておくと良いでしょう
+### Q3. 配列から特定の要素を取得するには？
+A. インデックスを使います。例：`jq '.users[0]'`は配列の最初の要素を取得します。
 
-- 大きなJSONファイルを扱う場合は、必要な部分だけを抽出することでパフォーマンスが向上します
+### Q4. 複数のフィールドを選択するには？
+A. `{}`を使って新しいオブジェクトを作成します。例：`jq '{name: .name, age: .age}'`
+
+### Q5. jqのフィルタを保存して再利用できますか？
+A. はい、`-f`オプションを使ってファイルからフィルタを読み込めます。
+
+## 追加情報
+
+- jqはパイプラインを使った複雑な処理も可能です。例：`.[] | select(.active == true) | .name`
+- 出力をCSVやTSVに変換することもできます：`jq -r '.[] | [.name, .age] | @csv'`
+- 複雑なJSONデータを扱う場合は、まず`jq '.'`で整形表示して構造を確認すると便利です。
+- jqのフィルタ式は独自の言語で書かれており、学習曲線がありますが、一度マスターすると非常に強力です。
+- オンラインでjqを試せるサイト（[jqplay.org](https://jqplay.org/)など）を活用すると学習に役立ちます。
