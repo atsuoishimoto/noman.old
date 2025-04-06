@@ -25,7 +25,7 @@ function Matches({ name }: { name: string }) {
   )
 }
 
-function Candidate() {
+function SearchBox() {
   const [search, setSearch] = useState("");
   return (
     < div style={{ border: "solid" }}>
@@ -48,7 +48,7 @@ function App() {
 
   return (
     <>
-      <Candidate />
+      <SearchBox />
       <div>
         <div>
         </div>
