@@ -20,18 +20,18 @@ COMMAND_DIR = Path("commands")
 
 
 def get_lang_prompt(lang):
-    path = Path("prompts", "langs", lang, "prompt.md")
+    path = Path("prompts", "langs", lang, "prompt")
     if path.is_file():
         return path.read_text()
     return ""
 
 
 def get_base_prompt():
-    prompt = Path("prompts/prompt.md").read_text()
+    prompt = Path("prompts/prompt").read_text()
     return prompt
 
 def get_command_prompt(command):
-    prompt = Path("commands", command, "prompt.md")
+    prompt = Path("commands", command, "prompt")
     if prompt.is_file():
         return prompt.read_text()
     return ""
