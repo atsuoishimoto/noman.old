@@ -16,8 +16,6 @@ def generate_document(command_name, langname, *prompts, max_tokens):
 ------
 """
 
-    print(final_prompt)
-    
     response = client.messages.create(
         model="claude-3-7-sonnet-20250219",
         max_tokens=max_tokens,

@@ -21,14 +21,13 @@ def command_prompt(target, stem):
 
 @rule(f"pages/*/%.md", depends=(PROMPT, lang_prompt, command_prompt))
 def build_noman(target, *deps):
-    print(target, deps)
-
     target = Path(target)
     target.parent.mkdir(parents=True, exist_ok=True)
     command = target.stem
     lang = target.parts[1]
 
     prompts = [Path(p).read_text() for p in deps]
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", command)
     text, stop_reason, usage = noman.generate_document(command, lang, *prompts, max_tokens=MAX_TOKENS)
     
     target.write_text(text)

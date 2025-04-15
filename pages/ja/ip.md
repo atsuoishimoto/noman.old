@@ -1,95 +1,110 @@
-# `ip` コマンド概要
+# ip コマンド概要
 
-`ip` コマンドは、ネットワークインターフェース、ルーティングテーブル、IPアドレスなどのネットワーク設定を表示・管理するための強力なツールです。従来の `ifconfig` や `route` コマンドの代替として使用されます。
+`ip` コマンドは、ネットワークインターフェース、ルーティングテーブル、IPアドレスなどのネットワーク設定を表示・管理するための強力なツールです。`ifconfig` や `route` コマンドの後継として設計されています。
 
-## 主なオプション
+## オプション
 
-- **`ip addr`**: ネットワークインターフェースとそのIPアドレスを表示します
-  - 例: `ip addr show`
+### **ip addr (address)**
 
-- **`ip link`**: ネットワークインターフェースの状態を表示・変更します
-  - 例: `ip link show`
-
-- **`ip route`**: ルーティングテーブルを表示・管理します
-  - 例: `ip route show`
-
-- **`ip neigh`**: ARPテーブル（近隣探索キャッシュ）を表示・管理します
-  - 例: `ip neigh show`
-
-## 使用例
-
-### IPアドレスの表示
+ネットワークインターフェースのIPアドレス情報を表示・管理します。
 
 ```bash
-# すべてのインターフェースのIPアドレスを表示
-ip addr show
-# 出力例
+$ ip addr show
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     inet 127.0.0.1/8 scope host lo
        valid_lft forever preferred_lft forever
 2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
-    link/ether 00:11:22:33:44:55 brd ff:ff:ff:ff:ff:ff
+    link/ether 00:0c:29:3d:5e:7a brd ff:ff:ff:ff:ff:ff
     inet 192.168.1.100/24 brd 192.168.1.255 scope global eth0
        valid_lft forever preferred_lft forever
 ```
 
-### 特定のインターフェースの情報表示
+### **ip link**
+
+ネットワークインターフェースの状態を表示・管理します。
 
 ```bash
-# eth0インターフェースの情報のみ表示
-ip addr show dev eth0
+$ ip link show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether 00:0c:29:3d:5e:7a brd ff:ff:ff:ff:ff:ff
 ```
 
-### IPアドレスの追加と削除
+### **ip route**
+
+ルーティングテーブルを表示・管理します。
 
 ```bash
-# eth0インターフェースに新しいIPアドレスを追加
-sudo ip addr add 192.168.1.200/24 dev eth0
-
-# eth0インターフェースからIPアドレスを削除
-sudo ip addr del 192.168.1.200/24 dev eth0
+$ ip route show
+default via 192.168.1.1 dev eth0 proto static 
+192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.100
 ```
+
+### **ip neigh (neighbour)**
+
+ARPテーブル（ネイバーテーブル）を表示・管理します。
+
+```bash
+$ ip neigh show
+192.168.1.1 dev eth0 lladdr 00:11:22:33:44:55 REACHABLE
+192.168.1.5 dev eth0 lladdr aa:bb:cc:dd:ee:ff STALE
+```
+
+## 使用例
 
 ### インターフェースの有効化/無効化
 
 ```bash
 # eth0インターフェースを有効化
-sudo ip link set eth0 up
+$ sudo ip link set eth0 up
 
 # eth0インターフェースを無効化
-sudo ip link set eth0 down
+$ sudo ip link set eth0 down
 ```
 
-### ルーティングテーブルの表示と管理
+### IPアドレスの追加/削除
 
 ```bash
-# ルーティングテーブルを表示
-ip route show
-# 出力例
-default via 192.168.1.1 dev eth0 proto static 
-192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.100
+# eth0にIPアドレスを追加
+$ sudo ip addr add 192.168.1.200/24 dev eth0
 
-# デフォルトゲートウェイの追加
-sudo ip route add default via 192.168.1.1 dev eth0
+# eth0からIPアドレスを削除
+$ sudo ip addr del 192.168.1.200/24 dev eth0
+```
+
+### ルートの追加/削除
+
+```bash
+# デフォルトゲートウェイの設定
+$ sudo ip route add default via 192.168.1.1 dev eth0
 
 # 特定のネットワークへのルートを追加
-sudo ip route add 10.0.0.0/24 via 192.168.1.254 dev eth0
+$ sudo ip route add 10.0.0.0/24 via 192.168.1.254 dev eth0
+
+# ルートの削除
+$ sudo ip route del 10.0.0.0/24
 ```
 
-### ARPテーブルの表示
+## よくある質問
 
-```bash
-# ARPテーブル（近隣探索キャッシュ）を表示
-ip neigh show
-# 出力例
-192.168.1.1 dev eth0 lladdr aa:bb:cc:dd:ee:ff REACHABLE
-```
+### Q1. `ip` コマンドと `ifconfig` の違いは何ですか？
+A. `ip` コマンドは `ifconfig` の後継として開発され、より多くの機能を持ち、最新のネットワーク技術に対応しています。`ifconfig` は多くのディストリビューションで非推奨となっています。
+
+### Q2. 自分のIPアドレスを確認するには？
+A. `ip addr show` コマンドを使用します。各インターフェースに割り当てられたIPアドレスが表示されます。
+
+### Q3. デフォルトゲートウェイを確認するには？
+A. `ip route show` コマンドを実行し、「default via」で始まる行を探します。
+
+### Q4. ネットワークインターフェースの名前を確認するには？
+A. `ip link show` コマンドを使用すると、システム上のすべてのネットワークインターフェースが表示されます。
 
 ## 追加情報
 
-- `ip` コマンドは、`-c` オプションを使用してカラー出力を有効にできます（例: `ip -c addr show`）
-- 出力を簡潔にするには `-br`（brief）オプションを使用できます（例: `ip -br addr show`）
-- `ip` コマンドは非常に多機能なため、`man ip` で詳細なマニュアルを参照することをお勧めします
-- 多くのLinuxディストリビューションでは、`ip` コマンドを使用するために `iproute2` パッケージのインストールが必要です
-- 従来の `ifconfig` や `route` コマンドは古いとされ、最新のLinuxディストリビューションでは `ip` コマンドの使用が推奨されています
+- `ip` コマンドは出力が色分けされていることがあり、読みやすくなっています。
+- `-s` オプションを追加すると、より詳細な統計情報が表示されます（例：`ip -s link show`）。
+- `-br`（brief）オプションを使うと、より簡潔な出力が得られます（例：`ip -br addr show`）。
+- `ip` コマンドはサブコマンドを省略形で指定できます（例：`ip a` は `ip addr`、`ip r` は `ip route` と同じ）。
+- ほとんどの `ip` コマンドの操作には管理者権限（sudo）が必要です。
