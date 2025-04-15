@@ -106,13 +106,14 @@ We welcome all contributions! Feel free to:
    git clone https://github.com/yourusername/noman.git
    cd noman
    ```
+
 2. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   uv sync
    ```
-3. Make changes and run tests (if available):
+3. Rebuild pages
    ```bash
-   pytest
+   uv run pyprod pages/ja/ls.md
    ```
 
 ## License
