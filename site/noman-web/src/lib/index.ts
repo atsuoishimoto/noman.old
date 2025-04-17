@@ -1,0 +1,1 @@
+export { createSearchBox } from './createSearchBox';

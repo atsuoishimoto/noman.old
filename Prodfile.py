@@ -27,7 +27,6 @@ def build_noman(target, *deps):
     lang = target.parts[1]
 
     prompts = [Path(p).read_text() for p in deps]
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", command)
     text, stop_reason, usage = noman.generate_document(command, lang, *prompts, max_tokens=MAX_TOKENS)
     
     target.write_text(text)
