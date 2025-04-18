@@ -1,9 +1,12 @@
+# type: ignore
+
 import os
 import json
 from dotenv import load_dotenv
 load_dotenv()
 
 import noman
+from md2html import md_to_html
 
 COMMANDDIR = Path("./commands")
 COMMANDS = [p for p in COMMANDDIR.glob("*") if p.is_dir()]
@@ -19,7 +22,7 @@ def lang_prompt(target, stem):
 def command_prompt(target, stem):
     return (COMMANDDIR / stem).glob("*")
 
-@rule(f"pages/*/%.md", depends=(PROMPT, lang_prompt, command_prompt))
+@rule("pages/*/%.md", depends=(PROMPT, lang_prompt, command_prompt))
 def build_noman(target, *deps):
     target = Path(target)
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -45,3 +48,14 @@ def build_noman(target, *deps):
 @task
 def all():
     build(NOMANS)
+
+def get_mdfile(target, stem):
+    return Path(target).with_suffix(".md")
+
+@rule("pages/*/%.html", depends=get_mdfile)
+def build_html(target, mdfile):
+    target = Path(target)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    html = md_to_html(mdfile)
+    target.write_text(html)
+    
