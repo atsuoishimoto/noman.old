@@ -1,6 +1,6 @@
 # noman - Man pages without the man
 
-**noman** is a command-line tool that provides AI-generated, human-friendly “man pages.” Unlike traditional man pages (often seen as too verbose or cryptic), **noman** uses AI to summarize and clarify command usage, making it easier to understand. No man behind these man pages.
+**noman** is a command-line tool and website that provides AI-generated, human-friendly “man pages.” Unlike traditional man pages—often seen as too verbose or cryptic—**noman** uses AI to summarize and clarify command usage, making it easier to understand. No man behind these man pages.
 
 
 ## Features
@@ -28,6 +28,10 @@ Traditional man pages might be verbose, but at least they're quick—you just ty
 ## Why AI works well here
 
 Unix commands are a stable and well-documented domain, making it easier for AI to generate accurate information by referencing established sources. This reduces the risk of the AI producing inaccurate or misleading information. Additionally, customizing prompts specifically for each command can further enhance the accuracy and reliability of AI-generated explanations.
+
+## Why noman is safer than searching on your own
+
+While users can always search online or ask general-purpose AI tools for help, those methods often produce inconsistent or inaccurate results depending on how the question is phrased. By contrast, noman uses carefully designed prompts and consistent formatting to reduce ambiguity and increase reliability. Although no AI-generated content is entirely error-free, noman offers a safer and more user-friendly alternative to ad-hoc searching, especially for beginners.
 
 ## Low maintenance cost
 
