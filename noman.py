@@ -1,4 +1,4 @@
-import os
+import os, sys
 from anthropic import Anthropic
 
 api_key = os.environ["NOMAN_ANTHROPIC_API_KEY"]
@@ -16,11 +16,19 @@ def generate_document(command_name, langname, *prompts, max_tokens):
 ------
 """
 
+    # check OverloadedError?
     response = client.messages.create(
         model="claude-3-7-sonnet-20250219",
         max_tokens=max_tokens,
         temperature=0.2,
         messages=[{"role": "user", "content": final_prompt}],
     )
-    return response.content[0].text, response.stop_reason, response.usage
+    if str(response.stop_reason) != "end_turn":
+        raise ValueError(
+            f"generate_document failed: "
+            f"stop_reason: {response.stop_reason!s} "
+            f"usage: {response.usage}\n"
+            f"{response.content[0].text}"
+        )
 
+    return response.content[0].text, response.stop_reason, response.usage

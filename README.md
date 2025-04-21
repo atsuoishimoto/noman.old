@@ -9,6 +9,8 @@
   `noman` uses AI to generate concise explanations and examples for various Unix commands. Given the AI's strong training in programming-related topics, it provides reliable descriptions for established UNIX commands.
 - **Simplified Language**
   We minimize jargon and explain things in everyday terms, so you don’t have to dig through long or confusing docs.
+- **Focused, Not Exhaustive**
+  noman doesn't aim to document every obscure feature of a command. Instead, it highlights the most common and practical use cases, avoiding overly technical or academic details that aren't useful in day-to-day work.
 - **Practical Examples**
   Each command’s page focuses on real-world use cases and common options.
 - **Freqentry Asked Questions(FAQ)**

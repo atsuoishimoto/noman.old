@@ -1,160 +1,140 @@
-# `rg` コマンド概要
+# rg (ripgrep)
 
-`rg`（ripgrep）は高速なテキスト検索ツールで、ファイル内の文字列パターンを検索します。`grep`の代替として開発され、Rustで書かれているため非常に高速です。
+ripgrepは高速な検索ツールで、ファイル内の文字列パターンを検索します。grepの代替として設計され、より高速で使いやすい機能を提供します。
 
 ## オプション
 
-### **-i, --ignore-case**:
+### **-i, --ignore-case**
+
 大文字と小文字を区別せずに検索します。
 
-例：
 ```bash
-# 「hello」という単語を大文字小文字を区別せずに検索
-rg -i hello
+$ rg -i "hello"
+example.txt:10:Hello World
+example.txt:15:hello everyone
 ```
 
-### **-v, --invert-match**:
+### **-v, --invert-match**
+
 パターンに一致しない行を表示します。
 
-例：
 ```bash
-# 「error」を含まない行を表示
-rg -v error logfile.txt
+$ rg -v "error" log.txt
+log.txt:1:System started
+log.txt:3:Process completed successfully
 ```
 
-### **-w, --word-regexp**:
+### **-w, --word-regexp**
+
 単語全体に一致するパターンのみを検索します。
 
-例：
 ```bash
-# 「log」という単語のみを検索（「blog」や「logging」は含まない）
-rg -w log
+$ rg -w "log"
+logger.js:5:function log(message) {
+config.json:10:"log": true
 ```
 
-### **-c, --count**:
-マッチした行数のみを表示します。
+### **-A, --after-context**
 
-例：
+一致した行の後に指定した行数を表示します。
+
 ```bash
-# 各ファイルで「TODO」が出現する回数を表示
-rg -c TODO
+$ rg -A 2 "error"
+app.js:25:throw new Error("Something went wrong");
+app.js:26:  console.log("This won't execute");
+app.js:27:}
 ```
 
-### **-l, --files-with-matches**:
-マッチしたファイル名のみを表示します。
+### **-B, --before-context**
 
-例：
+一致した行の前に指定した行数を表示します。
+
 ```bash
-# 「password」を含むファイルの一覧を表示
-rg -l password
+$ rg -B 1 "function main"
+main.js:9:// Entry point
+main.js:10:function main() {
 ```
 
-### **-A, --after-context**:
-マッチした行の後の指定行数も表示します。
+### **-C, --context**
 
-例：
+一致した行の前後に指定した行数を表示します。
+
 ```bash
-# 「error」を含む行とその後2行を表示
-rg -A 2 error logfile.txt
+$ rg -C 1 "important"
+document.txt:14:The previous line
+document.txt:15:This is important information
+document.txt:16:The next line
 ```
 
-### **-B, --before-context**:
-マッチした行の前の指定行数も表示します。
+### **-t, --type**
 
-例：
-```bash
-# 「error」を含む行とその前3行を表示
-rg -B 3 error logfile.txt
-```
-
-### **-C, --context**:
-マッチした行の前後の指定行数を表示します。
-
-例：
-```bash
-# 「error」を含む行とその前後2行ずつを表示
-rg -C 2 error logfile.txt
-```
-
-### **-t, --type**:
 特定のファイルタイプのみを検索します。
 
-例：
 ```bash
-# JavaScriptファイルのみで「function」を検索
-rg -t js function
+$ rg -t js "function"
+app.js:5:function initialize() {
+utils.js:10:function formatDate(date) {
 ```
 
-### **-g, --glob**:
-グロブパターンでファイルをフィルタリングします。
+### **-g, --glob**
 
-例：
+指定したグロブパターンに一致するファイルのみを検索します。
+
 ```bash
-# 「*.log」ファイルのみで「error」を検索
-rg -g "*.log" error
+$ rg -g "*.md" "TODO"
+README.md:30:TODO: Update documentation
+CONTRIBUTING.md:15:TODO: Add more examples
 ```
 
 ## 使用例
 
+### 複数のパターンで検索
+
 ```bash
-# 基本的な検索
-rg "function" src/
-# 出力例
-src/main.js:10:function calculateTotal(items) {
-src/utils.js:5:function formatDate(date) {
+$ rg -e "error" -e "warning" log.txt
+log.txt:15:warning: disk space low
+log.txt:42:error: connection failed
+log.txt:67:warning: timeout occurred
+```
 
-# 複数のディレクトリを再帰的に検索
-rg "TODO" src/ lib/
-# 出力例
-src/app.js:42:// TODO: Implement error handling
-lib/helpers.js:15:// TODO: Refactor this function
+### 再帰的に特定のディレクトリを検索
 
-# 隠しファイルも含めて検索
-rg --hidden "password"
-# 出力例
-.config/settings.json:8:  "default_password": "changeme"
+```bash
+$ rg "api.connect" src/
+src/network/client.js:25:  api.connect(endpoint);
+src/services/auth.js:10:  await api.connect(authServer);
+```
 
-# 正規表現を使用した検索
-rg "\d{3}-\d{3}-\d{4}" --only-matching
-# 出力例
-contact.txt:123-456-7890
+### 隠しファイルを含めて検索
+
+```bash
+$ rg --hidden "password"
+.config:5:password=test123
+config.js:10:const password = process.env.PASSWORD;
 ```
 
 ## よくある質問
 
-### Q1. `rg`と`grep`の違いは何ですか？
-A. `rg`は`grep`より高速で、デフォルトで再帰検索や`.git`ディレクトリの無視などの機能があります。また、色付き出力やファイルタイプフィルタリングなどの機能も組み込まれています。
+### Q1. ripgrepとgrepの違いは何ですか？
+A. ripgrepはgrepよりも高速で、デフォルトで再帰的に検索し、.gitignoreファイルを尊重し、自動的にバイナリファイルをスキップします。また、より多くの検索オプションと色付き出力を提供します。
 
-### Q2. 隠しファイルも検索するにはどうすればいいですか？
-A. `--hidden`オプションを使用します。例：`rg --hidden pattern`
+### Q2. 特定のディレクトリやファイルを検索から除外するにはどうすればいいですか？
+A. `--ignore-file`オプションを使用するか、プロジェクトルートに`.ignore`ファイルを作成して除外パターンを指定できます。また、`-g '!pattern'`を使用して特定のパターンを除外することもできます。
 
-### Q3. バイナリファイルを検索から除外するにはどうすればいいですか？
-A. デフォルトでバイナリファイルは検索されません。明示的に含めたい場合は`-a`または`--text`オプションを使用します。
+### Q3. 正規表現を使用できますか？
+A. はい、ripgrepはデフォルトで正規表現をサポートしています。例えば、`rg '\d{3}-\d{2}-\d{4}'`は社会保障番号のようなパターンを検索します。
 
-### Q4. 特定のディレクトリを検索から除外するにはどうすればいいですか？
-A. `--glob`オプションを使用します。例：`rg pattern --glob '!node_modules/'`
+### Q4. 検索結果をファイルに保存するにはどうすればいいですか？
+A. 標準的なリダイレクトを使用できます：`rg "pattern" > results.txt`
 
-### Q5. 大きなファイルを効率的に検索するにはどうすればいいですか？
-A. `rg`は既に非常に効率的ですが、`--mmap`オプションを使用するとメモリマッピングを利用して大きなファイルの検索が速くなる場合があります。
+## 追加情報
 
-### Q6. 検索結果をファイルに保存するにはどうすればいいですか？
-A. 標準的なリダイレクトを使用します。例：`rg pattern > results.txt`
+- ripgrepは非常に高速で、大規模なコードベースでも効率的に動作します。
+- デフォルトでは、ripgrepは`.gitignore`ファイルに記載されたパターンを無視します。この動作を変更するには`--no-ignore`オプションを使用します。
+- macOSでは、Homebrewを使用してインストールできます：`brew install ripgrep`
+- 検索結果が多すぎる場合は、`-l`または`--files-with-matches`オプションを使用して、一致するファイル名のみを表示することができます。
+- `--type-list`オプションを使用すると、サポートされているすべてのファイルタイプを確認できます。
 
-### Q7. 複数のパターンを検索するにはどうすればいいですか？
-A. `-e`または`--regexp`オプションを複数回使用します。例：`rg -e pattern1 -e pattern2`
+## 参考
 
-### Q8. ファイルタイプのリストを表示するにはどうすればいいですか？
-A. `--type-list`オプションを使用します。例：`rg --type-list`
-
-### Q9. 検索結果の行番号を非表示にするにはどうすればいいですか？
-A. `--no-line-number`オプションを使用します。例：`rg --no-line-number pattern`
-
-### Q10. 検索パターンをファイルから読み込むにはどうすればいいですか？
-A. `-f`または`--file`オプションを使用します。例：`rg -f patterns.txt`
-
-## 追加のメモ
-
-- `rg`はデフォルトで`.gitignore`ファイルに記載されたパターンを無視します。
-- `--no-ignore`オプションを使用すると、`.gitignore`などの無視ファイルを無視できます。
-- 非常に大きなプロジェクトでは、`-j`または`--threads`オプションでスレッド数を調整できます。
-- `rg`は多くの環境で`apt`、`brew`、`chocolatey`などのパッケージマネージャーを通じてインストールできます。
+https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md

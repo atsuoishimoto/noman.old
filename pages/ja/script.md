@@ -1,84 +1,94 @@
-# `script` コマンドの概要
+# script
 
-`script` コマンドは、ターミナルセッションの全出力を記録し、ファイルに保存するためのユーティリティです。コマンドの実行履歴やその出力結果を後で確認したり、他の人と共有したりする際に便利です。
+`script` コマンドは、ターミナルセッションの全出力を記録し、ファイルに保存するためのツールです。デバッグやトレーニング、ドキュメント作成に役立ちます。
 
-## 主なオプション
+## オプション
 
-- **`-a`, `--append`**: 既存のファイルに追記します（上書きではなく）
-  - 例: `script -a session.log`
+### **-a, --append**
 
-- **`-f`, `--flush`**: 各コマンド実行後にバッファをフラッシュし、リアルタイムでログを更新します
-  - 例: `script -f realtime.log`
+既存のファイルに追記します。デフォルトでは上書きされます。
 
-- **`-q`, `--quiet`**: 開始・終了メッセージを表示しません
-  - 例: `script -q silent.log`
+```bash
+$ script -a session.log
+Script started, output appended to session.log.
+```
 
-- **`-t`, `--timing[=ファイル]`**: タイミング情報を別ファイルに記録します
-  - 例: `script -t timing.log session.log`
+### **-f, --flush**
 
-- **`-c`, `--command "コマンド"`**: 指定したコマンドのみを実行して記録します
-  - 例: `script -c "ls -la" command_output.log`
+各入力後にすぐにログファイルに書き込みます。クラッシュ時のデータ損失を防ぎます。
+
+```bash
+$ script -f session.log
+Script started, output file is session.log.
+```
+
+### **-q, --quiet**
+
+開始・終了メッセージを表示しません。
+
+```bash
+$ script -q session.log
+```
+
+### **-t, --timing[=ファイル]**
+
+タイミング情報を別ファイルに記録します。後で `scriptreplay` コマンドで再生できます。
+
+```bash
+$ script -t timing.log session.log
+Script started, output file is session.log.
+```
 
 ## 使用例
 
 ### 基本的な使い方
 
 ```bash
-# script コマンドを開始
-script my_session.log
-
-# 開始メッセージが表示される
-Script started, file is my_session.log
-
-# いくつかのコマンドを実行
-ls -la
-pwd
-echo "Hello World"
-
-# 記録を終了
-exit
-
-# または Ctrl+D を押す
-# 終了メッセージが表示される
-Script done, file is my_session.log
+$ script session.log
+Script started, output file is session.log.
+$ ls
+Documents Downloads Pictures
+$ exit
+Script done, output file is session.log.
 ```
 
-### 特定のコマンドだけを記録
+### セッションの再生
+
+タイミング情報を記録した場合、`scriptreplay` コマンドでセッションを再生できます。
 
 ```bash
-# ls -la コマンドの出力だけを記録
-script -c "ls -la" directory_listing.log
+$ script -t timing.log session.log
+Script started, output file is session.log.
+$ ls -la
+$ pwd
+$ exit
+Script done, output file is session.log.
 
-# 記録されたファイルの内容を確認
-cat directory_listing.log
-# 出力例:
-# total 32
-# drwxr-xr-x  5 user  staff   160 Apr 10 12:34 .
-# drwxr-xr-x  3 user  staff    96 Apr 10 12:30 ..
-# -rw-r--r--  1 user  staff  2048 Apr 10 12:32 file1.txt
-# -rw-r--r--  1 user  staff  1024 Apr 10 12:33 file2.txt
+$ scriptreplay timing.log session.log
+# 記録されたセッションが再生される
 ```
 
-### タイミング情報を記録して再生
+## よくある質問
 
-```bash
-# タイミング情報を記録
-script -t timing.log session.log
+### Q1. `script` コマンドはどのような場合に使うのですか？
+A. トラブルシューティングの記録、コマンドラインデモの作成、トレーニング資料の準備、システム管理作業の監査証跡の作成などに使用します。
 
-# コマンドを実行
-ls -la
-sleep 2
-echo "Hello after 2 seconds"
-exit
+### Q2. 記録を終了するにはどうすればいいですか？
+A. `exit` コマンドを入力するか、`Ctrl+D` を押すことで記録を終了できます。
 
-# 記録を再生（scriptreplay コマンドを使用）
-scriptreplay timing.log session.log
-# 実行したコマンドが、実際の操作と同じタイミングで再生される
-```
+### Q3. パスワードなど機密情報も記録されますか？
+A. はい、表示される全ての内容が記録されます。機密情報を入力する前に記録を一時停止するか、後で編集する必要があります。
+
+### Q4. 記録したファイルはどのように確認できますか？
+A. 通常のテキストファイルなので、`cat`、`less`、`more` などのコマンドや任意のテキストエディタで確認できます。
 
 ## 追加情報
 
-- `script` コマンドはシェルスクリプトの実行ログを取るだけでなく、インタラクティブなセッション全体（プロンプト、コマンド入力、出力など）を記録します。
-- 記録されたファイルには制御文字も含まれるため、`cat` で表示すると読みにくい場合があります。`less` コマンドで確認するとより見やすくなります。
-- システム管理者がトラブルシューティングの手順を記録したり、コマンドラインでの作業を他の人に説明したりする際に非常に役立ちます。
-- セキュリティ上の注意点として、パスワードなどの機密情報を入力する場合は記録が残ることを意識してください。
+- 長時間のセッションを記録する場合は、`-f` オプションを使用してバッファリングを無効にすることをお勧めします。
+- macOSでは基本的な機能は同じですが、一部のオプションが異なる場合があります。
+- 大量の出力がある場合、ログファイルが非常に大きくなる可能性があるため注意が必要です。
+- 色付きの出力（ANSIエスケープシーケンス）も記録されるため、ファイルを表示する際に特殊な文字が含まれることがあります。
+
+## 参考情報
+
+https://man7.org/linux/man-pages/man1/script.1.html
