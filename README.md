@@ -29,7 +29,7 @@ Traditional man pages might be verbose, but at least they're quick—you just ty
 
 ## Why AI works well here
 
-Unix commands are a stable and well-documented domain, making it easier for AI to generate accurate information by referencing established sources. This reduces the risk of producing inaccurate or misleading content. Additionally, customizing prompts for each command can further improve the accuracy and reliability of AI-generated explanations. Final outputs are also reviewed by humans to ensure their correctness and practical usefulness.
+It is widely recognized that AI-generated technical explanations often fall short in terms of clarity and accuracy. However, in the case of Unix commands—a well-established and thoroughly documented domain—AI systems have a distinct advantage: they can reference authoritative sources to produce reliable content with minimal risk of error. By customizing prompts for each command, we enhance both the precision and clarity of the output. Furthermore, all generated content undergoes human review to ensure correctness and practical relevance.
 
 ## Why noman is safer than searching on your own
 
