@@ -29,7 +29,7 @@ Traditional man pages might be verbose, but at least they're quick—you just ty
 
 ## Why AI works well here
 
-Unix commands are a stable and well-documented domain, making it easier for AI to generate accurate information by referencing established sources. This reduces the risk of the AI producing inaccurate or misleading information. Additionally, customizing prompts specifically for each command can further enhance the accuracy and reliability of AI-generated explanations.
+Unix commands are a stable and well-documented domain, making it easier for AI to generate accurate information by referencing established sources. This reduces the risk of producing inaccurate or misleading content. Additionally, customizing prompts for each command can further improve the accuracy and reliability of AI-generated explanations. Final outputs are also reviewed by humans to ensure their correctness and practical usefulness.
 
 ## Why noman is safer than searching on your own
 
@@ -60,41 +60,6 @@ While noman uses AI to generate documentation, we still value human feedback! Re
    pip install -r requirements.txt
    ```
 
-## Usage
-
-The main usage pattern is simple: run `noman <command>` to get an AI-generated explanation of that command.
-
-```bash
-# Basic usage
-noman grep
-
-# Another example
-noman docker run
-```
-
-### Sample Output
-
-When you run `noman grep`, you might see something like:
-
-```
-grep (Global Regular Expression Print)
-
-Short Description:
-  Searches for lines in files that match a given pattern.
-
-Common Options:
-  -i        Case-insensitive matching.
-  -r        Recursively search through subdirectories.
-  -n        Display line numbers of matched lines.
-  --color   Highlight matched patterns in color.
-
-Example:
-  grep -i "error" /var/log/syslog
-
-Pro Tips:
-  - Combine -r with -n for quick debugging over multiple files.
-  - Use grep -v to invert the match and filter out unwanted text.
-```
 
 
 ## Contributing
