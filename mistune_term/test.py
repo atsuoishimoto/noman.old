@@ -23,14 +23,41 @@ renderer = ansi_renderer.ANSIRenderer()
 markdown = mistune.create_markdown(renderer=renderer)
 
 src = """
-text1 *test1-1*  
+text1 test1-1  
 test1-2
+
+*aaa* **bbb** ***bbb*** 
 
 text2
 
 text3
+[aaa](http://aaa.com)
+
+`abcdefgあいうえお`
+
+# abcdefg
+## abcdefg
+
+- a1111
+  * b22222  
+    d44 `44` 44
+  * cccccc
+- ddddddddd
+
 """
 
-s = markdown(src)
-print("-------------")
-print(s)
+
+if 1:
+    print(src)
+    print("-------------")
+    s = markdown(src)
+    print("-------------")
+    print(s)
+    print(repr(s))
+
+
+
+if 0:
+    s = markdown("***abc***")
+    print(s)
+    print(repr(s))
