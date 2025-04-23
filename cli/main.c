@@ -5,8 +5,12 @@
 #include <sys/wait.h>
 #include <ctype.h>
 #include <limits.h>
+#include <locale.h>
 #include <zip.h>
+#ifndef ENGLISH_ONLY
 #include "zip_ja.h"
+#endif
+#include "zip_en.h"
 
 #define VERSION "0.0.1"
 
@@ -17,15 +21,18 @@ void display_help(const char* program_name) {
     printf("  -h, --help     Display this help message and exit\n");
     printf("  --version      Display version information and exit\n");
     printf("  --no-pager     Output directly to stdout instead of using a pager\n");
+    printf("  --lang=LANG    Use documentation in specified language (ja or en)\n");
+    printf("                 If not specified, uses system locale\n");
     printf("\nDescription:\n");
-    printf("  Extracts and displays a file from the embedded ZIP archive.\n");
+    printf("  Extracts and displays a file from the embedded documentation ZIP archive.\n");
+    printf("  By default, Japanese documentation is used. Use -e or --english for English.\n");
     printf("  By default, uses the PAGER environment variable, less, or more for display.\n");
 }
 
 // Display version information
 void display_version() {
     printf("noman version %s\n", VERSION);
-    printf("A command-line tool to display Japanese command documentation.\n");
+    printf("A command-line tool to display command documentation in Japanese and English.\n");
 }
 
 // Check if a program exists in PATH
@@ -100,6 +107,11 @@ char* find_pager(int no_pager) {
 int main(int argc, char* argv[]) {
     int no_pager = 0;
     char* filename = NULL;
+    int use_english = 0;
+    char* lang = NULL;
+    
+    // Initialize locale
+    setlocale(LC_ALL, "");
     
     // Parse arguments
     for (int i = 1; i < argc; i++) {
@@ -111,19 +123,53 @@ int main(int argc, char* argv[]) {
         } else if (strcmp(argv[i], "--version") == 0) {
             display_version();
             return 0;
+        } else if (strncmp(argv[i], "--lang=", 7) == 0) {
+            lang = argv[i] + 7;
+        } else if (i + 1 < argc && strcmp(argv[i], "--lang") == 0) {
+            lang = argv[++i];
         } else {
             filename = argv[i];
         }
     }
+
+    // Process language selection
+    if (lang != NULL) {
+        // If --lang is specified, use that
+        if (strcmp(lang, "ja") == 0) {
+            use_english = 0;
+        } else {
+            use_english = 1;
+        }
+    } else {
+        // If --lang is not specified and --english is not set, check locale
+        char* current_locale = setlocale(LC_MESSAGES, NULL);
+        char* lang_env = getenv("LANG");
+        
+        // Check both setlocale result and LANG environment variable
+        if ((current_locale == NULL || strstr(current_locale, "ja") == NULL) && 
+            (lang_env == NULL || strstr(lang_env, "ja") == NULL)) {
+            // If neither contains "ja", use English
+            use_english = 1;
+        } else {
+            // If either contains "ja", use Japanese
+            use_english = 0;
+        }
+    }
     
     if (!filename) {
-        fprintf(stderr, "Usage: %s [OPTIONS] <filename in zip>\n", argv[0]);
-        fprintf(stderr, "Try '%s --help' for more information.\n", argv[0]);
         return 1;
     }
     
     zip_error_t error;
-    zip_source_t* src = zip_source_buffer_create(noman_ja_zip, noman_ja_zip_len, 0, &error);
+    zip_source_t* src;
+    
+    // Otherwise, use the selected language
+    if (use_english) {
+        src = zip_source_buffer_create(noman_en_zip, noman_en_zip_len, 0, &error);
+    } else {
+        src = zip_source_buffer_create(noman_ja_zip, noman_ja_zip_len, 0, &error);
+    }
+
     if (!src) {
         fprintf(stderr, "zip_source_buffer_create failed: %s\n", zip_error_strerror(&error));
         return 1;

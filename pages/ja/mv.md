@@ -1,63 +1,97 @@
-# `mv` コマンド概要
-`mv`（move）コマンドは、ファイルやディレクトリを移動したり、名前を変更したりするために使用されます。
+# mv
 
-## 主なオプション
-- **-i（interactive）**: 上書き確認を行います。既存のファイルを上書きする前に確認メッセージを表示します。
-  - 例: `mv -i file1.txt file2.txt`
+`mv`コマンドは、ファイルやディレクトリを移動（移動）したり、名前を変更したりするために使用されます。
 
-- **-f（force）**: 確認なしで強制的に上書きします。
-  - 例: `mv -f source.txt destination.txt`
+## オプション
 
-- **-v（verbose）**: 実行内容を詳細に表示します。
-  - 例: `mv -v file1.txt Documents/`
+### **-i (interactive)**
 
-- **-n（no-clobber）**: 既存のファイルを上書きしません。
-  - 例: `mv -n file1.txt file2.txt`
+上書き前に確認を求めます。既存のファイルを誤って上書きするのを防ぐのに役立ちます。
 
-- **-u（update）**: 移動先のファイルが存在しない場合、または移動元のファイルが移動先のファイルより新しい場合のみ移動します。
-  - 例: `mv -u source.txt destination.txt`
+```bash
+$ mv -i file.txt destination/
+mv: overwrite 'destination/file.txt'? y
+```
+
+### **-f (force)**
+
+上書き時に確認を求めずに強制的に実行します。
+
+```bash
+$ mv -f important.txt backup/
+```
+
+### **-v (verbose)**
+
+実行中の操作を詳細に表示します。
+
+```bash
+$ mv -v document.txt reports/
+'document.txt' -> 'reports/document.txt'
+```
+
+### **-n (no-clobber)**
+
+既存のファイルを上書きしません。
+
+```bash
+$ mv -n file.txt destination/
+```
 
 ## 使用例
 
-### 基本的なファイル移動
+### ファイルの移動
+
 ```bash
-# ファイルを別のディレクトリに移動
-mv file.txt Documents/
-# 出力なし（成功時）
+$ mv file.txt Documents/
 ```
+
+これは`file.txt`を現在のディレクトリから`Documents`ディレクトリに移動する。
 
 ### ファイル名の変更
+
 ```bash
-# ファイル名を変更
-mv oldname.txt newname.txt
-# 出力なし（成功時）
+$ mv oldname.txt newname.txt
 ```
+
+これは`oldname.txt`の名前を`newname.txt`に変更する。
 
 ### 複数ファイルの移動
+
 ```bash
-# 複数のファイルを一度に移動
-mv file1.txt file2.txt file3.txt Documents/
-# 出力なし（成功時）
+$ mv file1.txt file2.txt file3.txt destination/
 ```
 
-### 詳細表示オプション使用
+これは複数のファイルを一度に`destination`ディレクトリに移動する。
+
+### ディレクトリの移動
+
 ```bash
-# 詳細表示オプションを使用
-mv -v report.txt Documents/
-# 出力例
-'report.txt' -> 'Documents/report.txt'
+$ mv directory1 directory2
 ```
 
-### 上書き確認オプション使用
-```bash
-# 上書き確認オプションを使用
-mv -i file1.txt file2.txt
-# 出力例（file2.txtが既に存在する場合）
-overwrite file2.txt? (y/n) 
-```
+これは`directory1`を`directory2`に移動する。`directory2`が存在しない場合は、`directory1`の名前が`directory2`に変更される。
 
-## 追加メモ
-- ファイルを誤って上書きしないように、日常的な使用では `-i` オプションを使うことをお勧めします。
-- `mv` コマンドはデフォルトでは確認なしで上書きするため、重要なファイルを扱う際は注意が必要です。
-- エイリアスを設定して `mv` を常に `-i` オプション付きで使用するようにすることも一般的です（例: `alias mv='mv -i'`）。
-- ディレクトリの移動や名前変更も同じ構文で行えます。
+## よくある質問
+
+### Q1. `mv`コマンドでファイルを誤って上書きしないようにするにはどうすればいいですか？
+A. `-i`オプションを使用すると、既存のファイルを上書きする前に確認を求められます。`mv -i file.txt destination/`のように使います。
+
+### Q2. 複数のファイルを一度に移動できますか？
+A. はい、`mv file1.txt file2.txt directory/`のように、最後の引数をディレクトリにして複数のファイルを指定できます。
+
+### Q3. ファイル名に特殊文字やスペースがある場合はどうすればいいですか？
+A. 引用符で囲むか、バックスラッシュでエスケープします。例：`mv "my file.txt" destination/`または`mv my\ file.txt destination/`
+
+### Q4. `mv`コマンドを使ってファイルをバックアップするにはどうすればいいですか？
+A. 元のファイル名に拡張子を追加します。例：`mv file.txt file.txt.bak`
+
+## 追加情報
+
+- `mv`コマンドはデフォルトでは確認なしに上書きするため、重要なファイルを扱う場合は`-i`オプションの使用をお勧めします。
+- macOSでは、`mv`コマンドの動作はLinuxとほぼ同じですが、一部のファイルシステム属性（拡張属性など）の扱いが異なる場合があります。
+- エイリアスを設定して`mv -i`をデフォルトにすることで、誤った上書きを防ぐことができます：`alias mv='mv -i'`
+
+## 参考情報
+
+https://www.gnu.org/software/coreutils/manual/html_node/mv-invocation.html

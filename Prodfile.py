@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-import noman
+import gen_noman
 from md2html import md_to_html
 
 COMMANDDIR = Path("./commands")
@@ -45,7 +45,7 @@ def build_noman(target, *deps):
     lang = target.parts[1]
 
     prompts = [Path(p).read_text() for p in deps]
-    text, stop_reason, usage = noman.generate_document(
+    text, stop_reason, usage = gen_noman.generate_document(
         command, lang, *prompts, max_tokens=MAX_TOKENS
     )
 
@@ -63,10 +63,6 @@ def build_noman(target, *deps):
     print(text)
 
 
-@task
-def all():
-    build(NOMANS)
-
 
 def get_mdfile(target, stem):
     return Path(target).with_suffix(".md")
@@ -78,3 +74,12 @@ def build_html(target, mdfile):
     target.parent.mkdir(parents=True, exist_ok=True)
     html = md_to_html(mdfile)
     target.write_text(html)
+
+
+@rule("pages/*/%.txt", depends=get_mdfile)
+def build_html(target, mdfile):
+    target = Path(target)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    run("pandoc", "-f", "markdown", "-t", "plain", "--wrap=none", "-o", target, mdfile)
+
+

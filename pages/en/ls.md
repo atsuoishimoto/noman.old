@@ -1,10 +1,10 @@
 # ls
 
-`ls` is a command that lists files and directories in a specified location. It's one of the most frequently used commands for navigating the filesystem.
+`ls` is a command that lists files and directories in the specified location. It's one of the most frequently used commands for navigating the filesystem.
 
 ## Options
 
-### **-l** (Long format)
+### **-l** (long format)
 
 Displays detailed information about files and directories including permissions, number of links, owner, group, size, and modification time.
 
@@ -15,7 +15,7 @@ total 16
 drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects
 ```
 
-### **-a** (All)
+### **-a** (all)
 
 Shows all files, including hidden files (those starting with a dot `.`).
 
@@ -24,9 +24,9 @@ $ ls -a
 .  ..  .hidden_file  document.txt  projects
 ```
 
-### **-h** (Human-readable)
+### **-h** (human-readable)
 
-When used with `-l`, displays file sizes in human-readable format (KB, MB, GB).
+When used with `-l`, displays file sizes in human-readable format (KB, MB, GB) instead of bytes.
 
 ```bash
 $ ls -lh
@@ -35,7 +35,7 @@ total 16K
 drwxr-xr-x  3 user  staff   96B Apr 9  14:22 projects
 ```
 
-### **-d** (Directory)
+### **-d** (directory)
 
 Lists directories themselves, not their contents. Useful when you want to see information about a directory rather than what's inside it.
 
@@ -44,7 +44,7 @@ $ ls -ld projects
 drwxr-xr-x  3 user  staff  96 Apr 9 14:22 projects
 ```
 
-### **-s** (Size)
+### **-s** (size)
 
 Shows the allocated size of each file in blocks.
 
@@ -54,7 +54,7 @@ total 16
 8 document.txt  8 projects
 ```
 
-### **-t** (Time)
+### **-t** (time)
 
 Sorts files by modification time, newest first.
 
@@ -65,9 +65,9 @@ total 16
 drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects
 ```
 
-### **-r** (Reverse)
+### **-r** (reverse)
 
-Reverses the order of sorting. Often combined with other options like `-t`.
+Reverses the order of the sort. Often combined with other sorting options like `-t`.
 
 ```bash
 $ ls -ltr
@@ -85,44 +85,47 @@ $ ls -lah
 total 20K
 drwxr-xr-x  4 user  staff  128B Apr 10 15:35 .
 drwxr-xr-x 18 user  staff  576B Apr 10 14:00 ..
--rw-r--r--  1 user  staff   74B Apr 10 15:32 .hidden_file
+-rw-r--r--  1 user  staff   74B Apr 10 15:20 .hidden_file
 -rw-r--r--  1 user  staff  1.0K Apr 10 15:30 document.txt
 drwxr-xr-x  3 user  staff   96B Apr 9  14:22 projects
 ```
 
-### Listing files in a specific directory
+### Listing specific directories
 
 ```bash
 $ ls -l /usr/bin
-total 258872
--rwxr-xr-x  1 root  wheel    49584 Jan 1  2023 [
--rwxr-xr-x  1 root  wheel    49584 Jan 1  2023 bash
-...
+[output shows contents of /usr/bin directory]
+```
+
+### Listing files by pattern
+
+```bash
+$ ls *.txt
+document.txt  notes.txt  readme.txt
 ```
 
 ## Frequently Asked Questions
 
-### Q1. What is `ls` used for?
+### Q1. What is `ls` used for?  
 A. `ls` lists files and directories in the current directory or a specified location.
 
-### Q2. How do I show hidden files?
+### Q2. How do I show hidden files?  
 A. Use `ls -a`. This displays files starting with a dot (`.`).
 
-### Q3. How can I view detailed file information?
+### Q3. How can I view detailed file information?  
 A. Use `ls -l` to see permissions, owner, size, and last modified time.
 
-### Q4. How do I sort files by modification time?
-A. Use `ls -t` to sort by time, newest first. Add `-r` (`ls -tr`) to reverse the order.
+### Q4. How do I sort files by their size?
+A. Use `ls -lS` to sort files by size, with largest files first.
 
-### Q5. How do I see the size of a directory?
-A. `ls -l` only shows the metadata size of directories, not their contents. Use `du -sh directory_name` to see the total size.
+### Q5. How can I list only directories?
+A. Use `ls -d */` to list only directories in the current location.
 
 ## Additional Notes
 
 - On macOS, `ls` is colorized by default in newer versions. You can add `alias ls='ls -G'` to your `.bash_profile` or `.zshrc` if colors aren't showing.
-- To customize the colors on macOS, you can set the `LSCOLORS` environment variable.
-- On macOS, the `-G` option enables colorized output, while on Linux systems, it's typically `-\-color=auto`.
-- The total size shown at the top of `ls -l` output is in blocks (usually 512-byte or 1024-byte blocks), not the sum of file sizes.
+- The `-F` option adds indicators to entries (like `/` for directories, `*` for executables) which can be helpful for visual identification.
+- To recursively list all files in subdirectories, you can use `ls -R`, but be cautious as this can produce a lot of output in large directory structures.
 
 ## References
 

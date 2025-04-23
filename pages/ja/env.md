@@ -1,56 +1,91 @@
-# envコマンド概要
+# env
 
-`env`コマンドは、環境変数を表示したり、指定した環境変数の下でコマンドを実行したりするためのUnixコマンドです。
+環境変数を表示したり、指定した環境変数の下でコマンドを実行したりするためのコマンドです。
 
-## 主なオプション
+## オプション
 
-- **オプションなし**: 現在の環境変数をすべて表示します
-  - 例: `env`
+### **-i, --ignore-environment**
 
-- **-i, --ignore-environment**: すべての継承された環境変数を無視して、空の環境でコマンドを実行します
-  - 例: `env -i command`
+すべての継承された環境変数を無視して、空の環境でコマンドを実行します。
 
-- **-u, --unset=NAME**: 指定した環境変数を削除してからコマンドを実行します
-  - 例: `env -u HOME command`
+```bash
+$ env -i bash -c 'echo $PATH'
 
-- **NAME=VALUE**: 一時的に環境変数を設定してコマンドを実行します
-  - 例: `env DEBUG=1 ./script.sh`
+```
+
+上記の例では、空の環境で新しいbashシェルを起動し、PATHが設定されていないことを確認しています。
+
+### **-u, --unset=NAME**
+
+指定した環境変数を削除してからコマンドを実行します。
+
+```bash
+$ env -u HOME echo $HOME
+
+```
+
+この例では、HOME環境変数を削除してからechoコマンドを実行しています。
+
+### **NAME=VALUE**
+
+指定した環境変数を設定してからコマンドを実行します。
+
+```bash
+$ env LANG=ja_JP.UTF-8 date
+2023年 4月 10日 月曜日 15:30:45 JST
+```
+
+この例では、LANG環境変数を日本語に設定してからdateコマンドを実行しています。
 
 ## 使用例
 
+### 現在の環境変数をすべて表示
+
 ```bash
-# 現在の環境変数をすべて表示
-env
-# 出力例
-PATH=/usr/local/bin:/usr/bin:/bin
-HOME=/home/user
-USER=username
+$ env
+TERM=xterm-256color
 SHELL=/bin/bash
-...
-
-# 特定の環境変数だけを表示（grepと組み合わせる）
-env | grep PATH
-# 出力例
+USER=username
 PATH=/usr/local/bin:/usr/bin:/bin
-
-# 一時的に環境変数を設定してコマンドを実行
-env LANG=ja_JP.UTF-8 date
-# 出力例
-2023年 4月 1日 土曜日 12:00:00 JST
-
-# 空の環境でコマンドを実行
-env -i bash -c 'echo $PATH'
-# 出力例
-（空の出力、PATHが設定されていない）
-
-# 特定の環境変数を削除してコマンドを実行
-env -u HOME pwd
-# 出力例
-/current/directory
+PWD=/home/username
+HOME=/home/username
+...
 ```
 
-## 追加メモ
+### 特定の環境変数を設定してコマンドを実行
 
-- `env`コマンドは、スクリプトやプログラムのデバッグに役立ちます。特定の環境変数の影響を確認したい場合に便利です。
-- シェルスクリプトの先頭に `#!/usr/bin/env python` のように記述すると、環境のPATH変数に基づいてインタープリタを探すため、移植性が高まります。
-- 環境変数の変更は、そのコマンド実行中のみ有効で、親シェルには影響しません。永続的に変更するには、`.bashrc`や`.profile`などの設定ファイルを編集する必要があります。
+```bash
+$ env HTTP_PROXY=http://proxy.example.com:8080 curl example.com
+<!doctype html>
+<html>
+...
+</html>
+```
+
+### 環境変数を追加・変更してコマンドを実行
+
+```bash
+$ env PATH=$PATH:/opt/custom/bin DEBUG=true python script.py
+デバッグモードで実行中...
+```
+
+## よくある質問
+
+### Q1. envコマンドとprintenvコマンドの違いは何ですか？
+A. `env`は環境変数の表示だけでなく、環境変数を設定してコマンドを実行する機能も持っています。一方、`printenv`は環境変数の表示のみを行います。
+
+### Q2. 特定の環境変数だけを表示するにはどうすればいいですか？
+A. `env | grep 変数名` を使用します。例えば、`env | grep PATH` とすると、PATH関連の環境変数だけが表示されます。
+
+### Q3. 一時的に環境変数を変更するにはどうすればいいですか？
+A. `env 変数名=値 コマンド` の形式で実行します。これにより、現在のシェルの環境変数は変更されず、指定したコマンドの実行時のみ環境変数が変更されます。
+
+## 追加情報
+
+- `env`コマンドは、異なる環境設定でプログラムをテストする際に非常に便利です。
+- スクリプトの先頭に `#!/usr/bin/env プログラム名` と記述することで、環境に依存しないシバン（shebang）行を作成できます。
+- macOSでは、`env`コマンドはBSD由来のバージョンが使用されており、GNU版と若干オプションが異なる場合があります。
+
+## 参考情報
+
+https://www.gnu.org/software/coreutils/manual/html_node/env-invocation.html
