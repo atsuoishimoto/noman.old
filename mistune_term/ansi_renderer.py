@@ -139,7 +139,6 @@ class StyleManager:
 
 def dump(tokens, indent=0):
     for token in tokens:
-        #print(token)
         ttt = {k:v for (k,v) in token.items() if k not in {"children", "raw", "type"}}
 
         print("  "*indent + token["type"], repr(token.get("raw", "")[:20]), ttt)
@@ -235,9 +234,10 @@ class ANSIRenderer(BaseRenderer):
         
         with self.theme.with_style(stylename) as (s, e):
             text = self.render_children(token, state)
+            text = s + text +  e + "\n"
             if level >= 4:
                 text = self.margin(text)
-            return s + text +  e + "\n"
+            return  text
 
     def thematic_break(self, token: Dict[str, Any], state: BlockState) -> str:
         return self.margin("--------------\n\n")
