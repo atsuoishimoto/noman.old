@@ -106,4 +106,3 @@ class Dark:
     quote = style(fg=cyan, bg=red)
     blockcode = style(fg=bright_black)
 
-#print(f"{fg.red}{bg.green}1234{fg.default}56{bg.default}78{attr.reset}")
