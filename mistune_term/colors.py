@@ -94,11 +94,16 @@ class style:
         self.attrs = attrs or set()
 
 class Dark:
-    text = style(fg=default, bg=default)
+    h1 = style(fg=red, bg=yellow, attrs={bold})
+    h2 = style(fg=red)
+    h3 = style(fg=cyan)
+    h4 = style(attrs={underline})
+    text = style(fg=default, bg=red)
     emphasis = style(attrs={italic})
     strong = style(attrs={bold})
     link  = style(attrs={underline})
     code = style(fg=yellow)
-    quote = style(fg=cyan)
+    quote = style(fg=cyan, bg=red)
+    blockcode = style(fg=bright_black)
 
 #print(f"{fg.red}{bg.green}1234{fg.default}56{bg.default}78{attr.reset}")

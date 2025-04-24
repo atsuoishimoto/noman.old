@@ -73,9 +73,6 @@ def render_list(renderer: "BaseRenderer", token: Dict[str, Any], state: "BlockSt
         return text + "\n"
     return strip_end(text) + "\n"
 
-
-
-
 class StyleManager:
     def __init__(self, theme):
         self._theme = theme
@@ -140,6 +137,19 @@ class StyleManager:
         return self._with_style(style)
 
 
+def dump(tokens, indent=0):
+    for token in tokens:
+        #print(token)
+        ttt = {k:v for (k,v) in token.items() if k not in {"children", "raw", "type"}}
+
+        print("  "*indent + token["type"], repr(token.get("raw", "")[:20]), ttt)
+
+        children = token.get("children", [])
+        if children:
+            dump(children, indent=indent+2)
+
+
+
 class ANSIRenderer(BaseRenderer):
     """A renderer for converting Markdown to ANSI colered text."""
 
@@ -148,26 +158,36 @@ class ANSIRenderer(BaseRenderer):
     def __init__(self):
         super().__init__()
         self.theme = StyleManager(self.THEME)
+        self._nested = 0
 
     def style(self, name):
         return self.theme.with_style(name)
 
     def __call__(self, tokens: Iterable[Dict[str, Any]], state: BlockState) -> str:
-
         out = self.render_tokens(tokens, state)
+        assert self._nested == 0
         return strip_end(out)
 
+
+    def margin(self, s):
+        if self._nested == 0:
+            return indent(s, "    ")
+        return s
 
     def render_token(self, token: Dict[str, Any], state: BlockState) -> str:
         #pprint.pprint(token)
         return super().render_token(token, state)
 
     def render_children(self, token: Dict[str, Any], state: BlockState) -> str:
-        children = token["children"]
-        return self.render_tokens(children, state)
+        self._nested += 1
+        try:
+            children = token["children"]
+            return self.render_tokens(children, state)
+        finally:
+            self._nested -= 1
 
     def blank_line(self, token, state):
-        return ""
+        return "\n"
 
     def text(self, token: Dict[str, Any], state: BlockState) -> str:
         return token["raw"]
@@ -206,18 +226,21 @@ class ANSIRenderer(BaseRenderer):
         return "<html is not supported>"
 
     def paragraph(self, token: Dict[str, Any], state: BlockState) -> str:
-        return self.render_children(token, state) + "\n\n"
+        return self.margin(self.render_children(token, state) + "\n")
 
     def heading(self, token: Dict[str, Any], state: BlockState) -> str:
-        level = token["attrs"]["level"]
+
+        level = min(token["attrs"]["level"], 4)
+        stylename  = f"h{level}"
         
-        attrs = token["attrs"]
-        text = self.render_children(token, state)
-        
-        return text + "\n" 
+        with self.theme.with_style(stylename) as (s, e):
+            text = self.render_children(token, state)
+            if level >= 4:
+                text = self.margin(text)
+            return s + text +  e + "\n"
 
     def thematic_break(self, token: Dict[str, Any], state: BlockState) -> str:
-        return "--------------\n\n"
+        return self.margin("--------------\n\n")
 
     def block_text(self, token: Dict[str, Any], state: BlockState) -> str:
         return self.render_children(token, state) + "\n"
@@ -230,20 +253,24 @@ class ANSIRenderer(BaseRenderer):
             lexer = get_lexer_by_name(info, stripall=True)
             formatter = terminal.TerminalFormatter(bg="dark")
             code = highlight(code, lexer, formatter)
+        else:
+            with self.style("blockcode") as (s, e):
+                code = s+token["raw"]+e
 
         code = indent(code, "  ")
-        return code
+        return self.margin(code)
 
     def block_quote(self, token: Dict[str, Any], state: BlockState) -> str:
         with self.style("quote") as (s, e):
-            text = indent(self.render_children(token, state), "   ")
-            return f"{s}{text}{e}"
+            text = self.render_children(token, state)
+            text = indent(text.strip(), "   ")
+            return self.margin(f"{s}{text}{e}")
 
     def block_html(self, token: Dict[str, Any], state: BlockState) -> str:
-        return "<html is not supported>"
+        return self.margin("<html is not supported>")
 
     def block_error(self, token: Dict[str, Any], state: BlockState) -> str:
         return ""
 
     def list(self, token: Dict[str, Any], state: BlockState) -> str:
-        return render_list(self, token, state)
+        return self.margin(render_list(self, token, state))

@@ -21,6 +21,7 @@ class HighlightRenderer(mistune.HTMLRenderer):
 
 renderer = ansi_renderer.ANSIRenderer()
 markdown = mistune.create_markdown(renderer=renderer)
+dump = mistune.create_markdown(renderer=lambda tokens, state: ansi_renderer.dump(tokens))
 
 src = """
 text1 test1-1  
@@ -36,11 +37,19 @@ text3
 
 abcdefg
 > quote?
+> quote?
+dfasdf
+
+defg
 
 `abcdefgあいうえお`
 
-# abcdefg
-## abcdefg
+# heading1 [sadfasd](kasjfnasjkn)
+safdasfdas
+22222222222222
+## heading 2 
+### heading 3 
+#### heading 4
 
 - a1111
   * b22222  
@@ -48,16 +57,39 @@ abcdefg
   * cccccc
 - ddddddddd
 
+
+2. sadfasdfa
+1. asdflkmasdfklm
+
 ``` python
 def a():
     1+1
 ```
 
+
+
+
+```
+def a():
+    1+1
+```
+
+- sadfl;kmas asdf asdfasdf asdfadfas fasdf adf asdf  
+  ;asl,dfma;sldf,as fasdf asdf asdf aqsd ff aqsdf asd fasdfasdf
+  asd;flm,as;dfm,as;dfm
+
+- asdlfkmasldfmkaslfdm asdfas dfas df asdf as
+  asdflkmasdlfkma asdf asdf as dfaf 
+
 """
 
 
-if 1:
+if 0:
     print(src)
+    print("-------------")
+
+    dump(src)
+
     print("-------------")
     s = markdown(src)
     print("-------------")
@@ -67,6 +99,29 @@ if 1:
 
 
 if 0:
-    s = markdown("***abc***")
+    s = """
+# heading1
+22222222222222
+"""
+    s = markdown(s)
     print(s)
     print(repr(s))
+
+
+if 1:
+    # 表示がおかしい
+    s = """
+- 11111111111
+
+  22222222222222222222222
+"""
+
+    s = markdown(s)
+    print(s)
+    dump(s)
+
+
+if 0:
+    src = open("../pages/ja/ls.md").read()
+    s = markdown(src)
+    print(s)

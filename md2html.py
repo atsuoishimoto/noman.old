@@ -7,7 +7,6 @@ from pathlib import Path
 
 class HighlightRenderer(mistune.HTMLRenderer):
     def block_code(self, code, info=None):
-        breakpoint()
         if info:
             if info == "mermaid":
                 return "<pre class='mermaid'>\n" + mistune.escape(code) + "\n</pre>"
