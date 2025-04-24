@@ -1,4 +1,5 @@
 import sys
+import subprocess
 import mistune
 from pygments import highlight
 from pygments.formatters import html
@@ -14,4 +15,8 @@ dump = mistune.create_markdown(renderer=lambda tokens, state: ansi_renderer.dump
 
 src = open(sys.argv[1]).read()
 s = markdown(src)
-print(s)
+
+p = subprocess.Popen(["less", "-R"], stdin=subprocess.PIPE)
+p.stdin.write(s.encode())
+p.stdin.close()
+sys.exit(p.wait())
