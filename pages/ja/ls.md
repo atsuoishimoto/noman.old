@@ -71,24 +71,27 @@ drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects
 
 ## 使用例
 
-### 基本的な使用法
-```console
-$ ls
-document.txt  projects
-```
+- **基本的な使用法**
 
-### 複数のオプションを組み合わせる
-隠しファイルを含む詳細情報を人間が読みやすい形式で表示します。
+  ```console
+  $ ls
+  document.txt  projects
+  ```
 
-```console
-$ ls -lah
-total 24K
-drwxr-xr-x   4 user  staff   128B Apr 10 15:35 .
-drwxr-xr-x  15 user  staff   480B Apr 10 15:00 ..
--rw-r--r--   1 user  staff    74B Apr 10 15:20 .hidden
--rw-r--r--   1 user  staff   1.0K Apr 10 15:30 document.txt
-drwxr-xr-x   3 user  staff    96B Apr 9  14:22 projects
-```
+
+- **複数のオプションを組み合わせる**
+
+  隠しファイルを含む詳細情報を人間が読みやすい形式で表示します。
+
+  ```console
+  $ ls -lah
+  total 24K
+  drwxr-xr-x   4 user  staff   128B Apr 10 15:35 .
+  drwxr-xr-x  15 user  staff   480B Apr 10 15:00 ..
+  -rw-r--r--   1 user  staff    74B Apr 10 15:20 .hidden
+  -rw-r--r--   1 user  staff   1.0K Apr 10 15:30 document.txt
+  drwxr-xr-x   3 user  staff    96B Apr 9  14:22 projects
+  ```
 
 ### 特定のディレクトリの内容を表示
 ```console
@@ -125,14 +128,16 @@ A. `ls -ld ディレクトリ名` を使用します。ただし、これはデ�
 ## 追加情報
 
 - カラー表示を有効にするには `ls --color=auto`（LinuxなどのGNU系）または `ls -G`（macOS）を使用します。
+
 - 多くのシステムでは、`ls` コマンドに対するエイリアスが設定されており、自動的にカラー表示などが有効になっていることがあります。
+
 - macOSでは、`ls` コマンドの動作がLinuxとは若干異なる場合があります。例えば、GNU版の `ls` では `--color` オプションが使えますが、macOSでは `-G` を使います。
 
 ## macOSでの注意点
 
-- macOSの `ls` コマンドはBSD由来であり、GNU版とは一部オプションが異なります。
-- カラー表示には `-G` オプションを使用します（GNU版では `--color`）。
-- macOSでGNU版の `ls` を使いたい場合は、Homebrewなどのパッケージマネージャで `coreutils` をインストールし、`gls` コマンドを使用できます。
+* macOSの `ls` コマンドはBSD由来であり、GNU版とは一部オプションが異なります。
+* カラー表示には `-G` オプションを使用します（GNU版では `--color`）。
+* macOSでGNU版の `ls` を使いたい場合は、Homebrewなどのパッケージマネージャで `coreutils` をインストールし、`gls` コマンドを使用できます。
 
 ## 参考資料
 

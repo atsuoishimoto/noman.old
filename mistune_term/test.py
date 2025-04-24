@@ -108,7 +108,7 @@ if 0:
     print(repr(s))
 
 
-if 1:
+if 0:
     # 表示がおかしい
     s = """
 - 11111111111
@@ -121,7 +121,7 @@ if 1:
     dump(s)
 
 
-if 0:
+if 1:
     src = open("../pages/ja/ls.md").read()
     s = markdown(src)
     print(s)

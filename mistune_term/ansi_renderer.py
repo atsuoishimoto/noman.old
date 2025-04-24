@@ -71,7 +71,7 @@ def render_list(renderer: "BaseRenderer", token: Dict[str, Any], state: "BlockSt
         if parent["tight"]:
             return text
         return text + "\n"
-    return strip_end(text) + "\n"
+    return strip_end(text) + "\n\n"
 
 class StyleManager:
     def __init__(self, theme):
@@ -170,21 +170,21 @@ class ANSIRenderer(BaseRenderer):
 
 
     def margin(self, s):
-        if self._nested == 0:
+        if self._nested == 1:
             return indent(s, "    ")
         return s
 
     def render_token(self, token: Dict[str, Any], state: BlockState) -> str:
         #pprint.pprint(token)
-        return super().render_token(token, state)
-
-    def render_children(self, token: Dict[str, Any], state: BlockState) -> str:
         self._nested += 1
         try:
-            children = token["children"]
-            return self.render_tokens(children, state)
+            return super().render_token(token, state)
         finally:
             self._nested -= 1
+
+    def render_children(self, token: Dict[str, Any], state: BlockState) -> str:
+        children = token["children"]
+        return self.render_tokens(children, state)
 
     def blank_line(self, token, state):
         return "\n"
@@ -257,7 +257,6 @@ class ANSIRenderer(BaseRenderer):
             with self.style("blockcode") as (s, e):
                 code = s+token["raw"]+e
 
-        code = indent(code, "  ")
         return self.margin(code)
 
     def block_quote(self, token: Dict[str, Any], state: BlockState) -> str:

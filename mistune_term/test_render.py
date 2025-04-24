@@ -24,4 +24,4 @@ def test_list():
     print(ret)
     print(repr(ret))
     assert repr(ret) == repr('\n-     \x1b[1m11111111111\x1b[0m\n          22222222222222222222222\n')
-""")
+
