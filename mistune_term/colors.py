@@ -99,4 +99,6 @@ class Dark:
     strong = style(attrs={bold})
     link  = style(attrs={underline})
     code = style(fg=yellow)
+    quote = style(fg=cyan)
+
 #print(f"{fg.red}{bg.green}1234{fg.default}56{bg.default}78{attr.reset}")

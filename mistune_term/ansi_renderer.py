@@ -4,7 +4,9 @@ from typing import Any, Dict, Iterable, List, cast
 from contextlib import contextmanager
 from mistune.core import BaseRenderer, BlockState
 from mistune.util import strip_end
-
+from pygments.formatters import terminal
+from pygments.lexers import get_lexer_by_name
+from pygments import highlight
 import colors
 
 
@@ -76,26 +78,26 @@ def render_list(renderer: "BaseRenderer", token: Dict[str, Any], state: "BlockSt
 
 class StyleManager:
     def __init__(self, theme):
-        self.theme = theme
-        self.fg = colors.fg.default
-        self.bg = colors.bg.default
-        self.attrs = set()
+        self._theme = theme
+        self._fg = colors.fg.default
+        self._bg = colors.bg.default
+        self._attrs = set()
+        self._lv = 1
 
-    lv = 1
     @contextmanager
-    def nextstyle(self, style):
-        self.lv+=1
+    def _with_style(self, style):
+        self._lv+=1
         fg = None
         bg = None
         attrs = {}
 
-        if style.fg and (style.fg is not self.fg):
+        if style.fg and (style.fg is not self._fg):
             fg = style.fg
 
-        if style.bg and (style.bg is not self.bg):
+        if style.bg and (style.bg is not self._bg):
             bg = style.bg
 
-        attrs = style.attrs - self.attrs
+        attrs = style.attrs - self._attrs
         s = []
         e = []
         if attrs:
@@ -104,38 +106,39 @@ class StyleManager:
                 s.append(fg)
             if bg:
                 s.append(bg)
-            e = [colors.attr.reset, *self.attrs]
-            if self.fg != colors.fg.default:
-                e.append(self.fg)
-            if self.bg != colors.bg.default:
-                e.append(self.bg)
+            e = [colors.attr.reset, *self._attrs]
+            if self._fg != colors.fg.default:
+                e.append(self._fg)
+            if self._bg != colors.bg.default:
+                e.append(self._bg)
         else:
             if fg:
                 s.append(fg)
-                e.append(self.fg)
+                e.append(self._fg)
             if bg:
                 s.append(bg)
-                e.append(self.bg)
+                e.append(self._bg)
 
-        save_fg = self.fg
-        save_bg = self.bg
-        save_attrs = self.attrs.copy()
+        save_fg = self._fg
+        save_bg = self._bg
+        save_attrs = self._attrs.copy()
         if fg:
-            self.fg = fg
+            self._fg = fg
         if bg:
-            self.bg = bg
-        self.attrs = self.attrs | attrs
+            self._bg = bg
+        self._attrs = self._attrs | attrs
 
         yield ("".join(s), "".join(e))
 
-        self.fg = save_fg
-        self.bg = save_bg
-        self.attrs = save_attrs.copy()
-        self.lv-=1
+        self._fg = save_fg
+        self._bg = save_bg
+        self._attrs = save_attrs.copy()
+        self._lv-=1
 
-    def __getattr__(self, name):
-        style = getattr(self.theme, name)
-        return self.nextstyle(style)
+    def with_style(self, name):
+        style = getattr(self._theme, name)
+        return self._with_style(style)
+
 
 class ANSIRenderer(BaseRenderer):
     """A renderer for converting Markdown to ANSI colered text."""
@@ -143,7 +146,11 @@ class ANSIRenderer(BaseRenderer):
     THEME = colors.Dark
 
     def __init__(self):
+        super().__init__()
         self.theme = StyleManager(self.THEME)
+
+    def style(self, name):
+        return self.theme.with_style(name)
 
     def __call__(self, tokens: Iterable[Dict[str, Any]], state: BlockState) -> str:
 
@@ -152,7 +159,7 @@ class ANSIRenderer(BaseRenderer):
 
 
     def render_token(self, token: Dict[str, Any], state: BlockState) -> str:
-        pprint.pprint(token)
+        #pprint.pprint(token)
         return super().render_token(token, state)
 
     def render_children(self, token: Dict[str, Any], state: BlockState) -> str:
@@ -166,25 +173,28 @@ class ANSIRenderer(BaseRenderer):
         return token["raw"]
 
     def emphasis(self, token: Dict[str, Any], state: BlockState) -> str:
-        with self.theme.emphasis as (s, e):
-            return f"{s}{self.render_children(token, state)}{e}"
+        with self.style("emphasis") as (s, e):
+            text = self.render_children(token, state)
+            return f"{s}{text}{e}"
 
     def strong(self, token: Dict[str, Any], state: BlockState) -> str:
-        with self.theme.strong as (s, e):
-            return f"{s}{self.render_children(token, state)}{e}"
+        text = self.render_children(token, state)
+        with self.style("strong") as (s, e):
+            return f"{s}{text}{e}"
 
     def link(self, token: Dict[str, Any], state: BlockState) -> str:
         attrs = token["attrs"]
         url = attrs["url"]
-        with self.theme.link as (s, e):
-            return f"{s}{self.render_children(token, state)}({url}){e}"
+        with self.style("link") as (s, e):
+            text = self.render_children(token, state)
+            return f"{s}{text}({url}){e}"
 
     def image(self, token: Dict[str, Any], state: BlockState) -> str:
         return "{Images are not supported}"
 
     def codespan(self, token: Dict[str, Any], state: BlockState) -> str:
-        with self.theme.code as (s, e):
-            return f"{s}{token["raw"]}{e}"
+        with self.style("code") as (s, e):
+            return f"{s}{token['raw']}{e}"
 
     def linebreak(self, token: Dict[str, Any], state: BlockState) -> str:
         return "\n"
@@ -193,16 +203,13 @@ class ANSIRenderer(BaseRenderer):
         return " "
 
     def inline_html(self, token: Dict[str, Any], state: BlockState) -> str:
-        return ""
+        return "<html is not supported>"
 
     def paragraph(self, token: Dict[str, Any], state: BlockState) -> str:
-        children = token["children"]
-        text = self.render_tokens(children, state)
-        return text + "\n\n"
+        return self.render_children(token, state) + "\n\n"
 
     def heading(self, token: Dict[str, Any], state: BlockState) -> str:
         level = token["attrs"]["level"]
-
         
         attrs = token["attrs"]
         text = self.render_children(token, state)
@@ -216,31 +223,24 @@ class ANSIRenderer(BaseRenderer):
         return self.render_children(token, state) + "\n"
 
     def block_code(self, token: Dict[str, Any], state: BlockState) -> str:
+        code = token["raw"]
         attrs = token.get("attrs", {})
-        info = cast(str, attrs.get("info"))
-        code = indent(cast(str, token["raw"]), "   ")
+        info = attrs.get("info")
         if info:
-            lang = info.split()[0]
-            return ".. code:: " + lang + "\n\n" + code + "\n"
-        else:
-            return "::\n\n" + code + "\n\n"
+            lexer = get_lexer_by_name(info, stripall=True)
+            formatter = terminal.TerminalFormatter(bg="dark")
+            code = highlight(code, lexer, formatter)
+
+        code = indent(code, "  ")
+        return code
 
     def block_quote(self, token: Dict[str, Any], state: BlockState) -> str:
-        text = indent(self.render_children(token, state), "   ")
-        prev = token["prev"]
-        ignore_blocks = (
-            "paragraph",
-            "thematic_break",
-            "linebreak",
-            "heading",
-        )
-        if prev and prev["type"] not in ignore_blocks:
-            text = "..\n\n" + text
-        return text
+        with self.style("quote") as (s, e):
+            text = indent(self.render_children(token, state), "   ")
+            return f"{s}{text}{e}"
 
     def block_html(self, token: Dict[str, Any], state: BlockState) -> str:
-        raw = token["raw"]
-        return ".. raw:: html\n\n" + indent(raw, "   ") + "\n\n"
+        return "<html is not supported>"
 
     def block_error(self, token: Dict[str, Any], state: BlockState) -> str:
         return ""
