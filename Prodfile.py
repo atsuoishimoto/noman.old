@@ -51,6 +51,10 @@ Command to Explain: {command}
 Write in {lang}
 """)
 
+    if target.is_file():
+        current = target.read_text()
+        prompts.append(f"<current-documnent>{current}</current-document>")
+
     text, stop_reason, usage = gen_noman.generate_document(
         *prompts, max_tokens=MAX_TOKENS
     )
