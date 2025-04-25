@@ -189,7 +189,8 @@ class ANSIRenderer(BaseRenderer):
         return "\n"
 
     def text(self, token: Dict[str, Any], state: BlockState) -> str:
-        return token["raw"]
+        with self.style("text") as (s, e):
+            return f"{s}{token["raw"]}{e}"
 
     def emphasis(self, token: Dict[str, Any], state: BlockState) -> str:
         with self.style("emphasis") as (s, e):

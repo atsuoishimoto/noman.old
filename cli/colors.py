@@ -96,9 +96,9 @@ class style:
 class Dark:
     h1 = style(fg=red, bg=yellow, attrs={bold})
     h2 = style(fg=red)
-    h3 = style(fg=cyan)
-    h4 = style(fg=green)
-    text = style(fg=default, bg=red)
+    h3 = style(fg=green)
+    h4 = style(fg=blue)
+    text = style()
     emphasis = style(fg={italic})
     strong = style(attrs={bold})
     link  = style(attrs={underline})
