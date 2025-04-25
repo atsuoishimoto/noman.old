@@ -1,4 +1,4 @@
-TARGET = embedded_zip_reader
+TARGET = noman
 ZIP_JA = noman-ja.zip
 ZIP_EN = noman-en.zip
 ZIP_JA_HEADER = zip_ja.h
