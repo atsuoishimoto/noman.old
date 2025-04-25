@@ -12,6 +12,7 @@ from md2html import md_to_html
 COMMANDDIR = Path("./commands")
 COMMANDS = [p for p in COMMANDDIR.glob("*") if p.is_dir()]
 PROMPT = Path("./prompts/prompt")
+FORMAT = Path("./prompts/format")
 MAX_TOKENS = 10000
 
 
@@ -36,7 +37,7 @@ def build_command_dir(target):
 @rule(
     "pages/*/%.md",
     uses="commands/%/.empty",
-    depends=(PROMPT, lang_prompt, command_prompt),
+    depends=(PROMPT, FORMAT, lang_prompt, command_prompt),
 )
 def build_noman(target, *deps):
     target = Path(target)
@@ -45,8 +46,13 @@ def build_noman(target, *deps):
     lang = target.parts[1]
 
     prompts = [Path(p).read_text() for p in deps]
+    prompts.append(f"""
+Command to Explain: {command}
+Write in {lang}
+""")
+
     text, stop_reason, usage = gen_noman.generate_document(
-        command, lang, *prompts, max_tokens=MAX_TOKENS
+        *prompts, max_tokens=MAX_TOKENS
     )
 
     target.write_text(text)
