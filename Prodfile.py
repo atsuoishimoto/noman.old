@@ -1,5 +1,6 @@
 # type: ignore
 
+import datetime
 import os
 import json
 from dotenv import load_dotenv
@@ -9,6 +10,7 @@ load_dotenv()
 import gen_noman
 from md2html import md_to_html
 
+TODAY = datetime.datetime.now(tz=datetime.UTC).date().strftime("%Y/%m/%d")
 COMMANDDIR = Path("./commands")
 COMMANDS = [p for p in COMMANDDIR.glob("*") if p.is_dir()]
 PROMPT = Path("./prompts/prompt")
@@ -48,7 +50,8 @@ def build_noman(target, *deps):
     prompts = [Path(p).read_text() for p in deps]
     prompts.append(f"""
 Command to Explain: {command}
-Write in {lang}
+Write in {lang}.
+TODAY is {TODAY}.
 """)
 
     if target.is_file():
