@@ -39,7 +39,7 @@ def build_command_dir(target):
 @rule(
     "pages/*/%.md",
     uses="commands/%/.empty",
-    depends=(PROMPT, FORMAT, lang_prompt, command_prompt),
+    depends=(PROMPT, command_prompt, lang_prompt, FORMAT),
 )
 def build_noman(target, *deps):
     target = Path(target)
