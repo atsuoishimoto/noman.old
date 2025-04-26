@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>noman - Simplified Man Pages</title>
+  <style>
+    :root {
+      --nav-color: #f1f1f1;
+      --nav-background-color: #1d2439;
+      --text-color: #1d2439;
+      --header-border-color: #2c622c;
+    }    
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    h1 {
+
+      color: #1d2439;
+      border-bottom: 10px solid var(--header-border-color);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;    
+    }
+
+    h2::before {
+      content: "●";
+      padding-right: .5rem;
+      color: var(--header-border-color);
+      font-size: 0.8rem;
+      font-weight: bold;
+      vertical-align: middle;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: #333;
+    }
+    body {
+      font-family: "monospace", "Noto Sans Japanese";
+      background-color: #f9f9f9;
+      color: #111;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      background-color: var(--nav-background-color);
+      color:  var(--nav-color);
+
+      border-bottom: 1px solid #333;
+      padding: 1rem;
+      margin: 0rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .mono {
+      font-family: SFMono-Regular, Menlo, Consolas, Courier, monospace, "Noto Sans Japanese"
+    }
+
+    .nav-logo {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color:  var(--nav-color);
+      margin-left: 0.5rem;
+    }
+
+    .nav-search input {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.9rem;
+      border-radius: 3px;
+      background-color: #222;
+      color:  var(--nav-color);
+    }
+
+    .content {
+      max-width: 700px;
+      margin: 1rem auto;
+    }
+    
+    header, main, footer {
+      margin: 1rem 1rem;
+    }
+
+    .hero {
+      background-color: #eee;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .buttons {
+      margin-top: 1rem;
+    }
+
+    .buttons a {
+      display: inline-block;
+      margin-right: 1rem;
+      text-decoration: none;
+      color: #000;
+      border: 1px solid #000;
+      padding: 0.4rem 0.8rem;
+      border-radius: 3px;
+    }
+
+    .features {
+      margin: 2rem 0;
+    }
+
+    .feature-item {
+      margin-bottom: 1rem;
+    }
+
+    .search {
+      border-radius: 3px;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 0.6rem;
+      font-size: 1rem;
+      border: 1px solid #aaa;
+      border-radius: 3px;
+    }
+
+    .command-output {
+      background: #f0f0f0;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-top: 1rem;
+    }
+
+    footer {
+      border-top: 1px solid #ccc;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    footer a {
+      color: #666;
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    pre {
+      background-color: #95959550;
+      padding: 1rem;
+      border-radius: 10px;
+      overflow-x: auto;    
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo" style="background-color:white"><img src="images/logo.png" height="40px"><a href="/">&gt; xxx	noman</a></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+
+
+<h1>ls コマンド</h1>
+<p><code>ls</code> コマンドは、ディレクトリの内容（ファイルやフォルダ）を一覧表示するための基本的なUNIXコマンドです。</p>
+<h2>オプション</h2>
+<h3><strong>-l</strong> (long format)</h3>
+<p>ファイルの詳細情報（権限、所有者、サイズ、更新日時など）を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l
+<span style="color: #000; font-style: italic">total 16</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1024 Apr 10 15:30 document.txt</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects</span>
+</pre></div>
+<h3><strong>-a</strong> (all)</h3>
+<p>隠しファイル（ドットで始まるファイル）を含むすべてのファイルを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">.  ..  .hidden  document.txt  projects</span>
+</pre></div>
+<h3><strong>-h</strong> (human-readable)</h3>
+<p>ファイルサイズを読みやすい形式（KB、MB、GBなど）で表示します。通常は <code>-l</code> と組み合わせて使います。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-lh
+<span style="color: #000; font-style: italic">total 16</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1.0K Apr 10 15:30 document.txt</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff   96B Apr 9  14:22 projects</span>
+</pre></div>
+<h3><strong>-d</strong> (directory)</h3>
+<p>ディレクトリ自体の情報を表示し、その内容は表示しません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-ld<span style="color: #F8F8F8"> </span>projects
+<span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff  96 Apr 9 14:22 projects</span>
+</pre></div>
+<h3><strong>-s</strong> (size)</h3>
+<p>各ファイルが使用しているブロック数を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-s
+<span style="color: #000; font-style: italic">total 16</span>
+<span style="color: #000; font-style: italic">8 document.txt  8 projects</span>
+</pre></div>
+<h3><strong>-t</strong> (time)</h3>
+<p>ファイルを最終更新時間順（新しい順）にソートします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-lt
+<span style="color: #000; font-style: italic">total 16</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1024 Apr 10 15:30 document.txt</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects</span>
+</pre></div>
+<h3><strong>-r</strong> (reverse)</h3>
+<p>通常の並び順を逆にします。他のオプションと組み合わせて使用できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-ltr
+<span style="color: #000; font-style: italic">total 16</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1024 Apr 10 15:30 document.txt</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的な使い方</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls
+<span style="color: #000; font-style: italic">document.txt  projects</span>
+</pre></div>
+<h3>詳細情報と人間が読みやすいサイズ表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-lh
+<span style="color: #000; font-style: italic">total 16</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1.0K Apr 10 15:30 document.txt</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff   96B Apr 9  14:22 projects</span>
+</pre></div>
+<h3>隠しファイルを含めて時間順に表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-lat
+<span style="color: #000; font-style: italic">total 24</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  4 user  staff  128 Apr 10 15:35 .</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1024 Apr 10 15:30 document.txt</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff   50 Apr 10 15:20 .hidden</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff   96 Apr 9  14:22 projects</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  5 user  staff  160 Apr 9  14:20 ..</span>
+</pre></div>
+<h2>よくある質問</h2>
+<h3>Q1. <code>ls</code> コマンドの基本的な使い方は？</h3>
+<p>A. 引数なしで実行すると、現在のディレクトリ内のファイルとフォルダを表示します。</p>
+<h3>Q2. 隠しファイルを表示するには？</h3>
+<p>A. <code>ls -a</code> を使用します。これにより、ドット(<code>.</code>)で始まるファイルも表示されます。</p>
+<h3>Q3. ファイルを更新日時順に表示するには？</h3>
+<p>A. <code>ls -t</code> を使用します。最新のファイルが最初に表示されます。逆順にするには <code>ls -tr</code> を使用します。</p>
+<h3>Q4. ディレクトリだけを表示するには？</h3>
+<p>A. 直接的な方法はありませんが、<code>ls -l | grep &quot;^d&quot;</code> のようにパイプとgrepを使って絞り込むことができます。</p>
+<h3>Q5. ファイルの拡張子でソートするには？</h3>
+<p>A. <code>ls -X</code> を使用します（一部のシステムでのみ利用可能）。</p>
+<h2>追加情報</h2>
+<ul>
+<li>カラー表示を有効にするには <code>ls --color=auto</code>（LinuxなどのGNU系）または <code>ls -G</code>（macOS）を使用します。</li>
+<li>多くのシステムでは、<code>ls</code> コマンドに対するエイリアスが設定されていることがあります（例：<code>alias ls='ls --color=auto'</code>）。</li>
+<li>macOSでは、<code>-G</code> オプションでカラー表示が可能ですが、GNU版の <code>ls</code> と比べて一部のオプションが異なる場合があります。</li>
+<li>ファイル名に特殊文字（スペースなど）が含まれる場合、<code>ls -b</code> または <code>ls -q</code> を使用すると安全に表示できます。</li>
+</ul>
+<h2>参考</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/ls-invocation.html</p>
+
+    
+  </main>
+  </div>
+<footer>
+  <p>
+    <a href="#">GitHub</a> |
+    MIT License
+  </p>
+</footer>
+</body>
+</html>
