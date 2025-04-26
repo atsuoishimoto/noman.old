@@ -72,8 +72,6 @@ TODAY is {TODAY}.
     resultsdir = target.parent / "results"
     resultsdir.mkdir(parents=True, exist_ok=True)
     (resultsdir / f"{target.stem}.json").write_text(result)
-    print(result)
-    print(text)
 
 
 
