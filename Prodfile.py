@@ -3,6 +3,7 @@
 import datetime
 import json
 from dotenv import load_dotenv
+import yaml
 
 load_dotenv()
 
@@ -75,6 +76,12 @@ TODAY is {TODAY}.
     resultsdir.mkdir(parents=True, exist_ok=True)
     (resultsdir / f"{target.stem}.json").write_text(result)
 
+def read_commandinfo(command):
+    conf = Path("commands") / command / "command.yaml"
+    if conf.is_file():
+        cmd = yaml.safe_load(conf.read_text())
+        return cmd
+    return {}
 
 @task
 def summary():
@@ -83,17 +90,32 @@ def summary():
 
     d = make_summary.make_summary(Path("pages/ja"))
     d = {k: {"summary": v} for k, v in sorted(d.items())}
+    for k, v in d.items():
+        v.update(read_commandinfo(k))
+
     text = json.dumps(d, ensure_ascii=False, indent=2)
     (dest / "summary.js").write_text(f"pages = {text.strip()};")
+
 
     dest = Path("www/en")
     dest.mkdir(parents=True, exist_ok=True)
 
     d = make_summary.make_summary(Path("pages/en"))
     d = {k: {"summary": v} for k, v in sorted(d.items())}
+    for k, v in d.items():
+        v.update(read_commandinfo(k))
     text = json.dumps(d, ensure_ascii=False, indent=2)
     (dest / "summary.js").write_text(f"pages = {text.strip()};")
 
+@task
+def text():
+    for md in Path("pages/ja").glob("*.md"):
+        txt = md.with_suffix(".txt")
+        run("pandoc", "-f", "markdown", "-t", "plain", "--wrap=none", "-o", txt, md)
+
+    for md in Path("pages/en").glob("*.md"):
+        txt = md.with_suffix(".txt")
+        run("pandoc", "-f", "markdown", "-t", "plain", "--wrap=none", "-o", txt, md)
 
 @task
 def html():
@@ -116,12 +138,3 @@ def html():
         (dest / md.with_suffix(".html").name).write_text(html)
 
 
-@task
-def text():
-    for md in Path("pages/ja").glob("*.md"):
-        txt = md.with_suffix(".txt")
-        run("pandoc", "-f", "markdown", "-t", "plain", "--wrap=none", "-o", txt, md)
-
-    for md in Path("pages/en").glob("*.md"):
-        txt = md.with_suffix(".txt")
-        run("pandoc", "-f", "markdown", "-t", "plain", "--wrap=none", "-o", txt, md)

@@ -12,7 +12,7 @@
 - **Focused, Not Exhaustive**
   Noman doesn't aim to document every obscure feature of a command. Instead, it highlights the most common and practical use cases, avoiding overly technical or academic details that aren't useful in day-to-day work.
 - **No more waiting or typing long questions**
-  Traditional man pages might be verbose, but at least they're quick—just type `man ls` and get results instantly. In contrast, using AI means opening a browser, typing a full question, and waiting for a response. Noman fixes this with pre-generated docs that load instantly.
+  Traditional man pages might be lengty, but at least they're quick—just type `man ls` and get results instantly. In contrast, using AI means opening a browser, typing a full question, and waiting for a response. Noman fixes this with pre-generated docs that load instantly.
 - **Practical Examples**
   Each command’s page focuses on real-world use cases and common options.
 - **Freqentry Asked Questions(FAQ)**
