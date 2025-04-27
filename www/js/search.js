@@ -113,10 +113,18 @@ document.addEventListener('DOMContentLoaded', function () {
             // Disable scrolling and other interactions when panel is shown
             disableInteractions();
 
-            // Filter pages based on search term
+            // Split search term into keywords
+            const keywords = searchTerm.split(' ').filter(keyword => keyword.length > 0);
+
+            // Filter pages based on multiple keywords
             const matchingPages = Object.entries(pages).filter(([command, data]) => {
-                //return command.toLowerCase().includes(searchTerm);
-                return command.toLowerCase().includes(searchTerm) || data.summary.toLowerCase().includes(searchTerm);
+                const commandText = command.toLowerCase();
+                const summaryText = data.summary.toLowerCase();
+
+                // Check if all keywords are found in either command or summary
+                return keywords.every(keyword =>
+                    commandText.includes(keyword) || summaryText.includes(keyword)
+                );
             });
 
             // Update search results panel
