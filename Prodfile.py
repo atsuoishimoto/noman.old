@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import gen_noman
+import make_summary
 from md2html import md_to_html
 
 TODAY = datetime.datetime.now(tz=datetime.UTC).date().strftime("%Y/%m/%d")
@@ -74,23 +75,40 @@ TODAY is {TODAY}.
     (resultsdir / f"{target.stem}.json").write_text(result)
 
 
-
-def get_mdfile(target, stem):
-    return Path(target).with_suffix(".md")
-
-
-@rule("pages/*/%.html", depends=get_mdfile)
-def build_html(target, mdfile):
-    target = Path(target)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    html = md_to_html(mdfile)
-    target.write_text(html)
-
-
 @rule("pages/*/%.txt", depends=get_mdfile)
 def build_html(target, mdfile):
     target = Path(target)
     target.parent.mkdir(parents=True, exist_ok=True)
     run("pandoc", "-f", "markdown", "-t", "plain", "--wrap=none", "-o", target, mdfile)
 
+@task
+def summary():
+    ja = make_summary.make_summary(Path("pages/ja"))
+    with open("pages/ja/summary.json", "w") as f:
+        json.dump(ja, f, ensure_ascii=False, indent=2)
+
+    en = make_summary.make_summary(Path("pages/en"))
+    with open("pages/en/summary.json", "w") as f:
+        json.dump(en, f, ensure_ascii=False, indent=2)
+
+
+@task
+def html():
+    for md in Path("pages/ja").glob("*.md"):
+        html = md_to_html(mdfile)
+        md.with_suffix(".html").write_text(html)
+
+    for md in Path("pages/en").glob("*.md"):
+        html = md_to_html(mdfile)
+        md.with_suffix(".html").write_text(html)
+
+@task
+def text():
+    for md in Path("pages/ja").glob("*.md"):
+        txt = md.with_suffix(".txt")
+        run("pandoc", "-f", "markdown", "-t", "plain", "--wrap=none", "-o", txt, md)
+
+    for md in Path("pages/en").glob("*.md"):
+        txt = md.with_suffix(".txt")
+        run("pandoc", "-f", "markdown", "-t", "plain", "--wrap=none", "-o", txt, md)
 

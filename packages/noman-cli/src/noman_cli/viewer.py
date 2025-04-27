@@ -1,12 +1,33 @@
 import locale
 import os
 import argparse
+import curses
+
 
 import sys
 import subprocess
 import mistune
 from pathlib import Path
 from . import ansi_renderer
+
+
+def detect_terminal_background():
+    try:
+        stdscr = curses.initscr()
+        curses.start_color()
+        curses.use_default_colors()
+        curses.endwin()
+        
+        if curses.can_change_color():
+            r, g, b = curses.color_content(curses.COLOR_WHITE)
+            if r > 500 and g > 500 and b > 500:
+                return "dark"
+            else:
+                return "light"
+    except:
+        pass
+
+
 
 
 renderer = ansi_renderer.ANSIRenderer()
@@ -51,7 +72,6 @@ parser.add_argument(
 
 
 parser.add_argument("name", nargs=1, help="Name of the page to view")
-
 
 def main():
     args = parser.parse_args()

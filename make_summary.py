@@ -18,6 +18,7 @@ def make_summary(dir):
         stdout, stderr = p.communicate((m["header"]+"\n"))
         p.stdin.close()
         p.wait()
+        stdout = "".join(stdout.split("\n")).strip()
         d[file.stem] = stdout
     return d
 
