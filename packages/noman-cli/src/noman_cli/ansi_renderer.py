@@ -7,7 +7,7 @@ from mistune.util import strip_end
 from pygments.formatters import terminal
 from pygments.lexers import get_lexer_by_name
 from pygments import highlight
-import colors
+from . import colors
 
 
 

@@ -6,7 +6,7 @@ import sys
 import subprocess
 import mistune
 from pathlib import Path
-import ansi_renderer
+from . import ansi_renderer
 
 
 renderer = ansi_renderer.ANSIRenderer()
@@ -76,7 +76,7 @@ def main():
     if lang not in SUPPORTED_LANGUAGES:
         lang = "en"
 
-    filename = Path("..") / "pages" / lang / f"{args.name[0]}.md"
+    filename = Path(args.name[0])
     print(filename)
     src = filename.read_text()
 
