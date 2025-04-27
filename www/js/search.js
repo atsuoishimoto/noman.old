@@ -19,6 +19,59 @@ const pages = {
 };
 */
 document.addEventListener('DOMContentLoaded', function () {
+    // Event handlers to prevent scrolling and other interactions
+    function preventWheel(e) {
+        // Allow scrolling within the search results panel
+        if (e.target.closest('.search-results-panel')) {
+            return;
+        }
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function preventTouch(e) {
+        // Allow touch interactions within the search results panel
+        if (e.target.closest('.search-results-panel')) {
+            return;
+        }
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function preventKeyScroll(e) {
+        // Keys that typically cause scrolling or navigation
+        const scrollKeys = [
+            'Space', 'PageUp', 'PageDown', 'End', 'Home',
+            'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'
+        ];
+
+        // Allow keyboard navigation within the search results panel
+        if (e.target.closest('.search-results-panel') ||
+            e.target.id === 'nav-searchbox' ||
+            e.target.id === 'searchbox-2') {
+            return;
+        }
+
+        if (scrollKeys.includes(e.key)) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }
+
+    // Function to disable scrolling and other interactions
+    function disableInteractions() {
+        document.addEventListener('wheel', preventWheel, { passive: false });
+        document.addEventListener('touchmove', preventTouch, { passive: false });
+        document.addEventListener('keydown', preventKeyScroll);
+    }
+
+    // Function to re-enable scrolling and other interactions
+    function enableInteractions() {
+        document.removeEventListener('wheel', preventWheel);
+        document.removeEventListener('touchmove', preventTouch);
+        document.removeEventListener('keydown', preventKeyScroll);
+    }
+
     // Function to create and setup search functionality for a search box
     function setupSearch(searchBoxId) {
         const searchBox = document.getElementById(searchBoxId);
@@ -57,6 +110,9 @@ document.addEventListener('DOMContentLoaded', function () {
             positionSearchPanel();
             searchResultsPanel.style.display = 'block';
 
+            // Disable scrolling and other interactions when panel is shown
+            disableInteractions();
+
             // Filter pages based on search term
             const matchingPages = Object.entries(pages).filter(([command, data]) => {
                 //return command.toLowerCase().includes(searchTerm);
@@ -92,6 +148,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('click', function (event) {
             if (event.target !== searchBox && !searchResultsPanel.contains(event.target)) {
                 searchResultsPanel.style.display = 'none';
+                // Re-enable scrolling and other interactions when panel is hidden
+                enableInteractions();
             }
         });
 
@@ -135,6 +193,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 items[currentIndex].click();
             } else if (event.key === 'Escape') {
                 searchResultsPanel.style.display = 'none';
+                // Re-enable scrolling and other interactions when panel is hidden
+                enableInteractions();
             }
         });
     }
