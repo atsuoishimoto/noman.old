@@ -104,6 +104,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Handle keyboard navigation in search results
         searchBox.addEventListener('keydown', function (event) {
+            // If the search term is empty, don't handle arrow keys
+            if (this.value.trim() === '') return;
+
+            // Check if we need to show the search results panel
+            if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && searchResultsPanel.style.display !== 'block') {
+                // Trigger the input event to show search results
+                this.dispatchEvent(new Event('input'));
+            }
+
             const items = document.querySelectorAll('.search-result-item');
             if (items.length === 0) return;
 

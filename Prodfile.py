@@ -3,13 +3,14 @@
 import datetime
 import json
 from dotenv import load_dotenv
+
+load_dotenv()
+
 import gen_noman
 import make_summary
 from md2html import md_to_html
 from pathlib import Path
-from pyprod import rule, task, run
 
-load_dotenv()
 
 TODAY = datetime.datetime.now(tz=datetime.UTC).date().strftime("%Y/%m/%d")
 COMMANDDIR = Path("./commands")
