@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>systemctl コマンドの概要</h1>
+<p>systemctl は、systemd システムとサービスマネージャーを制御するためのコマンドです。サービスの起動・停止、状態確認、自動起動の設定などを行うことができます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>status</strong>: サービスの現在の状態を確認します</p>
+<ul>
+<li>例: <code>systemctl status nginx</code></li>
+</ul>
+</li>
+<li><p><strong>start</strong>: サービスを起動します</p>
+<ul>
+<li>例: <code>systemctl start nginx</code></li>
+</ul>
+</li>
+<li><p><strong>stop</strong>: サービスを停止します</p>
+<ul>
+<li>例: <code>systemctl stop nginx</code></li>
+</ul>
+</li>
+<li><p><strong>restart</strong>: サービスを再起動します</p>
+<ul>
+<li>例: <code>systemctl restart nginx</code></li>
+</ul>
+</li>
+<li><p><strong>reload</strong>: サービスの設定を再読み込みします（可能な場合）</p>
+<ul>
+<li>例: <code>systemctl reload nginx</code></li>
+</ul>
+</li>
+<li><p><strong>enable</strong>: システム起動時に自動的にサービスを起動するよう設定します</p>
+<ul>
+<li>例: <code>systemctl enable nginx</code></li>
+</ul>
+</li>
+<li><p><strong>disable</strong>: システム起動時の自動起動を無効にします</p>
+<ul>
+<li>例: <code>systemctl disable nginx</code></li>
+</ul>
+</li>
+<li><p><strong>is-active</strong>: サービスが実行中かどうかを確認します</p>
+<ul>
+<li>例: <code>systemctl is-active nginx</code></li>
+</ul>
+</li>
+<li><p><strong>is-enabled</strong>: サービスが自動起動に設定されているかを確認します</p>
+<ul>
+<li>例: <code>systemctl is-enabled nginx</code></li>
+</ul>
+</li>
+<li><p><strong>list-units</strong>: 読み込まれたユニット（サービスなど）を一覧表示します</p>
+<ul>
+<li>例: <code>systemctl list-units --type=service</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>サービスの状態確認</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># Nginxの状態を確認</span>
+systemctl<span style="color: #F8F8F8"> </span>status<span style="color: #F8F8F8"> </span>nginx
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+●<span style="color: #F8F8F8"> </span>nginx.service<span style="color: #F8F8F8"> </span>-<span style="color: #F8F8F8"> </span>A<span style="color: #F8F8F8"> </span>high<span style="color: #F8F8F8"> </span>performance<span style="color: #F8F8F8"> </span>web<span style="color: #F8F8F8"> </span>server<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span>reverse<span style="color: #F8F8F8"> </span>proxy<span style="color: #F8F8F8"> </span>server
+<span style="color: #F8F8F8">   </span>Loaded:<span style="color: #F8F8F8"> </span>loaded<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>/lib/systemd/system/nginx.service<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>enabled<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>vendor<span style="color: #F8F8F8"> </span>preset:<span style="color: #F8F8F8"> </span>enabled<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">   </span>Active:<span style="color: #F8F8F8"> </span>active<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>running<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>since<span style="color: #F8F8F8"> </span>Mon<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2023</span>-04-03<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">12</span>:34:56<span style="color: #F8F8F8"> </span>JST<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>2h<span style="color: #F8F8F8"> </span>ago
+<span style="color: #F8F8F8">     </span>Docs:<span style="color: #F8F8F8"> </span>man:nginx<span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">8</span><span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">  </span>Process:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #F8F8F8"> </span><span style="color: #000">ExecStartPre</span><span style="color: #CE5C00; font-weight: bold">=</span>/usr/sbin/nginx<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span>daemon<span style="color: #F8F8F8"> </span>on<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>master_process<span style="color: #F8F8F8"> </span>on<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #000">code</span><span style="color: #CE5C00; font-weight: bold">=</span>exited,<span style="color: #F8F8F8"> </span><span style="color: #000">status</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">0</span>/SUCCESS<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">  </span>Process:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1235</span><span style="color: #F8F8F8"> </span><span style="color: #000">ExecStart</span><span style="color: #CE5C00; font-weight: bold">=</span>/usr/sbin/nginx<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span>daemon<span style="color: #F8F8F8"> </span>on<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>master_process<span style="color: #F8F8F8"> </span>on<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #000">code</span><span style="color: #CE5C00; font-weight: bold">=</span>exited,<span style="color: #F8F8F8"> </span><span style="color: #000">status</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">0</span>/SUCCESS<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8"> </span>Main<span style="color: #F8F8F8"> </span>PID:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1236</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>nginx<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">    </span>Tasks:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>limit:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4915</span><span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">   </span>CGroup:<span style="color: #F8F8F8"> </span>/system.slice/nginx.service
+<span style="color: #F8F8F8">           </span>├─1236<span style="color: #F8F8F8"> </span>nginx:<span style="color: #F8F8F8"> </span>master<span style="color: #F8F8F8"> </span>process<span style="color: #F8F8F8"> </span>/usr/sbin/nginx<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span>daemon<span style="color: #F8F8F8"> </span>on<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>master_process<span style="color: #F8F8F8"> </span>on<span style="color: #000; font-weight: bold">;</span>
+<span style="color: #F8F8F8">           </span>└─1237<span style="color: #F8F8F8"> </span>nginx:<span style="color: #F8F8F8"> </span>worker<span style="color: #F8F8F8"> </span>process
+</pre></div>
+<h3>サービスの起動と停止</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># サービスを起動</span>
+systemctl<span style="color: #F8F8F8"> </span>start<span style="color: #F8F8F8"> </span>nginx
+<span style="color: #8F5902; font-style: italic"># 特に成功時は出力なし</span>
+
+<span style="color: #8F5902; font-style: italic"># サービスを停止</span>
+systemctl<span style="color: #F8F8F8"> </span>stop<span style="color: #F8F8F8"> </span>nginx
+<span style="color: #8F5902; font-style: italic"># 特に成功時は出力なし</span>
+</pre></div>
+<h3>自動起動の設定</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 自動起動を有効化</span>
+systemctl<span style="color: #F8F8F8"> </span><span style="color: #204A87">enable</span><span style="color: #F8F8F8"> </span>nginx
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+Created<span style="color: #F8F8F8"> </span>symlink<span style="color: #F8F8F8"> </span>/etc/systemd/system/multi-user.target.wants/nginx.service<span style="color: #F8F8F8"> </span>→<span style="color: #F8F8F8"> </span>/lib/systemd/system/nginx.service.
+
+<span style="color: #8F5902; font-style: italic"># 自動起動を無効化</span>
+systemctl<span style="color: #F8F8F8"> </span>disable<span style="color: #F8F8F8"> </span>nginx
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+Removed<span style="color: #F8F8F8"> </span>/etc/systemd/system/multi-user.target.wants/nginx.service.
+</pre></div>
+<h3>実行中のサービス一覧表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 実行中のサービスを一覧表示</span>
+systemctl<span style="color: #F8F8F8"> </span>list-units<span style="color: #F8F8F8"> </span>--type<span style="color: #CE5C00; font-weight: bold">=</span>service<span style="color: #F8F8F8"> </span>--state<span style="color: #CE5C00; font-weight: bold">=</span>running
+<span style="color: #8F5902; font-style: italic"># 出力例（一部）</span>
+UNIT<span style="color: #F8F8F8">                  </span>LOAD<span style="color: #F8F8F8">   </span>ACTIVE<span style="color: #F8F8F8"> </span>SUB<span style="color: #F8F8F8">     </span>DESCRIPTION
+nginx.service<span style="color: #F8F8F8">         </span>loaded<span style="color: #F8F8F8"> </span>active<span style="color: #F8F8F8"> </span>running<span style="color: #F8F8F8"> </span>A<span style="color: #F8F8F8"> </span>high<span style="color: #F8F8F8"> </span>performance<span style="color: #F8F8F8"> </span>web<span style="color: #F8F8F8"> </span>server<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span>reverse<span style="color: #F8F8F8"> </span>proxy<span style="color: #F8F8F8"> </span>server
+ssh.service<span style="color: #F8F8F8">           </span>loaded<span style="color: #F8F8F8"> </span>active<span style="color: #F8F8F8"> </span>running<span style="color: #F8F8F8"> </span>OpenSSH<span style="color: #F8F8F8"> </span>server<span style="color: #F8F8F8"> </span>daemon
+systemd-journald.service<span style="color: #F8F8F8"> </span>loaded<span style="color: #F8F8F8"> </span>active<span style="color: #F8F8F8"> </span>running<span style="color: #F8F8F8"> </span>Journal<span style="color: #F8F8F8"> </span>Service
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><code>sudo</code> が必要：多くの systemctl コマンドは管理者権限が必要なため、<code>sudo</code> を付けて実行する必要があります。</li>
+<li>システム全体の再起動・シャットダウンも可能です：<code>systemctl reboot</code> や <code>systemctl poweroff</code> などのコマンドがあります。</li>
+<li>ユニットファイル：各サービスの設定は <code>/etc/systemd/system/</code> や <code>/lib/systemd/system/</code> ディレクトリにあるユニットファイルで定義されています。</li>
+<li>設定変更後は <code>systemctl daemon-reload</code> を実行すると、systemd が設定を再読み込みします。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

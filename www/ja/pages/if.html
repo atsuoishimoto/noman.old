@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>if コマンド概要</h1>
+<p><code>if</code> はシェルスクリプトで条件分岐を実行するためのコマンドです。特定の条件が真の場合にのみ、指定されたコマンドを実行します。</p>
+<h2>オプション</h2>
+<p><code>if</code> コマンド自体にはオプションはありませんが、条件式と組み合わせて使用します。</p>
+<h2>基本構文</h2>
+<h3><strong>基本的な if 文</strong></h3>
+<p>最も基本的な形式です。条件が真の場合のみコマンドを実行します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>条件<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 条件が真の場合に実行されるコマンド</span>
+<span style="color: #204A87; font-weight: bold">fi</span>
+</pre></div>
+<h3><strong>if-else 文</strong></h3>
+<p>条件が真の場合と偽の場合で異なるコマンドを実行します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>条件<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 条件が真の場合に実行されるコマンド</span>
+<span style="color: #204A87; font-weight: bold">else</span>
+<span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 条件が偽の場合に実行されるコマンド</span>
+<span style="color: #204A87; font-weight: bold">fi</span>
+</pre></div>
+<h3><strong>if-elif-else 文</strong></h3>
+<p>複数の条件を順番にチェックします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>条件1<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 条件1が真の場合に実行されるコマンド</span>
+<span style="color: #204A87; font-weight: bold">elif</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>条件2<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 条件1が偽で条件2が真の場合に実行されるコマンド</span>
+<span style="color: #204A87; font-weight: bold">else</span>
+<span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># すべての条件が偽の場合に実行されるコマンド</span>
+<span style="color: #204A87; font-weight: bold">fi</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>数値比較</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic">#!/bin/bash</span>
+<span style="color: #000">age</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">25</span>
+
+<span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$age</span><span style="color: #F8F8F8"> </span>-gt<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">18</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;成人です&quot;</span>
+<span style="color: #204A87; font-weight: bold">else</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;未成年です&quot;</span>
+<span style="color: #204A87; font-weight: bold">fi</span>
+
+<span style="color: #8F5902; font-style: italic"># 出力: 成人です</span>
+</pre></div>
+<h3>ファイル存在チェック</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic">#!/bin/bash</span>
+<span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;config.txt&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;設定ファイルが存在します&quot;</span>
+<span style="color: #204A87; font-weight: bold">else</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;設定ファイルが見つかりません&quot;</span>
+<span style="color: #F8F8F8">    </span>touch<span style="color: #F8F8F8"> </span>config.txt
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;設定ファイルを作成しました&quot;</span>
+<span style="color: #204A87; font-weight: bold">fi</span>
+</pre></div>
+<h3>文字列比較</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic">#!/bin/bash</span>
+<span style="color: #000">username</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;admin&quot;</span>
+
+<span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$username</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;admin&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;管理者権限でログインしました&quot;</span>
+<span style="color: #204A87; font-weight: bold">else</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;一般ユーザーでログインしました&quot;</span>
+<span style="color: #204A87; font-weight: bold">fi</span>
+
+<span style="color: #8F5902; font-style: italic"># 出力: 管理者権限でログインしました</span>
+</pre></div>
+<h3>コマンド実行結果の確認</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic">#!/bin/bash</span>
+<span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>log.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>/dev/null<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;エラーが見つかりました&quot;</span>
+<span style="color: #204A87; font-weight: bold">else</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;エラーはありません&quot;</span>
+<span style="color: #204A87; font-weight: bold">fi</span>
+</pre></div>
+<h2>よく使われる条件式</h2>
+<h3>ファイル関連</h3>
+<ul>
+<li><code>-f ファイル名</code>: ファイルが存在し、通常のファイルである</li>
+<li><code>-d ディレクトリ名</code>: ディレクトリが存在する</li>
+<li><code>-r ファイル名</code>: ファイルが読み取り可能</li>
+<li><code>-w ファイル名</code>: ファイルが書き込み可能</li>
+<li><code>-x ファイル名</code>: ファイルが実行可能</li>
+</ul>
+<h3>数値比較</h3>
+<ul>
+<li><code>-eq</code>: 等しい</li>
+<li><code>-ne</code>: 等しくない</li>
+<li><code>-gt</code>: より大きい</li>
+<li><code>-lt</code>: より小さい</li>
+<li><code>-ge</code>: 以上</li>
+<li><code>-le</code>: 以下</li>
+</ul>
+<h3>文字列比較</h3>
+<ul>
+<li><code>=</code> または <code>==</code>: 等しい</li>
+<li><code>!=</code>: 等しくない</li>
+<li><code>-z 文字列</code>: 文字列が空</li>
+<li><code>-n 文字列</code>: 文字列が空でない</li>
+</ul>
+<h2>よくある質問</h2>
+<h3>Q1. <code>if</code> と <code>test</code> コマンドの関係は？</h3>
+<p>A. <code>[ 条件 ]</code> は実際には <code>test</code> コマンドの別の書き方です。<code>if test 条件</code> と <code>if [ 条件 ]</code> は同じ意味になります。</p>
+<h3>Q2. <code>[[ ]]</code> と <code>[ ]</code> の違いは何ですか？</h3>
+<p>A. <code>[[ ]]</code> はBashの拡張機能で、より高度なパターンマッチングや論理演算子（<code>&amp;&amp;</code>, <code>||</code>）をサポートしています。<code>[ ]</code> はPOSIX互換の基本的なテストコマンドです。</p>
+<h3>Q3. 複数の条件を組み合わせるにはどうすればいいですか？</h3>
+<p>A. <code>-a</code>（AND）や <code>-o</code>（OR）を使用するか、<code>[[ ]]</code> を使用して <code>&amp;&amp;</code>（AND）や <code>||</code>（OR）で条件を組み合わせることができます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># [ ] での例</span>
+<span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$age</span><span style="color: #F8F8F8"> </span>-gt<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">18</span><span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$name</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Taro&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;条件を満たしています&quot;</span>
+<span style="color: #204A87; font-weight: bold">fi</span>
+
+<span style="color: #8F5902; font-style: italic"># [[ ]] での例（Bashの場合）</span>
+<span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$age</span><span style="color: #F8F8F8"> </span>-gt<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">18</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$name</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Taro&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;条件を満たしています&quot;</span>
+<span style="color: #204A87; font-weight: bold">fi</span>
+</pre></div>
+<h2>追加のヒント</h2>
+<ul>
+<li>変数を条件式で使用する場合は、変数を引用符（<code>&quot;$変数&quot;</code>）で囲むことをお勧めします。これにより、変数が空の場合や空白を含む場合のエラーを防ぐことができます。</li>
+<li><code>if</code> 文の条件部分では、最後に実行されたコマンドの終了ステータスをチェックします。終了ステータスが0（成功）の場合、条件は真と見なされます。</li>
+<li>複雑な条件分岐が必要な場合は、<code>case</code> 文を検討してください。複数の値に対する分岐を簡潔に書くことができます。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

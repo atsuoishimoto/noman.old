@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1><code>file</code> コマンド概要</h1>
+<p><code>file</code> コマンドはファイルの種類（タイプ）を判別するためのコマンドです。ファイルの内容を解析し、テキストファイル、実行ファイル、画像ファイルなどの種類を表示します。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-b, --brief</strong>: ファイル名を表示せず、ファイルタイプのみを表示します</p>
+<ul>
+<li>例: <code>file -b document.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-i, --mime</strong>: MIMEタイプ形式でファイルタイプを表示します</p>
+<ul>
+<li>例: <code>file -i image.jpg</code></li>
+</ul>
+</li>
+<li><p><strong>-z, --uncompress</strong>: 圧縮ファイルの内容を解析します</p>
+<ul>
+<li>例: <code>file -z archive.gz</code></li>
+</ul>
+</li>
+<li><p><strong>-L, --dereference</strong>: シンボリックリンクをたどってリンク先のファイルタイプを表示します</p>
+<ul>
+<li>例: <code>file -L symlink</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使い方</span>
+$<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+document.txt:<span style="color: #F8F8F8"> </span>ASCII<span style="color: #F8F8F8"> </span>text
+
+<span style="color: #8F5902; font-style: italic"># 複数のファイルを一度に調べる</span>
+$<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>document.txt<span style="color: #F8F8F8"> </span>image.jpg<span style="color: #F8F8F8"> </span>script.sh
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+document.txt:<span style="color: #F8F8F8"> </span>ASCII<span style="color: #F8F8F8"> </span>text
+image.jpg:<span style="color: #F8F8F8"> </span>JPEG<span style="color: #F8F8F8"> </span>image<span style="color: #F8F8F8"> </span>data,<span style="color: #F8F8F8"> </span>JFIF<span style="color: #F8F8F8"> </span>standard<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>.01
+script.sh:<span style="color: #F8F8F8"> </span>Bourne-Again<span style="color: #F8F8F8"> </span>shell<span style="color: #F8F8F8"> </span>script,<span style="color: #F8F8F8"> </span>ASCII<span style="color: #F8F8F8"> </span>text<span style="color: #F8F8F8"> </span>executable
+
+<span style="color: #8F5902; font-style: italic"># -b オプションでファイル名を省略</span>
+$<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+ASCII<span style="color: #F8F8F8"> </span>text
+
+<span style="color: #8F5902; font-style: italic"># -i オプションでMIMEタイプを表示</span>
+$<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+document.txt:<span style="color: #F8F8F8"> </span>text/plain<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #000">charset</span><span style="color: #CE5C00; font-weight: bold">=</span>us-ascii
+
+<span style="color: #8F5902; font-style: italic"># バイナリファイルの確認</span>
+$<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>/bin/ls
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+/bin/ls:<span style="color: #F8F8F8"> </span>ELF<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">64</span>-bit<span style="color: #F8F8F8"> </span>LSB<span style="color: #F8F8F8"> </span>executable,<span style="color: #F8F8F8"> </span>x86-64,<span style="color: #F8F8F8"> </span>version<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>SYSV<span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span>dynamically<span style="color: #F8F8F8"> </span>linked,<span style="color: #F8F8F8"> </span>interpreter<span style="color: #F8F8F8"> </span>/lib64/ld-linux-x86-64.so.2,<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>GNU/Linux<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>.6.32
+</pre></div>
+<h2>追加メモ</h2>
+<ul>
+<li>ファイルに拡張子がない場合や、拡張子が実際の内容と一致しない場合に特に役立ちます。</li>
+<li><code>file</code> コマンドは「マジックナンバー」と呼ばれるファイル先頭のバイトパターンを解析して判定を行います。</li>
+<li>スクリプトファイルの場合は、シバン（<code>#!</code>）行を検出して言語を判別します。</li>
+<li>大量のファイルを処理する場合は、<code>find</code> コマンドと組み合わせて使うと便利です。例：<code>find . -type f -exec file {} \;</code></li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

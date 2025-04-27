@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>patchコマンドの概要</h1>
+<p><code>patch</code>コマンドは、差分ファイル（パッチファイル）を使用して元のファイルを更新するためのツールです。ソースコードの変更や修正を適用する際によく使われます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-p[数字]</strong>: パッチファイル内のパス名から取り除く階層の数を指定します</p>
+<ul>
+<li>例: <code>patch -p1 &lt; patchfile.diff</code>（パス名から1階層を取り除きます）</li>
+</ul>
+</li>
+<li><p><strong>-R</strong>: 逆パッチを適用します（パッチを取り消します）</p>
+<ul>
+<li>例: <code>patch -R &lt; patchfile.diff</code></li>
+</ul>
+</li>
+<li><p><strong>-b</strong>: バックアップファイルを作成します</p>
+<ul>
+<li>例: <code>patch -b file.txt &lt; patch.diff</code>（元のファイルを<code>file.txt.orig</code>として保存）</li>
+</ul>
+</li>
+<li><p><strong>-d [ディレクトリ]</strong>: 指定したディレクトリに移動してからパッチを適用します</p>
+<ul>
+<li>例: <code>patch -d src/ &lt; patch.diff</code></li>
+</ul>
+</li>
+<li><p><strong>--dry-run</strong>: 実際にファイルを変更せずにパッチの適用をシミュレーションします</p>
+<ul>
+<li>例: <code>patch --dry-run &lt; patch.diff</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>基本的なパッチの適用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># パッチファイルを標準入力から適用</span>
+patch<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>bugfix.patch
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+patching<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>src/main.c
+</pre></div>
+<h3>特定のファイルにパッチを適用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 特定のファイルにパッチを適用</span>
+patch<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>file.patch
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+patching<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>file.txt
+</pre></div>
+<h3>パスの階層を調整してパッチを適用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># -p1オプションでパス階層を1つ削除</span>
+patch<span style="color: #F8F8F8"> </span>-p1<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>project.patch
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+patching<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>src/lib/utils.c
+patching<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>include/header.h
+</pre></div>
+<h3>バックアップを作成してパッチを適用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># バックアップを作成しながらパッチを適用</span>
+patch<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>program.c<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>fix.patch
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+patching<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>program.c
+<span style="color: #8F5902; font-style: italic"># program.c.origというバックアップファイルが作成されます</span>
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li>パッチファイルは通常、<code>diff</code>コマンドで作成されます。</li>
+<li>パッチの適用に失敗した場合、<code>.rej</code>拡張子を持つ拒否ファイルが作成されることがあります。</li>
+<li>Gitなどのバージョン管理システムを使用している場合は、そのシステム固有のコマンド（<code>git apply</code>など）を使用する方が適切な場合があります。</li>
+<li>パッチを適用する前に<code>--dry-run</code>オプションでテストすると安全です。特に重要なファイルを変更する場合は推奨されます。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

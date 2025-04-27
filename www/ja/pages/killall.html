@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>killall コマンドの概要</h1>
+<p><code>killall</code> コマンドは、プロセス名を指定して、そのプロセスを終了させるためのコマンドです。同じ名前のプロセスが複数実行されている場合、すべて終了させることができます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-s, --signal [シグナル]</strong>: 送信するシグナルを指定します（デフォルトは SIGTERM）</p>
+<ul>
+<li>例: <code>killall -s KILL firefox</code></li>
+</ul>
+</li>
+<li><p><strong>-i, --interactive</strong>: プロセスを終了する前に確認を求めます</p>
+<ul>
+<li>例: <code>killall -i firefox</code></li>
+</ul>
+</li>
+<li><p><strong>-u, --user [ユーザー名]</strong>: 指定したユーザーのプロセスのみを終了します</p>
+<ul>
+<li>例: <code>killall -u username firefox</code></li>
+</ul>
+</li>
+<li><p><strong>-v, --verbose</strong>: 処理の詳細を表示します</p>
+<ul>
+<li>例: <code>killall -v firefox</code></li>
+</ul>
+</li>
+<li><p><strong>-w, --wait</strong>: プロセスが終了するまで待機します</p>
+<ul>
+<li>例: <code>killall -w firefox</code></li>
+</ul>
+</li>
+<li><p><strong>-I, --ignore-case</strong>: プロセス名の大文字小文字を区別しません</p>
+<ul>
+<li>例: <code>killall -I firefox</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使い方（firefoxプロセスをすべて終了）</span>
+killall<span style="color: #F8F8F8"> </span>firefox
+<span style="color: #8F5902; font-style: italic"># 出力はありません（成功した場合）</span>
+
+<span style="color: #8F5902; font-style: italic"># 強制終了する（SIGKILL信号を送信）</span>
+killall<span style="color: #F8F8F8"> </span>-9<span style="color: #F8F8F8"> </span>firefox
+<span style="color: #8F5902; font-style: italic"># または</span>
+killall<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>KILL<span style="color: #F8F8F8"> </span>firefox
+
+<span style="color: #8F5902; font-style: italic"># 対話モードで確認しながら終了</span>
+killall<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>chrome
+<span style="color: #8F5902; font-style: italic"># 出力例:</span>
+<span style="color: #8F5902; font-style: italic"># Kill chrome(1234) ? (y/N) y</span>
+<span style="color: #8F5902; font-style: italic"># Kill chrome(5678) ? (y/N) n</span>
+
+<span style="color: #8F5902; font-style: italic"># 特定ユーザーのプロセスのみを終了</span>
+killall<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>username<span style="color: #F8F8F8"> </span>nginx
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li>プロセスが見つからない場合、エラーメッセージが表示されます。</li>
+<li><code>-9</code> オプションは <code>SIGKILL</code> シグナルを送信し、プロセスを強制終了します。通常は先に通常の終了（デフォルトの <code>SIGTERM</code>）を試すことをお勧めします。</li>
+<li>プロセス名は完全に一致する必要があります。部分一致では機能しません。</li>
+<li><code>ps aux</code> コマンドと組み合わせて使うと、終了したいプロセスを特定するのに役立ちます。</li>
+<li>管理者権限が必要なプロセスを終了するには <code>sudo</code> を使用します（例: <code>sudo killall apache2</code>）。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

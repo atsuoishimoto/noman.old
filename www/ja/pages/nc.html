@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>nc コマンドの概要</h1>
+<p><code>nc</code>（netcat）は、ネットワーク接続の読み書きを行うためのシンプルなユーティリティです。「ネットワークのスイスアーミーナイフ」とも呼ばれ、ポートスキャン、ファイル転送、チャットなど様々なネットワークタスクに使用できます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-l</strong>: リッスンモード（サーバーとして動作）</p>
+<ul>
+<li>例: <code>nc -l 8080</code>（8080ポートでの接続を待ち受けます）</li>
+</ul>
+</li>
+<li><p><strong>-p</strong>: ポート番号の指定（クライアントモード時）</p>
+<ul>
+<li>例: <code>nc -p 12345 example.com 80</code>（ローカルポート12345から接続）</li>
+</ul>
+</li>
+<li><p><strong>-v</strong>: 詳細（verbose）出力</p>
+<ul>
+<li>例: <code>nc -v example.com 80</code>（接続の詳細情報を表示）</li>
+</ul>
+</li>
+<li><p><strong>-z</strong>: スキャンモード（接続せずにポートの開閉状態を確認）</p>
+<ul>
+<li>例: <code>nc -z -v example.com 20-30</code>（20〜30番ポートをスキャン）</li>
+</ul>
+</li>
+<li><p><strong>-w</strong>: タイムアウト時間の設定（秒）</p>
+<ul>
+<li>例: <code>nc -w 5 example.com 80</code>（5秒でタイムアウト）</li>
+</ul>
+</li>
+<li><p><strong>-u</strong>: UDPモード（デフォルトはTCP）</p>
+<ul>
+<li>例: <code>nc -u example.com 53</code>（UDPで53番ポートに接続）</li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>1. 基本的な接続（HTTPリクエスト）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># Webサーバーに接続してHTTPリクエストを送信</span>
+nc<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">80</span>
+GET<span style="color: #F8F8F8"> </span>/<span style="color: #F8F8F8"> </span>HTTP/1.1
+Host:<span style="color: #F8F8F8"> </span>example.com
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+HTTP/1.1<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">200</span><span style="color: #F8F8F8"> </span>OK
+Content-Type:<span style="color: #F8F8F8"> </span>text/html
+...
+</pre></div>
+<h3>2. シンプルなチャットサーバー</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># サーバー側（ポート8080でリッスン）</span>
+nc<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>
+
+<span style="color: #8F5902; font-style: italic"># クライアント側（サーバーに接続）</span>
+nc<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.100<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>
+
+<span style="color: #8F5902; font-style: italic"># これで双方向のテキスト通信が可能になる</span>
+</pre></div>
+<h3>3. ファイル転送</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 受信側（サーバー）</span>
+nc<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>received_file.txt
+
+<span style="color: #8F5902; font-style: italic"># 送信側（クライアント）</span>
+nc<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.100<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span><span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>file_to_send.txt
+</pre></div>
+<h3>4. ポートスキャン</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 特定のホストの複数ポートをスキャン</span>
+nc<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span>-25
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+nc:<span style="color: #F8F8F8"> </span>connect<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span>port<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>tcp<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>failed:<span style="color: #F8F8F8"> </span>Connection<span style="color: #F8F8F8"> </span>refused
+nc:<span style="color: #F8F8F8"> </span>connect<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span>port<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">21</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>tcp<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>succeeded!
+nc:<span style="color: #F8F8F8"> </span>connect<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span>port<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">22</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>tcp<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>succeeded!
+...
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><p><code>nc</code>コマンドはセキュリティ監査やネットワークのデバッグに非常に便利ですが、悪意ある目的にも使用できるため、多くの組織ではその使用が制限されている場合があります。</p>
+</li>
+<li><p>一部のシステムでは<code>nc</code>の代わりに<code>ncat</code>や<code>netcat</code>コマンドが使用されることがあります。機能は似ていますが、オプションが若干異なる場合があります。</p>
+</li>
+<li><p>長時間のリッスンや接続を維持するには、<code>-k</code>オプション（一部のバージョンでサポート）を使用すると、接続が切れた後もリッスンを継続できます。</p>
+</li>
+<li><p>セキュアな通信が必要な場合は、<code>ncat</code>の<code>--ssl</code>オプションや、代わりに<code>openssl s_client</code>/<code>s_server</code>コマンドの使用を検討してください。</p>
+</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>grepコマンド概要</h1>
+<p><code>grep</code>は、ファイルやテキスト入力から特定のパターン（文字列や正規表現）を検索するためのコマンドです。名前は「Global Regular Expression Print」に由来しています。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-i</strong>: 大文字と小文字を区別せずに検索します</p>
+<ul>
+<li>例: <code>grep -i &quot;hello&quot; file.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-v</strong>: マッチしない行を表示します（反転検索）</p>
+<ul>
+<li>例: <code>grep -v &quot;error&quot; log.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-r, -R</strong>: ディレクトリ内のファイルを再帰的に検索します</p>
+<ul>
+<li>例: <code>grep -r &quot;TODO&quot; ./src/</code></li>
+</ul>
+</li>
+<li><p><strong>-l</strong>: マッチしたファイル名のみを表示します</p>
+<ul>
+<li>例: <code>grep -l &quot;function&quot; *.js</code></li>
+</ul>
+</li>
+<li><p><strong>-n</strong>: マッチした行の行番号も表示します</p>
+<ul>
+<li>例: <code>grep -n &quot;import&quot; *.py</code></li>
+</ul>
+</li>
+<li><p><strong>-c</strong>: マッチした行数のみを表示します</p>
+<ul>
+<li>例: <code>grep -c &quot;ERROR&quot; error.log</code></li>
+</ul>
+</li>
+<li><p><strong>-A n</strong>: マッチした行の後ろn行も表示します（After）</p>
+<ul>
+<li>例: <code>grep -A 2 &quot;exception&quot; log.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-B n</strong>: マッチした行の前n行も表示します（Before）</p>
+<ul>
+<li>例: <code>grep -B 2 &quot;exception&quot; log.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-C n</strong>: マッチした行の前後n行を表示します（Context）</p>
+<ul>
+<li>例: <code>grep -C 2 &quot;exception&quot; log.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-E</strong>: 拡張正規表現を使用します</p>
+<ul>
+<li>例: <code>grep -E &quot;apple|orange&quot; fruits.txt</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使い方：ファイル内で「error」を含む行を検索</span>
+grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>log.txt
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #0000CF; font-weight: bold">2023</span>-04-01<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">12</span>:34:56<span style="color: #F8F8F8"> </span>error:<span style="color: #F8F8F8"> </span>connection<span style="color: #F8F8F8"> </span>refused
+
+<span style="color: #8F5902; font-style: italic"># 大文字小文字を区別せずに検索</span>
+grep<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>log.txt
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #0000CF; font-weight: bold">2023</span>-04-01<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">12</span>:34:56<span style="color: #F8F8F8"> </span>error:<span style="color: #F8F8F8"> </span>connection<span style="color: #F8F8F8"> </span>refused
+<span style="color: #0000CF; font-weight: bold">2023</span>-04-01<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">13</span>:45:23<span style="color: #F8F8F8"> </span>ERROR:<span style="color: #F8F8F8"> </span>timeout<span style="color: #F8F8F8"> </span>occurred
+
+<span style="color: #8F5902; font-style: italic"># 複数ファイルから検索し、ファイル名も表示</span>
+grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;function&quot;</span><span style="color: #F8F8F8"> </span>*.js
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+app.js:function<span style="color: #F8F8F8"> </span>initialize<span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
+utils.js:function<span style="color: #F8F8F8"> </span>formatDate<span style="color: #CE5C00; font-weight: bold">(</span>date<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
+
+<span style="color: #8F5902; font-style: italic"># 行番号付きで表示</span>
+grep<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;import&quot;</span><span style="color: #F8F8F8"> </span>main.py
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #0000CF; font-weight: bold">3</span>:import<span style="color: #F8F8F8"> </span>os
+<span style="color: #0000CF; font-weight: bold">4</span>:import<span style="color: #F8F8F8"> </span>sys
+<span style="color: #0000CF; font-weight: bold">10</span>:import<span style="color: #F8F8F8"> </span>datetime
+
+<span style="color: #8F5902; font-style: italic"># 再帰的にディレクトリ内を検索</span>
+grep<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;TODO&quot;</span><span style="color: #F8F8F8"> </span>./project/
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+./project/src/main.js://<span style="color: #F8F8F8"> </span>TODO:<span style="color: #F8F8F8"> </span>Implement<span style="color: #F8F8F8"> </span>error<span style="color: #F8F8F8"> </span>handling
+./project/docs/readme.md:TODO:<span style="color: #F8F8F8"> </span>Complete<span style="color: #F8F8F8"> </span>documentation
+
+<span style="color: #8F5902; font-style: italic"># マッチした行の前後1行を表示</span>
+grep<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;exception&quot;</span><span style="color: #F8F8F8"> </span>error.log
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+trying<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>connect<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>server
+exception<span style="color: #F8F8F8"> </span>occurred:<span style="color: #F8F8F8"> </span>connection<span style="color: #F8F8F8"> </span>timeout
+retrying<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>seconds
+</pre></div>
+<h2>追加メモ</h2>
+<ul>
+<li>パイプ（<code>|</code>）と組み合わせて使うと非常に便利です。例えば <code>ps aux | grep &quot;firefox&quot;</code> でFirefoxプロセスを検索できます。</li>
+<li>正規表現を使うことで、より複雑なパターンマッチングが可能です。例えば <code>grep &quot;^[0-9]&quot;</code> で数字で始まる行を検索できます。</li>
+<li>検索パターンに空白やメタ文字が含まれる場合は、引用符で囲むことをお勧めします。</li>
+<li>大量のファイルを検索する場合は、<code>grep -l</code> でマッチするファイル名だけを先に確認すると効率的です。</li>
+<li>最近のLinuxディストリビューションでは、<code>grep</code>の出力は通常カラー表示されますが、<code>--color=auto</code>オプションで明示的に指定することもできます。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

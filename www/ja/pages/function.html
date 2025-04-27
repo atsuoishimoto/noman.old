@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>function コマンド概要</h1>
+<p><code>function</code>は、シェルスクリプトやコマンドラインで関数を定義するためのコマンドです。関数を使うことで、繰り返し使用するコマンドの集まりに名前をつけて再利用できます。</p>
+<h2>オプション</h2>
+<p><code>function</code>コマンド自体にはオプションがありません。関数の定義方法と使用方法に焦点を当てます。</p>
+<h2>定義方法</h2>
+<h3><strong>基本的な定義方法</strong></h3>
+<p>関数は以下の2つの方法で定義できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 方法1: functionキーワードを使用</span>
+<span style="color: #204A87; font-weight: bold">function</span><span style="color: #F8F8F8"> </span>関数名<span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
+<span style="color: #F8F8F8">    </span>コマンド1
+<span style="color: #F8F8F8">    </span>コマンド2
+<span style="color: #CE5C00; font-weight: bold">}</span>
+
+<span style="color: #8F5902; font-style: italic"># 方法2: functionキーワードなし</span>
+関数名<span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
+<span style="color: #F8F8F8">    </span>コマンド1
+<span style="color: #F8F8F8">    </span>コマンド2
+<span style="color: #CE5C00; font-weight: bold">}</span>
+</pre></div>
+<h3><strong>引数の使用</strong></h3>
+<p>関数内では、引数を<code>$1</code>, <code>$2</code>などで参照できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">function</span><span style="color: #F8F8F8"> </span>greet<span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;こんにちは、</span><span style="color: #000">$1</span><span style="color: #4E9A06">さん！&quot;</span>
+<span style="color: #CE5C00; font-weight: bold">}</span>
+
+<span style="color: #8F5902; font-style: italic"># 実行例</span>
+$<span style="color: #F8F8F8"> </span>greet<span style="color: #F8F8F8"> </span>田中
+こんにちは、田中さん！
+</pre></div>
+<h3><strong>戻り値の設定</strong></h3>
+<p>関数は<code>return</code>で数値を返すことができます（0〜255の範囲）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">function</span><span style="color: #F8F8F8"> </span>is_number<span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$1</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span>~<span style="color: #F8F8F8"> </span>^<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">0</span>-9<span style="color: #CE5C00; font-weight: bold">]</span>+$<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">        </span><span style="color: #204A87; font-weight: bold">return</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># 成功（数値である）</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87; font-weight: bold">else</span>
+<span style="color: #F8F8F8">        </span><span style="color: #204A87; font-weight: bold">return</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># 失敗（数値でない）</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87; font-weight: bold">fi</span>
+<span style="color: #CE5C00; font-weight: bold">}</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的な関数の定義と呼び出し</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">function</span><span style="color: #F8F8F8"> </span>hello<span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;こんにちは、世界！&quot;</span>
+&gt;<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">}</span>
+
+$<span style="color: #F8F8F8"> </span>hello
+こんにちは、世界！
+</pre></div>
+<h3>引数を使った関数</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">function</span><span style="color: #F8F8F8"> </span>calc<span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;計算結果: </span><span style="color: #204A87; font-weight: bold">$((</span><span style="color: #000">$1</span><span style="color: #F8F8F8"> </span><span style="color: #000">$2</span><span style="color: #F8F8F8"> </span><span style="color: #000">$3</span><span style="color: #204A87; font-weight: bold">))</span><span style="color: #4E9A06">&quot;</span>
+&gt;<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">}</span>
+
+$<span style="color: #F8F8F8"> </span>calc<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+計算結果:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>
+
+$<span style="color: #F8F8F8"> </span>calc<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\*</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
+計算結果:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span>
+</pre></div>
+<h3>関数の出力を変数に格納</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">function</span><span style="color: #F8F8F8"> </span>get_date<span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>date<span style="color: #F8F8F8"> </span>+%Y-%m-%d<span style="color: #204A87; font-weight: bold">)</span>
+&gt;<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">}</span>
+
+$<span style="color: #F8F8F8"> </span><span style="color: #000">today</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>get_date<span style="color: #204A87; font-weight: bold">)</span>
+$<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$today</span>
+<span style="color: #0000CF; font-weight: bold">2023</span>-11-15
+</pre></div>
+<h2>よくある質問</h2>
+<h3>Q1. 関数とエイリアスの違いは何ですか？</h3>
+<p>A. エイリアスは単純なコマンド置換ですが、関数はより複雑な処理や引数の処理ができます。関数は複数のコマンドをまとめて実行でき、条件分岐なども含められます。</p>
+<h3>Q2. 関数の一覧を表示するには？</h3>
+<p>A. <code>declare -f</code>コマンドで定義されているすべての関数を表示できます。特定の関数の定義を見るには<code>declare -f 関数名</code>を使います。</p>
+<h3>Q3. 関数を永続的に使えるようにするには？</h3>
+<p>A. 関数を<code>.bashrc</code>や<code>.zshrc</code>などのシェル設定ファイルに追加すると、新しいシェルを開くたびに使用できるようになります。</p>
+<h3>Q4. 関数を削除するには？</h3>
+<p>A. <code>unset -f 関数名</code>コマンドで関数を削除できます。</p>
+<h2>追加のヒント</h2>
+<ul>
+<li>関数名は一般的なコマンド名と重複しないようにしましょう。既存のコマンドと同じ名前を使うと、予期しない動作の原因になります。</li>
+<li>関数内で<code>local</code>キーワードを使うと、変数のスコープを関数内に限定できます。これにより、グローバル変数との衝突を防げます。</li>
+</ul>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">function</span><span style="color: #F8F8F8"> </span>count_files<span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">local</span><span style="color: #F8F8F8"> </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>ls<span style="color: #F8F8F8"> </span>-1<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>wc<span style="color: #F8F8F8"> </span>-l<span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;このディレクトリには</span><span style="color: #000">$count個のファイルがあります</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #CE5C00; font-weight: bold">}</span>
+</pre></div>
+<ul>
+<li>関数は<code>.sh</code>ファイルに記述して<code>source</code>コマンドで読み込むことで、複数のスクリプトで再利用できます。</li>
+</ul>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># utils.shに関数を定義</span>
+$<span style="color: #F8F8F8"> </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>utils.sh
+<span style="color: #8F5902; font-style: italic"># 関数が使えるようになる</span>
+</pre></div>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

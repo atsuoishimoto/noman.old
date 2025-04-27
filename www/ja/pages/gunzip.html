@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>gunzipコマンド概要</h1>
+<p><code>gunzip</code>は圧縮ファイル（通常は<code>.gz</code>拡張子を持つファイル）を解凍するためのUNIXコマンドです。主にgzipで圧縮されたファイルを元に戻すために使用されます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-c, --stdout</strong>: 解凍したデータを標準出力に出力します。元の圧縮ファイルは削除されません。</p>
+<ul>
+<li>例: <code>gunzip -c file.gz &gt; file</code></li>
+</ul>
+</li>
+<li><p><strong>-f, --force</strong>: 強制的に解凍を実行します。既に同名のファイルが存在する場合でも上書きします。</p>
+<ul>
+<li>例: <code>gunzip -f already_exists.gz</code></li>
+</ul>
+</li>
+<li><p><strong>-k, --keep</strong>: 解凍後も元の圧縮ファイルを保持します（通常は解凍後に削除されます）。</p>
+<ul>
+<li>例: <code>gunzip -k important_archive.gz</code></li>
+</ul>
+</li>
+<li><p><strong>-l, --list</strong>: 圧縮ファイルの内容を表示します（解凍せずに情報のみ表示）。</p>
+<ul>
+<li>例: <code>gunzip -l files.gz</code></li>
+</ul>
+</li>
+<li><p><strong>-r, --recursive</strong>: ディレクトリを再帰的に処理し、見つかった全ての<code>.gz</code>ファイルを解凍します。</p>
+<ul>
+<li>例: <code>gunzip -r directory/</code></li>
+</ul>
+</li>
+<li><p><strong>-t, --test</strong>: 圧縮ファイルの整合性をテストします（実際に解凍は行いません）。</p>
+<ul>
+<li>例: <code>gunzip -t suspicious.gz</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使い方：ファイルの解凍</span>
+gunzip<span style="color: #F8F8F8"> </span>file.gz
+<span style="color: #8F5902; font-style: italic"># 結果：file.gzが解凍されてfileというファイルが作成され、元のfile.gzは削除される</span>
+
+<span style="color: #8F5902; font-style: italic"># 複数ファイルの解凍</span>
+gunzip<span style="color: #F8F8F8"> </span>file1.gz<span style="color: #F8F8F8"> </span>file2.gz<span style="color: #F8F8F8"> </span>file3.gz
+<span style="color: #8F5902; font-style: italic"># 結果：指定した全てのファイルが解凍される</span>
+
+<span style="color: #8F5902; font-style: italic"># 元のファイルを保持したまま解凍</span>
+gunzip<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>important.gz
+<span style="color: #8F5902; font-style: italic"># 結果：important.gzが解凍されてimportantというファイルが作成され、important.gzも保持される</span>
+
+<span style="color: #8F5902; font-style: italic"># 圧縮ファイルの内容を確認</span>
+gunzip<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>large_archive.gz
+<span style="color: #8F5902; font-style: italic"># 出力例：</span>
+<span style="color: #8F5902; font-style: italic">#         compressed        uncompressed  ratio uncompressed_name</span>
+<span style="color: #8F5902; font-style: italic">#                1024               4096  75.0% large_archive</span>
+
+<span style="color: #8F5902; font-style: italic"># 標準出力への解凍（パイプラインで他のコマンドに渡す場合に便利）</span>
+gunzip<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>data.gz<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;keyword&quot;</span>
+<span style="color: #8F5902; font-style: italic"># 結果：data.gzを解凍した内容から&quot;keyword&quot;を含む行が表示される</span>
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><code>gunzip</code>は実際には<code>gzip -d</code>と同等です。<code>gzip</code>コマンドの解凍モードとして機能します。</li>
+<li>ファイル名に<code>.gz</code>拡張子がない場合でも、<code>gunzip</code>は自動的に<code>.gz</code>を追加して探そうとします。</li>
+<li>複数のファイルを一度に解凍する場合、一部のファイルでエラーが発生しても処理は続行されます。</li>
+<li><code>.tar.gz</code>や<code>.tgz</code>ファイル（tarボールと呼ばれる）は、<code>tar -xzf file.tar.gz</code>コマンドで一度に解凍・展開できます。</li>
+<li>大きなファイルを解凍する場合、十分なディスク容量があることを事前に確認しておくことをお勧めします。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>dmesgコマンド概要</h1>
+<p><code>dmesg</code>はカーネルのリングバッファからシステムメッセージを表示するコマンドです。起動時のハードウェア検出やエラーメッセージなど、システムの診断情報を確認するのに役立ちます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong><code>-H</code>, <code>--human</code></strong>: 人間が読みやすい形式で出力します（タイムスタンプの整形、色付けなど）</p>
+<ul>
+<li>例: <code>dmesg -H</code></li>
+</ul>
+</li>
+<li><p><strong><code>-c</code>, <code>--clear</code></strong>: メッセージを表示した後、バッファをクリアします</p>
+<ul>
+<li>例: <code>dmesg -c</code></li>
+</ul>
+</li>
+<li><p><strong><code>-f</code>, <code>--facility=LIST</code></strong>: 指定した種類（facility）のメッセージのみを表示します（例：kern, user, daemon）</p>
+<ul>
+<li>例: <code>dmesg -f kern</code></li>
+</ul>
+</li>
+<li><p><strong><code>-l</code>, <code>--level=LIST</code></strong>: 指定したレベルのメッセージのみを表示します（例：err, warn, info）</p>
+<ul>
+<li>例: <code>dmesg -l err,warn</code></li>
+</ul>
+</li>
+<li><p><strong><code>-T</code>, <code>--ctime</code></strong>: 人間が読みやすい時刻形式で表示します</p>
+<ul>
+<li>例: <code>dmesg -T</code></li>
+</ul>
+</li>
+<li><p><strong><code>-w</code>, <code>--follow</code></strong>: 新しいメッセージを待ち続けます（<code>tail -f</code>のような動作）</p>
+<ul>
+<li>例: <code>dmesg -w</code></li>
+</ul>
+</li>
+<li><p><strong><code>-k</code>, <code>--kernel</code></strong>: カーネルメッセージを表示します（デフォルト）</p>
+<ul>
+<li>例: <code>dmesg -k</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使用法（すべてのカーネルメッセージを表示）</span>
+dmesg
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">0</span>.000000<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>Linux<span style="color: #F8F8F8"> </span>version<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>.4.0-42-generic<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>buildd@lgw01-amd64-060<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>gcc<span style="color: #F8F8F8"> </span>version<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">9</span>.3.0<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>Ubuntu<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">9</span>.3.0-10ubuntu2<span style="color: #CE5C00; font-weight: bold">))</span><span style="color: #F8F8F8"> </span><span style="color: #8F5902; font-style: italic">#46-Ubuntu SMP Fri Jul 10 00:24:02 UTC 2020</span>
+<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">0</span>.000000<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>Command<span style="color: #F8F8F8"> </span>line:<span style="color: #F8F8F8"> </span><span style="color: #000">BOOT_IMAGE</span><span style="color: #CE5C00; font-weight: bold">=</span>/boot/vmlinuz-5.4.0-42-generic<span style="color: #F8F8F8"> </span><span style="color: #000">root</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #000">UUID</span><span style="color: #CE5C00; font-weight: bold">=</span>1234abcd-1234-1234-1234-1234abcd<span style="color: #F8F8F8"> </span>ro<span style="color: #F8F8F8"> </span>quiet<span style="color: #F8F8F8"> </span>splash
+...
+</pre></div>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 人間が読みやすい形式で表示</span>
+dmesg<span style="color: #F8F8F8"> </span>-H
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #CE5C00; font-weight: bold">[</span>Jul15<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>:58<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>Linux<span style="color: #F8F8F8"> </span>version<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>.4.0-42-generic<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>buildd@lgw01-amd64-060<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>gcc<span style="color: #F8F8F8"> </span>version<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">9</span>.3.0<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>Ubuntu<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">9</span>.3.0-10ubuntu2<span style="color: #CE5C00; font-weight: bold">))</span><span style="color: #F8F8F8"> </span><span style="color: #8F5902; font-style: italic">#46-Ubuntu SMP Fri Jul 10 00:24:02 UTC 2020</span>
+<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8">  </span>+0.000000<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>Command<span style="color: #F8F8F8"> </span>line:<span style="color: #F8F8F8"> </span><span style="color: #000">BOOT_IMAGE</span><span style="color: #CE5C00; font-weight: bold">=</span>/boot/vmlinuz-5.4.0-42-generic<span style="color: #F8F8F8"> </span><span style="color: #000">root</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #000">UUID</span><span style="color: #CE5C00; font-weight: bold">=</span>1234abcd-1234-1234-1234-1234abcd<span style="color: #F8F8F8"> </span>ro<span style="color: #F8F8F8"> </span>quiet<span style="color: #F8F8F8"> </span>splash
+...
+</pre></div>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># エラーと警告のみを表示</span>
+dmesg<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>err,warn
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">12345</span>.678901<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>usb<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-2:<span style="color: #F8F8F8"> </span>device<span style="color: #F8F8F8"> </span>descriptor<span style="color: #F8F8F8"> </span>read/64,<span style="color: #F8F8F8"> </span>error<span style="color: #F8F8F8"> </span>-110
+<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">12346</span>.789012<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>sd<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>:0:0:0:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span>sda<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>Assuming<span style="color: #F8F8F8"> </span>drive<span style="color: #F8F8F8"> </span>cache:<span style="color: #F8F8F8"> </span>write<span style="color: #F8F8F8"> </span>through
+</pre></div>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 新しいメッセージをリアルタイムで監視</span>
+dmesg<span style="color: #F8F8F8"> </span>-w
+<span style="color: #8F5902; font-style: italic"># 出力例（新しいメッセージが発生するたびに表示されます）</span>
+<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">12347</span>.890123<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>usb<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>-1:<span style="color: #F8F8F8"> </span>new<span style="color: #F8F8F8"> </span>high-speed<span style="color: #F8F8F8"> </span>USB<span style="color: #F8F8F8"> </span>device<span style="color: #F8F8F8"> </span>number<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>using<span style="color: #F8F8F8"> </span>ehci-pci
+<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">12348</span>.901234<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>usb<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>-1:<span style="color: #F8F8F8"> </span>New<span style="color: #F8F8F8"> </span>USB<span style="color: #F8F8F8"> </span>device<span style="color: #F8F8F8"> </span>found,<span style="color: #F8F8F8"> </span><span style="color: #000">idVendor</span><span style="color: #CE5C00; font-weight: bold">=</span>abcd,<span style="color: #F8F8F8"> </span><span style="color: #000">idProduct</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1234</span>,<span style="color: #F8F8F8"> </span><span style="color: #000">bcdDevice</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>.00
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li>システムの問題を診断する際に、<code>dmesg | grep -i error</code>のようにgrepと組み合わせて特定のメッセージを検索すると効果的です。</li>
+<li>最新のメッセージだけを見たい場合は、<code>dmesg | tail</code>を使用すると便利です。</li>
+<li>Linuxディストリビューションによっては、<code>/var/log/dmesg</code>にログが保存されていることもあります。</li>
+<li>一般ユーザーでは一部のメッセージが表示されないことがあります。重要な診断を行う場合は<code>sudo dmesg</code>を使用してください。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

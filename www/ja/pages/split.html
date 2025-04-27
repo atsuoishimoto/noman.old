@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1><code>split</code> コマンド概要</h1>
+<p><code>split</code>コマンドは、大きなファイルを小さな部分に分割するためのUnixコマンドです。ファイルサイズが大きすぎて扱いにくい場合や、メール添付などで分割が必要な場合に便利です。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-b, --bytes=SIZE</strong>: 指定したバイトサイズごとにファイルを分割</p>
+<ul>
+<li>例: <code>split -b 1M largefile</code> (1MBごとに分割)</li>
+</ul>
+</li>
+<li><p><strong>-l, --lines=NUMBER</strong>: 指定した行数ごとにファイルを分割</p>
+<ul>
+<li>例: <code>split -l 1000 largefile</code> (1000行ごとに分割)</li>
+</ul>
+</li>
+<li><p><strong>-d, --numeric-suffixes[=FROM]</strong>: 数字のサフィックスを使用（アルファベットの代わりに）</p>
+<ul>
+<li>例: <code>split -d largefile</code> (xaa, xabではなく、x00, x01などの形式で出力)</li>
+</ul>
+</li>
+<li><p><strong>-a, --suffix-length=N</strong>: サフィックスの長さを指定</p>
+<ul>
+<li>例: <code>split -a 3 largefile</code> (xaaa, xaab, ...のように3文字のサフィックス)</li>
+</ul>
+</li>
+<li><p><strong>--additional-suffix=SUFFIX</strong>: 出力ファイル名に追加するサフィックスを指定</p>
+<ul>
+<li>例: <code>split -b 1M --additional-suffix=.txt largefile</code> (x00.txt, x01.txt, ...)</li>
+</ul>
+</li>
+<li><p><strong>PREFIX</strong>: 出力ファイル名のプレフィックスを指定（デフォルトは「x」）</p>
+<ul>
+<li>例: <code>split -b 1M largefile part_</code> (part_aa, part_ab, ...)</li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>基本的な使用方法（デフォルトで1000行ごとに分割）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 大きなファイルを分割</span>
+split<span style="color: #F8F8F8"> </span>largefile
+<span style="color: #8F5902; font-style: italic"># 出力</span>
+<span style="color: #8F5902; font-style: italic"># xaa, xab, xac, ... というファイルが生成される</span>
+</pre></div>
+<h3>サイズによる分割</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 10MBごとに分割し、数字のサフィックスを使用</span>
+split<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>10M<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>largefile<span style="color: #F8F8F8"> </span>chunk_
+<span style="color: #8F5902; font-style: italic"># 出力</span>
+<span style="color: #8F5902; font-style: italic"># chunk_00, chunk_01, chunk_02, ... というファイルが生成される</span>
+</pre></div>
+<h3>行数による分割</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 500行ごとに分割</span>
+split<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">500</span><span style="color: #F8F8F8"> </span>logfile<span style="color: #F8F8F8"> </span>log_part_
+<span style="color: #8F5902; font-style: italic"># 出力</span>
+<span style="color: #8F5902; font-style: italic"># log_part_aa, log_part_ab, ... というファイルが生成される</span>
+</pre></div>
+<h3>分割したファイルの結合</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 分割したファイルを元に戻す</span>
+cat<span style="color: #F8F8F8"> </span>x*<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>original_file_restored
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li>分割されたファイルは自動的に連番が振られますが、デフォルトではアルファベット順（aa, ab, ac...）です。<code>-d</code>オプションを使うと数字順（00, 01, 02...）になります。</li>
+<li>分割したファイルを元に戻すには、<code>cat</code>コマンドを使って全ての分割ファイルを連結します。</li>
+<li>バイナリファイルを分割する場合は、<code>-b</code>オプションを使用するのが安全です。テキストファイルなら<code>-l</code>オプションが便利です。</li>
+<li>サイズ指定には、K（キロバイト）、M（メガバイト）、G（ギガバイト）などの単位を使用できます。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

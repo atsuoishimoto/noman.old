@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>groupdel</h1>
+<p><code>groupdel</code>コマンドは、システムからグループを削除するためのシンプルなコマンドです。ユーザーアカウント管理の一部として、不要になったグループを削除する際に使用します。</p>
+<h2>オプション</h2>
+<h3><strong>-f, --force</strong></h3>
+<p>グループの削除を強制します。通常、プライマリグループとして使用されているグループは削除できませんが、このオプションを使用すると強制的に削除できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>sudo<span style="color: #F8F8F8"> </span>groupdel<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>developers
+</pre></div>
+<h3><strong>-h, --help</strong></h3>
+<p>ヘルプメッセージを表示して終了します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>groupdel<span style="color: #F8F8F8"> </span>--help
+使用法:<span style="color: #F8F8F8"> </span>groupdel<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span>オプション<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>グループ
+
+オプション:
+<span style="color: #F8F8F8">  </span>-h,<span style="color: #F8F8F8"> </span>--help<span style="color: #F8F8F8">                    </span>このヘルプメッセージを表示して終了する
+<span style="color: #F8F8F8">  </span>-R,<span style="color: #F8F8F8"> </span>--root<span style="color: #F8F8F8"> </span>CHROOT_DIR<span style="color: #F8F8F8">         </span>chroot<span style="color: #F8F8F8"> </span>するディレクトリ
+<span style="color: #F8F8F8">  </span>-P,<span style="color: #F8F8F8"> </span>--prefix<span style="color: #F8F8F8"> </span>PREFIX_DIR<span style="color: #F8F8F8">       </span>PREFIX_DIR<span style="color: #F8F8F8"> </span>内の設定ファイルを使用する
+<span style="color: #F8F8F8">  </span>-f,<span style="color: #F8F8F8"> </span>--force<span style="color: #F8F8F8">                   </span>グループがユーザのプライマリグループでも削除する
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的なグループの削除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>sudo<span style="color: #F8F8F8"> </span>groupdel<span style="color: #F8F8F8"> </span>temporary_group
+</pre></div>
+<p>グループ「temporary_group」をシステムから削除します。</p>
+<h3>強制的にグループを削除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>sudo<span style="color: #F8F8F8"> </span>groupdel<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>project_team
+</pre></div>
+<p>「project_team」グループを、それがユーザーのプライマリグループであっても強制的に削除します。</p>
+<h2>よくある質問</h2>
+<h3>Q1. <code>groupdel</code>を実行するのに必要な権限は？</h3>
+<p>A. <code>groupdel</code>コマンドを実行するには、通常root権限（または<code>sudo</code>）が必要です。一般ユーザーはグループを削除できません。</p>
+<h3>Q2. ユーザーのプライマリグループを削除するとどうなりますか？</h3>
+<p>A. 通常、ユーザーのプライマリグループは削除できません。削除しようとするとエラーが発生します。強制的に削除する場合は<code>-f</code>オプションを使用しますが、そのユーザーアカウントに問題が生じる可能性があります。</p>
+<h3>Q3. 削除したグループを元に戻すことはできますか？</h3>
+<p>A. いいえ、<code>groupdel</code>で削除したグループは直接元に戻せません。必要であれば<code>groupadd</code>コマンドで同じ名前・GIDのグループを再作成する必要があります。</p>
+<h3>Q4. グループを削除する前に確認すべきことはありますか？</h3>
+<p>A. グループを削除する前に、そのグループがユーザーのプライマリグループになっていないか、重要なファイルの所有グループになっていないかを確認するべきです。</p>
+<h2>追加情報</h2>
+<ul>
+<li>グループを削除しても、そのグループが所有していたファイルの所有権は自動的に変更されません。ファイルは数値のグループID（GID）を保持したままになります。</li>
+<li>システムグループ（GID 1000未満）の削除は、システムの機能に影響を与える可能性があるため注意が必要です。</li>
+<li>macOSでは、システムグループの削除は推奨されません。特にmacOSのアップデート後に問題が発生する可能性があります。</li>
+</ul>
+<h2>参考情報</h2>
+<p>man ページを参照するには：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>man<span style="color: #F8F8F8"> </span>groupdel
+</pre></div>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

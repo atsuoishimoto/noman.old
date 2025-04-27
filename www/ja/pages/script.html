@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>script</h1>
+<p><code>script</code> コマンドは、ターミナルセッションの全出力を記録し、ファイルに保存するためのツールです。デバッグやトレーニング、ドキュメント作成に役立ちます。</p>
+<h2>オプション</h2>
+<h3><strong>-a, --append</strong></h3>
+<p>既存のファイルに追記します。デフォルトでは上書きされます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>script<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>session.log
+Script<span style="color: #F8F8F8"> </span>started,<span style="color: #F8F8F8"> </span>output<span style="color: #F8F8F8"> </span>appended<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>session.log.
+</pre></div>
+<h3><strong>-f, --flush</strong></h3>
+<p>各入力後にすぐにログファイルに書き込みます。クラッシュ時のデータ損失を防ぎます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>script<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>session.log
+Script<span style="color: #F8F8F8"> </span>started,<span style="color: #F8F8F8"> </span>output<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>session.log.
+</pre></div>
+<h3><strong>-q, --quiet</strong></h3>
+<p>開始・終了メッセージを表示しません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>script<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>session.log
+</pre></div>
+<h3><strong>-t, --timing[=ファイル]</strong></h3>
+<p>タイミング情報を別ファイルに記録します。後で <code>scriptreplay</code> コマンドで再生できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>script<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>timing.log<span style="color: #F8F8F8"> </span>session.log
+Script<span style="color: #F8F8F8"> </span>started,<span style="color: #F8F8F8"> </span>output<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>session.log.
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的な使い方</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>script<span style="color: #F8F8F8"> </span>session.log
+Script<span style="color: #F8F8F8"> </span>started,<span style="color: #F8F8F8"> </span>output<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>session.log.
+$<span style="color: #F8F8F8"> </span>ls
+Documents<span style="color: #F8F8F8"> </span>Downloads<span style="color: #F8F8F8"> </span>Pictures
+$<span style="color: #F8F8F8"> </span><span style="color: #204A87">exit</span>
+Script<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>,<span style="color: #F8F8F8"> </span>output<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>session.log.
+</pre></div>
+<h3>セッションの再生</h3>
+<p>タイミング情報を記録した場合、<code>scriptreplay</code> コマンドでセッションを再生できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>script<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>timing.log<span style="color: #F8F8F8"> </span>session.log
+Script<span style="color: #F8F8F8"> </span>started,<span style="color: #F8F8F8"> </span>output<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>session.log.
+$<span style="color: #F8F8F8"> </span>ls<span style="color: #F8F8F8"> </span>-la
+$<span style="color: #F8F8F8"> </span><span style="color: #204A87">pwd</span>
+$<span style="color: #F8F8F8"> </span><span style="color: #204A87">exit</span>
+Script<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>,<span style="color: #F8F8F8"> </span>output<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>session.log.
+
+$<span style="color: #F8F8F8"> </span>scriptreplay<span style="color: #F8F8F8"> </span>timing.log<span style="color: #F8F8F8"> </span>session.log
+<span style="color: #8F5902; font-style: italic"># 記録されたセッションが再生される</span>
+</pre></div>
+<h2>よくある質問</h2>
+<h3>Q1. <code>script</code> コマンドはどのような場合に使うのですか？</h3>
+<p>A. トラブルシューティングの記録、コマンドラインデモの作成、トレーニング資料の準備、システム管理作業の監査証跡の作成などに使用します。</p>
+<h3>Q2. 記録を終了するにはどうすればいいですか？</h3>
+<p>A. <code>exit</code> コマンドを入力するか、<code>Ctrl+D</code> を押すことで記録を終了できます。</p>
+<h3>Q3. パスワードなど機密情報も記録されますか？</h3>
+<p>A. はい、表示される全ての内容が記録されます。機密情報を入力する前に記録を一時停止するか、後で編集する必要があります。</p>
+<h3>Q4. 記録したファイルはどのように確認できますか？</h3>
+<p>A. 通常のテキストファイルなので、<code>cat</code>、<code>less</code>、<code>more</code> などのコマンドや任意のテキストエディタで確認できます。</p>
+<h2>追加情報</h2>
+<ul>
+<li>長時間のセッションを記録する場合は、<code>-f</code> オプションを使用してバッファリングを無効にすることをお勧めします。</li>
+<li>macOSでは基本的な機能は同じですが、一部のオプションが異なる場合があります。</li>
+<li>大量の出力がある場合、ログファイルが非常に大きくなる可能性があるため注意が必要です。</li>
+<li>色付きの出力（ANSIエスケープシーケンス）も記録されるため、ファイルを表示する際に特殊な文字が含まれることがあります。</li>
+</ul>
+<h2>参考情報</h2>
+<p>https://man7.org/linux/man-pages/man1/script.1.html</p>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

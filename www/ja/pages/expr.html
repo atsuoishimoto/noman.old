@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>exprコマンド概要</h1>
+<p><code>expr</code>は、数値計算や文字列操作を行うためのコマンドラインユーティリティです。シェルスクリプト内で算術演算や文字列の比較、パターンマッチングなどを実行するのに使用されます。</p>
+<h2>主な機能</h2>
+<ul>
+<li><p><strong>算術演算</strong>: 加算、減算、乗算、除算、剰余演算</p>
+<ul>
+<li>例: <code>expr 5 + 3</code>（加算）</li>
+<li>例: <code>expr 10 \* 2</code>（乗算。<code>*</code>はシェルで特殊文字のためエスケープが必要）</li>
+</ul>
+</li>
+<li><p><strong>比較演算</strong>: 数値や文字列の比較</p>
+<ul>
+<li>例: <code>expr 5 \&gt; 3</code>（大なり比較）</li>
+<li>例: <code>expr &quot;abc&quot; = &quot;abc&quot;</code>（文字列の等価比較）</li>
+</ul>
+</li>
+<li><p><strong>文字列操作</strong>: 文字列の長さ取得、部分文字列の抽出、パターンマッチング</p>
+<ul>
+<li>例: <code>expr length &quot;hello&quot;</code>（文字列の長さを取得）</li>
+<li>例: <code>expr substr &quot;hello world&quot; 7 5</code>（部分文字列の抽出）</li>
+<li>例: <code>expr &quot;hello&quot; : &quot;h.*o&quot;</code>（正規表現によるマッチング）</li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な算術演算</span>
+$<span style="color: #F8F8F8"> </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #0000CF; font-weight: bold">15</span>
+
+<span style="color: #8F5902; font-style: italic"># 乗算（*はエスケープが必要）</span>
+$<span style="color: #F8F8F8"> </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\*</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #0000CF; font-weight: bold">12</span>
+
+<span style="color: #8F5902; font-style: italic"># 文字列の長さを取得</span>
+$<span style="color: #F8F8F8"> </span>expr<span style="color: #F8F8F8"> </span>length<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;こんにちは&quot;</span>
+<span style="color: #0000CF; font-weight: bold">5</span>
+
+<span style="color: #8F5902; font-style: italic"># 部分文字列の抽出（7文字目から5文字分）</span>
+$<span style="color: #F8F8F8"> </span>expr<span style="color: #F8F8F8"> </span>substr<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">7</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+World
+
+<span style="color: #8F5902; font-style: italic"># 文字列の比較</span>
+$<span style="color: #F8F8F8"> </span>expr<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;apple&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;apple&quot;</span>
+<span style="color: #0000CF; font-weight: bold">1</span>
+$<span style="color: #F8F8F8"> </span>expr<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;apple&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;orange&quot;</span>
+<span style="color: #0000CF; font-weight: bold">0</span>
+
+<span style="color: #8F5902; font-style: italic"># 正規表現によるマッチング</span>
+$<span style="color: #F8F8F8"> </span>expr<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hello123&quot;</span><span style="color: #F8F8F8"> </span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;.*\([0-9]*\)&quot;</span>
+<span style="color: #0000CF; font-weight: bold">123</span>
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><p>シェルスクリプト内で変数に結果を格納する場合は、バッククォートまたは<code>$()</code>を使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #000">result</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">`</span>expr<span style="color: #F8F8F8"> </span><span style="color: #000">$a</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #000">$b</span><span style="color: #4E9A06">`</span>
+<span style="color: #8F5902; font-style: italic"># または</span>
+<span style="color: #000">result</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>expr<span style="color: #F8F8F8"> </span><span style="color: #000">$a</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #000">$b</span><span style="color: #204A87; font-weight: bold">)</span>
+</pre></div>
+</li>
+<li><p>現代のシェルスクリプトでは、<code>expr</code>の代わりにシェル組み込みの算術展開<code>$(( ))</code>を使用することが多いです：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># exprの代わりに</span>
+<span style="color: #000">result</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$((</span><span style="color: #F8F8F8"> </span><span style="color: #000">a</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">+</span><span style="color: #F8F8F8"> </span><span style="color: #000">b</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">))</span>
+</pre></div>
+</li>
+<li><p><code>expr</code>は空白で区切られた引数として演算子と被演算子を受け取るため、構文に注意が必要です。</p>
+</li>
+<li><p>0を返す場合（比較が偽の場合など）と、エラーが発生した場合は区別されるので注意してください。</p>
+</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

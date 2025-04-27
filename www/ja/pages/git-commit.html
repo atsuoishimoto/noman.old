@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>git-commit コマンド概要</h1>
+<p><code>git-commit</code>は、Gitリポジトリ内の変更をコミット（記録）するためのコマンドです。ステージングエリア（インデックス）に追加された変更を、コミットメッセージとともにリポジトリの履歴に保存します。</p>
+<h2>オプション</h2>
+<h3><strong>-m, --message</strong>:</h3>
+<p>コミットメッセージを直接コマンドラインで指定します。これにより、テキストエディタが開かずにコミットできます。</p>
+<p>例: <code>git commit -m &quot;バグを修正しました&quot;</code></p>
+<h3><strong>-a, --all</strong>:</h3>
+<p>すでに追跡されているファイルの変更を自動的にステージングしてからコミットします。<code>git add</code>を実行せずに変更をコミットできます。</p>
+<p>例: <code>git commit -a -m &quot;全ての変更をコミット&quot;</code></p>
+<h3><strong>--amend</strong>:</h3>
+<p>直前のコミットを修正します。コミットメッセージの変更や、追加の変更を含めることができます。</p>
+<p>例: <code>git commit --amend -m &quot;修正したコミットメッセージ&quot;</code></p>
+<h3><strong>-v, --verbose</strong>:</h3>
+<p>コミットメッセージエディタにdiffの内容も表示します。何を変更したかを確認しながらコミットメッセージを書けます。</p>
+<p>例: <code>git commit -v</code></p>
+<h3><strong>--no-verify</strong>:</h3>
+<p>pre-commitフックやcommit-msgフックをスキップします。CIチェックなどを一時的に回避したい場合に使用します。</p>
+<p>例: <code>git commit --no-verify -m &quot;緊急修正&quot;</code></p>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的なコミット</span>
+git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>file.txt
+git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ファイルを追加&quot;</span>
+<span style="color: #8F5902; font-style: italic"># 出力</span>
+<span style="color: #CE5C00; font-weight: bold">[</span>main<span style="color: #F8F8F8"> </span>1a2b3c4<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>ファイルを追加
+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>changed,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>insertions<span style="color: #CE5C00; font-weight: bold">(</span>+<span style="color: #CE5C00; font-weight: bold">)</span>
+
+<span style="color: #8F5902; font-style: italic"># 変更を自動ステージングしてコミット</span>
+git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-am<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;すべての変更をコミット&quot;</span>
+<span style="color: #8F5902; font-style: italic"># 出力</span>
+<span style="color: #CE5C00; font-weight: bold">[</span>main<span style="color: #F8F8F8"> </span>5d6e7f8<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>すべての変更をコミット
+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>files<span style="color: #F8F8F8"> </span>changed,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span><span style="color: #F8F8F8"> </span>insertions<span style="color: #CE5C00; font-weight: bold">(</span>+<span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>deletions<span style="color: #CE5C00; font-weight: bold">(</span>-<span style="color: #CE5C00; font-weight: bold">)</span>
+
+<span style="color: #8F5902; font-style: italic"># 直前のコミットを修正</span>
+git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>--amend<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;より良いコミットメッセージ&quot;</span>
+<span style="color: #8F5902; font-style: italic"># 出力</span>
+<span style="color: #CE5C00; font-weight: bold">[</span>main<span style="color: #F8F8F8"> </span>5d6e7f8<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>より良いコミットメッセージ
+<span style="color: #F8F8F8"> </span>Date:<span style="color: #F8F8F8"> </span>Mon<span style="color: #F8F8F8"> </span>Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">12</span>:34:56<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2023</span><span style="color: #F8F8F8"> </span>+0900
+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>files<span style="color: #F8F8F8"> </span>changed,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span><span style="color: #F8F8F8"> </span>insertions<span style="color: #CE5C00; font-weight: bold">(</span>+<span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>deletions<span style="color: #CE5C00; font-weight: bold">(</span>-<span style="color: #CE5C00; font-weight: bold">)</span>
+</pre></div>
+<h2>よくある質問</h2>
+<h3>Q1. コミットとは何ですか？</h3>
+<p>A. コミットとは、プロジェクトの変更履歴のスナップショットです。変更内容、作成者、日時などの情報が含まれます。</p>
+<h3>Q2. コミットメッセージはどのように書くべきですか？</h3>
+<p>A. 簡潔で明確な一行の要約から始め、必要に応じて詳細な説明を空行の後に続けます。「何を」変更したかだけでなく「なぜ」変更したかも説明すると良いでしょう。</p>
+<h3>Q3. コミットした後に間違いに気づいた場合はどうすればよいですか？</h3>
+<p>A. <code>git commit --amend</code>を使用して直前のコミットを修正できます。すでにプッシュした場合は注意が必要です。</p>
+<h3>Q4. 複数のファイルを別々にコミットするにはどうすればよいですか？</h3>
+<p>A. <code>git add &lt;ファイル名&gt;</code>で特定のファイルだけをステージングし、<code>git commit</code>でコミットします。これを繰り返します。</p>
+<h3>Q5. コミットメッセージを書くときにエディタが開かないようにするには？</h3>
+<p>A. <code>-m</code>オプションを使用して、コマンドラインで直接メッセージを指定します：<code>git commit -m &quot;メッセージ&quot;</code></p>
+<h3>Q6. 空のコミットを作成できますか？</h3>
+<p>A. <code>git commit --allow-empty -m &quot;空のコミット&quot;</code>で、変更なしのコミットを作成できます。CIトリガーなどに使用されます。</p>
+<h3>Q7. コミットを取り消すにはどうすればよいですか？</h3>
+<p>A. <code>git reset HEAD~1</code>で直前のコミットを取り消せます。公開リポジトリの場合は<code>git revert</code>の使用を検討してください。</p>
+<h3>Q8. 特定のファイルだけをコミットから除外するには？</h3>
+<p>A. <code>git reset &lt;ファイル名&gt;</code>でステージングから特定のファイルを除外し、残りをコミットします。</p>
+<h3>Q9. コミットの署名を行うにはどうすればよいですか？</h3>
+<p>A. <code>git commit -S -m &quot;署名付きコミット&quot;</code>で、GPGキーを使用してコミットに署名できます。</p>
+<h3>Q10. コミットの日時を指定できますか？</h3>
+<p>A. <code>git commit --date=&quot;2023-04-01T12:00:00&quot;</code>で、特定の日時を持つコミットを作成できます。</p>
+<h2>追加情報</h2>
+<ul>
+<li>コミットは小さく、論理的なまとまりで行うと、変更履歴が追跡しやすくなります。</li>
+<li>コミットメッセージは現在形（&quot;Fix bug&quot;など）で書くのが一般的です。</li>
+<li>コミットする前に<code>git diff --staged</code>で変更内容を確認すると、意図しない変更を防げます。</li>
+<li>チーム開発では、コミットメッセージの形式を統一すると履歴が読みやすくなります。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

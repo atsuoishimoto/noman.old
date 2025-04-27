@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>xdg-mime コマンド</h1>
+<p>xdg-mime は Linux デスクトップ環境でファイルタイプの関連付けを管理するコマンドです。ファイルの MIME タイプの確認や、特定の MIME タイプに対するデフォルトアプリケーションの設定ができます。</p>
+<h2>オプション</h2>
+<h3><strong>query filetype</strong></h3>
+<p>ファイルの MIME タイプを確認します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>filetype<span style="color: #F8F8F8"> </span>document.pdf
+<span style="color: #000; font-style: italic">application/pdf</span>
+</pre></div>
+<h3><strong>query default</strong></h3>
+<p>特定の MIME タイプに対するデフォルトアプリケーションを確認します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>application/pdf
+<span style="color: #000; font-style: italic">evince.desktop</span>
+</pre></div>
+<h3><strong>default</strong></h3>
+<p>MIME タイプに対するデフォルトアプリケーションを設定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>okular.desktop<span style="color: #F8F8F8"> </span>application/pdf
+</pre></div>
+<h3><strong>install</strong></h3>
+<p>新しい MIME タイプ情報をシステムにインストールします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>--mode<span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8"> </span>mytype.xml
+</pre></div>
+<h2>使用例</h2>
+<h3>ファイルの MIME タイプを確認する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>filetype<span style="color: #F8F8F8"> </span>~/Downloads/report.docx
+<span style="color: #000; font-style: italic">application/vnd.openxmlformats-officedocument.wordprocessingml.document</span>
+</pre></div>
+<h3>PDF ファイルのデフォルトアプリケーションを変更する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>org.gnome.Evince.desktop<span style="color: #F8F8F8"> </span>application/pdf
+</pre></div>
+<h3>複数の MIME タイプに同じアプリケーションを設定する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>org.gnome.Nautilus.desktop<span style="color: #F8F8F8"> </span>inode/directory
+<span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>org.gnome.Nautilus.desktop<span style="color: #F8F8F8"> </span>application/x-gnome-saved-search
+</pre></div>
+<h2>ヒント:</h2>
+<h3>MIME タイプの確認方法</h3>
+<p>ファイルの正確な MIME タイプがわからない場合は、<code>xdg-mime query filetype ファイル名</code> を使用して確認できます。これは新しいファイル形式のアプリケーション関連付けを設定する際に役立ちます。</p>
+<h3>デスクトップファイルの場所</h3>
+<p><code>.desktop</code> ファイルは通常 <code>/usr/share/applications/</code> または <code>~/.local/share/applications/</code> にあります。正確なファイル名が必要な場合は、これらのディレクトリを確認してください。</p>
+<h3>変更の反映</h3>
+<p>変更が即座に反映されない場合は、デスクトップ環境を再起動するか、<code>update-desktop-database</code> コマンドを実行してみてください。</p>
+<h2>よくある質問</h2>
+<h4>Q1. xdg-mime とは何ですか？</h4>
+<p>A. xdg-mime は Linux デスクトップ環境でファイルタイプとアプリケーションの関連付けを管理するためのコマンドラインツールです。</p>
+<h4>Q2. 特定のファイルタイプのデフォルトアプリケーションを変更するにはどうすればよいですか？</h4>
+<p>A. <code>xdg-mime default アプリケーション名.desktop MIMEタイプ</code> を使用します。例えば、<code>xdg-mime default firefox.desktop text/html</code> とすると、HTML ファイルのデフォルトブラウザが Firefox に設定されます。</p>
+<h4>Q3. 変更はどこに保存されますか？</h4>
+<p>A. ユーザーレベルの変更は <code>~/.config/mimeapps.list</code> ファイルに保存されます。システム全体の設定は <code>/usr/share/applications/mimeinfo.cache</code> などに保存されます。</p>
+<h4>Q4. 設定した関連付けをリセットするにはどうすればよいですか？</h4>
+<p>A. <code>~/.config/mimeapps.list</code> ファイルから該当する行を削除するか、別のアプリケーションを同じ MIME タイプのデフォルトとして設定します。</p>
+<h2>参考資料</h2>
+<p>https://portland.freedesktop.org/doc/xdg-mime.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/26 初版作成。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

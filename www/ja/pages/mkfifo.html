@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>mkfifo コマンドの概要</h1>
+<p><code>mkfifo</code>は、名前付きパイプ（FIFO: First In First Out）を作成するためのUnixコマンドです。これにより、異なるプロセス間でデータを受け渡しするための特殊なファイルを作成できます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-m, --mode=MODE</strong>: パイプのパーミッション（アクセス権限）を設定します</p>
+<ul>
+<li>例: <code>mkfifo -m 644 mypipe</code></li>
+</ul>
+</li>
+<li><p><strong>-Z, --context=CTX</strong>: SELinuxセキュリティコンテキストを設定します（SELinux対応システムのみ）</p>
+<ul>
+<li>例: <code>mkfifo -Z user_u:object_r:user_tmp_t:s0 mypipe</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>基本的な名前付きパイプの作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 名前付きパイプ「mypipe」を作成</span>
+mkfifo<span style="color: #F8F8F8"> </span>mypipe
+
+<span style="color: #8F5902; font-style: italic"># 確認（lsコマンドでは「p」がパイプを示す）</span>
+ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>mypipe
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+prw-r--r--<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8"> </span>group<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span>Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">12</span>:34<span style="color: #F8F8F8"> </span>mypipe
+</pre></div>
+<h3>パイプを使ったプロセス間通信</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ターミナル1で実行：パイプからデータを読み込む</span>
+cat<span style="color: #F8F8F8"> </span>mypipe
+
+<span style="color: #8F5902; font-style: italic"># ターミナル2で実行：パイプにデータを書き込む</span>
+<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello through the pipe&quot;</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>mypipe
+<span style="color: #8F5902; font-style: italic"># ターミナル1に「Hello through the pipe」と表示される</span>
+</pre></div>
+<h3>特定のパーミッションでパイプを作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 所有者のみ読み書き可能なパイプを作成</span>
+mkfifo<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">600</span><span style="color: #F8F8F8"> </span>securepipe
+
+<span style="color: #8F5902; font-style: italic"># 確認</span>
+ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>securepipe
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+prw-------<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8"> </span>group<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span>Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">12</span>:40<span style="color: #F8F8F8"> </span>securepipe
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li>名前付きパイプは、関連のないプロセス間でデータを受け渡しするのに便利です。</li>
+<li>パイプからの読み取りは、誰かがパイプに書き込むまでブロック（待機）されます。</li>
+<li>パイプへの書き込みも、誰かがパイプから読み取るまでブロックされることがあります。</li>
+<li>通常のファイルとは異なり、パイプはデータを一時的に保持するだけで、ディスクに永続的に保存されません。</li>
+<li>パイプを削除するには通常のファイルと同様に <code>rm</code> コマンドを使用します。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>truncateコマンドの概要</h1>
+<p><code>truncate</code>コマンドは、ファイルのサイズを指定したサイズに変更するためのコマンドです。ファイルを拡大したり縮小したりすることができます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-s, --size=SIZE</strong>: ファイルを指定したサイズに設定します</p>
+<ul>
+<li>例: <code>truncate -s 100 file.txt</code> (ファイルを100バイトにする)</li>
+<li>サイズ指定には単位を付けることができます: K (キロバイト)、M (メガバイト)、G (ギガバイト)など</li>
+<li><code>+</code>や<code>-</code>を付けると、現在のサイズから相対的に変更できます</li>
+</ul>
+</li>
+<li><p><strong>-c, --no-create</strong>: 存在しないファイルを作成しません</p>
+<ul>
+<li>例: <code>truncate -c -s 0 file.txt</code> (file.txtが存在しない場合は作成しない)</li>
+</ul>
+</li>
+<li><p><strong>-r, --reference=RFILE</strong>: 指定したファイルと同じサイズに設定します</p>
+<ul>
+<li>例: <code>truncate -r reference.txt target.txt</code> (target.txtをreference.txtと同じサイズにする)</li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 新しいファイルを作成して100バイトのサイズに設定</span>
+truncate<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span>newfile.txt
+
+<span style="color: #8F5902; font-style: italic"># 既存のファイルを0バイト（空）にする</span>
+truncate<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span>logfile.txt
+
+<span style="color: #8F5902; font-style: italic"># ファイルサイズを1メガバイトに設定</span>
+truncate<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>1M<span style="color: #F8F8F8"> </span>largefile.dat
+
+<span style="color: #8F5902; font-style: italic"># 現在のサイズから500バイト増やす</span>
+truncate<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>+500<span style="color: #F8F8F8"> </span>growing.txt
+
+<span style="color: #8F5902; font-style: italic"># 現在のサイズから1キロバイト減らす</span>
+truncate<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>-1K<span style="color: #F8F8F8"> </span>shrinking.txt
+
+<span style="color: #8F5902; font-style: italic"># 別のファイルと同じサイズにする</span>
+truncate<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>reference.txt<span style="color: #F8F8F8"> </span>target.txt
+</pre></div>
+<h2>追加メモ</h2>
+<ul>
+<li>ファイルを縮小すると、余分なデータは失われます（削除されます）</li>
+<li>ファイルを拡大すると、新しく追加された部分はゼロ（null）バイトで埋められます</li>
+<li>ログファイルを素早く空にするのに便利です（<code>truncate -s 0 logfile.log</code>）</li>
+<li><code>-s 0</code>は、ファイルを削除せずに内容だけを空にする最も一般的な使い方です</li>
+<li>存在しないファイルを指定すると、デフォルトでは新しく作成されます（<code>-c</code>オプションで防止可能）</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

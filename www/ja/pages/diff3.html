@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>diff3 コマンドの概要</h1>
+<p>diff3 は3つのファイルを比較し、それらの違いを表示するコマンドです。主に複数の人が同じファイルを編集した場合や、ファイルの複数のバージョンを比較する際に使用されます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-m</strong>: 3つのファイルをマージした結果を出力します。競合がある場合は、マークアップ付きで表示されます。</p>
+<ul>
+<li>例: <code>diff3 -m file1 file2 file3</code></li>
+</ul>
+</li>
+<li><p><strong>-e</strong>: ed スクリプト形式で出力します。これを使用して file2 を file1 と file3 の変更を含むように編集できます。</p>
+<ul>
+<li>例: <code>diff3 -e file1 file2 file3</code></li>
+</ul>
+</li>
+<li><p><strong>-3</strong>: マージの競合がある場合、file3 の内容を優先します。</p>
+<ul>
+<li>例: <code>diff3 -m -3 file1 file2 file3</code></li>
+</ul>
+</li>
+<li><p><strong>-A</strong>: すべての変更を出力します（-A は --show-all の省略形）。</p>
+<ul>
+<li>例: <code>diff3 -A file1 file2 file3</code></li>
+</ul>
+</li>
+<li><p><strong>-T</strong>: タブを出力時に表示します。</p>
+<ul>
+<li>例: <code>diff3 -T file1 file2 file3</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>基本的な比較</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 3つのファイルの違いを表示</span>
+diff3<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>file3
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #CE5C00; font-weight: bold">====</span>
+<span style="color: #0000CF; font-weight: bold">1</span>:1c
+<span style="color: #0000CF; font-weight: bold">2</span>:1c
+<span style="color: #0000CF; font-weight: bold">3</span>:1c
+<span style="color: #F8F8F8">  </span>ファイル1の内容
+<span style="color: #F8F8F8">  </span>ファイル2の内容
+<span style="color: #F8F8F8">  </span>ファイル3の内容
+</pre></div>
+<h3>マージの例</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 3つのファイルをマージして出力</span>
+diff3<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>file3
+
+<span style="color: #8F5902; font-style: italic"># 出力例（競合がある場合）</span>
+<span style="color: #CE5C00; font-weight: bold">&lt;&lt;&lt;&lt;&lt;&lt;</span>&lt;<span style="color: #F8F8F8"> </span>file1
+ファイル1の内容
+<span style="color: #CE5C00; font-weight: bold">||||||</span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>file2
+<span style="color: #000">ファイル2の内容</span>
+<span style="color: #CE5C00; font-weight: bold">=======</span>
+ファイル3の内容
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;<span style="color: #F8F8F8"> </span>file3
+</pre></div>
+<h3>ed スクリプトの生成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ed スクリプト形式で出力</span>
+diff3<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>file3<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>ed_script
+<span style="color: #8F5902; font-style: italic"># ed_scriptを使用してfile2を編集</span>
+ed<span style="color: #F8F8F8"> </span>-<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>ed_script
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li>diff3 コマンドは、ファイルの順序が重要です。通常、<code>diff3 元ファイル 自分の変更 相手の変更</code> という順序で使用します。</li>
+<li>バージョン管理システム（Git など）は内部で diff3 のようなアルゴリズムを使用してマージを行っています。</li>
+<li>大きなファイルや複雑な差分を扱う場合は、視覚的な差分ツール（vimdiff、meld など）の方が分かりやすい場合があります。</li>
+<li>マージ結果（-m オプション）を直接ファイルに保存する場合は、リダイレクト（&gt;）を使用します：<code>diff3 -m file1 file2 file3 &gt; merged_file</code></li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

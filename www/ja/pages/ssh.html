@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>SSH コマンド</h1>
+<p>SSH（Secure Shell）は、ネットワーク上の別のコンピュータに暗号化された安全な接続を確立するためのコマンドです。リモートサーバーへのログイン、コマンド実行、ファイル転送などに使用されます。</p>
+<h2>オプション</h2>
+<h3><strong>-p（ポート指定）</strong></h3>
+<p>標準の22番以外のポートを使用する場合に指定します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2222</span><span style="color: #F8F8F8"> </span>username@hostname
+<span style="color: #8F5902"># </span>ポート2222を使用してリモートサーバーに接続
+</pre></div>
+<h3><strong>-i（秘密鍵ファイル指定）</strong></h3>
+<p>特定の秘密鍵ファイルを使用して認証します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>~/.ssh/my_key<span style="color: #F8F8F8"> </span>username@hostname
+<span style="color: #8F5902"># </span>指定した秘密鍵ファイルを使用して認証
+</pre></div>
+<h3><strong>-X（X11転送）</strong></h3>
+<p>X11転送を有効にし、リモートのグラフィカルアプリケーションをローカルで表示できます</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-X<span style="color: #F8F8F8"> </span>username@hostname
+<span style="color: #8F5902"># </span>X11転送を有効にして接続
+<span style="color: #8F5902">$ </span>firefox
+<span style="color: #8F5902"># </span>リモートサーバー上のFirefoxがローカル画面に表示される
+</pre></div>
+<h3><strong>-L（ローカルポートフォワーディング）</strong></h3>
+<p>ローカルポートをリモートサーバー経由で別のサーバーに転送します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>:internal-server:80<span style="color: #F8F8F8"> </span>username@gateway-host
+<span style="color: #8F5902"># </span>ローカルの8080ポートへのアクセスがgateway-host経由でinternal-serverの80ポートに転送される
+</pre></div>
+<h3><strong>-v（詳細表示）</strong></h3>
+<p>接続プロセスの詳細情報を表示します（デバッグに役立ちます）</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>username@hostname
+<span style="color: #8F5902"># </span>接続の詳細情報が表示される
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的な接続</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>user@example.com
+<span style="color: #8F5902"># </span>接続が確立され、リモートサーバーのシェルプロンプトが表示される
+</pre></div>
+<h3>リモートコマンド実行</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>user@example.com<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ls -la /var/www&quot;</span>
+<span style="color: #8F5902"># </span>リモートサーバーの/var/wwwディレクトリの内容が表示される
+</pre></div>
+<h3>SSH設定ファイルを使用した接続</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>~/.ssh/config
+<span style="color: #000; font-style: italic">Host myserver</span>
+<span style="color: #000; font-style: italic">  HostName example.com</span>
+<span style="color: #000; font-style: italic">  User username</span>
+<span style="color: #000; font-style: italic">  Port 2222</span>
+<span style="color: #000; font-style: italic">  IdentityFile ~/.ssh/custom_key</span>
+
+<span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>myserver
+<span style="color: #8F5902"># </span>設定ファイルの情報を使用して接続
+</pre></div>
+<h2>ヒント:</h2>
+<h3>SSH鍵認証の設定</h3>
+<p>パスワード認証よりも安全で便利な鍵認証を設定するには、<code>ssh-keygen</code>で鍵ペアを生成し、<code>ssh-copy-id user@hostname</code>で公開鍵をリモートサーバーに登録します。</p>
+<h3>接続が頻繁に切れる場合の対策</h3>
+<p>長時間接続を維持したい場合は、<code>~/.ssh/config</code>に以下を追加すると効果的です：</p>
+<pre><code>Host *
+  ServerAliveInterval 60
+</code></pre><h3>SCP/SFTPでのファイル転送</h3>
+<p>SSHプロトコルを使用したファイル転送には<code>scp</code>や<code>sftp</code>コマンドが利用できます。例：<code>scp file.txt user@hostname:/path/to/destination/</code></p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. SSHとは何ですか？</h4>
+<p>A. SSHは「Secure Shell」の略で、暗号化された安全な通信チャネルを通じてリモートサーバーに接続するためのプロトコルとコマンドです。</p>
+<h4>Q2. パスワードなしでログインするにはどうすればよいですか？</h4>
+<p>A. SSH鍵認証を設定します。<code>ssh-keygen</code>で鍵ペアを生成し、<code>ssh-copy-id</code>で公開鍵をサーバーに登録すると、パスワード入力なしでログインできます。</p>
+<h4>Q3. 「Host key verification failed」エラーが出た場合はどうすればよいですか？</h4>
+<p>A. サーバーの鍵が変更された可能性があります。安全が確認できれば、<code>ssh-keygen -R hostname</code>で古い鍵を削除し、再接続してください。</p>
+<h4>Q4. SSHトンネルとは何ですか？</h4>
+<p>A. SSHトンネルは暗号化された通信経路を作成し、通常アクセスできないサービスに安全に接続するための機能です。<code>-L</code>や<code>-R</code>オプションで設定できます。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSでは、SSHクライアントが標準でインストールされていますが、以下の点に注意してください：</p>
+<ul>
+<li>macOS Catalina以降では、秘密鍵のパーミッションが厳格にチェックされます。<code>chmod 600 ~/.ssh/id_rsa</code>のように設定してください。</li>
+<li>キーチェーンとの連携により、パスフレーズ付きの鍵でも一度入力すれば記憶されます。</li>
+<li>macOSのSSHは基本的にOpenSSHベースですが、バージョンが古い場合があります。最新機能が必要な場合はHomebrewでOpenSSHをインストールすることを検討してください。</li>
+</ul>
+<h2>References</h2>
+<p>https://www.openssh.com/manual.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/26 macOSでの注意点を追加。FAQセクションを拡充。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

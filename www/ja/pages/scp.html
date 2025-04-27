@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>scp コマンドの概要</h1>
+<p><code>scp</code>（Secure Copy）は、SSHプロトコルを使用してコンピュータ間でファイルを安全に転送するためのコマンドラインツールです。ローカルマシンとリモートサーバー間、または2つのリモートサーバー間でファイルやディレクトリをコピーできます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-r</strong>: ディレクトリを再帰的にコピーします</p>
+<ul>
+<li>例: <code>scp -r /local/directory user@remote:/path/to/destination</code></li>
+</ul>
+</li>
+<li><p><strong>-P</strong>: 接続先のSSHポート番号を指定します（デフォルトは22）</p>
+<ul>
+<li>例: <code>scp -P 2222 file.txt user@remote:/path/to/destination</code></li>
+</ul>
+</li>
+<li><p><strong>-p</strong>: 元のファイルの修正時刻、アクセス時刻、権限を保持します</p>
+<ul>
+<li>例: <code>scp -p file.txt user@remote:/path/to/destination</code></li>
+</ul>
+</li>
+<li><p><strong>-C</strong>: 転送中にデータを圧縮します（低速ネットワークで有用）</p>
+<ul>
+<li>例: <code>scp -C large_file.zip user@remote:/path/to/destination</code></li>
+</ul>
+</li>
+<li><p><strong>-q</strong>: 進行状況の表示を抑制し、静かに実行します</p>
+<ul>
+<li>例: <code>scp -q file.txt user@remote:/path/to/destination</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>ローカルからリモートへのファイル転送</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ローカルファイルをリモートサーバーに転送する</span>
+scp<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>user@remote.server:/home/user/
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+file.txt<span style="color: #F8F8F8">                  </span><span style="color: #0000CF; font-weight: bold">100</span>%<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">1</span>.2MB/s<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">00</span>:01
+</pre></div>
+<h3>リモートからローカルへのファイル転送</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># リモートサーバーからローカルマシンにファイルをダウンロードする</span>
+scp<span style="color: #F8F8F8"> </span>user@remote.server:/home/user/file.txt<span style="color: #F8F8F8"> </span>./
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+file.txt<span style="color: #F8F8F8">                  </span><span style="color: #0000CF; font-weight: bold">100</span>%<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">1</span>.2MB/s<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">00</span>:01
+</pre></div>
+<h3>ディレクトリの再帰的コピー</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ディレクトリ全体をコピーする</span>
+scp<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>/local/directory<span style="color: #F8F8F8"> </span>user@remote.server:/home/user/
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+file1.txt<span style="color: #F8F8F8">                 </span><span style="color: #0000CF; font-weight: bold">100</span>%<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">1</span>.2MB/s<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">00</span>:01
+file2.txt<span style="color: #F8F8F8">                 </span><span style="color: #0000CF; font-weight: bold">100</span>%<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">5678</span><span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">1</span>.5MB/s<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">00</span>:03
+</pre></div>
+<h3>異なるポート番号を使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ポート2222を使用してファイルを転送</span>
+scp<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2222</span><span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>user@remote.server:/home/user/
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+file.txt<span style="color: #F8F8F8">                  </span><span style="color: #0000CF; font-weight: bold">100</span>%<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">1</span>.2MB/s<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">00</span>:01
+</pre></div>
+<h3>リモートサーバー間のファイル転送</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># あるリモートサーバーから別のリモートサーバーにファイルをコピー</span>
+scp<span style="color: #F8F8F8"> </span>user1@server1:/path/to/file<span style="color: #F8F8F8"> </span>user2@server2:/path/to/destination
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+file.txt<span style="color: #F8F8F8">                  </span><span style="color: #0000CF; font-weight: bold">100</span>%<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">1</span>.2MB/s<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">00</span>:01
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li>初めて接続するサーバーの場合、ホストキーの確認メッセージが表示されます。「yes」と入力して続行します。</li>
+<li>パスワード認証の代わりにSSH鍵認証を設定すると、より安全で便利です。</li>
+<li>ワイルドカード（<code>*</code>）を使用して複数のファイルを一度に転送できます：<code>scp *.txt user@remote:/path/</code></li>
+<li>大きなファイルを転送する場合は、<code>-C</code>（圧縮）オプションを使用すると転送速度が向上することがあります。</li>
+<li>接続が頻繁に切断される不安定なネットワークでは、代わりに<code>rsync</code>コマンドの使用を検討してください。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

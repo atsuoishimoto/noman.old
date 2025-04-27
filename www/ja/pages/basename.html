@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>basename コマンド概要</h1>
+<p><code>basename</code>コマンドは、ファイルパスからディレクトリ部分を削除し、ファイル名のみを取得するためのコマンドです。スクリプト内でファイル名だけを抽出したい場合に便利です。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>基本的な使用法</strong>: パスからファイル名部分を抽出する</p>
+<ul>
+<li>例: <code>basename /path/to/file.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-s, --suffix=接尾辞</strong>: 指定した接尾辞（拡張子など）を削除する</p>
+<ul>
+<li>例: <code>basename file.txt .txt</code></li>
+</ul>
+</li>
+<li><p><strong>-a, --multiple</strong>: 複数のパスを処理する</p>
+<ul>
+<li>例: <code>basename -a /path/to/file1.txt /path/to/file2.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-z, --zero</strong>: 出力の区切りとして改行ではなくNULL文字を使用する</p>
+<ul>
+<li>例: <code>basename -z /path/to/file1.txt /path/to/file2.txt</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使用法</span>
+basename<span style="color: #F8F8F8"> </span>/home/user/documents/report.pdf
+<span style="color: #8F5902; font-style: italic"># 出力</span>
+report.pdf
+
+<span style="color: #8F5902; font-style: italic"># 拡張子を削除</span>
+basename<span style="color: #F8F8F8"> </span>/home/user/documents/report.pdf<span style="color: #F8F8F8"> </span>.pdf
+<span style="color: #8F5902; font-style: italic"># 出力</span>
+report
+
+<span style="color: #8F5902; font-style: italic"># 複数のファイルを処理</span>
+basename<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>/var/log/syslog<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>/usr/bin/python
+<span style="color: #8F5902; font-style: italic"># 出力</span>
+syslog
+hosts
+python
+
+<span style="color: #8F5902; font-style: italic"># スクリプト内での使用例</span>
+<span style="color: #000">FILENAME</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$FILEPATH</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;処理中のファイル: </span><span style="color: #000">$FILENAME</span><span style="color: #4E9A06">&quot;</span>
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><code>basename</code>は主にシェルスクリプト内で使用され、ファイルパスからファイル名部分だけを取り出したい場合に役立ちます。</li>
+<li><code>dirname</code>コマンドと組み合わせると、パスの各部分（ディレクトリとファイル名）を別々に扱うことができます。</li>
+<li>パス操作には、より柔軟な方法として<code>${変数##*/}</code>のようなシェルのパラメータ展開を使用することもできます。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

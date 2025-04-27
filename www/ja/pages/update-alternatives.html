@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>update-alternatives コマンド</h1>
+<p><code>update-alternatives</code>は、Debian系Linuxディストリビューションで使用される、システム上の代替コマンドやアプリケーションを管理するためのコマンドです。複数のバージョンのソフトウェアを共存させ、デフォルトで使用するものを切り替えることができます。</p>
+<h2>オプション</h2>
+<h3><strong>--install</strong></h3>
+<p>新しい代替グループを作成するか、既存のグループに新しい選択肢を追加します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-alternatives<span style="color: #F8F8F8"> </span>--install<span style="color: #F8F8F8"> </span>/usr/bin/editor<span style="color: #F8F8F8"> </span>editor<span style="color: #F8F8F8"> </span>/usr/bin/vim<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span>
+<span style="color: #000; font-style: italic">update-alternatives: using /usr/bin/vim to provide /usr/bin/editor (editor) in auto mode</span>
+</pre></div>
+<h3><strong>--config</strong></h3>
+<p>対話的にデフォルトの代替を選択します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-alternatives<span style="color: #F8F8F8"> </span>--config<span style="color: #F8F8F8"> </span>java
+<span style="color: #000; font-style: italic">There are 3 choices for the alternative java (providing /usr/bin/java).</span>
+
+<span style="color: #000; font-style: italic">  Selection    Path                                            Priority   Status</span>
+<span style="color: #000; font-style: italic">------------------------------------------------------------</span>
+<span style="color: #000; font-style: italic">* 0            /usr/lib/jvm/java-11-openjdk-amd64/bin/java      1111      auto mode</span>
+<span style="color: #000; font-style: italic">  1            /usr/lib/jvm/java-11-openjdk-amd64/bin/java      1111      manual mode</span>
+<span style="color: #000; font-style: italic">  2            /usr/lib/jvm/java-8-openjdk-amd64/bin/java       1081      manual mode</span>
+<span style="color: #000; font-style: italic">  3            /usr/lib/jvm/java-17-openjdk-amd64/bin/java      1171      manual mode</span>
+
+<span style="color: #000; font-style: italic">Press &lt;enter&gt; to keep the current choice[*], or type selection number:</span>
+</pre></div>
+<h3><strong>--display</strong></h3>
+<p>特定の代替グループに関する情報を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>update-alternatives<span style="color: #F8F8F8"> </span>--display<span style="color: #F8F8F8"> </span>editor
+<span style="color: #000; font-style: italic">editor - auto mode</span>
+<span style="color: #000; font-style: italic">  link best version is /usr/bin/vim</span>
+<span style="color: #000; font-style: italic">  link currently points to /usr/bin/vim</span>
+<span style="color: #000; font-style: italic">  link editor is /usr/bin/editor</span>
+<span style="color: #000; font-style: italic">  slave editor.1.gz is /usr/share/man/man1/editor.1.gz</span>
+<span style="color: #000; font-style: italic">  slave editor.fr.1.gz is /usr/share/man/fr/man1/editor.1.gz</span>
+<span style="color: #000; font-style: italic">  slave editor.it.1.gz is /usr/share/man/it/man1/editor.1.gz</span>
+<span style="color: #000; font-style: italic">  slave editor.ja.1.gz is /usr/share/man/ja/man1/editor.1.gz</span>
+<span style="color: #000; font-style: italic">  slave editor.pl.1.gz is /usr/share/man/pl/man1/editor.1.gz</span>
+<span style="color: #000; font-style: italic">  slave editor.ru.1.gz is /usr/share/man/ru/man1/editor.1.gz</span>
+<span style="color: #000; font-style: italic">/usr/bin/vim - priority 100</span>
+<span style="color: #000; font-style: italic">/bin/nano - priority 40</span>
+<span style="color: #000; font-style: italic">/usr/bin/emacs - priority 0</span>
+</pre></div>
+<h3><strong>--remove</strong></h3>
+<p>代替グループから特定の選択肢を削除します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-alternatives<span style="color: #F8F8F8"> </span>--remove<span style="color: #F8F8F8"> </span>editor<span style="color: #F8F8F8"> </span>/usr/bin/emacs
+<span style="color: #000; font-style: italic">update-alternatives: removing editor alternative /usr/bin/emacs</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>Javaのバージョン切り替え</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-alternatives<span style="color: #F8F8F8"> </span>--config<span style="color: #F8F8F8"> </span>java
+<span style="color: #000; font-style: italic">[対話的なメニューが表示され、使用するJavaバージョンを選択できます]</span>
+</pre></div>
+<h3>新しいエディタを代替として追加</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-alternatives<span style="color: #F8F8F8"> </span>--install<span style="color: #F8F8F8"> </span>/usr/bin/editor<span style="color: #F8F8F8"> </span>editor<span style="color: #F8F8F8"> </span>/usr/bin/code<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">90</span>
+<span style="color: #000; font-style: italic">update-alternatives: using /usr/bin/code to provide /usr/bin/editor (editor) in auto mode</span>
+</pre></div>
+<h3>現在の代替設定を確認</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>update-alternatives<span style="color: #F8F8F8"> </span>--list<span style="color: #F8F8F8"> </span>java
+<span style="color: #000; font-style: italic">/usr/lib/jvm/java-11-openjdk-amd64/bin/java</span>
+<span style="color: #000; font-style: italic">/usr/lib/jvm/java-8-openjdk-amd64/bin/java</span>
+<span style="color: #000; font-style: italic">/usr/lib/jvm/java-17-openjdk-amd64/bin/java</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>優先度の理解</h3>
+<p><code>--install</code>オプションで設定する優先度（priority）の値が高いほど、自動モードでその選択肢が選ばれやすくなります。手動で設定した場合は優先度に関係なく選択したものが使用されます。</p>
+<h3>スレーブリンクの活用</h3>
+<p>メインの代替だけでなく、関連するマニュアルページなども一緒に切り替えたい場合は、<code>--slave</code>オプションを使用します。これにより、一貫性のある環境を維持できます。</p>
+<h3>自動モードと手動モード</h3>
+<p>自動モードでは、システムが最も優先度の高い選択肢を自動的に選びます。手動モードでは、ユーザーが明示的に選んだ選択肢が使用されます。</p>
+<h3>管理者権限の必要性</h3>
+<p>ほとんどの操作には管理者権限（sudo）が必要です。読み取り専用の操作（--display, --list）のみ一般ユーザーでも実行できます。</p>
+<h2>よくある質問</h2>
+<h4>Q1. update-alternativesとは何ですか？</h4>
+<p>A. システム上の複数のバージョンのソフトウェアを管理し、デフォルトで使用するものを切り替えるためのコマンドです。</p>
+<h4>Q2. 現在設定されている代替を確認するにはどうすればよいですか？</h4>
+<p>A. <code>update-alternatives --display &lt;名前&gt;</code> または <code>update-alternatives --list &lt;名前&gt;</code> を使用します。</p>
+<h4>Q3. 代替の優先度はどのように機能しますか？</h4>
+<p>A. 優先度は数値で表され、値が大きいほど優先されます。自動モードでは最も優先度の高い選択肢が選ばれます。</p>
+<h4>Q4. 手動で設定した代替を自動モードに戻すにはどうすればよいですか？</h4>
+<p>A. <code>sudo update-alternatives --auto &lt;名前&gt;</code> を実行します。</p>
+<h4>Q5. 代替グループの一覧を表示するにはどうすればよいですか？</h4>
+<p>A. <code>update-alternatives --get-selections</code> コマンドを使用すると、システム上のすべての代替グループとその現在の設定を確認できます。</p>
+<h2>参考資料</h2>
+<p>https://manpages.debian.org/buster/dpkg/update-alternatives.1.en.html</p>
+<h2>改訂</h2>
+<ul>
+<li>2025/04/26 管理者権限の必要性に関するヒントと代替グループ一覧表示に関するFAQを追加。</li>
+<li>2025/04/26 初版作成。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

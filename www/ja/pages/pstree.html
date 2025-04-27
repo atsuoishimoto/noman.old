@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1>pstree</h1>
+<p>プロセスの親子関係を階層的なツリー構造で表示するコマンドです。システム上で実行中のプロセスの関係性を視覚的に確認できます。</p>
+<h2>オプション</h2>
+<h3><strong>-a</strong></h3>
+<p>すべてのプロセスを表示します（デフォルトでは一部のプロセスが省略されることがあります）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>pstree<span style="color: #F8F8F8"> </span>-a
+systemd
+<span style="color: #F8F8F8">  </span>├─ModemManager
+<span style="color: #F8F8F8">  </span>│<span style="color: #F8F8F8">   </span>└─2*<span style="color: #CE5C00; font-weight: bold">[{</span>ModemManager<span style="color: #CE5C00; font-weight: bold">}]</span>
+<span style="color: #F8F8F8">  </span>├─NetworkManager<span style="color: #F8F8F8"> </span>--no-daemon
+<span style="color: #F8F8F8">  </span>│<span style="color: #F8F8F8">   </span>└─3*<span style="color: #CE5C00; font-weight: bold">[{</span>NetworkManager<span style="color: #CE5C00; font-weight: bold">}]</span>
+<span style="color: #F8F8F8">  </span>├─accounts-daemon
+<span style="color: #F8F8F8">  </span>│<span style="color: #F8F8F8">   </span>└─2*<span style="color: #CE5C00; font-weight: bold">[{</span>accounts-daemon<span style="color: #CE5C00; font-weight: bold">}]</span>
+<span style="color: #F8F8F8">  </span>├─avahi-daemon
+<span style="color: #F8F8F8">  </span>│<span style="color: #F8F8F8">   </span>└─avahi-daemon
+<span style="color: #F8F8F8">  </span>...
+</pre></div>
+<h3><strong>-p</strong></h3>
+<p>各プロセスのPID（プロセスID）を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>pstree<span style="color: #F8F8F8"> </span>-p
+systemd<span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">)</span>─┬─ModemManager<span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">823</span><span style="color: #CE5C00; font-weight: bold">)</span>─┬─<span style="color: #CE5C00; font-weight: bold">{</span>ModemManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">841</span><span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">           </span>│<span style="color: #F8F8F8">                   </span>└─<span style="color: #CE5C00; font-weight: bold">{</span>ModemManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">843</span><span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">           </span>├─NetworkManager<span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">824</span><span style="color: #CE5C00; font-weight: bold">)</span>─┬─<span style="color: #CE5C00; font-weight: bold">{</span>NetworkManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">845</span><span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">           </span>│<span style="color: #F8F8F8">                     </span>├─<span style="color: #CE5C00; font-weight: bold">{</span>NetworkManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">846</span><span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">           </span>│<span style="color: #F8F8F8">                     </span>└─<span style="color: #CE5C00; font-weight: bold">{</span>NetworkManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">847</span><span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">           </span>...
+</pre></div>
+<h3><strong>-u</strong></h3>
+<p>各プロセスのユーザー名も表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>pstree<span style="color: #F8F8F8"> </span>-u
+systemd─┬─ModemManager<span style="color: #CE5C00; font-weight: bold">(</span>root<span style="color: #CE5C00; font-weight: bold">)</span>─┬─<span style="color: #CE5C00; font-weight: bold">{</span>ModemManager<span style="color: #CE5C00; font-weight: bold">}(</span>root<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">        </span>│<span style="color: #F8F8F8">                    </span>└─<span style="color: #CE5C00; font-weight: bold">{</span>ModemManager<span style="color: #CE5C00; font-weight: bold">}(</span>root<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">        </span>├─NetworkManager<span style="color: #CE5C00; font-weight: bold">(</span>root<span style="color: #CE5C00; font-weight: bold">)</span>─┬─<span style="color: #CE5C00; font-weight: bold">{</span>NetworkManager<span style="color: #CE5C00; font-weight: bold">}(</span>root<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">        </span>│<span style="color: #F8F8F8">                      </span>├─<span style="color: #CE5C00; font-weight: bold">{</span>NetworkManager<span style="color: #CE5C00; font-weight: bold">}(</span>root<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">        </span>│<span style="color: #F8F8F8">                      </span>└─<span style="color: #CE5C00; font-weight: bold">{</span>NetworkManager<span style="color: #CE5C00; font-weight: bold">}(</span>root<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">        </span>...
+</pre></div>
+<h3><strong>-g</strong></h3>
+<p>各プロセスのグループIDも表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>pstree<span style="color: #F8F8F8"> </span>-g
+systemd─┬─ModemManager<span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">823</span><span style="color: #CE5C00; font-weight: bold">)</span>─┬─<span style="color: #CE5C00; font-weight: bold">{</span>ModemManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">823</span><span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">        </span>│<span style="color: #F8F8F8">                   </span>└─<span style="color: #CE5C00; font-weight: bold">{</span>ModemManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">823</span><span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">        </span>├─NetworkManager<span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">824</span><span style="color: #CE5C00; font-weight: bold">)</span>─┬─<span style="color: #CE5C00; font-weight: bold">{</span>NetworkManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">824</span><span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">        </span>│<span style="color: #F8F8F8">                     </span>├─<span style="color: #CE5C00; font-weight: bold">{</span>NetworkManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">824</span><span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">        </span>│<span style="color: #F8F8F8">                     </span>└─<span style="color: #CE5C00; font-weight: bold">{</span>NetworkManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">824</span><span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">        </span>...
+</pre></div>
+<h3><strong>-n</strong></h3>
+<p>出力を数値順（PID順）でソートします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>pstree<span style="color: #F8F8F8"> </span>-n
+systemd─┬─systemd-journald
+<span style="color: #F8F8F8">        </span>├─systemd-udevd
+<span style="color: #F8F8F8">        </span>├─systemd-networkd
+<span style="color: #F8F8F8">        </span>├─systemd-resolved
+<span style="color: #F8F8F8">        </span>├─accounts-daemon
+<span style="color: #F8F8F8">        </span>...
+</pre></div>
+<h2>使用例</h2>
+<h3>特定のユーザーのプロセスツリーを表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>pstree<span style="color: #F8F8F8"> </span>username
+bash───vim
+</pre></div>
+<h3>PIDとユーザー名を含めた詳細なプロセスツリーを表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>pstree<span style="color: #F8F8F8"> </span>-pu
+systemd<span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">1</span>,root<span style="color: #CE5C00; font-weight: bold">)</span>─┬─ModemManager<span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">823</span>,root<span style="color: #CE5C00; font-weight: bold">)</span>─┬─<span style="color: #CE5C00; font-weight: bold">{</span>ModemManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">841</span>,root<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">                </span>│<span style="color: #F8F8F8">                        </span>└─<span style="color: #CE5C00; font-weight: bold">{</span>ModemManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">843</span>,root<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">                </span>├─NetworkManager<span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">824</span>,root<span style="color: #CE5C00; font-weight: bold">)</span>─┬─<span style="color: #CE5C00; font-weight: bold">{</span>NetworkManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">845</span>,root<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">                </span>│<span style="color: #F8F8F8">                          </span>├─<span style="color: #CE5C00; font-weight: bold">{</span>NetworkManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">846</span>,root<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">                </span>│<span style="color: #F8F8F8">                          </span>└─<span style="color: #CE5C00; font-weight: bold">{</span>NetworkManager<span style="color: #CE5C00; font-weight: bold">}(</span><span style="color: #0000CF; font-weight: bold">847</span>,root<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">                </span>...
+</pre></div>
+<h3>特定のプロセスのサブツリーのみを表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>pstree<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+bash<span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #CE5C00; font-weight: bold">)</span>───ssh<span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">1250</span><span style="color: #CE5C00; font-weight: bold">)</span>───bash<span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">1300</span><span style="color: #CE5C00; font-weight: bold">)</span>───vim<span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">1400</span><span style="color: #CE5C00; font-weight: bold">)</span>
+</pre></div>
+<h2>よくある質問</h2>
+<h3>Q1. pstreeとpsコマンドの違いは何ですか？</h3>
+<p>A. <code>ps</code>コマンドはプロセスを一覧形式で表示しますが、<code>pstree</code>はプロセスの親子関係を階層的なツリー構造で視覚的に表示します。</p>
+<h3>Q2. 特定のプロセスだけを表示するにはどうすればいいですか？</h3>
+<p>A. <code>pstree PID</code>または<code>pstree ユーザー名</code>のように、特定のPIDやユーザー名を指定することで、そのプロセスまたはユーザーのプロセスのみを表示できます。</p>
+<h3>Q3. 同じプロセスが複数ある場合はどのように表示されますか？</h3>
+<p>A. 同じプロセスが複数ある場合は、<code>3*[プロセス名]</code>のように表示されます。これは同じプロセスが3つあることを示しています。</p>
+<h3>Q4. macOSでpstreeを使うにはどうすればいいですか？</h3>
+<p>A. macOSには標準で<code>pstree</code>コマンドがインストールされていません。Homebrewを使って<code>brew install pstree</code>でインストールするか、代わりに<code>ps -e -o pid,ppid,user,args | sort</code>などのコマンドを使用できます。</p>
+<h2>追加情報</h2>
+<ul>
+<li><code>pstree</code>は大規模なシステムでプロセスの関係を把握するのに非常に役立ちます。</li>
+<li><code>-h</code>オプションを使用すると、現在のプロセス（pstreeを実行しているプロセス）がハイライト表示されます。</li>
+<li>出力が長すぎる場合は、<code>pstree | less</code>のようにパイプして閲覧すると便利です。</li>
+<li>同じプロセスが多数ある場合（例：ウェブサーバーの子プロセス）、<code>-c</code>オプションを使用すると、それらを個別に表示できます。</li>
+</ul>
+<h2>参考情報</h2>
+<p>https://man7.org/linux/man-pages/man1/pstree.1.html</p>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/main-ja.css">
+  <link rel="stylesheet" href="../../css/search.css">
+  <script src="../../js/search.js"></script>
+  <title>{{ command }} - noman</title>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav>
+    <div class="nav-logo"><img src="../../../images/white.png" height="50px"></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#">Docs</a>
+        <a href="#">Try</a>
+        <a href="#">GitHub</a>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command...">
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+  <main>
+
+
+<h1><code>free</code> コマンド概要</h1>
+<p><code>free</code>コマンドはシステムのメモリ使用状況を表示するためのコマンドです。物理メモリ（RAM）やスワップ領域の合計、使用中、空き容量などの情報を確認できます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong><code>-h</code>（human-readable）</strong>: メモリサイズを読みやすい単位（KB、MB、GB）で表示します</p>
+<ul>
+<li>例: <code>free -h</code></li>
+</ul>
+</li>
+<li><p><strong><code>-m</code>（megabytes）</strong>: メモリサイズをメガバイト単位で表示します</p>
+<ul>
+<li>例: <code>free -m</code></li>
+</ul>
+</li>
+<li><p><strong><code>-g</code>（gigabytes）</strong>: メモリサイズをギガバイト単位で表示します</p>
+<ul>
+<li>例: <code>free -g</code></li>
+</ul>
+</li>
+<li><p><strong><code>-s N</code>（seconds）</strong>: N秒ごとに継続的にメモリ情報を更新して表示します</p>
+<ul>
+<li>例: <code>free -s 5</code>（5秒ごとに更新）</li>
+</ul>
+</li>
+<li><p><strong><code>-t</code>（total）</strong>: 物理メモリとスワップの合計行を追加表示します</p>
+<ul>
+<li>例: <code>free -t</code></li>
+</ul>
+</li>
+<li><p><strong><code>-w</code>（wide）</strong>: 新しいフォーマットで表示します（buffers と cached を分けて表示）</p>
+<ul>
+<li>例: <code>free -w</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>基本的な使用方法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># メモリ情報を表示</span>
+free
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #F8F8F8">              </span>total<span style="color: #F8F8F8">        </span>used<span style="color: #F8F8F8">        </span>free<span style="color: #F8F8F8">      </span>shared<span style="color: #F8F8F8">  </span>buff/cache<span style="color: #F8F8F8">   </span>available
+Mem:<span style="color: #F8F8F8">        </span><span style="color: #0000CF; font-weight: bold">8167872</span><span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">3899460</span><span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">1007328</span><span style="color: #F8F8F8">      </span><span style="color: #0000CF; font-weight: bold">772312</span><span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">3261084</span><span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">3177520</span>
+Swap:<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">2097148</span><span style="color: #F8F8F8">      </span><span style="color: #0000CF; font-weight: bold">123904</span><span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">1973244</span>
+</pre></div>
+<h3>読みやすい単位で表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 人間が読みやすい単位でメモリ情報を表示</span>
+free<span style="color: #F8F8F8"> </span>-h
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #F8F8F8">              </span>total<span style="color: #F8F8F8">        </span>used<span style="color: #F8F8F8">        </span>free<span style="color: #F8F8F8">      </span>shared<span style="color: #F8F8F8">  </span>buff/cache<span style="color: #F8F8F8">   </span>available
+Mem:<span style="color: #F8F8F8">           </span><span style="color: #0000CF; font-weight: bold">7</span>.8Gi<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">3</span>.7Gi<span style="color: #F8F8F8">       </span>962Mi<span style="color: #F8F8F8">       </span>754Mi<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">3</span>.1Gi<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">3</span>.0Gi
+Swap:<span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">2</span>.0Gi<span style="color: #F8F8F8">       </span>121Mi<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">1</span>.9Gi
+</pre></div>
+<h3>継続的な監視</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 3秒ごとにメモリ情報を更新して表示</span>
+free<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #8F5902; font-style: italic"># 出力例（3秒ごとに更新される）</span>
+<span style="color: #F8F8F8">              </span>total<span style="color: #F8F8F8">        </span>used<span style="color: #F8F8F8">        </span>free<span style="color: #F8F8F8">      </span>shared<span style="color: #F8F8F8">  </span>buff/cache<span style="color: #F8F8F8">   </span>available
+Mem:<span style="color: #F8F8F8">           </span><span style="color: #0000CF; font-weight: bold">7</span>.8Gi<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">3</span>.7Gi<span style="color: #F8F8F8">       </span>962Mi<span style="color: #F8F8F8">       </span>754Mi<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">3</span>.1Gi<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">3</span>.0Gi
+Swap:<span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">2</span>.0Gi<span style="color: #F8F8F8">       </span>121Mi<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">1</span>.9Gi
+
+<span style="color: #F8F8F8">              </span>total<span style="color: #F8F8F8">        </span>used<span style="color: #F8F8F8">        </span>free<span style="color: #F8F8F8">      </span>shared<span style="color: #F8F8F8">  </span>buff/cache<span style="color: #F8F8F8">   </span>available
+Mem:<span style="color: #F8F8F8">           </span><span style="color: #0000CF; font-weight: bold">7</span>.8Gi<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">3</span>.7Gi<span style="color: #F8F8F8">       </span>961Mi<span style="color: #F8F8F8">       </span>754Mi<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">3</span>.1Gi<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">3</span>.0Gi
+Swap:<span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">2</span>.0Gi<span style="color: #F8F8F8">       </span>121Mi<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">1</span>.9Gi
+</pre></div>
+<h3>メガバイト単位で合計行を表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># メモリ情報をメガバイト単位で表示し、合計行も追加</span>
+free<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>-t
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #F8F8F8">              </span>total<span style="color: #F8F8F8">        </span>used<span style="color: #F8F8F8">        </span>free<span style="color: #F8F8F8">      </span>shared<span style="color: #F8F8F8">  </span>buff/cache<span style="color: #F8F8F8">   </span>available
+Mem:<span style="color: #F8F8F8">           </span><span style="color: #0000CF; font-weight: bold">7975</span><span style="color: #F8F8F8">        </span><span style="color: #0000CF; font-weight: bold">3805</span><span style="color: #F8F8F8">         </span><span style="color: #0000CF; font-weight: bold">984</span><span style="color: #F8F8F8">        </span><span style="color: #0000CF; font-weight: bold">754</span><span style="color: #F8F8F8">        </span><span style="color: #0000CF; font-weight: bold">3185</span><span style="color: #F8F8F8">        </span><span style="color: #0000CF; font-weight: bold">3102</span>
+Swap:<span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">2047</span><span style="color: #F8F8F8">         </span><span style="color: #0000CF; font-weight: bold">121</span><span style="color: #F8F8F8">        </span><span style="color: #0000CF; font-weight: bold">1926</span>
+Total:<span style="color: #F8F8F8">        </span><span style="color: #0000CF; font-weight: bold">10022</span><span style="color: #F8F8F8">        </span><span style="color: #0000CF; font-weight: bold">3926</span><span style="color: #F8F8F8">        </span><span style="color: #0000CF; font-weight: bold">2910</span>
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><code>buff/cache</code>列はバッファとキャッシュに使用されているメモリを示します。これは必要に応じて解放可能なメモリです。</li>
+<li><code>available</code>列は、スワップを使わずに新しいアプリケーションを起動できる実質的に利用可能なメモリ量を示します。</li>
+<li>メモリ使用率が高くても、Linuxはキャッシュとして積極的にメモリを使用するため、必ずしもメモリ不足を意味するわけではありません。</li>
+<li>システムのパフォーマンス問題を診断する際は、<code>free</code>コマンドと<code>top</code>や<code>htop</code>コマンドを組み合わせて使用すると効果的です。</li>
+</ul>
+
+
+
+    
+  </main>
+  </div>
+<footer>
+  <div>
+    <a href="#">GitHub</a> |
+    MIT License
+  </div>
+</footer>
+</body>
+</html>
