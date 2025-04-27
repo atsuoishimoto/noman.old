@@ -81,15 +81,17 @@ def summary():
     dest.mkdir(parents=True, exist_ok=True)
 
     d  = make_summary.make_summary(Path("pages/ja"))
+    d = {k:{"summary":v} for k, v in sorted(d.items())}
     text = json.dumps(d, ensure_ascii=False, indent=2)
-    (dest / "summary.json").write_text(text)
+    (dest / "summary.js").write_text(f"pages = {text.strip()};")
 
     dest = Path("www/en")
     dest.mkdir(parents=True, exist_ok=True)
 
     d = make_summary.make_summary(Path("pages/en"))
+    d = {k:{"summary":v} for k, v in sorted(d.items())}
     text = json.dumps(d, ensure_ascii=False, indent=2)
-    (dest / "summary.json").write_text(text)
+    (dest / "summary.js").write_text(f"pages = {text.strip()};")
 
 
 @task
@@ -100,7 +102,7 @@ def html():
 
     for md in Path("pages/ja").glob("*.md"):
         html = template.replace("{{ command }}", md.stem)
-        html = template.replace("{{ content }}", md_to_html(md))
+        html = html.replace("{{ content }}", md_to_html(md))
         (dest / md.with_suffix(".html").name).write_text(html)
 
     template = Path("templates/en.html").read_text()
@@ -109,7 +111,7 @@ def html():
 
     for md in Path("pages/en").glob("*.md"):
         html = template.replace("{{ command }}", md.stem)
-        html = template.replace("{{ content }}", md_to_html(md))
+        html = html.replace("{{ content }}", md_to_html(md))
         (dest / md.with_suffix(".html").name).write_text(html)
 
 @task
