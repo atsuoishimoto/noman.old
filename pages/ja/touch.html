@@ -1,0 +1,67 @@
+<h1>touchコマンド概要</h1>
+<p><code>touch</code>コマンドは、新しい空のファイルを作成したり、既存のファイルのタイムスタンプ（アクセス時間や更新時間）を更新したりするために使用されます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-a</strong>: ファイルのアクセス時間のみを変更します</p>
+<ul>
+<li>例: <code>touch -a file.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-m</strong>: ファイルの更新時間のみを変更します</p>
+<ul>
+<li>例: <code>touch -m file.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-c</strong>: 指定したファイルが存在しない場合、新しいファイルを作成しません</p>
+<ul>
+<li>例: <code>touch -c nonexistent.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-t</strong>: 指定した時間にタイムスタンプを設定します（形式：[[CC]YY]MMDDhhmm[.ss]）</p>
+<ul>
+<li>例: <code>touch -t 202401010000 file.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-r</strong>: 参照ファイルと同じタイムスタンプに設定します</p>
+<ul>
+<li>例: <code>touch -r reference.txt target.txt</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>基本的な使用法 - 新しいファイルの作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 新しい空のファイルを作成する</span>
+touch<span style="color: #F8F8F8"> </span>newfile.txt
+
+<span style="color: #8F5902; font-style: italic"># 複数のファイルを一度に作成する</span>
+touch<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt
+</pre></div>
+<h3>タイムスタンプの更新</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 既存のファイルのタイムスタンプを現在の時刻に更新する</span>
+touch<span style="color: #F8F8F8"> </span>existing.txt
+
+<span style="color: #8F5902; font-style: italic"># ls -lコマンドでタイムスタンプを確認できる</span>
+ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>existing.txt
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+-rw-r--r--<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8"> </span>group<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span>Jan<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">14</span>:30<span style="color: #F8F8F8"> </span>existing.txt
+</pre></div>
+<h3>特定の時間にタイムスタンプを設定</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 2024年1月1日00:00にタイムスタンプを設定</span>
+touch<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">202401010000</span><span style="color: #F8F8F8"> </span>file.txt
+
+<span style="color: #8F5902; font-style: italic"># 確認</span>
+ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+-rw-r--r--<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8"> </span>group<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span>Jan<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span>:00<span style="color: #F8F8F8"> </span>file.txt
+</pre></div>
+<h3>参照ファイルと同じタイムスタンプに設定</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># reference.txtと同じタイムスタンプをtarget.txtに設定</span>
+touch<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>reference.txt<span style="color: #F8F8F8"> </span>target.txt
+</pre></div>
+<h2>追加メモ</h2>
+<ul>
+<li><code>touch</code>は主にファイル作成とタイムスタンプ更新のために使われますが、ファイルの内容は変更しません。</li>
+<li>ディレクトリ内の全ファイルのタイムスタンプを更新したい場合は、ワイルドカード（<code>*</code>）を使用できます：<code>touch *</code></li>
+<li>存在しないディレクトリ内にファイルを作成しようとすると失敗します（例：<code>touch nonexistent_dir/file.txt</code>）</li>
+<li>スクリプトやプログラムで、ファイルの存在確認や更新確認のためにタイムスタンプを利用することがよくあります。</li>
+</ul>

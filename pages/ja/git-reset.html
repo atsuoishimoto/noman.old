@@ -1,0 +1,60 @@
+<h1>git-reset コマンドの概要</h1>
+<p><code>git-reset</code>は、現在のブランチの状態を特定のコミットに戻すためのGitコマンドです。作業ディレクトリ、ステージングエリア、HEADの位置を変更することができます。</p>
+<h2>オプション</h2>
+<h3><strong>--soft</strong>:</h3>
+<p>HEADの位置だけを変更し、ステージングエリアと作業ディレクトリはそのままにします。</p>
+<p>例: <code>git reset --soft HEAD~1</code></p>
+<h3><strong>--mixed</strong> (デフォルト):</h3>
+<p>HEADの位置とステージングエリアを変更しますが、作業ディレクトリはそのままにします。</p>
+<p>例: <code>git reset HEAD~1</code> または <code>git reset --mixed HEAD~1</code></p>
+<h3><strong>--hard</strong>:</h3>
+<p>HEADの位置、ステージングエリア、作業ディレクトリをすべて変更します。変更内容は失われるので注意が必要です。</p>
+<p>例: <code>git reset --hard HEAD~1</code></p>
+<h3><strong>特定のファイルのリセット</strong>:</h3>
+<p>特定のファイルをステージングエリアからワーキングディレクトリに戻します。</p>
+<p>例: <code>git reset HEAD file.txt</code></p>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 直前のコミットを取り消し、変更をステージングエリアに残す</span>
+git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>--soft<span style="color: #F8F8F8"> </span>HEAD~1
+<span style="color: #8F5902; font-style: italic"># 結果: コミットは取り消されるが、変更はステージングされた状態で残る</span>
+
+<span style="color: #8F5902; font-style: italic"># 直前のコミットを取り消し、変更を作業ディレクトリに残す</span>
+git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>HEAD~1
+<span style="color: #8F5902; font-style: italic"># 結果: コミットは取り消され、変更は作業ディレクトリに残る（ステージングは解除される）</span>
+
+<span style="color: #8F5902; font-style: italic"># 直前のコミットを完全に取り消し、変更も削除する</span>
+git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>--hard<span style="color: #F8F8F8"> </span>HEAD~1
+<span style="color: #8F5902; font-style: italic"># 結果: コミットは取り消され、変更も完全に削除される</span>
+
+<span style="color: #8F5902; font-style: italic"># 特定のファイルをステージングエリアから作業ディレクトリに戻す</span>
+git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>HEAD<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #8F5902; font-style: italic"># 結果: file.txtのステージングが解除される</span>
+</pre></div>
+<h2>よくある質問</h2>
+<h3>Q1. <code>git reset</code>と<code>git revert</code>の違いは何ですか？</h3>
+<p>A. <code>git reset</code>はコミット履歴を書き換えますが、<code>git revert</code>は新しいコミットを作成して変更を元に戻します。<code>revert</code>は共有リポジトリでの作業に適しています。</p>
+<h3>Q2. 誤って<code>git reset --hard</code>を実行してしまいました。データを復元できますか？</h3>
+<p>A. <code>git reflog</code>コマンドを使用して最近のHEADの位置を確認し、<code>git reset --hard &lt;commit-id&gt;</code>で戻すことができる場合があります。ただし、完全な復元は保証されません。</p>
+<h3>Q3. リモートリポジトリにプッシュ済みのコミットを<code>reset</code>しても大丈夫ですか？</h3>
+<p>A. 共有リポジトリにプッシュ済みのコミットを<code>reset</code>すると、他の開発者に問題が生じる可能性があります。この場合は<code>git revert</code>の使用を検討してください。</p>
+<h3>Q4. ステージングエリアの変更だけをリセットするには？</h3>
+<p>A. <code>git reset</code>（オプションなし）または<code>git reset --mixed HEAD</code>を使用すると、ステージングエリアをリセットできます。</p>
+<h3>Q5. 特定のコミットまで戻るには？</h3>
+<p>A. <code>git reset &lt;commit-id&gt;</code>または<code>git reset HEAD~n</code>（nは戻りたいコミット数）を使用します。</p>
+<h3>Q6. <code>git reset</code>後に強制プッシュするのは危険ですか？</h3>
+<p>A. はい、<code>git push --force</code>は他の開発者の作業を上書きする可能性があるため、共有ブランチでは避けるべきです。</p>
+<h3>Q7. マージコミットをリセットするには？</h3>
+<p>A. 通常の<code>git reset HEAD~1</code>でマージコミットをリセットできますが、マージの複雑さによっては競合が発生する場合があります。</p>
+<h3>Q8. ファイルの特定の変更だけをリセットするには？</h3>
+<p>A. 特定のファイルの変更をリセットするには<code>git checkout -- &lt;file&gt;</code>を使用します。これは<code>git reset</code>ではなく<code>git checkout</code>コマンドです。</p>
+<h3>Q9. <code>git reset</code>と<code>git checkout</code>の違いは？</h3>
+<p>A. <code>git reset</code>はブランチの参照を移動させますが、<code>git checkout</code>は作業ディレクトリを変更します。<code>git checkout &lt;branch&gt;</code>はブランチを切り替えます。</p>
+<h3>Q10. <code>git reset</code>後に変更を復活させるには？</h3>
+<p>A. <code>git reset --soft</code>または<code>git reset --mixed</code>を使用した場合、変更は作業ディレクトリに残っているので、再度ステージングとコミットが可能です。</p>
+<h2>追加のメモ</h2>
+<ul>
+<li><code>git reset</code>を使用する前に、重要な変更は必ずバックアップしておきましょう。</li>
+<li>共有リポジトリで作業している場合は、<code>git reset --hard</code>の使用には特に注意が必要です。</li>
+<li>履歴を書き換えたくない場合は、代わりに<code>git revert</code>の使用を検討してください。</li>
+<li><code>git reflog</code>は、リセット操作を元に戻すのに役立つコマンドです。</li>
+</ul>

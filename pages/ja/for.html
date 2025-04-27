@@ -1,0 +1,93 @@
+<h1>for コマンド</h1>
+<p><code>for</code> はシェルスクリプトで繰り返し処理を行うためのループ構文です。指定したリストの各要素に対して、同じコマンドを繰り返し実行することができます。</p>
+<h2>構文</h2>
+<h3><strong>基本構文</strong></h3>
+<p>リスト内の各要素に対して処理を繰り返します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>変数<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>リスト<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #F8F8F8">  </span>コマンド
+<span style="color: #204A87; font-weight: bold">done</span>
+</pre></div>
+<h3><strong>C言語風構文</strong> (Bash専用)</h3>
+<p>C言語のような構文でループを記述できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">((</span>初期値<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>条件<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>増分<span style="color: #CE5C00; font-weight: bold">))</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #F8F8F8">  </span>コマンド
+<span style="color: #204A87; font-weight: bold">done</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的な使い方</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #000; font-style: italic">    echo &quot;数字: $i&quot;</span>
+<span style="color: #000; font-style: italic">  done</span>
+<span style="color: #000; font-style: italic">数字: 1</span>
+<span style="color: #000; font-style: italic">数字: 2</span>
+<span style="color: #000; font-style: italic">数字: 3</span>
+</pre></div>
+<h3>ファイル一覧に対する処理</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>*.txt<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #000; font-style: italic">    echo &quot;ファイル名: $file&quot;</span>
+<span style="color: #000; font-style: italic">  done</span>
+<span style="color: #000; font-style: italic">ファイル名: document.txt</span>
+<span style="color: #000; font-style: italic">ファイル名: notes.txt</span>
+<span style="color: #000; font-style: italic">ファイル名: readme.txt</span>
+</pre></div>
+<h3>数値範囲を使ったループ</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span>..5<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #000; font-style: italic">    echo &quot;$i回目の処理&quot;</span>
+<span style="color: #000; font-style: italic">  done</span>
+<span style="color: #000; font-style: italic">1回目の処理</span>
+<span style="color: #000; font-style: italic">2回目の処理</span>
+<span style="color: #000; font-style: italic">3回目の処理</span>
+<span style="color: #000; font-style: italic">4回目の処理</span>
+<span style="color: #000; font-style: italic">5回目の処理</span>
+</pre></div>
+<h3>C言語風構文の例</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">((</span><span style="color: #000">i</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>i&lt;<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>i++<span style="color: #CE5C00; font-weight: bold">))</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #000; font-style: italic">    echo &quot;カウント: $i&quot;</span>
+<span style="color: #000; font-style: italic">  done</span>
+<span style="color: #000; font-style: italic">カウント: 1</span>
+<span style="color: #000; font-style: italic">カウント: 2</span>
+<span style="color: #000; font-style: italic">カウント: 3</span>
+</pre></div>
+<h2>よくある質問</h2>
+<h4>Q1. <code>for</code> ループでファイル名に空白が含まれる場合はどうすればよいですか？</h4>
+<p>A. <code>IFS</code>（Internal Field Separator）を変更するか、配列を使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">IFS</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">$&#39;\n&#39;</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># 改行だけを区切り文字に設定</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>ls<span style="color: #204A87; font-weight: bold">)</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #000; font-style: italic">    echo &quot;処理中: $file&quot;</span>
+<span style="color: #000; font-style: italic">  done</span>
+</pre></div>
+<h4>Q2. 特定の間隔で数値を増やすにはどうすればよいですか？</h4>
+<p>A. 波括弧展開で増分を指定できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span>..10..2<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># 0から10まで2ずつ増加</span>
+<span style="color: #000; font-style: italic">    echo $i</span>
+<span style="color: #000; font-style: italic">  done</span>
+<span style="color: #000; font-style: italic">0</span>
+<span style="color: #000; font-style: italic">2</span>
+<span style="color: #000; font-style: italic">4</span>
+<span style="color: #000; font-style: italic">6</span>
+<span style="color: #000; font-style: italic">8</span>
+<span style="color: #000; font-style: italic">10</span>
+</pre></div>
+<h4>Q3. <code>for</code> ループを途中で抜けるにはどうすればよいですか？</h4>
+<p>A. <code>break</code> コマンドを使用します。条件付きでスキップするには <code>continue</code> を使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span>..10<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #000; font-style: italic">    if [ $i -eq 5 ]; then</span>
+<span style="color: #000; font-style: italic">      break  # 5になったらループを抜ける</span>
+<span style="color: #000; font-style: italic">    fi</span>
+<span style="color: #000; font-style: italic">    echo $i</span>
+<span style="color: #000; font-style: italic">  done</span>
+<span style="color: #000; font-style: italic">1</span>
+<span style="color: #000; font-style: italic">2</span>
+<span style="color: #000; font-style: italic">3</span>
+<span style="color: #000; font-style: italic">4</span>
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li>シェルスクリプトでは、<code>for</code> ループは配列処理やファイル操作の自動化に非常に便利です。</li>
+<li>macOSでは基本的な <code>for</code> 構文は同じですが、デフォルトシェルが <code>zsh</code> であることに注意してください。</li>
+<li>処理が複雑な場合は、可読性のために変数名を意味のある名前にすることをお勧めします。</li>
+</ul>
+<h2>参考資料</h2>
+<p>https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html</p>
+<h2>改訂履歴</h2>
+<p>2025/04/26 フォーマットを統一し、出力例を追加しました。追加情報セクションを新設しました。</p>

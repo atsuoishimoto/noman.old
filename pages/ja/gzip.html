@@ -1,0 +1,81 @@
+<h1>gzipコマンド概要</h1>
+<p>gzipは、ファイルを圧縮・展開するためのUNIXコマンドです。ファイルサイズを小さくして保存容量を節約したり、ネットワーク転送を高速化したりするために使用されます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-d</strong>: 圧縮ファイルを展開（解凍）します</p>
+<ul>
+<li>例: <code>gzip -d file.gz</code></li>
+</ul>
+</li>
+<li><p><strong>-c</strong>: 圧縮/展開結果を標準出力に出力します（元のファイルはそのまま保持）</p>
+<ul>
+<li>例: <code>gzip -c file &gt; file.gz</code></li>
+</ul>
+</li>
+<li><p><strong>-k</strong>: 圧縮/展開後も元のファイルを保持します</p>
+<ul>
+<li>例: <code>gzip -k file</code></li>
+</ul>
+</li>
+<li><p><strong>-l</strong>: 圧縮ファイルの情報を表示します</p>
+<ul>
+<li>例: <code>gzip -l file.gz</code></li>
+</ul>
+</li>
+<li><p><strong>-[1-9]</strong>: 圧縮レベルを指定します（1が最速・低圧縮率、9が最高圧縮率・低速）</p>
+<ul>
+<li>例: <code>gzip -9 file</code></li>
+</ul>
+</li>
+<li><p><strong>-r</strong>: ディレクトリを再帰的に処理します</p>
+<ul>
+<li>例: <code>gzip -r directory</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>基本的な圧縮</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ファイルを圧縮（元のファイルは削除される）</span>
+gzip<span style="color: #F8F8F8"> </span>data.txt
+<span style="color: #8F5902; font-style: italic"># 結果: data.txt.gz が作成される</span>
+</pre></div>
+<h3>複数ファイルの圧縮</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 複数のファイルを一度に圧縮</span>
+gzip<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt
+<span style="color: #8F5902; font-style: italic"># 結果: file1.txt.gz, file2.txt.gz, file3.txt.gz が作成される</span>
+</pre></div>
+<h3>圧縮ファイルの展開</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 圧縮ファイルを展開</span>
+gzip<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>data.txt.gz
+<span style="color: #8F5902; font-style: italic"># または</span>
+gunzip<span style="color: #F8F8F8"> </span>data.txt.gz
+<span style="color: #8F5902; font-style: italic"># 結果: data.txt が復元される</span>
+</pre></div>
+<h3>元ファイルを保持しながら圧縮</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># -k オプションで元ファイルを保持</span>
+gzip<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>important_data.txt
+<span style="color: #8F5902; font-style: italic"># 結果: important_data.txt と important_data.txt.gz の両方が存在</span>
+</pre></div>
+<h3>圧縮情報の表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 圧縮ファイルの情報を表示</span>
+gzip<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>archive.gz
+<span style="color: #8F5902; font-style: italic"># 出力例:</span>
+<span style="color: #8F5902; font-style: italic">#         compressed        uncompressed  ratio uncompressed_name</span>
+<span style="color: #8F5902; font-style: italic">#                 453               1024  55.7% archive</span>
+</pre></div>
+<h3>高圧縮率での圧縮</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 最高圧縮率（レベル9）で圧縮</span>
+gzip<span style="color: #F8F8F8"> </span>-9<span style="color: #F8F8F8"> </span>large_file.txt
+<span style="color: #8F5902; font-style: italic"># 結果: 時間はかかるが、より小さいサイズの large_file.txt.gz が作成される</span>
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><p>gzipは単一ファイルのみを圧縮します。複数のファイルをまとめて一つのアーカイブにしたい場合は、先に<code>tar</code>コマンドでアーカイブ化してから<code>gzip</code>で圧縮するのが一般的です（例: <code>tar -czf archive.tar.gz directory/</code>）。</p>
+</li>
+<li><p>圧縮ファイルの拡張子は通常<code>.gz</code>ですが、gzipコマンドは自動的に付加します。</p>
+</li>
+<li><p><code>zcat</code>、<code>zless</code>、<code>zgrep</code>などの関連コマンドを使うと、圧縮ファイルを展開せずに内容を確認できます。</p>
+</li>
+<li><p>大きなファイルを圧縮する場合、圧縮レベルが高いほどCPU使用率が上がり、処理時間が長くなることに注意してください。日常的な使用では、デフォルトのレベル6が速度と圧縮率のバランスが良いでしょう。</p>
+</li>
+</ul>

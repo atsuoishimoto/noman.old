@@ -1,0 +1,88 @@
+<h1><code>diff</code> コマンドの概要</h1>
+<p><code>diff</code>コマンドは、2つのファイルやディレクトリの内容を比較し、その違いを表示するためのツールです。テキストファイルの変更点を確認したり、コードの修正箇所を特定したりする際に非常に便利です。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong><code>-u</code>（unified形式）</strong>: 統一された形式で差分を表示します。変更された行の前後の文脈も含めて表示するため、変更内容を理解しやすくなります。</p>
+<ul>
+<li>例: <code>diff -u file1.txt file2.txt</code></li>
+</ul>
+</li>
+<li><p><strong><code>-i</code>（大文字小文字を無視）</strong>: 大文字と小文字の違いを無視して比較します。</p>
+<ul>
+<li>例: <code>diff -i original.txt modified.txt</code></li>
+</ul>
+</li>
+<li><p><strong><code>-w</code>（空白を無視）</strong>: 空白（スペース、タブ）の違いを無視して比較します。</p>
+<ul>
+<li>例: <code>diff -w code1.py code2.py</code></li>
+</ul>
+</li>
+<li><p><strong><code>-r</code>（再帰的）</strong>: ディレクトリを再帰的に比較します。サブディレクトリ内のファイルも含めて比較します。</p>
+<ul>
+<li>例: <code>diff -r dir1 dir2</code></li>
+</ul>
+</li>
+<li><p><strong><code>-q</code>（簡易表示）</strong>: 違いがあるファイルの名前だけを表示します。詳細な差分は表示しません。</p>
+<ul>
+<li>例: <code>diff -q olddir newdir</code></li>
+</ul>
+</li>
+<li><p><strong><code>-y</code>（横並び形式）</strong>: 2つのファイルを横に並べて表示し、違いを視覚的に確認できます。</p>
+<ul>
+<li>例: <code>diff -y file1.txt file2.txt</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>基本的な使い方</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 2つのファイルの違いを表示</span>
+diff<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+2c2
+&lt;<span style="color: #F8F8F8"> </span>これは元のファイルの2行目です。
+---
+&gt;<span style="color: #F8F8F8"> </span>これは変更後のファイルの2行目です。
+</pre></div>
+<h3>unified形式での表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># unified形式で差分を表示</span>
+diff<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+---<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8">	</span><span style="color: #0000CF; font-weight: bold">2023</span>-05-01<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>:00:00
++++<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8">	</span><span style="color: #0000CF; font-weight: bold">2023</span>-05-01<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">11</span>:00:00
+@@<span style="color: #F8F8F8"> </span>-1,3<span style="color: #F8F8F8"> </span>+1,3<span style="color: #F8F8F8"> </span>@@
+<span style="color: #F8F8F8"> </span>これは1行目です。
+-これは元のファイルの2行目です。
++これは変更後のファイルの2行目です。
+<span style="color: #F8F8F8"> </span>これは3行目です。
+</pre></div>
+<h3>ディレクトリの比較</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 2つのディレクトリを再帰的に比較</span>
+diff<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>dir1<span style="color: #F8F8F8"> </span>dir2
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+Only<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>dir1:<span style="color: #F8F8F8"> </span>uniquefile1.txt
+Only<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>dir2:<span style="color: #F8F8F8"> </span>uniquefile2.txt
+diff<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>dir1/common.txt<span style="color: #F8F8F8"> </span>dir2/common.txt
+2c2
+&lt;<span style="color: #F8F8F8"> </span>これは元のファイルの内容です。
+---
+&gt;<span style="color: #F8F8F8"> </span>これは変更後のファイルの内容です。
+</pre></div>
+<h3>横並び形式での表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 横並び形式で差分を表示</span>
+diff<span style="color: #F8F8F8"> </span>-y<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+これは1行目です。<span style="color: #F8F8F8">                      </span>これは1行目です。
+これは元のファイルの2行目です。<span style="color: #F8F8F8">      </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>これは変更後のファイルの2行目です。
+これは3行目です。<span style="color: #F8F8F8">                      </span>これは3行目です。
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><code>diff</code>の出力形式は少し独特です。<code>&lt;</code>は最初のファイルの行、<code>&gt;</code>は2番目のファイルの行を示します。</li>
+<li>より視覚的に分かりやすい差分表示が必要な場合は、<code>colordiff</code>や<code>vimdiff</code>などの代替ツールも検討してみてください。</li>
+<li>大きなファイルや多数のファイルを比較する場合は、<code>-q</code>オプションを使って最初に違いがあるファイルだけを特定し、その後で詳細な差分を確認すると効率的です。</li>
+<li>バージョン管理システム（Git、SVNなど）を使用している場合は、それらの差分表示機能を使うとより便利な場合があります。</li>
+</ul>

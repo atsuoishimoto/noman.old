@@ -1,0 +1,54 @@
+<h1><code>sudo</code> コマンドの概要</h1>
+<p><code>sudo</code>（スーパーユーザー・ドゥ）は、一時的に管理者（root）権限で他のコマンドを実行するためのコマンドです。通常のユーザーが管理者権限が必要な操作を安全に行うことができます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-u [ユーザー名]</strong>: 指定したユーザーとして実行します</p>
+<ul>
+<li>例: <code>sudo -u postgres psql</code>（postgresユーザーとしてpsqlを実行）</li>
+</ul>
+</li>
+<li><p><strong>-i</strong>: ログインシェルを起動し、ターゲットユーザーの環境で実行します</p>
+<ul>
+<li>例: <code>sudo -i</code>（rootユーザーのシェルを起動）</li>
+</ul>
+</li>
+<li><p><strong>-s</strong>: シェルを起動します（環境変数は現在のユーザーのまま）</p>
+<ul>
+<li>例: <code>sudo -s</code></li>
+</ul>
+</li>
+<li><p><strong>-l</strong>: 現在のユーザーが実行できる<code>sudo</code>コマンドの一覧を表示します</p>
+<ul>
+<li>例: <code>sudo -l</code></li>
+</ul>
+</li>
+<li><p><strong>-v</strong>: タイムアウト時間を延長します（パスワードの再入力を防ぐ）</p>
+<ul>
+<li>例: <code>sudo -v</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># システムファイルの編集</span>
+sudo<span style="color: #F8F8F8"> </span>nano<span style="color: #F8F8F8"> </span>/etc/hosts
+<span style="color: #8F5902; font-style: italic"># 出力: （nanoエディタが開き、/etc/hostsファイルを編集できる）</span>
+
+<span style="color: #8F5902; font-style: italic"># パッケージのインストール（Ubuntuの例）</span>
+sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>firefox
+<span style="color: #8F5902; font-style: italic"># 出力: （firefoxのインストールプロセスが開始される）</span>
+
+<span style="color: #8F5902; font-style: italic"># 別のユーザーとしてコマンドを実行</span>
+sudo<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>www-data<span style="color: #F8F8F8"> </span>php<span style="color: #F8F8F8"> </span>test.php
+<span style="color: #8F5902; font-style: italic"># 出力: （www-dataユーザーとしてPHPスクリプトが実行される）</span>
+
+<span style="color: #8F5902; font-style: italic"># rootユーザーのシェルを起動</span>
+sudo<span style="color: #F8F8F8"> </span>-i
+<span style="color: #8F5902; font-style: italic"># 出力: root@hostname:~#</span>
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><code>sudo</code>コマンドを初めて実行する際や、一定時間（通常は15分）経過後は、パスワードの入力が求められます。</li>
+<li><code>/etc/sudoers</code>ファイルで、どのユーザーがどのコマンドを<code>sudo</code>で実行できるかが定義されています。このファイルは<code>visudo</code>コマンドで安全に編集できます。</li>
+<li><code>sudo !!</code>と入力すると、直前に実行したコマンドを管理者権限で再実行できます（時間の節約になります）。</li>
+<li>セキュリティ上の理由から、必要な時だけ<code>sudo</code>を使用し、通常の作業では一般ユーザー権限で操作することをお勧めします。</li>
+</ul>

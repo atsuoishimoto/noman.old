@@ -1,0 +1,95 @@
+<h1>rg コマンド</h1>
+<p><code>rg</code>（ripgrep）は高速な検索ツールで、ファイル内の文字列パターンを正規表現で検索します。gitやVSCodeなどでも採用されている高性能な<code>grep</code>代替ツールです。</p>
+<h2>オプション</h2>
+<h3><strong>-i, --ignore-case</strong></h3>
+<p>大文字と小文字を区別せずに検索します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>error
+<span style="color: #000; font-style: italic">./log.txt:10:ERROR: Failed to connect to database</span>
+<span style="color: #000; font-style: italic">./log.txt:15:error: timeout occurred</span>
+<span style="color: #000; font-style: italic">./config.js:5:// errorHandler configuration</span>
+</pre></div>
+<h3><strong>-v, --invert-match</strong></h3>
+<p>パターンに一致しない行を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>success<span style="color: #F8F8F8"> </span>./log.txt
+<span style="color: #000; font-style: italic">./log.txt:10:ERROR: Failed to connect to database</span>
+<span style="color: #000; font-style: italic">./log.txt:15:error: timeout occurred</span>
+<span style="color: #000; font-style: italic">./log.txt:20:Warning: retry attempt 3</span>
+</pre></div>
+<h3><strong>-A, --after-context</strong></h3>
+<p>マッチした行の後に指定した行数を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>error
+<span style="color: #000; font-style: italic">./log.txt:15:error: timeout occurred</span>
+<span style="color: #000; font-style: italic">./log.txt-16:  at line 42 in network.js</span>
+<span style="color: #000; font-style: italic">./log.txt-17:  retrying in 5 seconds</span>
+</pre></div>
+<h3><strong>-B, --before-context</strong></h3>
+<p>マッチした行の前に指定した行数を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-B<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>error
+<span style="color: #000; font-style: italic">./log.txt-14:Attempting connection...</span>
+<span style="color: #000; font-style: italic">./log.txt:15:error: timeout occurred</span>
+</pre></div>
+<h3><strong>-C, --context</strong></h3>
+<p>マッチした行の前後に指定した行数を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>error
+<span style="color: #000; font-style: italic">./log.txt-14:Attempting connection...</span>
+<span style="color: #000; font-style: italic">./log.txt:15:error: timeout occurred</span>
+<span style="color: #000; font-style: italic">./log.txt-16:  at line 42 in network.js</span>
+</pre></div>
+<h3><strong>-l, --files-with-matches</strong></h3>
+<p>マッチしたファイル名のみを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>error
+<span style="color: #000; font-style: italic">./log.txt</span>
+<span style="color: #000; font-style: italic">./config.js</span>
+</pre></div>
+<h3><strong>--no-ignore</strong></h3>
+<p><code>.gitignore</code>や<code>.ignore</code>などで指定された無視ファイルも検索対象に含めます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>--no-ignore<span style="color: #F8F8F8"> </span>password
+<span style="color: #000; font-style: italic">./node_modules/config.js:5:const password = &#39;default123&#39;;</span>
+<span style="color: #000; font-style: italic">./config.backup:10:password=test123</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>複数のファイルタイプを検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>js<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>ts<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;function main&#39;</span>
+<span style="color: #000; font-style: italic">./src/main.js:5:function main() {</span>
+<span style="color: #000; font-style: italic">./src/utils.ts:10:export function main(): void {</span>
+</pre></div>
+<h3>再帰的に特定のディレクトリを検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;TODO&#39;</span><span style="color: #F8F8F8"> </span>./src
+<span style="color: #000; font-style: italic">./src/app.js:15:// TODO: Implement error handling</span>
+<span style="color: #000; font-style: italic">./src/components/Button.js:42:// TODO: Add accessibility features</span>
+</pre></div>
+<h3>正規表現を使用した検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;\d{3}-\d{4}&#39;</span><span style="color: #F8F8F8"> </span>--type<span style="color: #CE5C00; font-weight: bold">=</span>txt
+<span style="color: #000; font-style: italic">./contacts.txt:5:Phone: 555-1234</span>
+<span style="color: #000; font-style: italic">./orders.txt:12:Contact: 123-4567</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>検索速度の最適化</h3>
+<p><code>rg</code>はデフォルトで<code>.git</code>ディレクトリや<code>.gitignore</code>で指定されたファイルを無視するため、大規模なプロジェクトでも高速に検索できます。</p>
+<h3>複雑な検索パターン</h3>
+<p><code>-e</code>オプションを使用すると、複数の検索パターンを指定できます：<code>rg -e 'pattern1' -e 'pattern2'</code></p>
+<h3>検索結果の色分け</h3>
+<p><code>rg</code>はデフォルトでマッチした部分を色付きで表示します。<code>--color never</code>で無効化、<code>--color always</code>で常に有効化できます。</p>
+<h3>隠しファイルの検索</h3>
+<p><code>-u</code>（<code>--unrestricted</code>）オプションを使うと隠しファイルも検索対象に含めることができます。<code>-uu</code>でさらに多くのファイルを、<code>-uuu</code>で全てのファイルを対象にします。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>rg</code>と<code>grep</code>の違いは何ですか？</h4>
+<p>A. <code>rg</code>は<code>grep</code>より高速で、デフォルトで再帰検索や<code>.gitignore</code>の尊重、色付き出力などの機能があります。また、マルチスレッドで動作するため大規模なプロジェクトでの検索が速いです。</p>
+<h4>Q2. 特定のファイルタイプだけを検索するには？</h4>
+<p>A. <code>-t</code>または<code>--type</code>オプションを使用します。例：<code>rg -t js pattern</code>でJavaScriptファイルのみ検索します。</p>
+<h4>Q3. バイナリファイルを検索対象から除外するには？</h4>
+<p>A. デフォルトでバイナリファイルは検索されません。明示的に指定する場合は<code>--no-binary</code>オプションを使用します。</p>
+<h4>Q4. 大きなファイルを効率的に検索するには？</h4>
+<p>A. <code>rg</code>は自動的に大きなファイルも効率的に処理しますが、<code>--mmap</code>オプションを使うとメモリマッピングを利用してさらに高速化できる場合があります。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSでは、Homebrewを使用してインストールするのが一般的です：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>brew<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>ripgrep
+</pre></div>
+<p>macOSのファイルシステム（APFS/HFS+）は大文字小文字を区別しないため、検索時に注意が必要です。正確に大文字小文字を区別したい場合は、明示的に<code>-s</code>または<code>--case-sensitive</code>オプションを使用してください。</p>
+<h2>参考資料</h2>
+<p>https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/04/26 --no-ignoreオプションの説明を追加。macOSでの注意点を追加。</li>
+<li>2025/04/26 初回作成</li>
+</ul>

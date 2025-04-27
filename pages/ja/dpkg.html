@@ -1,0 +1,89 @@
+<h1>dpkgコマンドの概要</h1>
+<p>dpkgはDebian系Linuxディストリビューション（UbuntuやDebianなど）でパッケージの管理を行うための基本的なコマンドです。パッケージのインストール、削除、情報表示などの操作を行います。</p>
+<h2>オプション</h2>
+<h3><strong>-i, --install</strong>:</h3>
+<p>パッケージをインストールします。</p>
+<p>例:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># example.debパッケージをインストールする</span>
+sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>example.deb
+</pre></div>
+<h3><strong>-r, --remove</strong>:</h3>
+<p>パッケージを削除します（設定ファイルは残ります）。</p>
+<p>例:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># exampleパッケージを削除する</span>
+sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>example
+</pre></div>
+<h3><strong>-P, --purge</strong>:</h3>
+<p>パッケージを設定ファイルごと完全に削除します。</p>
+<p>例:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># exampleパッケージを設定ファイルごと削除する</span>
+sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span>example
+</pre></div>
+<h3><strong>-l, --list</strong>:</h3>
+<p>インストールされているパッケージの一覧を表示します。</p>
+<p>例:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># インストール済みのパッケージを一覧表示する</span>
+dpkg<span style="color: #F8F8F8"> </span>-l
+<span style="color: #8F5902; font-style: italic"># 特定のパターンに一致するパッケージを表示する</span>
+dpkg<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;python*&#39;</span>
+</pre></div>
+<h3><strong>-s, --status</strong>:</h3>
+<p>特定のパッケージの状態を表示します。</p>
+<p>例:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># firefoxパッケージの状態を確認する</span>
+dpkg<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>firefox
+</pre></div>
+<h3><strong>-L, --listfiles</strong>:</h3>
+<p>パッケージに含まれるファイルの一覧を表示します。</p>
+<p>例:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># firefoxパッケージに含まれるファイルを表示する</span>
+dpkg<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>firefox
+</pre></div>
+<h3><strong>-S, --search</strong>:</h3>
+<p>指定したファイルがどのパッケージに属しているかを検索します。</p>
+<p>例:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># /usr/bin/pythonファイルがどのパッケージに属しているか調べる</span>
+dpkg<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>/usr/bin/python
+</pre></div>
+<h3><strong>--configure</strong>:</h3>
+<p>設定が完了していないパッケージの設定を行います。</p>
+<p>例:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 設定が完了していないパッケージを設定する</span>
+sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>--configure<span style="color: #F8F8F8"> </span>-a
+</pre></div>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># .debファイルからパッケージをインストールする</span>
+sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>package.deb
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+Selecting<span style="color: #F8F8F8"> </span>previously<span style="color: #F8F8F8"> </span>unselected<span style="color: #F8F8F8"> </span>package<span style="color: #F8F8F8"> </span>example.
+<span style="color: #CE5C00; font-weight: bold">(</span>Reading<span style="color: #F8F8F8"> </span>database<span style="color: #F8F8F8"> </span>...<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">200000</span><span style="color: #F8F8F8"> </span>files<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span>directories<span style="color: #F8F8F8"> </span>currently<span style="color: #F8F8F8"> </span>installed.<span style="color: #CE5C00; font-weight: bold">)</span>
+Preparing<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>unpack<span style="color: #F8F8F8"> </span>package.deb<span style="color: #F8F8F8"> </span>...
+Unpacking<span style="color: #F8F8F8"> </span>example<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">1</span>.0-1<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>...
+Setting<span style="color: #F8F8F8"> </span>up<span style="color: #F8F8F8"> </span>example<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">1</span>.0-1<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>...
+
+<span style="color: #8F5902; font-style: italic"># インストールされているパッケージを検索する</span>
+dpkg<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>firefox
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+ii<span style="color: #F8F8F8">  </span>firefox<span style="color: #F8F8F8">        </span><span style="color: #0000CF; font-weight: bold">115</span>.0+build2-0ubuntu0.22.04.1<span style="color: #F8F8F8"> </span>amd64<span style="color: #F8F8F8"> </span>Safe<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span>easy<span style="color: #F8F8F8"> </span>web<span style="color: #F8F8F8"> </span>browser<span style="color: #F8F8F8"> </span>from<span style="color: #F8F8F8"> </span>Mozilla
+
+<span style="color: #8F5902; font-style: italic"># パッケージを削除する</span>
+sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>firefox
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #CE5C00; font-weight: bold">(</span>Reading<span style="color: #F8F8F8"> </span>database<span style="color: #F8F8F8"> </span>...<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">200000</span><span style="color: #F8F8F8"> </span>files<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span>directories<span style="color: #F8F8F8"> </span>currently<span style="color: #F8F8F8"> </span>installed.<span style="color: #CE5C00; font-weight: bold">)</span>
+Removing<span style="color: #F8F8F8"> </span>firefox<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">115</span>.0+build2-0ubuntu0.22.04.1<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>...
+</pre></div>
+<h2>よくある質問</h2>
+<h3>Q1. dpkgとaptの違いは何ですか？</h3>
+<p>A. dpkgは単一のパッケージを管理する低レベルのツールです。aptはdpkgのフロントエンドで、依存関係の解決やリポジトリからのパッケージ取得などの高度な機能を提供します。</p>
+<h3>Q2. dpkgでインストールしたパッケージの依存関係エラーを解決するにはどうすればよいですか？</h3>
+<p>A. <code>sudo apt install -f</code>コマンドを実行すると、依存関係の問題を解決できることが多いです。</p>
+<h3>Q3. インストールに失敗したパッケージを修復するにはどうすればよいですか？</h3>
+<p>A. <code>sudo dpkg --configure -a</code>を実行すると、設定が中断されたパッケージの設定を完了できます。</p>
+<h3>Q4. パッケージのインストール状態を確認するにはどうすればよいですか？</h3>
+<p>A. <code>dpkg -s パッケージ名</code>を使用すると、パッケージの詳細な状態を確認できます。</p>
+<h2>追加情報</h2>
+<ul>
+<li>dpkgはパッケージの依存関係を自動的に解決しないため、依存関係のあるパッケージは手動でインストールするか、aptを使用する必要があります。</li>
+<li>システムファイルを誤って削除した場合、<code>dpkg -S ファイルパス</code>でどのパッケージに属しているかを調べ、そのパッケージを再インストールすることで復旧できることがあります。</li>
+<li><code>/var/lib/dpkg/</code>ディレクトリにはパッケージ管理のデータベースが保存されています。このディレクトリを誤って変更すると、パッケージ管理システムが破損する可能性があるので注意が必要です。</li>
+</ul>

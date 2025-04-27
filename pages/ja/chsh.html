@@ -1,0 +1,49 @@
+<h1>chsh コマンドの概要</h1>
+<p><code>chsh</code>（change shell）は、ユーザーのログインシェルを変更するためのコマンドです。ユーザーがシステムにログインした際に自動的に起動されるシェルを指定することができます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-s, --shell</strong>: 新しいログインシェルを指定します</p>
+<ul>
+<li>例: <code>chsh -s /bin/zsh</code></li>
+</ul>
+</li>
+<li><p><strong>-l, --list-shells</strong>: システムで利用可能なシェルの一覧を表示します</p>
+<ul>
+<li>例: <code>chsh -l</code></li>
+</ul>
+</li>
+<li><p><strong>-u, --help</strong>: ヘルプメッセージを表示します</p>
+<ul>
+<li>例: <code>chsh --help</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>自分のログインシェルを変更する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 自分のシェルをBashからZshに変更</span>
+chsh<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/bin/zsh
+<span style="color: #8F5902; font-style: italic"># パスワードの入力を求められます</span>
+Password:<span style="color: #F8F8F8"> </span>
+<span style="color: #8F5902; font-style: italic"># 成功すると次回ログイン時から新しいシェルが使用されます</span>
+</pre></div>
+<h3>利用可能なシェルを確認する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># システムで使用可能なシェルの一覧を表示</span>
+chsh<span style="color: #F8F8F8"> </span>-l
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+/bin/bash
+/bin/zsh
+/bin/sh
+/bin/dash
+</pre></div>
+<h3>他のユーザーのシェルを変更する（rootユーザーのみ）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># rootユーザーが他のユーザーのシェルを変更</span>
+sudo<span style="color: #F8F8F8"> </span>chsh<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/bin/bash<span style="color: #F8F8F8"> </span>username
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li>シェルを変更するには、変更先のシェルが <code>/etc/shells</code> ファイルに登録されている必要があります。</li>
+<li>変更は次回ログイン時から有効になります。現在のセッションには影響しません。</li>
+<li>自分のシェルを変更する場合は、通常パスワードの入力が求められます。</li>
+<li>存在しないシェルや <code>/etc/shells</code> に登録されていないシェルを指定すると、エラーになります。</li>
+<li>現在のシェルを確認するには <code>echo $SHELL</code> コマンドを使用できます。</li>
+</ul>

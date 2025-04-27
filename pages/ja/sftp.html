@@ -1,0 +1,86 @@
+<h1>sftpコマンド概要</h1>
+<p>sftpは「SSH File Transfer Protocol」の略で、SSHプロトコルを使用してリモートサーバーとの間でファイルを安全に転送するためのコマンドです。通常のFTPと違い、暗号化された接続を使用するため、データ転送がより安全です。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-P port</strong>: 接続先のSSHポート番号を指定します（デフォルトは22）</p>
+<ul>
+<li>例: <code>sftp -P 2222 user@example.com</code></li>
+</ul>
+</li>
+<li><p><strong>-i identity_file</strong>: 認証に使用する秘密鍵ファイルを指定します</p>
+<ul>
+<li>例: <code>sftp -i ~/.ssh/my_key user@example.com</code></li>
+</ul>
+</li>
+<li><p><strong>-b batchfile</strong>: バッチファイルからコマンドを読み込んで実行します</p>
+<ul>
+<li>例: <code>sftp -b commands.txt user@example.com</code></li>
+</ul>
+</li>
+<li><p><strong>-r</strong>: ディレクトリを再帰的にアップロード/ダウンロードします</p>
+<ul>
+<li>例: <code>get -r remote_dir local_dir</code>（sftpセッション内で使用）</li>
+</ul>
+</li>
+</ul>
+<h2>基本的な使い方</h2>
+<h3>接続方法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ユーザー名とホスト名を指定して接続</span>
+sftp<span style="color: #F8F8F8"> </span>user@example.com
+
+<span style="color: #8F5902; font-style: italic"># 接続成功時の出力例</span>
+Connected<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>example.com.
+sftp&gt;
+</pre></div>
+<h3>sftpセッション内のコマンド</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># リモートディレクトリの内容を表示</span>
+sftp&gt;<span style="color: #F8F8F8"> </span>ls
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+file1.txt<span style="color: #F8F8F8">  </span>documents/<span style="color: #F8F8F8">  </span>images/
+
+<span style="color: #8F5902; font-style: italic"># ローカルディレクトリの内容を表示</span>
+sftp&gt;<span style="color: #F8F8F8"> </span>lls
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+Downloads/<span style="color: #F8F8F8">  </span>Desktop/<span style="color: #F8F8F8">  </span>local_file.txt
+
+<span style="color: #8F5902; font-style: italic"># カレントディレクトリの変更（リモート）</span>
+sftp&gt;<span style="color: #F8F8F8"> </span><span style="color: #204A87">cd</span><span style="color: #F8F8F8"> </span>documents
+
+<span style="color: #8F5902; font-style: italic"># カレントディレクトリの変更（ローカル）</span>
+sftp&gt;<span style="color: #F8F8F8"> </span>lcd<span style="color: #F8F8F8"> </span>Downloads
+
+<span style="color: #8F5902; font-style: italic"># ファイルのダウンロード</span>
+sftp&gt;<span style="color: #F8F8F8"> </span>get<span style="color: #F8F8F8"> </span>file1.txt
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+Fetching<span style="color: #F8F8F8"> </span>/home/user/file1.txt<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>file1.txt
+
+<span style="color: #8F5902; font-style: italic"># ファイルのアップロード</span>
+sftp&gt;<span style="color: #F8F8F8"> </span>put<span style="color: #F8F8F8"> </span>local_file.txt
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+Uploading<span style="color: #F8F8F8"> </span>local_file.txt<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>/home/user/local_file.txt
+
+<span style="color: #8F5902; font-style: italic"># ディレクトリの再帰的ダウンロード</span>
+sftp&gt;<span style="color: #F8F8F8"> </span>get<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>documents
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+Fetching<span style="color: #F8F8F8"> </span>/home/user/documents/<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>documents/
+
+<span style="color: #8F5902; font-style: italic"># セッションの終了</span>
+sftp&gt;<span style="color: #F8F8F8"> </span><span style="color: #204A87">exit</span>
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><p>sftpはインタラクティブモードとバッチモードの両方で使用できます。バッチモードは自動化スクリプトに便利です。</p>
+</li>
+<li><p>ワイルドカードを使用したファイル転送も可能です：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>sftp&gt;<span style="color: #F8F8F8"> </span>get<span style="color: #F8F8F8"> </span>*.txt
+</pre></div>
+</li>
+<li><p>転送速度を確認するには <code>-v</code>（詳細表示）オプションを使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>sftp<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>user@example.com
+</pre></div>
+</li>
+<li><p>多くのsftpコマンドはFTPと似ていますが、すべての通信が暗号化されるため、公共のネットワークでも安全に使用できます。</p>
+</li>
+<li><p>パスワード認証よりも公開鍵認証（<code>-i</code>オプション）を使用する方が安全で便利です。</p>
+</li>
+</ul>

@@ -1,0 +1,51 @@
+<h1>getent</h1>
+<p><code>getent</code> は、システムのデータベースエントリを取得・表示するコマンドです。ユーザー、グループ、ホスト名などの情報を統一された方法で取得できます。</p>
+<h2>オプション</h2>
+<h3><strong>-s SOURCE, --service=SOURCE</strong></h3>
+<p>特定のサービスソースを指定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>getent<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>files<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>root
+root:x:0:0:root:/root:/bin/bash
+</pre></div>
+<h3><strong>-h, --help</strong></h3>
+<p>ヘルプメッセージを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>getent<span style="color: #F8F8F8"> </span>--help
+使用法:<span style="color: #F8F8F8"> </span>getent<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span>オプション<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>データベース<span style="color: #F8F8F8"> </span>キー...
+...
+</pre></div>
+<h2>使用例</h2>
+<h3>パスワードデータベースからユーザー情報を取得</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>getent<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>root
+root:x:0:0:root:/root:/bin/bash
+</pre></div>
+<h3>ホスト名からIPアドレスを取得</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>getent<span style="color: #F8F8F8"> </span>hosts<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #0000CF; font-weight: bold">93</span>.184.216.34<span style="color: #F8F8F8">    </span>example.com
+</pre></div>
+<h3>グループ情報を取得</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>getent<span style="color: #F8F8F8"> </span>group<span style="color: #F8F8F8"> </span>sudo
+sudo:x:27:user1,user2
+</pre></div>
+<h3>サービス情報を取得</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>getent<span style="color: #F8F8F8"> </span>services<span style="color: #F8F8F8"> </span>ssh
+ssh<span style="color: #F8F8F8">                </span><span style="color: #0000CF; font-weight: bold">22</span>/tcp
+</pre></div>
+<h2>よくある質問</h2>
+<h3>Q1. <code>getent</code> はどのようなデータベースにアクセスできますか？</h3>
+<p>A. 主なデータベースには <code>passwd</code>（ユーザー情報）、<code>group</code>（グループ情報）、<code>hosts</code>（ホスト名とIPアドレス）、<code>services</code>（ネットワークサービス）、<code>protocols</code>（プロトコル）、<code>networks</code>（ネットワーク）などがあります。</p>
+<h3>Q2. <code>getent</code> と <code>/etc/passwd</code> を直接見ることの違いは何ですか？</h3>
+<p>A. <code>getent</code> はNIS、LDAP、DNSなど複数のソースから情報を取得できますが、<code>/etc/passwd</code> はローカルファイルのみを参照します。</p>
+<h3>Q3. 特定のユーザーが存在するか確認するには？</h3>
+<p>A. <code>getent passwd ユーザー名</code> を実行し、出力があれば存在します。</p>
+<h2>追加情報</h2>
+<ul>
+<li><code>getent</code> はName Service Switch（NSS）を使用して情報を取得するため、システム設定に応じて情報源が変わることがあります。</li>
+<li>出力形式はデータベースによって異なります。</li>
+<li>複数のキーを指定すると、それぞれに一致するエントリがすべて表示されます。</li>
+</ul>
+<h2>macOSでの注意点</h2>
+<ul>
+<li>macOSでは標準でインストールされていない場合があります。Homebrewなどのパッケージマネージャーを使用してインストールできます。</li>
+<li>macOSでは一部のデータベースが異なる形式や場所にある場合があります。</li>
+</ul>
+<h2>参考情報</h2>
+<p>https://man7.org/linux/man-pages/man1/getent.1.html</p>

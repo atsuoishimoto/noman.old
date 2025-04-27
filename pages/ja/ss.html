@@ -1,0 +1,77 @@
+<h1>ss コマンド概要</h1>
+<p><code>ss</code>（Socket Statistics）は、ネットワークソケット情報を表示するコマンドです。<code>netstat</code>の代替として開発され、より高速で詳細な情報を提供します。</p>
+<h2>オプション</h2>
+<h3><strong>-t (--tcp)</strong></h3>
+<p>TCPソケットのみを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>ss<span style="color: #F8F8F8"> </span>-t
+State<span style="color: #F8F8F8">     </span>Recv-Q<span style="color: #F8F8F8">     </span>Send-Q<span style="color: #F8F8F8">         </span>Local<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">          </span>Peer<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">     </span>Process
+ESTAB<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">              </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.5:ssh<span style="color: #F8F8F8">             </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.10:52414
+ESTAB<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">              </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.5:42004<span style="color: #F8F8F8">           </span><span style="color: #0000CF; font-weight: bold">151</span>.101.65.69:https
+</pre></div>
+<h3><strong>-u (--udp)</strong></h3>
+<p>UDPソケットのみを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>ss<span style="color: #F8F8F8"> </span>-u
+State<span style="color: #F8F8F8">     </span>Recv-Q<span style="color: #F8F8F8">     </span>Send-Q<span style="color: #F8F8F8">         </span>Local<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">          </span>Peer<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">     </span>Process
+UNCONN<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">              </span><span style="color: #0000CF; font-weight: bold">0</span>.0.0.0:bootpc<span style="color: #F8F8F8">             </span><span style="color: #0000CF; font-weight: bold">0</span>.0.0.0:*
+UNCONN<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">              </span><span style="color: #0000CF; font-weight: bold">0</span>.0.0.0:mdns<span style="color: #F8F8F8">               </span><span style="color: #0000CF; font-weight: bold">0</span>.0.0.0:*
+</pre></div>
+<h3><strong>-l (--listening)</strong></h3>
+<p>リスニング状態のソケットのみを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>ss<span style="color: #F8F8F8"> </span>-l
+Netid<span style="color: #F8F8F8">     </span>State<span style="color: #F8F8F8">      </span>Recv-Q<span style="color: #F8F8F8">     </span>Send-Q<span style="color: #F8F8F8">         </span>Local<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">          </span>Peer<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">     </span>Process
+tcp<span style="color: #F8F8F8">       </span>LISTEN<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">128</span><span style="color: #F8F8F8">            </span><span style="color: #0000CF; font-weight: bold">0</span>.0.0.0:ssh<span style="color: #F8F8F8">                 </span><span style="color: #0000CF; font-weight: bold">0</span>.0.0.0:*
+tcp<span style="color: #F8F8F8">       </span>LISTEN<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">128</span><span style="color: #F8F8F8">            </span><span style="color: #0000CF; font-weight: bold">127</span>.0.0.1:smtp<span style="color: #F8F8F8">              </span><span style="color: #0000CF; font-weight: bold">0</span>.0.0.0:*
+</pre></div>
+<h3><strong>-a (--all)</strong></h3>
+<p>リスニング状態と非リスニング状態の両方のソケットを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>ss<span style="color: #F8F8F8"> </span>-a
+Netid<span style="color: #F8F8F8">     </span>State<span style="color: #F8F8F8">      </span>Recv-Q<span style="color: #F8F8F8">     </span>Send-Q<span style="color: #F8F8F8">         </span>Local<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">          </span>Peer<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">     </span>Process
+tcp<span style="color: #F8F8F8">       </span>LISTEN<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">128</span><span style="color: #F8F8F8">            </span><span style="color: #0000CF; font-weight: bold">0</span>.0.0.0:ssh<span style="color: #F8F8F8">                 </span><span style="color: #0000CF; font-weight: bold">0</span>.0.0.0:*
+tcp<span style="color: #F8F8F8">       </span>ESTAB<span style="color: #F8F8F8">      </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">              </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.5:ssh<span style="color: #F8F8F8">             </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.10:52414
+</pre></div>
+<h3><strong>-n (--numeric)</strong></h3>
+<p>ホスト名、ポート名、ユーザー名を数値で表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>ss<span style="color: #F8F8F8"> </span>-tn
+State<span style="color: #F8F8F8">     </span>Recv-Q<span style="color: #F8F8F8">     </span>Send-Q<span style="color: #F8F8F8">         </span>Local<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">          </span>Peer<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">     </span>Process
+ESTAB<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">              </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.5:22<span style="color: #F8F8F8">              </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.10:52414
+ESTAB<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">              </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.5:42004<span style="color: #F8F8F8">           </span><span style="color: #0000CF; font-weight: bold">151</span>.101.65.69:443
+</pre></div>
+<h3><strong>-p (--processes)</strong></h3>
+<p>ソケットを使用しているプロセス情報を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>ss<span style="color: #F8F8F8"> </span>-tp
+State<span style="color: #F8F8F8">     </span>Recv-Q<span style="color: #F8F8F8">     </span>Send-Q<span style="color: #F8F8F8">         </span>Local<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">          </span>Peer<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">     </span>Process
+ESTAB<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">              </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.5:ssh<span style="color: #F8F8F8">             </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.10:52414<span style="color: #F8F8F8">    </span>users:<span style="color: #CE5C00; font-weight: bold">((</span><span style="color: #4E9A06">&quot;sshd&quot;</span>,pid<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1234</span>,fd<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #CE5C00; font-weight: bold">))</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>特定のポートに関連するすべての接続を表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>ss<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>state<span style="color: #F8F8F8"> </span>established<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;( dport = :ssh or sport = :ssh )&#39;</span>
+State<span style="color: #F8F8F8">     </span>Recv-Q<span style="color: #F8F8F8">     </span>Send-Q<span style="color: #F8F8F8">         </span>Local<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">          </span>Peer<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">     </span>Process
+ESTAB<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">              </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.5:ssh<span style="color: #F8F8F8">             </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.10:52414
+</pre></div>
+<h3>HTTPSの接続を表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>ss<span style="color: #F8F8F8"> </span>-tn<span style="color: #F8F8F8"> </span>state<span style="color: #F8F8F8"> </span>established<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;( dport = :443 or sport = :443 )&#39;</span>
+State<span style="color: #F8F8F8">     </span>Recv-Q<span style="color: #F8F8F8">     </span>Send-Q<span style="color: #F8F8F8">         </span>Local<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">          </span>Peer<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">     </span>Process
+ESTAB<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">              </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.5:42004<span style="color: #F8F8F8">           </span><span style="color: #0000CF; font-weight: bold">151</span>.101.65.69:443
+</pre></div>
+<h3>リスニング中のTCPポートとそのプロセスを表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>ss<span style="color: #F8F8F8"> </span>-tlp
+State<span style="color: #F8F8F8">     </span>Recv-Q<span style="color: #F8F8F8">     </span>Send-Q<span style="color: #F8F8F8">         </span>Local<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">          </span>Peer<span style="color: #F8F8F8"> </span>Address:Port<span style="color: #F8F8F8">     </span>Process
+LISTEN<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">128</span><span style="color: #F8F8F8">            </span><span style="color: #0000CF; font-weight: bold">0</span>.0.0.0:ssh<span style="color: #F8F8F8">                 </span><span style="color: #0000CF; font-weight: bold">0</span>.0.0.0:*<span style="color: #F8F8F8">             </span>users:<span style="color: #CE5C00; font-weight: bold">((</span><span style="color: #4E9A06">&quot;sshd&quot;</span>,pid<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1234</span>,fd<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #CE5C00; font-weight: bold">))</span>
+LISTEN<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">128</span><span style="color: #F8F8F8">            </span><span style="color: #0000CF; font-weight: bold">127</span>.0.0.1:smtp<span style="color: #F8F8F8">              </span><span style="color: #0000CF; font-weight: bold">0</span>.0.0.0:*<span style="color: #F8F8F8">             </span>users:<span style="color: #CE5C00; font-weight: bold">((</span><span style="color: #4E9A06">&quot;postfix&quot;</span>,pid<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">5678</span>,fd<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">13</span><span style="color: #CE5C00; font-weight: bold">))</span>
+</pre></div>
+<h2>よくある質問</h2>
+<h3>Q1. <code>ss</code>と<code>netstat</code>の違いは何ですか？</h3>
+<p>A. <code>ss</code>は<code>netstat</code>の代替として開発され、より高速で詳細な情報を提供します。<code>ss</code>はカーネルから直接情報を取得するため、特に多数の接続がある場合に効率的です。</p>
+<h3>Q2. 特定のポートをリスニングしているプロセスを確認するにはどうすればよいですか？</h3>
+<p>A. <code>ss -tlp | grep &lt;ポート番号&gt;</code> を使用します。例えば、HTTPポート(80)をリスニングしているプロセスを確認するには <code>ss -tlp | grep :http</code> または <code>ss -tlp | grep :80</code> を実行します。</p>
+<h3>Q3. 確立された接続のみを表示するにはどうすればよいですか？</h3>
+<p>A. <code>ss -t state established</code> を使用します。これにより、現在アクティブなTCP接続のみが表示されます。</p>
+<h3>Q4. 特定のIPアドレスとの接続を表示するにはどうすればよいですか？</h3>
+<p>A. <code>ss dst &lt;IPアドレス&gt;</code> または <code>ss src &lt;IPアドレス&gt;</code> を使用します。例えば、<code>ss dst 192.168.1.10</code> は、192.168.1.10に向けたすべての接続を表示します。</p>
+<h2>追加情報</h2>
+<ul>
+<li><code>ss</code>コマンドは<code>iproute2</code>パッケージの一部であり、多くの現代的なLinuxディストリビューションにデフォルトでインストールされています。</li>
+<li>複雑なフィルタリングが可能で、正規表現や条件式を使用して特定の接続を検索できます。</li>
+<li>大量の接続がある環境（サーバーなど）では、<code>-n</code>オプションを使用すると名前解決を行わないため処理が高速化します。</li>
+<li><code>ss</code>の出力は非常に詳細なため、<code>grep</code>と組み合わせて使用すると特定の情報を簡単に抽出できます。</li>
+</ul>

@@ -1,0 +1,48 @@
+<h1>sleepコマンド概要</h1>
+<p><code>sleep</code>コマンドは、指定した時間だけプロセスを一時停止（スリープ）させるためのコマンドです。スクリプト内での待機時間の設定や、コマンドの実行タイミングを調整する際に使用されます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>数値のみ</strong>: デフォルトでは秒単位で待機します</p>
+<ul>
+<li>例: <code>sleep 5</code>（5秒間待機）</li>
+</ul>
+</li>
+<li><p><strong>時間単位の指定</strong>:</p>
+<ul>
+<li><strong>s</strong>: 秒（デフォルト）</li>
+<li><strong>m</strong>: 分</li>
+<li><strong>h</strong>: 時間</li>
+<li><strong>d</strong>: 日</li>
+<li>例: <code>sleep 1m</code>（1分間待機）、<code>sleep 2h</code>（2時間待機）</li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使い方（5秒間待機）</span>
+$<span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #8F5902; font-style: italic"># （5秒後にプロンプトが戻ります）</span>
+
+<span style="color: #8F5902; font-style: italic"># 複数の時間単位を組み合わせる</span>
+$<span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span>1m<span style="color: #F8F8F8"> </span>30s
+<span style="color: #8F5902; font-style: italic"># （1分30秒後にプロンプトが戻ります）</span>
+
+<span style="color: #8F5902; font-style: italic"># スクリプト内での使用例</span>
+$<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;処理を開始します&quot;</span>
+$<span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
+$<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2秒経過しました&quot;</span>
+処理を開始します
+（2秒待機）
+2秒経過しました
+
+<span style="color: #8F5902; font-style: italic"># コマンドを連続実行する例</span>
+$<span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;5秒経ちました&quot;</span>
+（5秒待機）
+5秒経ちました
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><code>sleep</code>コマンドは単体では出力を生成しません。実行中は何も表示されず、指定時間が経過するとプロンプトに戻ります。</li>
+<li>バックグラウンドで実行する場合は、コマンドの末尾に<code>&amp;</code>を付けます（例: <code>sleep 10 &amp;</code>）。</li>
+<li>スクリプト内でよく使われ、処理の間隔を空けたり、APIリクエストの間隔を制御したりする際に便利です。</li>
+<li>非常に長い時間を指定する場合は、システムの再起動などで中断される可能性があることに注意してください。</li>
+</ul>

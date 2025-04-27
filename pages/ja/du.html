@@ -1,0 +1,74 @@
+<h1><code>du</code> コマンド概要</h1>
+<p><code>du</code>（disk usage）コマンドは、ファイルやディレクトリのディスク使用量（サイズ）を表示するためのUNIXコマンドです。ストレージ容量の管理や大きなファイルの特定に役立ちます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong><code>-h</code></strong>: 人間が読みやすい形式（KB、MB、GBなど）でサイズを表示します</p>
+<ul>
+<li>例: <code>du -h file.txt</code></li>
+</ul>
+</li>
+<li><p><strong><code>-s</code></strong>: 指定したディレクトリの合計サイズのみを表示します（サマリー）</p>
+<ul>
+<li>例: <code>du -s /home/user</code></li>
+</ul>
+</li>
+<li><p><strong><code>-a</code></strong>: ディレクトリだけでなく、すべてのファイルのサイズも表示します</p>
+<ul>
+<li>例: <code>du -a /home/user</code></li>
+</ul>
+</li>
+<li><p><strong><code>-c</code></strong>: 合計サイズを最後に表示します</p>
+<ul>
+<li>例: <code>du -c /home/user/*</code></li>
+</ul>
+</li>
+<li><p><strong><code>--max-depth=N</code></strong>: 指定した深さ（N）までのディレクトリ構造を表示します</p>
+<ul>
+<li>例: <code>du --max-depth=1 /home/user</code></li>
+</ul>
+</li>
+<li><p><strong><code>-k</code>, <code>-m</code>, <code>-g</code></strong>: サイズをキロバイト、メガバイト、ギガバイト単位で表示します</p>
+<ul>
+<li>例: <code>du -m /home/user</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 現在のディレクトリのサイズを人間が読みやすい形式で表示</span>
+du<span style="color: #F8F8F8"> </span>-h
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #0000CF; font-weight: bold">4</span>.0K<span style="color: #F8F8F8">    </span>./config
+<span style="color: #0000CF; font-weight: bold">8</span>.0K<span style="color: #F8F8F8">    </span>./src
+16K<span style="color: #F8F8F8">     </span>.
+
+<span style="color: #8F5902; font-style: italic"># 指定したディレクトリの合計サイズのみを表示</span>
+du<span style="color: #F8F8F8"> </span>-sh<span style="color: #F8F8F8"> </span>/home/user/Documents
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+156M<span style="color: #F8F8F8">    </span>/home/user/Documents
+
+<span style="color: #8F5902; font-style: italic"># 現在のディレクトリ内の各項目のサイズを表示（1階層のみ）</span>
+du<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>--max-depth<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #0000CF; font-weight: bold">5</span>.6M<span style="color: #F8F8F8">    </span>./Downloads
+<span style="color: #0000CF; font-weight: bold">2</span>.3G<span style="color: #F8F8F8">    </span>./Videos
+<span style="color: #0000CF; font-weight: bold">4</span>.5G<span style="color: #F8F8F8">    </span>./Pictures
+<span style="color: #0000CF; font-weight: bold">7</span>.2G<span style="color: #F8F8F8">    </span>.
+
+<span style="color: #8F5902; font-style: italic"># 最も容量を使用している10個のディレクトリを特定</span>
+du<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span>-hr<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-10
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #0000CF; font-weight: bold">7</span>.2G<span style="color: #F8F8F8">    </span>.
+<span style="color: #0000CF; font-weight: bold">4</span>.5G<span style="color: #F8F8F8">    </span>./Pictures
+<span style="color: #0000CF; font-weight: bold">2</span>.3G<span style="color: #F8F8F8">    </span>./Videos
+156M<span style="color: #F8F8F8">    </span>./Documents
+45M<span style="color: #F8F8F8">     </span>./Music
+<span style="color: #0000CF; font-weight: bold">5</span>.6M<span style="color: #F8F8F8">    </span>./Downloads
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><code>du</code>と<code>-h</code>オプションを組み合わせると、最も読みやすい結果が得られます。</li>
+<li>大きなディレクトリで実行すると時間がかかることがあります。特定のディレクトリに絞るか、<code>--max-depth</code>オプションを使用すると効率的です。</li>
+<li><code>du | sort -hr</code>の組み合わせは、最も容量を使用しているディレクトリを特定するのに便利です。</li>
+<li>シンボリックリンクは通常無視されますが、<code>-L</code>オプションを使用するとリンク先のサイズも計算されます。</li>
+<li>システム全体のディスク使用状況を確認するには、代わりに<code>df</code>コマンドを使用します。</li>
+</ul>

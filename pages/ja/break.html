@@ -1,0 +1,89 @@
+<h1>break</h1>
+<p><code>break</code> コマンドはシェルのループ（for, while, until）や switch 文から即座に抜け出すために使用されるシェル組み込みコマンドです。</p>
+<h2>オプション</h2>
+<h3><strong>n（数値）</strong></h3>
+<p>数値を指定すると、指定した数のネストされたループから抜け出します。デフォルトは1です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;外側のループ: </span><span style="color: #000">$i</span><span style="color: #4E9A06">&quot;</span>
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>j<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span>b<span style="color: #F8F8F8"> </span>c<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+&gt;<span style="color: #F8F8F8">     </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;  内側のループ: </span><span style="color: #000">$j</span><span style="color: #4E9A06">&quot;</span>
+&gt;<span style="color: #F8F8F8">     </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$j</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;b&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+&gt;<span style="color: #F8F8F8">       </span><span style="color: #204A87; font-weight: bold">break</span>
+&gt;<span style="color: #F8F8F8">     </span><span style="color: #204A87; font-weight: bold">fi</span>
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87; font-weight: bold">done</span>
+&gt;<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+外側のループ:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>
+<span style="color: #F8F8F8">  </span>内側のループ:<span style="color: #F8F8F8"> </span>a
+<span style="color: #F8F8F8">  </span>内側のループ:<span style="color: #F8F8F8"> </span>b
+外側のループ:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
+<span style="color: #F8F8F8">  </span>内側のループ:<span style="color: #F8F8F8"> </span>a
+<span style="color: #F8F8F8">  </span>内側のループ:<span style="color: #F8F8F8"> </span>b
+外側のループ:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #F8F8F8">  </span>内側のループ:<span style="color: #F8F8F8"> </span>a
+<span style="color: #F8F8F8">  </span>内側のループ:<span style="color: #F8F8F8"> </span>b
+</pre></div>
+<h3><strong>break 2</strong></h3>
+<p>2つのネストされたループから一度に抜け出します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;外側のループ: </span><span style="color: #000">$i</span><span style="color: #4E9A06">&quot;</span>
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>j<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span>b<span style="color: #F8F8F8"> </span>c<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+&gt;<span style="color: #F8F8F8">     </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;  内側のループ: </span><span style="color: #000">$j</span><span style="color: #4E9A06">&quot;</span>
+&gt;<span style="color: #F8F8F8">     </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$j</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;b&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+&gt;<span style="color: #F8F8F8">       </span><span style="color: #204A87; font-weight: bold">break</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
+&gt;<span style="color: #F8F8F8">     </span><span style="color: #204A87; font-weight: bold">fi</span>
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87; font-weight: bold">done</span>
+&gt;<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+外側のループ:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>
+<span style="color: #F8F8F8">  </span>内側のループ:<span style="color: #F8F8F8"> </span>a
+<span style="color: #F8F8F8">  </span>内側のループ:<span style="color: #F8F8F8"> </span>b
+</pre></div>
+<h2>使用例</h2>
+<h3>条件に基づいてループを終了する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>*.txt<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$file</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;secret.txt&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+&gt;<span style="color: #F8F8F8">     </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;秘密ファイルが見つかりました。処理を中止します。&quot;</span>
+&gt;<span style="color: #F8F8F8">     </span><span style="color: #204A87; font-weight: bold">break</span>
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87; font-weight: bold">fi</span>
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;処理中: </span><span style="color: #000">$file</span><span style="color: #4E9A06">&quot;</span>
+&gt;<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+処理中:<span style="color: #F8F8F8"> </span>file1.txt
+処理中:<span style="color: #F8F8F8"> </span>file2.txt
+秘密ファイルが見つかりました。処理を中止します。
+</pre></div>
+<h3>case文での使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87">read</span><span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;コマンドを入力してください (quit で終了): &quot;</span><span style="color: #F8F8F8"> </span>cmd
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$cmd</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
+&gt;<span style="color: #F8F8F8">     </span>quit<span style="color: #CE5C00; font-weight: bold">)</span>
+&gt;<span style="color: #F8F8F8">       </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;終了します&quot;</span>
+&gt;<span style="color: #F8F8F8">       </span><span style="color: #204A87; font-weight: bold">break</span>
+&gt;<span style="color: #F8F8F8">       </span><span style="color: #000; font-weight: bold">;;</span>
+&gt;<span style="color: #F8F8F8">     </span><span style="color: #204A87">help</span><span style="color: #CE5C00; font-weight: bold">)</span>
+&gt;<span style="color: #F8F8F8">       </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ヘルプメッセージ&quot;</span>
+&gt;<span style="color: #F8F8F8">       </span><span style="color: #000; font-weight: bold">;;</span>
+&gt;<span style="color: #F8F8F8">     </span>*<span style="color: #CE5C00; font-weight: bold">)</span>
+&gt;<span style="color: #F8F8F8">       </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;不明なコマンド: </span><span style="color: #000">$cmd</span><span style="color: #4E9A06">&quot;</span>
+&gt;<span style="color: #F8F8F8">       </span><span style="color: #000; font-weight: bold">;;</span>
+&gt;<span style="color: #F8F8F8">   </span><span style="color: #204A87; font-weight: bold">esac</span>
+&gt;<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+コマンドを入力してください<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>quit<span style="color: #F8F8F8"> </span>で終了<span style="color: #CE5C00; font-weight: bold">)</span>:<span style="color: #F8F8F8"> </span><span style="color: #204A87">help</span>
+ヘルプメッセージ
+コマンドを入力してください<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>quit<span style="color: #F8F8F8"> </span>で終了<span style="color: #CE5C00; font-weight: bold">)</span>:<span style="color: #F8F8F8"> </span>quit
+終了します
+</pre></div>
+<h2>よくある質問</h2>
+<h3>Q1. <code>break</code>と<code>exit</code>の違いは何ですか？</h3>
+<p>A. <code>break</code>はループや条件分岐から抜け出すだけで、スクリプトの実行は継続します。一方、<code>exit</code>はスクリプト全体を終了させます。</p>
+<h3>Q2. 複数のネストされたループから一度に抜け出すにはどうすればいいですか？</h3>
+<p>A. <code>break n</code>を使用します。ここで<code>n</code>は抜け出したいネストレベルの数です。例えば、<code>break 2</code>は2つのネストされたループから抜け出します。</p>
+<h3>Q3. <code>break</code>はすべてのシェルで同じように動作しますか？</h3>
+<p>A. 基本的な機能は同じですが、細かい動作はシェル（bash, zsh, sh など）によって異なる場合があります。特に複雑なスクリプトでは、使用しているシェルのドキュメントを確認することをお勧めします。</p>
+<h2>追加情報</h2>
+<ul>
+<li><code>break</code>はシェルの組み込みコマンドであり、外部コマンドではありません。</li>
+<li><code>break</code>はループ内でのみ意味を持ちます。ループ外で使用すると、エラーになります。</li>
+<li>条件付きでループを継続したい場合は、<code>break</code>の代わりに<code>continue</code>コマンドの使用を検討してください。</li>
+<li>スクリプトの可読性を高めるために、<code>break</code>を使用する条件は明確にコメントしておくことをお勧めします。</li>
+</ul>
+<h2>参考情報</h2>
+<p>bash マニュアル: https://www.gnu.org/software/bash/manual/bash.html</p>

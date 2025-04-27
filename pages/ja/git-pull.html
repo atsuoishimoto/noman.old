@@ -1,0 +1,72 @@
+<h1>git-pull コマンド概要</h1>
+<p><code>git pull</code>は、リモートリポジトリから最新の変更を取得し、ローカルリポジトリに統合するGitコマンドです。簡単に言えば、<code>git fetch</code>と<code>git merge</code>を一度に実行する操作です。</p>
+<h2>オプション</h2>
+<h3><strong>--rebase</strong>:</h3>
+<p>マージの代わりにリベースを使用して変更を統合します。これにより、コミット履歴がよりクリーンになります。</p>
+<p>例: <code>git pull --rebase origin main</code></p>
+<h3><strong>--no-rebase</strong>:</h3>
+<p>明示的にマージ方式を指定します（デフォルト）。</p>
+<p>例: <code>git pull --no-rebase origin main</code></p>
+<h3><strong>--ff-only</strong>:</h3>
+<p>Fast-forwardが可能な場合のみマージを実行します。コンフリクトを避けたい場合に便利です。</p>
+<p>例: <code>git pull --ff-only origin main</code></p>
+<h3><strong>-v, --verbose</strong>:</h3>
+<p>詳細な情報を表示します。</p>
+<p>例: <code>git pull -v origin main</code></p>
+<h3><strong>--no-commit</strong>:</h3>
+<p>マージ後に自動的にコミットしません。変更を確認してから手動でコミットしたい場合に使用します。</p>
+<p>例: <code>git pull --no-commit origin main</code></p>
+<h3><strong>--squash</strong>:</h3>
+<p>すべての変更を一つのコミットにまとめます。</p>
+<p>例: <code>git pull --squash origin feature-branch</code></p>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 現在のブランチに対応するリモートブランチから変更を取得</span>
+git<span style="color: #F8F8F8"> </span>pull
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+remote:<span style="color: #F8F8F8"> </span>Enumerating<span style="color: #F8F8F8"> </span>objects:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>,<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>.
+remote:<span style="color: #F8F8F8"> </span>Counting<span style="color: #F8F8F8"> </span>objects:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span>%<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">5</span>/5<span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>.
+remote:<span style="color: #F8F8F8"> </span>Compressing<span style="color: #F8F8F8"> </span>objects:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span>%<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">2</span>/2<span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>.
+remote:<span style="color: #F8F8F8"> </span>Total<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>delta<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span>reused<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>delta<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span>pack-reused<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>
+Unpacking<span style="color: #F8F8F8"> </span>objects:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span>%<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">3</span>/3<span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>.
+From<span style="color: #F8F8F8"> </span>https://github.com/user/repo
+<span style="color: #F8F8F8">   </span>a1b2c3d..e4f5g6h<span style="color: #F8F8F8">  </span>main<span style="color: #F8F8F8">     </span>-&gt;<span style="color: #F8F8F8"> </span>origin/main
+Updating<span style="color: #F8F8F8"> </span>a1b2c3d..e4f5g6h
+Fast-forward
+<span style="color: #F8F8F8"> </span>README.md<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>+-
+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>changed,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>insertion<span style="color: #CE5C00; font-weight: bold">(</span>+<span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>deletion<span style="color: #CE5C00; font-weight: bold">(</span>-<span style="color: #CE5C00; font-weight: bold">)</span>
+</pre></div>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 特定のリモートとブランチを指定して変更を取得</span>
+git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>develop
+
+<span style="color: #8F5902; font-style: italic"># リベースを使用して変更を統合</span>
+git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>--rebase<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>main
+</pre></div>
+<h2>よくある質問</h2>
+<h3>Q1. <code>git pull</code>と<code>git fetch</code>の違いは何ですか？</h3>
+<p>A. <code>git fetch</code>はリモートの変更を取得するだけですが、<code>git pull</code>は取得した変更をローカルブランチに統合（マージまたはリベース）します。</p>
+<h3>Q2. <code>git pull</code>でコンフリクトが発生した場合はどうすればいいですか？</h3>
+<p>A. コンフリクトを手動で解決し、変更をステージングして<code>git commit</code>を実行します。リベース中のコンフリクトの場合は、解決後に<code>git rebase --continue</code>を実行します。</p>
+<h3>Q3. 特定のブランチだけを取得するにはどうすればいいですか？</h3>
+<p>A. <code>git pull origin &lt;ブランチ名&gt;</code>のように、リモート名とブランチ名を指定します。</p>
+<h3>Q4. <code>git pull</code>を安全に実行するには？</h3>
+<p>A. コミットしていない変更がある場合は先に<code>git stash</code>で保存するか、<code>--ff-only</code>オプションを使用して競合を避けます。</p>
+<h3>Q5. リモートブランチを削除した後、ローカルでも反映させるには？</h3>
+<p>A. <code>git pull --prune</code>を実行すると、リモートで削除されたブランチの参照もローカルから削除されます。</p>
+<h3>Q6. <code>git pull</code>を実行する前に確認すべきことはありますか？</h3>
+<p>A. 現在のブランチとコミットしていない変更を確認するために、<code>git status</code>を実行するとよいでしょう。</p>
+<h3>Q7. <code>git pull</code>で特定のコミットだけを取得できますか？</h3>
+<p>A. いいえ、<code>git pull</code>はブランチ全体を取得します。特定のコミットだけ取得したい場合は、<code>git cherry-pick</code>を使用します。</p>
+<h3>Q8. <code>git pull</code>後に元に戻すには？</h3>
+<p>A. <code>git reset --hard ORIG_HEAD</code>を実行すると、<code>git pull</code>実行前の状態に戻ります。</p>
+<h3>Q9. <code>git pull</code>でリモートブランチを追跡するには？</h3>
+<p>A. <code>git pull -u origin &lt;ブランチ名&gt;</code>または<code>git branch --set-upstream-to=origin/&lt;ブランチ名&gt;</code>を使用します。</p>
+<h3>Q10. <code>git pull</code>が「You have divergent branches」エラーを出す場合は？</h3>
+<p>A. ローカルとリモートの履歴が分岐しています。<code>git pull --rebase</code>を使用するか、マージ方法を明示的に選択してください。</p>
+<h2>追加のメモ</h2>
+<ul>
+<li>コミットしていない変更がある状態で<code>git pull</code>を実行すると、マージコンフリクトが発生する可能性があります。</li>
+<li>チーム作業では、<code>git pull</code>を定期的に実行して最新の変更を取り込むことをお勧めします。</li>
+<li><code>git pull --rebase</code>は履歴をクリーンに保ちたい場合に便利ですが、チームでの使用ルールを統一することが重要です。</li>
+<li>大きな変更を行う前に<code>git pull</code>を実行すると、後でのコンフリクト解決が簡単になります。</li>
+</ul>

@@ -75,12 +75,6 @@ TODAY is {TODAY}.
     (resultsdir / f"{target.stem}.json").write_text(result)
 
 
-@rule("pages/*/%.txt", depends=get_mdfile)
-def build_html(target, mdfile):
-    target = Path(target)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    run("pandoc", "-f", "markdown", "-t", "plain", "--wrap=none", "-o", target, mdfile)
-
 @task
 def summary():
     ja = make_summary.make_summary(Path("pages/ja"))
@@ -95,11 +89,11 @@ def summary():
 @task
 def html():
     for md in Path("pages/ja").glob("*.md"):
-        html = md_to_html(mdfile)
+        html = md_to_html(md)
         md.with_suffix(".html").write_text(html)
 
     for md in Path("pages/en").glob("*.md"):
-        html = md_to_html(mdfile)
+        html = md_to_html(md)
         md.with_suffix(".html").write_text(html)
 
 @task

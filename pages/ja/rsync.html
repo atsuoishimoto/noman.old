@@ -1,0 +1,92 @@
+<h1>rsyncコマンド概要</h1>
+<p>rsyncは、ファイルやディレクトリを効率的に同期・コピーするためのコマンドです。通常のコピーと異なり、差分のみを転送するため高速で、リモートマシンとのファイル転送にも使用できます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-a (--archive)</strong>: アーカイブモード。権限、所有者、タイムスタンプなどの属性を保持します</p>
+<ul>
+<li>例: <code>rsync -a /source/ /destination/</code></li>
+</ul>
+</li>
+<li><p><strong>-v (--verbose)</strong>: 詳細な情報を表示します</p>
+<ul>
+<li>例: <code>rsync -av /source/ /destination/</code></li>
+</ul>
+</li>
+<li><p><strong>-z (--compress)</strong>: 転送中にデータを圧縮します（ネットワーク転送時に便利）</p>
+<ul>
+<li>例: <code>rsync -avz /source/ user@remote:/destination/</code></li>
+</ul>
+</li>
+<li><p><strong>-r (--recursive)</strong>: ディレクトリを再帰的にコピーします</p>
+<ul>
+<li>例: <code>rsync -r /source/ /destination/</code></li>
+</ul>
+</li>
+<li><p><strong>--delete</strong>: 送信先にあって送信元にないファイルを削除します（完全同期）</p>
+<ul>
+<li>例: <code>rsync -av --delete /source/ /destination/</code></li>
+</ul>
+</li>
+<li><p><strong>-n (--dry-run)</strong>: 実際にコピーせずに何が行われるかをシミュレーションします</p>
+<ul>
+<li>例: <code>rsync -avn /source/ /destination/</code></li>
+</ul>
+</li>
+<li><p><strong>-P (--partial --progress)</strong>: 進捗状況を表示し、部分的に転送されたファイルを保持します</p>
+<ul>
+<li>例: <code>rsync -avP /source/ /destination/</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>ローカルディレクトリの同期</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ソースディレクトリからデスティネーションディレクトリへファイルをコピー</span>
+rsync<span style="color: #F8F8F8"> </span>-av<span style="color: #F8F8F8"> </span>/home/user/documents/<span style="color: #F8F8F8"> </span>/backup/documents/
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+sending<span style="color: #F8F8F8"> </span>incremental<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>list
+./
+file1.txt
+file2.txt
+folder/
+folder/document.pdf
+
+sent<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>,048<span style="color: #F8F8F8"> </span>bytes<span style="color: #F8F8F8">  </span>received<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">48</span><span style="color: #F8F8F8"> </span>bytes<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">4</span>,192.00<span style="color: #F8F8F8"> </span>bytes/sec
+total<span style="color: #F8F8F8"> </span>size<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>,240<span style="color: #F8F8F8">  </span>speedup<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span>.88
+</pre></div>
+<h3>リモートサーバーへのファイル転送</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ローカルからリモートサーバーへファイルを転送</span>
+rsync<span style="color: #F8F8F8"> </span>-avz<span style="color: #F8F8F8"> </span>~/projects/<span style="color: #F8F8F8"> </span>user@remote-server:/home/user/projects/
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+sending<span style="color: #F8F8F8"> </span>incremental<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>list
+./
+index.html
+css/
+css/style.css
+js/
+js/script.js
+
+sent<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span>,872<span style="color: #F8F8F8"> </span>bytes<span style="color: #F8F8F8">  </span>received<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">312</span><span style="color: #F8F8F8"> </span>bytes<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">3</span>,236.80<span style="color: #F8F8F8"> </span>bytes/sec
+total<span style="color: #F8F8F8"> </span>size<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">156</span>,672<span style="color: #F8F8F8">  </span>speedup<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">9</span>.67
+</pre></div>
+<h3>進捗状況を表示しながらの大きなファイル転送</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 進捗状況を表示しながら大きなファイルを転送</span>
+rsync<span style="color: #F8F8F8"> </span>-avP<span style="color: #F8F8F8"> </span>large_file.iso<span style="color: #F8F8F8"> </span>user@remote-server:/home/user/downloads/
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+sending<span style="color: #F8F8F8"> </span>incremental<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>list
+large_file.iso
+<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">852</span>,017,152<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span>%<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">25</span>.78MB/s<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">0</span>:00:31<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>xfr#1,<span style="color: #F8F8F8"> </span>to-chk<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">0</span>/1<span style="color: #CE5C00; font-weight: bold">)</span>
+
+sent<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">852</span>,032,640<span style="color: #F8F8F8"> </span>bytes<span style="color: #F8F8F8">  </span>received<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">42</span><span style="color: #F8F8F8"> </span>bytes<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">27</span>,485,570.39<span style="color: #F8F8F8"> </span>bytes/sec
+total<span style="color: #F8F8F8"> </span>size<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">852</span>,017,152<span style="color: #F8F8F8">  </span>speedup<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>.00
+</pre></div>
+<h2>追加メモ</h2>
+<ul>
+<li>ソースディレクトリの末尾に <code>/</code> をつけると、ディレクトリの内容だけがコピーされます。<code>/</code> がない場合は、ディレクトリ自体もコピーされます。</li>
+<li><code>-e</code> オプションで SSH などの通信プロトコルを指定できます：<code>rsync -avz -e ssh /source/ user@remote:/destination/</code></li>
+<li>バックアップに使用する場合は <code>--backup</code> と <code>--backup-dir</code> オプションを使うと、上書きされるファイルのバックアップを作成できます。</li>
+<li>大きなファイルを転送する際に中断した場合、再開すると差分のみを転送するため効率的です。</li>
+<li><code>--exclude</code> オプションで特定のファイルやパターンを除外できます：<code>rsync -av --exclude='*.log' /source/ /destination/</code></li>
+</ul>

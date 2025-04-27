@@ -1,0 +1,38 @@
+<h1><code>which</code> コマンドの概要</h1>
+<p><code>which</code> コマンドは、指定したコマンドの実行ファイルがファイルシステム上のどこに位置しているかを表示します。環境変数 PATH に設定されているディレクトリから検索します。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><strong>-a</strong>: 検索パス内で見つかったすべての実行ファイルを表示します（デフォルトでは最初に見つかったものだけを表示）<ul>
+<li>例: <code>which -a python</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>基本的な使用法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># コマンドの場所を確認</span>
+which<span style="color: #F8F8F8"> </span>ls
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+/bin/ls
+</pre></div>
+<h3>複数のコマンドを一度に検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 複数のコマンドの場所を確認</span>
+which<span style="color: #F8F8F8"> </span>python<span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>find
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+/usr/bin/python
+/usr/bin/grep
+/usr/bin/find
+</pre></div>
+<h3>すべての一致を表示 (-a オプション)</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># pythonコマンドのすべての一致を表示</span>
+which<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>python
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+/usr/bin/python
+/usr/local/bin/python
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><code>which</code> コマンドは、コマンドが見つからない場合は何も出力しません（エラーメッセージも表示されません）。</li>
+<li>シェルの組み込みコマンド（例：<code>cd</code>、<code>echo</code>）は通常検出できません。これらはシェル自体の一部であり、独立した実行ファイルではないためです。</li>
+<li>環境変数 PATH に設定されているディレクトリのみを検索するため、PATH に含まれていない場所にあるコマンドは見つけられません。</li>
+<li>コマンドのエイリアスも検出できません。エイリアスを確認するには <code>alias</code> コマンドを使用してください。</li>
+</ul>

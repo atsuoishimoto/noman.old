@@ -1,0 +1,73 @@
+<h1>egrep コマンド概要</h1>
+<p><code>egrep</code>は拡張正規表現を使用してテキストパターンを検索するコマンドです。<code>grep -E</code>と同等の機能を持ち、複雑なパターンマッチングを簡潔な構文で実行できます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-i</strong>: 大文字と小文字を区別せずに検索します</p>
+<ul>
+<li>例: <code>egrep -i &quot;pattern&quot; file.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-v</strong>: パターンに一致しない行を表示します（反転マッチ）</p>
+<ul>
+<li>例: <code>egrep -v &quot;pattern&quot; file.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-c</strong>: 一致した行数のみを表示します</p>
+<ul>
+<li>例: <code>egrep -c &quot;pattern&quot; file.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-n</strong>: 一致した行の行番号も表示します</p>
+<ul>
+<li>例: <code>egrep -n &quot;pattern&quot; file.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-l</strong>: パターンが含まれるファイル名のみを表示します</p>
+<ul>
+<li>例: <code>egrep -l &quot;pattern&quot; *.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-r, -R</strong>: ディレクトリを再帰的に検索します</p>
+<ul>
+<li>例: <code>egrep -r &quot;pattern&quot; /path/to/directory</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>基本的な使用法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ファイル内で「apple」または「orange」を検索</span>
+egrep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;apple|orange&quot;</span><span style="color: #F8F8F8"> </span>fruits.txt
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+apple<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>red
+orange<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>orange
+</pre></div>
+<h3>複数のパターンと行番号表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 「user」または「admin」を含む行を行番号付きで表示</span>
+egrep<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;user|admin&quot;</span><span style="color: #F8F8F8"> </span>users.log
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #0000CF; font-weight: bold">2</span>:<span style="color: #F8F8F8"> </span>user1<span style="color: #F8F8F8"> </span>logged<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
+<span style="color: #0000CF; font-weight: bold">5</span>:<span style="color: #F8F8F8"> </span>admin<span style="color: #F8F8F8"> </span>access<span style="color: #F8F8F8"> </span>granted
+<span style="color: #0000CF; font-weight: bold">7</span>:<span style="color: #F8F8F8"> </span>user2<span style="color: #F8F8F8"> </span>logged<span style="color: #F8F8F8"> </span>out
+</pre></div>
+<h3>再帰的な検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># プロジェクト内のすべてのJavaファイルから「TODO」を検索</span>
+egrep<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;TODO&quot;</span><span style="color: #F8F8F8"> </span>--include<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;*.java&quot;</span><span style="color: #F8F8F8"> </span>./project/
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+./project/src/Main.java:45:<span style="color: #F8F8F8"> </span>//<span style="color: #F8F8F8"> </span>TODO:<span style="color: #F8F8F8"> </span>Fix<span style="color: #F8F8F8"> </span>this<span style="color: #F8F8F8"> </span>bug
+./project/src/User.java:23:<span style="color: #F8F8F8"> </span>//<span style="color: #F8F8F8"> </span>TODO:<span style="color: #F8F8F8"> </span>Implement<span style="color: #F8F8F8"> </span>authentication
+</pre></div>
+<h3>複雑な正規表現</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 数字で始まる行を検索</span>
+egrep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;^[0-9]&quot;</span><span style="color: #F8F8F8"> </span>data.txt
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #0000CF; font-weight: bold">1</span>.<span style="color: #F8F8F8"> </span>First<span style="color: #F8F8F8"> </span>item
+<span style="color: #0000CF; font-weight: bold">2</span>.<span style="color: #F8F8F8"> </span>Second<span style="color: #F8F8F8"> </span>item
+<span style="color: #0000CF; font-weight: bold">9999</span><span style="color: #F8F8F8"> </span>-<span style="color: #F8F8F8"> </span>Special<span style="color: #F8F8F8"> </span>code
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><code>egrep</code>は<code>grep -E</code>の別名であり、最近のシステムでは<code>grep -E</code>の使用が推奨されています。</li>
+<li>拡張正規表現では、<code>|</code>（OR）、<code>+</code>（1回以上の繰り返し）、<code>?</code>（0または1回の出現）、<code>()</code>（グループ化）などの特殊文字をエスケープなしで使用できます。</li>
+<li>検索パターンに空白やシェルの特殊文字が含まれる場合は、引用符（<code>&quot;&quot;</code>）で囲むことをお勧めします。</li>
+<li>大量のファイルを検索する場合は、<code>--include</code>や<code>--exclude</code>オプションを使用して対象を絞り込むと効率的です。</li>
+</ul>

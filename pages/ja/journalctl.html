@@ -1,0 +1,81 @@
+<h1>journalctl コマンドの概要</h1>
+<p><code>journalctl</code> は systemd のジャーナルログを閲覧するためのコマンドです。システムやサービスのログを効率的に検索・フィルタリングできます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>基本的な使用法</strong>: オプションなしで実行すると、すべてのログエントリを表示します</p>
+<ul>
+<li>例: <code>journalctl</code></li>
+</ul>
+</li>
+<li><p><strong>-f, --follow</strong>: リアルタイムでログを追跡表示します（tail -f と同様）</p>
+<ul>
+<li>例: <code>journalctl -f</code></li>
+</ul>
+</li>
+<li><p><strong>-u, --unit=名前</strong>: 特定のサービスユニットのログのみを表示します</p>
+<ul>
+<li>例: <code>journalctl -u ssh.service</code></li>
+</ul>
+</li>
+<li><p><strong>-b, --boot[=ID]</strong>: 現在または特定の起動時のログを表示します</p>
+<ul>
+<li>例: <code>journalctl -b</code> (現在の起動)</li>
+<li>例: <code>journalctl -b -1</code> (前回の起動)</li>
+</ul>
+</li>
+<li><p><strong>--since=日時, --until=日時</strong>: 指定した時間範囲のログを表示します</p>
+<ul>
+<li>例: <code>journalctl --since=&quot;2023-04-01&quot; --until=&quot;2023-04-02&quot;</code></li>
+<li>例: <code>journalctl --since=&quot;1 hour ago&quot;</code></li>
+</ul>
+</li>
+<li><p><strong>-p, --priority=レベル</strong>: 指定した優先度以上のログを表示します</p>
+<ul>
+<li>例: <code>journalctl -p err</code> (エラー以上の重要度)</li>
+</ul>
+</li>
+<li><p><strong>-n, --lines=行数</strong>: 表示する行数を制限します</p>
+<ul>
+<li>例: <code>journalctl -n 20</code></li>
+</ul>
+</li>
+<li><p><strong>-o, --output=フォーマット</strong>: 出力形式を指定します</p>
+<ul>
+<li>例: <code>journalctl -o json</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使用法 - すべてのログを表示</span>
+journalctl
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">01</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>:00:00<span style="color: #F8F8F8"> </span>hostname<span style="color: #F8F8F8"> </span>systemd<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">]</span>:<span style="color: #F8F8F8"> </span>Starting<span style="color: #F8F8F8"> </span>System...
+Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">01</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>:00:05<span style="color: #F8F8F8"> </span>hostname<span style="color: #F8F8F8"> </span>sshd<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #CE5C00; font-weight: bold">]</span>:<span style="color: #F8F8F8"> </span>Server<span style="color: #F8F8F8"> </span>listening<span style="color: #F8F8F8"> </span>on<span style="color: #F8F8F8"> </span>port<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">22</span>.
+...
+
+<span style="color: #8F5902; font-style: italic"># SSHサービスのログのみを表示</span>
+journalctl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>ssh.service
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">01</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>:00:05<span style="color: #F8F8F8"> </span>hostname<span style="color: #F8F8F8"> </span>sshd<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #CE5C00; font-weight: bold">]</span>:<span style="color: #F8F8F8"> </span>Server<span style="color: #F8F8F8"> </span>listening<span style="color: #F8F8F8"> </span>on<span style="color: #F8F8F8"> </span>port<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">22</span>.
+Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">01</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>:30:15<span style="color: #F8F8F8"> </span>hostname<span style="color: #F8F8F8"> </span>sshd<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">1456</span><span style="color: #CE5C00; font-weight: bold">]</span>:<span style="color: #F8F8F8"> </span>Accepted<span style="color: #F8F8F8"> </span>password<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8"> </span>from<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.10
+
+<span style="color: #8F5902; font-style: italic"># 今日のエラーログのみを表示</span>
+journalctl<span style="color: #F8F8F8"> </span>--since<span style="color: #CE5C00; font-weight: bold">=</span>today<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>err
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">01</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">11</span>:23:45<span style="color: #F8F8F8"> </span>hostname<span style="color: #F8F8F8"> </span>app<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">2345</span><span style="color: #CE5C00; font-weight: bold">]</span>:<span style="color: #F8F8F8"> </span>Error:<span style="color: #F8F8F8"> </span>Could<span style="color: #F8F8F8"> </span>not<span style="color: #F8F8F8"> </span>connect<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>database
+
+<span style="color: #8F5902; font-style: italic"># リアルタイムでログを監視</span>
+journalctl<span style="color: #F8F8F8"> </span>-f
+<span style="color: #8F5902; font-style: italic"># 出力例（リアルタイムで更新される）</span>
+Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">01</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">14</span>:30:22<span style="color: #F8F8F8"> </span>hostname<span style="color: #F8F8F8"> </span>systemd<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">]</span>:<span style="color: #F8F8F8"> </span>Started<span style="color: #F8F8F8"> </span>Service.
+Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">01</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">14</span>:30:25<span style="color: #F8F8F8"> </span>hostname<span style="color: #F8F8F8"> </span>app<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">3456</span><span style="color: #CE5C00; font-weight: bold">]</span>:<span style="color: #F8F8F8"> </span>Processing<span style="color: #F8F8F8"> </span>request...
+...
+</pre></div>
+<h2>追加のヒント</h2>
+<ul>
+<li><code>journalctl</code> は通常、ページャー（lessなど）を通して表示されるため、スペースキーで次のページ、<code>q</code>キーで終了できます。</li>
+<li><code>grep</code> と組み合わせて特定のキーワードを検索することもできます：<code>journalctl | grep &quot;キーワード&quot;</code></li>
+<li>ログが多い場合は <code>--disk-usage</code> オプションでジャーナルの使用容量を確認できます。</li>
+<li><code>--vacuum-size=サイズ</code> オプションで古いログを削除し、ディスク容量を解放できます（例：<code>journalctl --vacuum-size=1G</code>）。</li>
+<li><code>_SYSTEMD_UNIT</code>, <code>_HOSTNAME</code>, <code>_PID</code> などのフィールドを使って詳細なフィルタリングも可能です：<code>journalctl _PID=1234</code></li>
+</ul>

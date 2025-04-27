@@ -1,0 +1,50 @@
+<h1>rmdirコマンド概要</h1>
+<p><code>rmdir</code>コマンドは、空のディレクトリを削除するためのUnixコマンドです。ディレクトリ内にファイルやサブディレクトリが存在する場合は削除できません。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-p (--parents)</strong>: 指定したパスの親ディレクトリも必要に応じて削除します</p>
+<ul>
+<li>例: <code>rmdir -p dir1/dir2/dir3</code></li>
+</ul>
+</li>
+<li><p><strong>-v (--verbose)</strong>: 処理内容を詳細に表示します</p>
+<ul>
+<li>例: <code>rmdir -v emptyfolder</code></li>
+</ul>
+</li>
+<li><p><strong>--ignore-fail-on-non-empty</strong>: 空でないディレクトリを削除しようとした場合でもエラーを表示せず処理を続行します</p>
+<ul>
+<li>例: <code>rmdir --ignore-fail-on-non-empty folder1 folder2</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>基本的な使用法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 空のディレクトリ「emptyfolder」を削除</span>
+rmdir<span style="color: #F8F8F8"> </span>emptyfolder
+</pre></div>
+<h3>複数のディレクトリを一度に削除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 複数の空ディレクトリを一度に削除</span>
+rmdir<span style="color: #F8F8F8"> </span>folder1<span style="color: #F8F8F8"> </span>folder2<span style="color: #F8F8F8"> </span>folder3
+</pre></div>
+<h3>親ディレクトリも含めて削除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># dir1/dir2/dir3を削除し、空になったdir1とdir2も削除</span>
+rmdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>dir1/dir2/dir3
+<span style="color: #8F5902; font-style: italic"># 出力（-vオプションを使用した場合）:</span>
+<span style="color: #8F5902; font-style: italic"># rmdir: removing directory, &#39;dir1/dir2/dir3&#39;</span>
+<span style="color: #8F5902; font-style: italic"># rmdir: removing directory, &#39;dir1/dir2&#39;</span>
+<span style="color: #8F5902; font-style: italic"># rmdir: removing directory, &#39;dir1&#39;</span>
+</pre></div>
+<h3>詳細表示モード</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 削除処理の詳細を表示</span>
+rmdir<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>emptyfolder
+<span style="color: #8F5902; font-style: italic"># 出力:</span>
+<span style="color: #8F5902; font-style: italic"># rmdir: removing directory, &#39;emptyfolder&#39;</span>
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><code>rmdir</code>は空のディレクトリのみを削除できます。ディレクトリ内にファイルがある場合は、まず<code>rm</code>コマンドでファイルを削除するか、<code>rm -r</code>を使用してディレクトリごと削除する必要があります。</li>
+<li>ディレクトリが空でない場合、<code>rmdir</code>は「Directory not empty」というエラーを表示します。</li>
+<li>複雑なディレクトリ構造を削除する場合は、<code>rm -r</code>コマンドの方が便利なことが多いです。</li>
+<li>存在しないディレクトリを削除しようとすると「No such file or directory」エラーが表示されます。</li>
+</ul>

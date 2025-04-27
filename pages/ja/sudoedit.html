@@ -1,0 +1,46 @@
+<h1>sudoedit コマンドの概要</h1>
+<p><code>sudoedit</code>（または <code>sudo -e</code>）は、管理者権限で安全にファイルを編集するためのコマンドです。通常のユーザー権限では編集できないシステムファイルを、セキュリティリスクを最小限に抑えながら編集できます。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-u ユーザー名</strong>: 指定したユーザーとしてファイルを編集します</p>
+<ul>
+<li>例: <code>sudoedit -u root /etc/hosts</code></li>
+</ul>
+</li>
+<li><p><strong>-H</strong>: ホームディレクトリを実行ユーザーのものではなく、ターゲットユーザー（通常はroot）のものに設定します</p>
+<ul>
+<li>例: <code>sudoedit -H /etc/ssh/sshd_config</code></li>
+</ul>
+</li>
+<li><p><strong>-C ディレクトリ</strong>: 指定したディレクトリに移動してから編集を開始します</p>
+<ul>
+<li>例: <code>sudoedit -C /etc passwd</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使用法 - /etc/fstabファイルを管理者権限で編集</span>
+sudoedit<span style="color: #F8F8F8"> </span>/etc/fstab
+
+<span style="color: #8F5902; font-style: italic"># 出力例（エディタが開き、ファイルを編集できる状態になります）</span>
+<span style="color: #8F5902; font-style: italic"># （エディタ画面が表示されます）</span>
+</pre></div>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 複数のファイルを同時に編集</span>
+sudoedit<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>/etc/hostname
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #8F5902; font-style: italic"># （最初のファイルが編集用に開かれ、保存して閉じると次のファイルが開かれます）</span>
+</pre></div>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 特定のユーザーとしてファイルを編集</span>
+sudoedit<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>www-data<span style="color: #F8F8F8"> </span>/var/www/html/config.php
+
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+<span style="color: #8F5902; font-style: italic"># （www-dataユーザーの権限でファイルが開かれます）</span>
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li><code>sudoedit</code>は一時ファイルにコピーを作成してから編集するため、元のファイルの権限やSELinuxコンテキストが保持されます。</li>
+<li>使用されるエディタは環境変数<code>EDITOR</code>または<code>VISUAL</code>で設定されているものが使われます。設定されていない場合はデフォルトのエディタ（多くの場合vi）が使用されます。</li>
+<li><code>sudo -e</code>は<code>sudoedit</code>と同じ機能を持つ別の書き方です。</li>
+<li>通常の<code>sudo vim ファイル名</code>と比較して、<code>sudoedit</code>はエディタ自体が管理者権限で実行されないため、セキュリティ上より安全です。</li>
+</ul>

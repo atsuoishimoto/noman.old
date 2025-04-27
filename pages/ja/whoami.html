@@ -1,0 +1,44 @@
+<h1>whoami</h1>
+<p>現在ログインしているユーザー名を表示するコマンドです。システム上で「誰として」操作しているかを確認できます。</p>
+<h2>オプション</h2>
+<p><code>whoami</code> コマンドには一般的に使用されるオプションがほとんどありません。基本的な使い方は単純です。</p>
+<h3><strong>基本的な使い方</strong></h3>
+<p>引数なしで実行すると、現在のユーザー名を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>whoami
+tanaka
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的な使用例</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>whoami
+tanaka
+</pre></div>
+<p>この例では、現在ログインしているユーザー名が「tanaka」であることがわかります。</p>
+<h3>スクリプト内での使用例</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic">#!/bin/bash</span>
+<span style="color: #000">current_user</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>whoami<span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;このスクリプトは ${</span><span style="color: #000">current_user</span><span style="color: #4E9A06">} として実行されています&quot;</span>
+</pre></div>
+<p>実行結果:</p>
+<pre><code>このスクリプトは tanaka として実行されています
+</code></pre><h3>sudo と組み合わせた例</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>whoami
+tanaka
+$<span style="color: #F8F8F8"> </span>sudo<span style="color: #F8F8F8"> </span>whoami
+root
+</pre></div>
+<p><code>sudo</code> コマンドと組み合わせると、権限昇格後のユーザー（通常は root）が表示されます。</p>
+<h2>よくある質問</h2>
+<h3>Q1. <code>whoami</code> と <code>id -un</code> の違いは何ですか？</h3>
+<p>A. 基本的に同じ機能です。<code>id -un</code> は <code>id</code> コマンドのオプションで、ユーザー名のみを表示します。多くのシステムでは <code>whoami</code> は <code>id -un</code> のエイリアスとして実装されています。</p>
+<h3>Q2. <code>who am i</code> コマンドとの違いは何ですか？</h3>
+<p>A. <code>who am i</code> は接続時の元のログイン情報を表示しますが、<code>whoami</code> は現在の実効ユーザー名のみを表示します。<code>sudo</code> などで権限を変更した場合、結果が異なることがあります。</p>
+<h3>Q3. <code>whoami</code> の実行結果が予期しないユーザー名になる場合はどうすればよいですか？</h3>
+<p>A. 予期しないユーザー名が表示される場合は、<code>sudo</code> や <code>su</code> コマンドでユーザーを切り替えた可能性があります。元のユーザーに戻るには、権限昇格セッションを終了してください。</p>
+<h2>追加情報</h2>
+<ul>
+<li>このコマンドはシンプルですが、スクリプト内でユーザー確認や条件分岐に非常に役立ちます。</li>
+<li>セキュリティ関連のトラブルシューティングや、複数のユーザーアカウントを使い分ける環境で特に有用です。</li>
+<li>macOSを含むほとんどのUnixシステムで同様に動作します。</li>
+</ul>
+<h2>参考情報</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/whoami-invocation.html</p>

@@ -1,0 +1,79 @@
+<h1>git-merge コマンド概要</h1>
+<p><code>git-merge</code>は、異なるブランチの変更を現在のブランチに統合するGitコマンドです。複数の開発ラインを一つにまとめる際に使用されます。</p>
+<h2>オプション</h2>
+<h3><strong>--no-ff</strong>:</h3>
+<p>Fast-forwardマージを行わず、常にマージコミットを作成します。</p>
+<p>例: <code>git merge --no-ff feature-branch</code></p>
+<h3><strong>--ff-only</strong>:</h3>
+<p>Fast-forwardマージのみを許可し、マージコミットが必要な場合は失敗します。</p>
+<p>例: <code>git merge --ff-only release-branch</code></p>
+<h3><strong>--squash</strong>:</h3>
+<p>ブランチの全変更を一つのコミットにまとめてマージします。</p>
+<p>例: <code>git merge --squash bugfix-branch</code></p>
+<h3><strong>-m, --message</strong>:</h3>
+<p>マージコミットのメッセージを指定します。</p>
+<p>例: <code>git merge -m &quot;Merge feature X into main&quot; feature-branch</code></p>
+<h3><strong>--abort</strong>:</h3>
+<p>コンフリクト発生時にマージを中止し、マージ前の状態に戻します。</p>
+<p>例: <code>git merge --abort</code></p>
+<h3><strong>--continue</strong>:</h3>
+<p>コンフリクト解決後にマージを続行します。</p>
+<p>例: <code>git merge --continue</code></p>
+<h3><strong>-s, --strategy</strong>:</h3>
+<p>マージ戦略を指定します（recursive, resolve, octopus, ours, subtree）。</p>
+<p>例: <code>git merge -s recursive feature-branch</code></p>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的なマージ（feature-branchをマージ）</span>
+git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>feature-branch
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+Updating<span style="color: #F8F8F8"> </span>a1b2c3d..e4f5g6h
+Fast-forward
+<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>++++++++--
+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>changed,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span><span style="color: #F8F8F8"> </span>insertions<span style="color: #CE5C00; font-weight: bold">(</span>+<span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>deletions<span style="color: #CE5C00; font-weight: bold">(</span>-<span style="color: #CE5C00; font-weight: bold">)</span>
+
+<span style="color: #8F5902; font-style: italic"># マージコミットを強制的に作成</span>
+git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>--no-ff<span style="color: #F8F8F8"> </span>feature-branch
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+Merge<span style="color: #F8F8F8"> </span>made<span style="color: #F8F8F8"> </span>by<span style="color: #F8F8F8"> </span>the<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;recursive&#39;</span><span style="color: #F8F8F8"> </span>strategy.
+<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>++++++++--
+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>changed,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span><span style="color: #F8F8F8"> </span>insertions<span style="color: #CE5C00; font-weight: bold">(</span>+<span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>deletions<span style="color: #CE5C00; font-weight: bold">(</span>-<span style="color: #CE5C00; font-weight: bold">)</span>
+
+<span style="color: #8F5902; font-style: italic"># コンフリクトが発生した場合</span>
+git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>conflicting-branch
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+Auto-merging<span style="color: #F8F8F8"> </span>file.txt
+CONFLICT<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>content<span style="color: #CE5C00; font-weight: bold">)</span>:<span style="color: #F8F8F8"> </span>Merge<span style="color: #F8F8F8"> </span>conflict<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>file.txt
+Automatic<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>failed<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>fix<span style="color: #F8F8F8"> </span>conflicts<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span><span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>the<span style="color: #F8F8F8"> </span>result.
+
+<span style="color: #8F5902; font-style: italic"># コンフリクト解決後</span>
+git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>file.txt
+git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>--continue
+</pre></div>
+<h2>よくある質問</h2>
+<h3>Q1. Fast-forwardマージとは何ですか？</h3>
+<p>A. 現在のブランチの先端がマージするブランチの直接の親である場合、ブランチポインタを前に進めるだけの単純なマージです。新しいコミットは作成されません。</p>
+<h3>Q2. マージコンフリクトが発生したらどうすればいいですか？</h3>
+<p>A. コンフリクトが発生したファイルを編集してコンフリクトを解決し、<code>git add</code>でマークしてから<code>git merge --continue</code>または<code>git commit</code>を実行します。</p>
+<h3>Q3. マージを取り消すにはどうすればいいですか？</h3>
+<p>A. マージ完了前なら<code>git merge --abort</code>、完了後なら<code>git reset --hard ORIG_HEAD</code>を使用します。</p>
+<h3>Q4. squashマージとは何ですか？</h3>
+<p>A. ブランチの全変更を一つのコミットにまとめてマージする方法です。ブランチの履歴は保持されません。</p>
+<h3>Q5. マージ後に不要になったブランチを削除するにはどうすればいいですか？</h3>
+<p>A. <code>git branch -d branch-name</code>コマンドでブランチを削除できます。</p>
+<h3>Q6. 特定のファイルだけをマージすることはできますか？</h3>
+<p>A. Gitは部分的なマージを直接サポートしていませんが、<code>git checkout</code>を使って特定のファイルを取得することができます。</p>
+<h3>Q7. マージ戦略の違いは何ですか？</h3>
+<p>A. 主に使われる<code>recursive</code>は複数の共通祖先を処理できますが、<code>ours</code>は相手の変更を無視し、<code>theirs</code>は自分の変更を無視します。</p>
+<h3>Q8. マージ前に変更内容を確認するには？</h3>
+<p>A. <code>git diff branch-name</code>で現在のブランチとマージ予定のブランチの差分を確認できます。</p>
+<h3>Q9. リモートブランチをマージするには？</h3>
+<p>A. まず<code>git fetch</code>でリモートブランチを取得し、その後<code>git merge origin/branch-name</code>を実行します。</p>
+<h3>Q10. マージコミットのメッセージを後から変更できますか？</h3>
+<p>A. <code>git commit --amend</code>を使用してマージコミットのメッセージを変更できます。</p>
+<h2>追加メモ</h2>
+<ul>
+<li>マージ前に<code>git fetch</code>と<code>git pull</code>を実行して最新の変更を取得することをお勧めします。</li>
+<li>重要な変更をマージする前には、別のブランチで試すか、<code>git stash</code>を使って作業中の変更を保存しておくと安全です。</li>
+<li>複雑なマージの場合は、視覚的なツール（GitKraken、SourceTree等）を使用すると理解しやすくなります。</li>
+<li><code>git log --graph --oneline</code>を使うと、ブランチとマージの履歴を視覚的に確認できます。</li>
+</ul>

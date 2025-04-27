@@ -1,0 +1,64 @@
+<h1>realpathコマンドの概要</h1>
+<p><code>realpath</code>コマンドは、指定されたファイルやディレクトリの絶対パス（フルパス）を表示します。シンボリックリンクを解決し、正規化されたパスを出力します。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-s, --strip, --no-symlinks</strong>: シンボリックリンクを解決せず、そのままのパスを表示します</p>
+<ul>
+<li>例: <code>realpath -s /usr/bin/python</code></li>
+</ul>
+</li>
+<li><p><strong>-m, --canonicalize-missing</strong>: 指定したパスの一部が存在しなくても処理を続行します</p>
+<ul>
+<li>例: <code>realpath -m /path/to/non/existent/file</code></li>
+</ul>
+</li>
+<li><p><strong>-e, --canonicalize-existing</strong>: 指定したパスのすべての構成要素が存在する場合のみ処理します</p>
+<ul>
+<li>例: <code>realpath -e /existing/path</code></li>
+</ul>
+</li>
+<li><p><strong>-q, --quiet</strong>: エラーメッセージを表示しません</p>
+<ul>
+<li>例: <code>realpath -q /non/existent/path</code></li>
+</ul>
+</li>
+<li><p><strong>-z, --zero</strong>: 出力の各行を改行ではなくNULL文字で終了します（スクリプトで使用する場合に便利）</p>
+<ul>
+<li>例: <code>realpath -z file1 file2</code></li>
+</ul>
+</li>
+<li><p><strong>--relative-to=DIR</strong>: 指定したディレクトリからの相対パスを表示します</p>
+<ul>
+<li>例: <code>realpath --relative-to=/home /home/user/documents</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使用法（ファイルの絶対パスを表示）</span>
+realpath<span style="color: #F8F8F8"> </span>myfile.txt
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+/home/user/projects/myfile.txt
+
+<span style="color: #8F5902; font-style: italic"># シンボリックリンクを解決せずにパスを表示</span>
+ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>hosts_link
+realpath<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>hosts_link
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+/home/user/hosts_link
+
+<span style="color: #8F5902; font-style: italic"># 存在しないファイルのパスを表示</span>
+realpath<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>/home/user/non_existent_file.txt
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+/home/user/non_existent_file.txt
+
+<span style="color: #8F5902; font-style: italic"># 相対パスを表示</span>
+realpath<span style="color: #F8F8F8"> </span>--relative-to<span style="color: #CE5C00; font-weight: bold">=</span>/home<span style="color: #F8F8F8"> </span>/home/user/documents/file.txt
+<span style="color: #8F5902; font-style: italic"># 出力例</span>
+user/documents/file.txt
+</pre></div>
+<h2>追加情報</h2>
+<ul>
+<li>シェルスクリプト内でファイルの絶対パスを取得する際に特に便利です</li>
+<li><code>readlink -f</code>コマンドと似た機能を持ちますが、<code>realpath</code>の方がより多くのオプションを提供します</li>
+<li>複数のファイルを一度に指定すると、それぞれの絶対パスを1行ずつ出力します</li>
+<li>存在しないパスを指定した場合、デフォルトではエラーになりますが、<code>-m</code>オプションを使用すると仮想的なパスを表示できます</li>
+</ul>

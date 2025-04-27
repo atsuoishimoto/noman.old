@@ -1,0 +1,63 @@
+<h1>cpコマンド概要</h1>
+<p><code>cp</code>コマンドはファイルやディレクトリをコピーするためのUnixコマンドです。元のファイルを保持したまま、別の場所に複製を作成します。</p>
+<h2>主なオプション</h2>
+<ul>
+<li><p><strong>-r, -R, --recursive</strong>: ディレクトリとその中身を再帰的にコピーします</p>
+<ul>
+<li>例: <code>cp -r ソースディレクトリ 宛先ディレクトリ</code></li>
+</ul>
+</li>
+<li><p><strong>-i, --interactive</strong>: 上書き前に確認を求めます（対話モード）</p>
+<ul>
+<li>例: <code>cp -i file1.txt file2.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-v, --verbose</strong>: 実行中の操作を詳細に表示します</p>
+<ul>
+<li>例: <code>cp -v file1.txt file2.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-p, --preserve</strong>: ファイルの属性（所有者、グループ、タイムスタンプなど）を保持します</p>
+<ul>
+<li>例: <code>cp -p file1.txt file2.txt</code></li>
+</ul>
+</li>
+<li><p><strong>-u, --update</strong>: 宛先ファイルが存在しない場合、または元ファイルより古い場合のみコピーします</p>
+<ul>
+<li>例: <code>cp -u file1.txt file2.txt</code></li>
+</ul>
+</li>
+</ul>
+<h2>使用例</h2>
+<h3>基本的なファイルのコピー</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 1つのファイルを別の名前でコピー</span>
+cp<span style="color: #F8F8F8"> </span>document.txt<span style="color: #F8F8F8"> </span>document_backup.txt
+
+<span style="color: #8F5902; font-style: italic"># 複数のファイルをディレクトリにコピー</span>
+cp<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>destination_directory/
+</pre></div>
+<h3>ディレクトリのコピー</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ディレクトリとその中身を再帰的にコピー</span>
+cp<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>source_directory/<span style="color: #F8F8F8"> </span>destination_directory/
+
+<span style="color: #8F5902; font-style: italic"># 詳細表示しながらディレクトリをコピー</span>
+cp<span style="color: #F8F8F8"> </span>-rv<span style="color: #F8F8F8"> </span>source_directory/<span style="color: #F8F8F8"> </span>destination_directory/
+</pre></div>
+<h3>上書き確認</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 上書き前に確認を求める</span>
+cp<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>important.txt<span style="color: #F8F8F8"> </span>backup/important.txt
+<span style="color: #8F5902; font-style: italic"># 出力例（ファイルが存在する場合）:</span>
+<span style="color: #8F5902; font-style: italic"># overwrite backup/important.txt? (y/n)</span>
+</pre></div>
+<h3>属性を保持したコピー</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># タイムスタンプや権限などの属性を保持してコピー</span>
+cp<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>config.ini<span style="color: #F8F8F8"> </span>/etc/config.ini
+</pre></div>
+<h2>追加メモ</h2>
+<ul>
+<li>ワイルドカード（<code>*</code>）を使用して複数のファイルを一度にコピーできます：<code>cp *.txt destination/</code></li>
+<li>宛先が存在するディレクトリの場合、ファイルはそのディレクトリ内にコピーされます</li>
+<li>宛先が存在しないファイル名の場合、ファイルはその名前でコピーされます</li>
+<li><code>-f</code>（強制）オプションを使うと、確認なしで上書きします（注意して使用してください）</li>
+<li>大量のファイルや大きなディレクトリをコピーする場合は、<code>-v</code>オプションを使うと進行状況を確認できます</li>
+</ul>
