@@ -59,8 +59,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Filter pages based on search term
             const matchingPages = Object.entries(pages).filter(([command, data]) => {
-                return command.toLowerCase().includes(searchTerm);
-                //return command.toLowerCase().includes(searchTerm) || data.summary.toLowerCase().includes(searchTerm);
+                //return command.toLowerCase().includes(searchTerm);
+                return command.toLowerCase().includes(searchTerm) || data.summary.toLowerCase().includes(searchTerm);
             });
 
             // Update search results panel
