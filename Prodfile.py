@@ -1,15 +1,15 @@
 # type: ignore
 
 import datetime
-import os
 import json
 from dotenv import load_dotenv
-
-load_dotenv()
-
 import gen_noman
 import make_summary
 from md2html import md_to_html
+from pathlib import Path
+from pyprod import rule, task, run
+
+load_dotenv()
 
 TODAY = datetime.datetime.now(tz=datetime.UTC).date().strftime("%Y/%m/%d")
 COMMANDDIR = Path("./commands")
@@ -80,8 +80,8 @@ def summary():
     dest = Path("www/ja")
     dest.mkdir(parents=True, exist_ok=True)
 
-    d  = make_summary.make_summary(Path("pages/ja"))
-    d = {k:{"summary":v} for k, v in sorted(d.items())}
+    d = make_summary.make_summary(Path("pages/ja"))
+    d = {k: {"summary": v} for k, v in sorted(d.items())}
     text = json.dumps(d, ensure_ascii=False, indent=2)
     (dest / "summary.js").write_text(f"pages = {text.strip()};")
 
@@ -89,7 +89,7 @@ def summary():
     dest.mkdir(parents=True, exist_ok=True)
 
     d = make_summary.make_summary(Path("pages/en"))
-    d = {k:{"summary":v} for k, v in sorted(d.items())}
+    d = {k: {"summary": v} for k, v in sorted(d.items())}
     text = json.dumps(d, ensure_ascii=False, indent=2)
     (dest / "summary.js").write_text(f"pages = {text.strip()};")
 
@@ -114,6 +114,7 @@ def html():
         html = html.replace("{{ content }}", md_to_html(md))
         (dest / md.with_suffix(".html").name).write_text(html)
 
+
 @task
 def text():
     for md in Path("pages/ja").glob("*.md"):
@@ -123,4 +124,3 @@ def text():
     for md in Path("pages/en").glob("*.md"):
         txt = md.with_suffix(".txt")
         run("pandoc", "-f", "markdown", "-t", "plain", "--wrap=none", "-o", txt, md)
-
