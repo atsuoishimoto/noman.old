@@ -77,24 +77,40 @@ TODAY is {TODAY}.
 
 @task
 def summary():
-    ja = make_summary.make_summary(Path("pages/ja"))
-    with open("pages/ja/summary.json", "w") as f:
-        json.dump(ja, f, ensure_ascii=False, indent=2)
+    dest = Path("www/ja")
+    dest.mkdir(parents=True, exist_ok=True)
 
-    en = make_summary.make_summary(Path("pages/en"))
-    with open("pages/en/summary.json", "w") as f:
-        json.dump(en, f, ensure_ascii=False, indent=2)
+    d  = make_summary.make_summary(Path("pages/ja"))
+    text = json.dumps(d, ensure_ascii=False, indent=2)
+    (dest / "summary.json").write_text(text)
+
+    dest = Path("www/en")
+    dest.mkdir(parents=True, exist_ok=True)
+
+    d = make_summary.make_summary(Path("pages/en"))
+    text = json.dumps(d, ensure_ascii=False, indent=2)
+    (dest / "summary.json").write_text(text)
 
 
 @task
 def html():
+    template = Path("templates/ja.html").read_text()
+    dest = Path("www/ja/pages")
+    dest.mkdir(parents=True, exist_ok=True)
+
     for md in Path("pages/ja").glob("*.md"):
-        html = md_to_html(md)
-        md.with_suffix(".html").write_text(html)
+        html = template.replace("{{ command }}", md.stem)
+        html = template.replace("{{ content }}", md_to_html(md))
+        (dest / md.with_suffix(".html").name).write_text(html)
+
+    template = Path("templates/en.html").read_text()
+    dest = Path("www/en/pages")
+    dest.mkdir(parents=True, exist_ok=True)
 
     for md in Path("pages/en").glob("*.md"):
-        html = md_to_html(md)
-        md.with_suffix(".html").write_text(html)
+        html = template.replace("{{ command }}", md.stem)
+        html = template.replace("{{ content }}", md_to_html(md))
+        (dest / md.with_suffix(".html").name).write_text(html)
 
 @task
 def text():
