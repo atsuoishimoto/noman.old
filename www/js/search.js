@@ -117,22 +117,28 @@ document.addEventListener('DOMContentLoaded', function () {
             const keywords = searchTerm.split(' ').filter(keyword => keyword.length > 0);
 
             // Filter pages based on multiple keywords
-            const matchingPages = Object.entries(pages).filter(([command, data]) => {
-                const commandText = command.toLowerCase();
+            const matchingPages = Object.entries(pages).filter(([key, data]) => {
+                const keyText = key.toLowerCase();
                 const summaryText = data.summary.toLowerCase();
+                // Include command field in search if it exists
+                const commandText = data.command ? data.command.toLowerCase() : '';
 
-                // Check if all keywords are found in either command or summary
+                // Check if all keywords are found in either key, command, or summary
                 return keywords.every(keyword =>
-                    commandText.includes(keyword) || summaryText.includes(keyword)
+                    keyText.includes(keyword) ||
+                    summaryText.includes(keyword) ||
+                    commandText.includes(keyword)
                 );
             });
 
             // Update search results panel
             if (matchingPages.length > 0) {
-                searchResultsPanel.innerHTML = matchingPages.map(([command, data]) => {
+                searchResultsPanel.innerHTML = matchingPages.map(([key, data]) => {
+                    // Display command value if it exists, otherwise use the key
+                    const displayCommand = data.command ? data.command : key;
                     return `
-            <div class="search-result-item" data-command="${command}">
-              <div class="search-result-command">${command}</div>
+            <div class="search-result-item" data-command="${key}">
+              <div class="search-result-command">${displayCommand}</div>
               <div class="search-result-summary">${data.summary}</div>
             </div>
           `;
@@ -142,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.querySelectorAll('.search-result-item').forEach(item => {
                     item.addEventListener('click', function () {
                         const command = this.getAttribute('data-command');
-                        window.location.href = `#${command}`;
+                        window.location.href = `${command}.html`;
                         searchResultsPanel.style.display = 'none';
                         searchBox.value = command;
                     });
