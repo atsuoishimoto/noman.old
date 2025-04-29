@@ -1,1 +1,0 @@
-export { createSearchBox } from './createSearchBox';
