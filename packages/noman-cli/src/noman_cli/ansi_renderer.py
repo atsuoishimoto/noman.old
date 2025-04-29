@@ -10,7 +10,6 @@ from pygments import highlight
 from . import colors
 
 
-
 def _render_list_item(
     renderer: "BaseRenderer",
     parent: Dict[str, Any],
@@ -37,7 +36,9 @@ def _render_list_item(
     return leading + text
 
 
-def _render_ordered_list(renderer: "BaseRenderer", token: Dict[str, Any], state: "BlockState") -> Iterable[str]:
+def _render_ordered_list(
+    renderer: "BaseRenderer", token: Dict[str, Any], state: "BlockState"
+) -> Iterable[str]:
     attrs = token["attrs"]
     start = attrs.get("start", 1)
     for item in token["children"]:
@@ -50,7 +51,9 @@ def _render_ordered_list(renderer: "BaseRenderer", token: Dict[str, Any], state:
         start += 1
 
 
-def _render_unordered_list(renderer: "BaseRenderer", token: Dict[str, Any], state: "BlockState") -> Iterable[str]:
+def _render_unordered_list(
+    renderer: "BaseRenderer", token: Dict[str, Any], state: "BlockState"
+) -> Iterable[str]:
     parent = {
         "leading": token["bullet"] + " ",
         "tight": token["tight"],
@@ -58,7 +61,10 @@ def _render_unordered_list(renderer: "BaseRenderer", token: Dict[str, Any], stat
     for item in token["children"]:
         yield _render_list_item(renderer, parent, item, state)
 
-def render_list(renderer: "BaseRenderer", token: Dict[str, Any], state: "BlockState") -> str:
+
+def render_list(
+    renderer: "BaseRenderer", token: Dict[str, Any], state: "BlockState"
+) -> str:
     attrs = token["attrs"]
     if attrs["ordered"]:
         children = _render_ordered_list(renderer, token, state)
@@ -73,6 +79,7 @@ def render_list(renderer: "BaseRenderer", token: Dict[str, Any], state: "BlockSt
         return text + "\n"
     return strip_end(text) + "\n\n"
 
+
 class StyleManager:
     def __init__(self, theme):
         self._theme = theme
@@ -83,7 +90,7 @@ class StyleManager:
 
     @contextmanager
     def _with_style(self, style):
-        self._lv+=1
+        self._lv += 1
         fg = None
         bg = None
         attrs = {}
@@ -130,7 +137,7 @@ class StyleManager:
         self._fg = save_fg
         self._bg = save_bg
         self._attrs = save_attrs.copy()
-        self._lv-=1
+        self._lv -= 1
 
     def with_style(self, name):
         style = getattr(self._theme, name)
@@ -139,14 +146,13 @@ class StyleManager:
 
 def dump(tokens, indent=0):
     for token in tokens:
-        ttt = {k:v for (k,v) in token.items() if k not in {"children", "raw", "type"}}
+        ttt = {k: v for (k, v) in token.items() if k not in {"children", "raw", "type"}}
 
-        print("  "*indent + token["type"], repr(token.get("raw", "")[:20]), ttt)
+        print("  " * indent + token["type"], repr(token.get("raw", "")[:20]), ttt)
 
         children = token.get("children", [])
         if children:
-            dump(children, indent=indent+2)
-
+            dump(children, indent=indent + 2)
 
 
 class ANSIRenderer(BaseRenderer):
@@ -167,14 +173,13 @@ class ANSIRenderer(BaseRenderer):
         assert self._nested == 0
         return strip_end(out)
 
-
     def margin(self, s):
         if self._nested == 1:
             return indent(s, "    ")
         return s
 
     def render_token(self, token: Dict[str, Any], state: BlockState) -> str:
-        #pprint.pprint(token)
+        # pprint.pprint(token)
         self._nested += 1
         try:
             return super().render_token(token, state)
@@ -190,7 +195,7 @@ class ANSIRenderer(BaseRenderer):
 
     def text(self, token: Dict[str, Any], state: BlockState) -> str:
         with self.style("text") as (s, e):
-            return f"{s}{token["raw"]}{e}"
+            return f"{s}{token['raw']}{e}"
 
     def emphasis(self, token: Dict[str, Any], state: BlockState) -> str:
         with self.style("emphasis") as (s, e):
@@ -229,16 +234,15 @@ class ANSIRenderer(BaseRenderer):
         return self.margin(self.render_children(token, state) + "\n")
 
     def heading(self, token: Dict[str, Any], state: BlockState) -> str:
-
         level = min(token["attrs"]["level"], 4)
-        stylename  = f"h{level}"
-        
+        stylename = f"h{level}"
+
         with self.theme.with_style(stylename) as (s, e):
             text = self.render_children(token, state)
-            text = s + text +  e + "\n"
+            text = s + text + e + "\n"
             if level >= 4:
                 text = self.margin(text)
-            return  text
+            return text
 
     def thematic_break(self, token: Dict[str, Any], state: BlockState) -> str:
         return self.margin("--------------\n\n")
@@ -256,7 +260,7 @@ class ANSIRenderer(BaseRenderer):
             code = highlight(code, lexer, formatter)
         else:
             with self.style("blockcode") as (s, e):
-                code = s+token["raw"]+e
+                code = s + token["raw"] + e
 
         return self.margin(code)
 

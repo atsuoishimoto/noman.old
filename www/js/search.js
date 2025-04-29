@@ -147,8 +147,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Add click event to search result items
                 document.querySelectorAll('.search-result-item').forEach(item => {
                     item.addEventListener('click', function () {
+                        // 現在のurl /lang-name/page.html からlang-nameを取得
+                        const currentUrl = window.location.href;
+                        const langName = currentUrl.split('/')[3];
                         const command = this.getAttribute('data-command');
-                        window.location.href = `${command}.html`;
+                        window.location.href = `/${langName}/pages/${command}.html`;
                         searchResultsPanel.style.display = 'none';
                         searchBox.value = command;
                     });

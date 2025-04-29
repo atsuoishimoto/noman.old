@@ -72,7 +72,7 @@ rsyslogd 789   syslog    7w   REG    8,1   256789 131073 /var/log/syslog
 
 ### 複数のオプションを組み合わせる
 
-```bash
+```console
 $ lsof -u user1 -i TCP
 COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
 chrome  3456 user1    32u  IPv4 789123      0t0  TCP localhost:49152->localhost:http (ESTABLISHED)
