@@ -176,30 +176,16 @@ int main(int argc, char* argv[]) {
                 perror("fork");
                 pager_failed = 1;
             } else if (pid == 0) {
-                //todo: use shell
                 // Child process
                 close(pipefd[1]); // Close write end
                 dup2(pipefd[0], STDIN_FILENO); // Redirect stdin to pipe
                 close(pipefd[0]);
                 
-                // Split pager command into arguments
-                char* pager_copy = strdup(pager);
-                char* args[64] = {NULL}; // Maximum 64 arguments
-                int arg_count = 0;
+                // Execute pager through shell
+                execl("/bin/sh", "sh", "-c", pager, NULL);
                 
-                char* token = strtok(pager_copy, " ");
-                while (token && arg_count < 63) {
-                    args[arg_count++] = token;
-                    token = strtok(NULL, " ");
-                }
-                args[arg_count] = NULL;
-                
-                // Execute pager directly without shell
-                execvp(args[0], args);
-                
-                // If execvp fails
-                free(pager_copy);
-                perror("execvp");
+                // If execl fails
+                perror("execl");
                 exit(EXIT_FAILURE);
             } else {
                 // Parent process
