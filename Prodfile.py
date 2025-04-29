@@ -76,12 +76,14 @@ TODAY is {TODAY}.
     resultsdir.mkdir(parents=True, exist_ok=True)
     (resultsdir / f"{target.stem}.json").write_text(result)
 
+
 def read_commandinfo(command):
     conf = Path("commands") / command / "command.yaml"
     if conf.is_file():
         cmd = yaml.safe_load(conf.read_text())
         return cmd
     return {}
+
 
 @task
 def summary():
@@ -97,7 +99,6 @@ def summary():
     (dest / "summary.json").write_text(text.strip())
     (dest / "summary.js").write_text(f"pages = {text.strip()};")
 
-
     dest = Path("www/en")
     dest.mkdir(parents=True, exist_ok=True)
 
@@ -108,6 +109,7 @@ def summary():
     text = json.dumps(d, ensure_ascii=False, indent=2)
     (dest / "summary.js").write_text(f"pages = {text.strip()};")
 
+
 @task
 def text():
     for md in Path("pages/ja").glob("*.md"):
@@ -117,6 +119,7 @@ def text():
     for md in Path("pages/en").glob("*.md"):
         txt = md.with_suffix(".txt")
         run("pandoc", "-f", "markdown", "-t", "plain", "--wrap=none", "-o", txt, md)
+
 
 @task
 def html():
@@ -139,3 +142,8 @@ def html():
         (dest / md.with_suffix(".html").name).write_text(html)
 
 
+@task
+def build_cli():
+    run("cp", "pages/ja/*.md", "noman-cli/src/noman_cli/pages/ja")
+    run("cp", "pages/en/*.md", "noman-cli/src/noman_cli/pages/en")
+    run("uv build", cwd="noman-cli")

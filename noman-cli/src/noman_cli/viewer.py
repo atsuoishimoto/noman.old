@@ -2,7 +2,7 @@ import locale
 import os
 import argparse
 import curses
-
+from importlib import resources
 
 import sys
 import subprocess
@@ -17,17 +17,15 @@ def detect_terminal_background():
         curses.start_color()
         curses.use_default_colors()
         curses.endwin()
-        
+
         if curses.can_change_color():
             r, g, b = curses.color_content(curses.COLOR_WHITE)
             if r > 500 and g > 500 and b > 500:
                 return "dark"
             else:
                 return "light"
-    except:
+    except Exception:
         pass
-
-
 
 
 renderer = ansi_renderer.ANSIRenderer()
@@ -45,6 +43,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
     "-l",
     "--list",
+    action="store_true",
     help="List all available pages",
 )
 
@@ -71,19 +70,15 @@ parser.add_argument(
 )
 
 
-parser.add_argument("name", nargs=1, help="Name of the page to view")
+parser.add_argument("name", nargs="?", help="Name of the page to view")
+
 
 def main():
     args = parser.parse_args()
+    import noman_cli.pages.ja as ja
 
     if args.version:
         print("noman 0.1")
-        sys.exit(0)
-
-    if args.list:
-        print("List of available pages:")
-        for p in Path(".").glob("*.md"):
-            print(f" - {p.stem}")
         sys.exit(0)
 
     lang = "en"
@@ -96,9 +91,25 @@ def main():
     if lang not in SUPPORTED_LANGUAGES:
         lang = "en"
 
-    filename = Path(args.name[0])
-    print(filename)
-    src = filename.read_text()
+    root = resources.files() / "pages" / lang
+
+    if args.list:
+        print("List of available pages:")
+        for p in sorted(root.glob("*.md")):
+            print(f"{p.stem}")
+        sys.exit(0)
+
+    if not args.name:
+        print("No page name provided", file=sys.stderr)
+        sys.exit(1)
+
+    file = (root / args.name).with_suffix(".md")
+
+    if not file.exists():
+        print(f"Page {args.name} not found")
+        sys.exit(1)
+
+    src = file.read_text()
 
     s = markdown(src)
     if args.no_pager:
