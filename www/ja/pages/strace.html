@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  strace - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <a href="#">Try</a>
+        <a href="https://github.com/atsuoishimoto/noman">GitHub</a>
+        <span id="language-switcher"></span>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>strace コマンド</h1>
+<p>プロセスのシステムコールとシグナルをトレースするツール。</p>
+<h2>概要</h2>
+<p><code>strace</code>はLinuxシステムで実行中のプログラムが行うシステムコール（OSへの要求）とシグナルを監視・記録するコマンドです。プログラムのデバッグやパフォーマンス分析に役立ち、プログラムがどのファイルにアクセスしているか、どのネットワーク接続を確立しているかなどを確認できます。</p>
+<h2>オプション</h2>
+<h3><strong>-f</strong></h3>
+<p>子プロセスも含めてトレースします。<code>fork()</code>や<code>clone()</code>で生成された子プロセスも追跡できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>strace<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>ls
+<span style="color: #000; font-style: italic">execve(&quot;/bin/ls&quot;, [&quot;ls&quot;], 0x7ffc7c9d5b40 /* 24 vars */) = 0</span>
+<span style="color: #000; font-style: italic">brk(NULL)                               = 0x55a3e2a1b000</span>
+<span style="color: #000; font-style: italic">access(&quot;/etc/ld.so.preload&quot;, R_OK)      = -1 ENOENT (No such file or directory)</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">[pid 12345] openat(AT_FDCWD, &quot;.&quot;, O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>-o ファイル名</strong></h3>
+<p>出力を指定したファイルに保存します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>strace<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>trace.log<span style="color: #F8F8F8"> </span>ls
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>trace.log
+<span style="color: #000; font-style: italic">execve(&quot;/bin/ls&quot;, [&quot;ls&quot;], 0x7ffd8a1d3b40 /* 24 vars */) = 0</span>
+<span style="color: #000; font-style: italic">brk(NULL)                               = 0x55c8e4c0c000</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>-p PID</strong></h3>
+<p>実行中のプロセスをPIDを指定してトレースします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>strace<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+<span style="color: #000; font-style: italic">strace: Process 1234 attached</span>
+<span style="color: #000; font-style: italic">read(3, &quot;data\n&quot;, 4096)                 = 5</span>
+<span style="color: #000; font-style: italic">write(1, &quot;data\n&quot;, 5)                   = 5</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>-e expr</strong></h3>
+<p>トレースするシステムコールやシグナルを指定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>strace<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>open,read<span style="color: #F8F8F8"> </span>ls
+<span style="color: #000; font-style: italic">openat(AT_FDCWD, &quot;/etc/ld.so.cache&quot;, O_RDONLY|O_CLOEXEC) = 3</span>
+<span style="color: #000; font-style: italic">read(3, &quot;\237\235\0\0\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0&quot;..., 4096) = 4096</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>-c</strong></h3>
+<p>各システムコールの統計情報を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>strace<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>ls
+<span style="color: #000; font-style: italic">file1  file2  file3</span>
+
+<span style="color: #8F5902">% </span><span style="color: #204A87">time</span><span style="color: #F8F8F8">     </span>seconds<span style="color: #F8F8F8">  </span>usecs/call<span style="color: #F8F8F8">     </span>calls<span style="color: #F8F8F8">    </span>errors<span style="color: #F8F8F8"> </span>syscall
+<span style="color: #000; font-style: italic">------ ----------- ----------- --------- --------- ----------------</span>
+<span style="color: #000; font-style: italic">  0.00    0.000000           0        11           read</span>
+<span style="color: #000; font-style: italic">  0.00    0.000000           0         9           write</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">------ ----------- ----------- --------- --------- ----------------</span>
+<span style="color: #000; font-style: italic">100.00    0.000123                   106         1 total</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的なプログラムのトレース</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>strace<span style="color: #F8F8F8"> </span>ls
+<span style="color: #000; font-style: italic">execve(&quot;/bin/ls&quot;, [&quot;ls&quot;], 0x7ffc7c9d5b40 /* 24 vars */) = 0</span>
+<span style="color: #000; font-style: italic">brk(NULL)                               = 0x55a3e2a1b000</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">write(1, &quot;file1  file2  file3\n&quot;, 20)   = 20</span>
+<span style="color: #000; font-style: italic">close(1)                                = 0</span>
+<span style="color: #000; font-style: italic">exit_group(0)                           = ?</span>
+<span style="color: #000; font-style: italic">+++ exited with 0 +++</span>
+</pre></div>
+<h3>ファイルアクセスのみをトレース</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>strace<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #000">trace</span><span style="color: #CE5C00; font-weight: bold">=</span>file<span style="color: #F8F8F8"> </span>ls
+<span style="color: #000; font-style: italic">execve(&quot;/bin/ls&quot;, [&quot;ls&quot;], 0x7ffd8a1d3b40 /* 24 vars */) = 0</span>
+<span style="color: #000; font-style: italic">access(&quot;/etc/ld.so.preload&quot;, R_OK)      = -1 ENOENT (No such file or directory)</span>
+<span style="color: #000; font-style: italic">openat(AT_FDCWD, &quot;/etc/ld.so.cache&quot;, O_RDONLY|O_CLOEXEC) = 3</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">+++ exited with 0 +++</span>
+</pre></div>
+<h3>ネットワーク関連のシステムコールのみをトレース</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>strace<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #000">trace</span><span style="color: #CE5C00; font-weight: bold">=</span>network<span style="color: #F8F8F8"> </span>curl<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) = 3</span>
+<span style="color: #000; font-style: italic">connect(3, {sa_family=AF_INET, sin_port=htons(80), sin_addr=inet_addr(&quot;93.184.216.34&quot;)}, 16) = 0</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>出力が多すぎる場合</h3>
+<p><code>-o</code>オプションでファイルに出力し、あとでgrepなどで必要な情報を抽出すると効率的です。</p>
+<h3>パフォーマンス分析</h3>
+<p><code>-c</code>オプションを使うと、どのシステムコールが頻繁に呼ばれているか、どれが時間を消費しているかが分かります。</p>
+<h3>デバッグのコツ</h3>
+<p>ファイルが見つからないエラーを調査する場合は、<code>-e open</code>でファイルオープン操作だけを追跡すると効果的です。</p>
+<h3>権限の問題</h3>
+<p>多くのシステムコールをトレースするには管理者権限（root）が必要な場合があります。</p>
+<h2>よくある質問</h2>
+<h4>Q1. straceを使うとプログラムの実行速度は遅くなりますか？</h4>
+<p>A. はい、straceはプログラムの実行を大幅に遅くします。本番環境での使用は避け、デバッグ目的でのみ使用することをお勧めします。</p>
+<h4>Q2. MacOSでstraceは使えますか？</h4>
+<p>A. MacOSではstraceの代わりに<code>dtruss</code>や<code>dtrace</code>を使用します。ただし、System Integrity Protection (SIP)が有効な場合は制限があります。</p>
+<h4>Q3. 特定のシステムコールだけをトレースするにはどうすればいいですか？</h4>
+<p>A. <code>-e trace=システムコール名</code>を使用します。例えば、<code>strace -e trace=open,read,write ls</code>とすると、open、read、writeのシステムコールだけをトレースします。</p>
+<h4>Q4. straceの出力を読みやすくするには？</h4>
+<p>A. <code>-v</code>（詳細表示）や<code>-s 文字数</code>（表示する文字列の長さを指定）オプションを使うと読みやすくなります。</p>
+<h2>参考情報</h2>
+<p>https://man7.org/linux/man-pages/man1/strace.1.html</p>
+<h2>注意事項（macOS）</h2>
+<p>macOSではstraceは直接サポートされていません。代わりに<code>dtruss</code>コマンド（sudoが必要）や<code>instruments</code>アプリケーションを使用してください。</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/29 初版作成</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

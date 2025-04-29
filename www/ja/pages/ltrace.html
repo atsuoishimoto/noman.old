@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  ltrace - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <a href="#">Try</a>
+        <a href="https://github.com/atsuoishimoto/noman">GitHub</a>
+        <span id="language-switcher"></span>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>ltrace コマンド</h1>
+<p>実行中のプログラムが行うライブラリコールをトレースします。</p>
+<h2>概要</h2>
+<p><code>ltrace</code>は、プログラムが実行中に呼び出すライブラリ関数（C標準ライブラリなど）を追跡し表示するデバッグツールです。プログラムの動作を理解したり、バグを特定したりする際に役立ちます。<code>strace</code>がシステムコールを追跡するのに対し、<code>ltrace</code>はライブラリコールに焦点を当てています。</p>
+<h2>オプション</h2>
+<h3><strong>-c</strong></h3>
+<p>統計情報をまとめて表示します。各ライブラリ関数の呼び出し回数、費やした時間などを集計します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>ls
+<span style="color: #8F5902">% </span><span style="color: #204A87">time</span><span style="color: #F8F8F8">     </span>seconds<span style="color: #F8F8F8">  </span>usecs/call<span style="color: #F8F8F8">     </span>calls<span style="color: #F8F8F8">      </span><span style="color: #204A87; font-weight: bold">function</span>
+<span style="color: #000; font-style: italic">------ ----------- ----------- --------- --------------------</span>
+<span style="color: #000; font-style: italic"> 24.39    0.000100          33         3 __errno_location</span>
+<span style="color: #000; font-style: italic"> 21.95    0.000090          30         3 sigaction</span>
+<span style="color: #000; font-style: italic"> 14.63    0.000060          20         3 readdir</span>
+<span style="color: #000; font-style: italic">  9.76    0.000040          20         2 closedir</span>
+<span style="color: #000; font-style: italic">  7.32    0.000030          15         2 opendir</span>
+<span style="color: #000; font-style: italic">  7.32    0.000030          15         2 strlen</span>
+<span style="color: #000; font-style: italic">  7.32    0.000030          15         2 malloc</span>
+<span style="color: #000; font-style: italic">  4.88    0.000020          10         2 free</span>
+<span style="color: #000; font-style: italic">  2.44    0.000010          10         1 fclose</span>
+<span style="color: #000; font-style: italic">------ ----------- ----------- --------- --------------------</span>
+<span style="color: #000; font-style: italic">100.00    0.000410                    20 total</span>
+</pre></div>
+<h3><strong>-f</strong></h3>
+<p>子プロセスも追跡します。プログラムがforkやexecを使用して他のプロセスを起動する場合に便利です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>make
+<span style="color: #000; font-style: italic">[pid 12345] __libc_start_main(0x401500, 2, 0x7ffc123456, 0x4016a0 &lt;unfinished ...&gt;</span>
+<span style="color: #000; font-style: italic">[pid 12345] getopt_long(2, 0x7ffc123456, &quot;df:j:kmNnprRsS:t&quot;, 0x7f123456, 0) = -1</span>
+<span style="color: #000; font-style: italic">[pid 12345] fork() = 12346</span>
+<span style="color: #000; font-style: italic">[pid 12346] execve(&quot;/bin/sh&quot;, [&quot;sh&quot;, &quot;-c&quot;, &quot;gcc -o hello hello.c&quot;], 0x7ffc123456 &lt;unfinished ...&gt;</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>-p PID</strong></h3>
+<p>実行中のプロセスにアタッチします。すでに動作しているプログラムを途中から追跡したい場合に使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+<span style="color: #000; font-style: italic">[pid 1234] read(5, &quot;Hello World&quot;, 1024)                = 11</span>
+<span style="color: #000; font-style: italic">[pid 1234] printf(&quot;Received: %s\n&quot;, &quot;Hello World&quot;)     = 19</span>
+<span style="color: #000; font-style: italic">[pid 1234] write(1, &quot;Received: Hello World\n&quot;, 19)     = 19</span>
+</pre></div>
+<h3><strong>-e PATTERN</strong></h3>
+<p>特定のライブラリ関数だけを追跡します。大量の出力から必要な情報だけを絞り込みたい場合に便利です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>malloc+free<span style="color: #F8F8F8"> </span>ls
+<span style="color: #000; font-style: italic">ls-&gt;malloc(32)                                       = 0x55d5e9fa72a0</span>
+<span style="color: #000; font-style: italic">ls-&gt;malloc(13)                                       = 0x55d5e9fa72d0</span>
+<span style="color: #000; font-style: italic">ls-&gt;free(0x55d5e9fa72d0)                             = &lt;void&gt;</span>
+<span style="color: #000; font-style: italic">ls-&gt;free(0x55d5e9fa72a0)                             = &lt;void&gt;</span>
+<span style="color: #000; font-style: italic">+++ exited (status 0) +++</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的な使い方</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>ls
+<span style="color: #000; font-style: italic">__libc_start_main(0x401670, 1, 0x7ffc123456, 0x4017a0 &lt;unfinished ...&gt;</span>
+<span style="color: #000; font-style: italic">strrchr(&quot;ls&quot;, &#39;/&#39;)                                   = NULL</span>
+<span style="color: #000; font-style: italic">setlocale(LC_ALL, &quot;&quot;)                                = &quot;ja_JP.UTF-8&quot;</span>
+<span style="color: #000; font-style: italic">bindtextdomain(&quot;coreutils&quot;, &quot;/usr/share/locale&quot;)     = &quot;/usr/share/locale&quot;</span>
+<span style="color: #000; font-style: italic">textdomain(&quot;coreutils&quot;)                              = &quot;coreutils&quot;</span>
+<span style="color: #000; font-style: italic">__cxa_atexit(0x401930, 0, 0, 0x736c)                 = 0</span>
+<span style="color: #000; font-style: italic">getenv(&quot;POSIXLY_CORRECT&quot;)                            = NULL</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">+++ exited (status 0) +++</span>
+</pre></div>
+<h3>特定の関数を追跡する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>malloc+free+open<span style="color: #F8F8F8"> </span>firefox
+<span style="color: #000; font-style: italic">firefox-&gt;malloc(832)                                 = 0x55d5e9fa72a0</span>
+<span style="color: #000; font-style: italic">firefox-&gt;open(&quot;/etc/passwd&quot;, 0, 0)                   = 3</span>
+<span style="color: #000; font-style: italic">firefox-&gt;malloc(1024)                                = 0x55d5e9fa7500</span>
+<span style="color: #000; font-style: italic">firefox-&gt;free(0x55d5e9fa72a0)                        = &lt;void&gt;</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3>出力をファイルに保存する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>trace.log<span style="color: #F8F8F8"> </span>./myprogram
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>trace.log
+<span style="color: #000; font-style: italic">__libc_start_main(0x400526, 1, 0x7ffc123456, 0x400580 &lt;unfinished ...&gt;</span>
+<span style="color: #000; font-style: italic">printf(&quot;Hello, World!\n&quot;)                            = 14</span>
+<span style="color: #000; font-style: italic">puts(&quot;Program finished&quot;)                             = 17</span>
+<span style="color: #000; font-style: italic">+++ exited (status 0) +++</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>出力の読み方</h3>
+<p>関数名の後の括弧内は引数、等号の後は戻り値を示しています。<code>&lt;unfinished ...&gt;</code>は関数がまだ終了していないことを、<code>&lt;... function resumed&gt;</code>は中断された関数の処理が再開されたことを示します。</p>
+<h3>システムコールとの違い</h3>
+<p><code>ltrace</code>はライブラリコールを追跡し、<code>strace</code>はシステムコールを追跡します。両方を使うことで、プログラムの動作をより深く理解できます。</p>
+<h3>デバッグシンボルの重要性</h3>
+<p>デバッグシンボルがあるプログラムでは、より詳細な情報が得られます。<code>-debug</code>パッケージをインストールするか、コンパイル時に<code>-g</code>オプションを使用すると良いでしょう。</p>
+<h3>大きなプログラムでの使用</h3>
+<p>大規模なプログラムでは出力が膨大になるため、<code>-e</code>オプションで特定の関数に絞るか、<code>-o</code>で出力をファイルに保存して後で分析することをお勧めします。</p>
+<h2>よくある質問</h2>
+<h4>Q1. ltraceとstraceの違いは何ですか？</h4>
+<p>A. <code>ltrace</code>はライブラリ関数呼び出し（printf、mallocなど）を追跡し、<code>strace</code>はシステムコール（read、writeなど）を追跡します。</p>
+<h4>Q2. ltraceを使うにはroot権限が必要ですか？</h4>
+<p>A. 自分のプロセスを追跡する場合は不要ですが、他のユーザーのプロセスを追跡する場合はroot権限が必要です。</p>
+<h4>Q3. 出力が多すぎる場合はどうすればよいですか？</h4>
+<p>A. <code>-e</code>オプションで特定の関数だけを追跡するか、<code>-o</code>オプションで出力をファイルに保存して後で検索・フィルタリングすることができます。</p>
+<h4>Q4. 静的にリンクされたプログラムでltraceは使えますか？</h4>
+<p>A. 静的にリンクされたプログラムでは、ライブラリ関数が実行ファイルに組み込まれているため、<code>ltrace</code>の効果は限定的です。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSでは<code>ltrace</code>は標準でインストールされておらず、代わりに<code>dtruss</code>や<code>dtrace</code>などのツールが使用されます。Homebrewなどのパッケージマネージャーを使ってインストールすることもできますが、システム保護機能（SIP）により機能が制限される場合があります。</p>
+<h2>参考資料</h2>
+<p>https://man7.org/linux/man-pages/man1/ltrace.1.html</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/04/29 初版作成</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

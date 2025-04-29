@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  perf - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <a href="#">Try</a>
+        <a href="https://github.com/atsuoishimoto/noman">GitHub</a>
+        <span id="language-switcher"></span>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>perf コマンド</h1>
+<p>システムのパフォーマンスを分析し、プロファイリングするためのツール。</p>
+<h2>概要</h2>
+<p><code>perf</code>はLinuxカーネルのパフォーマンス分析ツールで、CPUパフォーマンスカウンタ、トレースポイント、ソフトウェアパフォーマンスカウンタなどを使用してシステムやアプリケーションのパフォーマンスを測定します。プログラムの実行時間、キャッシュミス、ブランチ予測ミスなどの低レベルのシステム情報を収集できます。</p>
+<h2>オプション</h2>
+<h3><strong>stat</strong></h3>
+<p>プログラムの実行中に基本的なパフォーマンス統計情報を収集します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>stat<span style="color: #F8F8F8"> </span>ls
+<span style="color: #000; font-style: italic">README.md  main.c  Makefile</span>
+
+<span style="color: #000; font-style: italic"> Performance counter stats for &#39;ls&#39;:</span>
+
+<span style="color: #000; font-style: italic">              2.30 msec task-clock                #    0.778 CPUs utilized          </span>
+<span style="color: #000; font-style: italic">                 0      context-switches          #    0.000 K/sec                  </span>
+<span style="color: #000; font-style: italic">                 0      cpu-migrations            #    0.000 K/sec                  </span>
+<span style="color: #000; font-style: italic">               107      page-faults               #    0.047 M/sec                  </span>
+<span style="color: #000; font-style: italic">         1,597,086      cycles                    #    0.694 GHz                    </span>
+<span style="color: #000; font-style: italic">         1,271,209      instructions              #    0.80  insn per cycle         </span>
+<span style="color: #000; font-style: italic">           262,930      branches                  #  114.230 M/sec                  </span>
+<span style="color: #000; font-style: italic">            10,493      branch-misses             #    3.99% of all branches        </span>
+
+<span style="color: #000; font-style: italic">       0.002956893 seconds time elapsed</span>
+
+<span style="color: #000; font-style: italic">       0.001953000 seconds user</span>
+<span style="color: #000; font-style: italic">       0.000000000 seconds sys</span>
+</pre></div>
+<h3><strong>record</strong></h3>
+<p>パフォーマンスデータを記録し、後で分析するために保存します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>record<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span>./myprogram
+<span style="color: #000; font-style: italic">[ perf record: Woken up 1 times to write data ]</span>
+<span style="color: #000; font-style: italic">[ perf record: Captured and wrote 0.452 MB perf.data (5621 samples) ]</span>
+</pre></div>
+<h3><strong>report</strong></h3>
+<p>記録したパフォーマンスデータを分析し、結果を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>report
+<span style="color: #8F5902"># </span>対話型のインターフェースが表示される
+<span style="color: #8F5902"># </span>サンプルの出力:
+<span style="color: #8F5902"># </span>Samples:<span style="color: #F8F8F8"> </span>5K<span style="color: #F8F8F8"> </span>of<span style="color: #F8F8F8"> </span>event<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;cycles&#39;</span>,<span style="color: #F8F8F8"> </span>Event<span style="color: #F8F8F8"> </span>count<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>approx.<span style="color: #CE5C00; font-weight: bold">)</span>:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2513942899</span>
+<span style="color: #8F5902"># </span>Overhead<span style="color: #F8F8F8">  </span>Command<span style="color: #F8F8F8">      </span>Shared<span style="color: #F8F8F8"> </span>Object<span style="color: #F8F8F8">        </span>Symbol
+<span style="color: #8F5902"># </span>........<span style="color: #F8F8F8">  </span>.......<span style="color: #F8F8F8">  </span>.................<span style="color: #F8F8F8">  </span>..............
+<span style="color: #8F5902">#   </span><span style="color: #0000CF; font-weight: bold">33</span>.57%<span style="color: #F8F8F8">  </span>myprogram<span style="color: #F8F8F8">  </span>myprogram<span style="color: #F8F8F8">           </span><span style="color: #CE5C00; font-weight: bold">[</span>.<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>process_data
+<span style="color: #8F5902">#   </span><span style="color: #0000CF; font-weight: bold">21</span>.43%<span style="color: #F8F8F8">  </span>myprogram<span style="color: #F8F8F8">  </span>libc-2.31.so<span style="color: #F8F8F8">        </span><span style="color: #CE5C00; font-weight: bold">[</span>.<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>malloc
+<span style="color: #8F5902">#   </span><span style="color: #0000CF; font-weight: bold">15</span>.28%<span style="color: #F8F8F8">  </span>myprogram<span style="color: #F8F8F8">  </span>myprogram<span style="color: #F8F8F8">           </span><span style="color: #CE5C00; font-weight: bold">[</span>.<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>calculate_result
+</pre></div>
+<h3><strong>top</strong></h3>
+<p>リアルタイムでシステムのパフォーマンスを監視します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>top
+<span style="color: #8F5902"># </span>リアルタイムで更新される対話型の画面が表示される
+<span style="color: #8F5902"># </span>サンプルの出力:
+<span style="color: #8F5902"># </span>Samples:<span style="color: #F8F8F8"> </span>42K<span style="color: #F8F8F8"> </span>of<span style="color: #F8F8F8"> </span>event<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;cycles&#39;</span>,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4000</span><span style="color: #F8F8F8"> </span>Hz,<span style="color: #F8F8F8"> </span>Event<span style="color: #F8F8F8"> </span>count<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>approx.<span style="color: #CE5C00; font-weight: bold">)</span>:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">21169767618</span>
+<span style="color: #8F5902"># </span>Overhead<span style="color: #F8F8F8">  </span>Shared<span style="color: #F8F8F8"> </span>Object<span style="color: #F8F8F8">        </span>Symbol
+<span style="color: #8F5902"># </span>........<span style="color: #F8F8F8">  </span>.................<span style="color: #F8F8F8">  </span>..............
+<span style="color: #8F5902">#   </span><span style="color: #0000CF; font-weight: bold">12</span>.50%<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">[</span>kernel<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8">            </span><span style="color: #CE5C00; font-weight: bold">[</span>k<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>_raw_spin_unlock_irqrestore
+<span style="color: #8F5902">#    </span><span style="color: #0000CF; font-weight: bold">8</span>.32%<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">[</span>kernel<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8">            </span><span style="color: #CE5C00; font-weight: bold">[</span>k<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>finish_task_switch
+<span style="color: #8F5902">#    </span><span style="color: #0000CF; font-weight: bold">6</span>.43%<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">[</span>kernel<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8">            </span><span style="color: #CE5C00; font-weight: bold">[</span>k<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>native_queued_spin_lock_slowpath
+</pre></div>
+<h2>使用例</h2>
+<h3>システム全体のプロファイリング</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>record<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>
+<span style="color: #000; font-style: italic">[ perf record: Woken up 1 times to write data ]</span>
+<span style="color: #000; font-style: italic">[ perf record: Captured and wrote 3.522 MB perf.data (16721 samples) ]</span>
+<span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>report
+<span style="color: #8F5902"># </span>対話型のレポートが表示される
+</pre></div>
+<p>システム全体のアクティビティを10秒間記録し、その後分析するためのコマンドである</p>
+<h3>特定のプロセスのプロファイリング</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>record<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">30</span>
+<span style="color: #000; font-style: italic">[ perf record: Woken up 3 times to write data ]</span>
+<span style="color: #000; font-style: italic">[ perf record: Captured and wrote 8.124 MB perf.data (38721 samples) ]</span>
+</pre></div>
+<p>PID 1234のプロセスを30秒間プロファイリングする</p>
+<h3>メモリアクセスのプロファイリング</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>mem<span style="color: #F8F8F8"> </span>record<span style="color: #F8F8F8"> </span>./myprogram
+<span style="color: #000; font-style: italic">[ perf record: Woken up 1 times to write data ]</span>
+<span style="color: #000; font-style: italic">[ perf record: Captured and wrote 2.452 MB perf.data (12621 samples) ]</span>
+<span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>mem<span style="color: #F8F8F8"> </span>report
+<span style="color: #8F5902"># </span>メモリアクセスに関する詳細なレポートが表示される
+</pre></div>
+<h2>ヒント:</h2>
+<h3>カーネルシンボルの表示</h3>
+<p>カーネルシンボルを表示するには、<code>linux-tools</code>パッケージと<code>linux-headers</code>パッケージをインストールしてください。これにより、カーネル関数の名前が表示されるようになります。</p>
+<h3>フレームポインタの有効化</h3>
+<p>より正確なコールグラフを得るには、プログラムをコンパイルする際に<code>-fno-omit-frame-pointer</code>オプションを使用してください。これにより、<code>perf</code>がスタックトレースを正確に再構築できるようになります。</p>
+<h3>特権レベル</h3>
+<p>多くの<code>perf</code>コマンドは特権が必要です。一般ユーザーとして実行する場合は、<code>/proc/sys/kernel/perf_event_paranoid</code>の値を調整するか、<code>sudo</code>を使用してください。</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. <code>perf</code>はどのようなシステムで使用できますか？</h4>
+<p>A. <code>perf</code>はLinuxカーネルの一部であり、主にLinuxシステムで使用できます。他のOSでは使用できません。</p>
+<h4>Q2. <code>perf</code>を使用するために必要なパッケージは何ですか？</h4>
+<p>A. 多くのLinuxディストリビューションでは、<code>linux-tools-common</code>や<code>linux-tools-$(uname -r)</code>などのパッケージをインストールする必要があります。</p>
+<h4>Q3. <code>perf</code>で収集したデータはどのように視覚化できますか？</h4>
+<p>A. <code>perf report</code>コマンドは基本的な視覚化を提供します。より高度な視覚化には、FlameGraph、perf-toolsなどのツールを使用できます。</p>
+<h4>Q4. <code>perf</code>はどのくらいのオーバーヘッドがありますか？</h4>
+<p>A. <code>perf</code>のオーバーヘッドは比較的低いですが、サンプリング頻度やイベントの種類によって異なります。通常、数パーセント程度です。</p>
+<h2>References</h2>
+<p>https://perf.wiki.kernel.org/index.php/Main_Page</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/29 初版作成。</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

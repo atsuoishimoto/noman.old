@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  vmstat - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <a href="#">Try</a>
+        <a href="https://github.com/atsuoishimoto/noman">GitHub</a>
+        <span id="language-switcher"></span>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>vmstat コマンド</h1>
+<p>システムの仮想メモリ統計情報を表示します。</p>
+<h2>概要</h2>
+<p><code>vmstat</code>（Virtual Memory Statistics）は、システムのメモリ、プロセス、CPU、I/O、スワップなどのリソース使用状況に関する統計情報を提供するコマンドです。システム管理者やデバッグ時に、パフォーマンスの問題を特定するのに役立ちます。</p>
+<h2>オプション</h2>
+<h3><strong>-S</strong></h3>
+<p>メモリ表示単位を指定します（k: キロバイト、m: メガバイト、g: ギガバイト）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-Sm
+<span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
+<span style="color: #000; font-style: italic"> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st</span>
+<span style="color: #000; font-style: italic"> 1  0      0   1892    180   2340    0    0     3     5   36   79  1  1 98  0  0</span>
+</pre></div>
+<h3><strong>-a</strong></h3>
+<p>アクティブ/非アクティブメモリの詳細を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
+<span style="color: #000; font-style: italic"> r  b   swpd   free  inact active   si   so    bi    bo   in   cs us sy id wa st</span>
+<span style="color: #000; font-style: italic"> 1  0      0 1937584 1282144 2397952    0    0     3     5   36   79  1  1 98  0  0</span>
+</pre></div>
+<h3><strong>-d</strong></h3>
+<p>ディスク統計情報を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-d
+<span style="color: #000; font-style: italic">disk- ------------reads------------ ------------writes----------- -----IO------</span>
+<span style="color: #000; font-style: italic">       total merged sectors      ms  total merged sectors      ms    cur    sec</span>
+<span style="color: #000; font-style: italic">sda    12345   3456  123456   12345  56789   7890  567890   56789      0     12</span>
+</pre></div>
+<h3><strong>間隔と回数</strong></h3>
+<p>更新間隔（秒）と表示回数を指定できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
+<span style="color: #000; font-style: italic"> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st</span>
+<span style="color: #000; font-style: italic"> 1  0      0 1937584  184320 2397952    0    0     3     5   36   79  1  1 98  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 1937584  184320 2397952    0    0     0     0  214  412  1  0 99  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 1937584  184320 2397952    0    0     0     0  211  398  0  1 99  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 1937584  184320 2397952    0    0     0     0  209  401  1  0 99  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 1937584  184320 2397952    0    0     0     0  215  405  0  1 99  0  0</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的な使用法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat
+<span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
+<span style="color: #000; font-style: italic"> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st</span>
+<span style="color: #000; font-style: italic"> 1  0      0 1937584  184320 2397952    0    0     3     5   36   79  1  1 98  0  0</span>
+</pre></div>
+<h3>5秒間隔で継続的に監視</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
+<span style="color: #000; font-style: italic"> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st</span>
+<span style="color: #000; font-style: italic"> 1  0      0 1937584  184320 2397952    0    0     3     5   36   79  1  1 98  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 1937584  184320 2397952    0    0     0     0  214  412  1  0 99  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 1937584  184320 2397952    0    0     0     0  211  398  0  1 99  0  0</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3>詳細なメモリ情報の表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-s
+<span style="color: #000; font-style: italic">      8169348 K total memory</span>
+<span style="color: #000; font-style: italic">      2397952 K used memory</span>
+<span style="color: #000; font-style: italic">      3489712 K active memory</span>
+<span style="color: #000; font-style: italic">      1282144 K inactive memory</span>
+<span style="color: #000; font-style: italic">      1937584 K free memory</span>
+<span style="color: #000; font-style: italic">       184320 K buffer memory</span>
+<span style="color: #000; font-style: italic">      3649492 K swap cache</span>
+<span style="color: #000; font-style: italic">      8289276 K total swap</span>
+<span style="color: #000; font-style: italic">            0 K used swap</span>
+<span style="color: #000; font-style: italic">      8289276 K free swap</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>出力の見方</h3>
+<ul>
+<li><strong>procs</strong>: r（実行待ちプロセス数）、b（割り込み不可能なスリープ状態のプロセス数）</li>
+<li><strong>memory</strong>: swpd（仮想メモリ使用量）、free（空きメモリ）、buff（バッファ）、cache（キャッシュ）</li>
+<li><strong>swap</strong>: si（スワップイン）、so（スワップアウト）</li>
+<li><strong>io</strong>: bi（ブロック入力）、bo（ブロック出力）</li>
+<li><strong>system</strong>: in（割り込み）、cs（コンテキストスイッチ）</li>
+<li><strong>cpu</strong>: us（ユーザー時間）、sy（システム時間）、id（アイドル時間）、wa（I/O待ち時間）、st（仮想マシンに奪われた時間）</li>
+</ul>
+<h3>高負荷の兆候</h3>
+<ul>
+<li>r値が常に高い場合はCPUバウンドの問題</li>
+<li>si/soの値が継続的に高い場合はメモリ不足の兆候</li>
+<li>wa値が高い場合はI/Oバウンドの問題</li>
+</ul>
+<h3>最初の行は平均値</h3>
+<p>vmstatを実行すると、最初の行はシステム起動からの平均値であるため、現在の状態を把握するには2行目以降を見るのが良いでしょう。</p>
+<h2>よくある質問</h2>
+<h4>Q1. vmstatの出力で最も重要な指標は何ですか？</h4>
+<p>A. 状況によって異なりますが、一般的にはr（実行待ちプロセス数）、free（空きメモリ）、si/so（スワップイン/アウト）、us/sy/wa（CPU使用率）が重要です。</p>
+<h4>Q2. vmstatの更新間隔はどのように設定しますか？</h4>
+<p>A. <code>vmstat [間隔(秒)]</code> のように指定します。例えば <code>vmstat 5</code> は5秒ごとに更新します。</p>
+<h4>Q3. 特定のディスクのI/O統計情報だけを見るにはどうすればよいですか？</h4>
+<p>A. <code>vmstat -d</code> でディスク統計を表示し、必要に応じて <code>grep</code> と組み合わせて特定のディスクをフィルタリングします。例: <code>vmstat -d | grep sda</code></p>
+<h4>Q4. macOSでvmstatを使用する際の注意点はありますか？</h4>
+<p>A. macOSでは<code>vmstat</code>コマンドの出力形式やオプションがLinuxと異なります。代わりに<code>vm_stat</code>コマンドを使用するか、より詳細な情報を得るために<code>top</code>や<code>iostat</code>などの代替コマンドを検討してください。</p>
+<h2>参考資料</h2>
+<p>https://man7.org/linux/man-pages/man8/vmstat.8.html</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/04/29 初版作成</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

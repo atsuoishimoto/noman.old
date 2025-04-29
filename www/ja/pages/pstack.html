@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  pstack - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <a href="#">Try</a>
+        <a href="https://github.com/atsuoishimoto/noman">GitHub</a>
+        <span id="language-switcher"></span>
+      </div>
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>pstack コマンド</h1>
+<p>実行中のプロセスのスタックトレースを表示します。</p>
+<h2>概要</h2>
+<p><code>pstack</code>は、実行中のプロセスのスタックトレース（関数呼び出し階層）を表示するコマンドです。デバッグやトラブルシューティングの際に、プロセスが現在どの関数を実行しているか、どのような呼び出し経路をたどってきたかを確認するのに役立ちます。内部的には<code>gdb</code>を使用してスタック情報を取得しています。</p>
+<h2>オプション</h2>
+<p><code>pstack</code>コマンドには特別なオプションはなく、引数としてプロセスIDを指定するだけです。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstack<span style="color: #F8F8F8"> </span>PID
+</pre></div>
+<h2>使用例</h2>
+<h3>特定のプロセスのスタックトレースを表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstack<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+<span style="color: #8F5902">#</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">  </span>0x00007f9a0c3e83e3<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>__read_nocancel<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span>from<span style="color: #F8F8F8"> </span>/lib64/libc.so.6
+<span style="color: #8F5902">#</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8">  </span>0x00007f9a0c0cf6a0<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>??<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span>from<span style="color: #F8F8F8"> </span>/lib64/libpthread.so.0
+<span style="color: #8F5902">#</span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8">  </span>0x00000000004006e5<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>main<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span>at<span style="color: #F8F8F8"> </span>example.c:15
+</pre></div>
+<p>この例では、PID 1234のプロセスが現在<code>__read_nocancel</code>関数内にあり、<code>main</code>関数から呼び出されていることがわかります。</p>
+<h3>複数のスレッドを持つプロセスのスタックトレース</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstack<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5678</span>
+<span style="color: #000; font-style: italic">Thread 1 (process 5678):</span>
+<span style="color: #8F5902">#</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">  </span>0x00007f9a0c3e83e3<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>poll<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span>from<span style="color: #F8F8F8"> </span>/lib64/libc.so.6
+<span style="color: #8F5902">#</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8">  </span>0x00000000004007c2<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>worker_thread<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span>at<span style="color: #F8F8F8"> </span>multi_thread.c:42
+<span style="color: #8F5902">#</span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8">  </span>0x00007f9a0c0ce5a0<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>start_thread<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span>from<span style="color: #F8F8F8"> </span>/lib64/libpthread.so.0
+
+<span style="color: #000; font-style: italic">Thread 2 (process 5682):</span>
+<span style="color: #8F5902">#</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">  </span>0x00007f9a0c3e83e3<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>nanosleep<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span>from<span style="color: #F8F8F8"> </span>/lib64/libc.so.6
+<span style="color: #8F5902">#</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8">  </span>0x0000000000400705<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>worker_thread<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span>at<span style="color: #F8F8F8"> </span>multi_thread.c:30
+<span style="color: #8F5902">#</span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8">  </span>0x00007f9a0c0ce5a0<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>start_thread<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span>from<span style="color: #F8F8F8"> </span>/lib64/libpthread.so.0
+</pre></div>
+<p>マルチスレッドプロセスの場合、各スレッドのスタックトレースが表示されます。</p>
+<h2>ヒント:</h2>
+<h3>プロセスIDの特定</h3>
+<p><code>ps</code>コマンドを使用して、調査したいプロセスのPIDを特定できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>aux<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>プログラム名
+</pre></div>
+<h3>定期的なスタックトレースの取得</h3>
+<p>問題の原因を特定するために、一定間隔でスタックトレースを取得することが有効です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span>pstack<span style="color: #F8F8F8"> </span>PID<span style="color: #F8F8F8"> </span>&gt;&gt;<span style="color: #F8F8F8"> </span>stack_trace.log<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+</pre></div>
+<p>これにより5秒ごとにスタックトレースを記録できます。</p>
+<h3>権限の問題</h3>
+<p>他のユーザーが所有するプロセスのスタックトレースを取得するには、通常root権限が必要です。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>pstack</code>と<code>gdb</code>の違いは何ですか？</h4>
+<p>A. <code>pstack</code>は<code>gdb</code>のラッパーで、スタックトレースのみを簡単に取得するために最適化されています。<code>gdb</code>はより多機能なデバッガで、ブレークポイントの設定や変数の検査など、より詳細なデバッグ機能を提供します。</p>
+<h4>Q2. <code>pstack</code>がインストールされていない場合はどうすればよいですか？</h4>
+<p>A. 多くのLinuxディストリビューションでは、<code>gdb</code>を使って同様の情報を取得できます：<code>gdb -p PID -batch -ex &quot;thread apply all bt&quot; -ex &quot;quit&quot;</code></p>
+<h4>Q3. <code>pstack</code>を使用するとプロセスは一時停止しますか？</h4>
+<p>A. はい、<code>pstack</code>はプロセスに一時的にアタッチして情報を取得するため、その間プロセスは一時停止します。ただし、情報取得後すぐに実行が再開されます。</p>
+<h4>Q4. macOSで<code>pstack</code>を使用できますか？</h4>
+<p>A. macOSには<code>pstack</code>コマンドが標準で含まれていません。代わりに<code>lldb</code>を使用して同様の情報を取得できます：<code>lldb -p PID -o &quot;bt all&quot; -o &quot;quit&quot;</code></p>
+<h2>参考資料</h2>
+<p>https://linux.die.net/man/1/pstack</p>
+<h2>改訂</h2>
+<ul>
+<li>2025/04/29 初版作成</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

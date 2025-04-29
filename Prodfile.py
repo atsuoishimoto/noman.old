@@ -94,6 +94,7 @@ def summary():
         v.update(read_commandinfo(k))
 
     text = json.dumps(d, ensure_ascii=False, indent=2)
+    (dest / "summary.json").write_text(text.strip())
     (dest / "summary.js").write_text(f"pages = {text.strip()};")
 
 
