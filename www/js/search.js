@@ -203,9 +203,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 items.forEach(item => item.classList.remove('selected'));
                 items[prevIndex].classList.add('selected');
                 items[prevIndex].scrollIntoView({ block: 'nearest' });
-            } else if (event.key === 'Enter' && currentIndex >= 0) {
+            } else if (event.key === 'Enter') {
                 event.preventDefault();
-                items[currentIndex].click();
+                if (currentIndex >= 0) {
+                    // If an item is already selected, click it
+                    items[currentIndex].click();
+                } else if (items.length > 0) {
+                    // If no item is selected but there are results, click the first one
+                    items[0].click();
+                }
             } else if (event.key === 'Escape') {
                 searchResultsPanel.style.display = 'none';
                 searchOverlay.style.display = 'none';
