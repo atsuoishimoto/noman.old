@@ -19,66 +19,39 @@ const pages = {
 };
 */
 document.addEventListener('DOMContentLoaded', function () {
-    // Event handlers to prevent scrolling and other interactions
-    function preventWheel(e) {
-        console.log("1111111111111111111111111111111111", e)
-        // Allow scrolling within the search results panel
-        if (e.target.closest('.search-results-panel')) {
-            return;
-        }
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    function preventScroll(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    function preventTouch(e) {
-        // Allow touch interactions within the search results panel
-        if (e.target.closest('.search-results-panel')) {
-            return;
-        }
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    function preventKeyScroll(e) {
-        // Keys that typically cause scrolling or navigation
-        const scrollKeys = [
-            'Space', 'PageUp', 'PageDown', 'End', 'Home',
-            'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'
-        ];
-
-        // Allow keyboard navigation within the search results panel
-        if (e.target.closest('.search-results-panel') ||
-            e.target.id === 'nav-searchbox' ||
-            e.target.id === 'searchbox-2') {
-            return;
-        }
-
-        if (scrollKeys.includes(e.key)) {
+    // Create overlay element to prevent scrolling
+    let searchOverlay = document.createElement('div');
+    searchOverlay.className = 'search-overlay';
+    searchOverlay.style.position = 'fixed';
+    searchOverlay.style.top = '0';
+    searchOverlay.style.left = '0';
+    searchOverlay.style.width = '100vw';
+    searchOverlay.style.height = '100vh';
+    searchOverlay.style.backgroundColor = 'transparent';
+    searchOverlay.style.zIndex = '9999';
+    searchOverlay.style.display = 'none';
+    searchOverlay.style.pointerEvents = 'all';
+    // Allow the overlay to have scrollable children
+    searchOverlay.style.overflow = 'visible';
+    
+    // Add event listeners to explicitly prevent events from propagating
+    searchOverlay.addEventListener('wheel', function(e) {
+        // Allow scrolling only within the search results panel
+        if (!e.target.closest('.search-results-panel')) {
             e.preventDefault();
             e.stopPropagation();
         }
-    }
-
-    // Function to disable scrolling and other interactions
-    function disableInteractions() {
-        document.addEventListener('wheel', preventWheel, { passive: false });
-        window.addEventListener('scroll', preventScroll, { passive: false });
-        document.addEventListener('touchmove', preventTouch, { passive: false });
-        document.addEventListener('keydown', preventKeyScroll);
-    }
-
-    // Function to re-enable scrolling and other interactions
-    function enableInteractions() {
-        document.removeEventListener('wheel', preventWheel);
-        document.removeEventListener('scroll', preventScroll);
-        document.removeEventListener('touchmove', preventTouch);
-        document.removeEventListener('keydown', preventKeyScroll);
-    }
+    }, { passive: false });
+    
+    searchOverlay.addEventListener('touchmove', function(e) {
+        // Allow touch movements only within the search results panel
+        if (!e.target.closest('.search-results-panel')) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }, { passive: false });
+    
+    document.body.appendChild(searchOverlay);
 
     // Function to create and setup search functionality for a search box
     function setupSearch(searchBoxId) {
@@ -87,12 +60,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let searchResultsPanel = document.createElement('div');
         searchResultsPanel.className = 'search-results-panel';
-        document.body.appendChild(searchResultsPanel);
+        // Add the search results panel to the overlay instead of directly to the body
+        searchOverlay.appendChild(searchResultsPanel);
 
         // Position the search results panel relative to the search box
         function positionSearchPanel() {
             const searchBoxRect = searchBox.getBoundingClientRect();
-            searchResultsPanel.style.top = (searchBoxRect.bottom + window.scrollY) + 'px';
+            
+            // Since the overlay is fixed position, we need to use viewport-relative positioning
+            // without adding window.scrollY (which was needed when appending to body)
+            searchResultsPanel.style.position = 'absolute';
+            searchResultsPanel.style.top = searchBoxRect.bottom + 'px';
 
             // For the nav searchbox, position to the right
             if (searchBoxId === 'nav-searchbox') {
@@ -103,6 +81,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 searchResultsPanel.style.left = searchBoxRect.left + 'px';
                 searchResultsPanel.style.right = '';
             }
+            
+            // Ensure the panel is visible and scrollable
+            searchResultsPanel.style.maxHeight = '40vh';
+            searchResultsPanel.style.overflowY = 'auto';
         }
 
         // Show/hide search results panel based on input
@@ -114,12 +96,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // Position and show the panel
+            // Show the overlay and position the panel
+            searchOverlay.style.display = 'block';
+            // Prevent body scrolling when overlay is shown
+            document.body.style.overflow = 'hidden';
             positionSearchPanel();
             searchResultsPanel.style.display = 'block';
-
-            // Disable scrolling and other interactions when panel is shown
-            disableInteractions();
 
             // Split search term into keywords
             const keywords = searchTerm.split(' ').filter(keyword => keyword.length > 0);
@@ -173,8 +155,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('click', function (event) {
             if (event.target !== searchBox && !searchResultsPanel.contains(event.target)) {
                 searchResultsPanel.style.display = 'none';
-                // Re-enable scrolling and other interactions when panel is hidden
-                enableInteractions();
+                searchOverlay.style.display = 'none';
+                // Restore body scrolling when overlay is hidden
+                document.body.style.overflow = '';
             }
         });
 
@@ -218,8 +201,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 items[currentIndex].click();
             } else if (event.key === 'Escape') {
                 searchResultsPanel.style.display = 'none';
-                // Re-enable scrolling and other interactions when panel is hidden
-                enableInteractions();
+                searchOverlay.style.display = 'none';
+                // Restore body scrolling when overlay is hidden
+                document.body.style.overflow = '';
             }
         });
     }
