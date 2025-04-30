@@ -112,12 +112,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 const summaryText = data.summary.toLowerCase();
                 // Include command field in search if it exists
                 const commandText = data.command ? data.command.toLowerCase() : '';
+                // Include aliases in search if they exist
+                const aliasesText = data.alias ? data.alias.join(' ').toLowerCase() : '';
 
-                // Check if all keywords are found in either key, command, or summary
+                // Check if all keywords are found in either key, command, summary, or aliases
                 return keywords.every(keyword =>
                     keyText.includes(keyword) ||
                     summaryText.includes(keyword) ||
-                    commandText.includes(keyword)
+                    commandText.includes(keyword) ||
+                    aliasesText.includes(keyword)
                 );
             });
 
@@ -126,9 +129,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 searchResultsPanel.innerHTML = matchingPages.map(([key, data]) => {
                     // Display command value if it exists, otherwise use the key
                     const displayCommand = data.command ? data.command : key;
+                    // Display aliases if they exist
+                    const aliasesDisplay = data.alias ? 
+                        `<div class="search-result-aliases">Aliases: ${data.alias.join(', ')}</div>` : '';
+                    const commandNames = data.alias ? (displayCommand + `, ${data.alias.join(', ')}`): displayCommand
                     return `
             <div class="search-result-item" data-command="${key}">
-              <div class="search-result-command">${displayCommand}</div>
+              <div class="search-result-command">${commandNames}</div>
               <div class="search-result-summary">${data.summary}</div>
             </div>
           `;
