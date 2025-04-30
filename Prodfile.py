@@ -4,6 +4,14 @@ import datetime
 import json
 from dotenv import load_dotenv
 import yaml
+from pathlib import Path
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+from markupsafe import Markup, escape
+import md2html
+from pathlib import Path
+import re
+import sys
+import subprocess
 
 load_dotenv()
 
@@ -19,6 +27,16 @@ COMMANDS = [p for p in COMMANDDIR.glob("*") if p.is_dir()]
 PROMPT = Path("./prompts/prompt")
 FORMAT = Path("./prompts/format")
 MAX_TOKENS = 10000
+WWW = Path("./www")
+
+JINJA = Environment(
+    loader=FileSystemLoader("./templates"),
+    autoescape=select_autoescape(
+        enabled_extensions=('html', 'xml', 'j2'),
+        default_for_string=True,
+    )
+)
+
 
 
 def lang_prompt(target, stem):
@@ -77,6 +95,22 @@ TODAY is {TODAY}.
     (resultsdir / f"{target.stem}.json").write_text(result)
 
 
+@task
+def summary():
+    for lang in ["ja", "en"]:
+        dest = WWW / lang
+        dest.mkdir(parents=True, exist_ok=True)
+
+        d = make_summary.make_summary(Path(f"pages/{lang}"))
+        d = {k: {"summary": v} for k, v in sorted(d.items())}
+        for k, v in d.items():
+            v.update(read_commandinfo(k))
+
+        text = json.dumps(d, ensure_ascii=False, indent=2)
+        (dest / "summary.json").write_text(text.strip())
+        (dest / "summary.js").write_text(f"pages = {text.strip()};")
+
+
 def read_commandinfo(command):
     conf = Path("commands") / command / "command.yaml"
     if conf.is_file():
@@ -84,66 +118,56 @@ def read_commandinfo(command):
         return cmd
     return {}
 
+def make_summary(dir):
+    d = {}
+    files = dir.glob("*.md")
+    for file in files:
+        print(file)
+        src = file.read_text()
+        m = re.search(r"#.*\n(?P<header>([^#].*\n+))", src)
+        if not m:
+            print("invalid md", file)
+            sys.exit(1)
+        p = subprocess.Popen(["pandoc", "-f", "markdown", "-t", "plain", "--wrap=none"], 
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding="utf8")
+        stdout, stderr = p.communicate((m["header"]+"\n"))
+        p.stdin.close()
+        p.wait()
+        stdout = "".join(stdout.split("\n")).strip()
+        d[file.stem] = {"summary": stdout, **read_commandinfo(file.stem)}
+
+    return sorted(d.items())
 
 @task
-def summary():
-    dest = Path("www/ja")
-    dest.mkdir(parents=True, exist_ok=True)
+def build_html():
+    command = JINJA.get_template("command.html.j2")
+    commandlist = JINJA.get_template("commandlist.html.j2")
 
-    d = make_summary.make_summary(Path("pages/ja"))
-    d = {k: {"summary": v} for k, v in sorted(d.items())}
-    for k, v in d.items():
-        v.update(read_commandinfo(k))
+    for lang in ["ja", "en"]:
+        dest = WWW / lang
+        pagedir =  Path(f"pages/{lang}")
+        for md in pagedir.glob("*.md"):
+            html = Markup(md2html.md_to_html(md))
+            commandname = md.stem
+            page = command.render(lang="ja", content=html, command=commandname)
+            (dest / "pages" / (commandname+".html")).write_text(page)
 
-    text = json.dumps(d, ensure_ascii=False, indent=2)
-    (dest / "summary.json").write_text(text.strip())
-    (dest / "summary.js").write_text(f"pages = {text.strip()};")
-
-    dest = Path("www/en")
-    dest.mkdir(parents=True, exist_ok=True)
-
-    d = make_summary.make_summary(Path("pages/en"))
-    d = {k: {"summary": v} for k, v in sorted(d.items())}
-    for k, v in d.items():
-        v.update(read_commandinfo(k))
-    text = json.dumps(d, ensure_ascii=False, indent=2)
-    (dest / "summary.js").write_text(f"pages = {text.strip()};")
-
-
-@task
-def text():
-    for md in Path("pages/ja").glob("*.md"):
-        txt = md.with_suffix(".txt")
-        run("pandoc", "-f", "markdown", "-t", "plain", "--wrap=none", "-o", txt, md)
-
-    for md in Path("pages/en").glob("*.md"):
-        txt = md.with_suffix(".txt")
-        run("pandoc", "-f", "markdown", "-t", "plain", "--wrap=none", "-o", txt, md)
-
-
-@task
-def html():
-    template = Path("templates/ja.html").read_text()
-    dest = Path("www/ja/pages")
-    dest.mkdir(parents=True, exist_ok=True)
-
-    for md in Path("pages/ja").glob("*.md"):
-        html = template.replace("{{ command }}", md.stem)
-        html = html.replace("{{ content }}", md_to_html(md))
-        (dest / md.with_suffix(".html").name).write_text(html)
-
-    template = Path("templates/en.html").read_text()
-    dest = Path("www/en/pages")
-    dest.mkdir(parents=True, exist_ok=True)
-
-    for md in Path("pages/en").glob("*.md"):
-        html = template.replace("{{ command }}", md.stem)
-        html = html.replace("{{ content }}", md_to_html(md))
-        (dest / md.with_suffix(".html").name).write_text(html)
+            src = md.read_text()
+            m = re.search(r"#.*\n(?P<header>([^#].*\n+))", src)
+            if not m:
+                print("invalid md", file)
+                sys.exit(1)
+        
+        summary = make_summary(pagedir)
+        page = commandlist.render(lang="ja", commands=summary)
+        (dest / "commandlist.html").write_text(page)
+        j = json.dumps(dict(summary), ensure_ascii=False, indent=2)
+        (dest / "summary.js").write_text(f"pages = {j.strip()};")
 
 
 @task
 def build_cli():
-    run("cp", "pages/ja/*.md", "noman-cli/src/noman_cli/pages/ja")
-    run("cp", "pages/en/*.md", "noman-cli/src/noman_cli/pages/en")
+    for lang in ["ja", "en"]:
+        run("cp", f"pages/{lang}/*.md", f"noman-cli/src/noman_cli/pages/{lang}")
+        run("cp", f"pages/{lang}/*.md", f"noman-cli/src/noman_cli/pages/{lang}")
     run("uv build", cwd="noman-cli")

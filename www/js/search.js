@@ -21,10 +21,16 @@ const pages = {
 document.addEventListener('DOMContentLoaded', function () {
     // Event handlers to prevent scrolling and other interactions
     function preventWheel(e) {
+        console.log("1111111111111111111111111111111111", e)
         // Allow scrolling within the search results panel
         if (e.target.closest('.search-results-panel')) {
             return;
         }
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function preventScroll(e) {
         e.preventDefault();
         e.stopPropagation();
     }
@@ -61,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to disable scrolling and other interactions
     function disableInteractions() {
         document.addEventListener('wheel', preventWheel, { passive: false });
+        window.addEventListener('scroll', preventScroll, { passive: false });
         document.addEventListener('touchmove', preventTouch, { passive: false });
         document.addEventListener('keydown', preventKeyScroll);
     }
@@ -68,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to re-enable scrolling and other interactions
     function enableInteractions() {
         document.removeEventListener('wheel', preventWheel);
+        document.removeEventListener('scroll', preventScroll);
         document.removeEventListener('touchmove', preventTouch);
         document.removeEventListener('keydown', preventKeyScroll);
     }
