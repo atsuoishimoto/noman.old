@@ -1,13 +1,12 @@
 # type: ignore
-
+import os
 import datetime
 import json
 from dotenv import load_dotenv
 import yaml
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from markupsafe import Markup, escape
-from pathlib import Path
+from markupsafe import Markup
 import re
 import sys
 import subprocess
@@ -15,7 +14,6 @@ import mistune
 from pygments import highlight
 from pygments.formatters import html
 from pygments.lexers import get_lexer_by_name
-from pathlib import Path
 
 load_dotenv()
 
@@ -25,7 +23,6 @@ api_key = os.environ["NOMAN_ANTHROPIC_API_KEY"]
 client = Anthropic(api_key=api_key)
 
 import make_summary
-from pathlib import Path
 
 
 TODAY = datetime.datetime.now(tz=datetime.UTC).date().strftime("%Y/%m/%d")
@@ -39,11 +36,10 @@ WWW = Path("./www")
 JINJA = Environment(
     loader=FileSystemLoader("./templates"),
     autoescape=select_autoescape(
-        enabled_extensions=('html', 'xml', 'j2'),
+        enabled_extensions=("html", "xml", "j2"),
         default_for_string=True,
-    )
+    ),
 )
-
 
 
 def lang_prompt(target, stem):
@@ -75,12 +71,10 @@ def generate_document(*prompts, max_tokens):
         }
         contents.append(message)
 
-    messages = [{
-        "role": "user",
-        "content": contents
-     }]
+    messages = [{"role": "user", "content": contents}]
 
     import pprint
+
     pprint.pprint(messages)
 
     # check OverloadedError?
@@ -123,9 +117,7 @@ TODAY is {TODAY}.
         current = target.read_text()
         prompts.append(f"<current-documnent>{current}</current-document>")
 
-    text, stop_reason, usage = generate_document(
-        *prompts, max_tokens=MAX_TOKENS
-    )
+    text, stop_reason, usage = generate_document(*prompts, max_tokens=MAX_TOKENS)
 
     target.write_text(text)
 
@@ -162,6 +154,7 @@ def read_commandinfo(command):
         return cmd
     return {}
 
+
 def make_summary(dir):
     d = {}
     files = dir.glob("*.md")
@@ -172,16 +165,19 @@ def make_summary(dir):
         if not m:
             print("invalid md", file)
             sys.exit(1)
-        p = subprocess.Popen(["pandoc", "-f", "markdown", "-t", "plain", "--wrap=none"], 
-            stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding="utf8")
-        stdout, stderr = p.communicate((m["header"]+"\n"))
+        p = subprocess.Popen(
+            ["pandoc", "-f", "markdown", "-t", "plain", "--wrap=none"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            encoding="utf8",
+        )
+        stdout, stderr = p.communicate((m["header"] + "\n"))
         p.stdin.close()
         p.wait()
         stdout = "".join(stdout.split("\n")).strip()
         d[file.stem] = {"summary": stdout, **read_commandinfo(file.stem)}
 
     return sorted(d.items())
-
 
 
 class HighlightRenderer(mistune.HTMLRenderer):
@@ -199,6 +195,7 @@ class HighlightRenderer(mistune.HTMLRenderer):
 renderer = HighlightRenderer()
 markdown = mistune.create_markdown(renderer=renderer)
 
+
 @task
 def build_www():
     command = JINJA.get_template("command.html.j2")
@@ -206,19 +203,19 @@ def build_www():
 
     for lang in ["ja", "en"]:
         dest = WWW / lang
-        pagedir =  Path(f"pages/{lang}")
+        pagedir = Path(f"pages/{lang}")
         for md in pagedir.glob("*.md"):
             html = Markup(markdown(md.read_text()))
             commandname = md.stem
             page = command.render(lang="ja", content=html, command=commandname)
-            (dest / "pages" / (commandname+".html")).write_text(page)
+            (dest / "pages" / (commandname + ".html")).write_text(page)
 
             src = md.read_text()
             m = re.search(r"#.*\n(?P<header>([^#].*\n+))", src)
             if not m:
                 print("invalid md", file)
                 sys.exit(1)
-        
+
         summary = make_summary(pagedir)
         page = commandlist.render(lang="ja", commands=summary)
         (dest / "commandlist.html").write_text(page)
