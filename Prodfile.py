@@ -217,7 +217,7 @@ def build_www():
                 sys.exit(1)
 
         summary = make_summary(pagedir)
-        page = commandlist.render(lang="ja", commands=summary)
+        page = commandlist.render(lang=lang, commands=summary)
         (dest / "commandlist.html").write_text(page)
         j = json.dumps(dict(summary), ensure_ascii=False, indent=2)
         (dest / "summary.js").write_text(f"pages = {j.strip()};")
