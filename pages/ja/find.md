@@ -18,6 +18,17 @@ $ find . -name "*.txt"
 ./readme.txt
 ```
 
+### **-iname パターン**
+
+ファイル名で大文字・小文字を区別せずに検索します。`-name`と同様にワイルドカードが使用できます。
+
+```console
+$ find . -iname "readme*"
+./README.md
+./docs/readme.txt
+./projects/ReadMe.rst
+```
+
 ### **-type タイプ**
 
 ファイルタイプで検索します。一般的な値は `f`（通常ファイル）、`d`（ディレクトリ）、`l`（シンボリックリンク）です。
@@ -62,6 +73,15 @@ $ find . -name "*.txt" -exec cat {} \;
 
 ## 使用例
 
+### 大文字小文字を区別せずにファイルを検索
+
+```console
+$ find ~/Documents -iname "*report*"
+/home/user/Documents/annual_Report.docx
+/home/user/Documents/reports/weekly_report.pdf
+/home/user/Documents/REPORT_template.xlsx
+```
+
 ### 特定の拡張子を持つファイルを検索
 
 ```console
@@ -84,16 +104,11 @@ $ find /var/log -mtime -1 -exec ls -l {} \;
 $ find /tmp -type f -size 0 -delete
 ```
 
-### 特定のユーザーが所有するファイルを検索
-
-```console
-$ find /home -user username
-/home/username
-/home/username/.bashrc
-/home/username/documents
-```
-
 ## ヒント:
+
+### 大文字小文字を区別しない検索の活用
+
+ファイル名の大文字小文字が不確かな場合は、`-iname`を使用すると便利です。特にチーム作業や異なるOSからのファイル転送時に役立ちます。
 
 ### パフォーマンスの向上
 
@@ -107,27 +122,23 @@ $ find /home -user username
 
 権限エラーを無視するには、`2>/dev/null`を追加します。例：`find / -name "config.xml" 2>/dev/null`
 
-### 検索結果の処理
-
-`-exec`の代わりに、パイプとxargsを使用することもできます：`find . -name "*.log" | xargs grep "error"`
-
 ## よくある質問
 
-#### Q1. findコマンドの基本的な構文は？
+#### Q1. `-name`と`-iname`の違いは何ですか？
+A. `-name`は大文字と小文字を区別しますが、`-iname`は区別しません。例えば、`-iname "readme*"`は「README.md」や「readme.txt」などにマッチします。
+
+#### Q2. findコマンドの基本的な構文は？
 A. 基本構文は `find [検索開始パス] [検索条件] [アクション]` です。例えば `find . -name "*.txt"` は現在のディレクトリから始めて、.txtで終わるファイルを検索します。
 
-#### Q2. 特定の日付範囲内のファイルを検索するには？
+#### Q3. 特定の日付範囲内のファイルを検索するには？
 A. `-mtime`や`-newer`オプションを使用します。例えば、`find . -mtime -7 -a -mtime +1`は1日以上7日以内に変更されたファイルを検索します。
 
-#### Q3. 検索結果を別のコマンドに渡すにはどうすればいいですか？
+#### Q4. 検索結果を別のコマンドに渡すにはどうすればいいですか？
 A. `-exec`オプションを使用するか、パイプとxargsを組み合わせます。例：`find . -name "*.txt" | xargs grep "keyword"`
-
-#### Q4. 検索から特定のディレクトリを除外するには？
-A. `-path "./dir" -prune -o`を使用します。例：`find . -path "./node_modules" -prune -o -name "*.js" -print`
 
 ## macOSでの注意点
 
-macOSのfindコマンドはGNU findとは若干異なります。特に、`-delete`オプションの動作や正規表現の扱いが異なる場合があります。また、macOSでは`-path`オプションの代わりに`-not -path`を使用することが多いです。
+macOSのfindコマンドはGNU findとは若干異なります。特に、`-delete`オプションの動作や正規表現の扱いが異なる場合があります。また、macOSでは`-path`オプションの代わりに`-not -path`を使用することが多いです。`-iname`オプションは両方のバージョンで同様に動作しますが、複雑な正規表現パターンを使用する場合は注意が必要です。
 
 ## 参考文献
 
@@ -135,4 +146,5 @@ https://www.gnu.org/software/findutils/manual/html_mono/find.html
 
 ## 改訂履歴
 
+- 2025/04/30 -iname オプションの説明を追加し、使用例と関連するFAQを更新
 - 2025/04/30 初版作成

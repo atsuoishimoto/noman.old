@@ -106,6 +106,11 @@
 <span style="color: #000; font-style: italic">/bin/bash</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
+<h3><strong>-S, --search</strong></h3>
+<p>Find which package owns a file</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dpkg<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>/bin/bash
+<span style="color: #000; font-style: italic">bash: /bin/bash</span>
+</pre></div>
 <h2>Usage Examples</h2>
 <h3>Installing a downloaded .deb package</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>google-chrome-stable_current_amd64.deb
@@ -136,7 +141,7 @@
 <li><code>un</code>: package is unknown/not installed</li>
 </ul>
 <h3>Backing Up Package List</h3>
-<p>Before major system changes, back up your package list with <code>dpkg --get-selections &gt; packages.list</code></p>
+<p>Before major system changes, back up your package list with <code>dpkg --get-selections &gt; packages.list</code> and restore with <code>sudo dpkg --set-selections &lt; packages.list &amp;&amp; sudo apt-get dselect-upgrade</code>.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between <code>dpkg</code> and <code>apt</code>?</h4>
 <p>A. <code>dpkg</code> works directly with .deb files and doesn't handle dependencies automatically. <code>apt</code> is a higher-level tool that resolves dependencies and can download packages from repositories.</p>
@@ -146,10 +151,13 @@
 <p>A. Use <code>dpkg-deb --contents package.deb</code> to view the contents of a .deb file before installation.</p>
 <h4>Q4. How do I reinstall a package?</h4>
 <p>A. Use <code>sudo dpkg -i --force-reinstall package.deb</code> to reinstall a package.</p>
+<h4>Q5. How can I find which package provides a specific file?</h4>
+<p>A. Use <code>dpkg -S /path/to/file</code> to find the package that owns a file.</p>
 <h2>References</h2>
 <p>https://man7.org/linux/man-pages/man1/dpkg.1.html</p>
 <h2>Revisions</h2>
 <ul>
+<li>2025/04/30 Added -S option and expanded Tips and FAQs sections.</li>
 <li>2025/04/30 First revision</li>
 </ul>
 

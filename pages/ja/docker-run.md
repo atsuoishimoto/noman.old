@@ -1,6 +1,6 @@
 # docker run コマンド
 
-コンテナを作成して実行するためのコマンド。
+新しいコンテナを作成し、指定されたイメージから起動するコマンドです。
 
 ## 概要
 
@@ -8,75 +8,36 @@
 
 ## オプション
 
-### **-d, --detach**
+### **-i, --interactive**
 
-コンテナをバックグラウンドで実行し、コンテナIDを表示します。
+コンテナの標準入力を開いたままにします。通常は `-t` オプションと組み合わせて使用します。
 
 ```console
-$ docker run -d nginx
-3a53a5724d6b9f25b85222e4c2c9b8c455d4f3909a7d8f74c6c9cb9d94d6f4a2
+$ docker run -i ubuntu
+# 標準入力が開いたままになる
 ```
 
-### **-p, --publish**
+### **-t, --tty**
 
-ホストとコンテナ間のポートマッピングを設定します。
-
-```console
-$ docker run -p 8080:80 nginx
-```
-
-### **-v, --volume**
-
-ホストとコンテナ間のボリュームマウントを設定します。
+疑似TTY（ターミナル）を割り当てます。対話型シェルを使用する場合に便利です。
 
 ```console
-$ docker run -v /host/path:/container/path nginx
-```
-
-### **-e, --env**
-
-環境変数を設定します。
-
-```console
-$ docker run -e MYSQL_ROOT_PASSWORD=password mysql
-```
-
-### **--name**
-
-コンテナに名前を付けます。
-
-```console
-$ docker run --name my-nginx nginx
+$ docker run -it ubuntu bash
+root@f8d9c7b6a5:/# ls
+bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
 ```
 
 ### **--rm**
 
-コンテナ終了時に自動的に削除します。
+コンテナ終了時に自動的に削除します。一時的な作業やテストに便利です。
 
 ```console
 $ docker run --rm alpine echo "Hello, World!"
 Hello, World!
+# コンテナは実行後に自動的に削除される
 ```
 
 ## 使用例
-
-### Webサーバーの起動
-
-```console
-$ docker run -d -p 8080:80 --name my-web-server nginx
-b8a5f8d9c9e8f7d6e5c4b3a2
-```
-
-このコマンドはnginxコンテナをバックグラウンドで起動し、ホストの8080ポートをコンテナの80ポートにマッピングしている。
-
-### データベースの起動
-
-```console
-$ docker run -d --name my-db -e POSTGRES_PASSWORD=mysecretpassword -v pgdata:/var/lib/postgresql/data postgres
-7c6b5a4d3e2f1g0h9i8j7k6l
-```
-
-このコマンドはPostgreSQLコンテナを起動し、パスワードを設定し、データを永続化するためのボリュームをマウントしている。
 
 ### 対話型シェルの起動
 
@@ -88,36 +49,60 @@ bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  roo
 
 このコマンドはUbuntuコンテナを対話モードで起動し、bashシェルを実行している。
 
+### バックグラウンドでのWebサーバー起動
+
+```console
+$ docker run -d -p 8080:80 --name my-web-server nginx
+b8a5f8d9c9e8f7d6e5c4b3a2
+```
+
+このコマンドはnginxコンテナをバックグラウンドで起動し、ホストの8080ポートをコンテナの80ポートにマッピングしている。
+
+### 一時的なコンテナでのコマンド実行
+
+```console
+$ docker run --rm alpine ls -la
+total 64
+drwxr-xr-x    1 root     root          4096 Apr 30 12:34 .
+drwxr-xr-x    1 root     root          4096 Apr 30 12:34 ..
+-rwxr-xr-x    1 root     root             0 Apr 30 12:34 .dockerenv
+drwxr-xr-x    2 root     root          4096 Mar 23 00:00 bin
+drwxr-xr-x    5 root     root           340 Apr 30 12:34 dev
+...
+```
+
+このコマンドはAlpineコンテナを起動してls -laコマンドを実行し、終了後にコンテナを削除している。
+
 ## ヒント:
 
-### コンテナのリソース制限
+### コンテナの名前付け
 
-`--memory` や `--cpus` オプションを使用して、コンテナが使用できるリソースを制限できます。
+`--name` オプションを使用して、コンテナに分かりやすい名前を付けると、後で参照しやすくなります。
 
 ```console
-$ docker run --memory=512m --cpus=0.5 nginx
+$ docker run --name my-app-container nginx
 ```
 
-### ネットワーク設定
+### 環境変数の設定
 
-`--network` オプションを使用して、コンテナを特定のネットワークに接続できます。
+`-e` または `--env` オプションを使用して、コンテナ内で使用する環境変数を設定できます。
 
 ```console
-$ docker run --network=my-network nginx
+$ docker run -e DB_HOST=localhost -e DB_PORT=5432 my-app
 ```
 
-### ヘルスチェックの設定
+### ボリュームマウントの活用
 
-`--health-cmd` オプションを使用して、コンテナの健全性をチェックするコマンドを設定できます。
+開発中は `-v` オプションを使ってソースコードをマウントすると、コンテナを再ビルドせずに変更を反映できます。
 
 ```console
-$ docker run --health-cmd="curl -f http://localhost/ || exit 1" nginx
+$ docker run -v $(pwd):/app my-dev-image
 ```
 
 ## よくある質問
 
-#### Q1. `docker run` と `docker create` + `docker start` の違いは何ですか？
-A. `docker run` は `docker create`（コンテナの作成）と `docker start`（コンテナの起動）を一度に行うコマンドです。より細かい制御が必要な場合は、個別のコマンドを使用することもできます。
+#### Q1. `-i` と `-t` オプションの違いは何ですか？
+A. `-i`（interactive）はコンテナの標準入力を開いたままにし、`-t`（tty）は疑似ターミナルを割り当てます。通常は `-it` として一緒に使用し、対話型シェルを実現します。
 
 #### Q2. コンテナを一時的に使用するにはどうすればよいですか？
 A. `--rm` オプションを使用すると、コンテナが停止した後に自動的に削除されます。一時的な作業やテストに便利です。
@@ -134,4 +119,5 @@ https://docs.docker.com/engine/reference/commandline/run/
 
 ## 改訂履歴
 
+- 2025/04/30 -i, -t, --rmオプションの詳細説明を追加し、使用例を更新
 - 2025/04/30 初版作成

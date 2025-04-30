@@ -87,6 +87,15 @@ $ dpkg -L bash
 ...
 ```
 
+### **-S, --search**
+
+Find which package owns a file
+
+```console
+$ dpkg -S /bin/bash
+bash: /bin/bash
+```
+
 ## Usage Examples
 
 ### Installing a downloaded .deb package
@@ -133,7 +142,7 @@ In the output of `dpkg -l`, the first column shows status codes:
 
 ### Backing Up Package List
 
-Before major system changes, back up your package list with `dpkg --get-selections > packages.list`
+Before major system changes, back up your package list with `dpkg --get-selections > packages.list` and restore with `sudo dpkg --set-selections < packages.list && sudo apt-get dselect-upgrade`.
 
 ## Frequently Asked Questions
 
@@ -149,10 +158,14 @@ A. Use `dpkg-deb --contents package.deb` to view the contents of a .deb file bef
 #### Q4. How do I reinstall a package?
 A. Use `sudo dpkg -i --force-reinstall package.deb` to reinstall a package.
 
+#### Q5. How can I find which package provides a specific file?
+A. Use `dpkg -S /path/to/file` to find the package that owns a file.
+
 ## References
 
 https://man7.org/linux/man-pages/man1/dpkg.1.html
 
 ## Revisions
 
+- 2025/04/30 Added -S option and expanded Tips and FAQs sections.
 - 2025/04/30 First revision

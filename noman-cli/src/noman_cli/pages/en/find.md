@@ -30,6 +30,8 @@ $ find . -iname "README*"
 ./docs/ReadMe.rst
 ```
 
+The `-iname` option works exactly like `-name` but performs a case-insensitive search, making it useful when you're unsure about the exact capitalization of filenames.
+
 ### **-type**
 
 Search for files by type (f=regular file, d=directory, l=symbolic link)
@@ -147,10 +149,14 @@ A. Use `-not -path`: `find . -type f -not -path "./node_modules/*"`
 #### Q5. Why is my find command so slow?
 A. Large directory trees, network filesystems, or complex criteria can slow down searches. Use `-maxdepth` to limit the search depth.
 
+#### Q6. What's the difference between -name and -iname?
+A. `-name` performs a case-sensitive search, while `-iname` performs a case-insensitive search. Use `-iname` when you're unsure about capitalization.
+
 ## References
 
 https://www.gnu.org/software/findutils/manual/html_node/find_html/index.html
 
 ## Revisions
 
+- 2025/04/30 Added more detailed explanation of -iname option and related FAQ
 - 2025/04/30 First revision

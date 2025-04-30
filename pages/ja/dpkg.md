@@ -50,25 +50,13 @@ $ dpkg -l | grep firefox
 ii  firefox                            115.0+build2-0ubuntu0.20.04.1        amd64        Safe and easy web browser from Mozilla
 ```
 
-### **-s, --status パッケージ名**
+### **-S, --search ファイルパス**
 
-指定したパッケージの状態を表示します。
+指定したファイルパスがどのパッケージに属しているかを検索します。
 
 ```console
-$ dpkg -s firefox
-Package: firefox
-Status: install ok installed
-Priority: optional
-Section: web
-Installed-Size: 240000
-Maintainer: Ubuntu Mozilla Team <ubuntu-mozilla@lists.ubuntu.com>
-Architecture: amd64
-Version: 115.0+build2-0ubuntu0.20.04.1
-Depends: [依存関係のリスト]
-Description: Safe and easy web browser from Mozilla
- Firefox delivers safe, easy web browsing. A familiar user interface,
- enhanced security features including protection from online identity theft,
- and integrated search let you get the most out of the web.
+$ dpkg -S /usr/bin/firefox
+firefox: /usr/bin/firefox
 ```
 
 ### **-L, --listfiles パッケージ名**
@@ -159,4 +147,5 @@ https://manpages.debian.org/buster/dpkg/dpkg.1.en.html
 
 ## 改訂履歴
 
+- 2025/04/30 -Sオプションを追加。説明を改善。
 - 2025/04/30 初版作成

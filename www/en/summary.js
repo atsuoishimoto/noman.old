@@ -2,6 +2,9 @@ pages = {
   "apt": {
     "summary": "Package management tool for Debian-based Linux distributions like Ubuntu."
   },
+  "apt-file": {
+    "summary": "Search for files within packages in Debian-based Linux distributions, even if the package is not installed."
+  },
   "awk": {
     "summary": "Process text files line by line, applying pattern-matching and transformations."
   },
@@ -58,6 +61,18 @@ pages = {
   },
   "dmesg": {
     "summary": "Display or control the kernel ring buffer, which contains kernel messages and logs."
+  },
+  "docker": {
+    "summary": "Manage containers, images, networks, and other Docker resources."
+  },
+  "docker-build": {
+    "summary": "Build Docker images from a Dockerfile and a context."
+  },
+  "docker-compose": {
+    "summary": "Define and run multi-container Docker applications."
+  },
+  "docker-run": {
+    "summary": "Create and start a new container from a specified image."
   },
   "dpkg": {
     "summary": "Manage Debian package files (.deb) on Debian-based Linux distributions."
