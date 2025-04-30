@@ -46,58 +46,66 @@
   <div class="content">
     <main>
       
-  <h1>teeコマンド</h1>
-<p>標準入力からデータを読み取り、それを同時にファイルと標準出力の両方に書き込むコマンドです。名前は配管のT字管（英語で「tee」）に由来しています。</p>
+  <h1>tee コマンド</h1>
+<p>標準入力からデータを読み取り、標準出力とファイルの両方に書き込みます。</p>
+<h2>概要</h2>
+<p><code>tee</code> コマンドは、入力されたデータを画面（標準出力）に表示すると同時に、指定したファイルにも保存します。パイプラインの途中でデータを「分岐」させるように動作するため、コマンドの出力を確認しながら同時にファイルに保存したい場合に便利です。</p>
 <h2>オプション</h2>
 <h3><strong>-a, --append</strong></h3>
-<p>指定したファイルに上書きせず、追記モードで書き込みます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;1行目&quot;</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>sample.txt
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2行目&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>sample.txt
-<span style="color: #000; font-style: italic">2行目</span>
-<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>sample.txt
-<span style="color: #000; font-style: italic">1行目</span>
-<span style="color: #000; font-style: italic">2行目</span>
+<p>既存のファイルに追記します（上書きではなく）</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;追加テキスト&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>output.txt
+<span style="color: #000; font-style: italic">追加テキスト</span>
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>output.txt
+<span style="color: #000; font-style: italic">既存の内容</span>
+<span style="color: #000; font-style: italic">追加テキスト</span>
 </pre></div>
 <h3><strong>-i, --ignore-interrupts</strong></h3>
-<p>割り込み信号（Ctrl+C）を無視します。長時間実行されるコマンドの出力をログに取る際に便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>long_running_command<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>logfile.txt
-<span style="color: #000; font-style: italic">[コマンドの出力がファイルに保存されながら画面にも表示されます]</span>
+<p>割り込み信号（Ctrl+C）を無視します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">command</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>output.txt
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な使い方</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>ファイル一覧.txt
-<span style="color: #000; font-style: italic">total 8</span>
-<span style="color: #000; font-style: italic">-rw-r--r--   1 user  staff   0 Apr  1 00:00 file1</span>
-<span style="color: #000; font-style: italic">-rw-r--r--   1 user  staff   0 Apr  1 00:00 file2</span>
+<h3>標準出力とファイルに同時に出力する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>file_list.txt
+<span style="color: #000; font-style: italic">total 16</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1024 Apr 10 15:30 document.txt</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects</span>
 </pre></div>
-<p>コマンドの出力をファイルに保存しながら、同時に画面にも表示しています。</p>
 <h3>複数のファイルに同時に書き込む</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;テストデータ&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>ファイル1.txt<span style="color: #F8F8F8"> </span>ファイル2.txt
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;テストデータ&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt
+<span style="color: #000; font-style: italic">テストデータ</span>
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file1.txt
 <span style="color: #000; font-style: italic">テストデータ</span>
 </pre></div>
-<p>「テストデータ」が両方のファイルに書き込まれます。</p>
-<h3>管理者権限が必要なファイルの編集</h3>
+<h3>管理者権限が必要なファイルへの書き込み</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;設定内容&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sudo<span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>/etc/some_config_file
 <span style="color: #000; font-style: italic">設定内容</span>
 </pre></div>
-<p>通常のリダイレクト（<code>&gt;</code>）ではできない管理者権限が必要なファイルへの書き込みができます。</p>
+<h2>ヒント:</h2>
+<h3>sudo と組み合わせた使い方</h3>
+<p><code>sudo echo &quot;text&quot; &gt; /etc/file</code> ではリダイレクト（<code>&gt;</code>）はシェルによって実行されるため権限エラーになります。代わりに <code>echo &quot;text&quot; | sudo tee /etc/file</code> を使うと、管理者権限でファイルに書き込めます。</p>
+<h3>出力を確認しながらログを取る</h3>
+<p>長時間実行されるコマンドの出力を確認しながらログファイルに保存したい場合に便利です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>./long_running_script.sh<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>log.txt
+</pre></div>
+<h3>/dev/null との組み合わせ</h3>
+<p>標準出力には表示せず、ファイルだけに書き込みたい場合は <code>/dev/null</code> にリダイレクトします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">command</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>output.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>/dev/null
+</pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. teeコマンドの主な用途は何ですか？</h4>
-<p>A. コマンドの出力を画面で確認しながら同時にファイルに保存したい場合に使用します。</p>
-<h4>Q2. sudoでファイルにリダイレクトする際にteeを使うのはなぜですか？</h4>
-<p>A. <code>sudo echo &quot;内容&quot; &gt; /etc/ファイル</code> ではリダイレクト部分にsudo権限が適用されないため、teeコマンドを使って <code>echo &quot;内容&quot; | sudo tee /etc/ファイル</code> とすることで権限の問題を回避できます。</p>
-<h4>Q3. 複数のファイルに書き込む方法はありますか？</h4>
-<p>A. <code>tee ファイル1 ファイル2 ファイル3</code> のように複数のファイル名を指定するだけです。</p>
-<h2>追加メモ</h2>
-<ul>
-<li>パイプラインの途中で出力を分岐させたいときに特に便利です。</li>
-<li>ログを取りながらコマンドを実行したい場合に非常に役立ちます。</li>
-<li>macOSでも同じように動作しますが、GNU版と比べて一部のオプションが異なる場合があります。</li>
-</ul>
-<h2>参考情報</h2>
+<h4>Q1. <code>tee</code> コマンドの名前の由来は何ですか？</h4>
+<p>A. 配管工事で使われるT字型の分岐管（tee）に由来しています。データの流れを分岐させる様子が似ているためです。</p>
+<h4>Q2. <code>tee</code> コマンドと単純なリダイレクト（<code>&gt;</code>）の違いは何ですか？</h4>
+<p>A. リダイレクト（<code>&gt;</code>）はコマンドの出力をファイルにのみ保存しますが、<code>tee</code> は標準出力にも表示しながらファイルに保存します。</p>
+<h4>Q3. <code>tee</code> で複数のファイルに書き込むことはできますか？</h4>
+<p>A. はい、<code>tee file1 file2 file3</code> のように複数のファイル名を指定できます。</p>
+<h4>Q4. <code>tee</code> コマンドでバイナリデータを扱えますか？</h4>
+<p>A. はい、<code>tee</code> はテキストだけでなくバイナリデータも処理できます。</p>
+<h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/tee-invocation.html</p>
 <h2>改訂履歴</h2>
-<p>2023/11/15 フォーマットを統一し、説明を簡潔にしました。FAQセクションを追加しました。</p>
+<ul>
+<li>2025/04/30 初版作成</li>
+</ul>
 
 
     </main>

@@ -1,49 +1,50 @@
-# SSH コマンド
+# ssh コマンド
 
-SSH（Secure Shell）は、ネットワーク上の別のコンピュータに暗号化された安全な接続を確立するためのコマンドです。リモートサーバーへのログイン、コマンド実行、ファイル転送などに使用されます。
+リモートホストに安全に接続し、ログインするためのコマンド。
+
+## 概要
+
+`ssh`（Secure Shell）は、暗号化された安全な通信チャネルを通じてリモートマシンに接続するためのコマンドです。ユーザー認証、データ転送、リモートコマンド実行などを安全に行うことができます。システム管理者やデベロッパーがリモートサーバーを管理する際に広く使用されています。
 
 ## オプション
 
-### **-p（ポート指定）**
-標準の22番以外のポートを使用する場合に指定します
+### **-p [ポート番号]**
+
+デフォルト（22）以外のポート番号を指定します。
 
 ```console
-$ ssh -p 2222 username@hostname
-# ポート2222を使用してリモートサーバーに接続
+$ ssh -p 2222 user@example.com
+user@example.com's password: 
 ```
 
-### **-i（秘密鍵ファイル指定）**
-特定の秘密鍵ファイルを使用して認証します
+### **-i [秘密鍵ファイル]**
+
+認証に使用する秘密鍵ファイルを指定します。
 
 ```console
-$ ssh -i ~/.ssh/my_key username@hostname
-# 指定した秘密鍵ファイルを使用して認証
+$ ssh -i ~/.ssh/my_private_key user@example.com
+Last login: Wed Apr 30 10:15:23 2025 from 192.168.1.5
 ```
 
-### **-X（X11転送）**
-X11転送を有効にし、リモートのグラフィカルアプリケーションをローカルで表示できます
+### **-l [ユーザー名]**
+
+接続先のユーザー名を指定します。
 
 ```console
-$ ssh -X username@hostname
-# X11転送を有効にして接続
-$ firefox
-# リモートサーバー上のFirefoxがローカル画面に表示される
+$ ssh -l admin example.com
+admin@example.com's password: 
 ```
 
-### **-L（ローカルポートフォワーディング）**
-ローカルポートをリモートサーバー経由で別のサーバーに転送します
+### **-v**
+
+詳細な接続情報を表示します（デバッグに役立ちます）。
 
 ```console
-$ ssh -L 8080:internal-server:80 username@gateway-host
-# ローカルの8080ポートへのアクセスがgateway-host経由でinternal-serverの80ポートに転送される
-```
-
-### **-v（詳細表示）**
-接続プロセスの詳細情報を表示します（デバッグに役立ちます）
-
-```console
-$ ssh -v username@hostname
-# 接続の詳細情報が表示される
+$ ssh -v user@example.com
+OpenSSH_8.6p1, LibreSSL 3.3.5
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: Connecting to example.com port 22.
+...
 ```
 
 ## 使用例
@@ -52,71 +53,107 @@ $ ssh -v username@hostname
 
 ```console
 $ ssh user@example.com
-# 接続が確立され、リモートサーバーのシェルプロンプトが表示される
+user@example.com's password: 
+Last login: Wed Apr 30 09:30:45 2025 from 192.168.1.10
+[user@example ~]$ 
 ```
 
-### リモートコマンド実行
+### リモートコマンドの実行
 
 ```console
-$ ssh user@example.com "ls -la /var/www"
-# リモートサーバーの/var/wwwディレクトリの内容が表示される
+$ ssh user@example.com "ls -la /var/log"
+total 156
+drwxr-xr-x 10 root  root  4096 Apr 30 10:00 .
+drwxr-xr-x 14 root  root  4096 Apr 29 15:30 ..
+-rw-r--r--  1 root  root  8192 Apr 30 09:45 auth.log
+...
 ```
 
-### SSH設定ファイルを使用した接続
+### X11転送を有効にした接続
 
 ```console
-$ cat ~/.ssh/config
-Host myserver
-  HostName example.com
-  User username
-  Port 2222
-  IdentityFile ~/.ssh/custom_key
-
-$ ssh myserver
-# 設定ファイルの情報を使用して接続
+$ ssh -X user@example.com
+user@example.com's password: 
+Last login: Wed Apr 30 11:20:33 2025 from 192.168.1.10
+[user@example ~]$ firefox &
+[1] 12345
 ```
 
 ## ヒント:
 
-### SSH鍵認証の設定
-パスワード認証よりも安全で便利な鍵認証を設定するには、`ssh-keygen`で鍵ペアを生成し、`ssh-copy-id user@hostname`で公開鍵をリモートサーバーに登録します。
+### SSH鍵の生成
 
-### 接続が頻繁に切れる場合の対策
-長時間接続を維持したい場合は、`~/.ssh/config`に以下を追加すると効果的です：
+```console
+$ ssh-keygen -t rsa -b 4096
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/user/.ssh/id_rsa): 
+```
+
+公開鍵認証を設定すると、パスワード入力なしでログインできるようになります。
+
+### SSH設定ファイルの活用
+
+`~/.ssh/config` ファイルを作成して接続設定を保存できます。
+
+```
+Host myserver
+    HostName example.com
+    User admin
+    Port 2222
+    IdentityFile ~/.ssh/special_key
+```
+
+これにより `ssh myserver` だけで接続できるようになります。
+
+### 接続が切れないようにする
+
+長時間の接続を維持するには、`~/.ssh/config` に以下を追加します：
+
 ```
 Host *
-  ServerAliveInterval 60
+    ServerAliveInterval 60
 ```
 
-### SCP/SFTPでのファイル転送
-SSHプロトコルを使用したファイル転送には`scp`や`sftp`コマンドが利用できます。例：`scp file.txt user@hostname:/path/to/destination/`
+これにより60秒ごとに信号を送信し、接続が維持されます。
 
-## Frequently Asked Questions
+## よくある質問
 
-#### Q1. SSHとは何ですか？
-A. SSHは「Secure Shell」の略で、暗号化された安全な通信チャネルを通じてリモートサーバーに接続するためのプロトコルとコマンドです。
+#### Q1. SSHの接続が拒否される場合はどうすればよいですか？
+A. 以下を確認してください：
+   - ユーザー名とホスト名が正しいか
+   - リモートサーバーでSSHサービスが実行されているか
+   - ファイアウォールがSSH接続を許可しているか
+   - `-v` オプションを使用してデバッグ情報を確認する
 
 #### Q2. パスワードなしでログインするにはどうすればよいですか？
-A. SSH鍵認証を設定します。`ssh-keygen`で鍵ペアを生成し、`ssh-copy-id`で公開鍵をサーバーに登録すると、パスワード入力なしでログインできます。
+A. 公開鍵認証を設定します：
+   1. `ssh-keygen` で鍵ペアを生成
+   2. `ssh-copy-id user@example.com` で公開鍵をサーバーに転送
+   3. これにより、パスワード入力なしでログインできるようになります
 
-#### Q3. 「Host key verification failed」エラーが出た場合はどうすればよいですか？
-A. サーバーの鍵が変更された可能性があります。安全が確認できれば、`ssh-keygen -R hostname`で古い鍵を削除し、再接続してください。
-
-#### Q4. SSHトンネルとは何ですか？
-A. SSHトンネルは暗号化された通信経路を作成し、通常アクセスできないサービスに安全に接続するための機能です。`-L`や`-R`オプションで設定できます。
+#### Q3. SSHトンネルとは何ですか？
+A. SSHトンネルは、暗号化された接続を通じてポートを転送する機能です。例えば、`ssh -L 8080:localhost:80 user@example.com` は、ローカルの8080ポートへのアクセスをリモートサーバーの80ポートに転送します。
 
 ## macOSでの注意点
 
-macOSでは、SSHクライアントが標準でインストールされていますが、以下の点に注意してください：
+macOSでは、SSH鍵のパーミッションが重要です。秘密鍵ファイルのパーミッションが適切でないと接続が拒否されることがあります。以下のコマンドで修正できます：
 
-- macOS Catalina以降では、秘密鍵のパーミッションが厳格にチェックされます。`chmod 600 ~/.ssh/id_rsa`のように設定してください。
-- キーチェーンとの連携により、パスフレーズ付きの鍵でも一度入力すれば記憶されます。
-- macOSのSSHは基本的にOpenSSHベースですが、バージョンが古い場合があります。最新機能が必要な場合はHomebrewでOpenSSHをインストールすることを検討してください。
+```console
+$ chmod 600 ~/.ssh/id_rsa
+```
 
-## References
+また、macOSのキーチェーンにSSHパスフレーズを保存するには、`~/.ssh/config` に以下を追加します：
+
+```
+Host *
+    UseKeychain yes
+    AddKeysToAgent yes
+```
+
+## 参考
 
 https://www.openssh.com/manual.html
 
-## Revisions
+## 改訂履歴
 
-- 2025/04/26 macOSでの注意点を追加。FAQセクションを拡充。
+- 2025/04/30 初版作成

@@ -46,50 +46,50 @@
   <div class="content">
     <main>
       
-  <h1><code>groups</code> コマンドの概要</h1>
-<p><code>groups</code> コマンドは、ユーザーが所属しているグループを表示するためのUnixコマンドです。デフォルトでは現在のユーザーのグループを表示しますが、特定のユーザー名を指定することもできます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>基本的な使い方</strong>: 引数なしで実行すると、現在ログインしているユーザーのグループを表示します</p>
-<ul>
-<li>例: <code>groups</code></li>
-</ul>
-</li>
-<li><p><strong>特定ユーザーのグループ表示</strong>: ユーザー名を指定して、そのユーザーが所属するグループを表示します</p>
-<ul>
-<li>例: <code>groups username</code></li>
-</ul>
-</li>
-<li><p><strong>複数ユーザーのグループ表示</strong>: 複数のユーザー名を指定して、それぞれのユーザーが所属するグループを表示します</p>
-<ul>
-<li>例: <code>groups user1 user2 user3</code></li>
-</ul>
-</li>
-</ul>
-<h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 現在のユーザーのグループを表示</span>
-groups
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-user<span style="color: #F8F8F8"> </span>wheel<span style="color: #F8F8F8"> </span>staff
-
-<span style="color: #8F5902; font-style: italic"># 特定のユーザー（例：root）のグループを表示</span>
-groups<span style="color: #F8F8F8"> </span>root
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-root<span style="color: #F8F8F8"> </span>:<span style="color: #F8F8F8"> </span>root<span style="color: #F8F8F8"> </span>wheel<span style="color: #F8F8F8"> </span>admin
-
-<span style="color: #8F5902; font-style: italic"># 複数ユーザーのグループを表示</span>
-groups<span style="color: #F8F8F8"> </span>user1<span style="color: #F8F8F8"> </span>user2
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-user1<span style="color: #F8F8F8"> </span>:<span style="color: #F8F8F8"> </span>user1<span style="color: #F8F8F8"> </span>staff<span style="color: #F8F8F8"> </span>developers
-user2<span style="color: #F8F8F8"> </span>:<span style="color: #F8F8F8"> </span>user2<span style="color: #F8F8F8"> </span>staff<span style="color: #F8F8F8"> </span>designers
+  <h1>groups コマンド</h1>
+<p>ユーザーが所属するグループを表示します。</p>
+<h2>概要</h2>
+<p><code>groups</code> コマンドは、指定したユーザーまたはコマンドを実行しているユーザーが所属するグループのリストを表示します。Unixシステムでは、ファイルやディレクトリへのアクセス権限はユーザーとグループに基づいて管理されているため、自分がどのグループに所属しているかを確認する際に役立ちます。</p>
+<h2>オプション</h2>
+<p><code>groups</code> コマンドはシンプルで、一般的に使用されるオプションはほとんどありません。</p>
+<h3><strong>ユーザー名の指定</strong></h3>
+<p>特定のユーザーが所属するグループを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">username : group1 group2 group3</span>
 </pre></div>
-<h2>補足情報</h2>
+<h2>使用例</h2>
+<h3>現在のユーザーのグループを表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups
+<span style="color: #000; font-style: italic">user wheel staff admin</span>
+</pre></div>
+<p>上記の例では、現在のユーザーが「user」、「wheel」、「staff」、「admin」の4つのグループに所属していることを示しています。</p>
+<h3>複数ユーザーのグループを表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups<span style="color: #F8F8F8"> </span>user1<span style="color: #F8F8F8"> </span>user2
+<span style="color: #000; font-style: italic">user1 : user1 wheel staff</span>
+<span style="color: #000; font-style: italic">user2 : user2 developers</span>
+</pre></div>
+<p>この例では、user1は「user1」、「wheel」、「staff」グループに、user2は「user2」と「developers」グループに所属していることがわかります。</p>
+<h2>ヒント:</h2>
+<h3>プライマリグループとセカンダリグループ</h3>
+<p>表示されるグループのうち、最初に表示されるのは通常ユーザーのプライマリグループです。その後に続くのはセカンダリグループです。プライマリグループはユーザーがファイルを作成する際にデフォルトで設定されるグループです。</p>
+<h3>グループメンバーシップの確認</h3>
+<p>特定のグループに誰が所属しているかを確認したい場合は、<code>groups</code> ではなく <code>/etc/group</code> ファイルを確認するか、<code>getent group グループ名</code> コマンドを使用します。</p>
+<h3>権限のトラブルシューティング</h3>
+<p>ファイルやディレクトリへのアクセス権限の問題が発生した場合、<code>groups</code> コマンドを使用して自分がどのグループに所属しているかを確認することで、問題解決の手がかりになることがあります。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>groups</code> コマンドと <code>id -Gn</code> コマンドの違いは何ですか？</h4>
+<p>A. 両方とも同様の情報を表示しますが、<code>id -Gn</code> はより多くのオプションを持ち、ユーザーIDやグループIDも表示できます。基本的な使用では、結果は同じです。</p>
+<h4>Q2. グループに所属しているユーザーを確認するにはどうすればよいですか？</h4>
+<p>A. <code>groups</code> コマンドは逆の情報（ユーザーが所属するグループ）を表示します。グループのメンバーを確認するには、<code>getent group グループ名</code> または <code>/etc/group</code> ファイルを確認してください。</p>
+<h4>Q3. 新しいグループに追加された後、すぐに <code>groups</code> コマンドに反映されますか？</h4>
+<p>A. 新しいグループへの追加後、変更を反映させるためにはログアウトして再ログインするか、新しいシェルセッションを開始する必要があることがあります。</p>
+<h4>Q4. macOSでグループを管理するにはどうすればよいですか？</h4>
+<p>A. macOSでは、システム環境設定のユーザーとグループセクションからグラフィカルに管理できますが、コマンドラインでは <code>dseditgroup</code> コマンドを使用してグループを管理できます。</p>
+<h2>参考資料</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/groups-invocation.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li>Unixシステムでは、各ユーザーは少なくとも1つのグループ（プライマリグループ）に所属しています。</li>
-<li>グループはファイルやディレクトリのアクセス権限を管理するために使用されます。</li>
-<li><code>/etc/group</code> ファイルにシステム上のグループ情報が保存されています。</li>
-<li><code>id</code> コマンドを使うと、ユーザーIDとグループIDも含めたより詳細な情報を取得できます。</li>
-<li><code>groups</code> コマンドにはほとんどオプションがなく、シンプルな設計になっています。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

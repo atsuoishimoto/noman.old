@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  less - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>less command</h1>
+<p>Display and navigate through text files one screen at a time.</p>
+<h2>Overview</h2>
+<p><code>less</code> is a terminal pager program that allows you to view text files interactively. Unlike <code>cat</code>, which dumps the entire file to your terminal, <code>less</code> displays content one screen at a time, letting you scroll forward and backward. It's particularly useful for examining large files without overwhelming your terminal.</p>
+<h2>Options</h2>
+<h3><strong>-N (Line Numbers)</strong></h3>
+<p>Displays line numbers at the beginning of each line</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>less<span style="color: #F8F8F8"> </span>-N<span style="color: #F8F8F8"> </span>example.txt
+<span style="color: #000; font-style: italic">      1 This is the first line of the file.</span>
+<span style="color: #000; font-style: italic">      2 This is the second line.</span>
+<span style="color: #000; font-style: italic">      3 And this is the third line.</span>
+</pre></div>
+<h3><strong>-i (Case Insensitive Search)</strong></h3>
+<p>Makes searches case insensitive</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>less<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>example.txt
+<span style="color: #8F5902">(When searching with /pattern, it will match both &quot;Pattern&quot; and &quot;pattern&quot;)</span>
+</pre></div>
+<h3><strong>-S (Chop Long Lines)</strong></h3>
+<p>Prevents line wrapping, allowing horizontal scrolling for long lines</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>less<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>example.txt
+<span style="color: #000; font-style: italic">This is a very long line that would normally wrap around to the next line, but with -S it stays on one line and you can scroll right to see the rest...</span>
+</pre></div>
+<h3><strong>-F (Quit if One Screen)</strong></h3>
+<p>Automatically exits if the entire file fits on one screen</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>less<span style="color: #F8F8F8"> </span>-F<span style="color: #F8F8F8"> </span>small_file.txt
+<span style="color: #8F5902">(If the file fits on one screen, less will display it and exit immediately)</span>
+</pre></div>
+<h3><strong>-R (Raw Control Characters)</strong></h3>
+<p>Displays ANSI color codes and other control characters correctly</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>less<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span>colored_output.txt
+<span style="color: #8F5902">(Shows colored text as it would appear in the terminal)</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Viewing a log file</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>less<span style="color: #F8F8F8"> </span>/var/log/syslog
+<span style="color: #000; font-style: italic">Apr 30 10:15:22 hostname service[1234]: Started process</span>
+<span style="color: #000; font-style: italic">Apr 30 10:15:23 hostname service[1234]: Processing data</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3>Piping command output to less</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-la<span style="color: #F8F8F8"> </span>/usr/bin<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>less
+<span style="color: #000; font-style: italic">total 123456</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  1 root  wheel   38400 Apr 25 09:12 .</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  1 root  wheel     512 Jan 15 14:30 ..</span>
+<span style="color: #000; font-style: italic">-rwxr-xr-x  1 root  wheel   38464 Sep 20  2023 [</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3>Using less with search</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>less<span style="color: #F8F8F8"> </span>example.txt
+<span style="color: #8F5902">(Type /error to search for &quot;error&quot; in the file)</span>
+<span style="color: #8F5902">(Press n to go to the next match, N to go to the previous match)</span>
+</pre></div>
+<h2>Navigation Commands</h2>
+<p>While in <code>less</code>, you can use these keyboard commands:</p>
+<ul>
+<li><strong>Space/Page Down</strong>: Forward one screen</li>
+<li><strong>b/Page Up</strong>: Backward one screen</li>
+<li><strong>Down Arrow/Enter</strong>: Forward one line</li>
+<li><strong>Up Arrow</strong>: Backward one line</li>
+<li><strong>g</strong>: Go to the first line</li>
+<li><strong>G</strong>: Go to the last line</li>
+<li><strong>q</strong>: Quit less</li>
+<li><strong>/pattern</strong>: Search forward for &quot;pattern&quot;</li>
+<li><strong>?pattern</strong>: Search backward for &quot;pattern&quot;</li>
+<li><strong>n</strong>: Next search match</li>
+<li><strong>N</strong>: Previous search match</li>
+</ul>
+<h2>Tips</h2>
+<h3>Create a .lesskey File</h3>
+<p>Create a <code>.lesskey</code> file in your home directory to customize less commands and settings. This can make navigation more intuitive based on your preferences.</p>
+<h3>Use -X to Prevent Screen Clearing</h3>
+<p>The <code>-X</code> option prevents less from clearing the screen when exiting, which helps preserve command output history in your terminal.</p>
+<h3>Combine with grep for Efficient Searching</h3>
+<p>Use <code>grep -n &quot;pattern&quot; file | less</code> to find and display lines containing your search pattern with line numbers.</p>
+<h3>Mark Positions in Files</h3>
+<p>While viewing a file, press <code>m</code> followed by any letter to mark your current position. Jump back to it later by pressing <code>'</code> (apostrophe) followed by the same letter.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How is <code>less</code> different from <code>more</code>?</h4>
+<p>A. <code>less</code> is more powerful than <code>more</code> as it allows backward navigation and has more features. The name &quot;less&quot; is a play on the phrase &quot;less is more.&quot;</p>
+<h4>Q2. How do I search for text in less?</h4>
+<p>A. Press <code>/</code> followed by your search term and Enter. Use <code>n</code> to find the next occurrence and <code>N</code> for the previous one.</p>
+<h4>Q3. How do I exit less?</h4>
+<p>A. Press <code>q</code> to quit.</p>
+<h4>Q4. Can less display binary files?</h4>
+<p>A. Yes, but it's not ideal. Use <code>-b</code> or <code>-U</code> options for binary files, but specialized tools like hexdump or hexedit are better for binary content.</p>
+<h4>Q5. How do I display line numbers in less?</h4>
+<p>A. Use the <code>-N</code> option: <code>less -N filename</code>.</p>
+<h2>References</h2>
+<p>https://www.greenwoodsoftware.com/less/</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

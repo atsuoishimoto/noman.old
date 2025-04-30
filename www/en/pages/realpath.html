@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  realpath - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>realpath command</h1>
+<p>Print the resolved absolute file path.</p>
+<h2>Overview</h2>
+<p>The <code>realpath</code> command resolves a file path to its absolute, canonical form, following all symbolic links and removing any redundant components like <code>.</code> and <code>..</code>. It's useful for scripts that need to work with absolute paths or when you need to determine where a symbolic link actually points.</p>
+<h2>Options</h2>
+<h3><strong>-s, --strip, --no-symlinks</strong></h3>
+<p>Don't expand symbolic links; instead show the absolute path to the symlink itself.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>mylink
+<span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>mylink
+<span style="color: #000; font-style: italic">/etc/hosts</span>
+<span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>mylink
+<span style="color: #000; font-style: italic">/home/user/mylink</span>
+</pre></div>
+<h3><strong>-e, --canonicalize-existing</strong></h3>
+<p>All components of the path must exist.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>/etc/hosts
+<span style="color: #000; font-style: italic">/etc/hosts</span>
+<span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>/nonexistent
+<span style="color: #000; font-style: italic">realpath: /nonexistent: No such file or directory</span>
+</pre></div>
+<h3><strong>-m, --canonicalize-missing</strong></h3>
+<p>No path components need to exist or be a directory.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>/nonexistent/file.txt
+<span style="color: #000; font-style: italic">/nonexistent/file.txt</span>
+</pre></div>
+<h3><strong>-q, --quiet</strong></h3>
+<p>Suppress error messages.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>/nonexistent
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$?</span>
+<span style="color: #000; font-style: italic">1</span>
+</pre></div>
+<h3><strong>-z, --zero</strong></h3>
+<p>End each output line with NUL, not newline (useful for parsing in scripts).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hexdump<span style="color: #F8F8F8"> </span>-C
+<span style="color: #000; font-style: italic">00000000  2f 65 74 63 2f 68 6f 73  74 73 00                 |/etc/hosts.|</span>
+<span style="color: #000; font-style: italic">0000000b</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Resolving a relative path</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">cd</span><span style="color: #F8F8F8"> </span>/usr/local
+<span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>bin/../share
+<span style="color: #000; font-style: italic">/usr/local/share</span>
+</pre></div>
+<h3>Finding where a symbolic link points</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/var/log/syslog<span style="color: #F8F8F8"> </span>logfile
+<span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>logfile
+<span style="color: #000; font-style: italic">/var/log/syslog</span>
+</pre></div>
+<h3>Using in shell scripts</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">SCRIPT_DIR</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>realpath<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>dirname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$0</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">))</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;This script is located in: </span><span style="color: #000">$SCRIPT_DIR</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">This script is located in: /home/user/scripts</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Use in Scripts for Reliable Paths</h3>
+<p>When writing shell scripts, use <code>realpath</code> to get the absolute path of the script directory with <code>SCRIPT_DIR=$(realpath $(dirname &quot;$0&quot;))</code>. This ensures your script works correctly regardless of where it's called from.</p>
+<h3>Combine with Other Commands</h3>
+<p>Pair <code>realpath</code> with commands like <code>find</code> or <code>xargs</code> to process files with their absolute paths: <code>find . -type f | xargs realpath</code>.</p>
+<h3>Check if Two Paths Reference the Same File</h3>
+<p>Use <code>realpath</code> to determine if two different paths actually point to the same file: <code>[ &quot;$(realpath path1)&quot; = &quot;$(realpath path2)&quot; ]</code>.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between <code>realpath</code> and <code>readlink -f</code>?</h4>
+<p>A. They're similar, but <code>realpath</code> is part of GNU coreutils and has more options. <code>readlink -f</code> is more commonly available on different Unix systems.</p>
+<h4>Q2. How do I use <code>realpath</code> to get the directory of a script?</h4>
+<p>A. Use <code>realpath $(dirname &quot;$0&quot;)</code> in your script to get its directory.</p>
+<h4>Q3. Can <code>realpath</code> handle paths with spaces?</h4>
+<p>A. Yes, but make sure to quote the paths: <code>realpath &quot;path with spaces&quot;</code>.</p>
+<h4>Q4. What happens if I use <code>realpath</code> on a non-existent path?</h4>
+<p>A. By default, it will return an error. Use <code>-m</code> option to get the canonical path even if it doesn't exist.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/realpath-invocation.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

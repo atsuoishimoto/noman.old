@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  git-add - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>git add command</h1>
+<p>Add file contents to the staging area (index) in preparation for the next commit.</p>
+<h2>Overview</h2>
+<p><code>git add</code> updates the Git index with the current content of files in your working directory. It marks new or modified files to be included in your next commit. This command is a crucial step in the Git workflow, as it allows you to selectively choose which changes will be part of your next commit.</p>
+<h2>Options</h2>
+<h3><strong>-A, --all</strong></h3>
+<p>Add all changes (new, modified, and deleted files) to the staging area.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>-A
+</pre></div>
+<h3><strong>-u, --update</strong></h3>
+<p>Update only files that Git already knows about (modified or deleted, but not new files).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>-u
+</pre></div>
+<h3><strong>-p, --patch</strong></h3>
+<p>Interactively choose parts of files to stage, allowing you to commit specific changes within a file rather than the entire file.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>-p
+<span style="color: #000; font-style: italic">diff --git a/file.txt b/file.txt</span>
+<span style="color: #000; font-style: italic">index 1234567..abcdefg 100644</span>
+<span style="color: #000; font-style: italic">--- a/file.txt</span>
+<span style="color: #000; font-style: italic">+++ b/file.txt</span>
+<span style="color: #000; font-style: italic">@@ -10,6 +10,7 @@ Some content</span>
+<span style="color: #000; font-style: italic"> More content</span>
+<span style="color: #000; font-style: italic">+New line added</span>
+<span style="color: #000; font-style: italic"> Final line</span>
+<span style="color: #000; font-style: italic">Stage this hunk [y,n,q,a,d,j,J,g,/,e,?]?</span>
+</pre></div>
+<h3><strong>-i, --interactive</strong></h3>
+<p>Start an interactive staging session to select files and parts of files to add.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>-i
+<span style="color: #000; font-style: italic">           staged     unstaged path</span>
+<span style="color: #000; font-style: italic">  1:    unchanged        +2/-0 file1.txt</span>
+<span style="color: #000; font-style: italic">  2:    unchanged        +1/-1 file2.txt</span>
+
+<span style="color: #000; font-style: italic">*** Commands ***</span>
+<span style="color: #000; font-style: italic">  1: status       2: update       3: revert       4: add untracked</span>
+<span style="color: #000; font-style: italic">  5: patch        6: diff         7: quit         8: help</span>
+<span style="color: #000; font-style: italic">What now&gt;</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Adding specific files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+</pre></div>
+<h3>Adding all files in a directory</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>src/
+</pre></div>
+<h3>Adding files by pattern</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>*.js
+</pre></div>
+<h3>Adding all changes except specific files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;:!file_to_exclude.txt&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;:!*.log&#39;</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Stage Changes in Chunks</h3>
+<p>Use <code>git add -p</code> to review and stage specific parts of files. This is useful when you've made multiple unrelated changes to a file but want to commit them separately.</p>
+<h3>Check What's Staged</h3>
+<p>After using <code>git add</code>, run <code>git status</code> to verify what changes are staged before committing.</p>
+<h3>Undo Staging</h3>
+<p>If you accidentally stage a file, use <code>git restore --staged &lt;file&gt;</code> to unstage it.</p>
+<h3>Use the Staging Area Strategically</h3>
+<p>The staging area allows you to create focused, logical commits. Take advantage of this by staging related changes together rather than adding everything at once.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between <code>git add .</code> and <code>git add -A</code>?</h4>
+<p>A. <code>git add .</code> adds all new and modified files in the current directory and its subdirectories, but doesn't stage deleted files unless you're using Git 2.0+. <code>git add -A</code> adds all changes including new, modified, and deleted files across the entire repository.</p>
+<h4>Q2. How do I add only part of a file's changes?</h4>
+<p>A. Use <code>git add -p</code> (or <code>--patch</code>) to interactively select which changes to stage within each file.</p>
+<h4>Q3. Can I undo a <code>git add</code> if I change my mind?</h4>
+<p>A. Yes, use <code>git restore --staged &lt;file&gt;</code> to unstage a file while keeping your changes in the working directory.</p>
+<h4>Q4. What does &quot;Changes to be committed&quot; mean after using <code>git add</code>?</h4>
+<p>A. It means the changes have been staged (added to the index) and will be included in your next commit.</p>
+<h2>References</h2>
+<p>https://git-scm.com/docs/git-add</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  hd - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>hd command</h1>
+<p>Display file contents in hexadecimal, decimal, octal, or ASCII format.</p>
+<h2>Overview</h2>
+<p>The <code>hd</code> command (hexdump) displays the contents of files in various formats, primarily hexadecimal. It's useful for examining binary files, debugging data formats, or viewing non-printable characters in text files. The command reads from files or standard input and outputs a formatted representation of the data.</p>
+<h2>Options</h2>
+<h3><strong>-n LENGTH</strong></h3>
+<p>Limit the output to the first LENGTH bytes of input</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hd<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #000; font-style: italic">00000000  48 65 6c                                          |Hel|</span>
+</pre></div>
+<h3><strong>-s OFFSET</strong></h3>
+<p>Skip OFFSET bytes from the beginning of input</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hd<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">6</span>
+<span style="color: #000; font-style: italic">00000006  57 6f 72 6c 64 0a                                 |World.|</span>
+</pre></div>
+<h3><strong>-v</strong></h3>
+<p>Display all input data (suppress the * line that indicates duplicate content)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;AAAAAAAA&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hd<span style="color: #F8F8F8"> </span>-v
+<span style="color: #000; font-style: italic">00000000  41 41 41 41 41 41 41 41  0a                       |AAAAAAAA.|</span>
+</pre></div>
+<h3><strong>-c BYTES</strong></h3>
+<p>Format output with BYTES number of octets per line</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hd<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span>
+<span style="color: #000; font-style: italic">00000000  48 65 6c 6c                                       |Hell|</span>
+<span style="color: #000; font-style: italic">00000004  6f 20 57 6f                                       |o Wo|</span>
+<span style="color: #000; font-style: italic">00000008  72 6c 64 0a                                       |rld.|</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic hexdump of a file</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hd<span style="color: #F8F8F8"> </span>sample.txt
+<span style="color: #000; font-style: italic">00000000  48 65 6c 6c 6f 20 57 6f  72 6c 64 0a 54 68 69 73  |Hello World.This|</span>
+<span style="color: #000; font-style: italic">00000010  20 69 73 20 61 20 74 65  73 74 2e 0a              | is a test..|</span>
+<span style="color: #000; font-style: italic">0000001c</span>
+</pre></div>
+<h3>Examining binary data</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hd<span style="color: #F8F8F8"> </span>/bin/ls<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-3
+<span style="color: #000; font-style: italic">00000000  cf fa ed fe 07 00 00 01  03 00 00 80 02 00 00 00  |................|</span>
+<span style="color: #000; font-style: italic">00000010  10 00 00 00 18 07 00 00  85 00 20 00 00 00 00 00  |.......... .....|</span>
+<span style="color: #000; font-style: italic">00000020  19 00 00 00 48 00 00 00  5f 5f 50 41 47 45 5a 45  |....H...__PAGEZE|</span>
+</pre></div>
+<h3>Piping data to hd</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Binary data&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hd
+<span style="color: #000; font-style: italic">00000000  42 69 6e 61 72 79 20 64  61 74 61                 |Binary data|</span>
+<span style="color: #000; font-style: italic">0000000b</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Comparing Binary Files</h3>
+<p>Use <code>hd</code> with <code>diff</code> to compare binary files: <code>diff &lt;(hd file1) &lt;(hd file2)</code> to see exactly where and how files differ.</p>
+<h3>Examining File Headers</h3>
+<p>Use <code>hd -n 32 filename</code> to examine just the first 32 bytes of a file, which often contains header information that identifies the file type.</p>
+<h3>Customizing Output Format</h3>
+<p>Combine options like <code>-c</code> and <code>-v</code> to create a more readable format when examining complex binary structures.</p>
+<h3>Alternative Commands</h3>
+<p>On some systems, <code>hexdump</code> or <code>xxd</code> commands may be available as alternatives with similar functionality.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between <code>hd</code> and <code>hexdump</code>?</h4>
+<p>A. On many systems, <code>hd</code> is actually a symbolic link to <code>hexdump</code> or provides similar functionality with a shorter name. The specific behavior may vary slightly between systems.</p>
+<h4>Q2. How can I convert hexadecimal output back to binary?</h4>
+<p>A. <code>hd</code> is primarily for displaying data, not converting it back. For the reverse operation, consider using tools like <code>xxd -r</code> or dedicated hex editors.</p>
+<h4>Q3. Can I use <code>hd</code> to edit binary files?</h4>
+<p>A. No, <code>hd</code> is only for viewing file contents. To edit binary files, use a hex editor like <code>hexedit</code> or <code>bvi</code>.</p>
+<h4>Q4. How do I interpret the output format?</h4>
+<p>A. The left column shows byte offsets in hexadecimal, the middle columns show the hexadecimal values of each byte, and the right column shows the ASCII representation (with dots for non-printable characters).</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, <code>hd</code> is typically available as part of the base system. However, its behavior and available options may differ slightly from other Unix-like systems. If you need more advanced hexdump functionality, consider installing GNU hexdump via Homebrew with <code>brew install hexdump</code>.</p>
+<h2>References</h2>
+<p>https://www.freebsd.org/cgi/man.cgi?query=hexdump</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

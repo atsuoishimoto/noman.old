@@ -1,71 +1,117 @@
-# patchコマンドの概要
+# patch コマンド
 
-`patch`コマンドは、差分ファイル（パッチファイル）を使用して元のファイルを更新するためのツールです。ソースコードの変更や修正を適用する際によく使われます。
+ファイルに差分（パッチ）を適用するユーティリティ。
 
-## 主なオプション
+## 概要
 
-- **-p[数字]**: パッチファイル内のパス名から取り除く階層の数を指定します
-  - 例: `patch -p1 < patchfile.diff`（パス名から1階層を取り除きます）
+`patch`コマンドは、差分ファイル（パッチファイル）を使用して元のファイルを更新するためのツールです。ソフトウェア開発やシステム管理において、コードの変更を配布したり適用したりする際によく使用されます。`diff`コマンドで生成された差分を適用するのに最適です。
 
-- **-R**: 逆パッチを適用します（パッチを取り消します）
-  - 例: `patch -R < patchfile.diff`
+## オプション
 
-- **-b**: バックアップファイルを作成します
-  - 例: `patch -b file.txt < patch.diff`（元のファイルを`file.txt.orig`として保存）
+### **-p[数字]**
 
-- **-d [ディレクトリ]**: 指定したディレクトリに移動してからパッチを適用します
-  - 例: `patch -d src/ < patch.diff`
+パッチファイル内のパス名から取り除く階層の数を指定します。
 
-- **--dry-run**: 実際にファイルを変更せずにパッチの適用をシミュレーションします
-  - 例: `patch --dry-run < patch.diff`
+```console
+$ patch -p1 < changes.patch
+patching file src/main.c
+```
+
+### **-b, --backup**
+
+パッチを適用する前にオリジナルファイルのバックアップを作成します。
+
+```console
+$ patch -b file.txt < file.patch
+patching file file.txt
+$ ls
+file.txt file.txt.orig file.patch
+```
+
+### **-R, --reverse**
+
+パッチを逆方向に適用します（変更を元に戻す）。
+
+```console
+$ patch -R file.txt < file.patch
+patching file file.txt
+```
+
+### **-d DIR, --directory=DIR**
+
+指定したディレクトリに移動してからパッチを適用します。
+
+```console
+$ patch -d src/ < changes.patch
+patching file main.c
+```
 
 ## 使用例
 
 ### 基本的なパッチの適用
 
-```bash
-# パッチファイルを標準入力から適用
-patch < bugfix.patch
-
-# 出力例
-patching file src/main.c
+```console
+$ diff -u original.txt modified.txt > changes.patch
+$ patch < changes.patch
+patching file original.txt
 ```
 
 ### 特定のファイルにパッチを適用
 
-```bash
-# 特定のファイルにパッチを適用
-patch file.txt < file.patch
-
-# 出力例
+```console
+$ patch file.txt < changes.patch
 patching file file.txt
 ```
 
-### パスの階層を調整してパッチを適用
+### 複数のファイルを含むパッチの適用
 
-```bash
-# -p1オプションでパス階層を1つ削除
-patch -p1 < project.patch
-
-# 出力例
-patching file src/lib/utils.c
+```console
+$ patch -p0 < project.patch
+patching file src/main.c
 patching file include/header.h
 ```
 
-### バックアップを作成してパッチを適用
+## ヒント:
 
-```bash
-# バックアップを作成しながらパッチを適用
-patch -b program.c < fix.patch
+### パッチの確認
 
-# 出力例
-patching file program.c
-# program.c.origというバックアップファイルが作成されます
+パッチを適用する前に、`--dry-run`オプションを使用して実際に変更を加えずにパッチの適用をシミュレーションできます。
+
+```console
+$ patch --dry-run < changes.patch
+patching file src/main.c
 ```
 
-## 追加情報
+### 拒否されたパッチの処理
 
-- パッチファイルは通常、`diff`コマンドで作成されます。
-- パッチの適用に失敗した場合、`.rej`拡張子を持つ拒否ファイルが作成されることがあります。
-- Gitなどのバージョン管理システムを使用している場合は、そのシステム固有のコマンド（`git apply`など）を使用する方が適切な場合があります。
-- パッチを適用する前に`--dry-run`オプションでテストすると安全です。特に重要なファイルを変更する場合は推奨されます。
+パッチの適用に失敗した場合、`.rej`拡張子を持つ拒否ファイルが作成されます。これらのファイルを確認して手動で変更を適用することができます。
+
+### パッチの作成
+
+パッチファイルは通常、`diff -u`コマンドを使用して作成します。これにより、コンテキスト情報を含む統一形式の差分が生成されます。
+
+```console
+$ diff -u original.txt modified.txt > changes.patch
+```
+
+## よくある質問
+
+#### Q1. パッチファイルとは何ですか？
+A. パッチファイルは、ファイルの元のバージョンと変更後のバージョンの間の差分を含むテキストファイルです。通常、`diff`コマンドで生成されます。
+
+#### Q2. パッチの適用に失敗した場合はどうすればよいですか？
+A. パッチの適用に失敗すると、`.rej`ファイルが作成されます。このファイルを確認して、変更を手動で適用することができます。また、`-f`オプションを使用して強制的に適用することもできますが、注意が必要です。
+
+#### Q3. パッチを元に戻すにはどうすればよいですか？
+A. `-R`または`--reverse`オプションを使用して、同じパッチファイルで変更を元に戻すことができます。
+
+#### Q4. パッチファイルの形式にはどのようなものがありますか？
+A. 一般的なパッチ形式には、コンテキスト形式（`diff -c`）、統一形式（`diff -u`）、通常形式（`diff`）があります。統一形式が最も一般的で推奨されています。
+
+## 参考
+
+https://www.gnu.org/software/diffutils/manual/html_node/Unified-Format.html
+
+## Revisions
+
+- 2025/04/30 初版作成

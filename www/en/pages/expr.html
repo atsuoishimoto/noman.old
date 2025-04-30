@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  expr - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>expr command</h1>
+<p>Evaluate expressions and output the result.</p>
+<h2>Overview</h2>
+<p><code>expr</code> is a command-line utility that evaluates expressions and outputs the result. It performs arithmetic operations, string manipulations, and logical comparisons. The command is particularly useful in shell scripts for calculations and string handling.</p>
+<h2>Options</h2>
+<h3><strong>Basic Arithmetic</strong></h3>
+<p>Performs addition, subtraction, multiplication, division, and modulo operations.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #000; font-style: italic">8</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>-<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span>
+<span style="color: #000; font-style: italic">6</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\*</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span>
+<span style="color: #000; font-style: italic">12</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>/<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">4</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">17</span><span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">2</span>
+</pre></div>
+<p>Note: The multiplication operator (<code>*</code>) must be escaped with a backslash to prevent shell interpretation.</p>
+<h3><strong>Comparison Operators</strong></h3>
+<p>Compares values and returns 1 for true or 0 for false.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\&gt;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #000; font-style: italic">1</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\&lt;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #000; font-style: italic">0</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #000">5</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">1</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>!<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span>
+<span style="color: #000; font-style: italic">1</span>
+</pre></div>
+<h3><strong>String Operations</strong></h3>
+<p>Manipulates and extracts information from strings.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>length<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span>
+<span style="color: #000; font-style: italic">5</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>substr<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">7</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">World</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>index<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;W&quot;</span>
+<span style="color: #000; font-style: italic">7</span>
+</pre></div>
+<h3><strong>Logical Operators</strong></h3>
+<p>Performs logical AND and OR operations.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\&gt;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\&gt;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">1</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\&gt;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\|</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\&gt;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">1</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Incrementing a Variable in a Shell Script</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>expr<span style="color: #F8F8F8"> </span><span style="color: #000">$count</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$count</span>
+<span style="color: #000; font-style: italic">2</span>
+</pre></div>
+<h3>Extracting a Substring</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>substr<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">Hello</span>
+</pre></div>
+<h3>Checking String Length</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">filename</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;document.txt&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">length</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>expr<span style="color: #F8F8F8"> </span>length<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$filename</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;The filename is </span><span style="color: #000">$length</span><span style="color: #4E9A06"> characters long&quot;</span>
+<span style="color: #000; font-style: italic">The filename is 12 characters long</span>
+</pre></div>
+<h2>Tips:</h2>
+<h3>Use Proper Spacing</h3>
+<p>Always put spaces between operators and operands. <code>expr 5+3</code> will not work, but <code>expr 5 + 3</code> will.</p>
+<h3>Escape Special Characters</h3>
+<p>Remember to escape characters that have special meaning to the shell, such as <code>*</code>, <code>(</code>, <code>)</code>, and <code>&lt;</code>.</p>
+<h3>Alternative to expr</h3>
+<p>Modern shell scripts often use bash's built-in arithmetic expansion <code>$(( ))</code> instead of <code>expr</code> for better performance and readability.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$((</span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">+</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #204A87; font-weight: bold">))</span>
+<span style="color: #000; font-style: italic">8</span>
+</pre></div>
+<h3>Return Values</h3>
+<p><code>expr</code> returns 0 if the expression evaluates to a non-zero and non-empty value, 1 if the expression is 0 or empty, and 2 if the expression is invalid.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. Why does my multiplication with <code>expr</code> fail?</h4>
+<p>A. You need to escape the asterisk: <code>expr 5 \* 3</code>. Otherwise, the shell interprets it as a wildcard.</p>
+<h4>Q2. How do I use <code>expr</code> in a shell script?</h4>
+<p>A. Capture the output using command substitution: <code>result=$(expr 5 + 3)</code>.</p>
+<h4>Q3. Is there a limit to the size of numbers <code>expr</code> can handle?</h4>
+<p>A. Yes, <code>expr</code> typically handles integer arithmetic within the range of your system's integer limits.</p>
+<h4>Q4. Why use <code>expr</code> when bash has built-in arithmetic?</h4>
+<p>A. <code>expr</code> is primarily used for POSIX compatibility in scripts that need to run on various Unix-like systems.</p>
+<h2>References</h2>
+<p>https://pubs.opengroup.org/onlinepubs/9699919799/utilities/expr.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

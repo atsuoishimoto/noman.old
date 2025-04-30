@@ -46,90 +46,83 @@
   <div class="content">
     <main>
       
-  <h1>set</h1>
-<p><code>set</code> コマンドはシェル環境の変数や設定を表示・変更するためのコマンドです。主にBashやZshなどのシェルで使用され、シェルの動作を制御します。</p>
+  <h1>set コマンド</h1>
+<p>シェル変数の設定や表示、シェルの動作を制御するためのコマンドです。</p>
+<h2>概要</h2>
+<p><code>set</code> コマンドはシェル環境の変数を設定・表示したり、シェルの動作オプションを変更したりするために使用します。Bash、Zsh、shなど多くのシェルで利用可能で、引数なしで実行すると現在設定されているすべての環境変数とシェル関数を表示します。また、様々なオプションを使ってシェルの挙動を制御することができます。</p>
 <h2>オプション</h2>
 <h3><strong>-e</strong></h3>
-<p>エラーが発生した時点でスクリプトの実行を中止します。デバッグに役立ちます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-e
-$<span style="color: #F8F8F8"> </span>command_that_fails
-<span style="color: #8F5902; font-style: italic"># コマンドがエラーを返すとスクリプトはここで終了する</span>
+<p>エラーが発生した時点でスクリプトの実行を中止します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-e
+<span style="color: #8F5902">$ </span>command_that_fails
+<span style="color: #000; font-style: italic">[エラーが発生するとスクリプトはここで終了する]</span>
 </pre></div>
 <h3><strong>-x</strong></h3>
-<p>実行されるコマンドを表示します。デバッグに便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-x
-$<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span>
-+<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span>
-Hello
+<p>実行されるコマンドを実行前に表示します（デバッグに便利）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-x
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span>
+<span style="color: #000; font-style: italic">+ echo &quot;Hello&quot;</span>
+<span style="color: #000; font-style: italic">Hello</span>
 </pre></div>
 <h3><strong>-u</strong></h3>
-<p>未定義の変数を使用した場合にエラーを発生させます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-u
-$<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$UNDEFINED_VARIABLE</span>
-bash:<span style="color: #F8F8F8"> </span>UNDEFINED_VARIABLE:<span style="color: #F8F8F8"> </span>未定義の変数です
+<p>未定義の変数を参照した場合にエラーを発生させます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-u
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$UNDEFINED_VARIABLE</span>
+<span style="color: #000; font-style: italic">bash: UNDEFINED_VARIABLE: unbound variable</span>
 </pre></div>
-<h3><strong>-o pipefail</strong></h3>
-<p>パイプラインの中で一つでもコマンドが失敗した場合、パイプライン全体を失敗として扱います。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>pipefail
-$<span style="color: #F8F8F8"> </span><span style="color: #204A87">false</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">true</span>
-$<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$?</span>
-<span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># falseが失敗したため、パイプライン全体が失敗と見なされる</span>
-</pre></div>
-<h3><strong>+オプション</strong></h3>
-<p>オプションを無効にします（例：<code>set +e</code>でエラー時の中断を無効化）。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>+e
-$<span style="color: #F8F8F8"> </span>command_that_fails
-<span style="color: #8F5902; font-style: italic"># エラーが発生してもスクリプトは続行される</span>
+<h3><strong>-o</strong></h3>
+<p>特定のシェルオプションを有効または無効にします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>noclobber<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># リダイレクトによる既存ファイルの上書きを防止</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>+o<span style="color: #F8F8F8"> </span>noclobber<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># noclobberオプションを無効化</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>現在の設定を表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87">set</span>
-<span style="color: #8F5902; font-style: italic"># 現在のシェル変数と関数の一覧が表示される</span>
-<span style="color: #000">BASH_VERSION</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&#39;5.1.16(1)-release&#39;</span>
-<span style="color: #000">HOME</span><span style="color: #CE5C00; font-weight: bold">=</span>/home/user
-<span style="color: #000">PATH</span><span style="color: #CE5C00; font-weight: bold">=</span>/usr/local/bin:/usr/bin:/bin
-...
+<h3>現在の環境変数とシェル関数を表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span>
+<span style="color: #000; font-style: italic">BASH=/bin/bash</span>
+<span style="color: #000; font-style: italic">BASHOPTS=checkwinsize:cmdhist:complete_fullquote:expand_aliases:...</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">[多数の変数と関数が表示される]</span>
 </pre></div>
-<h3>シェルスクリプトの安全モード</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic">#!/bin/bash</span>
-<span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-euo<span style="color: #F8F8F8"> </span>pipefail
+<h3>スクリプトでの安全なオプション設定</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>safe_script.sh
+<span style="color: #8F5902">#</span>!/bin/bash
+<span style="color: #000; font-style: italic">set -euo pipefail</span>
 
-<span style="color: #8F5902; font-style: italic"># エラーが発生したら停止し(-e)</span>
-<span style="color: #8F5902; font-style: italic"># 未定義変数を使用したらエラー(-u)</span>
-<span style="color: #8F5902; font-style: italic"># パイプラインの一部が失敗したら全体を失敗とみなす(-o pipefail)</span>
+<span style="color: #8F5902"># </span>エラーが発生すると即座に終了
+<span style="color: #8F5902"># </span>未定義変数を使用するとエラー
+<span style="color: #8F5902"># </span>パイプラインの最後のコマンド以外のエラーも検出
 
-<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;安全なスクリプトの実行&quot;</span>
+<span style="color: #000; font-style: italic">echo &quot;安全なスクリプトの実行&quot;</span>
 </pre></div>
+<h3>位置パラメータの設定</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>arg1<span style="color: #F8F8F8"> </span>arg2<span style="color: #F8F8F8"> </span>arg3
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$1</span><span style="color: #F8F8F8"> </span><span style="color: #000">$2</span><span style="color: #F8F8F8"> </span><span style="color: #000">$3</span>
+<span style="color: #000; font-style: italic">arg1 arg2 arg3</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>シェルスクリプトの堅牢性向上</h3>
+<p><code>set -euo pipefail</code> はシェルスクリプトの堅牢性を高めるための一般的な組み合わせです。エラーで即座に停止し、未定義変数を使用するとエラーになり、パイプラインの途中でのエラーも検出します。</p>
 <h3>デバッグモード</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-x
-$<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span>..3<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$i</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
-+<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{1..3}&#39;</span>
-+<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>
-<span style="color: #0000CF; font-weight: bold">1</span>
-+<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{1..3}&#39;</span>
-+<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
-<span style="color: #0000CF; font-weight: bold">2</span>
-+<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{1..3}&#39;</span>
-+<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #0000CF; font-weight: bold">3</span>
-</pre></div>
+<p><code>set -x</code> はスクリプトのデバッグに非常に役立ちます。各コマンドが実行される前に表示されるため、問題の特定が容易になります。</p>
+<h3>位置パラメータのリセット</h3>
+<p><code>set --</code> を使うと、シェルの位置パラメータ（$1, $2, ...）を新しい値に設定できます。これはスクリプト内で引数を処理する際に便利です。</p>
 <h2>よくある質問</h2>
-<h3>Q1. <code>set</code> と <code>export</code> の違いは何ですか？</h3>
-<p>A. <code>set</code> はシェルの動作や変数を設定するのに対し、<code>export</code> は変数を子プロセスに引き継ぐために使用します。</p>
-<h3>Q2. シェルスクリプトの先頭によく見る <code>set -e</code> とは何ですか？</h3>
-<p>A. エラーが発生した時点でスクリプトの実行を中止する設定です。これにより、エラーを見逃さずに済みます。</p>
-<h3>Q3. <code>set</code> コマンドで設定した内容はログアウト後も保持されますか？</h3>
-<p>A. いいえ、<code>set</code> による設定は現在のシェルセッションのみ有効です。永続的に設定するには <code>.bashrc</code> や <code>.zshrc</code> などの設定ファイルに記述する必要があります。</p>
-<h3>Q4. <code>set -- arg1 arg2</code> のような使い方は何ですか？</h3>
-<p>A. シェルの位置パラメータ（<code>$1</code>, <code>$2</code> など）を設定します。スクリプト内で引数を操作する際に便利です。</p>
-<h2>追加情報</h2>
-<ul>
-<li><code>set</code> はシェルによって動作が異なる場合があります。Bash、Zsh、sh などで微妙な違いがあります。</li>
-<li>スクリプトの先頭に <code>set -euxo pipefail</code> を記述すると、堅牢なスクリプトを書くのに役立ちます。</li>
-<li>macOSでは基本的に同じように動作しますが、使用しているシェルのバージョンによって利用可能なオプションが異なる場合があります。</li>
-</ul>
-<h2>参考情報</h2>
+<h4>Q1. <code>set</code> と <code>export</code> の違いは何ですか？</h4>
+<p>A. <code>set</code> はシェル変数の設定や表示、シェルの動作オプションの変更に使用します。一方、<code>export</code> はシェル変数を環境変数として子プロセスに引き継ぐために使用します。</p>
+<h4>Q2. <code>set -e</code> と <code>set -x</code> を同時に使うことはできますか？</h4>
+<p>A. はい、<code>set -ex</code> のように組み合わせて使用できます。これにより、コマンドの実行前表示（デバッグ）とエラー時の即時終了の両方が有効になります。</p>
+<h4>Q3. <code>set</code> コマンドの変更は永続的ですか？</h4>
+<p>A. いいえ、<code>set</code> コマンドによる変更は現在のシェルセッションまたはスクリプト実行中のみ有効です。永続的な設定を行うには、<code>.bashrc</code> や <code>.zshrc</code> などの設定ファイルに記述する必要があります。</p>
+<h4>Q4. <code>set +e</code> は何をしますか？</h4>
+<p>A. <code>set +e</code> は <code>-e</code> オプション（エラー時即時終了）を無効にします。<code>set</code> コマンドでは、<code>-</code> でオプションを有効に、<code>+</code> でオプションを無効にします。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSのデフォルトシェルはZsh（以前はBash）ですが、GNU版のBashとは一部の動作が異なる場合があります。特に古いバージョンのBashでは、一部のオプション（例：<code>pipefail</code>）が利用できない場合があります。必要に応じて <code>brew install bash</code> などでより新しいバージョンをインストールすることを検討してください。</p>
+<h2>参考文献</h2>
 <p>https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
+</ul>
 
 
     </main>

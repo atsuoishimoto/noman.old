@@ -47,35 +47,33 @@
     <main>
       
   <h1>iotop コマンド</h1>
-<p>プロセスごとの I/O 使用状況をリアルタイムで監視するツール。</p>
+<p>I/O 使用量をプロセスごとに監視するリアルタイムモニタリングツール。</p>
 <h2>概要</h2>
-<p><code>iotop</code> は Linux システム上でプロセスやスレッドの I/O（入出力）使用状況をリアルタイムで監視するためのコマンドラインユーティリティです。ディスク I/O のボトルネックを特定したり、どのプロセスがディスクリソースを最も使用しているかを確認するのに役立ちます。<code>top</code> コマンドに似ていますが、CPU やメモリではなく I/O 使用状況に特化しています。</p>
+<p><code>iotop</code> は Linux システム上でプロセスごとの I/O（入出力）使用状況をリアルタイムで表示するコマンドです。ディスク I/O のボトルネックを特定したり、どのプロセスがディスクを最も使用しているかを確認したりするのに役立ちます。<code>top</code> コマンドに似ていますが、CPU やメモリではなく I/O 使用量に特化しています。</p>
 <h2>オプション</h2>
 <h3><strong>-o, --only</strong></h3>
 <p>I/O を実際に行っているプロセスのみを表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>iotop<span style="color: #F8F8F8"> </span>-o
-<span style="color: #000; font-style: italic">合計 DISK READ:       0.00 B/s | 合計 DISK WRITE:       7.56 K/s</span>
-<span style="color: #000; font-style: italic">現在 DISK READ:       0.00 B/s | 現在 DISK WRITE:       0.00 B/s</span>
+<span style="color: #000; font-style: italic">Total DISK READ:       0.00 B/s | Total DISK WRITE:       7.63 K/s</span>
+<span style="color: #000; font-style: italic">Current DISK READ:     0.00 B/s | Current DISK WRITE:     0.00 B/s</span>
 <span style="color: #000; font-style: italic">  PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND</span>
-<span style="color: #000; font-style: italic"> 1234  be/4  root        0.00 B/s    7.56 K/s  0.00 %  0.00 % systemd-journald</span>
+<span style="color: #000; font-style: italic"> 1234  be/4  root        0.00 B    7.63 K/s  0.00 %  0.00 % systemd-journald</span>
 </pre></div>
 <h3><strong>-b, --batch</strong></h3>
-<p>バッチモードで実行します。非対話的な出力形式で、ログファイルへの出力やスクリプト内での使用に適しています。</p>
+<p>バッチモードで実行します。非対話的な出力形式で、ログファイルへのリダイレクトに適しています。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>iotop<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #000; font-style: italic">合計 DISK READ:       0.00 B/s | 合計 DISK WRITE:      15.72 K/s</span>
-<span style="color: #000; font-style: italic">現在 DISK READ:       0.00 B/s | 現在 DISK WRITE:       0.00 B/s</span>
+<span style="color: #000; font-style: italic">Total DISK READ:       0.00 B/s | Total DISK WRITE:      15.27 K/s</span>
+<span style="color: #000; font-style: italic">Current DISK READ:     0.00 B/s | Current DISK WRITE:     0.00 B/s</span>
 <span style="color: #000; font-style: italic">  PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND</span>
-<span style="color: #000; font-style: italic">    1  be/4  root        0.00 B/s    0.00 B/s  0.00 %  0.00 % systemd --system</span>
-<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">    1  be/4  root        0.00 B    0.00 B/s  0.00 %  0.00 % systemd</span>
+<span style="color: #000; font-style: italic">  ...</span>
 </pre></div>
 <h3><strong>-n NUM, --iter=NUM</strong></h3>
 <p>指定した回数だけ更新して終了します。バッチモードと組み合わせて使用すると便利です。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>iotop<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
-<span style="color: #000; font-style: italic">合計 DISK READ:       0.00 B/s | 合計 DISK WRITE:      12.46 K/s</span>
-<span style="color: #000; font-style: italic">現在 DISK READ:       0.00 B/s | 現在 DISK WRITE:       0.00 B/s</span>
+<span style="color: #000; font-style: italic">Total DISK READ:       0.00 B/s | Total DISK WRITE:      15.27 K/s</span>
 <span style="color: #000; font-style: italic">...</span>
-<span style="color: #000; font-style: italic">合計 DISK READ:       0.00 B/s | 合計 DISK WRITE:      14.32 K/s</span>
-<span style="color: #000; font-style: italic">現在 DISK READ:       0.00 B/s | 現在 DISK WRITE:       0.00 B/s</span>
+<span style="color: #000; font-style: italic">Total DISK READ:       0.00 B/s | Total DISK WRITE:      12.45 K/s</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
 <h3><strong>-d SEC, --delay=SEC</strong></h3>
@@ -86,52 +84,57 @@
 <h2>使用例</h2>
 <h3>実際に I/O を行っているプロセスのみを表示</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>iotop<span style="color: #F8F8F8"> </span>-o
-<span style="color: #000; font-style: italic">合計 DISK READ:       1.21 M/s | 合計 DISK WRITE:     256.84 K/s</span>
-<span style="color: #000; font-style: italic">現在 DISK READ:       0.00 B/s | 現在 DISK WRITE:      12.56 K/s</span>
+<span style="color: #000; font-style: italic">Total DISK READ:       1.02 M/s | Total DISK WRITE:      156.68 K/s</span>
+<span style="color: #000; font-style: italic">Current DISK READ:     0.00 B/s | Current DISK WRITE:     23.44 K/s</span>
 <span style="color: #000; font-style: italic">  PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND</span>
-<span style="color: #000; font-style: italic"> 5432  be/4  postgres    1.21 M/s   245.32 K/s  0.00 %  2.34 % postgres: writer process</span>
-<span style="color: #000; font-style: italic"> 1234  be/4  www-data    0.00 B/s    11.52 K/s  0.00 %  0.12 % apache2 -k start</span>
+<span style="color: #000; font-style: italic"> 1234  be/4  postgres   1.02 M/s    0.00 B/s  0.00 %  0.12 % postgres: autovacuum worker process</span>
+<span style="color: #000; font-style: italic">  567  be/4  www-data   0.00 B/s  156.68 K/s  0.00 %  0.05 % apache2 -k start</span>
 </pre></div>
-<h3>特定のユーザーのプロセスのみを表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>iotop<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>postgres
-<span style="color: #000; font-style: italic">合計 DISK READ:       0.85 M/s | 合計 DISK WRITE:     178.45 K/s</span>
-<span style="color: #000; font-style: italic">現在 DISK READ:       0.00 B/s | 現在 DISK WRITE:       8.72 K/s</span>
-<span style="color: #000; font-style: italic">  PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND</span>
-<span style="color: #000; font-style: italic"> 5432  be/4  postgres    0.85 M/s   178.45 K/s  0.00 %  1.87 % postgres: writer process</span>
-<span style="color: #000; font-style: italic"> 5433  be/4  postgres    0.00 B/s     0.00 B/s  0.00 %  0.00 % postgres: wal writer process</span>
-<span style="color: #000; font-style: italic"> 5434  be/4  postgres    0.00 B/s     0.00 B/s  0.00 %  0.00 % postgres: autovacuum launcher</span>
+<h3>特定のプロセスの I/O 使用状況を監視してログに記録</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>iotop<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>,5678<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>io_log.txt
+<span style="color: #8F5902"># </span>プロセスID<span style="color: #F8F8F8"> </span>1234と5678の<span style="color: #F8F8F8"> </span>I/O<span style="color: #F8F8F8"> </span>使用状況を10回記録してio_log.txtに保存
 </pre></div>
-<h3>バッチモードで出力をファイルに保存</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>iotop<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>io_activity.log
-<span style="color: #8F5902"># </span>5秒間隔で10回の測定結果をio_activity.logファイルに保存する
+<h3>累積 I/O 統計を表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>iotop<span style="color: #F8F8F8"> </span>-a
+<span style="color: #8F5902"># </span>起動してから累積された<span style="color: #F8F8F8"> </span>I/O<span style="color: #F8F8F8"> </span>統計が表示される
+<span style="color: #8F5902"># </span>通常モードでは「A」キーを押すことでも切り替え可能
 </pre></div>
 <h2>ヒント:</h2>
-<h3>管理者権限が必要</h3>
-<p><code>iotop</code> の実行には通常、root 権限（sudo）が必要です。権限がない場合は「Permission denied」エラーが表示されます。</p>
-<h3>キーボードショートカット</h3>
-<p>対話モードでは、以下のキーが使用できます：</p>
+<h3>対話モードでのキーボードショートカット</h3>
+<p>対話モードでは、以下のキーを使用して表示を制御できます：</p>
 <ul>
-<li><code>o</code>: <code>-o</code> オプションと同様に、I/O を行っているプロセスのみの表示を切り替え</li>
-<li><code>p</code>: プロセスごとの表示とスレッドごとの表示を切り替え</li>
-<li><code>a</code>: 累積 I/O の表示を切り替え</li>
+<li><code>o</code>: I/O を行っているプロセスのみ表示/すべて表示を切り替え</li>
+<li><code>p</code>: PID でソート</li>
+<li><code>a</code>: 累積 I/O 統計の表示/非表示を切り替え</li>
 <li><code>q</code>: 終了</li>
 </ul>
-<h3>累積モードの活用</h3>
-<p><code>a</code> キーを押すと累積モードになり、プログラムの起動以降の合計 I/O 量を確認できます。長時間実行されるプロセスの I/O パターンを分析するのに役立ちます。</p>
+<h3>root 権限が必要</h3>
+<p><code>iotop</code> は通常、root 権限が必要です。一般ユーザーで実行する場合は <code>sudo</code> を使用してください。</p>
+<h3>長時間の I/O モニタリング</h3>
+<p>長時間の I/O 使用状況を分析するには、バッチモードとリダイレクトを組み合わせて使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>sudo<span style="color: #F8F8F8"> </span>iotop<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">60</span><span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">60</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>io_usage.log
+</pre></div>
+<p>これにより、1時間にわたって1分ごとに I/O を行っているプロセスの情報が記録されます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>iotop</code> と <code>top</code> の違いは何ですか？</h4>
-<p>A. <code>top</code> は CPU やメモリ使用率を中心に監視するのに対し、<code>iotop</code> はディスク I/O 使用状況に特化しています。ディスク I/O がボトルネックになっている場合に <code>iotop</code> が特に役立ちます。</p>
-<h4>Q2. <code>iotop</code> が「DISK READ/WRITE」と「IO&gt;」の両方を表示するのはなぜですか？</h4>
-<p>A. 「DISK READ/WRITE」は実際のディスク読み書き速度を示し、「IO&gt;」はプロセスが I/O 待ちで費やした時間の割合を示します。両方を見ることで、I/O 使用パターンをより詳細に理解できます。</p>
-<h4>Q3. <code>iotop</code> をインストールするにはどうすればよいですか？</h4>
-<p>A. Debian/Ubuntu では <code>sudo apt install iotop</code>、RHEL/CentOS では <code>sudo yum install iotop</code> または <code>sudo dnf install iotop</code> でインストールできます。</p>
-<h4>Q4. <code>iotop</code> が「CONFIG_TASK_DELAY_ACCT not enabled in kernel」というエラーを表示する場合はどうすればよいですか？</h4>
-<p>A. このエラーは、カーネルが必要な機能をサポートしていないことを示しています。カーネルを再コンパイルするか、より新しいバージョンのカーネルを使用する必要があります。</p>
-<h2>参考情報</h2>
-<p>https://github.com/Tomas-M/iotop</p>
-<h2>改訂履歴</h2>
+<h4>Q1. <code>iotop</code> をインストールするにはどうすればよいですか？</h4>
+<p>A. Debian/Ubuntu では <code>sudo apt install iotop</code>、CentOS/RHEL では <code>sudo yum install iotop</code> でインストールできます。</p>
+<h4>Q2. <code>iotop</code> が「CONFIG_TASK_DELAY_ACCT not enabled in kernel」というエラーを表示する場合はどうすればよいですか？</h4>
+<p>A. このエラーはカーネルに必要な機能が有効になっていないことを示しています。カーネルを再コンパイルするか、より新しいバージョンのディストリビューションを使用する必要があります。</p>
+<h4>Q3. 特定のプロセスだけを監視するにはどうすればよいですか？</h4>
+<p>A. <code>-p PID</code> または <code>--pid=PID</code> オプションを使用して、特定のプロセス ID を指定できます。複数のプロセスを監視する場合はカンマで区切ります（例：<code>-p 1234,5678</code>）。</p>
+<h4>Q4. <code>iotop</code> の出力を理解するにはどうすればよいですか？</h4>
+<p>A. 主な列は以下の通りです：</p>
 <ul>
-<li>2025/04/29 初版作成</li>
+<li>DISK READ/WRITE: プロセスのディスク読み書き速度</li>
+<li>SWAPIN: スワップインの割合</li>
+<li>IO&gt;: プロセスが I/O 待ちで費やした時間の割合</li>
+<li>COMMAND: プロセス名とコマンドライン引数</li>
+</ul>
+<h2>参考資料</h2>
+<p>https://linux.die.net/man/1/iotop</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

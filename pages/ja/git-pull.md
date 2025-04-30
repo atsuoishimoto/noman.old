@@ -1,108 +1,127 @@
-# git-pull コマンド概要
+# git pull コマンド
 
-`git pull`は、リモートリポジトリから最新の変更を取得し、ローカルリポジトリに統合するGitコマンドです。簡単に言えば、`git fetch`と`git merge`を一度に実行する操作です。
+リモートリポジトリから変更を取得し、ローカルブランチに統合します。
+
+## 概要
+
+`git pull` は、リモートリポジトリから最新の変更を取得し（`git fetch`）、その変更をローカルブランチに統合（`git merge` または `git rebase`）するコマンドです。これにより、ローカルの作業コピーを最新の状態に保つことができます。
 
 ## オプション
 
-### **--rebase**:
+### **--rebase**
 
-マージの代わりにリベースを使用して変更を統合します。これにより、コミット履歴がよりクリーンになります。
+マージの代わりにリベースを使用して変更を統合します。これにより、履歴がよりクリーンになります。
 
-例: `git pull --rebase origin main`
-
-### **--no-rebase**:
-
-明示的にマージ方式を指定します（デフォルト）。
-
-例: `git pull --no-rebase origin main`
-
-### **--ff-only**:
-
-Fast-forwardが可能な場合のみマージを実行します。コンフリクトを避けたい場合に便利です。
-
-例: `git pull --ff-only origin main`
-
-### **-v, --verbose**:
-
-詳細な情報を表示します。
-
-例: `git pull -v origin main`
-
-### **--no-commit**:
-
-マージ後に自動的にコミットしません。変更を確認してから手動でコミットしたい場合に使用します。
-
-例: `git pull --no-commit origin main`
-
-### **--squash**:
-
-すべての変更を一つのコミットにまとめます。
-
-例: `git pull --squash origin feature-branch`
-
-## 使用例
-
-```bash
-# 現在のブランチに対応するリモートブランチから変更を取得
-git pull
-
-# 出力例
+```console
+$ git pull --rebase origin main
 remote: Enumerating objects: 5, done.
 remote: Counting objects: 100% (5/5), done.
 remote: Compressing objects: 100% (2/2), done.
 remote: Total 3 (delta 1), reused 3 (delta 1), pack-reused 0
-Unpacking objects: 100% (3/3), done.
-From https://github.com/user/repo
+Unpacking objects: 100% (3/3), 285 bytes | 285.00 KiB/s, done.
+From github.com:username/repo
    a1b2c3d..e4f5g6h  main     -> origin/main
+Successfully rebased and updated refs/heads/main.
+```
+
+### **--ff-only**
+
+Fast-forwardできる場合のみマージを実行します。コンフリクトを避けたい場合に便利です。
+
+```console
+$ git pull --ff-only
 Updating a1b2c3d..e4f5g6h
 Fast-forward
- README.md | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ README.md | 2 ++
+ 1 file changed, 2 insertions(+)
 ```
 
-```bash
-# 特定のリモートとブランチを指定して変更を取得
-git pull origin develop
+### **-v, --verbose**
 
-# リベースを使用して変更を統合
-git pull --rebase origin main
+詳細な情報を表示します。
+
+```console
+$ git pull -v
+From github.com:username/repo
+ * branch            main     -> FETCH_HEAD
+Updating a1b2c3d..e4f5g6h
+Fast-forward
+ README.md | 2 ++
+ 1 file changed, 2 insertions(+)
 ```
 
-## よくある質問
+## 使用例
 
-### Q1. `git pull`と`git fetch`の違いは何ですか？
-A. `git fetch`はリモートの変更を取得するだけですが、`git pull`は取得した変更をローカルブランチに統合（マージまたはリベース）します。
+### 特定のリモートとブランチから変更を取得
 
-### Q2. `git pull`でコンフリクトが発生した場合はどうすればいいですか？
-A. コンフリクトを手動で解決し、変更をステージングして`git commit`を実行します。リベース中のコンフリクトの場合は、解決後に`git rebase --continue`を実行します。
+```console
+$ git pull origin develop
+From github.com:username/repo
+ * branch            develop   -> FETCH_HEAD
+Updating a1b2c3d..e4f5g6h
+Fast-forward
+ src/main.js | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+```
 
-### Q3. 特定のブランチだけを取得するにはどうすればいいですか？
-A. `git pull origin <ブランチ名>`のように、リモート名とブランチ名を指定します。
+### 複数のリモートリポジトリから変更を取得
 
-### Q4. `git pull`を安全に実行するには？
-A. コミットしていない変更がある場合は先に`git stash`で保存するか、`--ff-only`オプションを使用して競合を避けます。
+```console
+$ git pull upstream main && git pull origin main
+From github.com:upstream/repo
+ * branch            main     -> FETCH_HEAD
+Already up to date.
+From github.com:username/repo
+ * branch            main     -> FETCH_HEAD
+Updating a1b2c3d..e4f5g6h
+Fast-forward
+ README.md | 2 ++
+ 1 file changed, 2 insertions(+)
+```
 
-### Q5. リモートブランチを削除した後、ローカルでも反映させるには？
-A. `git pull --prune`を実行すると、リモートで削除されたブランチの参照もローカルから削除されます。
+## ヒント:
 
-### Q6. `git pull`を実行する前に確認すべきことはありますか？
-A. 現在のブランチとコミットしていない変更を確認するために、`git status`を実行するとよいでしょう。
+### プルする前に変更を退避する
 
-### Q7. `git pull`で特定のコミットだけを取得できますか？
-A. いいえ、`git pull`はブランチ全体を取得します。特定のコミットだけ取得したい場合は、`git cherry-pick`を使用します。
+未コミットの変更がある場合、`git stash`で一時的に保存してからプルし、その後`git stash pop`で復元するとコンフリクトを避けられます。
 
-### Q8. `git pull`後に元に戻すには？
-A. `git reset --hard ORIG_HEAD`を実行すると、`git pull`実行前の状態に戻ります。
+```console
+$ git stash
+Saved working directory and index state WIP on main: a1b2c3d Initial commit
+$ git pull
+$ git stash pop
+```
 
-### Q9. `git pull`でリモートブランチを追跡するには？
-A. `git pull -u origin <ブランチ名>`または`git branch --set-upstream-to=origin/<ブランチ名>`を使用します。
+### リベースを使用してクリーンな履歴を維持する
 
-### Q10. `git pull`が「You have divergent branches」エラーを出す場合は？
-A. ローカルとリモートの履歴が分岐しています。`git pull --rebase`を使用するか、マージ方法を明示的に選択してください。
+`git pull --rebase`を使用すると、マージコミットが作成されず、履歴が直線的になります。チームで作業する場合に特に便利です。
 
-## 追加のメモ
+### プル前にローカルの状態を確認する
 
-- コミットしていない変更がある状態で`git pull`を実行すると、マージコンフリクトが発生する可能性があります。
-- チーム作業では、`git pull`を定期的に実行して最新の変更を取り込むことをお勧めします。
-- `git pull --rebase`は履歴をクリーンに保ちたい場合に便利ですが、チームでの使用ルールを統一することが重要です。
-- 大きな変更を行う前に`git pull`を実行すると、後でのコンフリクト解決が簡単になります。
+`git status`を実行して、未コミットの変更がないことを確認してからプルすると安全です。
+
+## Frequently Asked Questions
+
+#### Q1. `git pull`と`git fetch`の違いは何ですか？
+A. `git fetch`はリモートの変更を取得するだけで、ローカルブランチには統合しません。一方、`git pull`は`fetch`と`merge`（または`rebase`）を一度に行います。
+
+#### Q2. プル時にコンフリクトが発生した場合はどうすればよいですか？
+A. コンフリクトを解決するには、コンフリクトファイルを編集し、`git add`でマークしてから`git commit`（マージの場合）または`git rebase --continue`（リベースの場合）を実行します。
+
+#### Q3. 特定のブランチだけをプルするにはどうすればよいですか？
+A. `git pull origin branch-name`のように、リモート名とブランチ名を指定します。
+
+#### Q4. プルを取り消すにはどうすればよいですか？
+A. マージの場合は`git reset --hard ORIG_HEAD`、リベースの場合は`git reflog`で以前の状態を見つけて`git reset --hard`で戻します。
+
+## macOSでの注意点
+
+macOSでは特別な注意点はありませんが、Keychain Accessを使用してGitの認証情報を保存している場合があります。認証に問題がある場合は、Keychain Accessアプリで認証情報を確認してください。
+
+## References
+
+https://git-scm.com/docs/git-pull
+
+## Revisions
+
+- 2025/04/30 初回作成

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  set - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>set command</h1>
+<p>Display, set, or unset shell options and positional parameters.</p>
+<h2>Overview</h2>
+<p>The <code>set</code> command is a built-in shell command that allows you to control various aspects of the shell's behavior. It can display all shell variables, set shell options that change how the shell behaves, and manipulate positional parameters. It's commonly used in shell scripts to enable error handling, debugging, and to control script execution flow.</p>
+<h2>Options</h2>
+<h3><strong>-e (errexit)</strong></h3>
+<p>Exits immediately if a command returns a non-zero status (fails)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-e
+<span style="color: #8F5902">$ </span>non_existent_command
+<span style="color: #000; font-style: italic">bash: non_existent_command: command not found</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;This won&#39;t be executed&quot;</span>
+<span style="color: #000; font-style: italic">[Shell has already exited due to the error]</span>
+</pre></div>
+<h3><strong>-x (xtrace)</strong></h3>
+<p>Prints each command before executing it, prefixed with '+'</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-x
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span>
+<span style="color: #000; font-style: italic">+ echo &#39;Hello World&#39;</span>
+<span style="color: #000; font-style: italic">Hello World</span>
+</pre></div>
+<h3><strong>-u (nounset)</strong></h3>
+<p>Treats unset variables as errors when referenced</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-u
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$UNDEFINED_VARIABLE</span>
+<span style="color: #000; font-style: italic">bash: UNDEFINED_VARIABLE: unbound variable</span>
+</pre></div>
+<h3><strong>-o option</strong></h3>
+<p>Sets a specific option by name</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>pipefail
+<span style="color: #8F5902">$ </span>non_existent_command<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;This command runs&quot;</span>
+<span style="color: #000; font-style: italic">This command runs</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$?</span>
+<span style="color: #000; font-style: italic">127</span>
+</pre></div>
+<h3><strong>+o option</strong></h3>
+<p>Unsets a specific option by name</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>+o<span style="color: #F8F8F8"> </span>pipefail
+<span style="color: #8F5902">$ </span>non_existent_command<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;This command runs&quot;</span>
+<span style="color: #000; font-style: italic">This command runs</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$?</span>
+<span style="color: #000; font-style: italic">0</span>
+</pre></div>
+<h3><strong>--</strong></h3>
+<p>Assigns following arguments to positional parameters</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>arg1<span style="color: #F8F8F8"> </span>arg2<span style="color: #F8F8F8"> </span>arg3
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$1</span><span style="color: #F8F8F8"> </span><span style="color: #000">$2</span><span style="color: #F8F8F8"> </span><span style="color: #000">$3</span>
+<span style="color: #000; font-style: italic">arg1 arg2 arg3</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Setting multiple options at once</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>-exu
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Now the script will exit on errors, show commands, and error on unset variables&quot;</span>
+<span style="color: #000; font-style: italic">+ echo &#39;Now the script will exit on errors, show commands, and error on unset variables&#39;</span>
+<span style="color: #000; font-style: italic">Now the script will exit on errors, show commands, and error on unset variables</span>
+</pre></div>
+<h3>Displaying all variables</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span>
+<span style="color: #000; font-style: italic">BASH=/bin/bash</span>
+<span style="color: #000; font-style: italic">BASHOPTS=checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob:extquote:force_fignore:histappend:interactive_comments:progcomp:promptvars:sourcepath</span>
+<span style="color: #000; font-style: italic">BASH_ALIASES=()</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">[many more variables shown]</span>
+</pre></div>
+<h3>Using set in a script for error handling</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>error_handling.sh
+<span style="color: #8F5902">#</span>!/bin/bash
+<span style="color: #000; font-style: italic">set -e  # Exit immediately if a command fails</span>
+<span style="color: #000; font-style: italic">set -u  # Treat unset variables as errors</span>
+<span style="color: #000; font-style: italic">set -o pipefail  # Return value of a pipeline is the value of the last command to exit with non-zero status</span>
+
+<span style="color: #000; font-style: italic">echo &quot;Starting script with error handling enabled&quot;</span>
+<span style="color: #8F5902"># </span>Script<span style="color: #F8F8F8"> </span>continues...
+</pre></div>
+<h2>Tips</h2>
+<h3>Use set -e in Scripts</h3>
+<p>Adding <code>set -e</code> at the beginning of your scripts makes them fail fast when errors occur, preventing cascading failures that can be hard to debug.</p>
+<h3>Combine Options for Robust Scripts</h3>
+<p>The combination <code>set -euo pipefail</code> is often used in production scripts as a best practice for error handling. It's sometimes called &quot;strict mode.&quot;</p>
+<h3>Save and Restore Settings</h3>
+<p>You can save the current options with <code>old_opts=$(set +o)</code> and restore them later with <code>eval &quot;$old_opts&quot;</code> when you need to temporarily change settings.</p>
+<h3>Debugging with set -x</h3>
+<p>When troubleshooting scripts, temporarily adding <code>set -x</code> helps you see exactly what commands are being executed and with what values.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between <code>set</code> and <code>export</code>?</h4>
+<p>A. <code>set</code> controls shell behavior and positional parameters, while <code>export</code> makes variables available to child processes.</p>
+<h4>Q2. How do I turn off an option that was set with <code>set -o</code>?</h4>
+<p>A. Use <code>set +o option_name</code>. The plus sign (+) disables the option.</p>
+<h4>Q3. How can I see what options are currently enabled?</h4>
+<p>A. Use <code>set -o</code> to see a list of all options and their current status.</p>
+<h4>Q4. What does <code>set --</code> do?</h4>
+<p>A. It assigns the arguments that follow to the positional parameters ($1, $2, etc.), replacing any existing values.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

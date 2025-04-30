@@ -46,89 +46,101 @@
   <div class="content">
     <main>
       
-  <h1>nc コマンドの概要</h1>
-<p><code>nc</code>（netcat）は、ネットワーク接続の読み書きを行うためのシンプルなユーティリティです。「ネットワークのスイスアーミーナイフ」とも呼ばれ、ポートスキャン、ファイル転送、チャットなど様々なネットワークタスクに使用できます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-l</strong>: リッスンモード（サーバーとして動作）</p>
-<ul>
-<li>例: <code>nc -l 8080</code>（8080ポートでの接続を待ち受けます）</li>
-</ul>
-</li>
-<li><p><strong>-p</strong>: ポート番号の指定（クライアントモード時）</p>
-<ul>
-<li>例: <code>nc -p 12345 example.com 80</code>（ローカルポート12345から接続）</li>
-</ul>
-</li>
-<li><p><strong>-v</strong>: 詳細（verbose）出力</p>
-<ul>
-<li>例: <code>nc -v example.com 80</code>（接続の詳細情報を表示）</li>
-</ul>
-</li>
-<li><p><strong>-z</strong>: スキャンモード（接続せずにポートの開閉状態を確認）</p>
-<ul>
-<li>例: <code>nc -z -v example.com 20-30</code>（20〜30番ポートをスキャン）</li>
-</ul>
-</li>
-<li><p><strong>-w</strong>: タイムアウト時間の設定（秒）</p>
-<ul>
-<li>例: <code>nc -w 5 example.com 80</code>（5秒でタイムアウト）</li>
-</ul>
-</li>
-<li><p><strong>-u</strong>: UDPモード（デフォルトはTCP）</p>
-<ul>
-<li>例: <code>nc -u example.com 53</code>（UDPで53番ポートに接続）</li>
-</ul>
-</li>
-</ul>
+  <h1>nc コマンド</h1>
+<p>ネットワーク接続を読み書きするためのユーティリティ。</p>
+<h2>概要</h2>
+<p><code>nc</code>（netcat）は、TCP や UDP プロトコルを使用してネットワーク接続を確立し、データを送受信するためのシンプルなコマンドラインツールです。ポートスキャン、ファイル転送、チャット、サーバーのテストなど、さまざまなネットワーク関連タスクに使用できます。</p>
+<h2>オプション</h2>
+<h3><strong>-l</strong>：リッスンモード</h3>
+<p>サーバーとして動作し、指定したポートで接続を待ち受けます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>nc<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+</pre></div>
+<h3><strong>-p</strong>：ポート指定</h3>
+<p>使用するローカルポート番号を指定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>nc<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">12345</span><span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">80</span>
+</pre></div>
+<h3><strong>-v</strong>：詳細表示</h3>
+<p>接続の詳細情報を表示します。デバッグに役立ちます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>nc<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">80</span>
+<span style="color: #000; font-style: italic">Connection to example.com 80 port [tcp/http] succeeded!</span>
+</pre></div>
+<h3><strong>-z</strong>：スキャンモード</h3>
+<p>接続を確立せずにポートスキャンを行います。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>nc<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span>-30
+<span style="color: #000; font-style: italic">Connection to example.com 22 port [tcp/ssh] succeeded!</span>
+<span style="color: #000; font-style: italic">Connection to example.com 25 port [tcp/smtp] succeeded!</span>
+</pre></div>
+<h3><strong>-u</strong>：UDP モード</h3>
+<p>デフォルトの TCP の代わりに UDP プロトコルを使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>nc<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+</pre></div>
 <h2>使用例</h2>
-<h3>1. 基本的な接続（HTTPリクエスト）</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># Webサーバーに接続してHTTPリクエストを送信</span>
-nc<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">80</span>
-GET<span style="color: #F8F8F8"> </span>/<span style="color: #F8F8F8"> </span>HTTP/1.1
-Host:<span style="color: #F8F8F8"> </span>example.com
+<h3>簡易チャットサーバーの作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902"># </span>サーバー側
+<span style="color: #8F5902">$ </span>nc<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+<span style="color: #000; font-style: italic">こんにちは！</span>
+<span style="color: #000; font-style: italic">元気ですか？</span>
 
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-HTTP/1.1<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">200</span><span style="color: #F8F8F8"> </span>OK
-Content-Type:<span style="color: #F8F8F8"> </span>text/html
-...
+<span style="color: #8F5902"># </span>クライアント側
+<span style="color: #8F5902">$ </span>nc<span style="color: #F8F8F8"> </span>localhost<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+<span style="color: #000; font-style: italic">こんにちは！</span>
+<span style="color: #000; font-style: italic">元気ですか？</span>
 </pre></div>
-<h3>2. シンプルなチャットサーバー</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># サーバー側（ポート8080でリッスン）</span>
-nc<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>
+<h3>ファイル転送</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902"># </span>受信側
+<span style="color: #8F5902">$ </span>nc<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>received_file.txt
 
-<span style="color: #8F5902; font-style: italic"># クライアント側（サーバーに接続）</span>
-nc<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.100<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>
-
-<span style="color: #8F5902; font-style: italic"># これで双方向のテキスト通信が可能になる</span>
+<span style="color: #8F5902"># </span>送信側
+<span style="color: #8F5902">$ </span>nc<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.100<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>file_to_send.txt
 </pre></div>
-<h3>3. ファイル転送</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 受信側（サーバー）</span>
-nc<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>received_file.txt
-
-<span style="color: #8F5902; font-style: italic"># 送信側（クライアント）</span>
-nc<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.100<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span><span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>file_to_send.txt
+<h3>ポートスキャン</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>nc<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span>-100
+<span style="color: #000; font-style: italic">Connection to example.com 22 port [tcp/ssh] succeeded!</span>
+<span style="color: #000; font-style: italic">Connection to example.com 80 port [tcp/http] succeeded!</span>
+<span style="color: #000; font-style: italic">Connection to example.com 443 port [tcp/https] succeeded!</span>
 </pre></div>
-<h3>4. ポートスキャン</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 特定のホストの複数ポートをスキャン</span>
-nc<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span>-25
-
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-nc:<span style="color: #F8F8F8"> </span>connect<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span>port<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>tcp<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>failed:<span style="color: #F8F8F8"> </span>Connection<span style="color: #F8F8F8"> </span>refused
-nc:<span style="color: #F8F8F8"> </span>connect<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span>port<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">21</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>tcp<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>succeeded!
-nc:<span style="color: #F8F8F8"> </span>connect<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span>port<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">22</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>tcp<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>succeeded!
-...
+<h3>HTTP リクエストの送信</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;GET / HTTP/1.1\r\nHost: example.com\r\n\r\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>nc<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">80</span>
+<span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
+<span style="color: #000; font-style: italic">Content-Type: text/html; charset=UTF-8</span>
+<span style="color: #000; font-style: italic">Date: Wed, 30 Apr 2025 12:00:00 GMT</span>
+<span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h2>追加情報</h2>
+<h2>ヒント:</h2>
+<h3>タイムアウトの設定</h3>
+<p><code>-w</code> オプションを使用して接続のタイムアウト時間を秒単位で設定できます。これはスクリプト内で使用する際に特に便利です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>nc<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">80</span>
+</pre></div>
+<h3>バナー情報の取得</h3>
+<p>サーバーのバナー情報を取得するには、単純に接続するだけで十分な場合があります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>nc<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">22</span>
+<span style="color: #000; font-style: italic">SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.5</span>
+</pre></div>
+<h3>永続的なリスニングサーバー</h3>
+<p><code>-k</code> オプションを使用すると、クライアントが切断した後もリスニングを継続します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>nc<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+</pre></div>
+<h2>よくある質問</h2>
+<h4>Q1. nc と telnet の違いは何ですか？</h4>
+<p>A. <code>nc</code> は <code>telnet</code> よりも多機能で、TCP/UDP の両方をサポートし、ポートスキャンやファイル転送などの機能も提供します。<code>telnet</code> は主に対話型のリモート接続に使用されます。</p>
+<h4>Q2. nc でファイアウォールをバイパスできますか？</h4>
+<p>A. <code>nc</code> 自体はファイアウォールをバイパスする機能はありませんが、さまざまなポートやプロトコルを使用して接続を試みることができます。ただし、セキュリティ上の理由から、許可されたネットワークでのみ使用してください。</p>
+<h4>Q3. nc の代替コマンドはありますか？</h4>
+<p>A. <code>socat</code>、<code>ncat</code>（Nmap プロジェクトの一部）、<code>telnet</code>（基本的な機能のみ）などがあります。<code>socat</code> は特に高度な機能を提供します。</p>
+<h4>Q4. macOS と Linux の nc コマンドに違いはありますか？</h4>
+<p>A. はい、macOS の <code>nc</code> は BSD バージョンで、Linux の多くのディストリビューションで使用される GNU バージョンとは一部のオプションが異なります。例えば、macOS の <code>nc</code> では <code>-k</code> オプション（接続後もリスニングを継続する）がサポートされていない場合があります。</p>
+<h2>macOS での注意点</h2>
+<p>macOS に搭載されている <code>nc</code> は BSD バージョンであり、Linux の GNU バージョンとは一部の機能やオプションが異なります。特に以下の点に注意してください：</p>
 <ul>
-<li><p><code>nc</code>コマンドはセキュリティ監査やネットワークのデバッグに非常に便利ですが、悪意ある目的にも使用できるため、多くの組織ではその使用が制限されている場合があります。</p>
-</li>
-<li><p>一部のシステムでは<code>nc</code>の代わりに<code>ncat</code>や<code>netcat</code>コマンドが使用されることがあります。機能は似ていますが、オプションが若干異なる場合があります。</p>
-</li>
-<li><p>長時間のリッスンや接続を維持するには、<code>-k</code>オプション（一部のバージョンでサポート）を使用すると、接続が切れた後もリッスンを継続できます。</p>
-</li>
-<li><p>セキュアな通信が必要な場合は、<code>ncat</code>の<code>--ssl</code>オプションや、代わりに<code>openssl s_client</code>/<code>s_server</code>コマンドの使用を検討してください。</p>
-</li>
+<li><code>-e</code> オプション（コマンド実行）は macOS の <code>nc</code> ではサポートされていません</li>
+<li>永続的なリスニング（<code>-k</code>）は macOS の一部のバージョンではサポートされていない場合があります</li>
+<li>macOS で同様の機能が必要な場合は、Homebrew などを使用して GNU バージョンの netcat をインストールすることを検討してください</li>
+</ul>
+<h2>参考資料</h2>
+<p>https://man.openbsd.org/nc.1</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

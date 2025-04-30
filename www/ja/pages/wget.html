@@ -47,124 +47,108 @@
     <main>
       
   <h1>wget コマンド</h1>
-<p>wgetはウェブサーバーからファイルをダウンロードするためのコマンドラインツールです。HTTPやFTPなどのプロトコルを使用してコンテンツを取得できます。</p>
+<p>リモートサーバーからファイルをダウンロードするためのコマンドラインツールです。</p>
+<h2>概要</h2>
+<p><code>wget</code>は、HTTP、HTTPS、FTPなどのプロトコルを使用してウェブサーバーからファイルをダウンロードするためのユーティリティです。オフラインでの閲覧のためにウェブサイト全体をミラーリングしたり、スクリプト内でファイルを自動的にダウンロードしたりするのに便利です。ネットワーク接続が不安定な場合でも、ダウンロードを再開する機能があります。</p>
 <h2>オプション</h2>
 <h3><strong>-O, --output-document=FILE</strong></h3>
-<p>ダウンロードしたファイルを指定した名前で保存します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>example.zip<span style="color: #F8F8F8"> </span>https://example.com/file.zip
-<span style="color: #000; font-style: italic">--2023-04-01 12:01:00--  https://example.com/file.zip</span>
-<span style="color: #000; font-style: italic">Resolving example.com... 93.184.216.34</span>
-<span style="color: #000; font-style: italic">Connecting to example.com|93.184.216.34|:443... connected.</span>
-<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 200 OK</span>
-<span style="color: #000; font-style: italic">Length: 1024000 (1000K) [application/zip]</span>
-<span style="color: #000; font-style: italic">Saving to: &#39;example.zip&#39;</span>
-
-<span style="color: #000; font-style: italic">example.zip     100%[===================&gt;]   1000K   256KB/s    in 3.9s    </span>
-
-<span style="color: #000; font-style: italic">2023-04-01 12:01:04 (256 KB/s) - &#39;example.zip&#39; saved [1024000/1024000]</span>
+<p>ダウンロードしたファイルを指定した名前で保存します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>latest-firefox.dmg<span style="color: #F8F8F8"> </span>https://download.mozilla.org/?product<span style="color: #CE5C00; font-weight: bold">=</span>firefox-latest
+<span style="color: #000; font-style: italic">--2025-04-30 10:15:23--  https://download.mozilla.org/?product=firefox-latest</span>
+<span style="color: #000; font-style: italic">ファイル &#39;latest-firefox.dmg&#39; に保存中</span>
 </pre></div>
 <h3><strong>-c, --continue</strong></h3>
-<p>部分的にダウンロードされたファイルの続きからダウンロードを再開します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>https://example.com/largefile.iso
-<span style="color: #000; font-style: italic">--2023-04-01 12:05:00--  https://example.com/largefile.iso</span>
-<span style="color: #000; font-style: italic">Resolving example.com... 93.184.216.34</span>
-<span style="color: #000; font-style: italic">Connecting to example.com|93.184.216.34|:443... connected.</span>
-<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 206 Partial Content</span>
-<span style="color: #000; font-style: italic">Length: 104857600 (100M), 52428800 (50M) remaining [application/octet-stream]</span>
-<span style="color: #000; font-style: italic">Saving to: &#39;largefile.iso&#39;</span>
-
-<span style="color: #000; font-style: italic">largefile.iso   50%[========&gt;         ]  50.0M   1.2MB/s    eta 41s</span>
+<p>部分的にダウンロードされたファイルの続きからダウンロードを再開します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>https://example.com/largefile.zip
+<span style="color: #000; font-style: italic">--2025-04-30 10:16:45--  https://example.com/largefile.zip</span>
+<span style="color: #000; font-style: italic">ファイル &#39;largefile.zip&#39; の続きからダウンロードを再開します</span>
+</pre></div>
+<h3><strong>-b, --background</strong></h3>
+<p>バックグラウンドでダウンロードを実行します。ログは <code>wget-log</code> ファイルに保存されます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>https://example.com/largefile.iso
+<span style="color: #000; font-style: italic">バックグラウンドで実行を継続します。pid 1234</span>
+<span style="color: #000; font-style: italic">ログは &#39;wget-log&#39; に出力されます</span>
 </pre></div>
 <h3><strong>-r, --recursive</strong></h3>
-<p>ウェブサイトを再帰的にダウンロードします</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>https://example.com/docs/
-<span style="color: #000; font-style: italic">--2023-04-01 12:02:00--  https://example.com/docs/</span>
-<span style="color: #000; font-style: italic">Resolving example.com... 93.184.216.34</span>
-<span style="color: #000; font-style: italic">Connecting to example.com|93.184.216.34|:443... connected.</span>
-<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 200 OK</span>
-<span style="color: #000; font-style: italic">Length: 5120 (5.0K) [text/html]</span>
-<span style="color: #000; font-style: italic">Saving to: &#39;example.com/docs/index.html&#39;</span>
-
-<span style="color: #000; font-style: italic">example.com/docs/index.html    100%[===================&gt;]   5.0K   --.-KB/s    in 0.1s</span>
+<p>リンクを再帰的にたどってダウンロードします。ウェブサイト全体をダウンロードする際に使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>-np<span style="color: #F8F8F8"> </span>https://example.com/docs/
+<span style="color: #000; font-style: italic">--2025-04-30 10:18:12--  https://example.com/docs/</span>
+<span style="color: #000; font-style: italic">ディレクトリ &#39;example.com/docs/&#39; を再帰的にダウンロードしています</span>
+</pre></div>
+<h3><strong>-np, --no-parent</strong></h3>
+<p>親ディレクトリへのリンクをたどらないようにします。特定のディレクトリ以下のみをダウンロードする場合に便利です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>-np<span style="color: #F8F8F8"> </span>https://example.com/docs/
+<span style="color: #000; font-style: italic">--2025-04-30 10:19:30--  https://example.com/docs/</span>
+<span style="color: #000; font-style: italic">親ディレクトリへのリンクは無視されます</span>
 </pre></div>
 <h3><strong>-P, --directory-prefix=PREFIX</strong></h3>
-<p>ファイルを保存するディレクトリを指定します</p>
+<p>ダウンロードしたファイルを指定したディレクトリに保存します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span>downloads/<span style="color: #F8F8F8"> </span>https://example.com/file.zip
-<span style="color: #000; font-style: italic">--2023-04-01 12:10:00--  https://example.com/file.zip</span>
-<span style="color: #000; font-style: italic">Resolving example.com... 93.184.216.34</span>
-<span style="color: #000; font-style: italic">Connecting to example.com|93.184.216.34|:443... connected.</span>
-<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 200 OK</span>
-<span style="color: #000; font-style: italic">Length: 1024000 (1000K) [application/zip]</span>
-<span style="color: #000; font-style: italic">Saving to: &#39;downloads/file.zip&#39;</span>
-
-<span style="color: #000; font-style: italic">downloads/file.zip  100%[===================&gt;]   1000K   256KB/s    in 3.9s</span>
+<span style="color: #000; font-style: italic">--2025-04-30 10:20:45--  https://example.com/file.zip</span>
+<span style="color: #000; font-style: italic">ファイルを &#39;downloads/file.zip&#39; に保存中</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的なファイルのダウンロード</h3>
+<h3>単一ファイルのダウンロード</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>https://example.com/file.zip
-<span style="color: #000; font-style: italic">--2023-04-01 12:00:00--  https://example.com/file.zip</span>
-<span style="color: #000; font-style: italic">Resolving example.com... 93.184.216.34</span>
-<span style="color: #000; font-style: italic">Connecting to example.com|93.184.216.34|:443... connected.</span>
-<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 200 OK</span>
-<span style="color: #000; font-style: italic">Length: 1024000 (1000K) [application/zip]</span>
-<span style="color: #000; font-style: italic">Saving to: &#39;file.zip&#39;</span>
-
-<span style="color: #000; font-style: italic">file.zip            100%[===================&gt;]   1000K   256KB/s    in 3.9s    </span>
-
-<span style="color: #000; font-style: italic">2023-04-01 12:00:04 (256 KB/s) - &#39;file.zip&#39; saved [1024000/1024000]</span>
+<span style="color: #000; font-style: italic">--2025-04-30 10:22:10--  https://example.com/file.zip</span>
+<span style="color: #000; font-style: italic">ファイル &#39;file.zip&#39; に保存中</span>
+<span style="color: #000; font-style: italic">100%[======================================&gt;] 1,234,567   1.2MB/s   in 1.0s</span>
+<span style="color: #000; font-style: italic">2025-04-30 10:22:11 (1.2 MB/s) - &#39;file.zip&#39; へ保存完了 [1234567]</span>
 </pre></div>
-<h3>ウェブサイトの再帰的ダウンロード（深さと親ディレクトリ制限付き）</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>-np<span style="color: #F8F8F8"> </span>https://example.com/docs/
-<span style="color: #000; font-style: italic">--2023-04-01 12:02:00--  https://example.com/docs/</span>
-<span style="color: #000; font-style: italic">Resolving example.com... 93.184.216.34</span>
-<span style="color: #000; font-style: italic">Connecting to example.com|93.184.216.34|:443... connected.</span>
-<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 200 OK</span>
-<span style="color: #000; font-style: italic">Length: 5120 (5.0K) [text/html]</span>
-<span style="color: #000; font-style: italic">Saving to: &#39;example.com/docs/index.html&#39;</span>
-
-<span style="color: #000; font-style: italic">example.com/docs/index.html    100%[===================&gt;]   5.0K   --.-KB/s    in 0.1s    </span>
-
-<span style="color: #000; font-style: italic">2023-04-01 12:02:01 (50.0 KB/s) - &#39;example.com/docs/index.html&#39; saved [5120/5120]</span>
+<h3>ウェブサイトのミラーリング</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>https://example.com/
+<span style="color: #000; font-style: italic">--2025-04-30 10:23:30--  https://example.com/</span>
+<span style="color: #000; font-style: italic">ウェブサイトをミラーリングしています</span>
+<span style="color: #000; font-style: italic">リンクを変換しています...</span>
 </pre></div>
+<h3>認証が必要なサイトからのダウンロード</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>--user<span style="color: #CE5C00; font-weight: bold">=</span>username<span style="color: #F8F8F8"> </span>--password<span style="color: #CE5C00; font-weight: bold">=</span>password<span style="color: #F8F8F8"> </span>https://secure-example.com/private/file.pdf
+<span style="color: #000; font-style: italic">--2025-04-30 10:25:15--  https://secure-example.com/private/file.pdf</span>
+<span style="color: #000; font-style: italic">ユーザー名/パスワードによる認証中...</span>
+</pre></div>
+<h3>複数URLのダウンロード（ファイルからURLリストを読み込む）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>url-list.txt
+<span style="color: #000; font-style: italic">--2025-04-30 10:26:40--  https://example.com/file1.zip</span>
+<span style="color: #000; font-style: italic">ファイル &#39;file1.zip&#39; に保存中</span>
+<span style="color: #000; font-style: italic">--2025-04-30 10:26:45--  https://example.com/file2.zip</span>
+<span style="color: #000; font-style: italic">ファイル &#39;file2.zip&#39; に保存中</span>
+</pre></div>
+<h2>ヒント:</h2>
 <h3>ダウンロード速度の制限</h3>
+<p>帯域幅を節約したい場合は、<code>--limit-rate</code>オプションを使用してダウンロード速度を制限できます。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>--limit-rate<span style="color: #CE5C00; font-weight: bold">=</span>200k<span style="color: #F8F8F8"> </span>https://example.com/largefile.iso
-<span style="color: #000; font-style: italic">--2023-04-01 12:15:00--  https://example.com/largefile.iso</span>
-<span style="color: #000; font-style: italic">Resolving example.com... 93.184.216.34</span>
-<span style="color: #000; font-style: italic">Connecting to example.com|93.184.216.34|:443... connected.</span>
-<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 200 OK</span>
-<span style="color: #000; font-style: italic">Length: 104857600 (100M) [application/octet-stream]</span>
-<span style="color: #000; font-style: italic">Saving to: &#39;largefile.iso&#39;</span>
-
-<span style="color: #000; font-style: italic">largefile.iso   10%[===&gt;              ]  10.0M   200KB/s    eta 7m 30s</span>
 </pre></div>
-<h2>Tips</h2>
-<h3>バックグラウンドでのダウンロード</h3>
-<p><code>-b</code>オプションを使用すると、ダウンロードをバックグラウンドで実行できます。進行状況は<code>wget-log</code>ファイルに記録されます。</p>
-<h3>複数ファイルのダウンロード</h3>
-<p>URLリストを含むファイルを作成し、<code>-i</code>オプションで指定すると、複数のファイルを一度にダウンロードできます。</p>
-<h3>ミラーリング</h3>
-<p><code>--mirror</code>オプションは、<code>-r -N -l inf --no-remove-listing</code>の組み合わせで、サイトの完全なミラーを作成します。</p>
+<h3>ユーザーエージェントの変更</h3>
+<p>一部のウェブサイトはブラウザからのアクセスのみを許可しています。<code>--user-agent</code>オプションでブラウザのふりをすることができます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>--user-agent<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;Mozilla/5.0&quot;</span><span style="color: #F8F8F8"> </span>https://example.com/restricted-file.zip
+</pre></div>
+<h3>再試行回数の設定</h3>
+<p>不安定なネットワーク環境では、<code>--tries</code>オプションで再試行回数を増やすことができます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>--tries<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>https://example.com/important-file.zip
+</pre></div>
+<h3>ダウンロード履歴の保存</h3>
+<p><code>-o</code>オプションを使用して、ダウンロードの詳細なログを保存できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>download.log<span style="color: #F8F8F8"> </span>https://example.com/file.zip
+</pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. ダウンロードが途中で中断された場合はどうすればよいですか？</h4>
-<p>A. <code>-c</code>オプションを使用すると、中断されたダウンロードを続きから再開できます。例：<code>wget -c https://example.com/largefile.iso</code></p>
-<h4>Q2. ウェブサイト全体をダウンロードするにはどうすればよいですか？</h4>
-<p>A. <code>-r</code>（再帰的）、<code>-np</code>（親ディレクトリに移動しない）、<code>-l</code>（深さレベル）オプションを組み合わせて使用します。例：<code>wget -r -np -l 2 https://example.com/</code></p>
-<h4>Q3. ダウンロードをバックグラウンドで実行するにはどうすればよいですか？</h4>
-<p>A. <code>-b</code>オプションを使用します。進行状況は<code>wget-log</code>ファイルに記録されます。例：<code>wget -b https://example.com/file.zip</code></p>
-<h4>Q4. 認証が必要なサイトからダウンロードするにはどうすればよいですか？</h4>
-<p>A. <code>--user=USER</code>と<code>--password=PASS</code>オプションを使用します。例：<code>wget --user=username --password=password https://example.com/private/file.zip</code></p>
+<h4>Q1. wgetとcurlの違いは何ですか？</h4>
+<p>A. <code>wget</code>は主にファイルのダウンロードに特化しており、再帰的なダウンロードやダウンロードの再開機能があります。一方、<code>curl</code>はより多くのプロトコルをサポートし、データの送信にも使用できますが、再帰的なダウンロードは標準では行いません。</p>
+<h4>Q2. ダウンロードが途中で中断された場合、どうすればよいですか？</h4>
+<p>A. <code>-c</code>（または<code>--continue</code>）オプションを使用すると、部分的にダウンロードされたファイルの続きからダウンロードを再開できます。</p>
+<h4>Q3. ウェブサイト全体をダウンロードするにはどうすればよいですか？</h4>
+<p>A. <code>-m</code>（または<code>--mirror</code>）オプションを使用します。これは<code>-r -N -l inf --no-remove-listing</code>の組み合わせと同等です。さらに<code>-k</code>（リンク変換）と<code>-p</code>（必要なファイルも取得）を追加するとオフライン閲覧に適しています。</p>
+<h4>Q4. HTTPSサイトの証明書エラーを無視するにはどうすればよいですか？</h4>
+<p>A. <code>--no-check-certificate</code>オプションを使用できますが、セキュリティ上のリスクがあるため注意が必要です。</p>
 <h2>macOSでの注意点</h2>
-<p>macOSでは、デフォルトではwgetがインストールされていません。Homebrewを使用して最新版のwgetをインストールできます：</p>
+<p>macOSにはデフォルトで<code>wget</code>がインストールされていません。Homebrewを使用してインストールできます：</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>brew<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>wget
 </pre></div>
-<p>インストール後は、他のUnixシステムと同様に使用できます。</p>
+<p>また、macOSのセキュリティ設定によっては、ダウンロードしたファイルの実行に追加の許可が必要な場合があります。</p>
 <h2>参考資料</h2>
 <p>https://www.gnu.org/software/wget/manual/wget.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/26 Tipsセクションを追加し、macOSでの注意点を独立したセクションに移動しました。</li>
-<li>2025/04/26 コマンドの概要を追加し、ドキュメント形式を改善しました。</li>
-<li>2025/04/01 ドキュメント形式を統一し、よくある質問と追加情報を整理しました。macOSに関する情報を追加しました。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

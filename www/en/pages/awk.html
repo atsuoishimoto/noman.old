@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  awk - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>awk command</h1>
+<p>Process text files line by line, applying pattern-matching and transformations.</p>
+<h2>Overview</h2>
+<p><code>awk</code> is a powerful text processing tool that treats each line of input as a record and each word as a field. It allows you to search for specific patterns in files and perform actions on matching lines. <code>awk</code> is particularly useful for extracting and manipulating structured data, generating reports, and transforming text files.</p>
+<h2>Options</h2>
+<h3><strong>-F</strong> (Field Separator)</h3>
+<p>Specifies the character or regular expression used to separate fields</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;apple,orange,banana&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>awk<span style="color: #F8F8F8"> </span>-F,<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{print $2}&#39;</span>
+<span style="color: #000; font-style: italic">orange</span>
+</pre></div>
+<h3><strong>-v</strong> (Variable Assignment)</h3>
+<p>Assigns a value to an <code>awk</code> variable before processing begins</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;John&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{print &quot;Hello, &quot; name &quot;!&quot;}&#39;</span>
+<span style="color: #000; font-style: italic">Hello, John!</span>
+</pre></div>
+<h3><strong>-f</strong> (File)</h3>
+<p>Reads the <code>awk</code> program from a file instead of from the command line</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>script.awk
+<span style="color: #000; font-style: italic">{print $1}</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hello world&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>awk<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>script.awk
+<span style="color: #000; font-style: italic">hello</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic Field Printing</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;John Smith 42&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>awk<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{print $1, $2}&#39;</span>
+<span style="color: #000; font-style: italic">John Smith</span>
+</pre></div>
+<h3>Pattern Matching</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>awk<span style="color: #F8F8F8"> </span>-F:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;/root/ {print $1, $6}&#39;</span>
+<span style="color: #000; font-style: italic">root /root</span>
+</pre></div>
+<h3>Calculations with Fields</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.txt
+<span style="color: #000; font-style: italic">Item1 10 5</span>
+<span style="color: #000; font-style: italic">Item2 15 3</span>
+<span style="color: #000; font-style: italic">Item3 20 8</span>
+<span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{print $1, $2 * $3}&#39;</span><span style="color: #F8F8F8"> </span>data.txt
+<span style="color: #000; font-style: italic">Item1 50</span>
+<span style="color: #000; font-style: italic">Item2 45</span>
+<span style="color: #000; font-style: italic">Item3 160</span>
+</pre></div>
+<h3>Built-in Variables</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>names.txt
+<span style="color: #000; font-style: italic">Alice</span>
+<span style="color: #000; font-style: italic">Bob</span>
+<span style="color: #000; font-style: italic">Charlie</span>
+<span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{print NR &quot;: &quot; $1}&#39;</span><span style="color: #F8F8F8"> </span>names.txt
+<span style="color: #000; font-style: italic">1: Alice</span>
+<span style="color: #000; font-style: italic">2: Bob</span>
+<span style="color: #000; font-style: italic">3: Charlie</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Understanding Field Variables</h3>
+<p>In <code>awk</code>, <code>$1</code> refers to the first field, <code>$2</code> to the second, and so on. <code>$0</code> represents the entire line. This makes extracting specific columns of data very straightforward.</p>
+<h3>Using BEGIN and END Blocks</h3>
+<p>The <code>BEGIN</code> block executes before processing any input, and the <code>END</code> block executes after all input is processed. These are useful for initialization and summary operations:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;BEGIN {sum=0} {sum+=$1} END {print &quot;Sum:&quot;, sum}&#39;</span><span style="color: #F8F8F8"> </span>numbers.txt
+<span style="color: #000; font-style: italic">Sum: 156</span>
+</pre></div>
+<h3>Multiple Commands</h3>
+<p>Separate multiple commands with semicolons within the action block:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{count++; sum+=$1} END {print &quot;Count:&quot;, count, &quot;Average:&quot;, sum/count}&#39;</span><span style="color: #F8F8F8"> </span>data.txt
+<span style="color: #000; font-style: italic">Count: 10 Average: 15.6</span>
+</pre></div>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between <code>awk</code>, <code>sed</code>, and <code>grep</code>?</h4>
+<p>A. While <code>grep</code> searches for patterns, and <code>sed</code> performs text substitutions, <code>awk</code> is designed for structured data processing with fields and records, making it more powerful for complex text manipulation.</p>
+<h4>Q2. How do I use regular expressions in <code>awk</code>?</h4>
+<p>A. Regular expressions are placed between slashes: <code>awk '/pattern/ {action}'</code>. For example, <code>awk '/^[0-9]+/ {print $0}'</code> prints lines starting with numbers.</p>
+<h4>Q3. Can <code>awk</code> read from multiple files?</h4>
+<p>A. Yes, simply list the files after the <code>awk</code> command: <code>awk '{print $1}' file1.txt file2.txt</code>.</p>
+<h4>Q4. How do I format output in <code>awk</code>?</h4>
+<p>A. Use <code>printf</code> for formatted output: <code>awk '{printf &quot;%-10s %5d\n&quot;, $1, $2}'</code> creates columns with specific widths.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/gawk/manual/gawk.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

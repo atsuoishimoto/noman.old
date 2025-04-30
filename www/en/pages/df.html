@@ -46,81 +46,77 @@
   <div class="content">
     <main>
       
-  <h1>df</h1>
-<p><code>df</code> (disk free) displays information about disk space usage on mounted filesystems, showing available and used space.</p>
+  <h1>df command</h1>
+<p>Display free disk space on the file system.</p>
+<h2>Overview</h2>
+<p>The <code>df</code> command reports file system disk space usage, showing the amount of used and available space on mounted file systems. It helps monitor disk usage and identify file systems that are running low on space.</p>
 <h2>Options</h2>
-<h3><strong>-h (human-readable)</strong></h3>
-<p>Displays sizes in human-readable format (KB, MB, GB) instead of blocks.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>df<span style="color: #F8F8F8"> </span>-h
-Filesystem<span style="color: #F8F8F8">      </span>Size<span style="color: #F8F8F8">  </span>Used<span style="color: #F8F8F8"> </span>Avail<span style="color: #F8F8F8"> </span>Use%<span style="color: #F8F8F8"> </span>Mounted<span style="color: #F8F8F8"> </span>on
-/dev/sda1<span style="color: #F8F8F8">        </span>20G<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">7</span>.8G<span style="color: #F8F8F8">   </span>11G<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">42</span>%<span style="color: #F8F8F8"> </span>/
-tmpfs<span style="color: #F8F8F8">           </span><span style="color: #0000CF; font-weight: bold">3</span>.9G<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">3</span>.9G<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">0</span>%<span style="color: #F8F8F8"> </span>/dev/shm
-/dev/sda3<span style="color: #F8F8F8">       </span>435G<span style="color: #F8F8F8">  </span>144G<span style="color: #F8F8F8">  </span>269G<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">35</span>%<span style="color: #F8F8F8"> </span>/home
+<h3><strong>-h, --human-readable</strong></h3>
+<p>Display sizes in human-readable format (e.g., KB, MB, GB) instead of blocks.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>df<span style="color: #F8F8F8"> </span>-h
+<span style="color: #000; font-style: italic">Filesystem      Size  Used Avail Use% Mounted on</span>
+<span style="color: #000; font-style: italic">/dev/sda1        20G   12G  6.8G  64% /</span>
+<span style="color: #000; font-style: italic">tmpfs           3.9G     0  3.9G   0% /dev/shm</span>
+<span style="color: #000; font-style: italic">/dev/sda2       450G  298G  130G  70% /home</span>
 </pre></div>
-<h3><strong>-T (file system type)</strong></h3>
-<p>Shows the filesystem type for each mounted filesystem.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>df<span style="color: #F8F8F8"> </span>-T
-Filesystem<span style="color: #F8F8F8">     </span>Type<span style="color: #F8F8F8">     </span>1K-blocks<span style="color: #F8F8F8">     </span>Used<span style="color: #F8F8F8"> </span>Available<span style="color: #F8F8F8"> </span>Use%<span style="color: #F8F8F8"> </span>Mounted<span style="color: #F8F8F8"> </span>on
-/dev/sda1<span style="color: #F8F8F8">      </span>ext4<span style="color: #F8F8F8">      </span><span style="color: #0000CF; font-weight: bold">20971520</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">8126464</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">11714816</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">42</span>%<span style="color: #F8F8F8"> </span>/
-tmpfs<span style="color: #F8F8F8">          </span>tmpfs<span style="color: #F8F8F8">      </span><span style="color: #0000CF; font-weight: bold">4017024</span><span style="color: #F8F8F8">        </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">4017024</span><span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">0</span>%<span style="color: #F8F8F8"> </span>/dev/shm
-/dev/sda3<span style="color: #F8F8F8">      </span>ext4<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">455358464</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">150323200</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">281845760</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">35</span>%<span style="color: #F8F8F8"> </span>/home
+<h3><strong>-T, --print-type</strong></h3>
+<p>Show the file system type for each mount point.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>df<span style="color: #F8F8F8"> </span>-T
+<span style="color: #000; font-style: italic">Filesystem     Type     1K-blocks     Used Available Use% Mounted on</span>
+<span style="color: #000; font-style: italic">/dev/sda1      ext4      20971520 12582912   7077888  64% /</span>
+<span style="color: #000; font-style: italic">tmpfs          tmpfs      4096000        0   4096000   0% /dev/shm</span>
+<span style="color: #000; font-style: italic">/dev/sda2      ext4     471859200 312475648 136314880  70% /home</span>
 </pre></div>
-<h3><strong>-i (inodes)</strong></h3>
-<p>Displays inode usage information instead of block usage.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>df<span style="color: #F8F8F8"> </span>-i
-Filesystem<span style="color: #F8F8F8">      </span>Inodes<span style="color: #F8F8F8">  </span>IUsed<span style="color: #F8F8F8">    </span>IFree<span style="color: #F8F8F8"> </span>IUse%<span style="color: #F8F8F8"> </span>Mounted<span style="color: #F8F8F8"> </span>on
-/dev/sda1<span style="color: #F8F8F8">      </span><span style="color: #0000CF; font-weight: bold">1310720</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">248955</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">1061765</span><span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">19</span>%<span style="color: #F8F8F8"> </span>/
-tmpfs<span style="color: #F8F8F8">          </span><span style="color: #0000CF; font-weight: bold">1004256</span><span style="color: #F8F8F8">      </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">1004255</span><span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">1</span>%<span style="color: #F8F8F8"> </span>/dev/shm
-/dev/sda3<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">28835840</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">845291</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">27990549</span><span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">3</span>%<span style="color: #F8F8F8"> </span>/home
-</pre></div>
-<h3><strong>-a (all)</strong></h3>
-<p>Shows all filesystems, including those with 0 blocks or that are normally hidden.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>df<span style="color: #F8F8F8"> </span>-a
-Filesystem<span style="color: #F8F8F8">     </span>1K-blocks<span style="color: #F8F8F8">     </span>Used<span style="color: #F8F8F8"> </span>Available<span style="color: #F8F8F8"> </span>Use%<span style="color: #F8F8F8"> </span>Mounted<span style="color: #F8F8F8"> </span>on
-/dev/sda1<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">20971520</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">8126464</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">11714816</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">42</span>%<span style="color: #F8F8F8"> </span>/
-proc<span style="color: #F8F8F8">                   </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">        </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">         </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">    </span>-<span style="color: #F8F8F8"> </span>/proc
-sysfs<span style="color: #F8F8F8">                  </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">        </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">         </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">    </span>-<span style="color: #F8F8F8"> </span>/sys
-tmpfs<span style="color: #F8F8F8">            </span><span style="color: #0000CF; font-weight: bold">4017024</span><span style="color: #F8F8F8">        </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">4017024</span><span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">0</span>%<span style="color: #F8F8F8"> </span>/dev/shm
-/dev/sda3<span style="color: #F8F8F8">      </span><span style="color: #0000CF; font-weight: bold">455358464</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">150323200</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">281845760</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">35</span>%<span style="color: #F8F8F8"> </span>/home
+<h3><strong>-i, --inodes</strong></h3>
+<p>Display inode information instead of block usage.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>df<span style="color: #F8F8F8"> </span>-i
+<span style="color: #000; font-style: italic">Filesystem      Inodes  IUsed    IFree IUse% Mounted on</span>
+<span style="color: #000; font-style: italic">/dev/sda1      1310720 248930  1061790   19% /</span>
+<span style="color: #000; font-style: italic">tmpfs          1024000     12  1023988    1% /dev/shm</span>
+<span style="color: #000; font-style: italic">/dev/sda2      29491200 983041 28508159    4% /home</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic usage with human-readable format</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>df<span style="color: #F8F8F8"> </span>-h
-Filesystem<span style="color: #F8F8F8">      </span>Size<span style="color: #F8F8F8">  </span>Used<span style="color: #F8F8F8"> </span>Avail<span style="color: #F8F8F8"> </span>Use%<span style="color: #F8F8F8"> </span>Mounted<span style="color: #F8F8F8"> </span>on
-/dev/sda1<span style="color: #F8F8F8">        </span>20G<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">7</span>.8G<span style="color: #F8F8F8">   </span>11G<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">42</span>%<span style="color: #F8F8F8"> </span>/
-tmpfs<span style="color: #F8F8F8">           </span><span style="color: #0000CF; font-weight: bold">3</span>.9G<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">3</span>.9G<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">0</span>%<span style="color: #F8F8F8"> </span>/dev/shm
-/dev/sda3<span style="color: #F8F8F8">       </span>435G<span style="color: #F8F8F8">  </span>144G<span style="color: #F8F8F8">  </span>269G<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">35</span>%<span style="color: #F8F8F8"> </span>/home
+<h3>Check space on a specific file system</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>df<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>/home
+<span style="color: #000; font-style: italic">Filesystem      Size  Used Avail Use% Mounted on</span>
+<span style="color: #000; font-style: italic">/dev/sda2       450G  298G  130G  70% /home</span>
 </pre></div>
-<h3>Check space on a specific filesystem</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>df<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>/home
-Filesystem<span style="color: #F8F8F8">      </span>Size<span style="color: #F8F8F8">  </span>Used<span style="color: #F8F8F8"> </span>Avail<span style="color: #F8F8F8"> </span>Use%<span style="color: #F8F8F8"> </span>Mounted<span style="color: #F8F8F8"> </span>on
-/dev/sda3<span style="color: #F8F8F8">       </span>435G<span style="color: #F8F8F8">  </span>144G<span style="color: #F8F8F8">  </span>269G<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">35</span>%<span style="color: #F8F8F8"> </span>/home
+<h3>Combine options for comprehensive output</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>df<span style="color: #F8F8F8"> </span>-hT
+<span style="color: #000; font-style: italic">Filesystem     Type   Size  Used Avail Use% Mounted on</span>
+<span style="color: #000; font-style: italic">/dev/sda1      ext4    20G   12G  6.8G  64% /</span>
+<span style="color: #000; font-style: italic">tmpfs          tmpfs  3.9G     0  3.9G   0% /dev/shm</span>
+<span style="color: #000; font-style: italic">/dev/sda2      ext4   450G  298G  130G  70% /home</span>
 </pre></div>
-<h3>Combining options for detailed output</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>df<span style="color: #F8F8F8"> </span>-hT
-Filesystem<span style="color: #F8F8F8">     </span>Type<span style="color: #F8F8F8">   </span>Size<span style="color: #F8F8F8">  </span>Used<span style="color: #F8F8F8"> </span>Avail<span style="color: #F8F8F8"> </span>Use%<span style="color: #F8F8F8"> </span>Mounted<span style="color: #F8F8F8"> </span>on
-/dev/sda1<span style="color: #F8F8F8">      </span>ext4<span style="color: #F8F8F8">    </span>20G<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">7</span>.8G<span style="color: #F8F8F8">   </span>11G<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">42</span>%<span style="color: #F8F8F8"> </span>/
-tmpfs<span style="color: #F8F8F8">          </span>tmpfs<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">3</span>.9G<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">3</span>.9G<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">0</span>%<span style="color: #F8F8F8"> </span>/dev/shm
-/dev/sda3<span style="color: #F8F8F8">      </span>ext4<span style="color: #F8F8F8">   </span>435G<span style="color: #F8F8F8">  </span>144G<span style="color: #F8F8F8">  </span>269G<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">35</span>%<span style="color: #F8F8F8"> </span>/home
-</pre></div>
+<h2>Tips</h2>
+<h3>Focus on Important File Systems</h3>
+<p>Use <code>df -h | grep -v tmpfs</code> to exclude temporary file systems and focus on physical disks.</p>
+<h3>Check Inode Usage</h3>
+<p>Sometimes a file system appears to have space but can't create new files. Use <code>df -i</code> to check if you're running out of inodes, which can happen with many small files.</p>
+<h3>Combine with Sort</h3>
+<p>Use <code>df -h | sort -k 5 -h</code> to sort file systems by usage percentage, helping identify the most filled partitions.</p>
 <h2>Frequently Asked Questions</h2>
-<h3>Q1. What does the &quot;Use%&quot; column mean?</h3>
-<p>A. It shows the percentage of the filesystem's capacity that is currently in use.</p>
-<h3>Q2. How can I check disk space for a specific directory?</h3>
-<p>A. <code>df</code> shows information for filesystems, not directories. Use <code>df -h /path/to/directory</code> to see the filesystem containing that directory.</p>
-<h3>Q3. Why does <code>df</code> show different values than what I expect?</h3>
-<p>A. Some space is reserved for the system (typically 5% on Linux), and filesystem overhead also uses space.</p>
-<h3>Q4. How do I check inode usage?</h3>
-<p>A. Use <code>df -i</code> to display inode usage instead of block usage.</p>
-<h2>Additional Notes</h2>
+<h4>Q1. What's the difference between <code>df</code> and <code>du</code>?</h4>
+<p>A. <code>df</code> shows disk space usage at the file system level, while <code>du</code> shows disk usage at the directory/file level.</p>
+<h4>Q2. Why does <code>df</code> show different available space than my file manager?</h4>
+<p>A. Most file systems reserve some space for the root user (typically 5%), which <code>df</code> includes in its calculations.</p>
+<h4>Q3. How do I check disk space on a specific directory?</h4>
+<p>A. <code>df</code> reports on file systems, not directories. Use <code>du -sh /path/to/directory</code> to check space used by a specific directory.</p>
+<h4>Q4. Why does <code>df</code> show 100% usage but I can still write files?</h4>
+<p>A. Reserved space for the root user allows the system to continue functioning even when user space is full.</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, <code>df</code> behaves slightly differently:</p>
 <ul>
-<li>On macOS, the output format may differ slightly from Linux systems.</li>
-<li>The <code>-P</code> option ensures POSIX output format for better compatibility across systems.</li>
-<li>Running out of inodes can prevent file creation even when disk space is available, so check both space and inodes when troubleshooting storage issues.</li>
-<li>Modern filesystems may report slightly different values than actual physical storage due to compression, deduplication, or thin provisioning.</li>
+<li>The default output uses 512-byte blocks instead of 1K blocks</li>
+<li>Use <code>df -h</code> to get human-readable output similar to Linux</li>
+<li>macOS doesn't support all GNU options; <code>-T</code> may not work as expected</li>
 </ul>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/df-invocation.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
 
 
     </main>

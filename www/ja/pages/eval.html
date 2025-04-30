@@ -46,56 +46,69 @@
   <div class="content">
     <main>
       
-  <h1>eval</h1>
-<p><code>eval</code> コマンドは、引数を連結して単一のコマンドとして実行するシェル組み込みコマンドです。変数の間接参照や動的なコマンド生成に特に役立ちます。</p>
+  <h1>eval コマンド</h1>
+<p>シェル内で文字列をコマンドとして評価・実行します。</p>
+<h2>概要</h2>
+<p><code>eval</code> コマンドは、与えられた引数を連結して単一の文字列を形成し、それをシェルコマンドとして実行します。これは変数の間接参照や動的にコマンドを生成する場合に特に役立ちます。シェルスクリプトで変数展開を二重に行いたい場合や、動的に生成されたコマンドを実行したい場合に使用されます。</p>
 <h2>オプション</h2>
-<p><code>eval</code> コマンド自体には特別なオプションはありません。引数として渡されたコマンドが実行されます。</p>
+<p><code>eval</code> コマンド自体には特別なオプションはありません。引数として渡された文字列がそのままコマンドとして評価されます。</p>
 <h2>使用例</h2>
 <h3>基本的な使用法</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;echo Hello, World!&quot;</span>
-Hello,<span style="color: #F8F8F8"> </span>World!
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">command</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;echo Hello, World!&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #000">$command</span>
+<span style="color: #000; font-style: italic">Hello, World!</span>
 </pre></div>
 <h3>変数の間接参照</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;value&quot;</span>
-$<span style="color: #F8F8F8"> </span><span style="color: #000">ref</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;name&quot;</span>
-$<span style="color: #F8F8F8"> </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\$</span><span style="color: #000">$ref</span>
-value
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;user&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">user</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;John&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\$</span><span style="color: #000">$name</span>
+<span style="color: #000; font-style: italic">John</span>
 </pre></div>
-<p>変数 <code>ref</code> が指す変数 <code>name</code> の値を取得している。</p>
 <h3>動的なコマンド生成</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #000">command</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;ls -la&quot;</span>
-$<span style="color: #F8F8F8"> </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #000">$command</span>
-total<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">32</span>
-drwxr-xr-x<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8">  </span>staff<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">160</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span>:30<span style="color: #F8F8F8"> </span>.
-drwxr-xr-x<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8">  </span>staff<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">96</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">9</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">14</span>:22<span style="color: #F8F8F8"> </span>..
--rw-r--r--<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8">  </span>staff<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">1024</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span>:30<span style="color: #F8F8F8"> </span>document.txt
-drwxr-xr-x<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8">  </span>staff<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">96</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">9</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">14</span>:22<span style="color: #F8F8F8"> </span>projects
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">operation</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;ls&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">options</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;-la&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">directory</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;/tmp&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$operation</span><span style="color: #4E9A06"> </span><span style="color: #000">$options</span><span style="color: #4E9A06"> </span><span style="color: #000">$directory</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">total 8</span>
+<span style="color: #000; font-style: italic">drwxrwxrwt 5 root  wheel  160 4月 30 10:15 .</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x 6 root  wheel  192 4月 30 10:15 ..</span>
+<span style="color: #000; font-style: italic">drwx------ 3 john  staff   96 4月 30 10:15 com.apple.launchd.xxxxx</span>
 </pre></div>
-<p>変数に格納されたコマンドを実行している。</p>
-<h3>複雑な置換を含むコマンド</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #000">files</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;file1.txt file2.txt&quot;</span>
-$<span style="color: #F8F8F8"> </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ls -l </span><span style="color: #000">$files</span><span style="color: #4E9A06">&quot;</span>
--rw-r--r--<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8">  </span>staff<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span>:30<span style="color: #F8F8F8"> </span>file1.txt
--rw-r--r--<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8">  </span>staff<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">200</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span>:40<span style="color: #F8F8F8"> </span>file2.txt
+<h3>パイプやリダイレクトを含むコマンド</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">cmd</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;ls -l | grep .txt &gt; file_list.txt&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #000">$cmd</span>
+<span style="color: #8F5902"># </span>.txtファイルのリストがfile_list.txtに保存される
 </pre></div>
-<p>変数展開を含むコマンドを実行している。</p>
+<h2>ヒント:</h2>
+<h3>引用符の使用に注意</h3>
+<p><code>eval</code> に渡す文字列内の引用符は適切にエスケープする必要があります。そうしないと予期しない動作が発生する可能性があります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;echo \&quot;This is properly escaped\&quot;&quot;</span>
+<span style="color: #000; font-style: italic">This is properly escaped</span>
+</pre></div>
+<h3>セキュリティリスク</h3>
+<p>ユーザー入力を直接 <code>eval</code> に渡すことは避けてください。これはコマンドインジェクション攻撃の原因となる可能性があります。</p>
+<h3>変数展開の順序</h3>
+<p><code>eval</code> を使用すると、変数は2回展開されます。最初にコマンドラインが解析されるとき、次に <code>eval</code> によって解析されるときです。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">var1</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;Hello&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">var2</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&#39;$var1&#39;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$var2</span>
+<span style="color: #8F5902">$</span>var1
+<span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$var2</span>
+<span style="color: #000; font-style: italic">Hello</span>
+</pre></div>
 <h2>よくある質問</h2>
-<h3>Q1. <code>eval</code> はどのような時に使うべきですか？</h3>
-<p>A. 変数の間接参照が必要な場合や、動的に生成されたコマンドを実行する場合に使います。特に、変数に格納された変数名を参照したい時に便利です。</p>
-<h3>Q2. <code>eval</code> の使用にはどのようなリスクがありますか？</h3>
-<p>A. ユーザー入力を直接 <code>eval</code> に渡すと、コマンドインジェクション攻撃のリスクがあります。信頼できない入力を <code>eval</code> で実行しないようにしましょう。</p>
-<h3>Q3. <code>eval</code> と通常のコマンド実行の違いは何ですか？</h3>
-<p>A. 通常のコマンド実行では一度だけ変数展開が行われますが、<code>eval</code> では二度変数展開が行われます。これにより、動的なコマンド生成や間接参照が可能になります。</p>
-<h2>追加情報</h2>
+<h4>Q1. <code>eval</code> はどのような場合に使うべきですか？</h4>
+<p>A. 変数の間接参照、動的なコマンド生成、複雑なシェル構文の実行など、通常のシェル展開では不十分な場合に使用します。</p>
+<h4>Q2. <code>eval</code> の使用にはどのようなリスクがありますか？</h4>
+<p>A. ユーザー入力を直接 <code>eval</code> に渡すと、コマンドインジェクション攻撃のリスクがあります。信頼できる入力のみを使用し、可能な限り他の方法を検討してください。</p>
+<h4>Q3. <code>eval</code> と通常のコマンド実行の違いは何ですか？</h4>
+<p>A. 通常のコマンド実行では変数は1回だけ展開されますが、<code>eval</code> では2回展開されます。これにより、動的に生成されたコマンドや変数の間接参照が可能になります。</p>
+<h2>参照</h2>
+<p>https://pubs.opengroup.org/onlinepubs/9699919799/utilities/eval.html</p>
+<h2>Revisions</h2>
 <ul>
-<li><code>eval</code> は強力ですが、使いすぎると可読性が低下し、デバッグが難しくなることがあります。</li>
-<li>可能な限り、より安全で明示的な代替手段（配列や関数など）を検討しましょう。</li>
-<li>シェルスクリプトで <code>eval</code> を使用する場合は、入力値を適切にエスケープして安全性を確保してください。</li>
+<li>2025/04/30 初版作成。</li>
 </ul>
-<h2>macOSでの注意点</h2>
-<p>macOSのBashやZshでも <code>eval</code> は同様に動作しますが、macOSのデフォルトシェルはZshになっているため、Bashとの微妙な違いがある場合があります。基本的な使い方は同じです。</p>
-<h2>参考情報</h2>
-<p>https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-eval</p>
 
 
     </main>

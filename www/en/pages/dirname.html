@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  dirname - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>dirname command</h1>
+<p>Extract the directory portion from a pathname.</p>
+<h2>Overview</h2>
+<p>The <code>dirname</code> command removes the last component from a pathname, leaving only the directory path. It's useful in scripts when you need to determine the parent directory of a file or path.</p>
+<h2>Options</h2>
+<h3><strong>--zero, -z</strong></h3>
+<p>Output is terminated with a null character (NUL) instead of a newline.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>/usr/bin/file
+<span style="color: #000; font-style: italic">/usr/bin$</span>
+</pre></div>
+<h3><strong>--help</strong></h3>
+<p>Display help information and exit.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>--help
+<span style="color: #000; font-style: italic">Usage: dirname [OPTION] NAME...</span>
+<span style="color: #000; font-style: italic">Output each NAME with its last non-slash component and trailing slashes</span>
+<span style="color: #000; font-style: italic">removed; if NAME contains no /&#39;s, output &#39;.&#39; (meaning the current directory).</span>
+
+<span style="color: #000; font-style: italic">  -z, --zero     end each output line with NUL, not newline</span>
+<span style="color: #000; font-style: italic">      --help     display this help and exit</span>
+<span style="color: #000; font-style: italic">      --version  output version information and exit</span>
+
+<span style="color: #000; font-style: italic">Examples:</span>
+<span style="color: #000; font-style: italic">  dirname /usr/bin/          -&gt; &quot;/usr&quot;</span>
+<span style="color: #000; font-style: italic">  dirname dir1/str dir2/str  -&gt; &quot;dir1&quot; followed by &quot;dir2&quot;</span>
+<span style="color: #000; font-style: italic">  dirname stdio.h            -&gt; &quot;.&quot;</span>
+</pre></div>
+<h3><strong>--version</strong></h3>
+<p>Display version information and exit.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>--version
+<span style="color: #000; font-style: italic">dirname (GNU coreutils) 9.0</span>
+<span style="color: #000; font-style: italic">Copyright (C) 2021 Free Software Foundation, Inc.</span>
+<span style="color: #000; font-style: italic">License GPLv3+: GNU GPL version 3 or later &lt;https://gnu.org/licenses/gpl.html&gt;.</span>
+<span style="color: #000; font-style: italic">This is free software: you are free to change and redistribute it.</span>
+<span style="color: #000; font-style: italic">There is NO WARRANTY, to the extent permitted by law.</span>
+
+<span style="color: #000; font-style: italic">Written by David MacKenzie.</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic Usage</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>/usr/bin/bash
+<span style="color: #000; font-style: italic">/usr/bin</span>
+</pre></div>
+<h3>Multiple Arguments</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>/usr/bin/bash<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span>/home/user/file.txt
+<span style="color: #000; font-style: italic">/usr/bin</span>
+<span style="color: #000; font-style: italic">/etc</span>
+<span style="color: #000; font-style: italic">/home/user</span>
+</pre></div>
+<h3>Current Directory</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">.</span>
+</pre></div>
+<h3>Using in Shell Scripts</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">script_dir</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>dirname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$0</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;This script is located in: </span><span style="color: #000">$script_dir</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">This script is located in: .</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Use with Absolute Paths</h3>
+<p>Always use absolute paths with <code>dirname</code> when possible to avoid confusion, especially in scripts that might run from different working directories.</p>
+<h3>Combine with <code>basename</code></h3>
+<p><code>dirname</code> pairs well with the <code>basename</code> command. While <code>dirname</code> extracts the directory portion, <code>basename</code> extracts the filename portion.</p>
+<h3>Path Normalization</h3>
+<p><code>dirname</code> doesn't normalize paths. For example, <code>dirname a/b/..</code> returns <code>a/b</code> rather than <code>a</code>.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between <code>dirname</code> and <code>pwd</code>?</h4>
+<p>A. <code>dirname</code> extracts the directory portion from a given path, while <code>pwd</code> prints the current working directory.</p>
+<h4>Q2. How do I get the directory of a script that's running?</h4>
+<p>A. Use <code>script_dir=$(dirname &quot;$0&quot;)</code> where <code>$0</code> is the path to the script being executed.</p>
+<h4>Q3. Does <code>dirname</code> follow symbolic links?</h4>
+<p>A. No, <code>dirname</code> simply manipulates the string path and doesn't interact with the filesystem.</p>
+<h4>Q4. What does <code>dirname</code> return for a path without directories?</h4>
+<p>A. It returns <code>.</code> (the current directory) for paths without any directory components.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/dirname-invocation.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

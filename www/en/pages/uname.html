@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  uname - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>uname command</h1>
+<p>Print system information about the operating system.</p>
+<h2>Overview</h2>
+<p>The <code>uname</code> command displays information about the system, including the operating system name, hostname, kernel version, and hardware architecture. It's commonly used in shell scripts to determine the operating system type or version for compatibility checks.</p>
+<h2>Options</h2>
+<h3><strong>-a, --all</strong></h3>
+<p>Print all available system information (combination of all options)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">Darwin MacBook-Pro.local 22.5.0 Darwin Kernel Version 22.5.0: Mon Apr 24 20:52:24 PDT 2023; root:xnu-8796.121.2~5/RELEASE_ARM64_T6000 arm64</span>
+</pre></div>
+<h3><strong>-s, --kernel-name</strong></h3>
+<p>Print the kernel name (default option if none specified)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-s
+<span style="color: #000; font-style: italic">Darwin</span>
+</pre></div>
+<h3><strong>-n, --nodename</strong></h3>
+<p>Print the network node hostname</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-n
+<span style="color: #000; font-style: italic">MacBook-Pro.local</span>
+</pre></div>
+<h3><strong>-r, --kernel-release</strong></h3>
+<p>Print the kernel release</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-r
+<span style="color: #000; font-style: italic">22.5.0</span>
+</pre></div>
+<h3><strong>-v, --kernel-version</strong></h3>
+<p>Print the kernel version</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-v
+<span style="color: #000; font-style: italic">Darwin Kernel Version 22.5.0: Mon Apr 24 20:52:24 PDT 2023; root:xnu-8796.121.2~5/RELEASE_ARM64_T6000</span>
+</pre></div>
+<h3><strong>-m, --machine</strong></h3>
+<p>Print the machine hardware name (architecture)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-m
+<span style="color: #000; font-style: italic">arm64</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Checking OS type in a script</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">$(</span>uname<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Darwin&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;This is macOS&quot;</span>
+<span style="color: #000; font-style: italic">&gt; else</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;This is not macOS&quot;</span>
+<span style="color: #000; font-style: italic">&gt; fi</span>
+<span style="color: #000; font-style: italic">This is macOS</span>
+</pre></div>
+<h3>Getting kernel version and architecture</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-rv
+<span style="color: #000; font-style: italic">Darwin Kernel Version 22.5.0: Mon Apr 24 20:52:24 PDT 2023; root:xnu-8796.121.2~5/RELEASE_ARM64_T6000 22.5.0</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Use in Shell Scripts for Cross-Platform Compatibility</h3>
+<p>The <code>uname</code> command is particularly useful in shell scripts that need to run on multiple platforms. You can use it to detect the operating system and execute platform-specific commands.</p>
+<h3>Combine with Other Commands</h3>
+<p>Pair <code>uname</code> with commands like <code>sw_vers</code> on macOS to get more detailed system information:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span>sw_vers
+<span style="color: #000; font-style: italic">arm64</span>
+<span style="color: #000; font-style: italic">ProductName:		macOS</span>
+<span style="color: #000; font-style: italic">ProductVersion:		13.4</span>
+<span style="color: #000; font-style: italic">BuildVersion:		22F66</span>
+</pre></div>
+<h3>Remember Platform Differences</h3>
+<p>Output format varies between Unix-like systems. For example, Linux systems will show &quot;Linux&quot; as the kernel name, while macOS shows &quot;Darwin&quot;.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between <code>uname -s</code> and <code>uname</code>?</h4>
+<p>A. There is no difference. When run without options, <code>uname</code> defaults to the <code>-s</code> option, displaying just the kernel name.</p>
+<h4>Q2. How can I tell if I'm on a 32-bit or 64-bit system?</h4>
+<p>A. Use <code>uname -m</code>. On 64-bit systems, you'll typically see &quot;x86_64&quot; for Intel/AMD processors or &quot;arm64&quot; for ARM processors.</p>
+<h4>Q3. Why does macOS show &quot;Darwin&quot; instead of &quot;macOS&quot;?</h4>
+<p>A. Darwin is the name of the core Unix-based operating system that underlies macOS. The <code>uname</code> command reports the kernel name, not the commercial product name.</p>
+<h4>Q4. How can I get the macOS version instead of kernel version?</h4>
+<p>A. Use the <code>sw_vers</code> command, which is specific to macOS and shows the product name, version, and build.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/uname-invocation.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

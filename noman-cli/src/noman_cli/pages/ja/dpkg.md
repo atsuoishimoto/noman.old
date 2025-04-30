@@ -1,123 +1,162 @@
-# dpkgコマンドの概要
+# dpkg コマンド
 
-dpkgはDebian系Linuxディストリビューション（UbuntuやDebianなど）でパッケージの管理を行うための基本的なコマンドです。パッケージのインストール、削除、情報表示などの操作を行います。
+Debian ベースのシステム（Ubuntu など）でパッケージの管理を行うコマンドラインツール。
+
+## 概要
+
+dpkg（Debian Package）は、Debian ベースの Linux ディストリビューション（Ubuntu など）で使用されるパッケージ管理システムの中核ツールです。.deb 形式のパッケージのインストール、削除、情報表示などの基本的なパッケージ管理操作を行います。apt コマンドの基盤となるツールですが、依存関係の解決は自動で行いません。
 
 ## オプション
 
-### **-i, --install**:
-パッケージをインストールします。
+### **-i, --install**
 
-例:
-```bash
-# example.debパッケージをインストールする
-sudo dpkg -i example.deb
+パッケージをインストールまたはアップグレードします。
+
+```console
+$ sudo dpkg -i firefox_115.0+build2-0ubuntu0.20.04.1_amd64.deb
+(Reading database ... 200000 files and directories currently installed.)
+Preparing to unpack firefox_115.0+build2-0ubuntu0.20.04.1_amd64.deb ...
+Unpacking firefox (115.0+build2-0ubuntu0.20.04.1) over (114.0.2+build1-0ubuntu0.20.04.1) ...
+Setting up firefox (115.0+build2-0ubuntu0.20.04.1) ...
+Processing triggers for mime-support (3.64ubuntu1) ...
 ```
 
-### **-r, --remove**:
+### **-r, --remove**
+
 パッケージを削除します（設定ファイルは残ります）。
 
-例:
-```bash
-# exampleパッケージを削除する
-sudo dpkg -r example
+```console
+$ sudo dpkg -r firefox
+(Reading database ... 200000 files and directories currently installed.)
+Removing firefox (115.0+build2-0ubuntu0.20.04.1) ...
 ```
 
-### **-P, --purge**:
-パッケージを設定ファイルごと完全に削除します。
+### **-P, --purge**
 
-例:
-```bash
-# exampleパッケージを設定ファイルごと削除する
-sudo dpkg -P example
+パッケージを完全に削除します（設定ファイルも含めて削除）。
+
+```console
+$ sudo dpkg -P firefox
+(Reading database ... 200000 files and directories currently installed.)
+Purging configuration files for firefox (115.0+build2-0ubuntu0.20.04.1) ...
 ```
 
-### **-l, --list**:
-インストールされているパッケージの一覧を表示します。
+### **-l, --list [パターン]**
 
-例:
-```bash
-# インストール済みのパッケージを一覧表示する
-dpkg -l
-# 特定のパターンに一致するパッケージを表示する
-dpkg -l 'python*'
+インストールされているパッケージを一覧表示します。パターンを指定すると、そのパターンに一致するパッケージのみを表示します。
+
+```console
+$ dpkg -l | grep firefox
+ii  firefox                            115.0+build2-0ubuntu0.20.04.1        amd64        Safe and easy web browser from Mozilla
 ```
 
-### **-s, --status**:
-特定のパッケージの状態を表示します。
+### **-s, --status パッケージ名**
 
-例:
-```bash
-# firefoxパッケージの状態を確認する
-dpkg -s firefox
+指定したパッケージの状態を表示します。
+
+```console
+$ dpkg -s firefox
+Package: firefox
+Status: install ok installed
+Priority: optional
+Section: web
+Installed-Size: 240000
+Maintainer: Ubuntu Mozilla Team <ubuntu-mozilla@lists.ubuntu.com>
+Architecture: amd64
+Version: 115.0+build2-0ubuntu0.20.04.1
+Depends: [依存関係のリスト]
+Description: Safe and easy web browser from Mozilla
+ Firefox delivers safe, easy web browsing. A familiar user interface,
+ enhanced security features including protection from online identity theft,
+ and integrated search let you get the most out of the web.
 ```
 
-### **-L, --listfiles**:
-パッケージに含まれるファイルの一覧を表示します。
+### **-L, --listfiles パッケージ名**
 
-例:
-```bash
-# firefoxパッケージに含まれるファイルを表示する
-dpkg -L firefox
-```
+パッケージによってインストールされたファイルを一覧表示します。
 
-### **-S, --search**:
-指定したファイルがどのパッケージに属しているかを検索します。
-
-例:
-```bash
-# /usr/bin/pythonファイルがどのパッケージに属しているか調べる
-dpkg -S /usr/bin/python
-```
-
-### **--configure**:
-設定が完了していないパッケージの設定を行います。
-
-例:
-```bash
-# 設定が完了していないパッケージを設定する
-sudo dpkg --configure -a
+```console
+$ dpkg -L firefox
+/.
+/usr
+/usr/bin
+/usr/bin/firefox
+/usr/lib
+/usr/lib/firefox
+[その他のファイル...]
 ```
 
 ## 使用例
 
-```bash
-# .debファイルからパッケージをインストールする
-sudo dpkg -i package.deb
-# 出力例
-Selecting previously unselected package example.
-(Reading database ... 200000 files and directories currently installed.)
-Preparing to unpack package.deb ...
-Unpacking example (1.0-1) ...
-Setting up example (1.0-1) ...
+### パッケージのインストールと依存関係の解決
 
-# インストールされているパッケージを検索する
-dpkg -l | grep firefox
-# 出力例
-ii  firefox        115.0+build2-0ubuntu0.22.04.1 amd64 Safe and easy web browser from Mozilla
+```console
+$ sudo dpkg -i mypackage.deb
+dpkg: dependency problems prevent configuration of mypackage:
+ mypackage depends on libsomething; however:
+  Package libsomething is not installed.
 
-# パッケージを削除する
-sudo dpkg -r firefox
-# 出力例
-(Reading database ... 200000 files and directories currently installed.)
-Removing firefox (115.0+build2-0ubuntu0.22.04.1) ...
+$ sudo apt-get install -f
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following packages will be installed:
+  libsomething
+0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
 ```
+
+### システムにインストールされているすべてのパッケージを表示
+
+```console
+$ dpkg --get-selections
+accountsservice                                install
+acl                                            install
+adduser                                        install
+[その他のパッケージ...]
+```
+
+### 特定のファイルがどのパッケージに属しているか確認
+
+```console
+$ dpkg -S /usr/bin/firefox
+firefox: /usr/bin/firefox
+```
+
+## ヒント:
+
+### apt と dpkg の違いを理解する
+
+apt は dpkg のフロントエンドで、依存関係の解決やリポジトリからのダウンロードを自動で行います。dpkg は単一パッケージの操作に特化しています。通常は apt を使用し、ローカルの .deb ファイルを直接インストールする場合に dpkg を使用するとよいでしょう。
+
+### 壊れたパッケージの修復
+
+パッケージのインストールが途中で失敗した場合は、`sudo dpkg --configure -a` を実行して未設定のパッケージを設定し、その後 `sudo apt-get install -f` で依存関係の問題を解決できます。
+
+### パッケージの状態を理解する
+
+dpkg -l の出力の最初の2文字はパッケージの状態を示します：
+- `ii`: 正常にインストールされている
+- `rc`: 削除されたが設定ファイルが残っている
+- `un`: 未インストール
 
 ## よくある質問
 
-### Q1. dpkgとaptの違いは何ですか？
-A. dpkgは単一のパッケージを管理する低レベルのツールです。aptはdpkgのフロントエンドで、依存関係の解決やリポジトリからのパッケージ取得などの高度な機能を提供します。
+#### Q1. apt と dpkg の違いは何ですか？
+A. dpkg は単一パッケージの管理ツールで依存関係を自動解決しません。apt は dpkg のフロントエンドで、依存関係の解決やリポジトリからのダウンロードを自動で行います。
 
-### Q2. dpkgでインストールしたパッケージの依存関係エラーを解決するにはどうすればよいですか？
-A. `sudo apt install -f`コマンドを実行すると、依存関係の問題を解決できることが多いです。
+#### Q2. インストールに失敗したパッケージを修復するにはどうすればよいですか？
+A. `sudo dpkg --configure -a` を実行して未設定のパッケージを設定し、その後 `sudo apt-get install -f` で依存関係の問題を解決します。
 
-### Q3. インストールに失敗したパッケージを修復するにはどうすればよいですか？
-A. `sudo dpkg --configure -a`を実行すると、設定が中断されたパッケージの設定を完了できます。
+#### Q3. パッケージの設定ファイルだけを残して削除するにはどうすればよいですか？
+A. `sudo dpkg -r パッケージ名` を使用します。設定ファイルも含めて完全に削除するには `sudo dpkg -P パッケージ名` を使用します。
 
-### Q4. パッケージのインストール状態を確認するにはどうすればよいですか？
-A. `dpkg -s パッケージ名`を使用すると、パッケージの詳細な状態を確認できます。
+#### Q4. あるファイルがどのパッケージに属しているか調べるにはどうすればよいですか？
+A. `dpkg -S /path/to/file` コマンドを使用します。
 
-## 追加情報
+## 参考文献
 
-- dpkgはパッケージの依存関係を自動的に解決しないため、依存関係のあるパッケージは手動でインストールするか、aptを使用する必要があります。
-- システムファイルを誤って削除した場合、`dpkg -S ファイルパス`でどのパッケージに属しているかを調べ、そのパッケージを再インストールすることで復旧できることがあります。
-- `/var/lib/dpkg/`ディレクトリにはパッケージ管理のデータベースが保存されています。このディレクトリを誤って変更すると、パッケージ管理システムが破損する可能性があるので注意が必要です。
+https://manpages.debian.org/buster/dpkg/dpkg.1.en.html
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

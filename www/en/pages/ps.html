@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  ps - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>ps command</h1>
+<p>Display information about active processes.</p>
+<h2>Overview</h2>
+<p>The <code>ps</code> command shows a snapshot of currently running processes on your system. It provides details about process IDs (PIDs), resource usage, status, and more. This command is essential for monitoring system activity, troubleshooting, and managing processes.</p>
+<h2>Options</h2>
+<h3><strong>-e</strong></h3>
+<p>Display all processes (system-wide)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-e
+<span style="color: #000; font-style: italic">  PID TTY          TIME CMD</span>
+<span style="color: #000; font-style: italic">    1 ?        00:00:03 systemd</span>
+<span style="color: #000; font-style: italic">  546 ?        00:00:00 sshd</span>
+<span style="color: #000; font-style: italic">  892 ?        00:00:01 nginx</span>
+<span style="color: #000; font-style: italic"> 1024 tty1     00:00:00 bash</span>
+</pre></div>
+<h3><strong>-f</strong></h3>
+<p>Show full-format listing with more details</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-f
+<span style="color: #000; font-style: italic">UID        PID  PPID  C STIME TTY          TIME CMD</span>
+<span style="color: #000; font-style: italic">user      1024  1020  0 10:30 tty1     00:00:00 -bash</span>
+<span style="color: #000; font-style: italic">user      1095  1024  0 10:35 tty1     00:00:00 ps -f</span>
+</pre></div>
+<h3><strong>-u [username]</strong></h3>
+<p>Display processes for a specific user</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>john
+<span style="color: #000; font-style: italic">  PID TTY          TIME CMD</span>
+<span style="color: #000; font-style: italic"> 1024 tty1     00:00:00 bash</span>
+<span style="color: #000; font-style: italic"> 1095 tty1     00:00:00 ps</span>
+<span style="color: #000; font-style: italic"> 1120 ?        00:00:01 firefox</span>
+</pre></div>
+<h3><strong>aux</strong></h3>
+<p>Comprehensive process listing (BSD style)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>aux
+<span style="color: #000; font-style: italic">USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND</span>
+<span style="color: #000; font-style: italic">root         1  0.0  0.1 168940  9416 ?        Ss   Apr29   0:03 /sbin/init</span>
+<span style="color: #000; font-style: italic">www-data   892  0.0  0.2 142392 12284 ?        S    Apr29   0:01 nginx: worker</span>
+<span style="color: #000; font-style: italic">user      1024  0.0  0.1  21452  5724 tty1     Ss   10:30   0:00 -bash</span>
+<span style="color: #000; font-style: italic">user      1120  2.1  4.3 1852404 354216 ?      Sl   10:40   0:45 /usr/lib/firefox/firefox</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Finding processes by name</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-ef<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>nginx
+<span style="color: #000; font-style: italic">root       891  1  0 Apr29 ?        00:00:00 nginx: master process</span>
+<span style="color: #000; font-style: italic">www-data   892  891  0 Apr29 ?        00:00:01 nginx: worker process</span>
+<span style="color: #000; font-style: italic">user      1245  1024  0 11:05 tty1     00:00:00 grep --color=auto nginx</span>
+</pre></div>
+<h3>Sorting processes by CPU usage</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>aux<span style="color: #F8F8F8"> </span>--sort<span style="color: #CE5C00; font-weight: bold">=</span>-%cpu<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-5
+<span style="color: #000; font-style: italic">USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND</span>
+<span style="color: #000; font-style: italic">user      1120  3.2  4.5 1852404 364216 ?      Sl   10:40   0:52 /usr/lib/firefox/firefox</span>
+<span style="color: #000; font-style: italic">user      1340  1.5  2.1 1245632 172544 ?      Sl   10:55   0:23 /usr/bin/chromium</span>
+<span style="color: #000; font-style: italic">root       432  0.8  0.6  85432  48216 ?       Ss   Apr29   0:12 /usr/sbin/dockerd</span>
+<span style="color: #000; font-style: italic">user      1562  0.5  1.2 524288  98432 ?       Sl   11:02   0:05 /usr/bin/code</span>
+</pre></div>
+<h3>Displaying process tree</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-ejH
+<span style="color: #000; font-style: italic">  PID  PGID   SID TTY          TIME CMD</span>
+<span style="color: #000; font-style: italic">    1     1     1 ?        00:00:03 systemd</span>
+<span style="color: #000; font-style: italic">  432   432   432 ?        00:00:12   dockerd</span>
+<span style="color: #000; font-style: italic">  546   546   546 ?        00:00:00   sshd</span>
+<span style="color: #000; font-style: italic">  891   891   891 ?        00:00:00   nginx</span>
+<span style="color: #000; font-style: italic">  892   891   891 ?        00:00:01     nginx</span>
+<span style="color: #000; font-style: italic"> 1020  1020  1020 tty1     00:00:00   login</span>
+<span style="color: #000; font-style: italic"> 1024  1024  1024 tty1     00:00:00     bash</span>
+<span style="color: #000; font-style: italic"> 1245  1245  1024 tty1     00:00:00       ps</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Process State Codes</h3>
+<p>In the STAT column, common codes include:</p>
+<ul>
+<li>R: Running</li>
+<li>S: Sleeping (interruptible)</li>
+<li>D: Uninterruptible sleep</li>
+<li>Z: Zombie (terminated but not reaped)</li>
+<li>T: Stopped</li>
+</ul>
+<h3>Memory Usage Analysis</h3>
+<p>Use <code>ps aux</code> to identify memory-intensive processes. The %MEM column shows memory usage percentage, while RSS shows actual physical memory used in kilobytes.</p>
+<h3>Combining with Other Commands</h3>
+<p>Pipe <code>ps</code> output to <code>grep</code> to filter processes, or to <code>sort</code> to organize by specific criteria. For example, <code>ps aux | sort -nk6</code> sorts by virtual memory usage.</p>
+<h3>Custom Format Output</h3>
+<p>Use the <code>-o</code> option to create custom output formats: <code>ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem</code> shows processes sorted by memory usage with only the specified columns.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How do I kill a process using ps?</h4>
+<p>A. <code>ps</code> itself doesn't kill processes. Use it to find the PID, then use the <code>kill</code> command: <code>kill PID</code> or <code>kill -9 PID</code> for forceful termination.</p>
+<h4>Q2. What's the difference between ps aux and ps -ef?</h4>
+<p>A. Both show all processes, but <code>ps aux</code> is BSD-style with different output format, while <code>ps -ef</code> is UNIX-style. <code>aux</code> shows %CPU and %MEM, while <code>-ef</code> shows PPID (parent process ID).</p>
+<h4>Q3. How can I see only my processes?</h4>
+<p>A. Use <code>ps -u $(whoami)</code> or simply <code>ps</code> without options to see processes associated with your current terminal.</p>
+<h4>Q4. How do I monitor processes in real-time?</h4>
+<p>A. <code>ps</code> shows a snapshot. For real-time monitoring, use <code>top</code> or <code>htop</code> instead.</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, <code>ps</code> has slightly different behavior. The BSD-style options (like <code>aux</code>) work without the leading dash. Additionally, some Linux-specific options may not be available. For macOS-specific process information, consider using <code>Activity Monitor</code> or the <code>top</code> command.</p>
+<h2>References</h2>
+<p>https://man7.org/linux/man-pages/man1/ps.1.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

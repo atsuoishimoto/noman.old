@@ -1,45 +1,19 @@
-# ssh-keygen コマンド概要
+# ssh-keygen コマンド
 
-`ssh-keygen`は、SSHプロトコルで使用する公開鍵と秘密鍵のペアを生成するためのコマンドです。これにより、パスワード入力なしで安全にリモートサーバーに接続できるようになります。
+SSH認証に使用する公開鍵と秘密鍵のペアを生成するツール。
 
-## 主なオプション
+## 概要
 
-- **-t**: 鍵の種類（タイプ）を指定します
-  - 例: `ssh-keygen -t rsa`（RSA鍵を生成）
-  - 例: `ssh-keygen -t ed25519`（より安全なEd25519鍵を生成）
+`ssh-keygen`は、SSHプロトコルで使用する認証鍵を生成、管理、変換するためのコマンドです。パスワードなしでリモートサーバーに安全に接続するための鍵ペア（公開鍵と秘密鍵）を作成できます。デフォルトでは、鍵は`~/.ssh/`ディレクトリに保存されます。
 
-- **-b**: 鍵のビット長（強度）を指定します
-  - 例: `ssh-keygen -t rsa -b 4096`（4096ビットのRSA鍵を生成）
+## オプション
 
-- **-f**: 鍵ファイルの保存先を指定します
-  - 例: `ssh-keygen -t rsa -f ~/.ssh/my_key`（指定した場所に鍵を保存）
+### **-t type**
 
-- **-C**: 鍵にコメントを追加します（通常はメールアドレスなど）
-  - 例: `ssh-keygen -t rsa -C "user@example.com"`
+鍵の種類を指定します。一般的な種類は`rsa`、`ed25519`、`dsa`、`ecdsa`です。現在は`ed25519`または`rsa`が推奨されています。
 
-- **-p**: 既存の秘密鍵のパスフレーズを変更します
-  - 例: `ssh-keygen -p -f ~/.ssh/id_rsa`
-
-## 使用例
-
-### 基本的な鍵の生成
-```bash
-# デフォルト設定でRSA鍵を生成
-ssh-keygen
-# 出力例
-Generating public/private rsa key pair.
-Enter file in which to save the key (/home/user/.ssh/id_rsa): 
-Enter passphrase (empty for no passphrase): 
-Enter same passphrase again: 
-Your identification has been saved in /home/user/.ssh/id_rsa
-Your public key has been saved in /home/user/.ssh/id_rsa.pub
-```
-
-### 安全なEd25519鍵の生成（推奨）
-```bash
-# より安全なEd25519鍵を生成
-ssh-keygen -t ed25519 -C "user@example.com"
-# 出力例
+```console
+$ ssh-keygen -t ed25519
 Generating public/private ed25519 key pair.
 Enter file in which to save the key (/home/user/.ssh/id_ed25519): 
 Enter passphrase (empty for no passphrase): 
@@ -48,18 +22,128 @@ Your identification has been saved in /home/user/.ssh/id_ed25519
 Your public key has been saved in /home/user/.ssh/id_ed25519.pub
 ```
 
-### 公開鍵の表示
-```bash
-# 生成した公開鍵の内容を表示
-cat ~/.ssh/id_ed25519.pub
-# 出力例
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJHkl7VrYG4FbLxhVzQm2k7LBQNWBttVS1xfVknvQZHt user@example.com
+### **-b bits**
+
+鍵のビット数（強度）を指定します。RSA鍵の場合、最低2048ビットが推奨されています。
+
+```console
+$ ssh-keygen -t rsa -b 4096
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/user/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/user/.ssh/id_rsa
+Your public key has been saved in /home/user/.ssh/id_rsa.pub
 ```
 
-## 追加情報
+### **-f filename**
 
-- パスフレーズは任意ですが、セキュリティ向上のために設定することをお勧めします。
-- 生成された公開鍵（`.pub`拡張子のファイル）は、接続先のサーバーの`~/.ssh/authorized_keys`ファイルに追加します。
-- 秘密鍵（拡張子なしのファイル）は絶対に他人と共有しないでください。
-- 最近のシステムでは、RSAよりもEd25519鍵の使用が推奨されています（より安全で小さいため）。
-- 鍵の権限設定は重要です：秘密鍵は`chmod 600 ~/.ssh/id_ed25519`のように設定してください。
+鍵ファイルの保存先を指定します。
+
+```console
+$ ssh-keygen -t ed25519 -f ~/.ssh/github_key
+Generating public/private ed25519 key pair.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/user/.ssh/github_key
+Your public key has been saved in /home/user/.ssh/github_key.pub
+```
+
+### **-C comment**
+
+鍵に関連付けるコメントを指定します。通常はメールアドレスや用途を記述します。
+
+```console
+$ ssh-keygen -t ed25519 -C "user@example.com"
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/home/user/.ssh/id_ed25519): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/user/.ssh/id_ed25519
+Your public key has been saved in /home/user/.ssh/id_ed25519.pub
+```
+
+## 使用例
+
+### 基本的な鍵の生成
+
+```console
+$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/user/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/user/.ssh/id_rsa
+Your public key has been saved in /home/user/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:abcdefghijklmnopqrstuvwxyz1234567890ABCDEFG user@hostname
+```
+
+### 公開鍵のフィンガープリントを表示
+
+```console
+$ ssh-keygen -lf ~/.ssh/id_ed25519.pub
+256 SHA256:abcdefghijklmnopqrstuvwxyz1234567890ABCDEFG user@example.com (ED25519)
+```
+
+### 既存の鍵のパスフレーズを変更
+
+```console
+$ ssh-keygen -p -f ~/.ssh/id_ed25519
+Enter old passphrase: 
+Enter new passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved with the new passphrase.
+```
+
+## ヒント:
+
+### パスフレーズの使用
+
+セキュリティを高めるために、鍵にパスフレーズを設定することをお勧めします。これにより、秘密鍵が漏洩した場合でも、パスフレーズなしでは使用できません。
+
+### ssh-agent の活用
+
+パスフレーズを設定した場合、`ssh-agent`を使用すると、一度パスフレーズを入力するだけで、その後はパスフレーズの再入力なしで鍵を使用できます。
+
+```console
+$ eval "$(ssh-agent -s)"
+Agent pid 12345
+$ ssh-add ~/.ssh/id_ed25519
+Enter passphrase for /home/user/.ssh/id_ed25519: 
+Identity added: /home/user/.ssh/id_ed25519
+```
+
+### 公開鍵の配布
+
+生成した公開鍵（`.pub`ファイル）をリモートサーバーの`~/.ssh/authorized_keys`ファイルに追加することで、パスワードなしでログインできるようになります。
+
+```console
+$ ssh-copy-id -i ~/.ssh/id_ed25519.pub user@remote-server
+```
+
+## よくある質問
+
+#### Q1. ssh-keygenで生成された鍵はどこに保存されますか？
+A. デフォルトでは、`~/.ssh/`ディレクトリに保存されます。秘密鍵は`id_rsa`や`id_ed25519`などのファイル名で、公開鍵はそれに`.pub`を付けた名前（例：`id_rsa.pub`）で保存されます。
+
+#### Q2. どの鍵の種類を選ぶべきですか？
+A. 現在は`ed25519`が推奨されています。これは比較的新しいアルゴリズムで、セキュリティが高く、鍵のサイズも小さいです。互換性が必要な場合は、`rsa`（4096ビット以上）を使用してください。
+
+#### Q3. パスフレーズを忘れた場合はどうすればよいですか？
+A. パスフレーズを忘れた場合、その鍵を回復する方法はありません。新しい鍵ペアを生成し、古い公開鍵をサーバーから削除して、新しい公開鍵を追加する必要があります。
+
+#### Q4. 公開鍵をサーバーに追加するにはどうすればよいですか？
+A. `ssh-copy-id -i ~/.ssh/keyfile.pub user@server`コマンドを使用するか、公開鍵の内容をサーバーの`~/.ssh/authorized_keys`ファイルに手動で追加します。
+
+## macOSでの注意点
+
+macOSでは、鍵を生成した後、キーチェーンに秘密鍵を追加することができます。これにより、システムが自動的にパスフレーズを管理できるようになります。また、macOS Catalina以降では、デフォルトでOpenSSHが使用されるようになりました。
+
+## 参考資料
+
+https://www.openssh.com/manual.html
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

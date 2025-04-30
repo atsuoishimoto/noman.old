@@ -46,102 +46,95 @@
   <div class="content">
     <main>
       
-  <h1>git-branch コマンド概要</h1>
-<p><code>git-branch</code>は、Gitリポジトリ内のブランチを作成、一覧表示、削除するためのコマンドです。ブランチは並行して開発を進めるための作業スペースとして機能します。</p>
+  <h1>git branch コマンド</h1>
+<p>ブランチの作成、一覧表示、名前変更、削除を行います。</p>
+<h2>概要</h2>
+<p><code>git branch</code> は Git リポジトリ内のブランチを管理するためのコマンドです。引数なしで実行すると、現在のリポジトリに存在するローカルブランチの一覧を表示します。ブランチの作成、名前変更、削除などの操作も行えます。ブランチは Git の重要な機能で、異なる作業を並行して進めるために使用されます。</p>
 <h2>オプション</h2>
-<h3><strong>-a, --all</strong>:</h3>
-<p>すべてのブランチ（ローカルとリモート）を表示します。</p>
-<p>例:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-a
+<h3><strong>-a, --all</strong></h3>
+<p>ローカルブランチとリモートブランチの両方を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">* main</span>
+<span style="color: #000; font-style: italic">  feature/login</span>
+<span style="color: #000; font-style: italic">  remotes/origin/main</span>
+<span style="color: #000; font-style: italic">  remotes/origin/develop</span>
 </pre></div>
-<h3><strong>-r, --remotes</strong>:</h3>
-<p>リモートブランチのみを表示します。</p>
-<p>例:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-r
+<h3><strong>-v, --verbose</strong></h3>
+<p>各ブランチの最新コミットのハッシュとメッセージを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-v
+<span style="color: #000; font-style: italic">* main        a1b2c3d [ahead 2] 最新の機能を追加</span>
+<span style="color: #000; font-style: italic">  feature/login e4f5g6h ログイン画面の実装</span>
 </pre></div>
-<h3><strong>-v, --verbose</strong>:</h3>
-<p>各ブランチの最新のコミットとメッセージを表示します。</p>
-<p>例:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-v
+<h3><strong>-d, --delete</strong></h3>
+<p>指定したブランチを削除します。マージ済みのブランチのみ削除できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>feature/login
+<span style="color: #000; font-style: italic">Deleted branch feature/login (was e4f5g6h).</span>
 </pre></div>
-<h3><strong>-d, --delete</strong>:</h3>
-<p>指定したブランチを削除します。</p>
-<p>例:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>feature-branch
+<h3><strong>-D</strong></h3>
+<p>指定したブランチを強制的に削除します。マージされていないブランチも削除できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-D<span style="color: #F8F8F8"> </span>feature/unmerged
+<span style="color: #000; font-style: italic">Deleted branch feature/unmerged (was 7h8i9j0).</span>
 </pre></div>
-<h3><strong>-D</strong>:</h3>
-<p>強制的にブランチを削除します（マージされていなくても）。</p>
-<p>例:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-D<span style="color: #F8F8F8"> </span>feature-branch
-</pre></div>
-<h3><strong>-m, --move</strong>:</h3>
+<h3><strong>-m, --move</strong></h3>
 <p>ブランチの名前を変更します。</p>
-<p>例:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>old-name<span style="color: #F8F8F8"> </span>new-name
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>old-name<span style="color: #F8F8F8"> </span>new-name
 </pre></div>
-<h3><strong>--merged</strong>:</h3>
-<p>現在のブランチにマージ済みのブランチを表示します。</p>
-<p>例:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>--merged
-</pre></div>
-<h3><strong>--no-merged</strong>:</h3>
-<p>現在のブランチにまだマージされていないブランチを表示します。</p>
-<p>例:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>--no-merged
+<h3><strong>-r, --remotes</strong></h3>
+<p>リモートブランチのみを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-r
+<span style="color: #000; font-style: italic">  origin/main</span>
+<span style="color: #000; font-style: italic">  origin/develop</span>
+<span style="color: #000; font-style: italic">  origin/feature/api</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>新しいブランチの作成</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 新しいブランチを作成</span>
-git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>feature-login
-<span style="color: #8F5902; font-style: italic"># 出力なし（成功時）</span>
+<h3>ブランチの作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>feature/search
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>branch
+<span style="color: #000; font-style: italic">* main</span>
+<span style="color: #000; font-style: italic">  feature/login</span>
+<span style="color: #000; font-style: italic">  feature/search</span>
 </pre></div>
-<h3>ブランチの一覧表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 全ブランチを表示</span>
-git<span style="color: #F8F8F8"> </span>branch
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-*<span style="color: #F8F8F8"> </span>main
-<span style="color: #F8F8F8">  </span>feature-login
-<span style="color: #F8F8F8">  </span>bugfix-header
+<h3>詳細情報付きでブランチ一覧を表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-vv
+<span style="color: #000; font-style: italic">* main        a1b2c3d [origin/main: ahead 2] 最新の機能を追加</span>
+<span style="color: #000; font-style: italic">  feature/login e4f5g6h [origin/feature/login] ログイン画面の実装</span>
 </pre></div>
-<p>（<code>*</code>は現在のブランチを示しています）</p>
-<h3>ブランチの削除</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># マージ済みブランチの削除</span>
-git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>feature-login
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-Deleted<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>feature-login<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>was<span style="color: #F8F8F8"> </span>a1b2c3d<span style="color: #CE5C00; font-weight: bold">)</span>.
+<h3>マージ済みブランチの一覧表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>--merged
+<span style="color: #000; font-style: italic">* main</span>
+<span style="color: #000; font-style: italic">  feature/completed</span>
 </pre></div>
-<h3>ブランチ名の変更</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ブランチ名を変更</span>
-git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>old-feature<span style="color: #F8F8F8"> </span>new-feature
-<span style="color: #8F5902; font-style: italic"># 出力なし（成功時）</span>
+<h3>マージされていないブランチの一覧表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>--no-merged
+<span style="color: #000; font-style: italic">  feature/in-progress</span>
 </pre></div>
+<h2>ヒント:</h2>
+<h3>現在のブランチの確認</h3>
+<p>現在作業中のブランチには、一覧表示時に名前の前に <code>*</code> が付きます。<code>git status</code> でも確認できます。</p>
+<h3>ブランチの切り替え</h3>
+<p>ブランチを作成しただけでは切り替わりません。<code>git checkout &lt;ブランチ名&gt;</code> または <code>git switch &lt;ブランチ名&gt;</code> で切り替えます。</p>
+<h3>ブランチの作成と切り替えを同時に行う</h3>
+<p><code>git checkout -b &lt;新ブランチ名&gt;</code> または <code>git switch -c &lt;新ブランチ名&gt;</code> で、ブランチの作成と切り替えを一度に行えます。</p>
+<h3>リモートブランチの追跡</h3>
+<p><code>git branch --track &lt;ローカルブランチ名&gt; &lt;リモートブランチ名&gt;</code> で、リモートブランチを追跡するローカルブランチを作成できます。</p>
 <h2>よくある質問</h2>
-<h3>Q1. 新しいブランチを作成して、そのブランチに切り替えるには？</h3>
-<p>A. <code>git checkout -b ブランチ名</code>または<code>git switch -c ブランチ名</code>を使用します。これは<code>git branch ブランチ名</code>と<code>git checkout ブランチ名</code>を一度に実行する省略形です。</p>
-<h3>Q2. リモートブランチをローカルに取得するには？</h3>
-<p>A. <code>git fetch</code>でリモートの情報を取得した後、<code>git checkout -b ローカルブランチ名 origin/リモートブランチ名</code>を実行します。</p>
-<h3>Q3. 不要になったリモートブランチを削除するには？</h3>
-<p>A. <code>git push origin --delete リモートブランチ名</code>を使用します。</p>
-<h3>Q4. 現在のブランチ名だけを確認するには？</h3>
-<p>A. <code>git branch --show-current</code>を使用します。</p>
-<h3>Q5. ブランチの作成元（親ブランチ）を確認するには？</h3>
-<p>A. <code>git log --graph --oneline --all</code>で履歴を視覚的に確認できます。</p>
-<h3>Q6. 特定のコミットから新しいブランチを作成するには？</h3>
-<p>A. <code>git branch ブランチ名 コミットハッシュ</code>を使用します。</p>
-<h3>Q7. マージ済みのブランチをまとめて削除するには？</h3>
-<p>A. <code>git branch --merged | grep -v &quot;\*&quot; | xargs git branch -d</code>を使用します。</p>
-<h3>Q8. ブランチの詳細な情報を確認するには？</h3>
-<p>A. <code>git branch -vv</code>を使用すると、リモートトラッキング情報も含めた詳細が表示されます。</p>
-<h3>Q9. 特定のパターンに一致するブランチを検索するには？</h3>
-<p>A. <code>git branch --list &quot;pattern*&quot;</code>を使用します。</p>
-<h3>Q10. 最後に作業していたブランチに戻るには？</h3>
-<p>A. <code>git checkout -</code>または<code>git switch -</code>を使用します。</p>
-<h2>追加情報</h2>
+<h4>Q1. ブランチとは何ですか？</h4>
+<p>A. ブランチとは、コードの独立した開発ラインです。メインのコードベースに影響を与えずに新機能の開発やバグ修正を行うために使用されます。</p>
+<h4>Q2. 現在のブランチを確認するにはどうすればよいですか？</h4>
+<p>A. <code>git branch</code> コマンドを実行すると、現在のブランチには <code>*</code> マークが付きます。また、<code>git status</code> でも確認できます。</p>
+<h4>Q3. 間違えて削除したブランチを復元できますか？</h4>
+<p>A. はい、ブランチの最後のコミットハッシュがわかれば <code>git branch &lt;ブランチ名&gt; &lt;コミットハッシュ&gt;</code> で復元できます。<code>git reflog</code> で最近の操作履歴を確認できます。</p>
+<h4>Q4. リモートブランチを削除するにはどうすればよいですか？</h4>
+<p>A. <code>git push origin --delete &lt;ブランチ名&gt;</code> または <code>git push origin :&lt;ブランチ名&gt;</code> でリモートブランチを削除できます。</p>
+<h4>Q5. ブランチ名を変更した後、リモートリポジトリにも反映させるにはどうすればよいですか？</h4>
+<p>A. ローカルでブランチ名を変更した後、古いブランチを削除して新しいブランチをプッシュします：</p>
+<pre><code>git push origin --delete &lt;古いブランチ名&gt;
+git push -u origin &lt;新しいブランチ名&gt;
+</code></pre><h2>参考</h2>
+<p>https://git-scm.com/docs/git-branch</p>
+<h2>改訂履歴</h2>
 <ul>
-<li>ブランチ名は、機能や目的を表す分かりやすい名前にすることをお勧めします（例：<code>feature/login</code>、<code>bugfix/header</code>）。</li>
-<li>長期間使用しないブランチは定期的に削除して、リポジトリを整理しましょう。</li>
-<li><code>git branch</code>だけでは新しいブランチを作成するだけで、そのブランチに切り替えることはできません。切り替えるには<code>git checkout</code>または<code>git switch</code>コマンドを使用します。</li>
-<li>リモートブランチの変更を取得するには、まず<code>git fetch</code>を実行する必要があります。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

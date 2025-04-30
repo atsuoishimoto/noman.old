@@ -46,78 +46,97 @@
   <div class="content">
     <main>
       
-  <h1>egrep コマンド概要</h1>
-<p><code>egrep</code>は拡張正規表現を使用してテキストパターンを検索するコマンドです。<code>grep -E</code>と同等の機能を持ち、複雑なパターンマッチングを簡潔な構文で実行できます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-i</strong>: 大文字と小文字を区別せずに検索します</p>
-<ul>
-<li>例: <code>egrep -i &quot;pattern&quot; file.txt</code></li>
-</ul>
-</li>
-<li><p><strong>-v</strong>: パターンに一致しない行を表示します（反転マッチ）</p>
-<ul>
-<li>例: <code>egrep -v &quot;pattern&quot; file.txt</code></li>
-</ul>
-</li>
-<li><p><strong>-c</strong>: 一致した行数のみを表示します</p>
-<ul>
-<li>例: <code>egrep -c &quot;pattern&quot; file.txt</code></li>
-</ul>
-</li>
-<li><p><strong>-n</strong>: 一致した行の行番号も表示します</p>
-<ul>
-<li>例: <code>egrep -n &quot;pattern&quot; file.txt</code></li>
-</ul>
-</li>
-<li><p><strong>-l</strong>: パターンが含まれるファイル名のみを表示します</p>
-<ul>
-<li>例: <code>egrep -l &quot;pattern&quot; *.txt</code></li>
-</ul>
-</li>
-<li><p><strong>-r, -R</strong>: ディレクトリを再帰的に検索します</p>
-<ul>
-<li>例: <code>egrep -r &quot;pattern&quot; /path/to/directory</code></li>
-</ul>
-</li>
-</ul>
+  <h1>egrep コマンド</h1>
+<p>テキストファイル内でパターンを検索するための拡張正規表現を使用するコマンド。</p>
+<h2>概要</h2>
+<p><code>egrep</code>は<code>grep -E</code>と同等で、拡張正規表現を使ってファイル内のテキストパターンを検索するコマンドです。複雑な検索パターンを簡潔に表現できるため、テキスト処理やログ分析などで広く使われています。</p>
+<h2>オプション</h2>
+<h3><strong>-i</strong></h3>
+<p>大文字と小文字を区別せずに検索します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>egrep<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>logfile.txt
+<span style="color: #000; font-style: italic">Error: Connection failed</span>
+<span style="color: #000; font-style: italic">WARNING: error in configuration file</span>
+<span style="color: #000; font-style: italic">System error detected at line 42</span>
+</pre></div>
+<h3><strong>-v</strong></h3>
+<p>パターンに一致しない行を表示します（反転マッチ）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>egrep<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;success&quot;</span><span style="color: #F8F8F8"> </span>logfile.txt
+<span style="color: #000; font-style: italic">Error: Connection failed</span>
+<span style="color: #000; font-style: italic">Warning: Timeout occurred</span>
+<span style="color: #000; font-style: italic">Process terminated unexpectedly</span>
+</pre></div>
+<h3><strong>-n</strong></h3>
+<p>マッチした行の行番号も表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>egrep<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>logfile.txt
+<span style="color: #000; font-style: italic">3:Error: Connection failed</span>
+<span style="color: #000; font-style: italic">7:System error detected at line 42</span>
+<span style="color: #000; font-style: italic">15:Cannot proceed due to error condition</span>
+</pre></div>
+<h3><strong>-c</strong></h3>
+<p>マッチした行数のみを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>egrep<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>logfile.txt
+<span style="color: #000; font-style: italic">3</span>
+</pre></div>
+<h3><strong>-l</strong></h3>
+<p>マッチしたファイル名のみを表示します（複数ファイル検索時に便利）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>egrep<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>*.log
+<span style="color: #000; font-style: italic">app.log</span>
+<span style="color: #000; font-style: italic">system.log</span>
+</pre></div>
 <h2>使用例</h2>
-<h3>基本的な使用法</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ファイル内で「apple」または「orange」を検索</span>
-egrep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;apple|orange&quot;</span><span style="color: #F8F8F8"> </span>fruits.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-apple<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>red
-orange<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>orange
+<h3>複数のパターンを検索（OR検索）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>egrep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error|warning|critical&quot;</span><span style="color: #F8F8F8"> </span>logfile.txt
+<span style="color: #000; font-style: italic">Error: Connection failed</span>
+<span style="color: #000; font-style: italic">Warning: Timeout occurred</span>
+<span style="color: #000; font-style: italic">CRITICAL: System shutdown initiated</span>
 </pre></div>
-<h3>複数のパターンと行番号表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 「user」または「admin」を含む行を行番号付きで表示</span>
-egrep<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;user|admin&quot;</span><span style="color: #F8F8F8"> </span>users.log
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">2</span>:<span style="color: #F8F8F8"> </span>user1<span style="color: #F8F8F8"> </span>logged<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
-<span style="color: #0000CF; font-weight: bold">5</span>:<span style="color: #F8F8F8"> </span>admin<span style="color: #F8F8F8"> </span>access<span style="color: #F8F8F8"> </span>granted
-<span style="color: #0000CF; font-weight: bold">7</span>:<span style="color: #F8F8F8"> </span>user2<span style="color: #F8F8F8"> </span>logged<span style="color: #F8F8F8"> </span>out
+<h3>特定の単語で始まる行を検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>egrep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;^Error&quot;</span><span style="color: #F8F8F8"> </span>logfile.txt
+<span style="color: #000; font-style: italic">Error: Connection failed</span>
+<span style="color: #000; font-style: italic">Error: Database unreachable</span>
 </pre></div>
-<h3>再帰的な検索</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># プロジェクト内のすべてのJavaファイルから「TODO」を検索</span>
-egrep<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;TODO&quot;</span><span style="color: #F8F8F8"> </span>--include<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;*.java&quot;</span><span style="color: #F8F8F8"> </span>./project/
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-./project/src/Main.java:45:<span style="color: #F8F8F8"> </span>//<span style="color: #F8F8F8"> </span>TODO:<span style="color: #F8F8F8"> </span>Fix<span style="color: #F8F8F8"> </span>this<span style="color: #F8F8F8"> </span>bug
-./project/src/User.java:23:<span style="color: #F8F8F8"> </span>//<span style="color: #F8F8F8"> </span>TODO:<span style="color: #F8F8F8"> </span>Implement<span style="color: #F8F8F8"> </span>authentication
+<h3>特定の単語で終わる行を検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>egrep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;failed</span>$<span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span>logfile.txt
+<span style="color: #000; font-style: italic">Connection attempt failed</span>
+<span style="color: #000; font-style: italic">Authentication failed</span>
 </pre></div>
-<h3>複雑な正規表現</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 数字で始まる行を検索</span>
-egrep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;^[0-9]&quot;</span><span style="color: #F8F8F8"> </span>data.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">1</span>.<span style="color: #F8F8F8"> </span>First<span style="color: #F8F8F8"> </span>item
-<span style="color: #0000CF; font-weight: bold">2</span>.<span style="color: #F8F8F8"> </span>Second<span style="color: #F8F8F8"> </span>item
-<span style="color: #0000CF; font-weight: bold">9999</span><span style="color: #F8F8F8"> </span>-<span style="color: #F8F8F8"> </span>Special<span style="color: #F8F8F8"> </span>code
+<h3>特定の形式の日付を含む行を検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>egrep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;[0-9]{4}-[0-9]{2}-[0-9]{2}&quot;</span><span style="color: #F8F8F8"> </span>logfile.txt
+<span style="color: #000; font-style: italic">2025-04-30: System update completed</span>
+<span style="color: #000; font-style: italic">2025-04-29: Backup failed</span>
 </pre></div>
-<h2>追加情報</h2>
+<h2>ヒント:</h2>
+<h3>正規表現の基本記号</h3>
 <ul>
-<li><code>egrep</code>は<code>grep -E</code>の別名であり、最近のシステムでは<code>grep -E</code>の使用が推奨されています。</li>
-<li>拡張正規表現では、<code>|</code>（OR）、<code>+</code>（1回以上の繰り返し）、<code>?</code>（0または1回の出現）、<code>()</code>（グループ化）などの特殊文字をエスケープなしで使用できます。</li>
-<li>検索パターンに空白やシェルの特殊文字が含まれる場合は、引用符（<code>&quot;&quot;</code>）で囲むことをお勧めします。</li>
-<li>大量のファイルを検索する場合は、<code>--include</code>や<code>--exclude</code>オプションを使用して対象を絞り込むと効率的です。</li>
+<li><code>|</code> - OR演算子（例：<code>pattern1|pattern2</code>）</li>
+<li><code>()</code> - グループ化</li>
+<li><code>?</code> - 直前の文字が0回または1回出現</li>
+<li><code>+</code> - 直前の文字が1回以上出現</li>
+<li><code>*</code> - 直前の文字が0回以上出現</li>
+<li><code>[]</code> - 文字クラス（例：<code>[0-9]</code>は任意の数字）</li>
+<li><code>^</code> - 行の先頭にマッチ</li>
+<li><code>$</code> - 行の末尾にマッチ</li>
+</ul>
+<h3>検索結果の色付け</h3>
+<p><code>--color=auto</code>オプションを使うと、マッチした部分が色付けされて見やすくなります。</p>
+<h3>エスケープシーケンス</h3>
+<p>特殊文字（<code>*</code>, <code>?</code>, <code>|</code>など）を検索する場合は、バックスラッシュ（<code>\</code>）でエスケープする必要があります。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>egrep</code>と<code>grep -E</code>の違いは何ですか？</h4>
+<p>A. 機能的には同じです。<code>egrep</code>は<code>grep -E</code>のエイリアスであり、拡張正規表現を使用するためのショートカットです。最近のシステムでは<code>grep -E</code>の使用が推奨されています。</p>
+<h4>Q2. 複数のファイルから検索するにはどうすればいいですか？</h4>
+<p>A. ファイル名にワイルドカードを使用するか、複数のファイル名を指定します。例：<code>egrep &quot;pattern&quot; file1.txt file2.txt</code>または<code>egrep &quot;pattern&quot; *.txt</code></p>
+<h4>Q3. 検索結果を別のファイルに保存するにはどうすればいいですか？</h4>
+<p>A. リダイレクト演算子（<code>&gt;</code>）を使用します。例：<code>egrep &quot;pattern&quot; file.txt &gt; results.txt</code></p>
+<h4>Q4. 再帰的にディレクトリ内を検索するにはどうすればいいですか？</h4>
+<p>A. <code>-r</code>オプションを使用します。例：<code>egrep -r &quot;pattern&quot; /path/to/directory</code></p>
+<h2>macOSでの注意点</h2>
+<p>macOSの<code>egrep</code>はBSD版であり、GNU版と若干の違いがあります。特に複雑な正規表現を使用する場合、動作が異なる可能性があります。また、macOSでは<code>grep -E</code>の使用が推奨されており、将来的に<code>egrep</code>は非推奨になる可能性があります。</p>
+<h2>参考</h2>
+<p>https://www.gnu.org/software/grep/manual/grep.html</p>
+<h2>改訂</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

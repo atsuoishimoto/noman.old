@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  tcpdump - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>tcpdump command</h1>
+<p>Capture and analyze network traffic on a system.</p>
+<h2>Overview</h2>
+<p><code>tcpdump</code> is a powerful command-line packet analyzer that allows you to capture and display network packets being transmitted or received over a network interface. It's commonly used for network troubleshooting, security analysis, and monitoring network activity. The tool can filter packets based on various criteria and display their contents in different formats.</p>
+<h2>Options</h2>
+<h3><strong>-i [interface]</strong></h3>
+<p>Specify the network interface to capture packets from</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>eth0
+<span style="color: #000; font-style: italic">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span>
+<span style="color: #000; font-style: italic">listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
+<span style="color: #000; font-style: italic">13:45:22.357928 IP 192.168.1.5.58642 &gt; 172.217.169.36.443: Flags [.], ack 1, win 502, options [nop,nop,TS val 3987654321 ecr 987654321], length 0</span>
+</pre></div>
+<h3><strong>-n</strong></h3>
+<p>Don't convert addresses (like host addresses, port numbers, etc.) to names</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-n
+<span style="color: #000; font-style: italic">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span>
+<span style="color: #000; font-style: italic">listening on en0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
+<span style="color: #000; font-style: italic">13:46:15.123456 IP 192.168.1.5.58642 &gt; 172.217.169.36.443: Flags [P.], seq 1:517, ack 1, win 502, length 516</span>
+</pre></div>
+<h3><strong>-c [count]</strong></h3>
+<p>Capture only a specific number of packets and then stop</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span>
+<span style="color: #000; font-style: italic">listening on en0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
+<span style="color: #000; font-style: italic">13:47:01.234567 IP host1.local.58642 &gt; host2.local.443: Flags [.], ack 1, win 502, length 0</span>
+<span style="color: #000; font-style: italic">13:47:01.345678 IP host1.local.58642 &gt; host2.local.443: Flags [P.], seq 1:517, ack 1, win 502, length 516</span>
+<span style="color: #000; font-style: italic">13:47:01.456789 IP host2.local.443 &gt; host1.local.58642: Flags [.], ack 517, win 501, length 0</span>
+<span style="color: #000; font-style: italic">13:47:01.567890 IP host2.local.443 &gt; host1.local.58642: Flags [P.], seq 1:1448, ack 517, win 501, length 1447</span>
+<span style="color: #000; font-style: italic">13:47:01.678901 IP host1.local.58642 &gt; host2.local.443: Flags [.], ack 1448, win 501, length 0</span>
+<span style="color: #000; font-style: italic">5 packets captured</span>
+<span style="color: #000; font-style: italic">10 packets received by filter</span>
+<span style="color: #000; font-style: italic">0 packets dropped by kernel</span>
+</pre></div>
+<h3><strong>-w [file]</strong></h3>
+<p>Write the raw packets to a file instead of displaying them</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span>capture.pcap
+<span style="color: #000; font-style: italic">tcpdump: listening on en0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
+<span style="color: #000; font-style: italic">^C</span>
+<span style="color: #000; font-style: italic">45 packets captured</span>
+<span style="color: #000; font-style: italic">50 packets received by filter</span>
+<span style="color: #000; font-style: italic">0 packets dropped by kernel</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Capturing packets with a specific protocol</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>tcp
+<span style="color: #000; font-style: italic">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span>
+<span style="color: #000; font-style: italic">listening on en0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
+<span style="color: #000; font-style: italic">13:50:22.123456 IP host1.local.58642 &gt; host2.local.443: Flags [P.], seq 1:517, ack 1, win 502, length 516</span>
+<span style="color: #000; font-style: italic">13:50:22.234567 IP host2.local.443 &gt; host1.local.58642: Flags [.], ack 517, win 501, length 0</span>
+</pre></div>
+<h3>Filtering by host and port</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>host<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.5<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span>port<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">443</span>
+<span style="color: #000; font-style: italic">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span>
+<span style="color: #000; font-style: italic">listening on en0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
+<span style="color: #000; font-style: italic">13:51:33.123456 IP 192.168.1.5.58642 &gt; 172.217.169.36.443: Flags [P.], seq 1:517, ack 1, win 502, length 516</span>
+<span style="color: #000; font-style: italic">13:51:33.234567 IP 172.217.169.36.443 &gt; 192.168.1.5.58642: Flags [.], ack 517, win 501, length 0</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Use sudo for Full Access</h3>
+<p>Most systems require root privileges to capture packets. Use <code>sudo tcpdump</code> to ensure you have proper access to the network interfaces.</p>
+<h3>Limit Verbosity for Better Performance</h3>
+<p>When capturing high-volume traffic, use <code>-q</code> (quiet mode) to reduce the output and prevent performance issues.</p>
+<h3>Read Captured Files Later</h3>
+<p>Use <code>tcpdump -r capture.pcap</code> to read and analyze previously captured packet files without having to recapture the traffic.</p>
+<h3>Combine with grep for Quick Filtering</h3>
+<p>Pipe tcpdump output to grep to quickly filter for specific information: <code>tcpdump -n | grep &quot;192.168.1.5&quot;</code>.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How do I see a list of available network interfaces?</h4>
+<p>A. Use <code>tcpdump -D</code> to display a list of all interfaces that tcpdump can capture on.</p>
+<h4>Q2. How can I see the packet contents and not just headers?</h4>
+<p>A. Use the <code>-X</code> option to display packet contents in hex and ASCII, or <code>-A</code> to display in ASCII only.</p>
+<h4>Q3. How do I capture packets on multiple interfaces simultaneously?</h4>
+<p>A. Use <code>tcpdump -i any</code> to capture on all interfaces, though this may not work on all systems.</p>
+<h4>Q4. How can I make the output more readable?</h4>
+<p>A. Use <code>-n</code> to avoid DNS lookups, <code>-v</code>, <code>-vv</code>, or <code>-vvv</code> for increasing verbosity, and consider using <code>-l</code> with pipe to <code>less</code> for scrollable output.</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, you may need to use <code>sudo</code> even more frequently than on Linux systems. Additionally, the default capture interface names typically start with &quot;en&quot; (like en0 for Ethernet, en1 for Wi-Fi) rather than &quot;eth&quot; as on Linux. Use <code>ifconfig</code> to identify the correct interface names on your Mac.</p>
+<h2>References</h2>
+<p>https://www.tcpdump.org/manpages/tcpdump.1.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

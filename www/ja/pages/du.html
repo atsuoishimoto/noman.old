@@ -46,79 +46,88 @@
   <div class="content">
     <main>
       
-  <h1><code>du</code> コマンド概要</h1>
-<p><code>du</code>（disk usage）コマンドは、ファイルやディレクトリのディスク使用量（サイズ）を表示するためのUNIXコマンドです。ストレージ容量の管理や大きなファイルの特定に役立ちます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong><code>-h</code></strong>: 人間が読みやすい形式（KB、MB、GBなど）でサイズを表示します</p>
-<ul>
-<li>例: <code>du -h file.txt</code></li>
-</ul>
-</li>
-<li><p><strong><code>-s</code></strong>: 指定したディレクトリの合計サイズのみを表示します（サマリー）</p>
-<ul>
-<li>例: <code>du -s /home/user</code></li>
-</ul>
-</li>
-<li><p><strong><code>-a</code></strong>: ディレクトリだけでなく、すべてのファイルのサイズも表示します</p>
-<ul>
-<li>例: <code>du -a /home/user</code></li>
-</ul>
-</li>
-<li><p><strong><code>-c</code></strong>: 合計サイズを最後に表示します</p>
-<ul>
-<li>例: <code>du -c /home/user/*</code></li>
-</ul>
-</li>
-<li><p><strong><code>--max-depth=N</code></strong>: 指定した深さ（N）までのディレクトリ構造を表示します</p>
-<ul>
-<li>例: <code>du --max-depth=1 /home/user</code></li>
-</ul>
-</li>
-<li><p><strong><code>-k</code>, <code>-m</code>, <code>-g</code></strong>: サイズをキロバイト、メガバイト、ギガバイト単位で表示します</p>
-<ul>
-<li>例: <code>du -m /home/user</code></li>
-</ul>
-</li>
-</ul>
-<h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 現在のディレクトリのサイズを人間が読みやすい形式で表示</span>
-du<span style="color: #F8F8F8"> </span>-h
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">4</span>.0K<span style="color: #F8F8F8">    </span>./config
-<span style="color: #0000CF; font-weight: bold">8</span>.0K<span style="color: #F8F8F8">    </span>./src
-16K<span style="color: #F8F8F8">     </span>.
-
-<span style="color: #8F5902; font-style: italic"># 指定したディレクトリの合計サイズのみを表示</span>
-du<span style="color: #F8F8F8"> </span>-sh<span style="color: #F8F8F8"> </span>/home/user/Documents
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-156M<span style="color: #F8F8F8">    </span>/home/user/Documents
-
-<span style="color: #8F5902; font-style: italic"># 現在のディレクトリ内の各項目のサイズを表示（1階層のみ）</span>
-du<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>--max-depth<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">5</span>.6M<span style="color: #F8F8F8">    </span>./Downloads
-<span style="color: #0000CF; font-weight: bold">2</span>.3G<span style="color: #F8F8F8">    </span>./Videos
-<span style="color: #0000CF; font-weight: bold">4</span>.5G<span style="color: #F8F8F8">    </span>./Pictures
-<span style="color: #0000CF; font-weight: bold">7</span>.2G<span style="color: #F8F8F8">    </span>.
-
-<span style="color: #8F5902; font-style: italic"># 最も容量を使用している10個のディレクトリを特定</span>
-du<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span>-hr<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-10
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">7</span>.2G<span style="color: #F8F8F8">    </span>.
-<span style="color: #0000CF; font-weight: bold">4</span>.5G<span style="color: #F8F8F8">    </span>./Pictures
-<span style="color: #0000CF; font-weight: bold">2</span>.3G<span style="color: #F8F8F8">    </span>./Videos
-156M<span style="color: #F8F8F8">    </span>./Documents
-45M<span style="color: #F8F8F8">     </span>./Music
-<span style="color: #0000CF; font-weight: bold">5</span>.6M<span style="color: #F8F8F8">    </span>./Downloads
+  <h1>du コマンド</h1>
+<p>ディスク使用量を表示するコマンドです。</p>
+<h2>概要</h2>
+<p><code>du</code>（disk usage）コマンドは、ファイルやディレクトリが使用しているディスク容量を表示します。デフォルトでは、指定したディレクトリとそのサブディレクトリのサイズを表示します。ストレージ容量の管理や、大きなファイルやディレクトリを特定するのに役立ちます。</p>
+<h2>オプション</h2>
+<h3><strong>-h, --human-readable</strong></h3>
+<p>サイズを人間が読みやすい形式（K, M, G）で表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>du<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>Documents
+<span style="color: #000; font-style: italic">4.0K    Documents/notes</span>
+<span style="color: #000; font-style: italic">8.0K    Documents/projects/old</span>
+<span style="color: #000; font-style: italic">16K     Documents/projects</span>
+<span style="color: #000; font-style: italic">24K     Documents</span>
 </pre></div>
-<h2>追加情報</h2>
+<h3><strong>-s, --summarize</strong></h3>
+<p>指定したディレクトリの合計サイズのみを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>du<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>Documents
+<span style="color: #000; font-style: italic">24      Documents</span>
+</pre></div>
+<h3><strong>-a, --all</strong></h3>
+<p>ディレクトリだけでなく、すべてのファイルのサイズも表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>du<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>Documents
+<span style="color: #000; font-style: italic">4       Documents/notes/todo.txt</span>
+<span style="color: #000; font-style: italic">4       Documents/notes</span>
+<span style="color: #000; font-style: italic">8       Documents/projects/old/backup.zip</span>
+<span style="color: #000; font-style: italic">8       Documents/projects/old</span>
+<span style="color: #000; font-style: italic">4       Documents/projects/current.doc</span>
+<span style="color: #000; font-style: italic">16      Documents/projects</span>
+<span style="color: #000; font-style: italic">24      Documents</span>
+</pre></div>
+<h3><strong>-c, --total</strong></h3>
+<p>全体の合計を最後に表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>du<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>Documents
+<span style="color: #000; font-style: italic">24      Documents</span>
+<span style="color: #000; font-style: italic">24      合計</span>
+</pre></div>
+<h3><strong>--max-depth=N</strong></h3>
+<p>指定した深さまでのディレクトリのみ表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>du<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>--max-depth<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>Documents
+<span style="color: #000; font-style: italic">16K     Documents/projects</span>
+<span style="color: #000; font-style: italic">4.0K    Documents/notes</span>
+<span style="color: #000; font-style: italic">24K     Documents</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>特定のディレクトリの容量を人間が読みやすい形式で確認</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>du<span style="color: #F8F8F8"> </span>-sh<span style="color: #F8F8F8"> </span>/var/log
+<span style="color: #000; font-style: italic">156M    /var/log</span>
+</pre></div>
+<h3>現在のディレクトリで最も容量を使用しているディレクトリを特定</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>du<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>--max-depth<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span>-hr
+<span style="color: #000; font-style: italic">1.2G    .</span>
+<span style="color: #000; font-style: italic">820M    ./Videos</span>
+<span style="color: #000; font-style: italic">245M    ./Pictures</span>
+<span style="color: #000; font-style: italic">98M     ./Documents</span>
+<span style="color: #000; font-style: italic">42M     ./Music</span>
+</pre></div>
+<h3>特定のファイルタイプの合計サイズを確認</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.mp4&quot;</span><span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>du<span style="color: #F8F8F8"> </span>-ch<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>合計
+<span style="color: #000; font-style: italic">1.5G    合計</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>大きなファイルを素早く見つける</h3>
+<p><code>du -h | sort -hr | head -10</code> を使用すると、最も容量を使用している10個のディレクトリを表示できます。</p>
+<h3>パイプラインでの活用</h3>
+<p><code>find</code> コマンドと組み合わせることで、特定のファイルタイプのディスク使用量を計算できます。</p>
+<h3>除外パターンの指定</h3>
+<p><code>du --exclude=&quot;*.log&quot;</code> のように、特定のパターンを除外してディスク使用量を計算できます。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>du</code> と <code>df</code> の違いは何ですか？</h4>
+<p>A. <code>du</code> は特定のファイルやディレクトリが使用しているディスク容量を表示しますが、<code>df</code> はファイルシステム全体の使用状況（総容量、使用量、空き容量など）を表示します。</p>
+<h4>Q2. なぜ <code>du</code> と <code>ls -l</code> で表示されるサイズが異なるのですか？</h4>
+<p>A. <code>ls -l</code> はファイルの実際のサイズを表示しますが、<code>du</code> はファイルが占めるディスクブロックのサイズを表示します。ファイルシステムのブロックサイズにより、小さなファイルでも最小ブロックサイズ分の容量を消費します。</p>
+<h4>Q3. 特定のディレクトリの合計サイズだけを知りたい場合はどうすればよいですか？</h4>
+<p>A. <code>du -sh ディレクトリ名</code> を使用すると、そのディレクトリの合計サイズのみを人間が読みやすい形式で表示できます。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSの<code>du</code>コマンドはGNU版と若干異なります。例えば、<code>--max-depth</code>オプションの代わりに<code>-d</code>を使用します。また、デフォルトのブロックサイズが異なるため、同じファイルでもLinuxとmacOSで表示される数値が異なる場合があります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>du<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>Documents<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># macOSでの深さ指定</span>
+</pre></div>
+<h2>参考</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/du-invocation.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li><code>du</code>と<code>-h</code>オプションを組み合わせると、最も読みやすい結果が得られます。</li>
-<li>大きなディレクトリで実行すると時間がかかることがあります。特定のディレクトリに絞るか、<code>--max-depth</code>オプションを使用すると効率的です。</li>
-<li><code>du | sort -hr</code>の組み合わせは、最も容量を使用しているディレクトリを特定するのに便利です。</li>
-<li>シンボリックリンクは通常無視されますが、<code>-L</code>オプションを使用するとリンク先のサイズも計算されます。</li>
-<li>システム全体のディスク使用状況を確認するには、代わりに<code>df</code>コマンドを使用します。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

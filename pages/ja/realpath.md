@@ -1,55 +1,145 @@
-# realpathコマンドの概要
+# realpath コマンド
 
-`realpath`コマンドは、指定されたファイルやディレクトリの絶対パス（フルパス）を表示します。シンボリックリンクを解決し、正規化されたパスを出力します。
+ファイルやディレクトリの絶対パス（正規化されたフルパス）を表示します。
 
-## 主なオプション
+## 概要
 
-- **-s, --strip, --no-symlinks**: シンボリックリンクを解決せず、そのままのパスを表示します
-  - 例: `realpath -s /usr/bin/python`
+`realpath`コマンドは、指定されたファイルやディレクトリの絶対パスを表示します。シンボリックリンクを解決し、相対パスを絶対パスに変換することができます。これにより、ファイルの実際の場所を正確に把握することができます。
 
-- **-m, --canonicalize-missing**: 指定したパスの一部が存在しなくても処理を続行します
-  - 例: `realpath -m /path/to/non/existent/file`
+## オプション
 
-- **-e, --canonicalize-existing**: 指定したパスのすべての構成要素が存在する場合のみ処理します
-  - 例: `realpath -e /existing/path`
+### **-s, --strip, --no-symlinks**
 
-- **-q, --quiet**: エラーメッセージを表示しません
-  - 例: `realpath -q /non/existent/path`
+シンボリックリンクを解決せず、絶対パスのみを表示します。
 
-- **-z, --zero**: 出力の各行を改行ではなくNULL文字で終了します（スクリプトで使用する場合に便利）
-  - 例: `realpath -z file1 file2`
+```console
+$ ln -s /etc/hosts symlink_to_hosts
+$ realpath -s symlink_to_hosts
+/home/user/symlink_to_hosts
+```
 
-- **--relative-to=DIR**: 指定したディレクトリからの相対パスを表示します
-  - 例: `realpath --relative-to=/home /home/user/documents`
+### **-e, --canonicalize-existing**
+
+パス上のすべてのコンポーネント（ディレクトリなど）が存在する必要があります。存在しない場合はエラーになります。
+
+```console
+$ realpath -e /path/to/nonexistent
+realpath: /path/to/nonexistent: No such file or directory
+```
+
+### **-m, --canonicalize-missing**
+
+パス上に存在しないコンポーネントがあっても処理を続行します。
+
+```console
+$ realpath -m /path/to/nonexistent
+/path/to/nonexistent
+```
+
+### **-L, --logical**
+
+シンボリックリンクを解決します（デフォルトの動作）。
+
+```console
+$ ln -s /etc/hosts symlink_to_hosts
+$ realpath -L symlink_to_hosts
+/etc/hosts
+```
+
+### **-P, --physical**
+
+すべてのシンボリックリンクを解決します。
+
+```console
+$ realpath -P symlink_to_hosts
+/etc/hosts
+```
+
+### **--relative-to=DIR**
+
+指定したディレクトリからの相対パスを表示します。
+
+```console
+$ realpath --relative-to=/etc /etc/hosts
+hosts
+```
+
+### **--relative-base=DIR**
+
+指定したディレクトリを基準として相対パスを表示します。指定したディレクトリの子ディレクトリでない場合は絶対パスを表示します。
+
+```console
+$ realpath --relative-base=/etc /etc/hosts
+hosts
+$ realpath --relative-base=/etc /var/log
+/var/log
+```
 
 ## 使用例
 
-```bash
-# 基本的な使用法（ファイルの絶対パスを表示）
-realpath myfile.txt
-# 出力例
-/home/user/projects/myfile.txt
+### 基本的な使用方法
 
-# シンボリックリンクを解決せずにパスを表示
-ln -s /etc/hosts hosts_link
-realpath -s hosts_link
-# 出力例
-/home/user/hosts_link
-
-# 存在しないファイルのパスを表示
-realpath -m /home/user/non_existent_file.txt
-# 出力例
-/home/user/non_existent_file.txt
-
-# 相対パスを表示
-realpath --relative-to=/home /home/user/documents/file.txt
-# 出力例
-user/documents/file.txt
+```console
+$ realpath file.txt
+/home/user/documents/file.txt
 ```
 
-## 追加情報
+### シンボリックリンクの解決
 
-- シェルスクリプト内でファイルの絶対パスを取得する際に特に便利です
-- `readlink -f`コマンドと似た機能を持ちますが、`realpath`の方がより多くのオプションを提供します
-- 複数のファイルを一度に指定すると、それぞれの絶対パスを1行ずつ出力します
-- 存在しないパスを指定した場合、デフォルトではエラーになりますが、`-m`オプションを使用すると仮想的なパスを表示できます
+```console
+$ ln -s /etc/hosts symlink_to_hosts
+$ realpath symlink_to_hosts
+/etc/hosts
+```
+
+### 相対パスの絶対パスへの変換
+
+```console
+$ realpath ../projects
+/home/user/projects
+```
+
+### 複数のファイルの絶対パスを表示
+
+```console
+$ realpath file1.txt file2.txt dir1
+/home/user/file1.txt
+/home/user/file2.txt
+/home/user/dir1
+```
+
+## ヒント:
+
+### スクリプト内での使用
+
+シェルスクリプト内で`realpath`を使用すると、スクリプトの実行場所に関係なく、ファイルの絶対パスを取得できるため、ファイル操作が安全になります。
+
+### 存在しないファイルのパス
+
+デフォルトでは、`realpath`は存在しないファイルに対してエラーを返します。存在しないファイルのパスを取得するには`-m`オプションを使用します。
+
+### 相対パスの活用
+
+`--relative-to`オプションを使うと、あるパスから別のパスへの相対パスを簡単に取得できます。これはファイルの移動やリンク作成時に役立ちます。
+
+## よくある質問
+
+#### Q1. `realpath`と`readlink -f`の違いは何ですか？
+A. 両方とも絶対パスを表示しますが、`realpath`はより多くのオプションを提供し、GNU coreutils の一部です。`readlink -f`は一部の古いシステムでは動作が異なる場合があります。
+
+#### Q2. 存在しないファイルの絶対パスを取得するにはどうすればよいですか？
+A. `realpath -m /path/to/nonexistent`を使用します。`-m`オプションは存在しないコンポーネントがあっても処理を続行します。
+
+#### Q3. シンボリックリンクを解決せずに絶対パスを取得するにはどうすればよいですか？
+A. `realpath -s symlink`を使用します。これにより、シンボリックリンク自体の絶対パスが表示されます。
+
+#### Q4. macOSでrealpathを使用するには？
+A. macOSのデフォルトインストールには`realpath`が含まれていない場合があります。Homebrewを使用して`coreutils`パッケージをインストールすることで利用できます: `brew install coreutils`
+
+## 参考文献
+
+https://www.gnu.org/software/coreutils/manual/html_node/realpath-invocation.html
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

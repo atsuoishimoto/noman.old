@@ -1,81 +1,145 @@
-# unzipコマンド概要
+# unzip コマンド
 
-`unzip`コマンドは、ZIP形式で圧縮されたファイルを展開（解凍）するためのコマンドです。Windows、macOS、Linuxなど様々なプラットフォームで使用される一般的な圧縮形式であるZIPファイルを扱うことができます。
+ZIP アーカイブファイルを展開するコマンド。
 
-## 主なオプション
+## 概要
 
-- **-l**: ZIPファイルの内容を一覧表示します（展開せずに中身を確認）
-  - 例: `unzip -l archive.zip`
+`unzip` コマンドは、ZIP 形式で圧縮されたファイルを解凍するために使用されます。ファイル名を指定するだけで、現在のディレクトリにアーカイブの内容を展開できます。また、特定のファイルのみを抽出したり、展開先ディレクトリを指定したりすることも可能です。
 
-- **-d**: 指定したディレクトリに展開します
-  - 例: `unzip archive.zip -d /path/to/directory`
+## オプション
 
-- **-o**: 既存のファイルを確認なしで上書きします
-  - 例: `unzip -o archive.zip`
+### **-l (リスト表示)**
 
-- **-n**: 既存のファイルを上書きしません
-  - 例: `unzip -n archive.zip`
+ZIP ファイル内のファイル一覧を表示します（実際に展開はしません）。
 
-- **-j**: ディレクトリ構造を無視して、すべてのファイルを現在のディレクトリに展開します
-  - 例: `unzip -j archive.zip`
+```console
+$ unzip -l archive.zip
+Archive:  archive.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+      100  2025-04-20 10:30   file1.txt
+      200  2025-04-20 10:31   file2.txt
+      300  2025-04-20 10:32   folder/file3.txt
+---------                     -------
+      600                     3 files
+```
 
-- **-q**: 静かモード（詳細な出力を表示しない）
-  - 例: `unzip -q archive.zip`
+### **-d (ディレクトリ指定)**
 
-- **-p**: 内容を標準出力に出力します（テキストファイルの内容を確認する場合に便利）
-  - 例: `unzip -p archive.zip file.txt`
+ZIP ファイルを展開する先のディレクトリを指定します。
 
-## 使用例
+```console
+$ unzip archive.zip -d extracted_files
+Archive:  archive.zip
+  inflating: extracted_files/file1.txt
+  inflating: extracted_files/file2.txt
+  inflating: extracted_files/folder/file3.txt
+```
 
-### 基本的な使い方
-```bash
-# ZIPファイルを現在のディレクトリに展開
-unzip archive.zip
-# 出力例
+### **-o (上書き)**
+
+既存のファイルを確認なしで上書きします。
+
+```console
+$ unzip -o archive.zip
 Archive:  archive.zip
   inflating: file1.txt
   inflating: file2.txt
-  inflating: subfolder/file3.txt
+  inflating: folder/file3.txt
 ```
 
-### ZIPファイルの内容を確認
-```bash
-# ZIPファイルの内容を一覧表示（展開せずに）
-unzip -l photos.zip
-# 出力例
-Archive:  photos.zip
+### **-q (静かモード)**
+
+解凍中の詳細な出力を表示せず、静かに実行します。
+
+```console
+$ unzip -q archive.zip
+```
+
+## 使用例
+
+### 基本的な解凍
+
+```console
+$ unzip archive.zip
+Archive:  archive.zip
+  inflating: file1.txt
+  inflating: file2.txt
+  creating: folder/
+  inflating: folder/file3.txt
+```
+
+### 特定のファイルのみを解凍
+
+```console
+$ unzip archive.zip file1.txt
+Archive:  archive.zip
+  inflating: file1.txt
+```
+
+### パスワード付きZIPファイルの解凍
+
+```console
+$ unzip -P mypassword secure.zip
+Archive:  secure.zip
+  inflating: confidential.txt
+```
+
+### 解凍前にファイル内容を確認
+
+```console
+$ unzip -l archive.zip
+Archive:  archive.zip
   Length     Date   Time    Name
  --------    ----   ----    ----
-   245760  2023-04-01 10:30   photo1.jpg
-   189440  2023-04-01 10:31   photo2.jpg
-   302080  2023-04-01 10:32   vacation/photo3.jpg
+      100  04-20-25 10:30   file1.txt
+      200  04-20-25 10:31   file2.txt
+      300  04-20-25 10:32   folder/file3.txt
  --------                   -------
-   737280                   3 files
+      600                   3 files
 ```
 
-### 特定のディレクトリに展開
-```bash
-# 指定したディレクトリに展開
-unzip documents.zip -d ~/Documents/extracted
-# 出力例
-Archive:  documents.zip
-   creating: /home/user/Documents/extracted/reports/
-  inflating: /home/user/Documents/extracted/reports/report1.pdf
-  inflating: /home/user/Documents/extracted/reports/report2.pdf
+## ヒント:
+
+### 日本語ファイル名の文字化け対策
+
+macOSでは、日本語ファイル名が含まれるZIPファイルを解凍すると文字化けすることがあります。その場合は `unar` コマンド（`brew install unar` でインストール）を使用すると良いでしょう。
+
+### 解凍前の内容確認
+
+大きなZIPファイルを解凍する前に `-l` オプションで内容を確認しましょう。これにより、不要なファイルの解凍を避けることができます。
+
+### 既存ファイルの保護
+
+重要なファイルを誤って上書きしないように、新しいディレクトリに解凍する `-d` オプションを活用しましょう。
+
+## よくある質問
+
+#### Q1. ZIPファイルが破損しているかどうかを確認するには？
+A. `unzip -t archive.zip` コマンドを使用すると、ZIPファイルの整合性をテストできます。
+
+#### Q2. 解凍せずにZIPファイルの内容を見るには？
+A. `unzip -l archive.zip` を使用すると、ファイルを実際に解凍せずに内容を確認できます。
+
+#### Q3. 特定のファイルやディレクトリだけを解凍するには？
+A. `unzip archive.zip filename` のようにZIPファイル名の後に抽出したいファイル名を指定します。ワイルドカード（`*.txt`など）も使用できます。
+
+#### Q4. 解凍時にファイル名の文字化けを防ぐには？
+A. macOSでは、`The Unarchiver`や`unar`コマンドラインツールを使用すると文字化けを防げることが多いです。
+
+## macOSでの注意点
+
+macOSの標準の`unzip`コマンドは、日本語などの非ASCII文字を含むファイル名を正しく処理できないことがあります。このような場合は、Homebrewを使って`unar`をインストールし、代わりに使用することをお勧めします：
+
+```console
+$ brew install unar
+$ unar archive.zip
 ```
 
-### 特定のファイルのみを展開
-```bash
-# ZIPファイルから特定のファイルのみを展開
-unzip archive.zip config.json
-# 出力例
-Archive:  archive.zip
-  inflating: config.json
-```
+## 参考
 
-## 追加のヒント
+https://linux.die.net/man/1/unzip
 
-- ZIPファイルにパスワードが設定されている場合は、`-P`オプションでパスワードを指定できます：`unzip -P password archive.zip`
-- セキュリティ上の理由から、パスワードをコマンドラインに直接入力したくない場合は、オプションなしで実行すると対話的にパスワードを入力できます
-- 日本語などの非ASCII文字を含むZIPファイルを展開する場合、文字化けすることがあります。その場合は`unzip -O CP932 archive.zip`（Windows向けの日本語エンコーディング）などのオプションを試してみてください
-- `unzip`コマンドがインストールされていない場合は、Ubuntuなどのデビアン系では`sudo apt install unzip`、RedHatなどのRPM系では`sudo yum install unzip`でインストールできます
+## 改訂履歴
+
+- 2025/04/30 初版作成

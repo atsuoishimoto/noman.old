@@ -1,68 +1,117 @@
-# `tail` コマンド概要
+# tail コマンド
 
-`tail`コマンドはファイルの末尾部分を表示するためのコマンドです。デフォルトでは、ファイルの最後の10行を表示します。ログファイルの監視や最新の変更を確認する際に特に便利です。
+ファイルの末尾部分を表示します。
 
-## 主なオプション
+## 概要
 
-- **-n, --lines=N**: 表示する行数を指定します（デフォルトは10行）
-  - 例: `tail -n 5 file.txt` （最後の5行を表示）
+`tail` コマンドはファイルの末尾（最後の部分）を表示するためのコマンドです。デフォルトでは、ファイルの最後の10行を表示します。ログファイルの最新エントリの確認や、ファイルの更新をリアルタイムで監視する場合に特に便利です。
 
-- **-f, --follow**: ファイルの更新をリアルタイムで監視し、新しく追加された行を表示し続けます
-  - 例: `tail -f log.txt` （ログファイルの更新をリアルタイムで監視）
+## オプション
 
-- **-c, --bytes=N**: 最後のN文字（バイト）を表示します
-  - 例: `tail -c 20 file.txt` （最後の20バイトを表示）
+### **-n, --lines=N**
 
-- **+N**: ファイルのN行目から最後までを表示します
-  - 例: `tail +100 file.txt` （100行目から最後まで表示）
+表示する行数を指定します。
+
+```console
+$ tail -n 5 /var/log/syslog
+Apr 30 10:15:22 hostname service[1234]: 処理を完了しました
+Apr 30 10:15:30 hostname service[1234]: 新しいリクエストを受信しました
+Apr 30 10:15:35 hostname service[1234]: 処理を開始します
+Apr 30 10:15:40 hostname service[1234]: データを処理中です
+Apr 30 10:15:45 hostname service[1234]: 処理が完了しました
+```
+
+### **-f, --follow**
+
+ファイルの末尾を継続的に監視し、新しく追加された行をリアルタイムで表示します。
+
+```console
+$ tail -f /var/log/apache2/access.log
+192.168.1.100 - - [30/Apr/2025:10:20:15 +0900] "GET /index.html HTTP/1.1" 200 2326
+192.168.1.101 - - [30/Apr/2025:10:20:18 +0900] "GET /images/logo.png HTTP/1.1" 200 4532
+192.168.1.102 - - [30/Apr/2025:10:20:20 +0900] "POST /login HTTP/1.1" 302 0
+```
+
+### **-c, --bytes=N**
+
+最後のN バイトを表示します。
+
+```console
+$ tail -c 20 example.txt
+の最後の20バイトです
+```
 
 ## 使用例
 
-```bash
-# ファイルの最後の10行を表示（デフォルト）
-tail file.txt
-# 出力例
-This is line 91
-This is line 92
-This is line 93
-This is line 94
-This is line 95
-This is line 96
-This is line 97
-This is line 98
-This is line 99
-This is line 100
+### 複数ファイルの末尾を表示
 
-# 最後の3行だけを表示
-tail -n 3 file.txt
-# 出力例
-This is line 98
-This is line 99
-This is line 100
-
-# 複数のファイルの末尾を表示
-tail -n 2 file1.txt file2.txt
-# 出力例
+```console
+$ tail -n 2 file1.txt file2.txt
 ==> file1.txt <==
-Last line of file1
-End of file1
+file1の最後から2行目
+file1の最後の行
 
 ==> file2.txt <==
-Last line of file2
-End of file2
-
-# ログファイルをリアルタイムで監視
-tail -f /var/log/syslog
-# 出力例（新しいログが追加されるたびに表示が更新される）
-Apr 10 15:23:01 server systemd[1]: Starting Daily apt upgrade and clean activities...
-Apr 10 15:23:01 server systemd[1]: apt-daily-upgrade.service: Succeeded.
-Apr 10 15:23:01 server systemd[1]: Finished Daily apt upgrade and clean activities.
-...（新しいログが追加されると自動的に表示される）
+file2の最後から2行目
+file2の最後の行
 ```
 
-## 追加情報
+### バイト数指定で表示
 
-- `tail -f`はサーバーのログ監視に非常に便利です。Ctrl+Cで監視を終了できます。
-- `tail -f`と`grep`を組み合わせると、特定のパターンを含む新しい行だけを監視できます：`tail -f log.txt | grep "error"`
-- 複数のファイルを同時に監視するには：`tail -f file1.txt file2.txt`
-- 最新のログを確認するために、システム管理者が最もよく使うコマンドの一つです。
+```console
+$ tail -c 50 large_file.txt
+...ファイルの最後の50バイト分のテキストが表示される...
+```
+
+### ファイルの更新を監視
+
+```console
+$ tail -f -n 0 /var/log/syslog
+# 新しく追加される行だけをリアルタイムで表示する
+```
+
+## ヒント:
+
+### ログ監視の効率化
+
+`tail -f` と `grep` を組み合わせることで、特定のパターンを含む新しいログエントリだけを監視できます。
+```console
+$ tail -f /var/log/syslog | grep ERROR
+```
+
+### 複数ファイルの監視
+
+`tail -f` で複数のファイルを同時に監視できます。各ファイルからの出力には、そのファイル名のヘッダーが付きます。
+```console
+$ tail -f /var/log/syslog /var/log/auth.log
+```
+
+### 行数の代わりにプラス記号を使用
+
+`tail +N` を使うと、N行目から最後までを表示できます。
+```console
+$ tail -n +100 large_file.txt
+# 100行目から最後までを表示する
+```
+
+## よくある質問
+
+#### Q1. `tail` と `head` の違いは何ですか？
+A. `tail` はファイルの末尾（最後の部分）を表示するのに対し、`head` はファイルの先頭（最初の部分）を表示します。
+
+#### Q2. `tail -f` を終了するにはどうすればいいですか？
+A. `Ctrl+C` キーを押すことで、`tail -f` の実行を終了できます。
+
+#### Q3. 特定の行から最後までを表示するにはどうすればいいですか？
+A. `tail -n +N` を使用します。例えば、`tail -n +100` は100行目から最後までを表示します。
+
+#### Q4. `tail -f` でファイルが削除されたり名前が変更されたりした場合はどうなりますか？
+A. デフォルトでは監視を続けますが、`--follow=name` オプションを使うと、ファイル名に基づいて追跡するため、ログローテーションなどで名前が変わった場合に新しいファイルを追跡できます。
+
+## 参考情報
+
+https://www.gnu.org/software/coreutils/manual/html_node/tail-invocation.html
+
+## Revisions
+
+- 2025/04/30 First revision

@@ -46,69 +46,91 @@
   <div class="content">
     <main>
       
-  <h1>realpathコマンドの概要</h1>
-<p><code>realpath</code>コマンドは、指定されたファイルやディレクトリの絶対パス（フルパス）を表示します。シンボリックリンクを解決し、正規化されたパスを出力します。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-s, --strip, --no-symlinks</strong>: シンボリックリンクを解決せず、そのままのパスを表示します</p>
-<ul>
-<li>例: <code>realpath -s /usr/bin/python</code></li>
-</ul>
-</li>
-<li><p><strong>-m, --canonicalize-missing</strong>: 指定したパスの一部が存在しなくても処理を続行します</p>
-<ul>
-<li>例: <code>realpath -m /path/to/non/existent/file</code></li>
-</ul>
-</li>
-<li><p><strong>-e, --canonicalize-existing</strong>: 指定したパスのすべての構成要素が存在する場合のみ処理します</p>
-<ul>
-<li>例: <code>realpath -e /existing/path</code></li>
-</ul>
-</li>
-<li><p><strong>-q, --quiet</strong>: エラーメッセージを表示しません</p>
-<ul>
-<li>例: <code>realpath -q /non/existent/path</code></li>
-</ul>
-</li>
-<li><p><strong>-z, --zero</strong>: 出力の各行を改行ではなくNULL文字で終了します（スクリプトで使用する場合に便利）</p>
-<ul>
-<li>例: <code>realpath -z file1 file2</code></li>
-</ul>
-</li>
-<li><p><strong>--relative-to=DIR</strong>: 指定したディレクトリからの相対パスを表示します</p>
-<ul>
-<li>例: <code>realpath --relative-to=/home /home/user/documents</code></li>
-</ul>
-</li>
-</ul>
-<h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使用法（ファイルの絶対パスを表示）</span>
-realpath<span style="color: #F8F8F8"> </span>myfile.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-/home/user/projects/myfile.txt
-
-<span style="color: #8F5902; font-style: italic"># シンボリックリンクを解決せずにパスを表示</span>
-ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>hosts_link
-realpath<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>hosts_link
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-/home/user/hosts_link
-
-<span style="color: #8F5902; font-style: italic"># 存在しないファイルのパスを表示</span>
-realpath<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>/home/user/non_existent_file.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-/home/user/non_existent_file.txt
-
-<span style="color: #8F5902; font-style: italic"># 相対パスを表示</span>
-realpath<span style="color: #F8F8F8"> </span>--relative-to<span style="color: #CE5C00; font-weight: bold">=</span>/home<span style="color: #F8F8F8"> </span>/home/user/documents/file.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-user/documents/file.txt
+  <h1>realpath コマンド</h1>
+<p>ファイルやディレクトリの絶対パス（正規化されたフルパス）を表示します。</p>
+<h2>概要</h2>
+<p><code>realpath</code>コマンドは、指定されたファイルやディレクトリの絶対パスを表示します。シンボリックリンクを解決し、相対パスを絶対パスに変換することができます。これにより、ファイルの実際の場所を正確に把握することができます。</p>
+<h2>オプション</h2>
+<h3><strong>-s, --strip, --no-symlinks</strong></h3>
+<p>シンボリックリンクを解決せず、絶対パスのみを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>symlink_to_hosts
+<span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>symlink_to_hosts
+<span style="color: #000; font-style: italic">/home/user/symlink_to_hosts</span>
 </pre></div>
-<h2>追加情報</h2>
+<h3><strong>-e, --canonicalize-existing</strong></h3>
+<p>パス上のすべてのコンポーネント（ディレクトリなど）が存在する必要があります。存在しない場合はエラーになります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>/path/to/nonexistent
+<span style="color: #000; font-style: italic">realpath: /path/to/nonexistent: No such file or directory</span>
+</pre></div>
+<h3><strong>-m, --canonicalize-missing</strong></h3>
+<p>パス上に存在しないコンポーネントがあっても処理を続行します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>/path/to/nonexistent
+<span style="color: #000; font-style: italic">/path/to/nonexistent</span>
+</pre></div>
+<h3><strong>-L, --logical</strong></h3>
+<p>シンボリックリンクを解決します（デフォルトの動作）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>symlink_to_hosts
+<span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>symlink_to_hosts
+<span style="color: #000; font-style: italic">/etc/hosts</span>
+</pre></div>
+<h3><strong>-P, --physical</strong></h3>
+<p>すべてのシンボリックリンクを解決します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span>symlink_to_hosts
+<span style="color: #000; font-style: italic">/etc/hosts</span>
+</pre></div>
+<h3><strong>--relative-to=DIR</strong></h3>
+<p>指定したディレクトリからの相対パスを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>--relative-to<span style="color: #CE5C00; font-weight: bold">=</span>/etc<span style="color: #F8F8F8"> </span>/etc/hosts
+<span style="color: #000; font-style: italic">hosts</span>
+</pre></div>
+<h3><strong>--relative-base=DIR</strong></h3>
+<p>指定したディレクトリを基準として相対パスを表示します。指定したディレクトリの子ディレクトリでない場合は絶対パスを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>--relative-base<span style="color: #CE5C00; font-weight: bold">=</span>/etc<span style="color: #F8F8F8"> </span>/etc/hosts
+<span style="color: #000; font-style: italic">hosts</span>
+<span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>--relative-base<span style="color: #CE5C00; font-weight: bold">=</span>/etc<span style="color: #F8F8F8"> </span>/var/log
+<span style="color: #000; font-style: italic">/var/log</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的な使用方法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">/home/user/documents/file.txt</span>
+</pre></div>
+<h3>シンボリックリンクの解決</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>symlink_to_hosts
+<span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>symlink_to_hosts
+<span style="color: #000; font-style: italic">/etc/hosts</span>
+</pre></div>
+<h3>相対パスの絶対パスへの変換</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>../projects
+<span style="color: #000; font-style: italic">/home/user/projects</span>
+</pre></div>
+<h3>複数のファイルの絶対パスを表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>dir1
+<span style="color: #000; font-style: italic">/home/user/file1.txt</span>
+<span style="color: #000; font-style: italic">/home/user/file2.txt</span>
+<span style="color: #000; font-style: italic">/home/user/dir1</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>スクリプト内での使用</h3>
+<p>シェルスクリプト内で<code>realpath</code>を使用すると、スクリプトの実行場所に関係なく、ファイルの絶対パスを取得できるため、ファイル操作が安全になります。</p>
+<h3>存在しないファイルのパス</h3>
+<p>デフォルトでは、<code>realpath</code>は存在しないファイルに対してエラーを返します。存在しないファイルのパスを取得するには<code>-m</code>オプションを使用します。</p>
+<h3>相対パスの活用</h3>
+<p><code>--relative-to</code>オプションを使うと、あるパスから別のパスへの相対パスを簡単に取得できます。これはファイルの移動やリンク作成時に役立ちます。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>realpath</code>と<code>readlink -f</code>の違いは何ですか？</h4>
+<p>A. 両方とも絶対パスを表示しますが、<code>realpath</code>はより多くのオプションを提供し、GNU coreutils の一部です。<code>readlink -f</code>は一部の古いシステムでは動作が異なる場合があります。</p>
+<h4>Q2. 存在しないファイルの絶対パスを取得するにはどうすればよいですか？</h4>
+<p>A. <code>realpath -m /path/to/nonexistent</code>を使用します。<code>-m</code>オプションは存在しないコンポーネントがあっても処理を続行します。</p>
+<h4>Q3. シンボリックリンクを解決せずに絶対パスを取得するにはどうすればよいですか？</h4>
+<p>A. <code>realpath -s symlink</code>を使用します。これにより、シンボリックリンク自体の絶対パスが表示されます。</p>
+<h4>Q4. macOSでrealpathを使用するには？</h4>
+<p>A. macOSのデフォルトインストールには<code>realpath</code>が含まれていない場合があります。Homebrewを使用して<code>coreutils</code>パッケージをインストールすることで利用できます: <code>brew install coreutils</code></p>
+<h2>参考文献</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/realpath-invocation.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li>シェルスクリプト内でファイルの絶対パスを取得する際に特に便利です</li>
-<li><code>readlink -f</code>コマンドと似た機能を持ちますが、<code>realpath</code>の方がより多くのオプションを提供します</li>
-<li>複数のファイルを一度に指定すると、それぞれの絶対パスを1行ずつ出力します</li>
-<li>存在しないパスを指定した場合、デフォルトではエラーになりますが、<code>-m</code>オプションを使用すると仮想的なパスを表示できます</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

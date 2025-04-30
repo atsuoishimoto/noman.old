@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  grep - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>grep command</h1>
+<p>Search for patterns in files or text streams.</p>
+<h2>Overview</h2>
+<p><code>grep</code> is a powerful text search tool that finds lines matching a specified pattern in files or input streams. It's commonly used to filter output, search through code, or find specific content in text files. The name comes from &quot;global regular expression print.&quot;</p>
+<h2>Options</h2>
+<h3><strong>-i</strong> (Ignore case)</h3>
+<p>Performs a case-insensitive search, matching both uppercase and lowercase letters.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>log.txt
+<span style="color: #000; font-style: italic">Error: Connection failed</span>
+<span style="color: #000; font-style: italic">error: file not found</span>
+<span style="color: #000; font-style: italic">WARNING: Some errors were detected</span>
+</pre></div>
+<h3><strong>-r</strong> or <strong>-R</strong> (Recursive)</h3>
+<p>Searches through all files in the specified directory and its subdirectories.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;function&quot;</span><span style="color: #F8F8F8"> </span>/path/to/project
+<span style="color: #000; font-style: italic">/path/to/project/main.js:function initialize() {</span>
+<span style="color: #000; font-style: italic">/path/to/project/utils/helpers.js:const function calculateTotal() {</span>
+</pre></div>
+<h3><strong>-v</strong> (Invert match)</h3>
+<p>Shows lines that do NOT match the pattern.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;success&quot;</span><span style="color: #F8F8F8"> </span>log.txt
+<span style="color: #000; font-style: italic">Error: Connection failed</span>
+<span style="color: #000; font-style: italic">Warning: Low disk space</span>
+<span style="color: #000; font-style: italic">Info: Process started</span>
+</pre></div>
+<h3><strong>-n</strong> (Line numbers)</h3>
+<p>Displays the line number before each matching line.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;TODO&quot;</span><span style="color: #F8F8F8"> </span>*.js
+<span style="color: #000; font-style: italic">main.js:15:// TODO: Implement error handling</span>
+<span style="color: #000; font-style: italic">utils.js:42:// TODO: Optimize this algorithm</span>
+</pre></div>
+<h3><strong>-c</strong> (Count)</h3>
+<p>Shows only the count of matching lines for each file.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>*.log
+<span style="color: #000; font-style: italic">app.log:5</span>
+<span style="color: #000; font-style: italic">system.log:2</span>
+<span style="color: #000; font-style: italic">access.log:0</span>
+</pre></div>
+<h3><strong>-A</strong>, <strong>-B</strong>, and <strong>-C</strong> (Context)</h3>
+<p>Shows lines before (-B), after (-A), or both (-C) around each match.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>log.txt
+<span style="color: #000; font-style: italic">error: file not found</span>
+<span style="color: #000; font-style: italic">  at line 42</span>
+<span style="color: #000; font-style: italic">  in module loader.js</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic pattern matching</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;password&quot;</span><span style="color: #F8F8F8"> </span>config.txt
+<span style="color: #000; font-style: italic">default_password=admin123</span>
+<span style="color: #8F5902"># </span>password<span style="color: #F8F8F8"> </span>settings<span style="color: #F8F8F8"> </span>below
+</pre></div>
+<h3>Using regular expressions</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;^[0-9]&quot;</span><span style="color: #F8F8F8"> </span>data.txt
+<span style="color: #000; font-style: italic">123 Main Street</span>
+<span style="color: #000; font-style: italic">456 Oak Avenue</span>
+<span style="color: #000; font-style: italic">789 Pine Road</span>
+</pre></div>
+<h3>Combining multiple options</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;warning&quot;</span><span style="color: #F8F8F8"> </span>--color<span style="color: #CE5C00; font-weight: bold">=</span>auto<span style="color: #F8F8F8"> </span>*.log
+<span style="color: #000; font-style: italic">app.log:15:Warning: Connection unstable</span>
+<span style="color: #000; font-style: italic">system.log:42:warning: low memory detected</span>
+</pre></div>
+<h3>Piping output from another command</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>aux<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;firefox&quot;</span>
+<span style="color: #000; font-style: italic">user     12345  2.5  1.8 3458196 298796 ?      Sl   09:15   0:45 /usr/lib/firefox/firefox</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Use Color Highlighting</h3>
+<p>Enable color highlighting with <code>--color=auto</code> to make matches stand out. Add this to your shell profile as an alias: <code>alias grep='grep --color=auto'</code>.</p>
+<h3>Understand Basic Regular Expressions</h3>
+<p>Learn basic regex patterns to make searches more powerful. For example, <code>^</code> matches the start of a line, <code>$</code> matches the end, and <code>[0-9]</code> matches any digit.</p>
+<h3>Exclude Directories</h3>
+<p>When searching recursively, exclude directories with <code>--exclude-dir=PATTERN</code>: <code>grep -r &quot;TODO&quot; --exclude-dir=node_modules .</code></p>
+<h3>Search for Multiple Patterns</h3>
+<p>Use the <code>-e</code> option multiple times or the <code>-f</code> option with a file containing patterns: <code>grep -e &quot;error&quot; -e &quot;warning&quot; log.txt</code></p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between <code>grep</code>, <code>egrep</code>, and <code>fgrep</code>?</h4>
+<p>A. <code>egrep</code> is equivalent to <code>grep -E</code> (extended regex), and <code>fgrep</code> is equivalent to <code>grep -F</code> (fixed strings, no regex). Modern systems typically implement these as links to <code>grep</code> with the appropriate option.</p>
+<h4>Q2. How do I search for a pattern that contains spaces?</h4>
+<p>A. Enclose the pattern in quotes: <code>grep &quot;search term with spaces&quot; file.txt</code></p>
+<h4>Q3. How can I make grep show only the matching part of a line?</h4>
+<p>A. Use the <code>-o</code> option: <code>grep -o &quot;pattern&quot; file.txt</code></p>
+<h4>Q4. How do I search for a pattern in all files of a specific type?</h4>
+<p>A. Combine with find or use globbing: <code>grep &quot;pattern&quot; *.txt</code> or <code>find . -name &quot;*.txt&quot; -exec grep &quot;pattern&quot; {} \;</code></p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/grep/manual/grep.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

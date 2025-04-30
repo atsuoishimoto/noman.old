@@ -46,91 +46,99 @@
   <div class="content">
     <main>
       
-  <h1>unzipコマンド概要</h1>
-<p><code>unzip</code>コマンドは、ZIP形式で圧縮されたファイルを展開（解凍）するためのコマンドです。Windows、macOS、Linuxなど様々なプラットフォームで使用される一般的な圧縮形式であるZIPファイルを扱うことができます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-l</strong>: ZIPファイルの内容を一覧表示します（展開せずに中身を確認）</p>
-<ul>
-<li>例: <code>unzip -l archive.zip</code></li>
-</ul>
-</li>
-<li><p><strong>-d</strong>: 指定したディレクトリに展開します</p>
-<ul>
-<li>例: <code>unzip archive.zip -d /path/to/directory</code></li>
-</ul>
-</li>
-<li><p><strong>-o</strong>: 既存のファイルを確認なしで上書きします</p>
-<ul>
-<li>例: <code>unzip -o archive.zip</code></li>
-</ul>
-</li>
-<li><p><strong>-n</strong>: 既存のファイルを上書きしません</p>
-<ul>
-<li>例: <code>unzip -n archive.zip</code></li>
-</ul>
-</li>
-<li><p><strong>-j</strong>: ディレクトリ構造を無視して、すべてのファイルを現在のディレクトリに展開します</p>
-<ul>
-<li>例: <code>unzip -j archive.zip</code></li>
-</ul>
-</li>
-<li><p><strong>-q</strong>: 静かモード（詳細な出力を表示しない）</p>
-<ul>
-<li>例: <code>unzip -q archive.zip</code></li>
-</ul>
-</li>
-<li><p><strong>-p</strong>: 内容を標準出力に出力します（テキストファイルの内容を確認する場合に便利）</p>
-<ul>
-<li>例: <code>unzip -p archive.zip file.txt</code></li>
-</ul>
-</li>
-</ul>
+  <h1>unzip コマンド</h1>
+<p>ZIP アーカイブファイルを展開するコマンド。</p>
+<h2>概要</h2>
+<p><code>unzip</code> コマンドは、ZIP 形式で圧縮されたファイルを解凍するために使用されます。ファイル名を指定するだけで、現在のディレクトリにアーカイブの内容を展開できます。また、特定のファイルのみを抽出したり、展開先ディレクトリを指定したりすることも可能です。</p>
+<h2>オプション</h2>
+<h3><strong>-l (リスト表示)</strong></h3>
+<p>ZIP ファイル内のファイル一覧を表示します（実際に展開はしません）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>unzip<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>archive.zip
+<span style="color: #000; font-style: italic">Archive:  archive.zip</span>
+<span style="color: #000; font-style: italic">  Length      Date    Time    Name</span>
+<span style="color: #000; font-style: italic">---------  ---------- -----   ----</span>
+<span style="color: #000; font-style: italic">      100  2025-04-20 10:30   file1.txt</span>
+<span style="color: #000; font-style: italic">      200  2025-04-20 10:31   file2.txt</span>
+<span style="color: #000; font-style: italic">      300  2025-04-20 10:32   folder/file3.txt</span>
+<span style="color: #000; font-style: italic">---------                     -------</span>
+<span style="color: #000; font-style: italic">      600                     3 files</span>
+</pre></div>
+<h3><strong>-d (ディレクトリ指定)</strong></h3>
+<p>ZIP ファイルを展開する先のディレクトリを指定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>unzip<span style="color: #F8F8F8"> </span>archive.zip<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>extracted_files
+<span style="color: #000; font-style: italic">Archive:  archive.zip</span>
+<span style="color: #000; font-style: italic">  inflating: extracted_files/file1.txt</span>
+<span style="color: #000; font-style: italic">  inflating: extracted_files/file2.txt</span>
+<span style="color: #000; font-style: italic">  inflating: extracted_files/folder/file3.txt</span>
+</pre></div>
+<h3><strong>-o (上書き)</strong></h3>
+<p>既存のファイルを確認なしで上書きします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>unzip<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>archive.zip
+<span style="color: #000; font-style: italic">Archive:  archive.zip</span>
+<span style="color: #000; font-style: italic">  inflating: file1.txt</span>
+<span style="color: #000; font-style: italic">  inflating: file2.txt</span>
+<span style="color: #000; font-style: italic">  inflating: folder/file3.txt</span>
+</pre></div>
+<h3><strong>-q (静かモード)</strong></h3>
+<p>解凍中の詳細な出力を表示せず、静かに実行します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>unzip<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>archive.zip
+</pre></div>
 <h2>使用例</h2>
-<h3>基本的な使い方</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ZIPファイルを現在のディレクトリに展開</span>
-unzip<span style="color: #F8F8F8"> </span>archive.zip
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-Archive:<span style="color: #F8F8F8">  </span>archive.zip
-<span style="color: #F8F8F8">  </span>inflating:<span style="color: #F8F8F8"> </span>file1.txt
-<span style="color: #F8F8F8">  </span>inflating:<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #F8F8F8">  </span>inflating:<span style="color: #F8F8F8"> </span>subfolder/file3.txt
+<h3>基本的な解凍</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>unzip<span style="color: #F8F8F8"> </span>archive.zip
+<span style="color: #000; font-style: italic">Archive:  archive.zip</span>
+<span style="color: #000; font-style: italic">  inflating: file1.txt</span>
+<span style="color: #000; font-style: italic">  inflating: file2.txt</span>
+<span style="color: #000; font-style: italic">  creating: folder/</span>
+<span style="color: #000; font-style: italic">  inflating: folder/file3.txt</span>
 </pre></div>
-<h3>ZIPファイルの内容を確認</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ZIPファイルの内容を一覧表示（展開せずに）</span>
-unzip<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>photos.zip
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-Archive:<span style="color: #F8F8F8">  </span>photos.zip
-<span style="color: #F8F8F8">  </span>Length<span style="color: #F8F8F8">     </span>Date<span style="color: #F8F8F8">   </span>Time<span style="color: #F8F8F8">    </span>Name
-<span style="color: #F8F8F8"> </span>--------<span style="color: #F8F8F8">    </span>----<span style="color: #F8F8F8">   </span>----<span style="color: #F8F8F8">    </span>----
-<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">245760</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">2023</span>-04-01<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>:30<span style="color: #F8F8F8">   </span>photo1.jpg
-<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">189440</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">2023</span>-04-01<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>:31<span style="color: #F8F8F8">   </span>photo2.jpg
-<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">302080</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">2023</span>-04-01<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>:32<span style="color: #F8F8F8">   </span>vacation/photo3.jpg
-<span style="color: #F8F8F8"> </span>--------<span style="color: #F8F8F8">                   </span>-------
-<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">737280</span><span style="color: #F8F8F8">                   </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>files
+<h3>特定のファイルのみを解凍</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>unzip<span style="color: #F8F8F8"> </span>archive.zip<span style="color: #F8F8F8"> </span>file1.txt
+<span style="color: #000; font-style: italic">Archive:  archive.zip</span>
+<span style="color: #000; font-style: italic">  inflating: file1.txt</span>
 </pre></div>
-<h3>特定のディレクトリに展開</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 指定したディレクトリに展開</span>
-unzip<span style="color: #F8F8F8"> </span>documents.zip<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>~/Documents/extracted
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-Archive:<span style="color: #F8F8F8">  </span>documents.zip
-<span style="color: #F8F8F8">   </span>creating:<span style="color: #F8F8F8"> </span>/home/user/Documents/extracted/reports/
-<span style="color: #F8F8F8">  </span>inflating:<span style="color: #F8F8F8"> </span>/home/user/Documents/extracted/reports/report1.pdf
-<span style="color: #F8F8F8">  </span>inflating:<span style="color: #F8F8F8"> </span>/home/user/Documents/extracted/reports/report2.pdf
+<h3>パスワード付きZIPファイルの解凍</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>unzip<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span>mypassword<span style="color: #F8F8F8"> </span>secure.zip
+<span style="color: #000; font-style: italic">Archive:  secure.zip</span>
+<span style="color: #000; font-style: italic">  inflating: confidential.txt</span>
 </pre></div>
-<h3>特定のファイルのみを展開</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ZIPファイルから特定のファイルのみを展開</span>
-unzip<span style="color: #F8F8F8"> </span>archive.zip<span style="color: #F8F8F8"> </span>config.json
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-Archive:<span style="color: #F8F8F8">  </span>archive.zip
-<span style="color: #F8F8F8">  </span>inflating:<span style="color: #F8F8F8"> </span>config.json
+<h3>解凍前にファイル内容を確認</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>unzip<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>archive.zip
+<span style="color: #000; font-style: italic">Archive:  archive.zip</span>
+<span style="color: #000; font-style: italic">  Length     Date   Time    Name</span>
+<span style="color: #000; font-style: italic"> --------    ----   ----    ----</span>
+<span style="color: #000; font-style: italic">      100  04-20-25 10:30   file1.txt</span>
+<span style="color: #000; font-style: italic">      200  04-20-25 10:31   file2.txt</span>
+<span style="color: #000; font-style: italic">      300  04-20-25 10:32   folder/file3.txt</span>
+<span style="color: #000; font-style: italic"> --------                   -------</span>
+<span style="color: #000; font-style: italic">      600                   3 files</span>
 </pre></div>
-<h2>追加のヒント</h2>
+<h2>ヒント:</h2>
+<h3>日本語ファイル名の文字化け対策</h3>
+<p>macOSでは、日本語ファイル名が含まれるZIPファイルを解凍すると文字化けすることがあります。その場合は <code>unar</code> コマンド（<code>brew install unar</code> でインストール）を使用すると良いでしょう。</p>
+<h3>解凍前の内容確認</h3>
+<p>大きなZIPファイルを解凍する前に <code>-l</code> オプションで内容を確認しましょう。これにより、不要なファイルの解凍を避けることができます。</p>
+<h3>既存ファイルの保護</h3>
+<p>重要なファイルを誤って上書きしないように、新しいディレクトリに解凍する <code>-d</code> オプションを活用しましょう。</p>
+<h2>よくある質問</h2>
+<h4>Q1. ZIPファイルが破損しているかどうかを確認するには？</h4>
+<p>A. <code>unzip -t archive.zip</code> コマンドを使用すると、ZIPファイルの整合性をテストできます。</p>
+<h4>Q2. 解凍せずにZIPファイルの内容を見るには？</h4>
+<p>A. <code>unzip -l archive.zip</code> を使用すると、ファイルを実際に解凍せずに内容を確認できます。</p>
+<h4>Q3. 特定のファイルやディレクトリだけを解凍するには？</h4>
+<p>A. <code>unzip archive.zip filename</code> のようにZIPファイル名の後に抽出したいファイル名を指定します。ワイルドカード（<code>*.txt</code>など）も使用できます。</p>
+<h4>Q4. 解凍時にファイル名の文字化けを防ぐには？</h4>
+<p>A. macOSでは、<code>The Unarchiver</code>や<code>unar</code>コマンドラインツールを使用すると文字化けを防げることが多いです。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSの標準の<code>unzip</code>コマンドは、日本語などの非ASCII文字を含むファイル名を正しく処理できないことがあります。このような場合は、Homebrewを使って<code>unar</code>をインストールし、代わりに使用することをお勧めします：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>brew<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>unar
+<span style="color: #8F5902">$ </span>unar<span style="color: #F8F8F8"> </span>archive.zip
+</pre></div>
+<h2>参考</h2>
+<p>https://linux.die.net/man/1/unzip</p>
+<h2>改訂履歴</h2>
 <ul>
-<li>ZIPファイルにパスワードが設定されている場合は、<code>-P</code>オプションでパスワードを指定できます：<code>unzip -P password archive.zip</code></li>
-<li>セキュリティ上の理由から、パスワードをコマンドラインに直接入力したくない場合は、オプションなしで実行すると対話的にパスワードを入力できます</li>
-<li>日本語などの非ASCII文字を含むZIPファイルを展開する場合、文字化けすることがあります。その場合は<code>unzip -O CP932 archive.zip</code>（Windows向けの日本語エンコーディング）などのオプションを試してみてください</li>
-<li><code>unzip</code>コマンドがインストールされていない場合は、Ubuntuなどのデビアン系では<code>sudo apt install unzip</code>、RedHatなどのRPM系では<code>sudo yum install unzip</code>でインストールできます</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

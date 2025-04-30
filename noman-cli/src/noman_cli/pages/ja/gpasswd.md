@@ -1,89 +1,120 @@
-# gpasswd
+# gpasswd コマンド
 
-`gpasswd`はグループ管理のためのコマンドで、グループのメンバーやグループ管理者の追加・削除などを行います。
+グループのパスワードとメンバーシップを管理します。
+
+## 概要
+
+`gpasswd` コマンドはグループのパスワードを設定したり、グループのメンバーを追加・削除したりするためのツールです。システム管理者やグループ管理者がグループのメンバーシップを管理する際に使用します。
 
 ## オプション
 
-### **-a (--add) ユーザー**
+### **-a ユーザー**
 
 指定したユーザーをグループに追加します。
 
-```bash
-$ sudo gpasswd -a yamada developers
-ユーザー「yamada」を「developers」グループに追加しました
+```console
+$ sudo gpasswd -a username groupname
+ユーザー username をグループ groupname に追加しました
 ```
 
-### **-d (--delete) ユーザー**
+### **-d ユーザー**
 
 指定したユーザーをグループから削除します。
 
-```bash
-$ sudo gpasswd -d yamada developers
-ユーザー「yamada」を「developers」グループから削除しました
+```console
+$ sudo gpasswd -d username groupname
+ユーザー username をグループ groupname から削除しました
 ```
 
-### **-A (--administrators) ユーザー1,ユーザー2,...**
+### **-A ユーザー,...**
 
-グループ管理者を設定します。グループ管理者はroot権限なしでグループメンバーを管理できます。
+グループ管理者のリストを設定します。複数の管理者を指定する場合はカンマで区切ります。
 
-```bash
-$ sudo gpasswd -A tanaka,suzuki developers
+```console
+$ sudo gpasswd -A admin1,admin2 groupname
 ```
 
-### **-M (--members) ユーザー1,ユーザー2,...**
+### **-M ユーザー,...**
 
-グループのメンバーリストを設定します（既存のメンバーリストは上書きされます）。
+グループのメンバーリストを設定します。既存のメンバーリストは上書きされます。
 
-```bash
-$ sudo gpasswd -M yamada,tanaka,suzuki developers
+```console
+$ sudo gpasswd -M user1,user2,user3 groupname
 ```
 
-### **-r (--remove-password)**
+### **-r**
 
 グループのパスワードを削除します。
 
-```bash
-$ sudo gpasswd -r developers
+```console
+$ sudo gpasswd -r groupname
 ```
 
 ## 使用例
 
 ### グループにユーザーを追加する
 
-```bash
-$ sudo gpasswd -a yamada developers
-ユーザー「yamada」を「developers」グループに追加しました
+```console
+$ sudo gpasswd -a john developers
+ユーザー john をグループ developers に追加しました
 ```
 
-### 複数のユーザーをグループに設定する
+### グループからユーザーを削除する
 
-```bash
-$ sudo gpasswd -M yamada,tanaka,suzuki developers
+```console
+$ sudo gpasswd -d mary designers
+ユーザー mary をグループ designers から削除しました
 ```
 
 ### グループ管理者を設定する
 
-```bash
-$ sudo gpasswd -A tanaka developers
+```console
+$ sudo gpasswd -A teamlead,manager projectgroup
 ```
+
+### グループメンバーを一括設定する
+
+```console
+$ sudo gpasswd -M user1,user2,user3,user4 projectgroup
+```
+
+## ヒント:
+
+### グループメンバーシップの確認
+
+グループのメンバーを確認するには、`getent group` コマンドを使用します。
+
+```console
+$ getent group developers
+developers:x:1001:john,mary,bob
+```
+
+### 管理者権限が必要
+
+ほとんどの `gpasswd` 操作には管理者権限（sudo）が必要です。グループ管理者として設定されている場合は、一部の操作が可能です。
+
+### グループ管理者とメンバーの違い
+
+グループ管理者（-A オプションで設定）はグループのメンバーシップを管理できますが、必ずしもそのグループのメンバーである必要はありません。
 
 ## よくある質問
 
-### Q1. `gpasswd`と`usermod`の違いは何ですか？
-A. `gpasswd`はグループ管理に特化したコマンドで、グループ管理者の設定などができます。`usermod`はユーザーアカウント全般の変更に使用され、グループ追加はその一機能です。
+#### Q1. 一般ユーザーでも `gpasswd` コマンドを使えますか？
+A. 基本的には管理者権限（root）が必要ですが、グループ管理者として設定されているユーザーは、そのグループのメンバーシップを管理できます。
 
-### Q2. 一般ユーザーでもグループ管理ができますか？
-A. グループ管理者として設定されたユーザーは、そのグループのメンバー管理ができます。ただし、すべての操作にroot権限が必要なわけではありません。
+#### Q2. グループのメンバーを確認するにはどうすればいいですか？
+A. `getent group グループ名` または `grep グループ名 /etc/group` コマンドで確認できます。
 
-### Q3. グループのメンバーリストを確認するには？
-A. `gpasswd`ではなく、`getent group グループ名`または`grep グループ名 /etc/group`で確認できます。
+#### Q3. ユーザーが所属しているすべてのグループを確認するには？
+A. `groups ユーザー名` コマンドで確認できます。
 
-## 追加情報
-
-- `-M`オプションを使うと既存のメンバーリストが上書きされるので注意が必要です。既存メンバーを残したまま追加する場合は`-a`を使用してください。
-- グループパスワードは現在のLinuxシステムではあまり使用されていません。
-- macOSでは`gpasswd`コマンドは標準では利用できません。代わりに`dscl`コマンドを使用してグループ管理を行います。
+#### Q4. グループパスワードは何のために使われますか？
+A. グループパスワードを使うと、ユーザーが `newgrp` コマンドでそのグループに一時的に切り替える際に認証が必要になります。ただし、セキュリティ上の理由から現代のシステムではあまり使用されません。
 
 ## 参考情報
 
-man ページを参照してください。オンラインでは各ディストリビューションのマニュアルページで確認できます。
+https://linux.die.net/man/1/gpasswd
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

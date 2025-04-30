@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  pstree - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>pstree command</h1>
+<p>Display running processes as a tree structure.</p>
+<h2>Overview</h2>
+<p>The <code>pstree</code> command shows the relationships between processes in a tree format, making it easy to visualize process hierarchies. It displays the parent-child relationships between processes, helping users understand how processes are spawned and related to each other in the system.</p>
+<h2>Options</h2>
+<h3><strong>-a</strong></h3>
+<p>Show command line arguments for each process</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">systemd</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager --no-daemon</span>
+<span style="color: #000; font-style: italic">  ├─sshd -D</span>
+<span style="color: #000; font-style: italic">  │   └─sshd</span>
+<span style="color: #000; font-style: italic">  │       └─sshd</span>
+<span style="color: #000; font-style: italic">  │           └─bash</span>
+<span style="color: #000; font-style: italic">  │               └─pstree -a</span>
+<span style="color: #000; font-style: italic">  └─systemd-journald</span>
+</pre></div>
+<h3><strong>-p</strong></h3>
+<p>Show PIDs (Process IDs) for each process</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-p
+<span style="color: #000; font-style: italic">systemd(1)</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager(687)</span>
+<span style="color: #000; font-style: italic">  ├─sshd(1025)─┬─sshd(2156)───sshd(2189)───bash(2190)───pstree(3421)</span>
+<span style="color: #000; font-style: italic">  └─systemd-journald(346)</span>
+</pre></div>
+<h3><strong>-u</strong></h3>
+<p>Show the user name for each process</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-u
+<span style="color: #000; font-style: italic">systemd</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager(root)</span>
+<span style="color: #000; font-style: italic">  ├─sshd(root)─┬─sshd(root)───sshd(user)───bash(user)───pstree(user)</span>
+<span style="color: #000; font-style: italic">  └─systemd-journald(root)</span>
+</pre></div>
+<h3><strong>-h</strong></h3>
+<p>Highlight the current process and its ancestors</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-h
+<span style="color: #000; font-style: italic">systemd</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager</span>
+<span style="color: #000; font-style: italic">  ├─sshd───sshd───sshd───bash───pstree</span>
+<span style="color: #000; font-style: italic">  └─systemd-journald</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Combining options for detailed view</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-apu
+<span style="color: #000; font-style: italic">systemd(1,root)</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager(687,root) --no-daemon</span>
+<span style="color: #000; font-style: italic">  ├─sshd(1025,root) -D</span>
+<span style="color: #000; font-style: italic">  │   └─sshd(2156,root)</span>
+<span style="color: #000; font-style: italic">  │       └─sshd(2189,user)</span>
+<span style="color: #000; font-style: italic">  │           └─bash(2190,user)</span>
+<span style="color: #000; font-style: italic">  │               └─pstree(3421,user) -apu</span>
+<span style="color: #000; font-style: italic">  └─systemd-journald(346,root)</span>
+</pre></div>
+<h3>Showing only a specific user's processes</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>user
+<span style="color: #000; font-style: italic">sshd───sshd───bash───pstree</span>
+</pre></div>
+<h3>Showing processes for a specific PID</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2190</span>
+<span style="color: #000; font-style: italic">bash(2190)───pstree(3422)</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Find Parent-Child Relationships Quickly</h3>
+<p>Use <code>pstree -p</code> to quickly identify which process spawned another process, helpful for troubleshooting runaway processes or understanding application behavior.</p>
+<h3>Compact View for Large Process Trees</h3>
+<p>By default, <code>pstree</code> compacts identical subtrees, showing them only once with a count. Use <code>-c</code> to disable this if you need to see every individual process.</p>
+<h3>Identify Resource-Intensive Process Hierarchies</h3>
+<p>Combine with <code>ps</code> or <code>top</code> to first identify high-resource processes, then use <code>pstree</code> to see their relationship to other processes in the system.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How is <code>pstree</code> different from <code>ps</code>?</h4>
+<p>A. While <code>ps</code> shows a flat list of processes, <code>pstree</code> displays processes in a hierarchical tree structure that shows parent-child relationships.</p>
+<h4>Q2. Can I see process arguments with <code>pstree</code>?</h4>
+<p>A. Yes, use the <code>-a</code> option to display command line arguments for each process.</p>
+<h4>Q3. How do I find which process started a specific process?</h4>
+<p>A. Use <code>pstree -p PID</code> to see the process and its parent hierarchy.</p>
+<h4>Q4. Does <code>pstree</code> show all system processes?</h4>
+<p>A. By default, it shows all processes. To see only processes for a specific user, use <code>pstree username</code>.</p>
+<h2>References</h2>
+<p>https://man7.org/linux/man-pages/man1/pstree.1.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

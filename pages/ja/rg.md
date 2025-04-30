@@ -1,144 +1,165 @@
 # rg コマンド
 
-`rg`（ripgrep）は高速な検索ツールで、ファイル内の文字列パターンを正規表現で検索します。gitやVSCodeなどでも採用されている高性能な`grep`代替ツールです。
+ファイル内の文字列を高速に検索するためのツール。
+
+## 概要
+
+`rg`（ripgrep）は、ファイル内のテキストパターンを検索するための高速なコマンドラインツールです。Gitリポジトリやプロジェクトディレクトリ内で特定のコードやテキストを素早く見つけることができます。デフォルトでは、バイナリファイルや隠しファイル、.gitignoreに記載されたファイルは無視されます。
 
 ## オプション
 
 ### **-i, --ignore-case**
+
 大文字と小文字を区別せずに検索します。
 
 ```console
-$ rg -i error
-./log.txt:10:ERROR: Failed to connect to database
-./log.txt:15:error: timeout occurred
-./config.js:5:// errorHandler configuration
+$ rg -i "error" 
+src/main.rs:15:    if let Err(error) = process() {
+src/utils.rs:42:    println!("ERROR: {}", message);
 ```
 
 ### **-v, --invert-match**
+
 パターンに一致しない行を表示します。
 
 ```console
-$ rg -v success ./log.txt
-./log.txt:10:ERROR: Failed to connect to database
-./log.txt:15:error: timeout occurred
-./log.txt:20:Warning: retry attempt 3
+$ rg -v "success" log.txt
+2025-04-28 10:15:23 ERROR: Connection failed
+2025-04-28 10:16:45 WARNING: Retry attempt 1
+2025-04-28 10:17:12 INFO: Processing started
 ```
 
 ### **-A, --after-context**
+
 マッチした行の後に指定した行数を表示します。
 
 ```console
-$ rg -A 2 error
-./log.txt:15:error: timeout occurred
-./log.txt-16:  at line 42 in network.js
-./log.txt-17:  retrying in 5 seconds
+$ rg -A 2 "error" log.txt
+2025-04-28 10:15:23 ERROR: Connection failed
+2025-04-28 10:15:24 INFO: Attempting reconnect
+2025-04-28 10:15:25 INFO: Reconnected successfully
 ```
 
 ### **-B, --before-context**
+
 マッチした行の前に指定した行数を表示します。
 
 ```console
-$ rg -B 1 error
-./log.txt-14:Attempting connection...
-./log.txt:15:error: timeout occurred
+$ rg -B 2 "error" log.txt
+2025-04-28 10:15:21 INFO: Connecting to server
+2025-04-28 10:15:22 INFO: Handshake initiated
+2025-04-28 10:15:23 ERROR: Connection failed
 ```
 
 ### **-C, --context**
+
 マッチした行の前後に指定した行数を表示します。
 
 ```console
-$ rg -C 1 error
-./log.txt-14:Attempting connection...
-./log.txt:15:error: timeout occurred
-./log.txt-16:  at line 42 in network.js
-```
-
-### **-l, --files-with-matches**
-マッチしたファイル名のみを表示します。
-
-```console
-$ rg -l error
-./log.txt
-./config.js
+$ rg -C 1 "error" log.txt
+2025-04-28 10:15:22 INFO: Handshake initiated
+2025-04-28 10:15:23 ERROR: Connection failed
+2025-04-28 10:15:24 INFO: Attempting reconnect
 ```
 
 ### **--no-ignore**
-`.gitignore`や`.ignore`などで指定された無視ファイルも検索対象に含めます。
+
+.gitignoreなどで指定された無視ファイルも検索対象に含めます。
 
 ```console
-$ rg --no-ignore password
-./node_modules/config.js:5:const password = 'default123';
-./config.backup:10:password=test123
+$ rg --no-ignore "TODO"
+node_modules/some-package/README.md:10:TODO: Update documentation
+.git/COMMIT_EDITMSG:3:TODO: Fix this before merging
+src/main.rs:42:// TODO: Refactor this function
+```
+
+### **-t, --type**
+
+特定のファイルタイプのみを検索します。
+
+```console
+$ rg -t rust "impl"
+src/lib.rs:15:impl Database {
+src/models.rs:24:impl User {
+```
+
+### **-g, --glob**
+
+指定したグロブパターンに一致するファイルのみを検索します。
+
+```console
+$ rg -g "*.json" "api_key"
+config.json:5:  "api_key": "abcd1234"
+settings.json:12:  "api_key": "xyz789"
 ```
 
 ## 使用例
 
-### 複数のファイルタイプを検索
+### 複数のディレクトリを検索
 
 ```console
-$ rg -t js -t ts 'function main'
-./src/main.js:5:function main() {
-./src/utils.ts:10:export function main(): void {
-```
-
-### 再帰的に特定のディレクトリを検索
-
-```console
-$ rg 'TODO' ./src
-./src/app.js:15:// TODO: Implement error handling
-./src/components/Button.js:42:// TODO: Add accessibility features
+$ rg "function" src/ lib/ tests/
+src/main.js:15:function processData(input) {
+lib/utils.js:42:function formatOutput(data) {
+tests/main.test.js:7:function testProcessing() {
 ```
 
 ### 正規表現を使用した検索
 
 ```console
-$ rg '\d{3}-\d{4}' --type=txt
-./contacts.txt:5:Phone: 555-1234
-./orders.txt:12:Contact: 123-4567
+$ rg "\d{4}-\d{2}-\d{2}" logs/
+logs/app.log:2025-04-28 10:15:23 ERROR: Connection failed
+logs/app.log:2025-04-29 09:30:45 INFO: Application started
+logs/system.log:2025-04-30 14:22:18 WARNING: Disk space low
+```
+
+### 再帰的に検索して結果をファイルに保存
+
+```console
+$ rg -r "TODO|FIXME" --json > todos.json
+# 「TODO」または「FIXME」を含む行をJSON形式で出力し、ファイルに保存する
 ```
 
 ## ヒント:
 
 ### 検索速度の最適化
-`rg`はデフォルトで`.git`ディレクトリや`.gitignore`で指定されたファイルを無視するため、大規模なプロジェクトでも高速に検索できます。
+
+大規模なプロジェクトでは、`-t` オプションを使って特定のファイルタイプに絞り込むことで検索速度が大幅に向上します。例えば `rg -t js "function"` とすると JavaScript ファイルのみを検索します。
 
 ### 複雑な検索パターン
-`-e`オプションを使用すると、複数の検索パターンを指定できます：`rg -e 'pattern1' -e 'pattern2'`
 
-### 検索結果の色分け
-`rg`はデフォルトでマッチした部分を色付きで表示します。`--color never`で無効化、`--color always`で常に有効化できます。
+正規表現をサポートしているため、複雑な検索パターンを使用できます。例えば `rg "\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b" -i` でメールアドレスを検索できます。
+
+### 検索結果のフィルタリング
+
+`rg` の結果を `grep` や他のコマンドと組み合わせることで、さらに結果をフィルタリングできます。例えば `rg "error" | grep "critical"` とすると、"error" を含む行のうち "critical" も含む行だけを表示します。
 
 ### 隠しファイルの検索
-`-u`（`--unrestricted`）オプションを使うと隠しファイルも検索対象に含めることができます。`-uu`でさらに多くのファイルを、`-uuu`で全てのファイルを対象にします。
+
+デフォルトでは隠しファイルやディレクトリは検索されませんが、`-u` または `--unrestricted` オプションを使用すると検索対象に含めることができます。
 
 ## よくある質問
 
-#### Q1. `rg`と`grep`の違いは何ですか？
-A. `rg`は`grep`より高速で、デフォルトで再帰検索や`.gitignore`の尊重、色付き出力などの機能があります。また、マルチスレッドで動作するため大規模なプロジェクトでの検索が速いです。
+#### Q1. `rg` と `grep` の違いは何ですか？
+A. `rg` は `grep` よりも高速で、デフォルトで再帰的に検索し、.gitignore ファイルを尊重します。また、ファイルタイプの指定やカラー出力などの機能が標準で組み込まれています。
 
-#### Q2. 特定のファイルタイプだけを検索するには？
-A. `-t`または`--type`オプションを使用します。例：`rg -t js pattern`でJavaScriptファイルのみ検索します。
+#### Q2. 大文字と小文字を区別せずに検索するにはどうすればいいですか？
+A. `-i` または `--ignore-case` オプションを使用します。例: `rg -i "error"`
 
-#### Q3. バイナリファイルを検索対象から除外するには？
-A. デフォルトでバイナリファイルは検索されません。明示的に指定する場合は`--no-binary`オプションを使用します。
+#### Q3. バイナリファイルも検索対象に含めるにはどうすればいいですか？
+A. `-a` または `--text` オプションを使用します。ただし、バイナリファイルの検索は時間がかかる場合があります。
 
-#### Q4. 大きなファイルを効率的に検索するには？
-A. `rg`は自動的に大きなファイルも効率的に処理しますが、`--mmap`オプションを使うとメモリマッピングを利用してさらに高速化できる場合があります。
+#### Q4. .gitignore で無視されているファイルも検索するにはどうすればいいですか？
+A. `--no-ignore` オプションを使用します。例: `rg --no-ignore "password"`
 
-## macOSでの注意点
+#### Q5. macOS で `rg` をインストールするにはどうすればいいですか？
+A. Homebrew を使用して `brew install ripgrep` でインストールできます。
 
-macOSでは、Homebrewを使用してインストールするのが一般的です：
-```console
-$ brew install ripgrep
-```
-
-macOSのファイルシステム（APFS/HFS+）は大文字小文字を区別しないため、検索時に注意が必要です。正確に大文字小文字を区別したい場合は、明示的に`-s`または`--case-sensitive`オプションを使用してください。
-
-## 参考資料
+## 参考
 
 https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
 
-## 改訂履歴
+## 改訂
 
-- 2025/04/26 --no-ignoreオプションの説明を追加。macOSでの注意点を追加。
-- 2025/04/26 初回作成
+- 2025/04/30 --no-ignoreオプションの説明を追加。
+- 2025/04/30 初版作成。

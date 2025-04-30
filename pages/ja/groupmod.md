@@ -1,84 +1,122 @@
-# groupmod
+# groupmod コマンド
 
-`groupmod`コマンドは、既存のグループの属性を変更するためのコマンドです。グループ名やグループIDなどの情報を更新できます。
+既存のグループの属性を変更します。
+
+## 概要
+
+`groupmod`コマンドは、システム上の既存のグループアカウントの設定を変更するために使用されます。グループ名やグループIDなどの属性を変更できます。システム管理者がユーザーグループを管理する際に役立ちます。
 
 ## オプション
 
 ### **-g, --gid GID**
 
-グループIDを変更します。
+グループのIDを変更します。
 
-```bash
+```console
 $ sudo groupmod -g 1001 developers
+# developersグループのGIDを1001に変更
 ```
 
 ### **-n, --new-name 新しいグループ名**
 
 グループの名前を変更します。
 
-```bash
+```console
 $ sudo groupmod -n programmers developers
-```
-
-### **-o, --non-unique**
-
-重複したグループIDを許可します。通常、システム上のグループIDは一意である必要がありますが、このオプションを使用すると同じIDを持つグループを作成できます。
-
-```bash
-$ sudo groupmod -g 1001 -o designers
+# developersグループの名前をprogrammersに変更
 ```
 
 ### **-p, --password パスワード**
 
-グループのパスワードを設定します（暗号化された形式で指定する必要があります）。
+グループのパスワードを変更します（暗号化された形式で指定）。
 
-```bash
+```console
 $ sudo groupmod -p encrypted_password developers
+# developersグループのパスワードを変更
+```
+
+### **-o, --non-unique**
+
+重複するGIDを許可します。
+
+```console
+$ sudo groupmod -g 1001 -o testers
+# testersグループのGIDを1001に変更（既に他のグループが使用していても許可）
 ```
 
 ## 使用例
 
-### 基本的なグループ名の変更
+### グループ名とGIDを同時に変更
 
-```bash
-$ sudo groupmod -n engineering developers
-# developersグループの名前をengineeringに変更
+```console
+$ sudo groupmod -g 2000 -n engineering developers
+# developersグループの名前をengineeringに変更し、GIDを2000に設定
 ```
 
-### グループIDの変更
+### グループ情報の確認
 
-```bash
-$ sudo groupmod -g 2000 engineering
-# engineeringグループのグループIDを2000に変更
+```console
+$ grep developers /etc/group
+developers:x:1001:user1,user2,user3
+# 変更前のグループ情報を確認
+
+$ sudo groupmod -n programmers developers
+# グループ名を変更
+
+$ grep programmers /etc/group
+programmers:x:1001:user1,user2,user3
+# 変更後のグループ情報を確認
 ```
 
-### グループ名とグループIDの同時変更
+## ヒント:
 
-```bash
-$ sudo groupmod -n tech-team -g 2500 engineering
-# engineeringグループの名前をtech-teamに、グループIDを2500に変更
+### 変更前にバックアップを作成
+
+グループ情報を変更する前に、/etc/groupファイルのバックアップを作成しておくと安全です。
+
+```console
+$ sudo cp /etc/group /etc/group.bak
+# グループファイルのバックアップを作成
 ```
+
+### 変更の影響を確認
+
+グループ名やGIDを変更すると、そのグループに関連付けられたファイルやプロセスに影響する可能性があります。変更前に影響範囲を確認しましょう。
+
+### rootユーザーで実行
+
+`groupmod`コマンドはシステム設定を変更するため、通常はroot権限（sudoを使用）で実行する必要があります。
 
 ## よくある質問
 
-### Q1. `groupmod`コマンドを実行するために必要な権限は？
-A. `groupmod`コマンドは通常、root権限（または`sudo`）が必要です。一般ユーザーはグループ情報を変更できません。
+#### Q1. `groupmod`コマンドを実行するために必要な権限は？
+A. rootユーザー権限が必要です。一般ユーザーは`sudo`を使用して実行する必要があります。
 
-### Q2. グループ名を変更した場合、そのグループに所属するユーザーへの影響は？
-A. グループ名を変更しても、そのグループに所属するユーザーのメンバーシップは自動的に更新されます。ユーザーは新しいグループ名に所属することになります。
+#### Q2. グループIDを変更した場合、ファイルの所有権はどうなりますか？
+A. ファイルシステム上の古いGIDを参照しているファイルは自動的に更新されません。`find`と`chgrp`コマンドを使用して手動で更新する必要があります。
 
-### Q3. 現在使用中のグループのIDを変更しても安全ですか？
-A. システムが使用中のグループのIDを変更すると問題が発生する可能性があります。重要なシステムグループ（例：`wheel`、`sudo`など）のIDを変更する場合は特に注意が必要です。
+#### Q3. 存在しないグループを変更しようとするとどうなりますか？
+A. エラーメッセージが表示され、コマンドは失敗します。例：「groupmod: group 'nonexistent' does not exist」
 
-### Q4. グループIDを変更した場合、ファイルの所有権はどうなりますか？
-A. グループIDを変更すると、古いグループIDに関連付けられていたファイルは、新しいグループIDに自動的に更新されません。`find`と`chgrp`コマンドを使用して手動で更新する必要があります。
+#### Q4. システムグループ（GID 1-999）の変更に制限はありますか？
+A. 多くのシステムでは、システムグループの変更は可能ですが、システムの動作に影響を与える可能性があるため注意が必要です。
 
-## 追加情報
+## macOSでの注意点
 
-- グループ情報を変更する前に、`/etc/group`ファイルのバックアップを取っておくことをお勧めします。
-- 重要なシステムグループの変更は、システムの動作に影響を与える可能性があるため注意が必要です。
-- macOSでは、システムグループの変更はディレクトリサービスを通じて行われるため、`groupmod`コマンドの代わりに`dscl`コマンドを使用することが推奨されます。
+macOSでは`groupmod`コマンドは標準では利用できません。代わりに`dscl`コマンドを使用してグループ属性を変更します：
 
-## 参考情報
+```console
+$ sudo dscl . -change /Groups/developers PrimaryGroupID 1000 1001
+# developersグループのGIDを1000から1001に変更
 
-https://www.man7.org/linux/man-pages/man8/groupmod.8.html
+$ sudo dscl . -change /Groups/developers RealName "Developers" "Programmers"
+# developersグループの表示名を変更
+```
+
+## 参考資料
+
+https://man7.org/linux/man-pages/man8/groupmod.8.html
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

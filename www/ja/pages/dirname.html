@@ -46,45 +46,70 @@
   <div class="content">
     <main>
       
-  <h1>dirnameコマンド概要</h1>
-<p><code>dirname</code>コマンドはファイルパスからディレクトリ部分を抽出するためのコマンドです。パスの最後のコンポーネント（通常はファイル名）を削除し、ディレクトリパスのみを返します。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><strong>-z</strong>: 出力の末尾に改行文字を付けずに、ヌル文字（\0）で終了します。<ul>
-<li>シェルスクリプトでパイプラインを使用する際に便利です。</li>
-</ul>
-</li>
-</ul>
+  <h1>dirname コマンド</h1>
+<p>パス名からディレクトリ部分を抽出します。</p>
+<h2>概要</h2>
+<p><code>dirname</code> コマンドは、ファイルパスからディレクトリ部分のみを取り出すためのユーティリティです。ファイルパスの最後のスラッシュ（/）より前の部分を出力します。スクリプト内でファイルのディレクトリパスを取得する際によく使用されます。</p>
+<h2>オプション</h2>
+<h3><strong>-z, --zero</strong></h3>
+<p>出力の区切り文字として改行ではなくNULL文字を使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>/usr/bin/file1<span style="color: #F8F8F8"> </span>/usr/bin/file2
+<span style="color: #000; font-style: italic">/usr/bin/usr/bin</span>
+</pre></div>
+<p>これは実際には2つのパスが連続して出力されています（NULLバイトで区切られているため表示されません）。</p>
 <h2>使用例</h2>
-<h3>基本的な使用法</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ファイルパスからディレクトリ部分を抽出</span>
-dirname<span style="color: #F8F8F8"> </span>/home/user/documents/file.txt
-<span style="color: #8F5902; font-style: italic"># 出力</span>
-/home/user/documents
+<h3>基本的な使用方法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>/usr/bin/bash
+<span style="color: #000; font-style: italic">/usr/bin</span>
 </pre></div>
-<h3>相対パスの場合</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 相対パスからディレクトリ部分を抽出</span>
-dirname<span style="color: #F8F8F8"> </span>documents/file.txt
-<span style="color: #8F5902; font-style: italic"># 出力</span>
-documents
+<h3>複数のパスを処理する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>/usr/bin/bash<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span>/home/user/file.txt
+<span style="color: #000; font-style: italic">/usr/bin</span>
+<span style="color: #000; font-style: italic">/etc</span>
+<span style="color: #000; font-style: italic">/home/user</span>
 </pre></div>
-<h3>カレントディレクトリの場合</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># カレントディレクトリのファイルの場合</span>
-dirname<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902; font-style: italic"># 出力</span>
-.
+<h3>相対パスでの使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>dir1/dir2/file.txt
+<span style="color: #000; font-style: italic">dir1/dir2</span>
 </pre></div>
-<h3>-zオプションの使用例</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ヌル文字で終了する出力を生成</span>
-dirname<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>/home/user/documents/file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-0<span style="color: #F8F8F8"> </span>ls
-<span style="color: #8F5902; font-style: italic"># 出力（/home/user/documentsディレクトリの内容を表示）</span>
+<h3>カレントディレクトリのファイル</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">.</span>
 </pre></div>
-<h2>追加情報</h2>
+<h3>スクリプト内での使用例</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">script_dir</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>dirname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$0</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;このスクリプトは </span><span style="color: #000">$script_dir</span><span style="color: #4E9A06"> ディレクトリにあります&quot;</span>
+<span style="color: #000; font-style: italic">このスクリプトは . ディレクトリにあります</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>スクリプトの場所を特定する</h3>
+<p>シェルスクリプト内で <code>dirname &quot;$0&quot;</code> を使用すると、スクリプト自体が存在するディレクトリを取得できます。これはスクリプトと同じディレクトリにある設定ファイルやリソースにアクセスする際に便利です。</p>
+<h3>絶対パスへの変換</h3>
+<p><code>dirname</code> と <code>cd</code> を組み合わせることで、相対パスを絶対パスに変換できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">cd</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>dirname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;/relative/path/file&quot;</span><span style="color: #204A87; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">pwd</span>
+</pre></div>
+<h3>パス操作の組み合わせ</h3>
+<p><code>dirname</code> と <code>basename</code> を組み合わせると、パスを効果的に操作できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">path</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;/usr/local/bin/script.sh&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">dir</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>dirname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$path</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">file</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$path</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ディレクトリ: </span><span style="color: #000">$dir</span><span style="color: #4E9A06">, ファイル: </span><span style="color: #000">$file</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">ディレクトリ: /usr/local/bin, ファイル: script.sh</span>
+</pre></div>
+<h2>よくある質問</h2>
+<h4>Q1. <code>dirname</code> と <code>basename</code> の違いは何ですか？</h4>
+<p>A. <code>dirname</code> はパスからディレクトリ部分を抽出し、<code>basename</code> はファイル名部分を抽出します。例えば、<code>/path/to/file.txt</code> に対して、<code>dirname</code> は <code>/path/to</code> を返し、<code>basename</code> は <code>file.txt</code> を返します。</p>
+<h4>Q2. <code>dirname</code> はファイルの存在を確認しますか？</h4>
+<p>A. いいえ、<code>dirname</code> は単に文字列操作を行うだけで、実際のファイルシステムにアクセスしません。存在しないパスでも処理できます。</p>
+<h4>Q3. スラッシュだけのパスを処理するとどうなりますか？</h4>
+<p>A. ルートディレクトリ（<code>/</code>）を処理すると、<code>dirname</code> は <code>/</code> を返します。</p>
+<h4>Q4. 末尾にスラッシュがあるパスはどう処理されますか？</h4>
+<p>A. 末尾のスラッシュは無視されます。例えば、<code>/usr/bin/</code> と <code>/usr/bin</code> は同じ結果（<code>/usr</code>）になります。</p>
+<h2>参照</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/dirname-invocation.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li><code>dirname</code>はパスが実際に存在するかどうかを確認しません。単に文字列として処理します。</li>
-<li>スクリプト内でファイルのディレクトリを取得するために頻繁に使用されます。</li>
-<li><code>basename</code>コマンドと対になることが多く、<code>basename</code>はパスからファイル名部分を抽出します。</li>
-<li>複数のパスを引数として渡すと、それぞれのディレクトリ部分を別々の行に出力します。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

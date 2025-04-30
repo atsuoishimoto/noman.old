@@ -46,46 +46,66 @@
   <div class="content">
     <main>
       
-  <h1><code>pwd</code> コマンドの概要</h1>
-<p><code>pwd</code>（print working directory）は、現在作業しているディレクトリの絶対パスを表示するUnixコマンドです。自分が今どのディレクトリにいるのかを確認するために使用します。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-L, --logical</strong>: シンボリックリンクを解決せず、論理的な現在のディレクトリを表示します（デフォルト動作）</p>
-<ul>
-<li>例: <code>pwd -L</code></li>
-</ul>
-</li>
-<li><p><strong>-P, --physical</strong>: すべてのシンボリックリンクを解決し、物理的な実際のディレクトリパスを表示します</p>
-<ul>
-<li>例: <code>pwd -P</code></li>
-</ul>
-</li>
-</ul>
+  <h1>pwd コマンド</h1>
+<p>現在の作業ディレクトリのフルパスを表示します。</p>
+<h2>概要</h2>
+<p><code>pwd</code>（print working directory）は、ユーザーが現在いるディレクトリの絶対パスを表示するコマンドです。ファイルシステム内での現在位置を確認するために使用され、特にディレクトリを移動した後や、スクリプト内で現在の場所を把握する必要がある場合に役立ちます。</p>
+<h2>オプション</h2>
+<h3><strong>-L, --logical</strong></h3>
+<p>シンボリックリンクをそのまま表示します（デフォルト動作）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">pwd</span><span style="color: #F8F8F8"> </span>-L
+<span style="color: #000; font-style: italic">/home/user/projects/link_to_docs</span>
+</pre></div>
+<p>このオプションでは、シンボリックリンクが指す実際の場所ではなく、リンク自体のパスが表示される。</p>
+<h3><strong>-P, --physical</strong></h3>
+<p>シンボリックリンクを解決して、実際の物理パスを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">pwd</span><span style="color: #F8F8F8"> </span>-P
+<span style="color: #000; font-style: italic">/home/user/documents</span>
+</pre></div>
+<p>このオプションを使用すると、シンボリックリンクが指す実際のディレクトリパスが表示される。</p>
 <h2>使用例</h2>
-<p>基本的な使用方法:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 現在のディレクトリを表示</span>
-<span style="color: #204A87">pwd</span>
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-/home/user/documents
+<h3>基本的な使用方法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">pwd</span>
+<span style="color: #000; font-style: italic">/home/user/projects</span>
 </pre></div>
-<p>シンボリックリンクを解決する例:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># シンボリックリンクを含むディレクトリにいる場合</span>
-<span style="color: #204A87">pwd</span><span style="color: #F8F8F8"> </span>-P
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-/var/www/html
+<h3>スクリプト内での使用例</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>myscript.sh
+<span style="color: #8F5902">#</span>!/bin/bash
+<span style="color: #000; font-style: italic">echo &quot;現在のディレクトリは $(pwd) です&quot;</span>
+<span style="color: #000; font-style: italic">cd /tmp</span>
+<span style="color: #000; font-style: italic">echo &quot;移動後のディレクトリは $(pwd) です&quot;</span>
+
+<span style="color: #8F5902">$ </span>./myscript.sh
+<span style="color: #000; font-style: italic">現在のディレクトリは /home/user/projects です</span>
+<span style="color: #000; font-style: italic">移動後のディレクトリは /tmp です</span>
 </pre></div>
-<p>論理パスを表示する例:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># シンボリックリンクを解決せずに表示</span>
-<span style="color: #204A87">pwd</span><span style="color: #F8F8F8"> </span>-L
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-/home/user/www
+<h2>ヒント:</h2>
+<h3>環境変数 PWD の利用</h3>
+<p>多くのシェルでは、<code>PWD</code>環境変数に現在のディレクトリパスが格納されています。これを利用することもできます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$PWD</span>
+<span style="color: #000; font-style: italic">/home/user/projects</span>
 </pre></div>
-<h2>追加情報</h2>
+<h3>プロンプトにパスを表示</h3>
+<p>多くのシェルでは、プロンプトに現在のディレクトリを表示するように設定できます。Bashの場合は<code>PS1</code>変数を使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">PS1</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&#39;\w $ &#39;</span>
+<span style="color: #000; font-style: italic">~/projects $</span>
+</pre></div>
+<h3>相対パスと絶対パス</h3>
+<p><code>pwd</code>は常に絶対パス（ルートディレクトリ「/」から始まるパス）を返します。これにより、どこからでもそのパスを使って同じディレクトリにアクセスできます。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>pwd</code>と<code>$PWD</code>の違いは何ですか？</h4>
+<p>A. <code>pwd</code>はコマンドであり、実行時に現在のディレクトリを調べて表示します。<code>$PWD</code>は環境変数で、シェルが自動的に更新する値です。通常は同じ値を返しますが、特定の状況では異なる場合があります。</p>
+<h4>Q2. シンボリックリンクのディレクトリにいる場合、実際のパスを知るにはどうすればよいですか？</h4>
+<p>A. <code>pwd -P</code>を使用すると、シンボリックリンクが解決された実際の物理パスが表示されます。</p>
+<h4>Q3. <code>pwd</code>コマンドはどのシェルでも使えますか？</h4>
+<p>A. はい、<code>pwd</code>はほぼすべてのUNIXシェル（bash、zsh、sh、cshなど）で利用可能な標準コマンドです。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSでは、<code>pwd</code>コマンドはBSD由来のバージョンが使用されていますが、基本的な機能はLinuxと同じです。ただし、一部のオプションが異なる場合があります。macOSでは、GNU版の<code>pwd</code>を使いたい場合、Homebrewを使って<code>coreutils</code>パッケージをインストールし、<code>gpwd</code>として使用できます。</p>
+<h2>参考文献</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/pwd-invocation.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li><code>pwd</code>コマンドは引数なしで使用することが最も一般的です。</li>
-<li>ほとんどのシェルでは、プロンプトに現在のディレクトリを表示するよう設定されていることが多いため、常に<code>pwd</code>を実行する必要はありません。</li>
-<li>スクリプト内で現在のディレクトリのパスを変数に格納する際によく使用されます。例: <code>current_dir=$(pwd)</code></li>
-<li>シンボリックリンクを通じてディレクトリに移動した場合、<code>-P</code>オプションを使用すると実際の物理パスを確認できます。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

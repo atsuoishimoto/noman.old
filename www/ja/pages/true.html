@@ -46,38 +46,56 @@
   <div class="content">
     <main>
       
-  <h1><code>true</code> コマンド概要</h1>
-<p><code>true</code> は常に成功（終了ステータス 0）を返す単純なコマンドです。主にシェルスクリプトやテスト、条件分岐で使用されます。</p>
-<h2>メインオプション</h2>
-<p><code>true</code> コマンドにはオプションがありません。このコマンドは単純に成功を示す終了コード 0 を返すだけです。</p>
+  <h1>true コマンド</h1>
+<p>何も実行せずに常に成功（終了コード 0）を返す。</p>
+<h2>概要</h2>
+<p><code>true</code> コマンドは何も実行せず、常に成功（終了コード 0）を返すシンプルなコマンドです。主にシェルスクリプトやコマンドラインでの条件分岐、無限ループの作成などに使用されます。</p>
+<h2>オプション</h2>
+<p><code>true</code> コマンドにはオプションがありません。引数を与えても無視されます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">true</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$?</span>
+<span style="color: #000; font-style: italic">0</span>
+</pre></div>
 <h2>使用例</h2>
-<h3>基本的な使用法</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># trueコマンドを実行</span>
-<span style="color: #204A87">true</span>
-<span style="color: #8F5902; font-style: italic"># 終了ステータスを確認</span>
-<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$?</span>
-<span style="color: #8F5902; font-style: italic"># 出力</span>
-<span style="color: #0000CF; font-weight: bold">0</span>
+<h3>無限ループの作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;無限ループ&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+<span style="color: #000; font-style: italic">無限ループ</span>
+<span style="color: #000; font-style: italic">無限ループ</span>
+<span style="color: #000; font-style: italic">無限ループ</span>
+<span style="color: #000; font-style: italic">[Ctrl+C で停止]</span>
+</pre></div>
+<h3>条件分岐での使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;常に実行される&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">fi</span>
+<span style="color: #000; font-style: italic">常に実行される</span>
 </pre></div>
 <h3>シェルスクリプトでの使用例</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 無限ループの作成</span>
-<span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
-<span style="color: #F8F8F8">  </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;このループは永遠に続きます&quot;</span>
-<span style="color: #F8F8F8">  </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>
-<span style="color: #204A87; font-weight: bold">done</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>example.sh
+<span style="color: #8F5902">#</span>!/bin/bash
+<span style="color: #000; font-style: italic">true || echo &quot;これは表示されない&quot;</span>
+<span style="color: #000; font-style: italic">false || echo &quot;これは表示される&quot;</span>
+
+<span style="color: #8F5902">$ </span>bash<span style="color: #F8F8F8"> </span>example.sh
+<span style="color: #000; font-style: italic">これは表示される</span>
 </pre></div>
-<h3>条件分岐での使用例</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 常に実行されるif文</span>
-<span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
-<span style="color: #F8F8F8">  </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;この部分は必ず実行されます&quot;</span>
-<span style="color: #204A87; font-weight: bold">fi</span>
-</pre></div>
-<h2>追加情報</h2>
+<h2>ヒント:</h2>
+<h3>無限ループの作成</h3>
+<p><code>while true; do ... done</code> は、シェルスクリプトで無限ループを作成する最も一般的な方法です。ただし、必ず終了条件やCtrl+Cなどの中断手段を用意しておきましょう。</p>
+<h3>条件分岐のデフォルト値として</h3>
+<p>条件分岐で常に真の結果が必要な場合に使用できます。例えば、<code>if true; then ... fi</code> は常に条件が真として扱われます。</p>
+<h3>falseコマンドとの対比</h3>
+<p><code>true</code> の反対は <code>false</code> コマンドで、常に失敗（終了コード 1）を返します。両方を理解することで、より柔軟なシェルスクリプトが書けるようになります。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>true</code> コマンドは何のために使われますか？</h4>
+<p>A. 主にシェルスクリプトで無限ループの作成や、常に成功する条件が必要な場合に使用されます。</p>
+<h4>Q2. <code>true</code> コマンドと <code>:</code> (コロン) コマンドの違いは何ですか？</h4>
+<p>A. 機能的にはほぼ同じですが、<code>:</code> はシェルのビルトインコマンドであるのに対し、<code>true</code> は通常は独立した実行ファイルです。どちらも常に成功（終了コード 0）を返します。</p>
+<h4>Q3. <code>true</code> コマンドを使った無限ループを安全に終了するにはどうすればよいですか？</h4>
+<p>A. Ctrl+C（割り込み信号）を送信するか、ループ内に条件付きの <code>break</code> ステートメントを含めることで終了できます。</p>
+<h2>参考情報</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/true-invocation.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li><code>true</code> の反対は <code>false</code> コマンドで、常に失敗（終了ステータス 1）を返します。</li>
-<li>シェルスクリプトのテストやデバッグ時に便利です。</li>
-<li><code>:</code> (コロン) コマンドも <code>true</code> と同様の機能を持ちますが、シェル組み込みコマンドとして実装されている場合が多いです。</li>
-<li><code>true</code> は非常にシンプルなコマンドですが、スクリプト内の制御フローを管理するのに役立ちます。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

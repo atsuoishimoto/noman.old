@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  hostname - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>hostname command</h1>
+<p>Display or set the system's host name.</p>
+<h2>Overview</h2>
+<p>The <code>hostname</code> command displays or sets the name of the current host system. This name identifies your computer on a network and is used by various network services. On most systems, the hostname is configured during installation but can be changed later.</p>
+<h2>Options</h2>
+<h3><strong>-s, --short</strong></h3>
+<p>Display the short hostname (the portion before the first dot) without the domain name.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname<span style="color: #F8F8F8"> </span>-s
+<span style="color: #000; font-style: italic">macbook</span>
+</pre></div>
+<h3><strong>-f, --fqdn, --long</strong></h3>
+<p>Display the Fully Qualified Domain Name (FQDN), which includes both the hostname and domain.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname<span style="color: #F8F8F8"> </span>-f
+<span style="color: #000; font-style: italic">macbook.local</span>
+</pre></div>
+<h3><strong>-i, --ip-address</strong></h3>
+<p>Display the IP address(es) of the host.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname<span style="color: #F8F8F8"> </span>-i
+<span style="color: #000; font-style: italic">192.168.1.5</span>
+</pre></div>
+<h3><strong>-d, --domain</strong></h3>
+<p>Display the domain name the host belongs to.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname<span style="color: #F8F8F8"> </span>-d
+<span style="color: #000; font-style: italic">local</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Displaying the current hostname</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname
+<span style="color: #000; font-style: italic">macbook.local</span>
+</pre></div>
+<h3>Setting a new hostname (requires root privileges)</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>hostname<span style="color: #F8F8F8"> </span>new-hostname
+<span style="color: #8F5902">$ </span>hostname
+<span style="color: #000; font-style: italic">new-hostname</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Permanent Hostname Changes</h3>
+<p>The <code>hostname</code> command only changes the hostname temporarily until the next reboot. For permanent changes:</p>
+<ul>
+<li>On Linux: Edit files like <code>/etc/hostname</code> or use system tools like <code>hostnamectl</code></li>
+<li>On macOS: Use System Preferences &gt; Sharing &gt; Computer Name</li>
+</ul>
+<h3>Network Configuration</h3>
+<p>Changing your hostname might require updating other network configuration files like <code>/etc/hosts</code> to ensure proper name resolution.</p>
+<h3>Hostname Conventions</h3>
+<p>Choose hostnames that are unique on your network and follow DNS naming rules: use only letters, numbers, and hyphens, and don't start with a number.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between hostname and computer name?</h4>
+<p>A. They're generally the same thing, though some operating systems distinguish between a &quot;pretty&quot; computer name (with spaces and special characters) and a network hostname (which follows stricter naming rules).</p>
+<h4>Q2. Why does my hostname show &quot;.local&quot; at the end?</h4>
+<p>A. The &quot;.local&quot; suffix is commonly used in local networks, especially on macOS systems using Bonjour/mDNS for local network discovery.</p>
+<h4>Q3. How can I make hostname changes permanent?</h4>
+<p>A. The method varies by operating system. On Linux, edit <code>/etc/hostname</code> or use <code>hostnamectl set-hostname</code>. On macOS, use System Preferences &gt; Sharing.</p>
+<h4>Q4. Can I set my hostname to anything?</h4>
+<p>A. While technically possible, it's best to follow DNS naming conventions: use only letters, numbers, and hyphens, don't start with a number, and keep it under 63 characters.</p>
+<h2>macOS Specifics</h2>
+<p>On macOS, the hostname command works similarly to Linux, but permanent hostname changes should be made through System Preferences &gt; Sharing &gt; Computer Name. macOS also maintains separate settings for the &quot;Computer Name&quot; (user-friendly name) and the hostname (network name). When you change the Computer Name, macOS automatically creates a hostname version by removing special characters and adding &quot;.local&quot;.</p>
+<h2>References</h2>
+<p>https://man7.org/linux/man-pages/man1/hostname.1.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

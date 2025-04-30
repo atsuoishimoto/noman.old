@@ -46,65 +46,91 @@
   <div class="content">
     <main>
       
-  <h1>git-reset コマンドの概要</h1>
-<p><code>git-reset</code>は、現在のブランチの状態を特定のコミットに戻すためのGitコマンドです。作業ディレクトリ、ステージングエリア、HEADの位置を変更することができます。</p>
+  <h1>git reset コマンド</h1>
+<p>コミットポインタを特定のコミットに移動させ、作業ツリーやインデックスを選択的にリセットします。</p>
+<h2>概要</h2>
+<p><code>git reset</code> は、現在のブランチの HEAD ポインタを移動させるコマンドです。オプションによって、インデックス（ステージングエリア）や作業ディレクトリの状態も変更できます。主に、コミットの取り消しやステージングした変更の取り消しに使用されます。</p>
 <h2>オプション</h2>
-<h3><strong>--soft</strong>:</h3>
-<p>HEADの位置だけを変更し、ステージングエリアと作業ディレクトリはそのままにします。</p>
-<p>例: <code>git reset --soft HEAD~1</code></p>
-<h3><strong>--mixed</strong> (デフォルト):</h3>
-<p>HEADの位置とステージングエリアを変更しますが、作業ディレクトリはそのままにします。</p>
-<p>例: <code>git reset HEAD~1</code> または <code>git reset --mixed HEAD~1</code></p>
-<h3><strong>--hard</strong>:</h3>
-<p>HEADの位置、ステージングエリア、作業ディレクトリをすべて変更します。変更内容は失われるので注意が必要です。</p>
-<p>例: <code>git reset --hard HEAD~1</code></p>
-<h3><strong>特定のファイルのリセット</strong>:</h3>
-<p>特定のファイルをステージングエリアからワーキングディレクトリに戻します。</p>
-<p>例: <code>git reset HEAD file.txt</code></p>
+<h3><strong>--soft</strong></h3>
+<p>HEAD ポインタのみを移動し、インデックスと作業ディレクトリはそのままにします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>--soft<span style="color: #F8F8F8"> </span>HEAD~1
+<span style="color: #8F5902"># </span>直前のコミットを取り消し、変更はステージングされたままになる
+</pre></div>
+<h3><strong>--mixed（デフォルト）</strong></h3>
+<p>HEAD ポインタとインデックスを移動しますが、作業ディレクトリはそのままにします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>HEAD~1
+<span style="color: #8F5902"># </span>直前のコミットを取り消し、変更は作業ディレクトリに残るがステージングは解除される
+</pre></div>
+<h3><strong>--hard</strong></h3>
+<p>HEAD ポインタ、インデックス、作業ディレクトリをすべて指定したコミットの状態にリセットします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>--hard<span style="color: #F8F8F8"> </span>HEAD~1
+<span style="color: #8F5902"># </span>直前のコミットを完全に取り消し、変更も削除される
+</pre></div>
+<h3><strong>&lt;commit&gt;</strong></h3>
+<p>リセット先のコミットを指定します。コミットハッシュ、ブランチ名、タグ名、または相対参照（HEAD~n など）を使用できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>--mixed<span style="color: #F8F8F8"> </span>5a8e4ca
+<span style="color: #8F5902"># </span>指定したコミットに<span style="color: #F8F8F8"> </span>HEAD<span style="color: #F8F8F8"> </span>とインデックスをリセット
+</pre></div>
+<h3><strong>&lt;paths&gt;...</strong></h3>
+<p>特定のファイルやディレクトリのみをインデックスからリセットします（HEAD は移動しません）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #8F5902"># </span>file.txt<span style="color: #F8F8F8"> </span>のステージングを解除する
+</pre></div>
 <h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 直前のコミットを取り消し、変更をステージングエリアに残す</span>
-git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>--soft<span style="color: #F8F8F8"> </span>HEAD~1
-<span style="color: #8F5902; font-style: italic"># 結果: コミットは取り消されるが、変更はステージングされた状態で残る</span>
+<h3>コミットの取り消し（変更を保持）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>--soft<span style="color: #F8F8F8"> </span>HEAD~3
+<span style="color: #8F5902"># </span>直近3つのコミットを取り消し、変更はステージングされたままになる
+</pre></div>
+<h3>ステージングの解除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>HEAD<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #8F5902"># </span>file.txt<span style="color: #F8F8F8"> </span>のステージングを解除する（作業ディレクトリの変更は保持される）
+</pre></div>
+<h3>特定のコミットまで完全にリセット</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>log<span style="color: #F8F8F8"> </span>--oneline
+<span style="color: #000; font-style: italic">a1b2c3d ファイル追加</span>
+<span style="color: #000; font-style: italic">e4f5g6h バグ修正</span>
+<span style="color: #000; font-style: italic">i7j8k9l 初期コミット</span>
 
-<span style="color: #8F5902; font-style: italic"># 直前のコミットを取り消し、変更を作業ディレクトリに残す</span>
-git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>HEAD~1
-<span style="color: #8F5902; font-style: italic"># 結果: コミットは取り消され、変更は作業ディレクトリに残る（ステージングは解除される）</span>
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>--hard<span style="color: #F8F8F8"> </span>e4f5g6h
+<span style="color: #000; font-style: italic">HEAD is now at e4f5g6h バグ修正</span>
+<span style="color: #8F5902"># </span>e4f5g6h<span style="color: #F8F8F8"> </span>のコミットまで戻り、それ以降の変更はすべて削除される
+</pre></div>
+<h3>マージの取り消し</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>--hard<span style="color: #F8F8F8"> </span>ORIG_HEAD
+<span style="color: #8F5902"># </span>直前のマージを取り消す
+</pre></div>
+<h2>ヒント:</h2>
+<h3>リセット前にブランチを作成する</h3>
+<p>重要な変更をリセットする前に、現在の状態を新しいブランチに保存しておくと安全です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>backup-branch
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>--hard<span style="color: #F8F8F8"> </span>HEAD~3
+<span style="color: #8F5902"># </span>万が一リセットを後悔しても、backup-branch<span style="color: #F8F8F8"> </span>に戻れる
+</pre></div>
+<h3>--hard は注意して使用する</h3>
+<p><code>--hard</code> オプションは作業ディレクトリの変更も削除するため、コミットされていない変更が失われます。使用前に <code>git status</code> で状態を確認しましょう。</p>
+<h3>reflog で失われたコミットを復元</h3>
+<p><code>--hard</code> リセット後でも、<code>git reflog</code> コマンドを使用すれば、通常は失われたコミットを見つけて復元できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>reflog
+<span style="color: #000; font-style: italic">5a8e4ca HEAD@{0}: reset: moving to HEAD~1</span>
+<span style="color: #000; font-style: italic">2c3d4e5 HEAD@{1}: commit: 失われたコミット</span>
 
-<span style="color: #8F5902; font-style: italic"># 直前のコミットを完全に取り消し、変更も削除する</span>
-git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>--hard<span style="color: #F8F8F8"> </span>HEAD~1
-<span style="color: #8F5902; font-style: italic"># 結果: コミットは取り消され、変更も完全に削除される</span>
-
-<span style="color: #8F5902; font-style: italic"># 特定のファイルをステージングエリアから作業ディレクトリに戻す</span>
-git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>HEAD<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902; font-style: italic"># 結果: file.txtのステージングが解除される</span>
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>reset<span style="color: #F8F8F8"> </span>--hard<span style="color: #F8F8F8"> </span>2c3d4e5
+<span style="color: #8F5902"># </span>失われたコミットを復元
 </pre></div>
 <h2>よくある質問</h2>
-<h3>Q1. <code>git reset</code>と<code>git revert</code>の違いは何ですか？</h3>
-<p>A. <code>git reset</code>はコミット履歴を書き換えますが、<code>git revert</code>は新しいコミットを作成して変更を元に戻します。<code>revert</code>は共有リポジトリでの作業に適しています。</p>
-<h3>Q2. 誤って<code>git reset --hard</code>を実行してしまいました。データを復元できますか？</h3>
-<p>A. <code>git reflog</code>コマンドを使用して最近のHEADの位置を確認し、<code>git reset --hard &lt;commit-id&gt;</code>で戻すことができる場合があります。ただし、完全な復元は保証されません。</p>
-<h3>Q3. リモートリポジトリにプッシュ済みのコミットを<code>reset</code>しても大丈夫ですか？</h3>
-<p>A. 共有リポジトリにプッシュ済みのコミットを<code>reset</code>すると、他の開発者に問題が生じる可能性があります。この場合は<code>git revert</code>の使用を検討してください。</p>
-<h3>Q4. ステージングエリアの変更だけをリセットするには？</h3>
-<p>A. <code>git reset</code>（オプションなし）または<code>git reset --mixed HEAD</code>を使用すると、ステージングエリアをリセットできます。</p>
-<h3>Q5. 特定のコミットまで戻るには？</h3>
-<p>A. <code>git reset &lt;commit-id&gt;</code>または<code>git reset HEAD~n</code>（nは戻りたいコミット数）を使用します。</p>
-<h3>Q6. <code>git reset</code>後に強制プッシュするのは危険ですか？</h3>
-<p>A. はい、<code>git push --force</code>は他の開発者の作業を上書きする可能性があるため、共有ブランチでは避けるべきです。</p>
-<h3>Q7. マージコミットをリセットするには？</h3>
-<p>A. 通常の<code>git reset HEAD~1</code>でマージコミットをリセットできますが、マージの複雑さによっては競合が発生する場合があります。</p>
-<h3>Q8. ファイルの特定の変更だけをリセットするには？</h3>
-<p>A. 特定のファイルの変更をリセットするには<code>git checkout -- &lt;file&gt;</code>を使用します。これは<code>git reset</code>ではなく<code>git checkout</code>コマンドです。</p>
-<h3>Q9. <code>git reset</code>と<code>git checkout</code>の違いは？</h3>
-<p>A. <code>git reset</code>はブランチの参照を移動させますが、<code>git checkout</code>は作業ディレクトリを変更します。<code>git checkout &lt;branch&gt;</code>はブランチを切り替えます。</p>
-<h3>Q10. <code>git reset</code>後に変更を復活させるには？</h3>
-<p>A. <code>git reset --soft</code>または<code>git reset --mixed</code>を使用した場合、変更は作業ディレクトリに残っているので、再度ステージングとコミットが可能です。</p>
-<h2>追加のメモ</h2>
+<h4>Q1. <code>git reset</code> と <code>git revert</code> の違いは何ですか？</h4>
+<p>A. <code>git reset</code> はコミット履歴を書き換えますが、<code>git revert</code> は元に戻す操作自体を新しいコミットとして追加します。共有リポジトリでは <code>git revert</code> の使用が推奨されます。</p>
+<h4>Q2. ステージングしたファイルを一部だけ解除するには？</h4>
+<p>A. <code>git reset &lt;file&gt;</code> または <code>git reset -- &lt;file&gt;</code> を使用して、特定のファイルのみステージングを解除できます。</p>
+<h4>Q3. リセット後に失われたコミットを復元できますか？</h4>
+<p>A. はい、<code>git reflog</code> を使用して過去の HEAD の位置を確認し、<code>git reset --hard &lt;commit-hash&gt;</code> で復元できます。</p>
+<h4>Q4. リモートブランチをリセットするには？</h4>
+<p>A. ローカルブランチをリセットした後、<code>git push --force</code> でリモートブランチを更新できますが、共有リポジトリでは注意が必要です。</p>
+<h2>参考</h2>
+<p>https://git-scm.com/docs/git-reset</p>
+<h2>Revisions</h2>
 <ul>
-<li><code>git reset</code>を使用する前に、重要な変更は必ずバックアップしておきましょう。</li>
-<li>共有リポジトリで作業している場合は、<code>git reset --hard</code>の使用には特に注意が必要です。</li>
-<li>履歴を書き換えたくない場合は、代わりに<code>git revert</code>の使用を検討してください。</li>
-<li><code>git reflog</code>は、リセット操作を元に戻すのに役立つコマンドです。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  ss - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>ss command</h1>
+<p>Display socket statistics, providing information about network connections.</p>
+<h2>Overview</h2>
+<p>The <code>ss</code> command is a modern replacement for the older <code>netstat</code> utility. It displays detailed information about network sockets, showing how your system is connected to other systems or how processes are communicating over the network. It's faster and provides more information than <code>netstat</code>, making it valuable for network troubleshooting and monitoring.</p>
+<h2>Options</h2>
+<h3><strong>-t (--tcp)</strong></h3>
+<p>Show only TCP sockets</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ss<span style="color: #F8F8F8"> </span>-t
+<span style="color: #000; font-style: italic">State    Recv-Q   Send-Q     Local Address:Port      Peer Address:Port   Process</span>
+<span style="color: #000; font-style: italic">ESTAB    0        0          192.168.1.5:22          192.168.1.10:52414</span>
+<span style="color: #000; font-style: italic">ESTAB    0        0          192.168.1.5:22          192.168.1.15:39658</span>
+</pre></div>
+<h3><strong>-u (--udp)</strong></h3>
+<p>Show only UDP sockets</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ss<span style="color: #F8F8F8"> </span>-u
+<span style="color: #000; font-style: italic">State    Recv-Q   Send-Q     Local Address:Port      Peer Address:Port   Process</span>
+<span style="color: #000; font-style: italic">UNCONN   0        0          0.0.0.0:68              0.0.0.0:*</span>
+<span style="color: #000; font-style: italic">UNCONN   0        0          0.0.0.0:5353            0.0.0.0:*</span>
+</pre></div>
+<h3><strong>-l (--listening)</strong></h3>
+<p>Display only listening sockets</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ss<span style="color: #F8F8F8"> </span>-l
+<span style="color: #000; font-style: italic">Netid    State     Recv-Q    Send-Q       Local Address:Port        Peer Address:Port    Process</span>
+<span style="color: #000; font-style: italic">tcp      LISTEN    0         128          0.0.0.0:ssh               0.0.0.0:*</span>
+<span style="color: #000; font-style: italic">tcp      LISTEN    0         5            127.0.0.1:ipp             0.0.0.0:*</span>
+</pre></div>
+<h3><strong>-p (--processes)</strong></h3>
+<p>Show process using socket</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ss<span style="color: #F8F8F8"> </span>-p
+<span style="color: #000; font-style: italic">State    Recv-Q   Send-Q     Local Address:Port      Peer Address:Port   Process</span>
+<span style="color: #000; font-style: italic">ESTAB    0        0          192.168.1.5:22          192.168.1.10:52414  users:((&quot;sshd&quot;,pid=1234,fd=3))</span>
+</pre></div>
+<h3><strong>-n (--numeric)</strong></h3>
+<p>Don't resolve service names (show port numbers instead)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ss<span style="color: #F8F8F8"> </span>-tn
+<span style="color: #000; font-style: italic">State    Recv-Q   Send-Q     Local Address:Port      Peer Address:Port</span>
+<span style="color: #000; font-style: italic">ESTAB    0        0          192.168.1.5:22          192.168.1.10:52414</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Viewing all established TCP connections</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ss<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>state<span style="color: #F8F8F8"> </span>established
+<span style="color: #000; font-style: italic">State    Recv-Q   Send-Q     Local Address:Port      Peer Address:Port   Process</span>
+<span style="color: #000; font-style: italic">ESTAB    0        0          192.168.1.5:22          192.168.1.10:52414</span>
+<span style="color: #000; font-style: italic">ESTAB    0        0          192.168.1.5:443         192.168.1.20:60123</span>
+</pre></div>
+<h3>Finding which process is using a specific port</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ss<span style="color: #F8F8F8"> </span>-tlp<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">80</span>
+<span style="color: #000; font-style: italic">tcp   LISTEN  0   128   *:80   *:*   users:((&quot;nginx&quot;,pid=1234,fd=6))</span>
+</pre></div>
+<h3>Displaying socket statistics</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ss<span style="color: #F8F8F8"> </span>-s
+<span style="color: #000; font-style: italic">Total: 268</span>
+<span style="color: #000; font-style: italic">TCP:   16 (estab 2, closed 8, orphaned 0, timewait 0)</span>
+<span style="color: #000; font-style: italic">Transport Total     IP        IPv6</span>
+<span style="color: #000; font-style: italic">RAW       0         0         0</span>
+<span style="color: #000; font-style: italic">UDP       9         6         3</span>
+<span style="color: #000; font-style: italic">TCP       8         6         2</span>
+<span style="color: #000; font-style: italic">INET      17        12        5</span>
+<span style="color: #000; font-style: italic">FRAG      0         0         0</span>
+</pre></div>
+<h2>Tips:</h2>
+<h3>Combine Options for More Specific Output</h3>
+<p>Combine options like <code>ss -tuln</code> to show TCP and UDP listening sockets with numeric ports, which is useful for quick security audits.</p>
+<h3>Filter by State</h3>
+<p>Use <code>ss state established</code> to see only active connections, or <code>ss state time-wait</code> to see connections in the TIME-WAIT state, helping with connection troubleshooting.</p>
+<h3>Filter by Port</h3>
+<p>Use <code>ss sport = :22</code> to see connections to a specific source port, or <code>ss dport = :80</code> for destination port, which helps when troubleshooting specific services.</p>
+<h3>Memory Usage</h3>
+<p>The <code>ss</code> command uses less memory than <code>netstat</code> when displaying the same information, making it more efficient for systems with many connections.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between ss and netstat?</h4>
+<p>A. <code>ss</code> is faster, uses less resources, and shows more information than <code>netstat</code>. It's designed as a modern replacement with better performance on systems with many connections.</p>
+<h4>Q2. How do I see which process is using a specific port?</h4>
+<p>A. Use <code>ss -tlp | grep PORT_NUMBER</code> to see the process using a specific listening port.</p>
+<h4>Q3. Can I filter connections by IP address?</h4>
+<p>A. Yes, use <code>ss dst ADDRESS</code> to filter by destination IP or <code>ss src ADDRESS</code> for source IP.</p>
+<h4>Q4. How do I see only IPv4 or IPv6 connections?</h4>
+<p>A. Use <code>ss -4</code> for IPv4 connections only or <code>ss -6</code> for IPv6 connections only.</p>
+<h2>References</h2>
+<p>https://man7.org/linux/man-pages/man8/ss.8.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

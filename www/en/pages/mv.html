@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  mv - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>mv command</h1>
+<p>Move or rename files and directories.</p>
+<h2>Overview</h2>
+<p>The <code>mv</code> command moves files or directories from one location to another, or renames them when the destination is in the same directory. It's one of the core file manipulation commands in Unix-like systems, allowing you to organize your filesystem by relocating files or changing their names.</p>
+<h2>Options</h2>
+<h3><strong>-i (interactive)</strong></h3>
+<p>Prompts for confirmation before overwriting existing files, helping prevent accidental data loss.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>existing-file.txt
+<span style="color: #000; font-style: italic">mv: overwrite &#39;existing-file.txt&#39;? y</span>
+</pre></div>
+<h3><strong>-f (force)</strong></h3>
+<p>Overrides the interactive mode and removes existing destination files without prompting.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>source.txt<span style="color: #F8F8F8"> </span>destination.txt
+</pre></div>
+<h3><strong>-v (verbose)</strong></h3>
+<p>Displays what is being done, showing the name of each file as it's moved.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>document.txt<span style="color: #F8F8F8"> </span>reports/
+<span style="color: #000; font-style: italic">&#39;document.txt&#39; -&gt; &#39;reports/document.txt&#39;</span>
+</pre></div>
+<h3><strong>-n (no-clobber)</strong></h3>
+<p>Prevents overwriting existing files, useful when you want to ensure you don't accidentally replace files.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>important.txt<span style="color: #F8F8F8"> </span>existing-file.txt
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Renaming a file</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>oldname.txt<span style="color: #F8F8F8"> </span>newname.txt
+</pre></div>
+<h3>Moving a file to another directory</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>document.txt<span style="color: #F8F8F8"> </span>~/Documents/
+</pre></div>
+<h3>Moving multiple files to a directory</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt<span style="color: #F8F8F8"> </span>target_directory/
+</pre></div>
+<h3>Moving and renaming at the same time</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>~/Downloads/report.pdf<span style="color: #F8F8F8"> </span>~/Documents/quarterly-report.pdf
+</pre></div>
+<h2>Tips</h2>
+<h3>Use Tab Completion</h3>
+<p>Press Tab while typing file paths to auto-complete names, reducing typing errors and saving time.</p>
+<h3>Check Before Moving</h3>
+<p>When moving important files, use <code>mv -i</code> to get confirmation prompts or first use <code>ls</code> to verify the source and destination.</p>
+<h3>Moving Hidden Files</h3>
+<p>Remember that wildcards like <code>*</code> don't match hidden files (those starting with a dot). Use <code>mv .*</code> specifically for hidden files or <code>mv -a *</code> for all files including hidden ones.</p>
+<h3>Create Destination Directories First</h3>
+<p>The destination directory must exist before using <code>mv</code>. If it doesn't, <code>mv</code> will treat the destination as a filename instead of a directory.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How do I undo a move operation?</h4>
+<p>A. There's no direct &quot;undo&quot; command. You need to use <code>mv</code> again to move the file back to its original location.</p>
+<h4>Q2. Can I move files between different drives or partitions?</h4>
+<p>A. Yes, but technically <code>mv</code> will copy the file to the new location and then delete the original when moving across filesystems.</p>
+<h4>Q3. How do I rename multiple files at once?</h4>
+<p>A. Basic <code>mv</code> can't rename multiple files with a pattern. For batch renaming, use tools like <code>rename</code> or write a simple loop in your shell.</p>
+<h4>Q4. What happens if I move a file to a location where a file with the same name exists?</h4>
+<p>A. By default, <code>mv</code> overwrites the destination file without warning. Use <code>-i</code> for confirmation prompts or <code>-n</code> to prevent overwriting.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/mv-invocation.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

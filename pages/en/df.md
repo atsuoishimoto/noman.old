@@ -1,110 +1,108 @@
-# df
+# df command
 
-`df` (disk free) displays information about disk space usage on mounted filesystems, showing available and used space.
+Display free disk space on the file system.
+
+## Overview
+
+The `df` command reports file system disk space usage, showing the amount of used and available space on mounted file systems. It helps monitor disk usage and identify file systems that are running low on space.
 
 ## Options
 
-### **-h (human-readable)**
+### **-h, --human-readable**
 
-Displays sizes in human-readable format (KB, MB, GB) instead of blocks.
+Display sizes in human-readable format (e.g., KB, MB, GB) instead of blocks.
 
-```bash
+```console
 $ df -h
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/sda1        20G  7.8G   11G  42% /
+/dev/sda1        20G   12G  6.8G  64% /
 tmpfs           3.9G     0  3.9G   0% /dev/shm
-/dev/sda3       435G  144G  269G  35% /home
+/dev/sda2       450G  298G  130G  70% /home
 ```
 
-### **-T (file system type)**
+### **-T, --print-type**
 
-Shows the filesystem type for each mounted filesystem.
+Show the file system type for each mount point.
 
-```bash
+```console
 $ df -T
 Filesystem     Type     1K-blocks     Used Available Use% Mounted on
-/dev/sda1      ext4      20971520  8126464  11714816  42% /
-tmpfs          tmpfs      4017024        0   4017024   0% /dev/shm
-/dev/sda3      ext4     455358464 150323200 281845760  35% /home
+/dev/sda1      ext4      20971520 12582912   7077888  64% /
+tmpfs          tmpfs      4096000        0   4096000   0% /dev/shm
+/dev/sda2      ext4     471859200 312475648 136314880  70% /home
 ```
 
-### **-i (inodes)**
+### **-i, --inodes**
 
-Displays inode usage information instead of block usage.
+Display inode information instead of block usage.
 
-```bash
+```console
 $ df -i
 Filesystem      Inodes  IUsed    IFree IUse% Mounted on
-/dev/sda1      1310720 248955  1061765   19% /
-tmpfs          1004256      1  1004255    1% /dev/shm
-/dev/sda3     28835840 845291 27990549    3% /home
-```
-
-### **-a (all)**
-
-Shows all filesystems, including those with 0 blocks or that are normally hidden.
-
-```bash
-$ df -a
-Filesystem     1K-blocks     Used Available Use% Mounted on
-/dev/sda1       20971520  8126464  11714816  42% /
-proc                   0        0         0    - /proc
-sysfs                  0        0         0    - /sys
-tmpfs            4017024        0   4017024   0% /dev/shm
-/dev/sda3      455358464 150323200 281845760  35% /home
+/dev/sda1      1310720 248930  1061790   19% /
+tmpfs          1024000     12  1023988    1% /dev/shm
+/dev/sda2      29491200 983041 28508159    4% /home
 ```
 
 ## Usage Examples
 
-### Basic usage with human-readable format
+### Check space on a specific file system
 
-```bash
-$ df -h
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/sda1        20G  7.8G   11G  42% /
-tmpfs           3.9G     0  3.9G   0% /dev/shm
-/dev/sda3       435G  144G  269G  35% /home
-```
-
-### Check space on a specific filesystem
-
-```bash
+```console
 $ df -h /home
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/sda3       435G  144G  269G  35% /home
+/dev/sda2       450G  298G  130G  70% /home
 ```
 
-### Combining options for detailed output
+### Combine options for comprehensive output
 
-```bash
+```console
 $ df -hT
 Filesystem     Type   Size  Used Avail Use% Mounted on
-/dev/sda1      ext4    20G  7.8G   11G  42% /
+/dev/sda1      ext4    20G   12G  6.8G  64% /
 tmpfs          tmpfs  3.9G     0  3.9G   0% /dev/shm
-/dev/sda3      ext4   435G  144G  269G  35% /home
+/dev/sda2      ext4   450G  298G  130G  70% /home
 ```
+
+## Tips
+
+### Focus on Important File Systems
+
+Use `df -h | grep -v tmpfs` to exclude temporary file systems and focus on physical disks.
+
+### Check Inode Usage
+
+Sometimes a file system appears to have space but can't create new files. Use `df -i` to check if you're running out of inodes, which can happen with many small files.
+
+### Combine with Sort
+
+Use `df -h | sort -k 5 -h` to sort file systems by usage percentage, helping identify the most filled partitions.
 
 ## Frequently Asked Questions
 
-### Q1. What does the "Use%" column mean?
-A. It shows the percentage of the filesystem's capacity that is currently in use.
+#### Q1. What's the difference between `df` and `du`?
+A. `df` shows disk space usage at the file system level, while `du` shows disk usage at the directory/file level.
 
-### Q2. How can I check disk space for a specific directory?
-A. `df` shows information for filesystems, not directories. Use `df -h /path/to/directory` to see the filesystem containing that directory.
+#### Q2. Why does `df` show different available space than my file manager?
+A. Most file systems reserve some space for the root user (typically 5%), which `df` includes in its calculations.
 
-### Q3. Why does `df` show different values than what I expect?
-A. Some space is reserved for the system (typically 5% on Linux), and filesystem overhead also uses space.
+#### Q3. How do I check disk space on a specific directory?
+A. `df` reports on file systems, not directories. Use `du -sh /path/to/directory` to check space used by a specific directory.
 
-### Q4. How do I check inode usage?
-A. Use `df -i` to display inode usage instead of block usage.
+#### Q4. Why does `df` show 100% usage but I can still write files?
+A. Reserved space for the root user allows the system to continue functioning even when user space is full.
 
-## Additional Notes
+## macOS Considerations
 
-- On macOS, the output format may differ slightly from Linux systems.
-- The `-P` option ensures POSIX output format for better compatibility across systems.
-- Running out of inodes can prevent file creation even when disk space is available, so check both space and inodes when troubleshooting storage issues.
-- Modern filesystems may report slightly different values than actual physical storage due to compression, deduplication, or thin provisioning.
+On macOS, `df` behaves slightly differently:
+- The default output uses 512-byte blocks instead of 1K blocks
+- Use `df -h` to get human-readable output similar to Linux
+- macOS doesn't support all GNU options; `-T` may not work as expected
 
 ## References
 
 https://www.gnu.org/software/coreutils/manual/html_node/df-invocation.html
+
+## Revisions
+
+- 2025/04/30 First revision

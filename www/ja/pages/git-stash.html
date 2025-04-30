@@ -46,139 +46,131 @@
   <div class="content">
     <main>
       
-  <h1>git-stash</h1>
-<p><code>git stash</code>は、作業中の変更を一時的に保存し、ワーキングディレクトリをクリーンな状態に戻すためのGitコマンドです。ブランチの切り替えやプル操作の前に、コミットしたくない変更を一時的に退避させるのに便利です。</p>
+  <h1>git stash コマンド</h1>
+<p>作業中の変更を一時的に保存し、クリーンな作業ディレクトリに戻すためのコマンド。</p>
+<h2>概要</h2>
+<p><code>git stash</code>は、コミットしていない変更（追跡されているファイルの変更とステージングされた変更）を一時的に保存し、作業ディレクトリをクリーンな状態に戻します。これにより、ブランチの切り替えやプル操作などを行う際に、コミットせずに作業を一時退避させることができます。保存した変更は後で元に戻すことができます。</p>
 <h2>オプション</h2>
-<h3><strong>git stash save [メッセージ]</strong></h3>
-<p>変更を保存し、オプションでわかりやすいメッセージを付けることができます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>save<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ログイン機能の途中作業&quot;</span>
-Saved<span style="color: #F8F8F8"> </span>working<span style="color: #F8F8F8"> </span>directory<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span>index<span style="color: #F8F8F8"> </span>state<span style="color: #F8F8F8"> </span>On<span style="color: #F8F8F8"> </span>main:<span style="color: #F8F8F8"> </span>ログイン機能の途中作業
+<h3><strong>stash save [メッセージ]</strong></h3>
+<p>変更を保存し、オプションでメッセージを付けることができます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>save<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;作業中のログイン機能&quot;</span>
+<span style="color: #000; font-style: italic">Saved working directory and index state On main: 作業中のログイン機能</span>
 </pre></div>
-<h3><strong>git stash list</strong></h3>
+<h3><strong>stash list</strong></h3>
 <p>保存されたスタッシュの一覧を表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>list
-stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>:<span style="color: #F8F8F8"> </span>On<span style="color: #F8F8F8"> </span>main:<span style="color: #F8F8F8"> </span>ログイン機能の途中作業
-stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">}</span>:<span style="color: #F8F8F8"> </span>On<span style="color: #F8F8F8"> </span>feature-branch:<span style="color: #F8F8F8"> </span>バグ修正の途中
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>list
+<span style="color: #000; font-style: italic">stash@{0}: On main: 作業中のログイン機能</span>
+<span style="color: #000; font-style: italic">stash@{1}: On feature-branch: ナビゲーションバーの修正</span>
 </pre></div>
-<h3><strong>git stash apply [stash@{n}]</strong></h3>
-<p>保存した変更を現在のブランチに適用します。スタッシュは削除されません。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>apply<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>
-On<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>main
-Changes<span style="color: #F8F8F8"> </span>not<span style="color: #F8F8F8"> </span>staged<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>commit:
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">(</span>use<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;git add &lt;file&gt;...&quot;</span><span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>update<span style="color: #F8F8F8"> </span>what<span style="color: #F8F8F8"> </span>will<span style="color: #F8F8F8"> </span>be<span style="color: #F8F8F8"> </span>committed<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">(</span>use<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;git restore &lt;file&gt;...&quot;</span><span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>discard<span style="color: #F8F8F8"> </span>changes<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>working<span style="color: #F8F8F8"> </span>directory<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">        </span>modified:<span style="color: #F8F8F8">   </span>login.js
-</pre></div>
-<h3><strong>git stash pop [stash@{n}]</strong></h3>
-<p>保存した変更を適用し、スタッシュリストから削除します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>pop
-On<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>main
-Changes<span style="color: #F8F8F8"> </span>not<span style="color: #F8F8F8"> </span>staged<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>commit:
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">(</span>use<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;git add &lt;file&gt;...&quot;</span><span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>update<span style="color: #F8F8F8"> </span>what<span style="color: #F8F8F8"> </span>will<span style="color: #F8F8F8"> </span>be<span style="color: #F8F8F8"> </span>committed<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">(</span>use<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;git restore &lt;file&gt;...&quot;</span><span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>discard<span style="color: #F8F8F8"> </span>changes<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>working<span style="color: #F8F8F8"> </span>directory<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">        </span>modified:<span style="color: #F8F8F8">   </span>login.js
-Dropped<span style="color: #F8F8F8"> </span>refs/stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9<span style="color: #CE5C00; font-weight: bold">)</span>
-</pre></div>
-<h3><strong>git stash drop [stash@{n}]</strong></h3>
-<p>特定のスタッシュを削除します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>drop<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">}</span>
-Dropped<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>fedcba9876543210abcdef0123456789abcdef01<span style="color: #CE5C00; font-weight: bold">)</span>
-</pre></div>
-<h3><strong>git stash clear</strong></h3>
-<p>すべてのスタッシュを削除します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>clear
-</pre></div>
-<h3><strong>git stash show [stash@{n}]</strong></h3>
-<p>スタッシュの内容を表示します。<code>-p</code>オプションで詳細な差分を確認できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>show<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>
-<span style="color: #F8F8F8"> </span>login.js<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span><span style="color: #F8F8F8"> </span>+++++++++++++++
-<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>changed,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span><span style="color: #F8F8F8"> </span>insertions<span style="color: #CE5C00; font-weight: bold">(</span>+<span style="color: #CE5C00; font-weight: bold">)</span>
+<h3><strong>stash apply [stash@{n}]</strong></h3>
+<p>保存した変更を現在の作業ディレクトリに適用します。スタッシュは削除されません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>apply<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>
+<span style="color: #000; font-style: italic">On branch main</span>
+<span style="color: #000; font-style: italic">Changes not staged for commit:</span>
+<span style="color: #000; font-style: italic">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span>
+<span style="color: #000; font-style: italic">  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)</span>
+<span style="color: #000; font-style: italic">        modified:   login.js</span>
 
-$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>show<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>
-diff<span style="color: #F8F8F8"> </span>--git<span style="color: #F8F8F8"> </span>a/login.js<span style="color: #F8F8F8"> </span>b/login.js
-index<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234567</span>..abcdefg<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100644</span>
----<span style="color: #F8F8F8"> </span>a/login.js
-+++<span style="color: #F8F8F8"> </span>b/login.js
-@@<span style="color: #F8F8F8"> </span>-10,6<span style="color: #F8F8F8"> </span>+10,21<span style="color: #F8F8F8"> </span>@@<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">function</span><span style="color: #F8F8F8"> </span>validateForm<span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
-<span style="color: #F8F8F8">   </span>//<span style="color: #F8F8F8"> </span>追加されたコード
-+<span style="color: #F8F8F8">  </span><span style="color: #204A87; font-weight: bold">function</span><span style="color: #F8F8F8"> </span>checkCredentials<span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
-+<span style="color: #F8F8F8">    </span>//<span style="color: #F8F8F8"> </span>ログイン処理
-+<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">}</span>
+<span style="color: #000; font-style: italic">no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)</span>
 </pre></div>
-<h3><strong>git stash branch &lt;ブランチ名&gt; [stash@{n}]</strong></h3>
-<p>スタッシュから新しいブランチを作成し、そこに変更を適用します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>login-feature<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>
-Switched<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span>new<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;login-feature&#39;</span>
-On<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>login-feature
-Changes<span style="color: #F8F8F8"> </span>not<span style="color: #F8F8F8"> </span>staged<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>commit:
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">(</span>use<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;git add &lt;file&gt;...&quot;</span><span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>update<span style="color: #F8F8F8"> </span>what<span style="color: #F8F8F8"> </span>will<span style="color: #F8F8F8"> </span>be<span style="color: #F8F8F8"> </span>committed<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">(</span>use<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;git restore &lt;file&gt;...&quot;</span><span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>discard<span style="color: #F8F8F8"> </span>changes<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>working<span style="color: #F8F8F8"> </span>directory<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">        </span>modified:<span style="color: #F8F8F8">   </span>login.js
-Dropped<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9<span style="color: #CE5C00; font-weight: bold">)</span>
+<h3><strong>stash pop [stash@{n}]</strong></h3>
+<p>保存した変更を適用し、スタッシュリストから削除します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>pop
+<span style="color: #000; font-style: italic">On branch main</span>
+<span style="color: #000; font-style: italic">Changes not staged for commit:</span>
+<span style="color: #000; font-style: italic">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span>
+<span style="color: #000; font-style: italic">  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)</span>
+<span style="color: #000; font-style: italic">        modified:   login.js</span>
+
+<span style="color: #000; font-style: italic">no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)</span>
+<span style="color: #000; font-style: italic">Dropped refs/stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)</span>
+</pre></div>
+<h3><strong>stash drop [stash@{n}]</strong></h3>
+<p>特定のスタッシュを削除します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>drop<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">}</span>
+<span style="color: #000; font-style: italic">Dropped stash@{1} (f1e2d3c4b5a6)</span>
+</pre></div>
+<h3><strong>stash clear</strong></h3>
+<p>すべてのスタッシュを削除します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>clear
+</pre></div>
+<h3><strong>stash show [stash@{n}]</strong></h3>
+<p>スタッシュの内容を表示します。<code>-p</code>オプションで詳細な差分を表示できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>show<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>
+<span style="color: #000; font-style: italic"> login.js | 15 +++++++++++++++</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 15 insertions(+)</span>
+
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>show<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>
+<span style="color: #000; font-style: italic">diff --git a/login.js b/login.js</span>
+<span style="color: #000; font-style: italic">index 1234567..abcdefg 100644</span>
+<span style="color: #000; font-style: italic">--- a/login.js</span>
+<span style="color: #000; font-style: italic">+++ b/login.js</span>
+<span style="color: #000; font-style: italic">@@ -10,6 +10,21 @@ function validateForm() {</span>
+<span style="color: #000; font-style: italic">   // 入力検証のコード</span>
+<span style="color: #000; font-style: italic">+  function authenticateUser() {</span>
+<span style="color: #000; font-style: italic">+    // 認証処理のコード</span>
+<span style="color: #000; font-style: italic">+  }</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な使い方</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 変更を一時保存</span>
-$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash
-Saved<span style="color: #F8F8F8"> </span>working<span style="color: #F8F8F8"> </span>directory<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span>index<span style="color: #F8F8F8"> </span>state<span style="color: #F8F8F8"> </span>WIP<span style="color: #F8F8F8"> </span>on<span style="color: #F8F8F8"> </span>main:<span style="color: #F8F8F8"> </span>abc1234<span style="color: #F8F8F8"> </span>最後のコミットメッセージ
+<h3>作業中の変更を一時保存してブランチを切り替える</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>status
+<span style="color: #000; font-style: italic">On branch feature-login</span>
+<span style="color: #000; font-style: italic">Changes not staged for commit:</span>
+<span style="color: #000; font-style: italic">  modified:   login.js</span>
 
-<span style="color: #8F5902; font-style: italic"># 別のブランチで作業</span>
-$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>checkout<span style="color: #F8F8F8"> </span>another-branch
-Switched<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;another-branch&#39;</span>
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash
+<span style="color: #000; font-style: italic">Saved working directory and index state WIP on feature-login: abc1234 最後のコミットメッセージ</span>
 
-<span style="color: #8F5902; font-style: italic"># 元のブランチに戻る</span>
-$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>checkout<span style="color: #F8F8F8"> </span>main
-Switched<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;main&#39;</span>
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>checkout<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">Switched to branch &#39;main&#39;</span>
 
-<span style="color: #8F5902; font-style: italic"># 保存した変更を復元して削除</span>
-$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>pop
-On<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>main
-Changes<span style="color: #F8F8F8"> </span>not<span style="color: #F8F8F8"> </span>staged<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>commit:
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">(</span>use<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;git add &lt;file&gt;...&quot;</span><span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>update<span style="color: #F8F8F8"> </span>what<span style="color: #F8F8F8"> </span>will<span style="color: #F8F8F8"> </span>be<span style="color: #F8F8F8"> </span>committed<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">(</span>use<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;git restore &lt;file&gt;...&quot;</span><span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>discard<span style="color: #F8F8F8"> </span>changes<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>working<span style="color: #F8F8F8"> </span>directory<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">        </span>modified:<span style="color: #F8F8F8">   </span>login.js
-Dropped<span style="color: #F8F8F8"> </span>refs/stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #8F5902"># </span>作業後、元のブランチに戻って変更を復元
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>checkout<span style="color: #F8F8F8"> </span>feature-login
+<span style="color: #000; font-style: italic">Switched to branch &#39;feature-login&#39;</span>
+
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>pop
+<span style="color: #000; font-style: italic">On branch feature-login</span>
+<span style="color: #000; font-style: italic">Changes not staged for commit:</span>
+<span style="color: #000; font-style: italic">  modified:   login.js</span>
 </pre></div>
-<h3>複数のスタッシュを管理する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 変更を説明付きで保存</span>
-$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>save<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ログイン機能の途中作業&quot;</span>
-Saved<span style="color: #F8F8F8"> </span>working<span style="color: #F8F8F8"> </span>directory<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span>index<span style="color: #F8F8F8"> </span>state<span style="color: #F8F8F8"> </span>On<span style="color: #F8F8F8"> </span>main:<span style="color: #F8F8F8"> </span>ログイン機能の途中作業
+<h3>未追跡ファイルも含めてスタッシュする</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>status
+<span style="color: #000; font-style: italic">On branch feature-login</span>
+<span style="color: #000; font-style: italic">Changes not staged for commit:</span>
+<span style="color: #000; font-style: italic">  modified:   login.js</span>
+<span style="color: #000; font-style: italic">Untracked files:</span>
+<span style="color: #000; font-style: italic">  auth.js</span>
 
-<span style="color: #8F5902; font-style: italic"># 別の変更を保存</span>
-$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>save<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ナビゲーションバーの修正&quot;</span>
-Saved<span style="color: #F8F8F8"> </span>working<span style="color: #F8F8F8"> </span>directory<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span>index<span style="color: #F8F8F8"> </span>state<span style="color: #F8F8F8"> </span>On<span style="color: #F8F8F8"> </span>main:<span style="color: #F8F8F8"> </span>ナビゲーションバーの修正
-
-<span style="color: #8F5902; font-style: italic"># スタッシュ一覧を確認</span>
-$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>list
-stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>:<span style="color: #F8F8F8"> </span>On<span style="color: #F8F8F8"> </span>main:<span style="color: #F8F8F8"> </span>ナビゲーションバーの修正
-stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">}</span>:<span style="color: #F8F8F8"> </span>On<span style="color: #F8F8F8"> </span>main:<span style="color: #F8F8F8"> </span>ログイン機能の途中作業
-
-<span style="color: #8F5902; font-style: italic"># 特定のスタッシュを適用</span>
-$<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>apply<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">}</span>
-On<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>main
-Changes<span style="color: #F8F8F8"> </span>not<span style="color: #F8F8F8"> </span>staged<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>commit:
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">(</span>use<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;git add &lt;file&gt;...&quot;</span><span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>update<span style="color: #F8F8F8"> </span>what<span style="color: #F8F8F8"> </span>will<span style="color: #F8F8F8"> </span>be<span style="color: #F8F8F8"> </span>committed<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">(</span>use<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;git restore &lt;file&gt;...&quot;</span><span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>discard<span style="color: #F8F8F8"> </span>changes<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>working<span style="color: #F8F8F8"> </span>directory<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">        </span>modified:<span style="color: #F8F8F8">   </span>login.js
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>-u
+<span style="color: #000; font-style: italic">Saved working directory and index state WIP on feature-login: abc1234 最後のコミットメッセージ</span>
 </pre></div>
+<h2>ヒント:</h2>
+<h3>意味のあるメッセージを付ける</h3>
+<p><code>git stash save &quot;メッセージ&quot;</code>を使って、スタッシュに説明的なメッセージを付けると、後で内容を思い出しやすくなります。</p>
+<h3>部分的なスタッシュ</h3>
+<p><code>git stash -p</code>（または <code>--patch</code>）を使うと、変更の一部だけをスタッシュできます。各変更ハンクごとに保存するかどうか選択できるため、関連する変更だけをグループ化できます。</p>
+<h3>ブランチの作成とスタッシュの適用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>new-branch<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>
+</pre></div>
+<p>このコマンドは新しいブランチを作成し、そこにスタッシュを適用して、成功したらスタッシュを削除します。コンフリクトが発生した場合に便利です。</p>
+<h3>スタッシュの定期的なクリーンアップ</h3>
+<p>古いスタッシュは定期的に確認し、不要なものは削除しましょう。長期間放置されたスタッシュは混乱の原因になります。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>git stash</code>と<code>git stash save</code>の違いは何ですか？</h4>
-<p>A. 基本的に同じ機能ですが、<code>git stash save</code>ではメッセージを付けることができます。Git 2.16以降では<code>git stash push</code>の使用が推奨されています。</p>
-<h4>Q2. スタッシュを適用する際に競合が発生した場合はどうすればよいですか？</h4>
-<p>A. 通常のマージ競合と同様に解決します。競合ファイルを編集し、<code>git add</code>でマークしてから作業を続けます。</p>
-<h4>Q3. 特定のファイルだけをスタッシュに保存できますか？</h4>
-<p>A. はい、Git 2.13以降では<code>git stash push -m &quot;メッセージ&quot; [ファイルパス]</code>を使用できます。</p>
-<h4>Q4. スタッシュした変更を誤って削除してしまった場合、復元できますか？</h4>
-<p>A. 通常のスタッシュコマンドでは復元できませんが、<code>git fsck --unreachable</code>と<code>git show</code>を組み合わせて復元できる場合があります。ただし確実ではありません。</p>
-<h2>追加のヒント</h2>
-<ul>
-<li>スタッシュはブランチをまたいで適用できますが、競合に注意が必要です。</li>
-<li>長期間保存する変更はスタッシュではなく、トピックブランチを作成することをお勧めします。</li>
-<li>スタッシュにはインデックスに追加されていない（<code>git add</code>していない）ファイルも含まれますが、新規作成した未追跡ファイルは含まれません。未追跡ファイルも含めるには<code>git stash -u</code>または<code>git stash --include-untracked</code>を使用します。</li>
-<li>スタッシュは内部的にはコミットとして保存されるため、Git履歴を圧迫することはありません。</li>
-</ul>
+<h4>Q1. スタッシュした変更を間違って削除してしまった場合、復元できますか？</h4>
+<p>A. 通常のスタッシュ操作では、<code>git stash drop</code>や<code>git stash clear</code>で削除したスタッシュを復元することはできません。ただし、Gitのreflogを使って最近削除されたスタッシュを見つけられる場合があります。</p>
+<h4>Q2. 複数のブランチで同じスタッシュを適用できますか？</h4>
+<p>A. はい、<code>git stash apply</code>を使えば同じスタッシュを複数のブランチに適用できます。ただし、コンフリクトが発生する可能性があるので注意が必要です。</p>
+<h4>Q3. スタッシュはリモートリポジトリに共有されますか？</h4>
+<p>A. いいえ、スタッシュはローカルリポジトリにのみ保存され、<code>git push</code>でリモートに送信されることはありません。</p>
+<h4>Q4. スタッシュとコミットの違いは何ですか？</h4>
+<p>A. スタッシュは一時的な保存場所で、履歴に残りません。コミットはリポジトリの履歴に永続的に記録されます。スタッシュは短期的な作業の退避に、コミットは意味のある変更の記録に使用します。</p>
 <h2>参考資料</h2>
 <p>https://git-scm.com/docs/git-stash</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
+</ul>
 
 
     </main>

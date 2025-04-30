@@ -1,52 +1,108 @@
-# dirnameコマンド概要
+# dirname コマンド
 
-`dirname`コマンドはファイルパスからディレクトリ部分を抽出するためのコマンドです。パスの最後のコンポーネント（通常はファイル名）を削除し、ディレクトリパスのみを返します。
+パス名からディレクトリ部分を抽出します。
 
-## 主なオプション
+## 概要
 
-- **-z**: 出力の末尾に改行文字を付けずに、ヌル文字（\0）で終了します。
-  - シェルスクリプトでパイプラインを使用する際に便利です。
+`dirname` コマンドは、ファイルパスからディレクトリ部分のみを取り出すためのユーティリティです。ファイルパスの最後のスラッシュ（/）より前の部分を出力します。スクリプト内でファイルのディレクトリパスを取得する際によく使用されます。
+
+## オプション
+
+### **-z, --zero**
+
+出力の区切り文字として改行ではなくNULL文字を使用します。
+
+```console
+$ dirname -z /usr/bin/file1 /usr/bin/file2
+/usr/bin/usr/bin
+```
+
+これは実際には2つのパスが連続して出力されています（NULLバイトで区切られているため表示されません）。
 
 ## 使用例
 
-### 基本的な使用法
+### 基本的な使用方法
 
-```bash
-# ファイルパスからディレクトリ部分を抽出
-dirname /home/user/documents/file.txt
-# 出力
-/home/user/documents
+```console
+$ dirname /usr/bin/bash
+/usr/bin
 ```
 
-### 相対パスの場合
+### 複数のパスを処理する
 
-```bash
-# 相対パスからディレクトリ部分を抽出
-dirname documents/file.txt
-# 出力
-documents
+```console
+$ dirname /usr/bin/bash /etc/passwd /home/user/file.txt
+/usr/bin
+/etc
+/home/user
 ```
 
-### カレントディレクトリの場合
+### 相対パスでの使用
 
-```bash
-# カレントディレクトリのファイルの場合
-dirname file.txt
-# 出力
+```console
+$ dirname dir1/dir2/file.txt
+dir1/dir2
+```
+
+### カレントディレクトリのファイル
+
+```console
+$ dirname file.txt
 .
 ```
 
-### -zオプションの使用例
+### スクリプト内での使用例
 
-```bash
-# ヌル文字で終了する出力を生成
-dirname -z /home/user/documents/file.txt | xargs -0 ls
-# 出力（/home/user/documentsディレクトリの内容を表示）
+```console
+$ script_dir=$(dirname "$0")
+$ echo "このスクリプトは $script_dir ディレクトリにあります"
+このスクリプトは . ディレクトリにあります
 ```
 
-## 追加情報
+## ヒント:
 
-- `dirname`はパスが実際に存在するかどうかを確認しません。単に文字列として処理します。
-- スクリプト内でファイルのディレクトリを取得するために頻繁に使用されます。
-- `basename`コマンドと対になることが多く、`basename`はパスからファイル名部分を抽出します。
-- 複数のパスを引数として渡すと、それぞれのディレクトリ部分を別々の行に出力します。
+### スクリプトの場所を特定する
+
+シェルスクリプト内で `dirname "$0"` を使用すると、スクリプト自体が存在するディレクトリを取得できます。これはスクリプトと同じディレクトリにある設定ファイルやリソースにアクセスする際に便利です。
+
+### 絶対パスへの変換
+
+`dirname` と `cd` を組み合わせることで、相対パスを絶対パスに変換できます：
+
+```console
+$ cd $(dirname "/relative/path/file") && pwd
+```
+
+### パス操作の組み合わせ
+
+`dirname` と `basename` を組み合わせると、パスを効果的に操作できます：
+
+```console
+$ path="/usr/local/bin/script.sh"
+$ dir=$(dirname "$path")
+$ file=$(basename "$path")
+$ echo "ディレクトリ: $dir, ファイル: $file"
+ディレクトリ: /usr/local/bin, ファイル: script.sh
+```
+
+## よくある質問
+
+#### Q1. `dirname` と `basename` の違いは何ですか？
+A. `dirname` はパスからディレクトリ部分を抽出し、`basename` はファイル名部分を抽出します。例えば、`/path/to/file.txt` に対して、`dirname` は `/path/to` を返し、`basename` は `file.txt` を返します。
+
+#### Q2. `dirname` はファイルの存在を確認しますか？
+A. いいえ、`dirname` は単に文字列操作を行うだけで、実際のファイルシステムにアクセスしません。存在しないパスでも処理できます。
+
+#### Q3. スラッシュだけのパスを処理するとどうなりますか？
+A. ルートディレクトリ（`/`）を処理すると、`dirname` は `/` を返します。
+
+#### Q4. 末尾にスラッシュがあるパスはどう処理されますか？
+A. 末尾のスラッシュは無視されます。例えば、`/usr/bin/` と `/usr/bin` は同じ結果（`/usr`）になります。
+
+## 参照
+
+https://www.gnu.org/software/coreutils/manual/html_node/dirname-invocation.html
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

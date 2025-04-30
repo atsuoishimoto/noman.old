@@ -1,76 +1,80 @@
 # curl コマンド
 
-curlは、さまざまなプロトコル（HTTP、HTTPS、FTP等）を使用してデータを転送するためのコマンドラインツールです。Webページの取得、APIとの通信、ファイルのダウンロードなどに使用されます。
+URLで指定されたリソースをダウンロードまたは操作するためのコマンドラインツール。
+
+## 概要
+
+`curl`はURLを使用してデータを転送するためのコマンドラインツールです。HTTP、HTTPS、FTP、FTPS、SFTPなど多くのプロトコルをサポートしています。Webページの取得、APIとの対話、ファイルのダウンロード、フォームデータの送信など、ネットワーク操作に広く使用されています。
 
 ## オプション
 
-### **-o, --output**
-指定したファイル名にダウンロードしたデータを保存します。
+### **-o, --output \<file\>**
+
+指定したファイルに出力を保存します。
 
 ```console
 $ curl -o example.html https://example.com
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100  1256  100  1256    0     0   7975      0 --:--:-- --:--:-- --:--:--  8034
+100  1256  100  1256    0     0  12560      0 --:--:-- --:--:-- --:--:-- 12686
 ```
 
 ### **-O, --remote-name**
+
 リモートファイルと同じ名前でローカルに保存します。
 
 ```console
 $ curl -O https://example.com/sample.zip
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100 10.2M  100 10.2M    0     0  5215k      0  0:00:02  0:00:02 --:--:-- 5216k
+100 10.2M  100 10.2M    0     0  5.1MB/s      0 --:--:-- 0:00:02 --:--:-- 5.1MB/s
 ```
 
 ### **-s, --silent**
+
 進行状況やエラーメッセージを表示せず、静かに実行します。
 
 ```console
-$ curl -s https://example.com > example.html
+$ curl -s https://example.com > /dev/null
 ```
 
 ### **-I, --head**
-HTTPヘッダー情報のみを取得します（コンテンツ本体は取得しません）。
+
+HTTPヘッダーのみを取得します（ボディは取得しません）。
 
 ```console
 $ curl -I https://example.com
 HTTP/2 200 
 content-type: text/html; charset=UTF-8
-date: Mon, 15 May 2023 12:34:56 GMT
-expires: Mon, 22 May 2023 12:34:56 GMT
+date: Tue, 30 Apr 2025 12:34:56 GMT
+expires: Tue, 07 May 2025 12:34:56 GMT
 cache-control: public, max-age=604800
-server: ECS (dcb/7F83)
+server: ECS (dcb/7F84)
 content-length: 1256
 ```
 
-### **-X, --request**
-HTTPリクエストメソッド（GET、POST、PUT、DELETEなど）を指定します。
+### **-X, --request \<command\>**
+
+使用するHTTPメソッドを指定します（GET、POST、PUT、DELETEなど）。
 
 ```console
 $ curl -X POST https://api.example.com/data
 ```
 
-### **-H, --header**
-HTTPリクエストヘッダーを追加します。
+### **-H, --header \<header\>**
+
+HTTPリクエストに追加のヘッダーを設定します。
 
 ```console
 $ curl -H "Content-Type: application/json" -H "Authorization: Bearer token123" https://api.example.com
 ```
 
-### **-d, --data**
-POSTリクエストでデータを送信します。
+### **-d, --data \<data\>**
+
+HTTPリクエストにデータを送信します（POSTリクエストなど）。
 
 ```console
 $ curl -X POST -d "name=John&age=30" https://api.example.com/users
-```
-
-### **-L, --location**
-リダイレクトに自動的に従います。
-
-```console
-$ curl -L https://example.com/redirect
 ```
 
 ## 使用例
@@ -78,11 +82,11 @@ $ curl -L https://example.com/redirect
 ### JSONデータをPOSTする
 
 ```console
-$ curl -X POST -H "Content-Type: application/json" -d '{"name":"山田太郎","email":"yamada@example.com"}' https://api.example.com/users
+$ curl -X POST -H "Content-Type: application/json" -d '{"name":"John","age":30}' https://api.example.com/users
 {"id": 123, "status": "created"}
 ```
 
-### ファイルをダウンロードして進捗状況を表示
+### ファイルをダウンロードして進行状況を表示
 
 ```console
 $ curl -# -O https://example.com/largefile.zip
@@ -95,48 +99,65 @@ $ curl -# -O https://example.com/largefile.zip
 $ curl -O https://example.com/file1.txt -O https://example.com/file2.txt
 ```
 
-### APIからJSONデータを取得して整形表示（jqと組み合わせ）
+### リダイレクトに従う
 
 ```console
-$ curl -s https://api.example.com/users | jq
-{
-  "users": [
-    {
-      "id": 1,
-      "name": "山田太郎"
-    },
-    {
-      "id": 2,
-      "name": "佐藤花子"
-    }
-  ]
-}
+$ curl -L https://short-url.example
+```
+
+## ヒント:
+
+### 証明書の検証をスキップ
+
+開発環境やテスト時に自己署名証明書を使用する場合は、`-k`または`--insecure`オプションを使用できますが、本番環境では使用しないでください。
+
+```console
+$ curl -k https://localhost:8443
+```
+
+### ユーザーエージェントの設定
+
+一部のウェブサイトはユーザーエージェントをチェックするため、ブラウザのように振る舞いたい場合は`-A`オプションを使用します。
+
+```console
+$ curl -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" https://example.com
+```
+
+### クッキーの使用
+
+クッキーを保存して再利用するには、`-b`と`-c`オプションを使用します。
+
+```console
+$ curl -c cookies.txt https://example.com/login -d "user=name&password=secret"
+$ curl -b cookies.txt https://example.com/protected-area
 ```
 
 ## よくある質問
 
 #### Q1. curlとwgetの違いは何ですか？
-A. curlはより多くのプロトコルをサポートし、データの送信に強みがあります。wgetは再帰的なダウンロードに適しています。
+A. curlはより多くのプロトコルをサポートし、より多くのオプションを提供しますが、wgetは再帰的なダウンロードに優れています。curlはスクリプトでの使用に適しており、wgetはシンプルなダウンロードタスクに適しています。
 
-#### Q2. curlでPOSTリクエストを送る基本的な方法は？
-A. `curl -X POST -d "データ" URL` の形式で送信できます。JSONデータを送る場合は `-H "Content-Type: application/json"` ヘッダーも追加します。
+#### Q2. curlでHTTPSサイトにアクセスする際に証明書エラーが発生する場合はどうすればよいですか？
+A. 開発環境では`-k`オプションを使用して証明書検証をスキップできますが、本番環境では適切な証明書を設定するか、`--cacert`オプションで信頼できる証明書を指定してください。
 
-#### Q3. ダウンロードが中断された場合、続きからダウンロードするには？
-A. `-C -` オプションを使用すると、中断したところから再開できます。例: `curl -C - -O URL`
+#### Q3. curlでPOSTリクエストを送信する方法は？
+A. `-X POST`でメソッドを指定し、`-d`オプションでデータを送信します。JSONデータを送信する場合は、`-H "Content-Type: application/json"`ヘッダーも追加してください。
 
-## 追加情報
+#### Q4. curlでファイルをアップロードするには？
+A. `-F "file=@ファイルパス"`オプションを使用します。例：`curl -F "file=@document.pdf" https://example.com/upload`
 
-* `-v`（verbose）オプションを使用すると、リクエストとレスポンスの詳細情報が表示され、デバッグに役立ちます。
-* `curl`は多くのプロトコル（HTTP、HTTPS、FTP、SFTP、SMTPなど）をサポートしています。
-* 大きなファイルをダウンロードする場合は、`-C -`オプションを使用すると、中断したダウンロードを再開できます。
-* APIテストやWebスクレイピングのスクリプトでよく使用されるコマンドです。
-* 複雑なリクエストは、`--data-binary @file.json`のようにファイルからデータを読み込むと便利です。
-* macOSでは標準でインストールされていますが、最新バージョンが必要な場合はHomebrewで `brew install curl` としてアップデートできます。
+## macOSでの注意点
 
-## References
+macOSのcurlはOpenSSLではなくSecure Transport（macOSのネイティブTLSライブラリ）を使用していることがあります。これにより、一部のSSL/TLS機能が異なる動作をする場合があります。最新のTLSプロトコルを使用するには、Homebrewなどでcurlを再インストールすることを検討してください。
 
-https://curl.se/docs/manpage.html
+```console
+$ brew install curl
+```
 
-## Revisions
+## 参考資料
 
-- 2025/04/26 コマンドの概要を冒頭に追加。フォーマットを指定された形式に変更。コードブロックの言語指定を`bash`から`console`に変更。「よくある質問」セクションを追加。macOSに関する情報を追加。
+https://curl.se/docs/
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

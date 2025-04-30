@@ -46,79 +46,117 @@
   <div class="content">
     <main>
       
-  <h1>git push コマンド概要</h1>
-<p><code>git push</code>は、ローカルリポジトリの変更をリモートリポジトリにアップロードするGitコマンドです。これにより、他の開発者とコードの変更を共有することができます。</p>
+  <h1>git push コマンド</h1>
+<p>リモートリポジトリに変更を送信するコマンドです。</p>
+<h2>概要</h2>
+<p><code>git push</code> は、ローカルリポジトリで行った変更（コミット）をリモートリポジトリに送信します。これにより、他の開発者とコードを共有したり、バックアップを作成したりすることができます。デフォルトでは、現在のブランチの変更を、設定されたリモートリポジトリの対応するブランチにプッシュします。</p>
 <h2>オプション</h2>
-<h3><strong>-u, --set-upstream</strong>:</h3>
-<p>ローカルブランチとリモートブランチの追跡関係を設定します。一度設定すれば、次回からは単に<code>git push</code>だけで済みます。</p>
-<p>例: <code>git push -u origin main</code></p>
-<h3><strong>--force, -f</strong>:</h3>
-<p>リモートブランチを強制的に上書きします。履歴が書き換えられるため、共有リポジトリでは注意が必要です。</p>
-<p>例: <code>git push --force origin feature-branch</code></p>
-<h3><strong>--all</strong>:</h3>
-<p>すべてのローカルブランチをリモートにプッシュします。</p>
-<p>例: <code>git push --all origin</code></p>
-<h3><strong>--tags</strong>:</h3>
-<p>ローカルのタグをすべてリモートにプッシュします。</p>
-<p>例: <code>git push --tags</code></p>
-<h3><strong>--delete</strong>:</h3>
-<p>リモートブランチを削除します。</p>
-<p>例: <code>git push origin --delete old-branch</code></p>
-<h3><strong>--dry-run</strong>:</h3>
-<p>実際にプッシュせずに、何が送信されるかを確認します。</p>
-<p>例: <code>git push --dry-run origin main</code></p>
-<h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使い方（mainブランチをoriginリモートにプッシュ）</span>
-git<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>main
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-Enumerating<span style="color: #F8F8F8"> </span>objects:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>,<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>.
-Counting<span style="color: #F8F8F8"> </span>objects:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span>%<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">5</span>/5<span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>.
-Delta<span style="color: #F8F8F8"> </span>compression<span style="color: #F8F8F8"> </span>using<span style="color: #F8F8F8"> </span>up<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span><span style="color: #F8F8F8"> </span>threads
-Compressing<span style="color: #F8F8F8"> </span>objects:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span>%<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">3</span>/3<span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>.
-Writing<span style="color: #F8F8F8"> </span>objects:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span>%<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">3</span>/3<span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">294</span><span style="color: #F8F8F8"> </span>bytes<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">294</span>.00<span style="color: #F8F8F8"> </span>KiB/s,<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>.
-Total<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>delta<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span>reused<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>delta<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span>pack-reused<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>
-remote:<span style="color: #F8F8F8"> </span>Resolving<span style="color: #F8F8F8"> </span>deltas:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span>%<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">2</span>/2<span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span>completed<span style="color: #F8F8F8"> </span>with<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">local</span><span style="color: #F8F8F8"> </span>objects.
-To<span style="color: #F8F8F8"> </span>github.com:username/repository.git
-<span style="color: #F8F8F8">   </span>a1b2c3d..e4f5g6h<span style="color: #F8F8F8">  </span>main<span style="color: #F8F8F8"> </span>-&gt;<span style="color: #F8F8F8"> </span>main
-
-<span style="color: #8F5902; font-style: italic"># 追跡関係を設定してプッシュ</span>
-git<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>feature-branch
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-Branch<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;feature-branch&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>up<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>track<span style="color: #F8F8F8"> </span>remote<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;feature-branch&#39;</span><span style="color: #F8F8F8"> </span>from<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;origin&#39;</span>.
-Everything<span style="color: #F8F8F8"> </span>up-to-date
-
-<span style="color: #8F5902; font-style: italic"># リモートブランチの削除</span>
-git<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>--delete<span style="color: #F8F8F8"> </span>old-feature
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-To<span style="color: #F8F8F8"> </span>github.com:username/repository.git
-<span style="color: #F8F8F8"> </span>-<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span>deleted<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8">         </span>old-feature
+<h3><strong>-u, --set-upstream</strong></h3>
+<p>指定したリモートブランチを、現在のブランチの上流（デフォルトの送信先）として設定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">Branch &#39;main&#39; set up to track remote branch &#39;main&#39; from &#39;origin&#39;.</span>
+<span style="color: #000; font-style: italic">Everything up-to-date</span>
 </pre></div>
+<h3><strong>--force, -f</strong></h3>
+<p>リモートブランチを強制的に上書きします。通常の <code>push</code> が拒否される場合に使用しますが、他の人の変更を上書きする可能性があるため注意が必要です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>--force<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>feature
+<span style="color: #000; font-style: italic">Counting objects: 5, done.</span>
+<span style="color: #000; font-style: italic">Delta compression using up to 8 threads.</span>
+<span style="color: #000; font-style: italic">Compressing objects: 100% (3/3), done.</span>
+<span style="color: #000; font-style: italic">Writing objects: 100% (5/5), 456 bytes | 456.00 KiB/s, done.</span>
+<span style="color: #000; font-style: italic">Total 5 (delta 1), reused 0 (delta 0)</span>
+<span style="color: #000; font-style: italic">remote: Resolving deltas: 100% (1/1), completed with 1 local object.</span>
+<span style="color: #000; font-style: italic"> + 7f9d407...2c5e7f0 feature -&gt; feature (forced update)</span>
+</pre></div>
+<h3><strong>--all</strong></h3>
+<p>すべてのローカルブランチをリモートにプッシュします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>--all<span style="color: #F8F8F8"> </span>origin
+<span style="color: #000; font-style: italic">Counting objects: 10, done.</span>
+<span style="color: #000; font-style: italic">Delta compression using up to 8 threads.</span>
+<span style="color: #000; font-style: italic">Compressing objects: 100% (8/8), done.</span>
+<span style="color: #000; font-style: italic">Writing objects: 100% (10/10), 1.22 KiB | 1.22 MiB/s, done.</span>
+<span style="color: #000; font-style: italic">Total 10 (delta 3), reused 0 (delta 0)</span>
+<span style="color: #000; font-style: italic">remote: Resolving deltas: 100% (3/3), completed with 3 local objects.</span>
+<span style="color: #000; font-style: italic"> * [new branch]      feature -&gt; feature</span>
+<span style="color: #000; font-style: italic"> * [new branch]      main -&gt; main</span>
+</pre></div>
+<h3><strong>--tags</strong></h3>
+<p>すべてのローカルタグをリモートにプッシュします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>--tags<span style="color: #F8F8F8"> </span>origin
+<span style="color: #000; font-style: italic">Counting objects: 1, done.</span>
+<span style="color: #000; font-style: italic">Writing objects: 100% (1/1), 160 bytes | 160.00 KiB/s, done.</span>
+<span style="color: #000; font-style: italic">Total 1 (delta 0), reused 0 (delta 0)</span>
+<span style="color: #000; font-style: italic">To github.com:user/repo.git</span>
+<span style="color: #000; font-style: italic"> * [new tag]         v1.0 -&gt; v1.0</span>
+</pre></div>
+<h3><strong>--delete</strong></h3>
+<p>リモートブランチを削除します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>--delete<span style="color: #F8F8F8"> </span>old-feature
+<span style="color: #000; font-style: italic">To github.com:user/repo.git</span>
+<span style="color: #000; font-style: italic"> - [deleted]         old-feature</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的な使い方</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>push
+<span style="color: #000; font-style: italic">Counting objects: 3, done.</span>
+<span style="color: #000; font-style: italic">Delta compression using up to 8 threads.</span>
+<span style="color: #000; font-style: italic">Compressing objects: 100% (2/2), done.</span>
+<span style="color: #000; font-style: italic">Writing objects: 100% (3/3), 267 bytes | 267.00 KiB/s, done.</span>
+<span style="color: #000; font-style: italic">Total 3 (delta 0), reused 0 (delta 0)</span>
+<span style="color: #000; font-style: italic">To github.com:user/repo.git</span>
+<span style="color: #000; font-style: italic">   a1b2c3d..e4f5g6h  main -&gt; main</span>
+</pre></div>
+<h3>特定のブランチをプッシュ</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>feature
+<span style="color: #000; font-style: italic">Counting objects: 5, done.</span>
+<span style="color: #000; font-style: italic">Delta compression using up to 8 threads.</span>
+<span style="color: #000; font-style: italic">Compressing objects: 100% (3/3), done.</span>
+<span style="color: #000; font-style: italic">Writing objects: 100% (5/5), 456 bytes | 456.00 KiB/s, done.</span>
+<span style="color: #000; font-style: italic">Total 5 (delta 1), reused 0 (delta 0)</span>
+<span style="color: #000; font-style: italic">remote: Resolving deltas: 100% (1/1), completed with 1 local object.</span>
+<span style="color: #000; font-style: italic">To github.com:user/repo.git</span>
+<span style="color: #000; font-style: italic">   7f9d407..2c5e7f0  feature -&gt; feature</span>
+</pre></div>
+<h3>新しいブランチをリモートに作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>new-feature
+<span style="color: #000; font-style: italic">Counting objects: 3, done.</span>
+<span style="color: #000; font-style: italic">Delta compression using up to 8 threads.</span>
+<span style="color: #000; font-style: italic">Compressing objects: 100% (2/2), done.</span>
+<span style="color: #000; font-style: italic">Writing objects: 100% (3/3), 267 bytes | 267.00 KiB/s, done.</span>
+<span style="color: #000; font-style: italic">Total 3 (delta 0), reused 0 (delta 0)</span>
+<span style="color: #000; font-style: italic">remote: </span>
+<span style="color: #000; font-style: italic">remote: Create a pull request for &#39;new-feature&#39; on GitHub by visiting:</span>
+<span style="color: #000; font-style: italic">remote:      https://github.com/user/repo/pull/new/new-feature</span>
+<span style="color: #000; font-style: italic">remote: </span>
+<span style="color: #000; font-style: italic">To github.com:user/repo.git</span>
+<span style="color: #000; font-style: italic"> * [new branch]      new-feature -&gt; new-feature</span>
+<span style="color: #000; font-style: italic">Branch &#39;new-feature&#39; set up to track remote branch &#39;new-feature&#39; from &#39;origin&#39;.</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>初回のプッシュには <code>-u</code> オプションを使う</h3>
+<p>新しいブランチを作成した後の初回プッシュでは、<code>-u</code> オプションを使うことで、以降の <code>git push</code> や <code>git pull</code> で明示的にリモートとブランチを指定する必要がなくなります。</p>
+<h3>プッシュする前に最新の変更を取得する</h3>
+<p><code>git pull</code> を実行してから <code>git push</code> することで、競合を避けることができます。</p>
+<h3><code>--force</code> は慎重に使う</h3>
+<p><code>--force</code> オプションは他の開発者の変更を上書きする可能性があるため、共有リポジトリでは特に注意が必要です。代わりに <code>--force-with-lease</code> を使うと、他の人の変更がある場合はプッシュが拒否されるため安全です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>--force-with-lease<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>feature
+</pre></div>
+<h3>プッシュ拒否時の対処法</h3>
+<p>リモートに存在する変更と競合する場合、プッシュが拒否されることがあります。その場合は、まず <code>git pull</code> で変更を取り込み、必要に応じて競合を解決してから再度プッシュします。</p>
 <h2>よくある質問</h2>
-<h3>Q1. <code>git push</code>と<code>git push origin main</code>の違いは何ですか？</h3>
-<p>A. <code>git push</code>は追跡関係が設定されているブランチに対してプッシュします。<code>git push origin main</code>は明示的に<code>origin</code>リモートの<code>main</code>ブランチにプッシュします。</p>
-<h3>Q2. プッシュが拒否された場合はどうすればいいですか？</h3>
-<p>A. リモートに新しい変更がある場合は、まず<code>git pull</code>でリモートの変更を取り込んでから再度プッシュしてください。コンフリクトがある場合は解決が必要です。</p>
-<h3>Q3. <code>--force</code>オプションはいつ使うべきですか？</h3>
-<p>A. 個人的なブランチや、リベースした後など履歴を書き換えた場合に限って使用すべきです。共有ブランチでの使用は避けてください。</p>
-<h3>Q4. 新しく作成したローカルブランチをリモートにプッシュするにはどうすればいいですか？</h3>
-<p>A. <code>git push -u origin &lt;ブランチ名&gt;</code>を使用します。<code>-u</code>オプションで追跡関係も設定されます。</p>
-<h3>Q5. タグをプッシュするにはどうすればいいですか？</h3>
-<p>A. 特定のタグは<code>git push origin &lt;タグ名&gt;</code>で、すべてのタグは<code>git push --tags</code>でプッシュできます。</p>
-<h3>Q6. プッシュ後に「Everything up-to-date」と表示される場合は何を意味していますか？</h3>
-<p>A. ローカルとリモートの間に差分がない状態です。コミットされていない変更があるか、すでにプッシュ済みの可能性があります。</p>
-<h3>Q7. 複数のリモートリポジトリにプッシュするにはどうすればいいですか？</h3>
-<p>A. 各リモートに対して個別に<code>git push &lt;リモート名&gt; &lt;ブランチ名&gt;</code>を実行します。</p>
-<h3>Q8. プッシュする前に変更内容を確認するにはどうすればいいですか？</h3>
-<p>A. <code>git push --dry-run origin main</code>を使用すると、実際にプッシュせずに何が送信されるかを確認できます。</p>
-<h3>Q9. 特定のコミットだけをプッシュするにはどうすればいいですか？</h3>
-<p>A. <code>git push origin &lt;コミットハッシュ&gt;:&lt;リモートブランチ名&gt;</code>の形式で指定できます。</p>
-<h3>Q10. プッシュ時の認証エラーを解決するにはどうすればいいですか？</h3>
-<p>A. 認証情報が正しいか確認し、SSHキーが設定されているか、またはパーソナルアクセストークンが有効かを確認してください。</p>
-<h2>追加のメモ</h2>
+<h4>Q1. プッシュが拒否される理由は何ですか？</h4>
+<p>A. リモートリポジトリに、ローカルにない新しい変更がある場合に拒否されます。まず <code>git pull</code> を実行して最新の変更を取得してから再度プッシュしてみてください。</p>
+<h4>Q2. 特定のコミットだけをプッシュするには？</h4>
+<p>A. Gitでは特定のコミットだけをプッシュすることはできません。ブランチ単位でプッシュします。特定のコミットだけを共有したい場合は、新しいブランチを作成してそこにコミットを含めてプッシュするか、<code>git cherry-pick</code> を使用して別のブランチに特定のコミットを適用します。</p>
+<h4>Q3. プッシュした変更を取り消すには？</h4>
+<p>A. 完全に取り消すことはできませんが、<code>git revert</code> で元に戻すコミットを作成し、それをプッシュすることで実質的に変更を取り消すことができます。または、履歴を書き換えて <code>--force</code> オプションでプッシュする方法もありますが、共有リポジトリでは避けるべきです。</p>
+<h4>Q4. タグをプッシュするには？</h4>
+<p>A. <code>git push origin &lt;タグ名&gt;</code> で特定のタグを、<code>git push --tags</code> ですべてのタグをプッシュできます。</p>
+<h2>参考</h2>
+<p>https://git-scm.com/docs/git-push</p>
+<h2>改訂</h2>
 <ul>
-<li>チーム開発では、<code>--force</code>オプションの使用には十分注意してください。他の開発者の作業を上書きする可能性があります。</li>
-<li>大きな変更をプッシュする前に、小さなコミットに分けてプッシュすると、問題が発生した場合に対処しやすくなります。</li>
-<li>初めてリモートリポジトリにプッシュする際は、<code>-u</code>オプションを使用して追跡関係を設定することをお勧めします。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

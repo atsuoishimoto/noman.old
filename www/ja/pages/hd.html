@@ -46,62 +46,74 @@
   <div class="content">
     <main>
       
-  <h1><code>hd</code> コマンドの概要</h1>
-<p><code>hd</code>（hexdump）コマンドは、ファイルやデータの内容を16進数形式で表示するためのユーティリティです。バイナリファイルの内容を確認したり、データの構造を分析したりする際に役立ちます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-n LENGTH</strong>: 指定したバイト数だけ表示します</p>
-<ul>
-<li>例: <code>hd -n 16 file.bin</code>（最初の16バイトのみ表示）</li>
-</ul>
-</li>
-<li><p><strong>-s OFFSET</strong>: 指定したオフセット（位置）から表示を開始します</p>
-<ul>
-<li>例: <code>hd -s 512 disk.img</code>（512バイト目から表示開始）</li>
-</ul>
-</li>
-<li><p><strong>-v</strong>: 重複行を省略せずに全て表示します</p>
-<ul>
-<li>例: <code>hd -v large_file</code>（同じパターンが続く場合も全て表示）</li>
-</ul>
-</li>
-<li><p><strong>-c</strong>: キャノニカル形式で出力します（16進数とASCII文字の両方を表示）</p>
-<ul>
-<li>例: <code>hd -c data.bin</code></li>
-</ul>
-</li>
-</ul>
-<h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># テキストファイルの16進ダンプを表示</span>
-$<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, World!&quot;</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>sample.txt
-$<span style="color: #F8F8F8"> </span>hd<span style="color: #F8F8F8"> </span>sample.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">00000000</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">48</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">65</span><span style="color: #F8F8F8"> </span>6c<span style="color: #F8F8F8"> </span>6c<span style="color: #F8F8F8"> </span>6f<span style="color: #F8F8F8"> </span>2c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">57</span><span style="color: #F8F8F8">  </span>6f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">72</span><span style="color: #F8F8F8"> </span>6c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">64</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">21</span><span style="color: #F8F8F8"> </span>0a<span style="color: #F8F8F8">        </span><span style="color: #000; font-weight: bold">|</span>Hello,<span style="color: #F8F8F8"> </span>World!.<span style="color: #000; font-weight: bold">|</span>
-0000000e
-
-<span style="color: #8F5902; font-style: italic"># バイナリファイルの最初の32バイトを表示</span>
-$<span style="color: #F8F8F8"> </span>hd<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">32</span><span style="color: #F8F8F8"> </span>/bin/ls
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">00000000</span><span style="color: #F8F8F8">  </span>cf<span style="color: #F8F8F8"> </span>fa<span style="color: #F8F8F8"> </span>ed<span style="color: #F8F8F8"> </span>fe<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">07</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">01</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">03</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">80</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">02</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8">  </span><span style="color: #000; font-weight: bold">|</span>................<span style="color: #000; font-weight: bold">|</span>
-<span style="color: #0000CF; font-weight: bold">00000010</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">18</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">07</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">85</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8">  </span><span style="color: #000; font-weight: bold">|</span>..........<span style="color: #F8F8F8"> </span>.....<span style="color: #000; font-weight: bold">|</span>
-<span style="color: #0000CF; font-weight: bold">00000020</span>
-
-<span style="color: #8F5902; font-style: italic"># 特定の位置から表示を開始</span>
-$<span style="color: #F8F8F8"> </span>hd<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">16</span><span style="color: #F8F8F8"> </span>sample.bin
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">00000010</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">00</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">01</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">02</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">03</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">04</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">05</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">06</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">07</span><span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">08</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">09</span><span style="color: #F8F8F8"> </span>0a<span style="color: #F8F8F8"> </span>0b<span style="color: #F8F8F8"> </span>0c<span style="color: #F8F8F8"> </span>0d<span style="color: #F8F8F8"> </span>0e<span style="color: #F8F8F8"> </span>0f<span style="color: #F8F8F8">  </span><span style="color: #000; font-weight: bold">|</span>................<span style="color: #000; font-weight: bold">|</span>
-<span style="color: #0000CF; font-weight: bold">00000020</span>
+  <h1>hd コマンド</h1>
+<p>ファイルの内容を16進数形式で表示します。</p>
+<h2>概要</h2>
+<p><code>hd</code>（hexdump）コマンドは、ファイルの内容を16進数とASCII文字の両方で表示するユーティリティです。バイナリファイルの内容を確認したり、テキストファイルの非表示文字を調査したりする際に便利です。多くのシステムでは、<code>hexdump</code>コマンドの別名または同等のコマンドとして機能します。</p>
+<h2>オプション</h2>
+<h3><strong>-n LENGTH</strong></h3>
+<p>指定したバイト数だけ表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hd<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">16</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">00000000  48 65 6c 6c 6f 2c 20 57  6f 72 6c 64 21 0a 54 68  |Hello, World!.Th|</span>
 </pre></div>
-<h2>追加情報</h2>
+<h3><strong>-s OFFSET</strong></h3>
+<p>指定したオフセット（バイト位置）から表示を開始します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hd<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">0000000a  64 21 0a 54 68 69 73 20  69 73 20 61 20 74 65 73  |d!.This is a tes|</span>
+<span style="color: #000; font-style: italic">0000001a  74 20 66 69 6c 65 2e 0a                           |t file..|</span>
+</pre></div>
+<h3><strong>-v</strong></h3>
+<p>重複行を省略せずに表示します（冗長モード）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hd<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">00000000  48 65 6c 6c 6f 2c 20 57  6f 72 6c 64 21 0a 54 68  |Hello, World!.Th|</span>
+<span style="color: #000; font-style: italic">00000010  69 73 20 69 73 20 61 20  74 65 73 74 20 66 69 6c  |is is a test fil|</span>
+<span style="color: #000; font-style: italic">00000020  65 2e 0a                                          |e..|</span>
+</pre></div>
+<h3><strong>-C</strong></h3>
+<p>キャノニカル形式で出力します（16進数とASCII表示）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hd<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">00000000  48 65 6c 6c 6f 2c 20 57  6f 72 6c 64 21 0a 54 68  |Hello, World!.Th|</span>
+<span style="color: #000; font-style: italic">00000010  69 73 20 69 73 20 61 20  74 65 73 74 20 66 69 6c  |is is a test fil|</span>
+<span style="color: #000; font-style: italic">00000020  65 2e 0a                                          |e..|</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>テキストファイルの内容を16進数で表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, World!&quot;</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>sample.txt
+<span style="color: #8F5902">$ </span>hd<span style="color: #F8F8F8"> </span>sample.txt
+<span style="color: #000; font-style: italic">00000000  48 65 6c 6c 6f 2c 20 57  6f 72 6c 64 21 0a        |Hello, World!.|</span>
+<span style="color: #000; font-style: italic">0000000e</span>
+</pre></div>
+<h3>バイナリファイルの先頭部分を確認</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hd<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">32</span><span style="color: #F8F8F8"> </span>/bin/ls
+<span style="color: #000; font-style: italic">00000000  cf fa ed fe 07 00 00 01  03 00 00 80 02 00 00 00  |................|</span>
+<span style="color: #000; font-style: italic">00000010  10 00 00 00 18 07 00 00  85 00 20 00 00 00 00 00  |.......... .....|</span>
+</pre></div>
+<h3>標準入力からの16進数ダンプ</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Testing 123&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hd
+<span style="color: #000; font-style: italic">00000000  54 65 73 74 69 6e 67 20  31 32 33 0a              |Testing 123.|</span>
+<span style="color: #000; font-style: italic">0000000c</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>非表示文字の確認</h3>
+<p>テキストファイルに含まれる改行コードやタブなどの非表示文字を確認するのに役立ちます。</p>
+<h3>バイナリファイルのヘッダー解析</h3>
+<p>多くのバイナリファイル形式は特定のヘッダー構造を持っています。<code>hd</code>を使用して最初の数バイトを確認することで、ファイルタイプを識別できることがあります。</p>
+<h3>大きなファイルの部分表示</h3>
+<p><code>-n</code>と<code>-s</code>オプションを組み合わせることで、大きなファイルの特定の部分だけを効率的に調査できます。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>hd</code>と<code>hexdump</code>の違いは何ですか？</h4>
+<p>A. 多くのシステムでは、<code>hd</code>は<code>hexdump</code>コマンドの別名または同等の機能を持つコマンドです。システムによっては、<code>hd</code>が<code>hexdump -C</code>のエイリアスとして設定されていることがあります。</p>
+<h4>Q2. ファイルの特定の部分だけを表示するにはどうすればいいですか？</h4>
+<p>A. <code>-s</code>オプションでオフセット（開始位置）を指定し、<code>-n</code>オプションで表示するバイト数を指定します。例：<code>hd -s 100 -n 50 file.bin</code></p>
+<h4>Q3. 出力の見方を教えてください。</h4>
+<p>A. 出力は左から順に、オフセット（16進数）、16進数でのバイト値、そして右側にASCII表現が表示されます。表示できない文字は通常ドット（.）で表されます。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSでは、<code>hd</code>コマンドは通常<code>hexdump</code>のエイリアスとして設定されています。もし<code>hd</code>コマンドが見つからない場合は、<code>hexdump -C</code>を使用するか、<code>alias hd='hexdump -C'</code>をシェル設定ファイルに追加してください。</p>
+<h2>参考資料</h2>
+<p>https://www.freebsd.org/cgi/man.cgi?query=hexdump</p>
+<h2>改訂履歴</h2>
 <ul>
-<li><p><code>hd</code>コマンドは多くのシステムで<code>hexdump</code>コマンドへのシンボリックリンクになっています。システムによっては<code>hexdump</code>を直接使用する必要がある場合があります。</p>
-</li>
-<li><p>大きなファイルを扱う場合は、<code>-n</code>オプションで表示するバイト数を制限すると便利です。</p>
-</li>
-<li><p>プログラミングやデバッグの際に、バイナリデータの構造を確認するのに非常に役立ちます。</p>
-</li>
-<li><p>一部のシステムでは、より多機能な代替コマンドとして<code>xxd</code>や<code>od</code>も利用できます。</p>
-</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

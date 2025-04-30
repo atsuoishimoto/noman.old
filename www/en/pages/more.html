@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  more - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>more command</h1>
+<p>Display file contents one screen at a time.</p>
+<h2>Overview</h2>
+<p>The <code>more</code> command is a pager that allows you to view text files one screen at a time. It's particularly useful for examining large files without overwhelming your terminal with text. Unlike its more advanced counterpart <code>less</code>, <code>more</code> only allows forward navigation through a file.</p>
+<h2>Options</h2>
+<h3><strong>-d (--display-help)</strong></h3>
+<p>Displays a help prompt at the bottom of the screen with basic navigation commands.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>large_file.txt
+<span style="color: #000; font-style: italic">[file content appears]</span>
+<span style="color: #000; font-style: italic">--More--(56%) [Press space to continue, &#39;q&#39; to quit, &#39;d&#39; to display help]</span>
+</pre></div>
+<h3><strong>-f (--force)</strong></h3>
+<p>Forces <code>more</code> to open non-regular files (like directories or device files).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/dev/null
+<span style="color: #000; font-style: italic">[displays content if any]</span>
+</pre></div>
+<h3><strong>-p (--clean-print)</strong></h3>
+<p>Clears the screen before displaying each page.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>large_file.txt
+<span style="color: #000; font-style: italic">[screen clears and shows first page]</span>
+</pre></div>
+<h3><strong>-s (--squeeze)</strong></h3>
+<p>Squeezes multiple blank lines into a single blank line.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>file_with_many_blanks.txt
+<span style="color: #000; font-style: italic">[file content with compressed blank lines]</span>
+</pre></div>
+<h3><strong>-number (--lines)</strong></h3>
+<p>Specifies the number of lines to display per screen.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-10<span style="color: #F8F8F8"> </span>large_file.txt
+<span style="color: #000; font-style: italic">[displays 10 lines at a time]</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic Usage</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>/etc/passwd
+<span style="color: #000; font-style: italic">root:x:0:0:root:/root:/bin/bash</span>
+<span style="color: #000; font-style: italic">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span>
+<span style="color: #000; font-style: italic">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span>
+<span style="color: #000; font-style: italic">--More--(28%)</span>
+</pre></div>
+<h3>Combining Options</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-ds<span style="color: #F8F8F8"> </span>large_log_file.log
+<span style="color: #000; font-style: italic">[displays content with squeezed blank lines and help prompt]</span>
+<span style="color: #000; font-style: italic">--More--(15%) [Press space to continue, &#39;q&#39; to quit, &#39;d&#39; to display help]</span>
+</pre></div>
+<h3>Viewing Multiple Files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">::::::::::::::</span>
+<span style="color: #000; font-style: italic">file1.txt</span>
+<span style="color: #000; font-style: italic">::::::::::::::</span>
+<span style="color: #000; font-style: italic">[content of file1.txt]</span>
+<span style="color: #000; font-style: italic">--More--(75%)</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Navigation Commands</h3>
+<p>While viewing a file with <code>more</code>, you can use these keyboard shortcuts:</p>
+<ul>
+<li><code>Space</code> or <code>f</code>: Move forward one screen</li>
+<li><code>Enter</code>: Move forward one line</li>
+<li><code>b</code>: Move back one screen (may not work in all implementations)</li>
+<li><code>q</code> or <code>Q</code>: Quit</li>
+<li><code>/pattern</code>: Search for &quot;pattern&quot; in the file</li>
+<li><code>n</code>: Repeat the previous search</li>
+</ul>
+<h3>Using with Pipes</h3>
+<p><code>more</code> works well with command output piping, making it useful for viewing lengthy command results:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-la<span style="color: #F8F8F8"> </span>/usr/bin<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>more
+</pre></div>
+<h3>Setting Default Options</h3>
+<p>You can set default options for <code>more</code> by defining the <code>MORE</code> environment variable:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">export</span><span style="color: #F8F8F8"> </span><span style="color: #000">MORE</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;-d&quot;</span>
+</pre></div>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between <code>more</code> and <code>less</code>?</h4>
+<p>A. <code>more</code> only allows forward navigation through a file, while <code>less</code> allows both forward and backward movement and has more features. The saying goes: &quot;less is more than more.&quot;</p>
+<h4>Q2. How do I search for text in <code>more</code>?</h4>
+<p>A. Type <code>/</code> followed by your search pattern and press Enter. Use <code>n</code> to find the next occurrence.</p>
+<h4>Q3. How do I exit <code>more</code>?</h4>
+<p>A. Press <code>q</code> or <code>Q</code> to quit.</p>
+<h4>Q4. Can I customize how many lines <code>more</code> displays?</h4>
+<p>A. Yes, use the <code>-number</code> option (e.g., <code>more -20 file.txt</code> to display 20 lines at a time).</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, the <code>more</code> command is slightly different from the GNU/Linux version. It doesn't support all the same options, and some behaviors may differ. For example, the <code>-d</code> option might not work as expected. If you need more advanced features, consider installing GNU coreutils via Homebrew and using <code>gmore</code> instead, or simply use the <code>less</code> command which is more feature-rich and available by default.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/more-invocation.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

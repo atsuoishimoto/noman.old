@@ -1,108 +1,164 @@
-# git push コマンド概要
+# git push コマンド
 
-`git push`は、ローカルリポジトリの変更をリモートリポジトリにアップロードするGitコマンドです。これにより、他の開発者とコードの変更を共有することができます。
+リモートリポジトリに変更を送信するコマンドです。
+
+## 概要
+
+`git push` は、ローカルリポジトリで行った変更（コミット）をリモートリポジトリに送信します。これにより、他の開発者とコードを共有したり、バックアップを作成したりすることができます。デフォルトでは、現在のブランチの変更を、設定されたリモートリポジトリの対応するブランチにプッシュします。
 
 ## オプション
 
-### **-u, --set-upstream**:
+### **-u, --set-upstream**
 
-ローカルブランチとリモートブランチの追跡関係を設定します。一度設定すれば、次回からは単に`git push`だけで済みます。
+指定したリモートブランチを、現在のブランチの上流（デフォルトの送信先）として設定します。
 
-例: `git push -u origin main`
+```console
+$ git push -u origin main
+Branch 'main' set up to track remote branch 'main' from 'origin'.
+Everything up-to-date
+```
 
-### **--force, -f**:
+### **--force, -f**
 
-リモートブランチを強制的に上書きします。履歴が書き換えられるため、共有リポジトリでは注意が必要です。
+リモートブランチを強制的に上書きします。通常の `push` が拒否される場合に使用しますが、他の人の変更を上書きする可能性があるため注意が必要です。
 
-例: `git push --force origin feature-branch`
+```console
+$ git push --force origin feature
+Counting objects: 5, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (5/5), 456 bytes | 456.00 KiB/s, done.
+Total 5 (delta 1), reused 0 (delta 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+ + 7f9d407...2c5e7f0 feature -> feature (forced update)
+```
 
-### **--all**:
+### **--all**
 
 すべてのローカルブランチをリモートにプッシュします。
 
-例: `git push --all origin`
+```console
+$ git push --all origin
+Counting objects: 10, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (8/8), done.
+Writing objects: 100% (10/10), 1.22 KiB | 1.22 MiB/s, done.
+Total 10 (delta 3), reused 0 (delta 0)
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+ * [new branch]      feature -> feature
+ * [new branch]      main -> main
+```
 
-### **--tags**:
+### **--tags**
 
-ローカルのタグをすべてリモートにプッシュします。
+すべてのローカルタグをリモートにプッシュします。
 
-例: `git push --tags`
+```console
+$ git push --tags origin
+Counting objects: 1, done.
+Writing objects: 100% (1/1), 160 bytes | 160.00 KiB/s, done.
+Total 1 (delta 0), reused 0 (delta 0)
+To github.com:user/repo.git
+ * [new tag]         v1.0 -> v1.0
+```
 
-### **--delete**:
+### **--delete**
 
 リモートブランチを削除します。
 
-例: `git push origin --delete old-branch`
-
-### **--dry-run**:
-
-実際にプッシュせずに、何が送信されるかを確認します。
-
-例: `git push --dry-run origin main`
-
-## 使用例
-
-```bash
-# 基本的な使い方（mainブランチをoriginリモートにプッシュ）
-git push origin main
-# 出力例
-Enumerating objects: 5, done.
-Counting objects: 100% (5/5), done.
-Delta compression using up to 8 threads
-Compressing objects: 100% (3/3), done.
-Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
-Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
-To github.com:username/repository.git
-   a1b2c3d..e4f5g6h  main -> main
-
-# 追跡関係を設定してプッシュ
-git push -u origin feature-branch
-# 出力例
-Branch 'feature-branch' set up to track remote branch 'feature-branch' from 'origin'.
-Everything up-to-date
-
-# リモートブランチの削除
-git push origin --delete old-feature
-# 出力例
-To github.com:username/repository.git
+```console
+$ git push origin --delete old-feature
+To github.com:user/repo.git
  - [deleted]         old-feature
 ```
 
+## 使用例
+
+### 基本的な使い方
+
+```console
+$ git push
+Counting objects: 3, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 267 bytes | 267.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To github.com:user/repo.git
+   a1b2c3d..e4f5g6h  main -> main
+```
+
+### 特定のブランチをプッシュ
+
+```console
+$ git push origin feature
+Counting objects: 5, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (5/5), 456 bytes | 456.00 KiB/s, done.
+Total 5 (delta 1), reused 0 (delta 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To github.com:user/repo.git
+   7f9d407..2c5e7f0  feature -> feature
+```
+
+### 新しいブランチをリモートに作成
+
+```console
+$ git push -u origin new-feature
+Counting objects: 3, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 267 bytes | 267.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+remote: 
+remote: Create a pull request for 'new-feature' on GitHub by visiting:
+remote:      https://github.com/user/repo/pull/new/new-feature
+remote: 
+To github.com:user/repo.git
+ * [new branch]      new-feature -> new-feature
+Branch 'new-feature' set up to track remote branch 'new-feature' from 'origin'.
+```
+
+## ヒント:
+
+### 初回のプッシュには `-u` オプションを使う
+
+新しいブランチを作成した後の初回プッシュでは、`-u` オプションを使うことで、以降の `git push` や `git pull` で明示的にリモートとブランチを指定する必要がなくなります。
+
+### プッシュする前に最新の変更を取得する
+
+`git pull` を実行してから `git push` することで、競合を避けることができます。
+
+### `--force` は慎重に使う
+
+`--force` オプションは他の開発者の変更を上書きする可能性があるため、共有リポジトリでは特に注意が必要です。代わりに `--force-with-lease` を使うと、他の人の変更がある場合はプッシュが拒否されるため安全です。
+
+```console
+$ git push --force-with-lease origin feature
+```
+
+### プッシュ拒否時の対処法
+
+リモートに存在する変更と競合する場合、プッシュが拒否されることがあります。その場合は、まず `git pull` で変更を取り込み、必要に応じて競合を解決してから再度プッシュします。
+
 ## よくある質問
 
-### Q1. `git push`と`git push origin main`の違いは何ですか？
-A. `git push`は追跡関係が設定されているブランチに対してプッシュします。`git push origin main`は明示的に`origin`リモートの`main`ブランチにプッシュします。
+#### Q1. プッシュが拒否される理由は何ですか？
+A. リモートリポジトリに、ローカルにない新しい変更がある場合に拒否されます。まず `git pull` を実行して最新の変更を取得してから再度プッシュしてみてください。
 
-### Q2. プッシュが拒否された場合はどうすればいいですか？
-A. リモートに新しい変更がある場合は、まず`git pull`でリモートの変更を取り込んでから再度プッシュしてください。コンフリクトがある場合は解決が必要です。
+#### Q2. 特定のコミットだけをプッシュするには？
+A. Gitでは特定のコミットだけをプッシュすることはできません。ブランチ単位でプッシュします。特定のコミットだけを共有したい場合は、新しいブランチを作成してそこにコミットを含めてプッシュするか、`git cherry-pick` を使用して別のブランチに特定のコミットを適用します。
 
-### Q3. `--force`オプションはいつ使うべきですか？
-A. 個人的なブランチや、リベースした後など履歴を書き換えた場合に限って使用すべきです。共有ブランチでの使用は避けてください。
+#### Q3. プッシュした変更を取り消すには？
+A. 完全に取り消すことはできませんが、`git revert` で元に戻すコミットを作成し、それをプッシュすることで実質的に変更を取り消すことができます。または、履歴を書き換えて `--force` オプションでプッシュする方法もありますが、共有リポジトリでは避けるべきです。
 
-### Q4. 新しく作成したローカルブランチをリモートにプッシュするにはどうすればいいですか？
-A. `git push -u origin <ブランチ名>`を使用します。`-u`オプションで追跡関係も設定されます。
+#### Q4. タグをプッシュするには？
+A. `git push origin <タグ名>` で特定のタグを、`git push --tags` ですべてのタグをプッシュできます。
 
-### Q5. タグをプッシュするにはどうすればいいですか？
-A. 特定のタグは`git push origin <タグ名>`で、すべてのタグは`git push --tags`でプッシュできます。
+## 参考
 
-### Q6. プッシュ後に「Everything up-to-date」と表示される場合は何を意味していますか？
-A. ローカルとリモートの間に差分がない状態です。コミットされていない変更があるか、すでにプッシュ済みの可能性があります。
+https://git-scm.com/docs/git-push
 
-### Q7. 複数のリモートリポジトリにプッシュするにはどうすればいいですか？
-A. 各リモートに対して個別に`git push <リモート名> <ブランチ名>`を実行します。
+## 改訂
 
-### Q8. プッシュする前に変更内容を確認するにはどうすればいいですか？
-A. `git push --dry-run origin main`を使用すると、実際にプッシュせずに何が送信されるかを確認できます。
-
-### Q9. 特定のコミットだけをプッシュするにはどうすればいいですか？
-A. `git push origin <コミットハッシュ>:<リモートブランチ名>`の形式で指定できます。
-
-### Q10. プッシュ時の認証エラーを解決するにはどうすればいいですか？
-A. 認証情報が正しいか確認し、SSHキーが設定されているか、またはパーソナルアクセストークンが有効かを確認してください。
-
-## 追加のメモ
-
-- チーム開発では、`--force`オプションの使用には十分注意してください。他の開発者の作業を上書きする可能性があります。
-- 大きな変更をプッシュする前に、小さなコミットに分けてプッシュすると、問題が発生した場合に対処しやすくなります。
-- 初めてリモートリポジトリにプッシュする際は、`-u`オプションを使用して追跡関係を設定することをお勧めします。
+- 2025/04/30 初版作成

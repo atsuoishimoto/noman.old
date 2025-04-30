@@ -1,57 +1,147 @@
-# unameコマンド概要
-`uname`コマンドは、システムの情報（オペレーティングシステム名、ホスト名、カーネルバージョンなど）を表示するためのコマンドです。システム環境の確認やスクリプト内での条件分岐に役立ちます。
+# uname コマンド
 
-## 主なオプション
-- **-a (--all)**: すべてのシステム情報を表示します
-  - 例: `uname -a`
+システムの情報を表示するコマンドです。
 
-- **-s (--kernel-name)**: カーネル名を表示します（デフォルトのオプション）
-  - 例: `uname -s`
+## 概要
 
-- **-n (--nodename)**: ネットワークノード名（ホスト名）を表示します
-  - 例: `uname -n`
+`uname` コマンドはシステムの基本情報（カーネル名、ホスト名、オペレーティングシステム、プロセッサアーキテクチャなど）を表示します。オプションなしで実行すると、カーネル名のみを表示します。システム管理やスクリプト内での環境判定に役立ちます。
 
-- **-r (--kernel-release)**: カーネルリリース番号を表示します
-  - 例: `uname -r`
+## オプション
 
-- **-v (--kernel-version)**: カーネルバージョンを表示します
-  - 例: `uname -v`
+### **-a (--all)**
 
-- **-m (--machine)**: マシンのハードウェア名を表示します
-  - 例: `uname -m`
+すべてのシステム情報を表示します。
 
-- **-p (--processor)**: プロセッサの種類を表示します
-  - 例: `uname -p`
+```console
+$ uname -a
+Darwin MacBook-Pro.local 21.6.0 Darwin Kernel Version 21.6.0: Mon Aug 22 20:19:52 PDT 2022; root:xnu-8020.140.49~2/RELEASE_ARM64_T6000 arm64
+```
 
-- **-o (--operating-system)**: オペレーティングシステム名を表示します
-  - 例: `uname -o`
+### **-s (--kernel-name)**
+
+カーネル名を表示します（デフォルトの動作）。
+
+```console
+$ uname -s
+Darwin
+```
+
+### **-n (--nodename)**
+
+ネットワークノード名（ホスト名）を表示します。
+
+```console
+$ uname -n
+MacBook-Pro.local
+```
+
+### **-r (--kernel-release)**
+
+カーネルリリース番号を表示します。
+
+```console
+$ uname -r
+21.6.0
+```
+
+### **-v (--kernel-version)**
+
+カーネルのバージョン情報を表示します。
+
+```console
+$ uname -v
+Darwin Kernel Version 21.6.0: Mon Aug 22 20:19:52 PDT 2022; root:xnu-8020.140.49~2/RELEASE_ARM64_T6000
+```
+
+### **-m (--machine)**
+
+ハードウェアのマシンタイプ（アーキテクチャ）を表示します。
+
+```console
+$ uname -m
+arm64
+```
+
+### **-p (--processor)**
+
+プロセッサタイプを表示します（多くのシステムでは「unknown」と表示されることがあります）。
+
+```console
+$ uname -p
+arm
+```
+
+### **-o (--operating-system)**
+
+オペレーティングシステム名を表示します。
+
+```console
+$ uname -o
+Darwin
+```
 
 ## 使用例
 
-```bash
-# オペレーティングシステム名のみを表示
-$ uname
-Linux
+### 複数の情報を組み合わせて表示
 
-# すべてのシステム情報を表示
-$ uname -a
-Linux hostname 5.4.0-42-generic #46-Ubuntu SMP Fri Jul 10 00:24:02 UTC 2020 x86_64 x86_64 GNU/Linux
-
-# カーネルのリリース番号を表示
-$ uname -r
-5.4.0-42-generic
-
-# マシンのハードウェアアーキテクチャを表示
-$ uname -m
-x86_64
-
-# ホスト名を表示
-$ uname -n
-hostname
+```console
+$ uname -sr
+Darwin 21.6.0
 ```
 
-## 追加情報
-- `uname`コマンドは引数なしで実行すると、デフォルトで`-s`オプション（カーネル名）と同じ結果を返します。
-- スクリプト内でシステム依存の処理を行う場合によく使用されます（例：LinuxとmacOSで異なる処理を行う場合）。
-- 複数のオプションを組み合わせることができます。例えば、`uname -sr`はカーネル名とリリース番号を表示します。
-- システムの詳細情報が必要な場合は、`/etc/os-release`ファイル（多くのLinuxディストリビューションで利用可能）や`lsb_release -a`コマンドも参考になります。
+### スクリプト内での使用例
+
+```console
+$ os_type=$(uname -s)
+$ if [ "$os_type" = "Darwin" ]; then
+>   echo "macOSで実行中です"
+> else
+>   echo "macOS以外のシステムで実行中です"
+> fi
+macOSで実行中です
+```
+
+## ヒント:
+
+### シェルスクリプトでの条件分岐
+
+`uname` の出力を使って、異なるOSに応じた処理を行うことができます。例えば：
+
+```bash
+if [ "$(uname)" = "Darwin" ]; then
+  # macOS固有の処理
+elif [ "$(uname)" = "Linux" ]; then
+  # Linux固有の処理
+fi
+```
+
+### アーキテクチャの確認
+
+Apple Silicon（M1/M2）とIntelプロセッサの区別が必要な場合は `uname -m` を使用します。arm64ならApple Silicon、x86_64ならIntelです。
+
+### システム情報の取得
+
+`uname -a` は、サポートを求める際やバグレポートを提出する際に、システム情報を簡潔に伝えるのに役立ちます。
+
+## よくある質問
+
+#### Q1. `uname` と `sw_vers`（macOS）の違いは何ですか？
+A. `uname` はカーネルレベルの情報を表示しますが、`sw_vers` はmacOSのバージョン情報（例：macOS 13.0 Ventura）を表示します。
+
+#### Q2. Linuxディストリビューション名を取得できますか？
+A. `uname` だけではディストリビューション名（Ubuntu、Fedoraなど）は取得できません。代わりに `/etc/os-release` ファイルを確認するか、`lsb_release -a` コマンドを使用してください。
+
+#### Q3. macOSでプロセッサの詳細情報を取得するには？
+A. `sysctl -n machdep.cpu.brand_string` コマンドを使用すると、より詳細なプロセッサ情報を取得できます。
+
+## 参考情報
+
+https://www.gnu.org/software/coreutils/manual/html_node/uname-invocation.html
+
+## macOSでの注意点
+
+macOSでは、`uname -o` オプションがサポートされていない場合があります。また、macOSの正確なバージョン情報を取得するには、`sw_vers` コマンドを使用することをお勧めします。
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

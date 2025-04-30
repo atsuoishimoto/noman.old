@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  wget - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>wget command</h1>
+<p>Download files from the web using HTTP, HTTPS, or FTP protocols.</p>
+<h2>Overview</h2>
+<p><code>wget</code> is a non-interactive command-line utility for downloading files from the web. It supports HTTP, HTTPS, and FTP protocols, and can handle downloads in the background, resume interrupted downloads, and follow links on webpages. It's particularly useful for retrieving content when a browser isn't available or for automating downloads.</p>
+<h2>Options</h2>
+<h3><strong>-O, --output-document=FILE</strong></h3>
+<p>Save downloaded content to a specified file instead of using the name from the URL</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>custom-name.zip<span style="color: #F8F8F8"> </span>https://example.com/download/archive.zip
+<span style="color: #000; font-style: italic">--2025-04-30 10:15:20--  https://example.com/download/archive.zip</span>
+<span style="color: #000; font-style: italic">Resolving example.com... 93.184.216.34</span>
+<span style="color: #000; font-style: italic">Connecting to example.com|93.184.216.34|:443... connected.</span>
+<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 200 OK</span>
+<span style="color: #000; font-style: italic">Length: 1048576 (1.0M) [application/zip]</span>
+<span style="color: #000; font-style: italic">Saving to: &#39;custom-name.zip&#39;</span>
+
+<span style="color: #000; font-style: italic">custom-name.zip     100%[===================&gt;]   1.00M  1.25MB/s    in 0.8s    </span>
+
+<span style="color: #000; font-style: italic">2025-04-30 10:15:22 (1.25 MB/s) - &#39;custom-name.zip&#39; saved [1048576/1048576]</span>
+</pre></div>
+<h3><strong>-c, --continue</strong></h3>
+<p>Resume a partially downloaded file</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>https://example.com/large-file.iso
+<span style="color: #000; font-style: italic">--2025-04-30 10:18:45--  https://example.com/large-file.iso</span>
+<span style="color: #000; font-style: italic">Resolving example.com... 93.184.216.34</span>
+<span style="color: #000; font-style: italic">Connecting to example.com|93.184.216.34|:443... connected.</span>
+<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 206 Partial Content</span>
+<span style="color: #000; font-style: italic">Length: 1073741824 (1.0G), 536870912 (512M) remaining [application/octet-stream]</span>
+<span style="color: #000; font-style: italic">Saving to: &#39;large-file.iso&#39;</span>
+
+<span style="color: #000; font-style: italic">large-file.iso      50%[====&gt;           ]   512M  5.25MB/s    eta 1m 38s</span>
+</pre></div>
+<h3><strong>-b, --background</strong></h3>
+<p>Run wget in the background after startup</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>https://example.com/huge-file.zip
+<span style="color: #000; font-style: italic">Continuing in background, pid 1234.</span>
+<span style="color: #000; font-style: italic">Output will be written to &#39;wget-log&#39;.</span>
+</pre></div>
+<h3><strong>-r, --recursive</strong></h3>
+<p>Download an entire website recursively</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>-np<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>https://example.com/docs/
+<span style="color: #000; font-style: italic">--2025-04-30 10:22:30--  https://example.com/docs/</span>
+<span style="color: #000; font-style: italic">Resolving example.com... 93.184.216.34</span>
+<span style="color: #000; font-style: italic">Connecting to example.com|93.184.216.34|:443... connected.</span>
+<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 200 OK</span>
+<span style="color: #000; font-style: italic">Length: 8192 (8.0K) [text/html]</span>
+<span style="color: #000; font-style: italic">Saving to: &#39;example.com/docs/index.html&#39;</span>
+
+<span style="color: #000; font-style: italic">example.com/docs/index.html    100%[===================&gt;]   8.0K  --.-KB/s    in 0.1s    </span>
+
+<span style="color: #000; font-style: italic">2025-04-30 10:22:31 (80.0 KB/s) - &#39;example.com/docs/index.html&#39; saved [8192/8192]</span>
+
+<span style="color: #000; font-style: italic">Loading robots.txt; please ignore errors.</span>
+<span style="color: #000; font-style: italic">--2025-04-30 10:22:31--  https://example.com/robots.txt</span>
+<span style="color: #000; font-style: italic">Reusing existing connection to example.com:443.</span>
+<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 404 Not Found</span>
+<span style="color: #000; font-style: italic">2025-04-30 10:22:31 ERROR 404: Not Found.</span>
+
+<span style="color: #000; font-style: italic">--2025-04-30 10:22:31--  https://example.com/docs/page1.html</span>
+<span style="color: #000; font-style: italic">Reusing existing connection to example.com:443.</span>
+<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 200 OK</span>
+<span style="color: #000; font-style: italic">Length: 4096 (4.0K) [text/html]</span>
+<span style="color: #000; font-style: italic">Saving to: &#39;example.com/docs/page1.html&#39;</span>
+
+<span style="color: #000; font-style: italic">example.com/docs/page1.html    100%[===================&gt;]   4.0K  --.-KB/s    in 0.1s</span>
+</pre></div>
+<h3><strong>-q, --quiet</strong></h3>
+<p>Run silently (no output)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>https://example.com/file.txt
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Downloading a file with progress bar</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>https://example.com/document.pdf
+<span style="color: #000; font-style: italic">--2025-04-30 10:30:15--  https://example.com/document.pdf</span>
+<span style="color: #000; font-style: italic">Resolving example.com... 93.184.216.34</span>
+<span style="color: #000; font-style: italic">Connecting to example.com|93.184.216.34|:443... connected.</span>
+<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 200 OK</span>
+<span style="color: #000; font-style: italic">Length: 2097152 (2.0M) [application/pdf]</span>
+<span style="color: #000; font-style: italic">Saving to: &#39;document.pdf&#39;</span>
+
+<span style="color: #000; font-style: italic">document.pdf        100%[===================&gt;]   2.00M  2.50MB/s    in 0.8s    </span>
+
+<span style="color: #000; font-style: italic">2025-04-30 10:30:16 (2.50 MB/s) - &#39;document.pdf&#39; saved [2097152/2097152]</span>
+</pre></div>
+<h3>Downloading multiple files listed in a text file</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>urls.txt
+<span style="color: #000; font-style: italic">https://example.com/file1.zip</span>
+<span style="color: #000; font-style: italic">https://example.com/file2.zip</span>
+<span style="color: #000; font-style: italic">https://example.com/file3.zip</span>
+
+<span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>urls.txt
+<span style="color: #000; font-style: italic">--2025-04-30 10:35:20--  https://example.com/file1.zip</span>
+<span style="color: #000; font-style: italic">Resolving example.com... 93.184.216.34</span>
+<span style="color: #000; font-style: italic">Connecting to example.com|93.184.216.34|:443... connected.</span>
+<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 200 OK</span>
+<span style="color: #000; font-style: italic">Length: 524288 (512K) [application/zip]</span>
+<span style="color: #000; font-style: italic">Saving to: &#39;file1.zip&#39;</span>
+
+<span style="color: #000; font-style: italic">file1.zip           100%[===================&gt;] 512.00K  1.25MB/s    in 0.4s    </span>
+
+<span style="color: #000; font-style: italic">2025-04-30 10:35:21 (1.25 MB/s) - &#39;file1.zip&#39; saved [524288/524288]</span>
+
+<span style="color: #000; font-style: italic">--2025-04-30 10:35:21--  https://example.com/file2.zip</span>
+<span style="color: #000; font-style: italic">Reusing existing connection to example.com:443.</span>
+<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 200 OK</span>
+<span style="color: #000; font-style: italic">Length: 262144 (256K) [application/zip]</span>
+<span style="color: #000; font-style: italic">Saving to: &#39;file2.zip&#39;</span>
+
+<span style="color: #000; font-style: italic">file2.zip           100%[===================&gt;] 256.00K  --.-KB/s    in 0.2s    </span>
+
+<span style="color: #000; font-style: italic">2025-04-30 10:35:21 (1.28 MB/s) - &#39;file2.zip&#39; saved [262144/262144]</span>
+</pre></div>
+<h3>Mirroring a website</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wget<span style="color: #F8F8F8"> </span>--mirror<span style="color: #F8F8F8"> </span>--convert-links<span style="color: #F8F8F8"> </span>--adjust-extension<span style="color: #F8F8F8"> </span>--page-requisites<span style="color: #F8F8F8"> </span>--no-parent<span style="color: #F8F8F8"> </span>https://example.com/blog/
+<span style="color: #000; font-style: italic">--2025-04-30 10:40:10--  https://example.com/blog/</span>
+<span style="color: #000; font-style: italic">Resolving example.com... 93.184.216.34</span>
+<span style="color: #000; font-style: italic">Connecting to example.com|93.184.216.34|:443... connected.</span>
+<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 200 OK</span>
+<span style="color: #000; font-style: italic">Length: 16384 (16K) [text/html]</span>
+<span style="color: #000; font-style: italic">Saving to: &#39;example.com/blog/index.html&#39;</span>
+
+<span style="color: #000; font-style: italic">example.com/blog/index.html    100%[===================&gt;]  16.00K  --.-KB/s    in 0.1s    </span>
+
+<span style="color: #000; font-style: italic">2025-04-30 10:40:10 (160 KB/s) - &#39;example.com/blog/index.html&#39; saved [16384/16384]</span>
+
+<span style="color: #000; font-style: italic">Loading robots.txt; please ignore errors.</span>
+<span style="color: #000; font-style: italic">--2025-04-30 10:40:10--  https://example.com/robots.txt</span>
+<span style="color: #000; font-style: italic">Reusing existing connection to example.com:443.</span>
+<span style="color: #000; font-style: italic">HTTP request sent, awaiting response... 404 Not Found</span>
+<span style="color: #000; font-style: italic">2025-04-30 10:40:10 ERROR 404: Not Found.</span>
+</pre></div>
+<h2>Tips:</h2>
+<h3>Rate Limiting Downloads</h3>
+<p>Use <code>--limit-rate=RATE</code> to avoid consuming all available bandwidth. For example, <code>wget --limit-rate=500k https://example.com/large-file.iso</code> limits the download speed to 500 KB/s.</p>
+<h3>Using a Proxy Server</h3>
+<p>If you're behind a proxy, use <code>--proxy=on</code> and set the environment variables <code>http_proxy</code>, <code>https_proxy</code>, or specify directly with <code>--proxy-user</code> and <code>--proxy-password</code>.</p>
+<h3>Handling Authentication</h3>
+<p>For password-protected sites, use <code>--user=USERNAME --password=PASSWORD</code> or <code>wget --http-user=USERNAME --http-password=PASSWORD https://example.com/private/file.zip</code>.</p>
+<h3>Retrying Failed Downloads</h3>
+<p>Use <code>--tries=NUMBER</code> to set the number of retry attempts and <code>--waitretry=SECONDS</code> to specify the time between retries.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How do I download a file without showing the progress output?</h4>
+<p>A. Use <code>wget -q URL</code> to run wget in quiet mode.</p>
+<h4>Q2. How can I resume a download that was interrupted?</h4>
+<p>A. Use <code>wget -c URL</code> to continue a partially downloaded file.</p>
+<h4>Q3. How do I download an entire website?</h4>
+<p>A. Use <code>wget --mirror --convert-links --adjust-extension --page-requisites --no-parent URL</code> to create a local copy of a website.</p>
+<h4>Q4. Can wget follow links on a webpage?</h4>
+<p>A. Yes, use the <code>-r</code> (recursive) option along with <code>-l depth</code> to specify how many levels of links to follow.</p>
+<h4>Q5. How do I download files that require authentication?</h4>
+<p>A. Use <code>wget --user=USERNAME --password=PASSWORD URL</code> for basic authentication.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/wget/manual/wget.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

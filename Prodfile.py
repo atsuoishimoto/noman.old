@@ -73,10 +73,6 @@ def generate_document(*prompts, max_tokens):
 
     messages = [{"role": "user", "content": contents}]
 
-    import pprint
-
-    pprint.pprint(messages)
-
     # check OverloadedError?
     response = client.messages.create(
         model="claude-3-7-sonnet-20250219",
@@ -101,6 +97,7 @@ def generate_document(*prompts, max_tokens):
     depends=(PROMPT, command_prompt, lang_prompt, FORMAT),
 )
 def build_noman(target, *deps):
+    print("building:", target)
     target = Path(target)
     target.parent.mkdir(parents=True, exist_ok=True)
     command = target.stem
@@ -130,6 +127,21 @@ TODAY is {TODAY}.
     resultsdir.mkdir(parents=True, exist_ok=True)
     (resultsdir / f"{target.stem}.json").write_text(result)
 
+@task
+def gen_ja():
+    docs = []
+    for c in COMMANDS:
+        name = f"pages/ja/{c.stem}.md"
+        docs.append(name)
+    build(docs)
+
+@task
+def gen_en():
+    docs = []
+    for c in COMMANDS:
+        name = f"pages/en/{c.stem}.md"
+        docs.append(name)
+    build(docs)
 
 @task
 def summary():
@@ -159,7 +171,6 @@ def make_summary(dir):
     d = {}
     files = dir.glob("*.md")
     for file in files:
-        print(file)
         src = file.read_text()
         m = re.search(r"#.*\n(?P<header>([^#].*\n+))", src)
         if not m:

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  rm - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>rm コマンド</h1>
+<p>ファイルやディレクトリを削除します。</p>
+<h2>概要</h2>
+<p><code>rm</code>（remove）コマンドは、ファイルシステムからファイルやディレクトリを削除するために使用されます。デフォルトでは、ディレクトリの削除や確認プロンプトの表示は行われません。削除されたファイルは通常のゴミ箱には移動せず、完全に削除されるため注意が必要です。</p>
+<h2>オプション</h2>
+<h3><strong>-f, --force</strong></h3>
+<p>確認プロンプトを表示せずに強制的に削除します。存在しないファイルやアクセス権限のないファイルに対してもエラーメッセージを表示しません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rm<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>不要なファイル.txt
+</pre></div>
+<h3><strong>-i, --interactive</strong></h3>
+<p>削除前に確認プロンプトを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rm<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">rm: remove regular file &#39;document.txt&#39;? y</span>
+</pre></div>
+<h3><strong>-r, -R, --recursive</strong></h3>
+<p>ディレクトリとその中身を再帰的に削除します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rm<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>プロジェクト/
+</pre></div>
+<h3><strong>-v, --verbose</strong></h3>
+<p>削除処理の詳細を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rm<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">removed &#39;document.txt&#39;</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>複数のファイルを削除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rm<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt
+</pre></div>
+<h3>確認プロンプト付きでディレクトリを削除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rm<span style="color: #F8F8F8"> </span>-ri<span style="color: #F8F8F8"> </span>古いプロジェクト/
+<span style="color: #000; font-style: italic">rm: descend into directory &#39;古いプロジェクト/&#39;? y</span>
+<span style="color: #000; font-style: italic">rm: remove regular file &#39;古いプロジェクト/README.md&#39;? y</span>
+<span style="color: #000; font-style: italic">rm: remove directory &#39;古いプロジェクト/&#39;? y</span>
+</pre></div>
+<h3>ワイルドカードを使用して特定のパターンのファイルを削除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rm<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>*.tmp
+<span style="color: #000; font-style: italic">removed &#39;temp1.tmp&#39;</span>
+<span style="color: #000; font-style: italic">removed &#39;temp2.tmp&#39;</span>
+<span style="color: #000; font-style: italic">removed &#39;backup.tmp&#39;</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>削除前のバックアップ</h3>
+<p>重要なファイルを削除する前に、バックアップを作成することをお勧めします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>重要なディレクトリ/<span style="color: #F8F8F8"> </span>重要なディレクトリ_backup/
+<span style="color: #8F5902">$ </span>rm<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>重要なディレクトリ/
+</pre></div>
+<h3>安全な削除のためのエイリアス設定</h3>
+<p><code>rm</code>コマンドに<code>-i</code>オプションを常に使用するエイリアスを設定すると、誤削除を防ぐことができます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">alias</span><span style="color: #F8F8F8"> </span><span style="color: #000">rm</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&#39;rm -i&#39;</span>
+</pre></div>
+<h3>「rm -rf /」は絶対に使用しない</h3>
+<p>ルートディレクトリ（<code>/</code>）に対して再帰的強制削除を行うと、システム全体が破壊される可能性があります。</p>
+<h2>よくある質問</h2>
+<h4>Q1. 削除したファイルを復元できますか？</h4>
+<p>A. 通常の<code>rm</code>コマンドで削除したファイルは、特別なデータ復旧ツールなしでは復元できません。<code>rm</code>はファイルをゴミ箱に移動するのではなく、完全に削除します。</p>
+<h4>Q2. ディレクトリを削除するにはどうすればよいですか？</h4>
+<p>A. ディレクトリを削除するには<code>rm -r ディレクトリ名</code>を使用します。空のディレクトリであれば<code>rmdir ディレクトリ名</code>も使えます。</p>
+<h4>Q3. 「Operation not permitted」エラーが表示される場合はどうすればよいですか？</h4>
+<p>A. ファイルの所有者でない場合や、特別な保護属性が設定されている場合に発生します。<code>sudo rm</code>で管理者権限で実行するか、ファイルの権限を確認してください。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSでは、一部のシステムファイルはSystem Integrity Protection（SIP）によって保護されており、<code>sudo</code>を使用しても削除できない場合があります。また、macOSでは<code>-P</code>オプションを使用して安全な上書き削除を行うことができますが、SSDでは効果が限定的です。</p>
+<h2>参考文献</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/rm-invocation.html</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

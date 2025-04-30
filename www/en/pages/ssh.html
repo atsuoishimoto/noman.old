@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  ssh - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>ssh command</h1>
+<p>Securely connect to and manage remote systems over an encrypted network connection.</p>
+<h2>Overview</h2>
+<p>SSH (Secure Shell) is a protocol for securely accessing and managing remote computers over an unsecured network. It provides encrypted communication between two hosts, allowing secure remote login, file transfers, and command execution. SSH replaces older, insecure protocols like Telnet and rsh.</p>
+<h2>Options</h2>
+<h3><strong>-p [port]</strong></h3>
+<p>Specify a custom port number (default is 22)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2222</span><span style="color: #F8F8F8"> </span>user@example.com
+<span style="color: #000; font-style: italic">user@example.com&#39;s password: </span>
+<span style="color: #000; font-style: italic">Last login: Wed Apr 30 09:15:22 2025 from 192.168.1.5</span>
+<span style="color: #8F5902">user@example.com:~$</span>
+</pre></div>
+<h3><strong>-i [identity_file]</strong></h3>
+<p>Use a specific private key file for authentication</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>~/.ssh/my_private_key<span style="color: #F8F8F8"> </span>user@example.com
+<span style="color: #000; font-style: italic">Last login: Wed Apr 30 10:22:45 2025 from 192.168.1.5</span>
+<span style="color: #8F5902">user@example.com:~$</span>
+</pre></div>
+<h3><strong>-L [local_port:remote_host:remote_port]</strong></h3>
+<p>Set up local port forwarding (create a secure tunnel)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>:localhost:80<span style="color: #F8F8F8"> </span>user@example.com
+<span style="color: #000; font-style: italic">user@example.com&#39;s password: </span>
+<span style="color: #000; font-style: italic">Last login: Wed Apr 30 11:30:15 2025 from 192.168.1.5</span>
+</pre></div>
+<h3><strong>-v</strong></h3>
+<p>Enable verbose mode for debugging connection issues</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>user@example.com
+<span style="color: #000; font-style: italic">OpenSSH_8.9p1, LibreSSL 3.3.6</span>
+<span style="color: #000; font-style: italic">debug1: Reading configuration data /Users/user/.ssh/config</span>
+<span style="color: #000; font-style: italic">debug1: Reading configuration data /etc/ssh/ssh_config</span>
+<span style="color: #000; font-style: italic">debug1: Connecting to example.com port 22.</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic SSH Connection</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>user@example.com
+<span style="color: #000; font-style: italic">user@example.com&#39;s password: </span>
+<span style="color: #000; font-style: italic">Last login: Wed Apr 30 08:45:12 2025 from 192.168.1.5</span>
+<span style="color: #8F5902">user@example.com:~$</span>
+</pre></div>
+<h3>Running a Command on a Remote Server</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>user@example.com<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ls -la /var/www&quot;</span>
+<span style="color: #000; font-style: italic">total 24</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  5 root     root     4096 Apr 29 14:22 .</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x 14 root     root     4096 Apr 28 09:15 ..</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  2 www-data www-data 4096 Apr 30 10:05 html</span>
+</pre></div>
+<h3>Copying Files with SCP (SSH-based file transfer)</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>scp<span style="color: #F8F8F8"> </span>myfile.txt<span style="color: #F8F8F8"> </span>user@example.com:/home/user/
+<span style="color: #000; font-style: italic">myfile.txt                                 100%  256KB  2.5MB/s  00:01</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Set Up SSH Key Authentication</h3>
+<p>Generate and use SSH keys instead of passwords for more secure and convenient logins:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-keygen<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>ed25519<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;your_email@example.com&quot;</span>
+<span style="color: #8F5902">$ </span>ssh-copy-id<span style="color: #F8F8F8"> </span>user@example.com
+</pre></div>
+<h3>Create SSH Config File</h3>
+<p>Create a <code>~/.ssh/config</code> file to store connection settings for frequently accessed servers:</p>
+<pre><code>Host myserver
+    HostName example.com
+    User username
+    Port 2222
+    IdentityFile ~/.ssh/special_key
+</code></pre><p>Then simply use: <code>ssh myserver</code></p>
+<h3>Keep Connections Alive</h3>
+<p>Add these lines to your <code>~/.ssh/config</code> file to prevent timeouts:</p>
+<pre><code>Host *
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+</code></pre><h2>Frequently Asked Questions</h2>
+<h4>Q1. How do I generate SSH keys?</h4>
+<p>A. Use <code>ssh-keygen -t ed25519</code> (or <code>ssh-keygen -t rsa -b 4096</code> for older systems). This creates a public/private key pair in your <code>~/.ssh</code> directory.</p>
+<h4>Q2. How can I copy my SSH key to a server?</h4>
+<p>A. Use <code>ssh-copy-id user@example.com</code> to copy your public key to the server's authorized_keys file.</p>
+<h4>Q3. How do I fix &quot;Permission denied (publickey)&quot; errors?</h4>
+<p>A. Check that your private key permissions are set to 600 (<code>chmod 600 ~/.ssh/id_ed25519</code>), ensure the key is added to the server's authorized_keys file, and verify you're using the correct username.</p>
+<h4>Q4. How can I transfer files using SSH?</h4>
+<p>A. Use the <code>scp</code> command (e.g., <code>scp file.txt user@example.com:~/destination/</code>) or <code>sftp</code> for interactive file transfers.</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, SSH keys are managed through the Keychain by default. To prevent this behavior (which can cause issues with some configurations), add <code>IdentityAgent none</code> to your SSH config file or use <code>ssh -o &quot;IdentityAgent=none&quot;</code> when connecting.</p>
+<p>The macOS SSH client may behave slightly differently than Linux versions, particularly with respect to key management and agent forwarding.</p>
+<h2>References</h2>
+<p>https://www.openssh.com/manual.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

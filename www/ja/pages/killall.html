@@ -46,67 +46,84 @@
   <div class="content">
     <main>
       
-  <h1>killall コマンドの概要</h1>
-<p><code>killall</code> コマンドは、プロセス名を指定して、そのプロセスを終了させるためのコマンドです。同じ名前のプロセスが複数実行されている場合、すべて終了させることができます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-s, --signal [シグナル]</strong>: 送信するシグナルを指定します（デフォルトは SIGTERM）</p>
-<ul>
-<li>例: <code>killall -s KILL firefox</code></li>
-</ul>
-</li>
-<li><p><strong>-i, --interactive</strong>: プロセスを終了する前に確認を求めます</p>
-<ul>
-<li>例: <code>killall -i firefox</code></li>
-</ul>
-</li>
-<li><p><strong>-u, --user [ユーザー名]</strong>: 指定したユーザーのプロセスのみを終了します</p>
-<ul>
-<li>例: <code>killall -u username firefox</code></li>
-</ul>
-</li>
-<li><p><strong>-v, --verbose</strong>: 処理の詳細を表示します</p>
-<ul>
-<li>例: <code>killall -v firefox</code></li>
-</ul>
-</li>
-<li><p><strong>-w, --wait</strong>: プロセスが終了するまで待機します</p>
-<ul>
-<li>例: <code>killall -w firefox</code></li>
-</ul>
-</li>
-<li><p><strong>-I, --ignore-case</strong>: プロセス名の大文字小文字を区別しません</p>
-<ul>
-<li>例: <code>killall -I firefox</code></li>
-</ul>
-</li>
-</ul>
-<h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使い方（firefoxプロセスをすべて終了）</span>
-killall<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #8F5902; font-style: italic"># 出力はありません（成功した場合）</span>
-
-<span style="color: #8F5902; font-style: italic"># 強制終了する（SIGKILL信号を送信）</span>
-killall<span style="color: #F8F8F8"> </span>-9<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #8F5902; font-style: italic"># または</span>
-killall<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>KILL<span style="color: #F8F8F8"> </span>firefox
-
-<span style="color: #8F5902; font-style: italic"># 対話モードで確認しながら終了</span>
-killall<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>chrome
-<span style="color: #8F5902; font-style: italic"># 出力例:</span>
-<span style="color: #8F5902; font-style: italic"># Kill chrome(1234) ? (y/N) y</span>
-<span style="color: #8F5902; font-style: italic"># Kill chrome(5678) ? (y/N) n</span>
-
-<span style="color: #8F5902; font-style: italic"># 特定ユーザーのプロセスのみを終了</span>
-killall<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>username<span style="color: #F8F8F8"> </span>nginx
+  <h1>killall コマンド</h1>
+<p>プロセス名を指定して、該当するすべてのプロセスを終了させる。</p>
+<h2>概要</h2>
+<p><code>killall</code> コマンドは、指定した名前に一致するすべてのプロセスにシグナルを送信します。通常は、特定のプログラムのすべてのインスタンスを一度に終了させるために使用されます。プロセスIDを調べる必要がなく、名前だけで複数のプロセスを終了できるため便利です。</p>
+<h2>オプション</h2>
+<h3><strong>-i (--interactive)</strong></h3>
+<p>各プロセスを終了する前に確認を求めます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>firefox
+<span style="color: #000; font-style: italic">Kill firefox(1234) ? (y/N) y</span>
+<span style="color: #000; font-style: italic">Kill firefox(5678) ? (y/N) n</span>
 </pre></div>
-<h2>追加情報</h2>
+<h3><strong>-I (--ignore-case)</strong></h3>
+<p>プロセス名の大文字と小文字を区別せずに一致させます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-I<span style="color: #F8F8F8"> </span>firefox
+</pre></div>
+<h3><strong>-e (--exact)</strong></h3>
+<p>プロセス名の完全一致を要求します（デフォルトでは部分一致も許容）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>chrome
+</pre></div>
+<h3><strong>-s (--signal)</strong></h3>
+<p>送信するシグナルを指定します（デフォルトはTERM）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>KILL<span style="color: #F8F8F8"> </span>firefox
+</pre></div>
+<h3><strong>-u (--user)</strong></h3>
+<p>特定のユーザーが所有するプロセスのみを終了します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>username<span style="color: #F8F8F8"> </span>firefox
+</pre></div>
+<h3><strong>-v (--verbose)</strong></h3>
+<p>実行内容の詳細を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>firefox
+<span style="color: #000; font-style: italic">Killed firefox(1234) with signal 15</span>
+<span style="color: #000; font-style: italic">Killed firefox(5678) with signal 15</span>
+</pre></div>
+<h3><strong>-w (--wait)</strong></h3>
+<p>すべてのプロセスが終了するまで待機します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span>firefox
+</pre></div>
+<h2>使用例</h2>
+<h3>特定のプログラムのすべてのインスタンスを終了</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>firefox
+</pre></div>
+<h3>強制的にプロセスを終了（SIGKILL）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-9<span style="color: #F8F8F8"> </span>chrome
+</pre></div>
+<h3>特定のユーザーのプロセスのみを終了</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>username<span style="color: #F8F8F8"> </span>nginx
+</pre></div>
+<h3>プロセスが終了するまで待機</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>TERM<span style="color: #F8F8F8"> </span>httpd
+</pre></div>
+<h2>ヒント:</h2>
+<h3>シグナル番号とシグナル名</h3>
+<p>シグナルは番号（例：9）または名前（例：KILL）で指定できます。一般的なシグナル：</p>
 <ul>
-<li>プロセスが見つからない場合、エラーメッセージが表示されます。</li>
-<li><code>-9</code> オプションは <code>SIGKILL</code> シグナルを送信し、プロセスを強制終了します。通常は先に通常の終了（デフォルトの <code>SIGTERM</code>）を試すことをお勧めします。</li>
-<li>プロセス名は完全に一致する必要があります。部分一致では機能しません。</li>
-<li><code>ps aux</code> コマンドと組み合わせて使うと、終了したいプロセスを特定するのに役立ちます。</li>
-<li>管理者権限が必要なプロセスを終了するには <code>sudo</code> を使用します（例: <code>sudo killall apache2</code>）。</li>
+<li>TERM (15): 通常の終了（デフォルト）</li>
+<li>KILL (9): 強制終了（プロセスが応答しない場合）</li>
+<li>HUP (1): 設定の再読み込み</li>
+</ul>
+<h3>安全な使用法</h3>
+<p>重要なシステムプロセスを誤って終了させないよう注意してください。特に <code>-9</code> オプションは最終手段として使用しましょう。</p>
+<h3>プロセス名の確認</h3>
+<p><code>ps aux | grep プロセス名</code> を使用して、終了させる前に正確なプロセス名を確認することをお勧めします。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>kill</code> コマンドと <code>killall</code> の違いは何ですか？</h4>
+<p>A. <code>kill</code> はプロセスIDを指定してプロセスを終了させますが、<code>killall</code> はプロセス名を指定して、その名前に一致するすべてのプロセスを終了させます。</p>
+<h4>Q2. プロセスが終了しない場合はどうすればよいですか？</h4>
+<p>A. より強力なシグナルを送信してみてください。例えば <code>killall -9 プロセス名</code> を使用すると、SIGKILL シグナルを送信して強制的にプロセスを終了させます。</p>
+<h4>Q3. 特定のユーザーのプロセスだけを終了させるにはどうすればよいですか？</h4>
+<p>A. <code>-u</code> オプションを使用します。例：<code>killall -u username プロセス名</code></p>
+<h4>Q4. <code>killall</code> コマンドの実行結果を確認するにはどうすればよいですか？</h4>
+<p>A. <code>-v</code>（verbose）オプションを使用すると、どのプロセスが終了されたかの情報が表示されます。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSの<code>killall</code>はLinuxバージョンとは若干動作が異なります。macOSでは完全なプロセス名の一致が必要で、部分一致は機能しません。また、一部のオプション（-I, -e など）がサポートされていない場合があります。</p>
+<h2>参考</h2>
+<p>https://man7.org/linux/man-pages/man1/killall.1.html</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

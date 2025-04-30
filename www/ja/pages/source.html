@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  source - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>source コマンド</h1>
+<p>シェルスクリプトやコマンドを現在のシェル環境で実行します。</p>
+<h2>概要</h2>
+<p><code>source</code> コマンドは、指定されたファイル内のコマンドを現在のシェル環境で読み込んで実行します。これは、環境変数の設定や関数の定義など、現在のシェルセッションに変更を適用したい場合に特に便利です。Bashでは、ドット演算子 (<code>.</code>) も <code>source</code> コマンドの別名として使用できます。</p>
+<h2>オプション</h2>
+<p><code>source</code> コマンドには多くのオプションはありませんが、基本的な使い方を説明します。</p>
+<h3><strong>基本的な使い方</strong></h3>
+<p>ファイルを現在のシェル環境で実行します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>filename
+</pre></div>
+<p>または</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>.<span style="color: #F8F8F8"> </span>filename
+</pre></div>
+<h2>使用例</h2>
+<h3>環境変数の設定</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>env_vars.sh
+<span style="color: #000; font-style: italic">export PROJECT_HOME=/path/to/project</span>
+<span style="color: #000; font-style: italic">export DEBUG_MODE=true</span>
+
+<span style="color: #8F5902">$ </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>env_vars.sh
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$PROJECT_HOME</span>
+<span style="color: #000; font-style: italic">/path/to/project</span>
+</pre></div>
+<h3>Bashの設定ファイルの再読み込み</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>~/.bashrc
+</pre></div>
+<h3>仮想環境のアクティベート（Python）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>venv/bin/activate
+<span style="color: #8F5902">(venv)</span> <span style="color: #8F5902">$</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3><code>source</code> と実行の違い</h3>
+<p>スクリプトを直接実行（<code>./script.sh</code>）すると、新しいシェルプロセスで実行されるため、環境変数の変更は親シェルに影響しません。<code>source</code> を使うと現在のシェルで実行されるため、環境変数の変更が保持されます。</p>
+<h3>相対パスの使用</h3>
+<p><code>source</code> コマンドは現在の作業ディレクトリを基準にファイルを探します。絶対パスを使用するか、相対パスが正しいことを確認してください。</p>
+<h3>シェルの互換性</h3>
+<p><code>source</code> は主にBashやZshなどのシェルで使用されます。シェルによっては構文や動作が異なる場合があるので注意してください。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>source</code> と <code>.</code> の違いは何ですか？</h4>
+<p>A. 機能的には同じです。<code>.</code> はPOSIX標準で、<code>source</code> はBashの拡張機能ですが、多くの現代的なシェルでは両方が使えます。</p>
+<h4>Q2. スクリプトを <code>source</code> で実行すると何が起こりますか？</h4>
+<p>A. スクリプト内のコマンドが現在のシェル環境で実行され、設定された変数や関数が現在のセッションで利用可能になります。</p>
+<h4>Q3. <code>source</code> コマンドの戻り値は何ですか？</h4>
+<p>A. 実行されたスクリプトの最後のコマンドの終了ステータスが返されます。</p>
+<h4>Q4. スクリプトに引数を渡すことはできますか？</h4>
+<p>A. はい、<code>source script.sh arg1 arg2</code> のように引数を渡すことができます。スクリプト内では <code>$1</code>, <code>$2</code> などで参照できます。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSのデフォルトシェルはzshですが、<code>source</code> コマンドはBashと同様に動作します。ただし、一部のシステムスクリプトはBash固有の機能を使用している場合があるため、互換性の問題が発生する可能性があります。</p>
+<h2>参考資料</h2>
+<p>https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

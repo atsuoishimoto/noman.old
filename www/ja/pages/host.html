@@ -46,96 +46,122 @@
   <div class="content">
     <main>
       
-  <h1><code>host</code> コマンドの概要</h1>
-<p><code>host</code> コマンドは、ドメイン名からIPアドレスへの変換（正引き）やIPアドレスからドメイン名への変換（逆引き）などのDNS検索を行うためのシンプルなユーティリティです。ネットワークの問題診断やDNS情報の確認に役立ちます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>基本的な使い方（オプションなし）</strong>: ドメイン名に関連するIPアドレスを表示します</p>
-<ul>
-<li>例: <code>host example.com</code></li>
-</ul>
-</li>
-<li><p><strong>-t TYPE</strong>: 特定のDNSレコードタイプを指定して検索します</p>
-<ul>
-<li>例: <code>host -t MX example.com</code>（メールサーバー情報を取得）</li>
-</ul>
-</li>
-<li><p><strong>-a</strong>: すべてのDNSレコードタイプを表示します</p>
-<ul>
-<li>例: <code>host -a example.com</code></li>
-</ul>
-</li>
-<li><p><strong>-v</strong>: 詳細な出力を表示します（verbose mode）</p>
-<ul>
-<li>例: <code>host -v example.com</code></li>
-</ul>
-</li>
-<li><p><strong>-4</strong>: IPv4アドレスのみを使用します</p>
-<ul>
-<li>例: <code>host -4 example.com</code></li>
-</ul>
-</li>
-<li><p><strong>-6</strong>: IPv6アドレスのみを使用します</p>
-<ul>
-<li>例: <code>host -6 example.com</code></li>
-</ul>
-</li>
-<li><p><strong>-W TIMEOUT</strong>: タイムアウト時間を秒単位で設定します</p>
-<ul>
-<li>例: <code>host -W 5 example.com</code></li>
-</ul>
-</li>
-</ul>
+  <h1>host コマンド</h1>
+<p>DNS（ドメインネームシステム）の検索を実行し、ドメイン名からIPアドレスへの変換や、その逆の変換を行います。</p>
+<h2>概要</h2>
+<p><code>host</code> コマンドは、ドメイン名からIPアドレスへの変換（正引き）や、IPアドレスからドメイン名への変換（逆引き）を行うためのDNSルックアップユーティリティです。シンプルなインターフェースで、ネットワークの問題診断やDNS情報の確認に役立ちます。</p>
+<h2>オプション</h2>
+<h3><strong>-t type</strong></h3>
+<p>特定のDNSレコードタイプを指定して検索します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>MX<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">example.com mail is handled by 10 mail.example.com.</span>
+</pre></div>
+<h3><strong>-a</strong></h3>
+<p>すべてのDNSレコードを表示します（ANY検索を実行）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">Trying &quot;example.com&quot;</span>
+<span style="color: #000; font-style: italic">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 12345</span>
+<span style="color: #000; font-style: italic">;; flags: qr rd ra; QUERY: 1, ANSWER: 8, AUTHORITY: 0, ADDITIONAL: 0</span>
+
+<span style="color: #000; font-style: italic">;; QUESTION SECTION:</span>
+<span style="color: #000; font-style: italic">;example.com.                   IN      ANY</span>
+
+<span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
+<span style="color: #000; font-style: italic">example.com.            86400   IN      A       93.184.216.34</span>
+<span style="color: #000; font-style: italic">example.com.            86400   IN      NS      a.iana-servers.net.</span>
+<span style="color: #000; font-style: italic">example.com.            86400   IN      NS      b.iana-servers.net.</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>-v</strong></h3>
+<p>詳細な出力を表示します（冗長モード）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">Trying &quot;example.com&quot;</span>
+<span style="color: #000; font-style: italic">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 54321</span>
+<span style="color: #000; font-style: italic">;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0</span>
+
+<span style="color: #000; font-style: italic">;; QUESTION SECTION:</span>
+<span style="color: #000; font-style: italic">;example.com.                   IN      A</span>
+
+<span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
+<span style="color: #000; font-style: italic">example.com.            86400   IN      A       93.184.216.34</span>
+</pre></div>
+<h3><strong>-4</strong></h3>
+<p>IPv4アドレスのみを使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-4<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">example.com has address 93.184.216.34</span>
+</pre></div>
+<h3><strong>-6</strong></h3>
+<p>IPv6アドレスのみを使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-6<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">example.com has IPv6 address 2606:2800:220:1:248:1893:25c8:1946</span>
+</pre></div>
 <h2>使用例</h2>
-<h3>基本的なドメイン検索（正引き）</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ドメイン名からIPアドレスを検索</span>
-host<span style="color: #F8F8F8"> </span>google.com
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-google.com<span style="color: #F8F8F8"> </span>has<span style="color: #F8F8F8"> </span>address<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">142</span>.250.207.110
-google.com<span style="color: #F8F8F8"> </span>has<span style="color: #F8F8F8"> </span>IPv6<span style="color: #F8F8F8"> </span>address<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2404</span>:6800:4004:80a::200e
-google.com<span style="color: #F8F8F8"> </span>mail<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>handled<span style="color: #F8F8F8"> </span>by<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>smtp.google.com.
+<h3>基本的なドメイン名の検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">example.com has address 93.184.216.34</span>
+<span style="color: #000; font-style: italic">example.com has IPv6 address 2606:2800:220:1:248:1893:25c8:1946</span>
+<span style="color: #000; font-style: italic">example.com mail is handled by 0 .</span>
 </pre></div>
-<h3>特定のレコードタイプの検索</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># メールサーバー（MX）レコードの検索</span>
-host<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>MX<span style="color: #F8F8F8"> </span>gmail.com
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-gmail.com<span style="color: #F8F8F8"> </span>mail<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>handled<span style="color: #F8F8F8"> </span>by<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>alt1.gmail-smtp-in.l.google.com.
-gmail.com<span style="color: #F8F8F8"> </span>mail<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>handled<span style="color: #F8F8F8"> </span>by<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>alt2.gmail-smtp-in.l.google.com.
-gmail.com<span style="color: #F8F8F8"> </span>mail<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>handled<span style="color: #F8F8F8"> </span>by<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">30</span><span style="color: #F8F8F8"> </span>alt3.gmail-smtp-in.l.google.com.
-gmail.com<span style="color: #F8F8F8"> </span>mail<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>handled<span style="color: #F8F8F8"> </span>by<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">40</span><span style="color: #F8F8F8"> </span>alt4.gmail-smtp-in.l.google.com.
+<h3>IPアドレスの逆引き</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">93</span>.184.216.34
+<span style="color: #000; font-style: italic">34.216.184.93.in-addr.arpa domain name pointer example.com.</span>
 </pre></div>
-<h3>逆引き検索（IPアドレスからホスト名）</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># IPアドレスからホスト名を検索</span>
-host<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>.8.8.8
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">8</span>.8.8.8.in-addr.arpa<span style="color: #F8F8F8"> </span>domain<span style="color: #F8F8F8"> </span>name<span style="color: #F8F8F8"> </span>pointer<span style="color: #F8F8F8"> </span>dns.google.
+<h3>MXレコード（メールサーバー）の検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>MX<span style="color: #F8F8F8"> </span>gmail.com
+<span style="color: #000; font-style: italic">gmail.com mail is handled by 10 alt1.gmail-smtp-in.l.google.com.</span>
+<span style="color: #000; font-style: italic">gmail.com mail is handled by 20 alt2.gmail-smtp-in.l.google.com.</span>
+<span style="color: #000; font-style: italic">gmail.com mail is handled by 30 alt3.gmail-smtp-in.l.google.com.</span>
+<span style="color: #000; font-style: italic">gmail.com mail is handled by 40 alt4.gmail-smtp-in.l.google.com.</span>
+<span style="color: #000; font-style: italic">gmail.com mail is handled by 5 gmail-smtp-in.l.google.com.</span>
 </pre></div>
-<h3>詳細情報の表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 詳細モードでの検索</span>
-host<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>example.com
-<span style="color: #8F5902; font-style: italic"># 出力例（一部抜粋）</span>
-Trying<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;example.com&quot;</span>
-<span style="color: #000; font-weight: bold">;;</span><span style="color: #F8F8F8"> </span>-&gt;&gt;HEADER<span style="color: #4E9A06">&lt;&lt;- opco</span>de:<span style="color: #F8F8F8"> </span>QUERY,<span style="color: #F8F8F8"> </span>status:<span style="color: #F8F8F8"> </span>NOERROR,<span style="color: #F8F8F8"> </span>id:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">12345</span>
-<span style="color: #000; font-weight: bold">;;</span><span style="color: #F8F8F8"> </span>flags:<span style="color: #F8F8F8"> </span>qr<span style="color: #F8F8F8"> </span>rd<span style="color: #F8F8F8"> </span>ra<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>QUERY:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>,<span style="color: #F8F8F8"> </span>ANSWER:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>,<span style="color: #F8F8F8"> </span>AUTHORITY:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>,<span style="color: #F8F8F8"> </span>ADDITIONAL:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>
+<h3>NSレコード（ネームサーバー）の検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>NS<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">example.com name server a.iana-servers.net.</span>
+<span style="color: #000; font-style: italic">example.com name server b.iana-servers.net.</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>特定のDNSサーバーを指定する</h3>
+<p>特定のDNSサーバーを使用して検索したい場合は、コマンドの最後にDNSサーバーのIPアドレスを指定できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>.8.8.8
+<span style="color: #000; font-style: italic">Using domain server:</span>
+<span style="color: #000; font-style: italic">Name: 8.8.8.8</span>
+<span style="color: #000; font-style: italic">Address: 8.8.8.8#53</span>
+<span style="color: #000; font-style: italic">Aliases: </span>
 
-<span style="color: #000; font-weight: bold">;;</span><span style="color: #F8F8F8"> </span>QUESTION<span style="color: #F8F8F8"> </span>SECTION:
-<span style="color: #000; font-weight: bold">;</span>example.com.<span style="color: #F8F8F8">                   </span>IN<span style="color: #F8F8F8">      </span>A
-
-<span style="color: #000; font-weight: bold">;;</span><span style="color: #F8F8F8"> </span>ANSWER<span style="color: #F8F8F8"> </span>SECTION:
-example.com.<span style="color: #F8F8F8">            </span><span style="color: #0000CF; font-weight: bold">86400</span><span style="color: #F8F8F8">   </span>IN<span style="color: #F8F8F8">      </span>A<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">93</span>.184.216.34
+<span style="color: #000; font-style: italic">example.com has address 93.184.216.34</span>
+<span style="color: #000; font-style: italic">example.com has IPv6 address 2606:2800:220:1:248:1893:25c8:1946</span>
 </pre></div>
-<h2>追加情報</h2>
+<h3>TTL（Time To Live）値の確認</h3>
+<p><code>-v</code>（詳細表示）オプションを使用すると、DNSレコードのTTL値を確認できます。これはキャッシュの有効期間を示しています。</p>
+<h3>複数のドメインを一度に検索</h3>
+<p>複数のドメインを一度に検索する場合は、スペースで区切って指定できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>google.com<span style="color: #F8F8F8"> </span>yahoo.com
+<span style="color: #000; font-style: italic">google.com has address 142.250.207.110</span>
+<span style="color: #000; font-style: italic">google.com has IPv6 address 2404:6800:4004:80a::200e</span>
+<span style="color: #000; font-style: italic">google.com mail is handled by 10 smtp.google.com.</span>
+<span style="color: #000; font-style: italic">yahoo.com has address 74.6.231.20</span>
+<span style="color: #000; font-style: italic">yahoo.com has address 74.6.143.25</span>
+<span style="color: #000; font-style: italic">yahoo.com has IPv6 address 2001:4998:124:1507::f000</span>
+<span style="color: #000; font-style: italic">yahoo.com has IPv6 address 2001:4998:44:3507::8000</span>
+<span style="color: #000; font-style: italic">yahoo.com mail is handled by 1 mta7.am0.yahoodns.net.</span>
+<span style="color: #000; font-style: italic">yahoo.com mail is handled by 1 mta6.am0.yahoodns.net.</span>
+</pre></div>
+<h2>よくある質問</h2>
+<h4>Q1. <code>host</code>コマンドと<code>dig</code>コマンドの違いは何ですか？</h4>
+<p>A. <code>host</code>はシンプルで読みやすい出力を提供し、基本的なDNS検索に適しています。一方、<code>dig</code>はより詳細な情報を提供し、DNSのトラブルシューティングや高度な分析に向いています。</p>
+<h4>Q2. 特定のDNSサーバーを使って検索するにはどうすればいいですか？</h4>
+<p>A. コマンドの最後にDNSサーバーのIPアドレスを指定します。例：<code>host example.com 8.8.8.8</code></p>
+<h4>Q3. すべてのDNSレコードタイプを一度に表示するにはどうすればいいですか？</h4>
+<p>A. <code>-a</code>オプションを使用します：<code>host -a example.com</code></p>
+<h4>Q4. macOSでホスト名を変更するのに<code>host</code>コマンドは使えますか？</h4>
+<p>A. いいえ、<code>host</code>コマンドはDNS検索のみを行います。macOSでホスト名を変更するには、システム環境設定またはコマンドラインの<code>scutil</code>コマンドを使用します。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSでは、<code>host</code>コマンドはデフォルトでインストールされています。macOSの<code>host</code>コマンドはBIND（Berkeley Internet Name Domain）の実装に基づいており、Linuxのものとほぼ同じ動作をします。ただし、一部のオプションや出力形式に若干の違いがある場合があります。</p>
+<h2>参考資料</h2>
+<p>https://linux.die.net/man/1/host</p>
+<h2>改訂履歴</h2>
 <ul>
-<li><p><code>host</code> コマンドは <code>dig</code> や <code>nslookup</code> と比較して、より簡潔な出力を提供します。基本的なDNS検索には十分な情報を表示します。</p>
-</li>
-<li><p>デフォルトでは、<code>host</code> コマンドは <code>/etc/resolv.conf</code> に設定されているDNSサーバーを使用しますが、特定のDNSサーバーを指定することもできます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>host<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>.8.8.8
-</pre></div>
-</li>
-<li><p>タイムアウト設定（-W オプション）は、応答の遅いDNSサーバーや接続問題がある場合に便利です。</p>
-</li>
-<li><p>ネットワーク接続のトラブルシューティングでは、まず <code>ping</code> コマンドでの接続確認、次に <code>host</code> コマンドでのDNS解決確認という順序で問題を切り分けることが多いです。</p>
-</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

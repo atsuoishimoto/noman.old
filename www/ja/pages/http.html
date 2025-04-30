@@ -46,129 +46,143 @@
   <div class="content">
     <main>
       
-  <h1><code>http</code> コマンド概要</h1>
-<p><code>http</code> コマンドは、HTTPリクエストを簡単に送信し、レスポンスを見やすく表示するためのコマンドラインツールです。主に開発者がAPIのテストやデバッグに使用します。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong><code>GET</code>/<code>POST</code>/<code>PUT</code>/<code>DELETE</code> など</strong>: HTTPメソッドを指定します</p>
-<ul>
-<li>例: <code>http GET example.com</code></li>
-</ul>
-</li>
-<li><p><strong><code>-v</code>, <code>--verbose</code></strong>: 詳細な情報（リクエストヘッダーやレスポンスヘッダーなど）を表示します</p>
-<ul>
-<li>例: <code>http -v GET example.com</code></li>
-</ul>
-</li>
-<li><p><strong><code>-j</code>, <code>--json</code></strong>: JSONデータを送信する際に使用します</p>
-<ul>
-<li>例: <code>http -j POST example.com/api name=value</code></li>
-</ul>
-</li>
-<li><p><strong><code>-f</code>, <code>--form</code></strong>: フォームデータを送信する際に使用します</p>
-<ul>
-<li>例: <code>http -f POST example.com/upload file@/path/to/file.jpg</code></li>
-</ul>
-</li>
-<li><p><strong><code>-a</code>, <code>--auth</code></strong>: 基本認証情報を指定します</p>
-<ul>
-<li>例: <code>http -a username:password example.com</code></li>
-</ul>
-</li>
-<li><p><strong><code>-h</code>, <code>--headers</code></strong>: カスタムヘッダーを追加します</p>
-<ul>
-<li>例: <code>http example.com X-API-Key:abc123</code></li>
-</ul>
-</li>
-</ul>
+  <h1>http command</h1>
+<p>HTTP リクエストを送信し、レスポンスを表示するコマンドラインツールです。</p>
+<h2>概要</h2>
+<p><code>http</code> コマンドは HTTPie というツールの一部で、コマンドラインから HTTP リクエストを簡単に作成、送信し、レスポンスを見やすく表示します。cURL よりも使いやすく設計されており、JSONデータの送信、ヘッダーの設定、認証など、Web APIとの対話に便利な機能を提供します。</p>
+<h2>オプション</h2>
+<h3><strong>-v, --verbose</strong></h3>
+<p>リクエストとレスポンスの詳細情報を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">GET / HTTP/1.1</span>
+<span style="color: #000; font-style: italic">Host: example.com</span>
+<span style="color: #000; font-style: italic">User-Agent: HTTPie/3.2.1</span>
+<span style="color: #000; font-style: italic">Accept-Encoding: gzip, deflate</span>
+<span style="color: #000; font-style: italic">Accept: */*</span>
+<span style="color: #000; font-style: italic">Connection: keep-alive</span>
+
+<span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
+<span style="color: #000; font-style: italic">Age: 595469</span>
+<span style="color: #000; font-style: italic">Cache-Control: max-age=604800</span>
+<span style="color: #000; font-style: italic">Content-Type: text/html; charset=UTF-8</span>
+<span style="color: #000; font-style: italic">Date: Tue, 30 Apr 2025 10:00:00 GMT</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>-j, --json</strong></h3>
+<p>JSONデータを送信するためのショートカットです。Content-Type ヘッダーを application/json に設定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-j<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>api.example.com/users<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span>John<span style="color: #F8F8F8"> </span>age:<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">30</span>
+<span style="color: #000; font-style: italic">POST /users HTTP/1.1</span>
+<span style="color: #000; font-style: italic">Host: api.example.com</span>
+<span style="color: #000; font-style: italic">Content-Type: application/json</span>
+<span style="color: #000; font-style: italic">...</span>
+
+<span style="color: #000; font-style: italic">{</span>
+<span style="color: #000; font-style: italic">    &quot;name&quot;: &quot;John&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;age&quot;: 30</span>
+<span style="color: #000; font-style: italic">}</span>
+</pre></div>
+<h3><strong>-f, --form</strong></h3>
+<p>フォームデータを送信するためのショートカットです。Content-Type ヘッダーを application/x-www-form-urlencoded に設定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>api.example.com/submit<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span>John<span style="color: #F8F8F8"> </span><span style="color: #000">age</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">30</span>
+<span style="color: #000; font-style: italic">POST /submit HTTP/1.1</span>
+<span style="color: #000; font-style: italic">Host: api.example.com</span>
+<span style="color: #000; font-style: italic">Content-Type: application/x-www-form-urlencoded</span>
+<span style="color: #000; font-style: italic">...</span>
+
+<span style="color: #000; font-style: italic">name=John&amp;age=30</span>
+</pre></div>
+<h3><strong>-a, --auth</strong></h3>
+<p>Basic認証のための認証情報を指定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>username:password<span style="color: #F8F8F8"> </span>api.example.com/secure
+<span style="color: #000; font-style: italic">GET /secure HTTP/1.1</span>
+<span style="color: #000; font-style: italic">Host: api.example.com</span>
+<span style="color: #000; font-style: italic">Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>-h, --headers</strong></h3>
+<p>レスポンスヘッダーのみを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
+<span style="color: #000; font-style: italic">Age: 595469</span>
+<span style="color: #000; font-style: italic">Cache-Control: max-age=604800</span>
+<span style="color: #000; font-style: italic">Content-Type: text/html; charset=UTF-8</span>
+<span style="color: #000; font-style: italic">Date: Tue, 30 Apr 2025 10:00:00 GMT</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
 <h2>使用例</h2>
 <h3>基本的なGETリクエスト</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># シンプルなGETリクエスト</span>
-http<span style="color: #F8F8F8"> </span>get<span style="color: #F8F8F8"> </span>httpbin.org/get
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #CE5C00; font-weight: bold">{</span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;args&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;headers&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;Accept&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*/*&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;Host&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;httpbin.org&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;User-Agent&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;HTTPie/2.6.0&quot;</span>
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">}</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;url&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;https://httpbin.org/get&quot;</span>
-<span style="color: #CE5C00; font-weight: bold">}</span>
-</pre></div>
-<h3>クエリパラメータの送信</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># クエリパラメータを含むGETリクエスト</span>
-http<span style="color: #F8F8F8"> </span>get<span style="color: #F8F8F8"> </span>httpbin.org/get<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span>value<span style="color: #F8F8F8"> </span><span style="color: #000">id</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">123</span>
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #CE5C00; font-weight: bold">{</span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;args&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;id&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;123&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;name&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;value&quot;</span>
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">}</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;headers&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;Accept&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*/*&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;Host&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;httpbin.org&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;User-Agent&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;HTTPie/2.6.0&quot;</span>
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">}</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;url&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;https://httpbin.org/get?name=value&amp;id=123&quot;</span>
-<span style="color: #CE5C00; font-weight: bold">}</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
+<span style="color: #000; font-style: italic">Content-Type: text/html; charset=UTF-8</span>
+<span style="color: #000; font-style: italic">...</span>
+
+<span style="color: #000; font-style: italic">&lt;!doctype html&gt;</span>
+<span style="color: #000; font-style: italic">&lt;html&gt;</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">&lt;/html&gt;</span>
 </pre></div>
 <h3>JSONデータを送信するPOSTリクエスト</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># JSONデータを送信するPOSTリクエスト</span>
-http<span style="color: #F8F8F8"> </span>post<span style="color: #F8F8F8"> </span>httpbin.org/post<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span>John<span style="color: #F8F8F8"> </span>age:<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">30</span><span style="color: #F8F8F8"> </span>skills:<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&#39;[&quot;python&quot;, &quot;javascript&quot;]&#39;</span>
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #CE5C00; font-weight: bold">{</span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;args&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;data&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;{\&quot;name\&quot;: \&quot;John\&quot;, \&quot;age\&quot;: 30, \&quot;skills\&quot;: [\&quot;python\&quot;, \&quot;javascript\&quot;]}&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;files&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;form&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;headers&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;Accept&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;application/json&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;Content-Length&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;60&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;Content-Type&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;application/json&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;Host&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;httpbin.org&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;User-Agent&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;HTTPie/2.6.0&quot;</span>
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">}</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;json&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;age&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">30</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;name&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;John&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;skills&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span>
-<span style="color: #F8F8F8">      </span><span style="color: #4E9A06">&quot;python&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">      </span><span style="color: #4E9A06">&quot;javascript&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #CE5C00; font-weight: bold">]</span>
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">}</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;url&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;https://httpbin.org/post&quot;</span>
-<span style="color: #CE5C00; font-weight: bold">}</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>api.example.com/users<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span>John<span style="color: #F8F8F8"> </span>age:<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">30</span><span style="color: #F8F8F8"> </span>is_active:<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87">true</span>
+<span style="color: #000; font-style: italic">HTTP/1.1 201 Created</span>
+<span style="color: #000; font-style: italic">Content-Type: application/json</span>
+<span style="color: #000; font-style: italic">...</span>
+
+<span style="color: #000; font-style: italic">{</span>
+<span style="color: #000; font-style: italic">    &quot;id&quot;: 123,</span>
+<span style="color: #000; font-style: italic">    &quot;name&quot;: &quot;John&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;age&quot;: 30,</span>
+<span style="color: #000; font-style: italic">    &quot;is_active&quot;: true</span>
+<span style="color: #000; font-style: italic">}</span>
+</pre></div>
+<h3>カスタムヘッダーの追加</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span>X-API-Key:abc123<span style="color: #F8F8F8"> </span>User-Agent:MyApp/1.0
+<span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
+<span style="color: #000; font-style: italic">...</span>
+
+<span style="color: #000; font-style: italic">[レスポンス本文]</span>
 </pre></div>
 <h3>ファイルのアップロード</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ファイルをアップロードする例</span>
-http<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>httpbin.org/post<span style="color: #F8F8F8"> </span>file@/path/to/document.pdf
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #CE5C00; font-weight: bold">{</span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;args&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;data&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;files&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;file&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ファイルの内容（バイナリデータ）&quot;</span>
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">}</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;form&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;headers&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;Accept&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*/*&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;Content-Length&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;12345&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;Content-Type&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;multipart/form-data; boundary=---&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;Host&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;httpbin.org&quot;</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">    </span><span style="color: #4E9A06">&quot;User-Agent&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;HTTPie/2.6.0&quot;</span>
-<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">}</span>,<span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;url&quot;</span>:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;https://httpbin.org/post&quot;</span>
-<span style="color: #CE5C00; font-weight: bold">}</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>api.example.com/upload<span style="color: #F8F8F8"> </span>file@/path/to/file.jpg
+<span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
+<span style="color: #000; font-style: italic">...</span>
+
+<span style="color: #000; font-style: italic">{</span>
+<span style="color: #000; font-style: italic">    &quot;success&quot;: true,</span>
+<span style="color: #000; font-style: italic">    &quot;file_id&quot;: &quot;f123&quot;</span>
+<span style="color: #000; font-style: italic">}</span>
 </pre></div>
-<h2>追加情報</h2>
+<h2>ヒント:</h2>
+<h3>JSONデータの書き方</h3>
 <ul>
-<li><code>:=</code> を使うと数値や真偽値などのJSONデータ型を指定できます（例: <code>count:=42</code>）</li>
-<li><code>:=[]</code> や <code>:={}</code> を使って配列やオブジェクトを指定できます</li>
-<li><code>@</code> を使ってファイルの内容を送信できます（例: <code>data@file.json</code>）</li>
-<li>カラー出力がデフォルトで有効になっており、レスポンスが見やすく表示されます</li>
-<li>HTTPSリクエストの場合、証明書の検証に問題があれば警告が表示されます</li>
-<li><code>--offline</code> オプションを使用すると、実際にリクエストを送信せずにリクエスト内容を確認できます</li>
+<li><code>name=value</code> は文字列として扱われます</li>
+<li><code>name:=value</code> は JSON として解釈されます（数値、ブール値、null など）</li>
+<li><code>name:=@file.json</code> はファイルから JSON を読み込みます</li>
+</ul>
+<h3>出力のカラー表示</h3>
+<p>HTTPie はデフォルトでカラー表示を行いますが、パイプやリダイレクトを使用する場合は <code>--pretty=all</code> オプションを使用すると強制的にカラー表示されます。</p>
+<h3>セッションの保存と再利用</h3>
+<p><code>--session=NAME</code> オプションを使用すると、クッキーやその他のセッション情報を保存して再利用できます。ログインが必要なAPIをテストする際に便利です。</p>
+<h3>リダイレクトの追跡</h3>
+<p><code>--follow</code> オプションを使用すると、HTTPリダイレクト（301、302など）を自動的に追跡します。</p>
+<h2>よくある質問</h2>
+<h4>Q1. HTTPieとcURLの違いは何ですか？</h4>
+<p>A. HTTPieはcURLよりも使いやすく設計されており、JSONの扱いが簡単で、カラフルな出力、直感的な構文などの特徴があります。cURLはより多機能ですが、HTTPieは日常的なAPI操作により適しています。</p>
+<h4>Q2. HTTPieをインストールするにはどうすればよいですか？</h4>
+<p>A. <code>pip install httpie</code>（Python）、<code>brew install httpie</code>（macOS）、<code>apt install httpie</code>（Ubuntu/Debian）などでインストールできます。</p>
+<h4>Q3. HTTPSリクエストで証明書検証をスキップするにはどうすればよいですか？</h4>
+<p>A. <code>--verify=no</code> オプションを使用します。ただし、セキュリティ上の理由から本番環境では推奨されません。</p>
+<h4>Q4. リクエストのタイムアウトを設定するにはどうすればよいですか？</h4>
+<p>A. <code>--timeout=SECONDS</code> オプションを使用します。例：<code>http --timeout=5 example.com</code></p>
+<h2>macOSでの注意点</h2>
+<p>macOSでは、Homebrewを使用して簡単にインストールできます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>brew<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>httpie
+</pre></div>
+<p>macOSのセキュリティ設定によっては、一部の証明書検証に関する問題が発生する場合があります。その場合は <code>--verify=no</code> オプションを使用するか、Python の証明書ストアを更新することで解決できることがあります。</p>
+<h2>参考</h2>
+<p>https://httpie.io/docs</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

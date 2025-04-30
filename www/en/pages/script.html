@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  script - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>script command</h1>
+<p>Make a typescript of a terminal session, capturing all input and output.</p>
+<h2>Overview</h2>
+<p>The <code>script</code> command creates a record of everything that happens in your terminal session, saving both your commands and their outputs to a file. This is useful for documenting procedures, creating tutorials, or keeping logs of terminal activities.</p>
+<h2>Options</h2>
+<h3><strong>-a, --append</strong></h3>
+<p>Append the output to the file instead of overwriting it.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>session_log.txt
+<span style="color: #000; font-style: italic">Script started, file is session_log.txt</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;This will be appended to existing content&quot;</span>
+<span style="color: #000; font-style: italic">This will be appended to existing content</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">exit</span>
+<span style="color: #000; font-style: italic">Script done, file is session_log.txt</span>
+</pre></div>
+<h3><strong>-f, --flush</strong></h3>
+<p>Flush output after each write to ensure real-time recording, useful when monitoring the typescript file while recording.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>realtime_log.txt
+<span style="color: #000; font-style: italic">Script started, file is realtime_log.txt</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;This output is flushed immediately&quot;</span>
+<span style="color: #000; font-style: italic">This output is flushed immediately</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">exit</span>
+<span style="color: #000; font-style: italic">Script done, file is realtime_log.txt</span>
+</pre></div>
+<h3><strong>-q, --quiet</strong></h3>
+<p>Run in quiet mode, suppressing the start and end messages.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>quiet_log.txt
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Recording silently&quot;</span>
+<span style="color: #000; font-style: italic">Recording silently</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">exit</span>
+</pre></div>
+<h3><strong>-t, --timing=FILE</strong></h3>
+<p>Record timing data to FILE, allowing for playback with the <code>scriptreplay</code> command.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>timing.log<span style="color: #F8F8F8"> </span>typescript.txt
+<span style="color: #000; font-style: italic">Script started, file is typescript.txt</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;This session can be replayed later&quot;</span>
+<span style="color: #000; font-style: italic">This session can be replayed later</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">exit</span>
+<span style="color: #000; font-style: italic">Script done, file is typescript.txt</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic Usage</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>my_session.txt
+<span style="color: #000; font-style: italic">Script started, file is my_session.txt</span>
+<span style="color: #8F5902">$ </span>ls
+<span style="color: #000; font-style: italic">Documents  Downloads  Pictures</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, world!&quot;</span>
+<span style="color: #000; font-style: italic">Hello, world!</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">exit</span>
+<span style="color: #000; font-style: italic">Script done, file is my_session.txt</span>
+</pre></div>
+<h3>Replaying a Recorded Session</h3>
+<p>When used with timing data, you can replay the session:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>timing.log<span style="color: #F8F8F8"> </span>typescript.txt
+<span style="color: #000; font-style: italic">Script started, file is typescript.txt</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Commands for demonstration&quot;</span>
+<span style="color: #000; font-style: italic">Commands for demonstration</span>
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-la
+<span style="color: #000; font-style: italic">[output of ls -la command]</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">exit</span>
+<span style="color: #000; font-style: italic">Script done, file is typescript.txt</span>
+
+<span style="color: #8F5902">$ </span>scriptreplay<span style="color: #F8F8F8"> </span>timing.log<span style="color: #F8F8F8"> </span>typescript.txt
+<span style="color: #000; font-style: italic">[The session replays with original timing]</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Automatic Session Documentation</h3>
+<p>Use <code>script</code> at the beginning of important system administration tasks to automatically document what you did, which can be invaluable for troubleshooting or creating documentation later.</p>
+<h3>Sharing Terminal Sessions</h3>
+<p>When teaching others command line operations, record your session with <code>script</code> and share the typescript file so they can see exactly what commands you ran and their outputs.</p>
+<h3>Cleaning Up Control Characters</h3>
+<p>The output file may contain terminal control characters. Use <code>cat -A</code> to view them or tools like <code>col -b</code> to remove them:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>col<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>typescript.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>clean_typescript.txt
+</pre></div>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How do I stop recording a script session?</h4>
+<p>A. Type <code>exit</code> or press Ctrl+D to end the recording session.</p>
+<h4>Q2. Can I record a session without saving commands I type?</h4>
+<p>A. No, <code>script</code> records everything in the terminal, including both input and output.</p>
+<h4>Q3. How can I replay a recorded session?</h4>
+<p>A. If you recorded with the <code>-t</code> option, use the <code>scriptreplay</code> command with the timing and typescript files.</p>
+<h4>Q4. Does script record passwords I type?</h4>
+<p>A. Yes, <code>script</code> records everything visible in the terminal. However, most password prompts don't display the characters you type, so passwords typically won't appear in the typescript file.</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, the <code>script</code> command has slightly different options than the Linux version. The <code>-t</code> timing option works differently, and some options like <code>--flush</code> may not be available. Use <code>man script</code> on macOS to see the specific options available.</p>
+<h2>References</h2>
+<p>https://man7.org/linux/man-pages/man1/script.1.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

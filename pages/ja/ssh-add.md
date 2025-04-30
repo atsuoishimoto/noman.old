@@ -1,57 +1,125 @@
-# ssh-add コマンド概要
+# ssh-add コマンド
 
-`ssh-add` は SSH 認証エージェント（ssh-agent）に秘密鍵を追加するコマンドです。これにより、パスフレーズを毎回入力することなく、SSH 接続を行うことができます。
+SSH 認証エージェントに秘密鍵を追加・管理するコマンドです。
 
-## 主なオプション
+## 概要
 
-- **引数なし**: デフォルトの SSH 秘密鍵（`~/.ssh/id_rsa`、`~/.ssh/id_dsa`、`~/.ssh/id_ecdsa`、`~/.ssh/id_ed25519` など）をエージェントに追加します。
-  - 例: `ssh-add`
+`ssh-add` は SSH 認証エージェント（ssh-agent）に SSH 秘密鍵を追加するためのコマンドです。これにより、SSH 接続時にパスフレーズを毎回入力する必要がなくなります。また、鍵の一覧表示や削除などの管理機能も提供します。
 
-- **-l**: 現在エージェントに登録されている鍵の一覧を表示します。
-  - 例: `ssh-add -l`
+## オプション
 
-- **-d [鍵ファイル]**: 指定した鍵をエージェントから削除します。
-  - 例: `ssh-add -d ~/.ssh/id_rsa`
+### **-l**（リスト表示）
 
-- **-D**: エージェントに登録されているすべての鍵を削除します。
-  - 例: `ssh-add -D`
+認証エージェントに登録されている鍵の一覧を表示します。
 
-- **-t [秒数]**: 指定した時間（秒）だけ鍵をエージェントに追加します。時間が経過すると自動的に削除されます。
-  - 例: `ssh-add -t 3600` （1時間後に削除）
+```console
+$ ssh-add -l
+2048 SHA256:abcdefghijklmnopqrstuvwxyz1234567890ABCD user@hostname (RSA)
+```
 
-## 使用例
+### **-d**（削除）
 
-```bash
-# デフォルトの SSH 鍵をエージェントに追加
-ssh-add
-# 出力例
-Enter passphrase for /home/user/.ssh/id_rsa: 
-Identity added: /home/user/.ssh/id_rsa (/home/user/.ssh/id_rsa)
+指定した鍵を認証エージェントから削除します。
 
-# 特定の鍵ファイルを追加
-ssh-add ~/.ssh/my_custom_key
-# 出力例
-Enter passphrase for /home/user/.ssh/my_custom_key: 
-Identity added: /home/user/.ssh/my_custom_key (/home/user/.ssh/my_custom_key)
+```console
+$ ssh-add -d ~/.ssh/id_rsa
+Identity removed: /Users/username/.ssh/id_rsa (user@hostname)
+```
 
-# 登録されている鍵の一覧を表示
-ssh-add -l
-# 出力例
-2048 SHA256:abcdefghijklmnopqrstuvwxyz1234567890ABCD /home/user/.ssh/id_rsa (RSA)
-4096 SHA256:1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcd /home/user/.ssh/my_custom_key (RSA)
+### **-D**（全削除）
 
-# すべての鍵を削除
-ssh-add -D
-# 出力例
+認証エージェントに登録されているすべての鍵を削除します。
+
+```console
+$ ssh-add -D
 All identities removed.
 ```
 
-## 追加情報
+### **-t**（有効期限設定）
 
-- `ssh-add` を使用する前に、`ssh-agent` が実行されている必要があります。通常は、ログイン時に自動的に起動されますが、起動していない場合は `eval $(ssh-agent)` で起動できます。
+鍵の有効期限を秒単位で設定します。
 
-- 一時的な SSH 接続のために鍵を追加する場合は、`-t` オプションを使用して有効期限を設定することでセキュリティを向上させることができます。
+```console
+$ ssh-add -t 3600 ~/.ssh/id_rsa
+Identity added: /Users/username/.ssh/id_rsa (user@hostname)
+Lifetime set to 3600 seconds
+```
 
-- macOS では、`-K` オプションを使用して、鍵をキーチェーンに保存することができます（macOS 特有の機能）。
+## 使用例
 
-- 秘密鍵にパスフレーズが設定されていない場合は、パスフレーズの入力を求められません。ただし、セキュリティ上の理由から、重要な鍵にはパスフレーズを設定することをお勧めします。
+### 標準の鍵を追加する
+
+```console
+$ ssh-add
+Enter passphrase for /Users/username/.ssh/id_rsa: 
+Identity added: /Users/username/.ssh/id_rsa (user@hostname)
+```
+
+### 特定の鍵ファイルを追加する
+
+```console
+$ ssh-add ~/.ssh/my_custom_key
+Enter passphrase for /Users/username/.ssh/my_custom_key: 
+Identity added: /Users/username/.ssh/my_custom_key (user@hostname)
+```
+
+### 鍵のフィンガープリントを表示する
+
+```console
+$ ssh-add -l -E md5
+2048 MD5:aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99 user@hostname (RSA)
+```
+
+## ヒント:
+
+### ssh-agent の起動確認
+
+`ssh-add` を使用する前に、ssh-agent が実行されていることを確認してください。実行されていない場合は、`eval $(ssh-agent)` コマンドで起動できます。
+
+### ログイン時に自動で鍵を追加
+
+`.bashrc` や `.zshrc` などのシェル設定ファイルに `ssh-add` コマンドを追加することで、ログイン時に自動的に鍵を追加できます。
+
+### パスフレーズなしでの使用
+
+```console
+$ ssh-add -k ~/.ssh/id_rsa
+```
+
+macOS では `-k` オプションを使用すると、キーチェーンに保存されたパスフレーズを使用して鍵を追加できます。
+
+## よくある質問
+
+#### Q1. ssh-add と ssh-agent の違いは何ですか？
+A. `ssh-agent` は認証情報を保持するバックグラウンドプロセスで、`ssh-add` はそのエージェントに鍵を追加するためのコマンドです。
+
+#### Q2. ログアウト後も鍵を保持するにはどうすればよいですか？
+A. macOS では `-K` オプションを使用してキーチェーンに保存できます。Linux では `keychain` などのツールを使用するか、systemd や screen/tmux で ssh-agent を永続化する方法があります。
+
+#### Q3. 追加した鍵が使われているか確認するにはどうすればよいですか？
+A. `ssh -v user@host` コマンドを実行すると、詳細なデバッグ情報が表示され、どの鍵が試行されているかを確認できます。
+
+## macOS での注意点
+
+macOS では、Sierra (10.12.2) 以降、デフォルトでキーチェーンと連携するようになりました。以下のオプションが特に重要です：
+
+- `-K`: 追加した鍵のパスフレーズをキーチェーンに保存します
+- `-A`: ローカルの ssh-agent から転送先のマシンの ssh-agent に鍵を転送します
+- `-k`: キーチェーンから鍵のパスフレーズを読み込みます
+
+macOS Monterey 以降では、`~/.ssh/config` に以下の設定を追加することで、キーチェーンとの連携を強化できます：
+
+```
+Host *
+  UseKeychain yes
+  AddKeysToAgent yes
+```
+
+## 参考資料
+
+https://man.openbsd.org/ssh-add.1
+
+## 改訂履歴
+
+- 2025/04/30 macOS での注意点を追加。
+- 2025/04/30 初版作成。

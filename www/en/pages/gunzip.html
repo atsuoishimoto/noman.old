@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  gunzip - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>gunzip command</h1>
+<p>Decompress files compressed with gzip.</p>
+<h2>Overview</h2>
+<p><code>gunzip</code> is a utility that expands files compressed with the gzip compression algorithm. It essentially reverses what the <code>gzip</code> command does, restoring compressed files to their original state. When you run <code>gunzip</code> on a file with a <code>.gz</code> extension, it decompresses the file and removes the extension.</p>
+<h2>Options</h2>
+<h3><strong>-c, --stdout</strong></h3>
+<p>Output decompressed content to standard output instead of creating a new file.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>archive.gz
+<span style="color: #000; font-style: italic">This is the content of the decompressed file.</span>
+</pre></div>
+<h3><strong>-f, --force</strong></h3>
+<p>Force decompression even when the output file already exists or when the compressed file has multiple links.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>already_exists.gz
+</pre></div>
+<h3><strong>-k, --keep</strong></h3>
+<p>Keep (don't delete) the input files during decompression.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>important_archive.gz
+<span style="color: #8F5902">$ </span>ls
+<span style="color: #000; font-style: italic">important_archive  important_archive.gz</span>
+</pre></div>
+<h3><strong>-l, --list</strong></h3>
+<p>List information about the compressed file without decompressing it.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>archive.gz
+<span style="color: #000; font-style: italic">         compressed        uncompressed  ratio uncompressed_name</span>
+<span style="color: #000; font-style: italic">                547                 1024  46.5% archive</span>
+</pre></div>
+<h3><strong>-r, --recursive</strong></h3>
+<p>Recursively decompress files in directories.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>compressed_folder/
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic Decompression</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>archive.gz
+<span style="color: #8F5902">$ </span>ls
+<span style="color: #000; font-style: italic">archive</span>
+</pre></div>
+<h3>Decompressing Multiple Files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>file1.gz<span style="color: #F8F8F8"> </span>file2.gz<span style="color: #F8F8F8"> </span>file3.gz
+<span style="color: #8F5902">$ </span>ls
+<span style="color: #000; font-style: italic">file1 file2 file3</span>
+</pre></div>
+<h3>Viewing Compressed Content Without Decompressing</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>logfile.gz<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-10
+<span style="color: #000; font-style: italic">[First 10 lines of the decompressed content]</span>
+</pre></div>
+<h3>Decompressing to a Different Name</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>archive.gz<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>new_name
+<span style="color: #8F5902">$ </span>ls
+<span style="color: #000; font-style: italic">archive.gz new_name</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Use zcat Instead of gunzip -c</h3>
+<p>The <code>zcat</code> command is equivalent to <code>gunzip -c</code> and may be more intuitive when you want to view compressed content without decompressing the file.</p>
+<h3>Preserve Original Compressed Files</h3>
+<p>When you need to keep the compressed version while accessing the contents, use the <code>-k</code> option or redirect the output with <code>-c</code>.</p>
+<h3>Handle Multiple Compression Formats</h3>
+<p>For files compressed multiple times with different algorithms (like <code>.tar.gz</code>), you'll need to use the appropriate tools in sequence (e.g., <code>gunzip</code> followed by <code>tar xf</code>).</p>
+<h3>Check Available Disk Space</h3>
+<p>Decompressed files can be significantly larger than their compressed versions. Check that you have enough disk space before decompressing large files.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between gunzip and gzip -d?</h4>
+<p>A. They are functionally equivalent. <code>gzip -d</code> and <code>gunzip</code> both decompress gzip files.</p>
+<h4>Q2. Can gunzip handle .zip files?</h4>
+<p>A. No, <code>gunzip</code> only works with files compressed using the gzip algorithm (typically .gz files). For .zip files, use the <code>unzip</code> command.</p>
+<h4>Q3. How do I decompress a file without losing the original compressed version?</h4>
+<p>A. Use <code>gunzip -k filename.gz</code> or <code>gunzip -c filename.gz &gt; newfilename</code>.</p>
+<h4>Q4. How can I see what's in a .gz file without decompressing it?</h4>
+<p>A. Use <code>gunzip -l filename.gz</code> to see metadata or <code>zcat filename.gz | less</code> to view the contents.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/gzip/manual/gzip.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

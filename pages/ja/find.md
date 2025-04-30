@@ -1,172 +1,138 @@
 # find コマンド
 
-ファイルシステム内でファイルやディレクトリを検索し、条件に基づいて見つけ出します。
+ファイルシステム内でファイルやディレクトリを検索します。
 
 ## 概要
 
-`find`コマンドは、ファイルシステム内でファイルやディレクトリを検索するための強力なツールです。ファイル名、サイズ、更新日時などの様々な条件に基づいて検索でき、さらに見つかったファイルに対して操作を実行することもできます。日常的なファイル管理から複雑なシステム管理まで幅広く活用できます。
+`find`コマンドは、指定したディレクトリ階層内でファイルやディレクトリを検索するための強力なツールです。名前、サイズ、更新日時、パーミッションなど、様々な条件に基づいて検索できます。また、検索結果に対して追加のアクションを実行することも可能です。
 
 ## オプション
 
-### **-name**
+### **-name パターン**
 
-ファイル名で検索します（大文字小文字を区別）
+ファイル名でファイルを検索します。ワイルドカード（*、?など）が使用できます。
 
 ```console
 $ find . -name "*.txt"
-./documents/memo.txt
-./notes.txt
-./archive/old_notes.txt
+./documents/note.txt
+./readme.txt
 ```
 
-### **-iname**
+### **-type タイプ**
 
-ファイル名で検索します（大文字小文字を区別しない）
-
-```console
-$ find . -iname "README*"
-./README.md
-./projects/readme.txt
-./docs/ReadMe.rst
-```
-
-### **-type**
-
-ファイルタイプで検索します
+ファイルタイプで検索します。一般的な値は `f`（通常ファイル）、`d`（ディレクトリ）、`l`（シンボリックリンク）です。
 
 ```console
 $ find . -type d
 .
 ./documents
-./photos
+./images
 ./projects
 ```
 
-### **-size**
+### **-mtime 日数**
 
-ファイルサイズで検索します
+指定した日数以内に変更されたファイルを検索します。`-mtime -7` は7日以内に変更されたファイルを検索します。
+
+```console
+$ find . -mtime -3
+./documents/report.docx
+./projects/script.py
+```
+
+### **-size サイズ**
+
+特定のサイズのファイルを検索します。`+`は「より大きい」、`-`は「より小さい」を意味します。
 
 ```console
 $ find . -size +1M
-./videos/tutorial.mp4
-./images/background.png
-./archives/backup.zip
+./images/photo.jpg
+./videos/clip.mp4
 ```
 
-### **-mtime**
+### **-exec コマンド {} \;**
 
-更新時間に基づいて検索します
-
-```console
-$ find . -mtime -7
-./documents/recent_report.pdf
-./notes.txt
-./downloads/latest.zip
-```
-
-### **-exec**
-
-見つかったファイルに対してコマンドを実行します
+検索結果の各ファイルに対してコマンドを実行します。`{}`は検索されたファイル名に置き換えられます。
 
 ```console
-$ find . -name "*.log" -exec rm {} \;
-```
-
-### **-maxdepth**
-
-検索する深さを制限します
-
-```console
-$ find . -maxdepth 1 -name "*.txt"
-./notes.txt
-./todo.txt
+$ find . -name "*.txt" -exec cat {} \;
+これはnote.txtの内容です。
+これはreadme.txtの内容です。
 ```
 
 ## 使用例
 
-### 複数条件での検索
+### 特定の拡張子を持つファイルを検索
 
 ```console
-$ find /home/user -type f -size +5M -mtime -30
-/home/user/videos/family.mp4
-/home/user/documents/presentation.pptx
+$ find /home/user -name "*.jpg"
+/home/user/pictures/vacation.jpg
+/home/user/documents/scan.jpg
 ```
 
-### 検索結果に対する操作
+### 最近変更されたファイルを検索して詳細表示
 
 ```console
-$ find . -name "*.jpg" -exec convert {} {}.png \;
+$ find /var/log -mtime -1 -exec ls -l {} \;
+-rw-r--r-- 1 root root 15340 4月 30 10:23 /var/log/syslog
+-rw-r--r-- 1 root root 7823 4月 30 09:15 /var/log/auth.log
 ```
 
-### 権限に基づく検索
+### 空のファイルを検索して削除
 
 ```console
-$ find /etc -type f -perm 644
-/etc/hosts
-/etc/resolv.conf
+$ find /tmp -type f -size 0 -delete
 ```
 
-### 空のファイルやディレクトリの検索
+### 特定のユーザーが所有するファイルを検索
 
 ```console
-$ find /tmp -empty
-/tmp/empty_dir
-/tmp/test.log
+$ find /home -user username
+/home/username
+/home/username/.bashrc
+/home/username/documents
 ```
 
 ## ヒント:
 
-### エラーメッセージを非表示にする
+### パフォーマンスの向上
 
-権限のないディレクトリでの検索エラーを無視するには、`2>/dev/null`を追加します。これにより、エラーメッセージが表示されなくなります。
+大きなディレクトリ構造を検索する場合は、検索範囲を制限するか、`-type`や`-name`などのフィルターを早めに指定すると処理が速くなります。
 
-```console
-$ find / -name "config.xml" 2>/dev/null
-```
+### 複数条件の組み合わせ
 
-### 効率的な-execの使用
+`-a`（AND、デフォルト）や`-o`（OR）、`!`（NOT）を使用して複数の検索条件を組み合わせることができます。例：`find . -name "*.txt" -a -size +1k`
 
-大量のファイルを扱う場合、`-exec command {} \;`の代わりに`-exec command {} \+`を使用すると効率的です。これにより、複数のファイルを一度にコマンドに渡すことができます。
+### 権限エラーの回避
 
-```console
-$ find . -name "*.txt" -exec grep "keyword" {} \+
-```
+権限エラーを無視するには、`2>/dev/null`を追加します。例：`find / -name "config.xml" 2>/dev/null`
 
-### 複雑な条件の組み合わせ
+### 検索結果の処理
 
-論理演算子（`-and`、`-or`、`-not`）を使って複雑な検索条件を作成できます。
-
-```console
-$ find . -name "*.log" -size +1M -and -mtime +30
-```
+`-exec`の代わりに、パイプとxargsを使用することもできます：`find . -name "*.log" | xargs grep "error"`
 
 ## よくある質問
 
 #### Q1. findコマンドの基本的な構文は？
-
-A. 基本構文は `find [検索開始パス] [検索条件] [アクション]` です。例えば `find . -name "*.txt"` はカレントディレクトリ以下の全ての.txtファイルを検索します。
+A. 基本構文は `find [検索開始パス] [検索条件] [アクション]` です。例えば `find . -name "*.txt"` は現在のディレクトリから始めて、.txtで終わるファイルを検索します。
 
 #### Q2. 特定の日付範囲内のファイルを検索するには？
+A. `-mtime`や`-newer`オプションを使用します。例えば、`find . -mtime -7 -a -mtime +1`は1日以上7日以内に変更されたファイルを検索します。
 
-A. `-mtime`オプションを使用します。例えば、7日以内に更新されたファイルは `find . -mtime -7`、7日以上前に更新されたファイルは `find . -mtime +7` で検索できます。
+#### Q3. 検索結果を別のコマンドに渡すにはどうすればいいですか？
+A. `-exec`オプションを使用するか、パイプとxargsを組み合わせます。例：`find . -name "*.txt" | xargs grep "keyword"`
 
-#### Q3. 検索結果をファイルに保存するには？
-
-A. リダイレクトを使用します：`find . -name "*.jpg" > image_files.txt`
-
-#### Q4. 特定のディレクトリを検索から除外するには？
-
-A. `-path`と`-prune`を組み合わせます：`find . -path "./node_modules" -prune -o -name "*.js" -print`
+#### Q4. 検索から特定のディレクトリを除外するには？
+A. `-path "./dir" -prune -o`を使用します。例：`find . -path "./node_modules" -prune -o -name "*.js" -print`
 
 ## macOSでの注意点
 
-macOSのfindコマンドはGNU findとは若干異なります。特に、`-path`や`-regex`の動作が異なる場合があります。また、macOSでは`-maxdepth`などの一部のオプションが標準でサポートされていない場合があります。代わりに`brew install findutils`でGNU findをインストールし、`gfind`として使用することも検討してください。
+macOSのfindコマンドはGNU findとは若干異なります。特に、`-delete`オプションの動作や正規表現の扱いが異なる場合があります。また、macOSでは`-path`オプションの代わりに`-not -path`を使用することが多いです。
 
-## 参考資料
+## 参考文献
 
-https://www.gnu.org/software/findutils/manual/html_node/find_html/index.html
+https://www.gnu.org/software/findutils/manual/html_mono/find.html
 
 ## 改訂履歴
 
-- 2025/04/30 macOSでの注意点を追加、よくある質問を拡充、ヒントセクションを改善
-- 2025/01/01 初版作成
+- 2025/04/30 初版作成

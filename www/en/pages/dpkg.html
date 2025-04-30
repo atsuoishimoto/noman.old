@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  dpkg - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>dpkg command</h1>
+<p>Manage Debian package files (.deb) on Debian-based Linux distributions.</p>
+<h2>Overview</h2>
+<p><code>dpkg</code> is the package management system for Debian-based Linux distributions (including Ubuntu). It handles the installation, removal, and providing information about .deb packages. Unlike higher-level package managers like <code>apt</code>, <code>dpkg</code> works directly with .deb files and doesn't automatically resolve dependencies.</p>
+<h2>Options</h2>
+<h3><strong>-i, --install</strong></h3>
+<p>Install a package from a .deb file</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>package.deb
+<span style="color: #000; font-style: italic">Selecting previously unselected package package.</span>
+<span style="color: #8F5902">(Reading database ... 200000 files and directories currently installed.)</span>
+<span style="color: #000; font-style: italic">Preparing to unpack package.deb ...</span>
+<span style="color: #000; font-style: italic">Unpacking package (1.0-1) ...</span>
+<span style="color: #000; font-style: italic">Setting up package (1.0-1) ...</span>
+</pre></div>
+<h3><strong>-r, --remove</strong></h3>
+<p>Remove an installed package (keeps configuration files)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>package
+<span style="color: #8F5902">(Reading database ... 200000 files and directories currently installed.)</span>
+<span style="color: #000; font-style: italic">Removing package (1.0-1) ...</span>
+</pre></div>
+<h3><strong>-P, --purge</strong></h3>
+<p>Remove an installed package completely (including configuration files)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span>package
+<span style="color: #8F5902">(Reading database ... 200000 files and directories currently installed.)</span>
+<span style="color: #000; font-style: italic">Purging configuration files for package (1.0-1) ...</span>
+</pre></div>
+<h3><strong>-l, --list</strong></h3>
+<p>List all installed packages with their status</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dpkg<span style="color: #F8F8F8"> </span>-l
+<span style="color: #000; font-style: italic">| Status | Name      | Version      | Architecture | Description                |</span>
+<span style="color: #000; font-style: italic">|--------|-----------|--------------|--------------|----------------------------|</span>
+<span style="color: #000; font-style: italic">| ii     | bash      | 5.1-6ubuntu1 | amd64        | GNU Bourne Again SHell     |</span>
+<span style="color: #000; font-style: italic">| ii     | coreutils | 8.32-4.1     | amd64        | GNU core utilities         |</span>
+</pre></div>
+<h3><strong>-s, --status</strong></h3>
+<p>Display detailed status information about a specific package</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dpkg<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>bash
+<span style="color: #000; font-style: italic">Package: bash</span>
+<span style="color: #000; font-style: italic">Status: install ok installed</span>
+<span style="color: #000; font-style: italic">Priority: required</span>
+<span style="color: #000; font-style: italic">Section: shells</span>
+<span style="color: #000; font-style: italic">Installed-Size: 6470</span>
+<span style="color: #000; font-style: italic">Maintainer: Ubuntu Developers &lt;ubuntu-devel-discuss@lists.ubuntu.com&gt;</span>
+<span style="color: #000; font-style: italic">Architecture: amd64</span>
+<span style="color: #000; font-style: italic">Version: 5.1-6ubuntu1</span>
+</pre></div>
+<h3><strong>-L, --listfiles</strong></h3>
+<p>List all files installed by a package</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dpkg<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>bash
+<span style="color: #000; font-style: italic">/.</span>
+<span style="color: #000; font-style: italic">/etc</span>
+<span style="color: #000; font-style: italic">/etc/bash.bashrc</span>
+<span style="color: #000; font-style: italic">/etc/skel</span>
+<span style="color: #000; font-style: italic">/etc/skel/.bash_logout</span>
+<span style="color: #000; font-style: italic">/etc/skel/.bashrc</span>
+<span style="color: #000; font-style: italic">/etc/skel/.profile</span>
+<span style="color: #000; font-style: italic">/bin</span>
+<span style="color: #000; font-style: italic">/bin/bash</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Installing a downloaded .deb package</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>google-chrome-stable_current_amd64.deb
+<span style="color: #000; font-style: italic">[output showing installation progress]</span>
+</pre></div>
+<h3>Fixing broken dependencies after installation</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt-get<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>-f
+<span style="color: #000; font-style: italic">Reading package lists... Done</span>
+<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
+<span style="color: #000; font-style: italic">Correcting dependencies... Done</span>
+<span style="color: #000; font-style: italic">[output showing dependency resolution]</span>
+</pre></div>
+<h3>Listing all installed packages matching a pattern</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dpkg<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>python
+<span style="color: #000; font-style: italic">ii  python3                          3.10.4-0ubuntu2        amd64        Interactive high-level object-oriented language</span>
+<span style="color: #000; font-style: italic">ii  python3-minimal                  3.10.4-0ubuntu2        amd64        Minimal subset of the Python language</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Handling Dependencies</h3>
+<p><code>dpkg</code> doesn't automatically resolve dependencies. If you encounter dependency errors, run <code>sudo apt-get install -f</code> to fix them.</p>
+<h3>Checking if a Package is Installed</h3>
+<p>Use <code>dpkg -l | grep package-name</code> to quickly check if a package is installed.</p>
+<h3>Understanding Package Status Codes</h3>
+<p>In the output of <code>dpkg -l</code>, the first column shows status codes:</p>
+<ul>
+<li><code>ii</code>: package is installed and configured</li>
+<li><code>rc</code>: package was removed but config files remain</li>
+<li><code>un</code>: package is unknown/not installed</li>
+</ul>
+<h3>Backing Up Package List</h3>
+<p>Before major system changes, back up your package list with <code>dpkg --get-selections &gt; packages.list</code></p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between <code>dpkg</code> and <code>apt</code>?</h4>
+<p>A. <code>dpkg</code> works directly with .deb files and doesn't handle dependencies automatically. <code>apt</code> is a higher-level tool that resolves dependencies and can download packages from repositories.</p>
+<h4>Q2. How do I fix &quot;dependency problems&quot; errors?</h4>
+<p>A. Run <code>sudo apt-get install -f</code> to fix dependency issues after a <code>dpkg</code> installation.</p>
+<h4>Q3. How can I see what files a package will install before installing it?</h4>
+<p>A. Use <code>dpkg-deb --contents package.deb</code> to view the contents of a .deb file before installation.</p>
+<h4>Q4. How do I reinstall a package?</h4>
+<p>A. Use <code>sudo dpkg -i --force-reinstall package.deb</code> to reinstall a package.</p>
+<h2>References</h2>
+<p>https://man7.org/linux/man-pages/man1/dpkg.1.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

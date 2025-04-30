@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  dmesg - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>dmesg command</h1>
+<p>Display or control the kernel ring buffer, which contains kernel messages and logs.</p>
+<h2>Overview</h2>
+<p>The <code>dmesg</code> command displays kernel-related messages from the system's boot process and ongoing operations. It's useful for troubleshooting hardware issues, checking system startup messages, and monitoring kernel events. These messages are stored in the kernel ring buffer, a circular buffer that overwrites old messages when full.</p>
+<h2>Options</h2>
+<h3><strong>-H, --human</strong></h3>
+<p>Display output in a human-readable format with colors and timestamps</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-H
+<span style="color: #000; font-style: italic">[Apr 30 10:15:23] Linux version 5.15.0-91-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #101-Ubuntu SMP Tue Apr 20 14:33:09 UTC 2023</span>
+<span style="color: #000; font-style: italic">[Apr 30 10:15:23] Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-91-generic root=UUID=1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p ro quiet splash</span>
+<span style="color: #000; font-style: italic">[Apr 30 10:15:24] Memory: 16302756K/16677440K available (14339K kernel code, 2394K rwdata, 4760K rodata, 2756K init, 5068K bss, 374684K reserved, 0K cma-reserved)</span>
+</pre></div>
+<h3><strong>-c, --clear</strong></h3>
+<p>Clear the kernel ring buffer after displaying its contents</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-c
+<span style="color: #000; font-style: italic">[    0.000000] microcode: microcode updated early to revision 0x2f, date = 2019-02-17</span>
+<span style="color: #000; font-style: italic">[    0.000000] Linux version 5.15.0-91-generic (buildd@lcy02-amd64-017)</span>
+<span style="color: #000; font-style: italic">[    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-91-generic root=UUID=1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p ro quiet splash</span>
+</pre></div>
+<h3><strong>-l, --level</strong></h3>
+<p>Filter messages by priority level (emerg, alert, crit, err, warn, notice, info, debug)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>--level<span style="color: #CE5C00; font-weight: bold">=</span>err
+<span style="color: #000; font-style: italic">[    4.302053] EXT4-fs (sda1): re-mounted. Opts: errors=remount-ro</span>
+<span style="color: #000; font-style: italic">[   15.485922] usb 1-2: device descriptor read/64, error -71</span>
+</pre></div>
+<h3><strong>-f, --facility</strong></h3>
+<p>Filter messages by facility (kern, user, mail, daemon, auth, syslog, etc.)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>kern
+<span style="color: #000; font-style: italic">[    0.000000] Linux version 5.15.0-91-generic (buildd@lcy02-amd64-017)</span>
+<span style="color: #000; font-style: italic">[    0.000000] KERNEL supported cpus:</span>
+<span style="color: #000; font-style: italic">[    0.000000] Intel GenuineIntel</span>
+</pre></div>
+<h3><strong>-t, --notime</strong></h3>
+<p>Don't print timestamps</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-t
+<span style="color: #000; font-style: italic">microcode: microcode updated early to revision 0x2f, date = 2019-02-17</span>
+<span style="color: #000; font-style: italic">Linux version 5.15.0-91-generic (buildd@lcy02-amd64-017)</span>
+<span style="color: #000; font-style: italic">Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-91-generic root=UUID=1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p ro quiet splash</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Searching for specific hardware information</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>usb
+<span style="color: #000; font-style: italic">[    2.332145] usb: USB bus registered</span>
+<span style="color: #000; font-style: italic">[    2.332146] usbcore: registered new interface driver usbfs</span>
+<span style="color: #000; font-style: italic">[    2.332147] usbcore: registered new interface driver hub</span>
+<span style="color: #000; font-style: italic">[    2.332148] usbcore: registered new device driver usb</span>
+<span style="color: #000; font-style: italic">[    3.452149] usb 1-1: new high-speed USB device number 2 using ehci-pci</span>
+</pre></div>
+<h3>Checking for disk or filesystem errors</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>error
+<span style="color: #000; font-style: italic">[    5.123456] EXT4-fs (sda1): re-mounted. Opts: errors=remount-ro</span>
+<span style="color: #000; font-style: italic">[   10.234567] ata3.00: error: { UNC }</span>
+<span style="color: #000; font-style: italic">[   15.345678] sd 2:0:0:0: [sdb] Sense Key : Medium Error [current]</span>
+</pre></div>
+<h3>Monitoring recent kernel messages in real-time</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-w
+<span style="color: #000; font-style: italic">[Apr 30 14:23:45] usb 1-2: new high-speed USB device number 4 using xhci_hcd</span>
+<span style="color: #000; font-style: italic">[Apr 30 14:23:46] usb 1-2: New USB device found, idVendor=0781, idProduct=5567, bcdDevice= 1.00</span>
+<span style="color: #000; font-style: italic">[Apr 30 14:23:46] usb 1-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3</span>
+<span style="color: #000; font-style: italic">[Apr 30 14:23:46] usb 1-2: Product: Cruzer Blade</span>
+</pre></div>
+<h2>Tips:</h2>
+<h3>Use sudo for Full Access</h3>
+<p>On many systems, regular users may have limited access to kernel messages. Use <code>sudo dmesg</code> to see all messages, especially when troubleshooting hardware issues.</p>
+<h3>Combine with grep for Targeted Troubleshooting</h3>
+<p>When troubleshooting specific hardware, pipe <code>dmesg</code> output to <code>grep</code> with relevant keywords like <code>dmesg | grep -i wifi</code> or <code>dmesg | grep -i error</code>.</p>
+<h3>Watch for New Messages</h3>
+<p>Use <code>dmesg -w</code> to continuously watch for new kernel messages, similar to <code>tail -f</code>. This is useful when monitoring hardware that's being connected or troubleshooting intermittent issues.</p>
+<h3>Check Boot Time Issues</h3>
+<p>After a system crash or unexpected reboot, use <code>dmesg</code> immediately to check for error messages that might explain what happened before the logs are cleared.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What is the kernel ring buffer?</h4>
+<p>A. The kernel ring buffer is a circular data structure that stores messages generated by the Linux kernel. It has a fixed size, and when it fills up, new messages overwrite the oldest ones.</p>
+<h4>Q2. How do I clear the kernel ring buffer?</h4>
+<p>A. Use <code>sudo dmesg -c</code> to display and then clear the buffer. To clear without displaying, use <code>sudo dmesg -C</code>.</p>
+<h4>Q3. Why do I see &quot;permission denied&quot; when running dmesg?</h4>
+<p>A. On many modern Linux distributions, access to kernel logs is restricted for security reasons. Use <code>sudo dmesg</code> to view the complete logs.</p>
+<h4>Q4. How can I see timestamps in a readable format?</h4>
+<p>A. Use <code>dmesg -T</code> for human-readable timestamps or <code>dmesg -H</code> for a fully human-readable output with colors and formatting.</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, <code>dmesg</code> functionality is more limited compared to Linux. For comprehensive system logs on macOS, consider using <code>log show</code> or viewing logs through Console.app instead. The macOS version of <code>dmesg</code> doesn't support many of the options available in Linux.</p>
+<h2>References</h2>
+<p>https://man7.org/linux/man-pages/man1/dmesg.1.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

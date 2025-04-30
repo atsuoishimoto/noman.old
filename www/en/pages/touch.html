@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  touch - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>touch command</h1>
+<p>Create or update file timestamps without changing file content.</p>
+<h2>Overview</h2>
+<p>The <code>touch</code> command creates empty files if they don't exist, or updates the access and modification timestamps of existing files to the current time. It's commonly used to create placeholder files or to refresh file timestamps without altering their contents.</p>
+<h2>Options</h2>
+<h3><strong>-a</strong></h3>
+<p>Update only the access time of a file</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>file.txt
+</pre></div>
+<h3><strong>-m</strong></h3>
+<p>Update only the modification time of a file</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>document.txt
+</pre></div>
+<h3><strong>-c</strong></h3>
+<p>Do not create files that don't exist (only update timestamps of existing files)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>nonexistent.txt
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>nonexistent.txt
+<span style="color: #000; font-style: italic">ls: nonexistent.txt: No such file or directory</span>
+</pre></div>
+<h3><strong>-t</strong></h3>
+<p>Set a specific timestamp instead of using the current time (format: [[CC]YY]MMDDhhmm[.ss])</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">202504301530</span>.45<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  0 Apr 30 15:30 file.txt</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Creating multiple empty files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt
+<span style="color: #8F5902">$ </span>ls
+<span style="color: #000; font-style: italic">file1.txt  file2.txt  file3.txt</span>
+</pre></div>
+<h3>Updating timestamps of existing files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1024 Apr 29 10:15 document.txt</span>
+<span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1024 Apr 30 14:22 document.txt</span>
+</pre></div>
+<h3>Setting a specific date and time</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">202501010000</span>.00<span style="color: #F8F8F8"> </span>new_year.txt
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>new_year.txt
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  0 Jan 1 00:00 new_year.txt</span>
+</pre></div>
+<h2>Tips:</h2>
+<h3>Create Directory Structure with Files</h3>
+<p>You can use <code>touch</code> with <code>mkdir -p</code> to create a directory structure with placeholder files in one command:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>project/<span style="color: #CE5C00; font-weight: bold">{</span>src,docs,tests<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span>touch<span style="color: #F8F8F8"> </span>project/src/main.py<span style="color: #F8F8F8"> </span>project/docs/readme.md
+</pre></div>
+<h3>Use with Find Command</h3>
+<p>Combine <code>touch</code> with <code>find</code> to update timestamps for multiple files matching a pattern:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.txt&quot;</span><span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>touch<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span>
+</pre></div>
+<h3>Preserve Reference File Timestamp</h3>
+<p>Use the <code>-r</code> option to set a file's timestamp to match another file:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>reference.txt<span style="color: #F8F8F8"> </span>target.txt
+</pre></div>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What happens if I touch a file that doesn't exist?</h4>
+<p>A. By default, <code>touch</code> creates an empty file with that name.</p>
+<h4>Q2. Can I use touch to create files with specific timestamps?</h4>
+<p>A. Yes, use the <code>-t</code> option with a timestamp in the format [[CC]YY]MMDDhhmm[.ss].</p>
+<h4>Q3. How do I prevent touch from creating new files?</h4>
+<p>A. Use the <code>-c</code> option, which only updates timestamps of existing files.</p>
+<h4>Q4. Does touch change file content?</h4>
+<p>A. No, touch only creates empty files or updates timestamps without modifying content.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/touch-invocation.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

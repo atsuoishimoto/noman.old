@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  patch - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>patch command</h1>
+<p>Apply a diff file to an original file or files.</p>
+<h2>Overview</h2>
+<p>The <code>patch</code> command applies changes (patches) to files. It reads a patch file (typically created by the <code>diff</code> command) and modifies the original files to incorporate those changes. This is commonly used for applying bug fixes, updates, or modifications to source code and text files.</p>
+<h2>Options</h2>
+<h3><strong>-p[num]</strong></h3>
+<p>Strip the smallest prefix containing <code>num</code> leading slashes from each file name in the patch. This helps when patch paths don't match your local directory structure.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-p1<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">patching file src/main.c</span>
+</pre></div>
+<h3><strong>-b, --backup</strong></h3>
+<p>Create backup files of the originals before patching.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>main.c<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>fix.patch
+<span style="color: #000; font-style: italic">patching file main.c</span>
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>main.c*
+<span style="color: #000; font-style: italic">main.c  main.c.orig</span>
+</pre></div>
+<h3><strong>-R, --reverse</strong></h3>
+<p>Assume patches were created with old and new files swapped, effectively reversing the patch.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">patching file main.c</span>
+</pre></div>
+<h3><strong>-d dir, --directory=dir</strong></h3>
+<p>Change to the specified directory before applying the patch.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>src/<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">patching file main.c</span>
+</pre></div>
+<h3><strong>--dry-run</strong></h3>
+<p>Print the results of applying the patches without actually changing any files.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>--dry-run<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">patching file main.c</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic Patch Application</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>modified.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">patching file original.txt</span>
+</pre></div>
+<h3>Applying a Patch to a Different Directory</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-p0<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>project/<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">patching file src/main.c</span>
+</pre></div>
+<h3>Creating and Applying a Patch for Multiple Files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-Naur<span style="color: #F8F8F8"> </span>original_dir/<span style="color: #F8F8F8"> </span>modified_dir/<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>project.patch
+<span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-p1<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>project.patch
+<span style="color: #000; font-style: italic">patching file src/main.c</span>
+<span style="color: #000; font-style: italic">patching file include/header.h</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Understanding Patch Formats</h3>
+<p>The most common patch formats are unified (<code>diff -u</code>) and context (<code>diff -c</code>). Unified format is more compact and readable, showing a few lines of context around each change with <code>+</code> for added lines and <code>-</code> for removed lines.</p>
+<h3>Testing Patches Before Applying</h3>
+<p>Always use <code>--dry-run</code> to test a patch before applying it to important files. This shows what would happen without making actual changes.</p>
+<h3>Handling Failed Patches</h3>
+<p>If a patch fails to apply cleanly, patch will create <code>.rej</code> files containing the rejected hunks. Examine these files to manually apply the changes that couldn't be applied automatically.</p>
+<h3>Creating Patches</h3>
+<p>To create a patch file, use the <code>diff</code> command with the <code>-u</code> option for unified format:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>original_file<span style="color: #F8F8F8"> </span>modified_file<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>changes.patch
+</pre></div>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How do I apply a patch file?</h4>
+<p>A. Use <code>patch &lt; patchfile</code> to apply changes to the files mentioned in the patch file.</p>
+<h4>Q2. How do I reverse a patch I've applied?</h4>
+<p>A. Use <code>patch -R &lt; patchfile</code> to undo changes made by a patch.</p>
+<h4>Q3. What does &quot;Hunk #1 FAILED&quot; mean?</h4>
+<p>A. It means that a section of the patch couldn't be applied, usually because the target file has been modified since the patch was created. Check the <code>.rej</code> file for the failed changes.</p>
+<h4>Q4. How do I handle patches with incorrect file paths?</h4>
+<p>A. Use the <code>-p</code> option to strip path prefixes. For example, <code>patch -p1</code> removes the first directory level from paths in the patch file.</p>
+<h4>Q5. Can I preview what a patch will do before applying it?</h4>
+<p>A. Yes, use <code>patch --dry-run &lt; patchfile</code> to see what would happen without making changes.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/diffutils/manual/html_node/Invoking-patch.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

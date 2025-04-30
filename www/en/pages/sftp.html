@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  sftp - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>sftp command</h1>
+<p>Securely transfer files between hosts over an encrypted SSH connection.</p>
+<h2>Overview</h2>
+<p>SFTP (Secure File Transfer Protocol) is a network protocol that provides file access, file transfer, and file management over a secure connection. It's built on top of SSH (Secure Shell) and offers similar security features while allowing you to upload and download files between your local machine and remote servers.</p>
+<h2>Options</h2>
+<h3><strong>-P port</strong></h3>
+<p>Specify a different port to connect to on the remote host</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2222</span><span style="color: #F8F8F8"> </span>user@example.com
+<span style="color: #000; font-style: italic">Connected to example.com.</span>
+<span style="color: #000; font-style: italic">sftp&gt;</span>
+</pre></div>
+<h3><strong>-i identity_file</strong></h3>
+<p>Selects the file from which the identity (private key) for public key authentication is read</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>~/.ssh/my_private_key<span style="color: #F8F8F8"> </span>user@example.com
+<span style="color: #000; font-style: italic">Connected to example.com.</span>
+<span style="color: #000; font-style: italic">sftp&gt;</span>
+</pre></div>
+<h3><strong>-b batchfile</strong></h3>
+<p>Batch mode: read a series of commands from a file instead of interactive mode</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;get remote_file.txt&quot;</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>commands.txt
+<span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>commands.txt<span style="color: #F8F8F8"> </span>user@example.com
+</pre></div>
+<h3><strong>-r</strong></h3>
+<p>Recursively copy entire directories when used with get or put commands</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #000; font-style: italic">sftp&gt; get -r remote_directory</span>
+<span style="color: #000; font-style: italic">Fetching /remote_directory/ to remote_directory</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">sftp&gt;</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Connecting to a remote server</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>user@example.com
+<span style="color: #000; font-style: italic">Connected to example.com.</span>
+<span style="color: #000; font-style: italic">sftp&gt;</span>
+</pre></div>
+<h3>Uploading a file to the remote server</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #000; font-style: italic">sftp&gt; put local_file.txt</span>
+<span style="color: #000; font-style: italic">Uploading local_file.txt to /home/user/local_file.txt</span>
+<span style="color: #000; font-style: italic">local_file.txt                                 100%  1234     1.2KB/s   00:01</span>
+<span style="color: #000; font-style: italic">sftp&gt;</span>
+</pre></div>
+<h3>Downloading a file from the remote server</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #000; font-style: italic">sftp&gt; get remote_file.txt</span>
+<span style="color: #000; font-style: italic">Fetching /home/user/remote_file.txt to remote_file.txt</span>
+<span style="color: #000; font-style: italic">remote_file.txt                                100%  5678     5.6KB/s   00:01</span>
+<span style="color: #000; font-style: italic">sftp&gt;</span>
+</pre></div>
+<h3>Navigating directories</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #000; font-style: italic">sftp&gt; pwd</span>
+<span style="color: #000; font-style: italic">Remote working directory: /home/user</span>
+<span style="color: #000; font-style: italic">sftp&gt; cd documents</span>
+<span style="color: #000; font-style: italic">sftp&gt; lpwd</span>
+<span style="color: #000; font-style: italic">Local working directory: /Users/localuser</span>
+<span style="color: #000; font-style: italic">sftp&gt; lcd Downloads</span>
+<span style="color: #000; font-style: italic">sftp&gt;</span>
+</pre></div>
+<h2>Tips:</h2>
+<h3>Use Tab Completion</h3>
+<p>SFTP supports tab completion for both local and remote files, making it easier to navigate without typing full paths.</p>
+<h3>Common SFTP Commands</h3>
+<ul>
+<li><code>ls</code> - List remote files</li>
+<li><code>lls</code> - List local files</li>
+<li><code>cd</code> - Change remote directory</li>
+<li><code>lcd</code> - Change local directory</li>
+<li><code>mkdir</code> - Create remote directory</li>
+<li><code>lmkdir</code> - Create local directory</li>
+<li><code>rm</code> - Delete remote file</li>
+<li><code>rmdir</code> - Delete remote directory</li>
+<li><code>bye</code> or <code>exit</code> - Exit sftp</li>
+</ul>
+<h3>Automate Transfers with Scripts</h3>
+<p>For repetitive transfers, create a batch file with SFTP commands and use the <code>-b</code> option to automate the process.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between SFTP and FTP?</h4>
+<p>A. SFTP is secure and encrypted as it runs over SSH, while traditional FTP sends data (including passwords) in plain text. SFTP is generally preferred for security reasons.</p>
+<h4>Q2. How do I transfer an entire directory?</h4>
+<p>A. Use the <code>-r</code> (recursive) option with the get or put command: <code>get -r remote_directory</code> or <code>put -r local_directory</code>.</p>
+<h4>Q3. Can I use SFTP with a password instead of keys?</h4>
+<p>A. Yes, SFTP will prompt for a password if key authentication isn't set up or fails.</p>
+<h4>Q4. How do I resume a failed transfer?</h4>
+<p>A. Use the <code>reget</code> or <code>reput</code> commands to resume interrupted downloads or uploads.</p>
+<h2>References</h2>
+<p>https://man.openbsd.org/sftp.1</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

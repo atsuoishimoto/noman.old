@@ -1,116 +1,136 @@
-# git-merge コマンド概要
+# git merge コマンド
 
-`git-merge`は、異なるブランチの変更を現在のブランチに統合するGitコマンドです。複数の開発ラインを一つにまとめる際に使用されます。
+複数のコミット履歴を統合します。
+
+## 概要
+
+`git merge` は、異なるブランチの変更内容を現在のブランチに統合するためのコマンドです。複数の開発ラインを一つにまとめる際に使用され、Git の基本的な機能の一つです。マージには「fast-forward」と「non-fast-forward（3-way）」の2種類があります。
 
 ## オプション
 
-### **--no-ff**:
+### **--ff**（デフォルト）
 
-Fast-forwardマージを行わず、常にマージコミットを作成します。
+可能であれば「fast-forward」マージを行います。これは履歴が直線的な場合に使用され、マージコミットは作成されません。
 
-例: `git merge --no-ff feature-branch`
+```console
+$ git checkout main
+$ git merge feature
+Updating 5ab1c2d..8ef9a01
+Fast-forward
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+```
 
-### **--ff-only**:
+### **--no-ff**
 
-Fast-forwardマージのみを許可し、マージコミットが必要な場合は失敗します。
+常に新しいマージコミットを作成します。ブランチの履歴を明示的に残したい場合に便利です。
 
-例: `git merge --ff-only release-branch`
+```console
+$ git checkout main
+$ git merge --no-ff feature
+Merge made by the 'recursive' strategy.
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+```
 
-### **--squash**:
+### **--squash**
 
-ブランチの全変更を一つのコミットにまとめてマージします。
+マージ対象ブランチの全変更を現在のブランチに統合しますが、コミット履歴はマージせず、変更のみをステージングエリアに追加します。
 
-例: `git merge --squash bugfix-branch`
+```console
+$ git checkout main
+$ git merge --squash feature
+Squash commit -- not updating HEAD
+Automatic merge went well; stopped before committing as requested
+$ git commit -m "機能Aの実装"
+[main ab12c3d] 機能Aの実装
+ 1 file changed, 10 insertions(+)
+```
 
-### **-m, --message**:
-
-マージコミットのメッセージを指定します。
-
-例: `git merge -m "Merge feature X into main" feature-branch`
-
-### **--abort**:
+### **--abort**
 
 コンフリクト発生時にマージを中止し、マージ前の状態に戻します。
 
-例: `git merge --abort`
-
-### **--continue**:
-
-コンフリクト解決後にマージを続行します。
-
-例: `git merge --continue`
-
-### **-s, --strategy**:
-
-マージ戦略を指定します（recursive, resolve, octopus, ours, subtree）。
-
-例: `git merge -s recursive feature-branch`
-
-## 使用例
-
-```bash
-# 基本的なマージ（feature-branchをマージ）
-git merge feature-branch
-# 出力例
-Updating a1b2c3d..e4f5g6h
-Fast-forward
- file.txt | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-# マージコミットを強制的に作成
-git merge --no-ff feature-branch
-# 出力例
-Merge made by the 'recursive' strategy.
- file.txt | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-# コンフリクトが発生した場合
-git merge conflicting-branch
-# 出力例
+```console
+$ git merge feature
 Auto-merging file.txt
 CONFLICT (content): Merge conflict in file.txt
 Automatic merge failed; fix conflicts and then commit the result.
-
-# コンフリクト解決後
-git add file.txt
-git merge --continue
+$ git merge --abort
 ```
+
+## 使用例
+
+### 基本的なマージ
+
+```console
+$ git checkout main
+Switched to branch 'main'
+$ git merge feature
+Merge made by the 'recursive' strategy.
+ feature.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+```
+
+### コンフリクトの解決
+
+```console
+$ git merge feature
+Auto-merging README.md
+CONFLICT (content): Merge conflict in README.md
+Automatic merge failed; fix conflicts and then commit the result.
+
+$ vim README.md  # コンフリクトを編集して解決
+
+$ git add README.md
+$ git commit
+[main 3e4f5a6] Merge branch 'feature'
+```
+
+### 特定のコミットをマージ
+
+```console
+$ git cherry-pick abc1234
+[main 5e6f7a8] 特定の機能を追加
+ 1 file changed, 3 insertions(+)
+```
+
+## ヒント:
+
+### マージ前の確認
+
+マージを実行する前に `git diff <ブランチ名>` を使用して、どのような変更が取り込まれるか確認しましょう。
+
+### ブランチの整理
+
+マージ完了後、不要になったブランチは `git branch -d <ブランチ名>` で削除できます。
+
+### マージ戦略の選択
+
+大きな機能開発では `--no-ff` オプションを使うと、どの変更がどの機能に関連しているか履歴から把握しやすくなります。小さな修正では `--ff`（デフォルト）が適しています。
+
+### リベースとの使い分け
+
+公開ブランチでは `merge` を、ローカルの作業ブランチでは `rebase` を使うというワークフローが一般的です。
 
 ## よくある質問
 
-### Q1. Fast-forwardマージとは何ですか？
-A. 現在のブランチの先端がマージするブランチの直接の親である場合、ブランチポインタを前に進めるだけの単純なマージです。新しいコミットは作成されません。
+#### Q1. マージとリベースの違いは何ですか？
+A. マージは2つのブランチの履歴を結合するのに対し、リベースはあるブランチのコミットを別のブランチの先端に移動させます。マージは履歴をそのまま保持しますが、リベースは履歴を書き換えます。
 
-### Q2. マージコンフリクトが発生したらどうすればいいですか？
-A. コンフリクトが発生したファイルを編集してコンフリクトを解決し、`git add`でマークしてから`git merge --continue`または`git commit`を実行します。
+#### Q2. マージコンフリクトが発生したらどうすればいいですか？
+A. コンフリクトが発生したファイルを開き、コンフリクトマーカー（`<<<<<<<`, `=======`, `>>>>>>>`)を編集して解決します。その後、`git add` でファイルをステージングし、`git commit` でマージを完了させます。
 
-### Q3. マージを取り消すにはどうすればいいですか？
-A. マージ完了前なら`git merge --abort`、完了後なら`git reset --hard ORIG_HEAD`を使用します。
+#### Q3. マージを取り消すにはどうすればいいですか？
+A. マージ直後であれば `git reset --hard ORIG_HEAD` で取り消せます。すでに他の操作を行っている場合は `git reflog` で以前の状態を確認し、`git reset --hard <コミットハッシュ>` で戻ります。
 
-### Q4. squashマージとは何ですか？
-A. ブランチの全変更を一つのコミットにまとめてマージする方法です。ブランチの履歴は保持されません。
+#### Q4. fast-forwardマージとnon-fast-forwardマージの違いは何ですか？
+A. fast-forwardは履歴が直線的な場合に使用され、単にHEADポインタを進めるだけです。non-fast-forwardは分岐した履歴を持つ場合に使用され、新しいマージコミットを作成します。
 
-### Q5. マージ後に不要になったブランチを削除するにはどうすればいいですか？
-A. `git branch -d branch-name`コマンドでブランチを削除できます。
+## 参考資料
 
-### Q6. 特定のファイルだけをマージすることはできますか？
-A. Gitは部分的なマージを直接サポートしていませんが、`git checkout`を使って特定のファイルを取得することができます。
+https://git-scm.com/docs/git-merge
 
-### Q7. マージ戦略の違いは何ですか？
-A. 主に使われる`recursive`は複数の共通祖先を処理できますが、`ours`は相手の変更を無視し、`theirs`は自分の変更を無視します。
+## Revisions
 
-### Q8. マージ前に変更内容を確認するには？
-A. `git diff branch-name`で現在のブランチとマージ予定のブランチの差分を確認できます。
-
-### Q9. リモートブランチをマージするには？
-A. まず`git fetch`でリモートブランチを取得し、その後`git merge origin/branch-name`を実行します。
-
-### Q10. マージコミットのメッセージを後から変更できますか？
-A. `git commit --amend`を使用してマージコミットのメッセージを変更できます。
-
-## 追加メモ
-
-- マージ前に`git fetch`と`git pull`を実行して最新の変更を取得することをお勧めします。
-- 重要な変更をマージする前には、別のブランチで試すか、`git stash`を使って作業中の変更を保存しておくと安全です。
-- 複雑なマージの場合は、視覚的なツール（GitKraken、SourceTree等）を使用すると理解しやすくなります。
-- `git log --graph --oneline`を使うと、ブランチとマージの履歴を視覚的に確認できます。
+- 2025/04/30 初版作成

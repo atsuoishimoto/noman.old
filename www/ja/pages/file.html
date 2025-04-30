@@ -46,65 +46,71 @@
   <div class="content">
     <main>
       
-  <h1><code>file</code> コマンド概要</h1>
-<p><code>file</code> コマンドはファイルの種類（タイプ）を判別するためのコマンドです。ファイルの内容を解析し、テキストファイル、実行ファイル、画像ファイルなどの種類を表示します。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-b, --brief</strong>: ファイル名を表示せず、ファイルタイプのみを表示します</p>
-<ul>
-<li>例: <code>file -b document.txt</code></li>
-</ul>
-</li>
-<li><p><strong>-i, --mime</strong>: MIMEタイプ形式でファイルタイプを表示します</p>
-<ul>
-<li>例: <code>file -i image.jpg</code></li>
-</ul>
-</li>
-<li><p><strong>-z, --uncompress</strong>: 圧縮ファイルの内容を解析します</p>
-<ul>
-<li>例: <code>file -z archive.gz</code></li>
-</ul>
-</li>
-<li><p><strong>-L, --dereference</strong>: シンボリックリンクをたどってリンク先のファイルタイプを表示します</p>
-<ul>
-<li>例: <code>file -L symlink</code></li>
-</ul>
-</li>
-</ul>
-<h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使い方</span>
-$<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>document.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-document.txt:<span style="color: #F8F8F8"> </span>ASCII<span style="color: #F8F8F8"> </span>text
-
-<span style="color: #8F5902; font-style: italic"># 複数のファイルを一度に調べる</span>
-$<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>document.txt<span style="color: #F8F8F8"> </span>image.jpg<span style="color: #F8F8F8"> </span>script.sh
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-document.txt:<span style="color: #F8F8F8"> </span>ASCII<span style="color: #F8F8F8"> </span>text
-image.jpg:<span style="color: #F8F8F8"> </span>JPEG<span style="color: #F8F8F8"> </span>image<span style="color: #F8F8F8"> </span>data,<span style="color: #F8F8F8"> </span>JFIF<span style="color: #F8F8F8"> </span>standard<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>.01
-script.sh:<span style="color: #F8F8F8"> </span>Bourne-Again<span style="color: #F8F8F8"> </span>shell<span style="color: #F8F8F8"> </span>script,<span style="color: #F8F8F8"> </span>ASCII<span style="color: #F8F8F8"> </span>text<span style="color: #F8F8F8"> </span>executable
-
-<span style="color: #8F5902; font-style: italic"># -b オプションでファイル名を省略</span>
-$<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>document.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-ASCII<span style="color: #F8F8F8"> </span>text
-
-<span style="color: #8F5902; font-style: italic"># -i オプションでMIMEタイプを表示</span>
-$<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>document.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-document.txt:<span style="color: #F8F8F8"> </span>text/plain<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #000">charset</span><span style="color: #CE5C00; font-weight: bold">=</span>us-ascii
-
-<span style="color: #8F5902; font-style: italic"># バイナリファイルの確認</span>
-$<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>/bin/ls
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-/bin/ls:<span style="color: #F8F8F8"> </span>ELF<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">64</span>-bit<span style="color: #F8F8F8"> </span>LSB<span style="color: #F8F8F8"> </span>executable,<span style="color: #F8F8F8"> </span>x86-64,<span style="color: #F8F8F8"> </span>version<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>SYSV<span style="color: #CE5C00; font-weight: bold">)</span>,<span style="color: #F8F8F8"> </span>dynamically<span style="color: #F8F8F8"> </span>linked,<span style="color: #F8F8F8"> </span>interpreter<span style="color: #F8F8F8"> </span>/lib64/ld-linux-x86-64.so.2,<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>GNU/Linux<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>.6.32
+  <h1>file コマンド</h1>
+<p>ファイルの種類を判別します。</p>
+<h2>概要</h2>
+<p><code>file</code> コマンドはファイルの内容を検査し、そのファイルの種類（テキスト、実行可能ファイル、画像など）を判定します。このコマンドは、拡張子がないファイルや、拡張子が実際の内容と一致しないファイルの種類を特定するのに役立ちます。</p>
+<h2>オプション</h2>
+<h3><strong>-b (--brief)</strong></h3>
+<p>ファイル名を表示せず、ファイルタイプのみを出力します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>sample.txt
+<span style="color: #000; font-style: italic">ASCII text</span>
 </pre></div>
-<h2>追加メモ</h2>
+<h3><strong>-i (--mime)</strong></h3>
+<p>MIMEタイプ形式でファイルの種類を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>sample.txt
+<span style="color: #000; font-style: italic">sample.txt: text/plain; charset=us-ascii</span>
+</pre></div>
+<h3><strong>-z (--uncompress)</strong></h3>
+<p>圧縮ファイルの内容を検査します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>archive.gz
+<span style="color: #000; font-style: italic">archive.gz: ASCII text (gzip compressed data, was &quot;sample.txt&quot;)</span>
+</pre></div>
+<h3><strong>-L (--dereference)</strong></h3>
+<p>シンボリックリンクをたどり、リンク先のファイルの種類を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>symlink.txt
+<span style="color: #000; font-style: italic">symlink.txt: ASCII text</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的な使用法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>sample.txt
+<span style="color: #000; font-style: italic">sample.txt: ASCII text</span>
+
+<span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>/bin/bash
+<span style="color: #000; font-style: italic">/bin/bash: Mach-O 64-bit executable x86_64</span>
+</pre></div>
+<h3>複数ファイルの種類を確認</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>*
+<span style="color: #000; font-style: italic">document.txt:  ASCII text</span>
+<span style="color: #000; font-style: italic">image.jpg:     JPEG image data, JFIF standard 1.01</span>
+<span style="color: #000; font-style: italic">program:       Mach-O 64-bit executable x86_64</span>
+<span style="color: #000; font-style: italic">archive.zip:   Zip archive data, at least v2.0 to extract</span>
+</pre></div>
+<h3>ディレクトリの確認</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>/etc
+<span style="color: #000; font-style: italic">/etc: directory</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>マジックナンバーによる判定</h3>
+<p><code>file</code> コマンドは「マジックナンバー」と呼ばれるファイル先頭のバイトパターンを検査して種類を判定しています。そのため、拡張子に関係なく実際の内容に基づいて判定できます。</p>
+<h3>スクリプトでの活用</h3>
+<p>シェルスクリプト内で <code>file</code> コマンドを使用して、処理前にファイルの種類を確認することで、不適切なファイルタイプによるエラーを防ぐことができます。</p>
+<h3>バイナリファイルの識別</h3>
+<p>テキストエディタで開く前にファイルがバイナリかテキストかを確認するのに役立ちます。バイナリファイルをテキストエディタで開くと文字化けの原因になります。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>file</code> コマンドはどのようにファイルの種類を判定しますか？</h4>
+<p>A. ファイルの先頭部分のバイトパターン（マジックナンバー）、テキスト分析、その他の特徴を調べて判定します。</p>
+<h4>Q2. ファイルの拡張子と <code>file</code> コマンドの結果が異なる場合はどうすればよいですか？</h4>
+<p>A. 通常は <code>file</code> コマンドの結果が実際のファイル内容を反映しています。必要に応じて拡張子を変更するか、適切なアプリケーションで開くことを検討してください。</p>
+<h4>Q3. <code>file</code> コマンドが「data」や「ASCII text」としか表示しない場合はどうすればよいですか？</h4>
+<p>A. これはファイルの内容が特定のパターンに一致しないか、一般的なテキストデータであることを示しています。より詳細な情報を得るには、ファイルの内容を直接確認する必要があるかもしれません。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSの <code>file</code> コマンドはBSD由来であり、Linux版と若干の違いがあります。特に <code>-z</code> オプションの動作が異なる場合があります。また、macOSでは実行可能ファイルの判定結果が「Mach-O」形式で表示されます。</p>
+<h2>参考資料</h2>
+<p>https://man7.org/linux/man-pages/man1/file.1.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li>ファイルに拡張子がない場合や、拡張子が実際の内容と一致しない場合に特に役立ちます。</li>
-<li><code>file</code> コマンドは「マジックナンバー」と呼ばれるファイル先頭のバイトパターンを解析して判定を行います。</li>
-<li>スクリプトファイルの場合は、シバン（<code>#!</code>）行を検出して言語を判別します。</li>
-<li>大量のファイルを処理する場合は、<code>find</code> コマンドと組み合わせて使うと便利です。例：<code>find . -type f -exec file {} \;</code></li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

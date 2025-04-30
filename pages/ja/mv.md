@@ -1,97 +1,129 @@
-# mv
+# mv コマンド
 
-`mv`コマンドは、ファイルやディレクトリを移動（移動）したり、名前を変更したりするために使用されます。
+ファイルやディレクトリを移動（名前変更）するためのコマンド。
+
+## 概要
+
+`mv`（move）コマンドは、ファイルやディレクトリを別の場所に移動したり、名前を変更したりするために使用します。基本的な構文は `mv 元ファイル 移動先` です。移動先が既存のディレクトリの場合、ファイルはそのディレクトリ内に移動されます。移動先が存在しないか、ファイル名の場合は、名前の変更として機能します。
 
 ## オプション
 
-### **-i (interactive)**
+### **-i（interactive）**
 
-上書き前に確認を求めます。既存のファイルを誤って上書きするのを防ぐのに役立ちます。
+上書き前に確認を求めます。
 
-```bash
-$ mv -i file.txt destination/
-mv: overwrite 'destination/file.txt'? y
+```console
+$ mv -i file.txt existing-file.txt
+mv: overwrite 'existing-file.txt'? y
 ```
 
-### **-f (force)**
+### **-f（force）**
 
-上書き時に確認を求めずに強制的に実行します。
+確認なしで強制的に上書きします。
 
-```bash
-$ mv -f important.txt backup/
+```console
+$ mv -f file.txt existing-file.txt
 ```
 
-### **-v (verbose)**
-
-実行中の操作を詳細に表示します。
-
-```bash
-$ mv -v document.txt reports/
-'document.txt' -> 'reports/document.txt'
-```
-
-### **-n (no-clobber)**
+### **-n（no-clobber）**
 
 既存のファイルを上書きしません。
 
-```bash
-$ mv -n file.txt destination/
+```console
+$ mv -n file.txt existing-file.txt
+```
+
+### **-v（verbose）**
+
+実行内容を詳細に表示します。
+
+```console
+$ mv -v file.txt documents/
+'file.txt' -> 'documents/file.txt'
+```
+
+### **-b（backup）**
+
+上書きする前にバックアップを作成します。
+
+```console
+$ mv -b file.txt existing-file.txt
 ```
 
 ## 使用例
 
 ### ファイルの移動
 
-```bash
-$ mv file.txt Documents/
+```console
+$ mv document.txt ~/Documents/
 ```
 
-これは`file.txt`を現在のディレクトリから`Documents`ディレクトリに移動する。
+ファイル `document.txt` をホームディレクトリの Documents フォルダに移動している。
 
 ### ファイル名の変更
 
-```bash
-$ mv oldname.txt newname.txt
+```console
+$ mv old-name.txt new-name.txt
 ```
 
-これは`oldname.txt`の名前を`newname.txt`に変更する。
+ファイル名を `old-name.txt` から `new-name.txt` に変更している。
 
 ### 複数ファイルの移動
 
-```bash
+```console
 $ mv file1.txt file2.txt file3.txt destination/
 ```
 
-これは複数のファイルを一度に`destination`ディレクトリに移動する。
+複数のファイルを一度に指定のディレクトリに移動している。
 
 ### ディレクトリの移動
 
-```bash
-$ mv directory1 directory2
+```console
+$ mv source_directory/ destination_directory/
 ```
 
-これは`directory1`を`directory2`に移動する。`directory2`が存在しない場合は、`directory1`の名前が`directory2`に変更される。
+ディレクトリ全体を別の場所に移動している。
+
+## ヒント:
+
+### バックアップを作成しながら移動
+
+```console
+$ mv -b important.txt new-location/
+```
+
+重要なファイルを移動する際は `-b` オプションを使用してバックアップを作成すると安全です。
+
+### ワイルドカードの活用
+
+```console
+$ mv *.jpg Photos/
+```
+
+特定のパターンに一致するすべてのファイル（この例では JPG 画像）を一度に移動できます。
+
+### 上書き確認の習慣化
+
+重要なファイルを扱う際は `-i` オプションを使用して、誤って上書きしないよう確認する習慣をつけましょう。
 
 ## よくある質問
 
-### Q1. `mv`コマンドでファイルを誤って上書きしないようにするにはどうすればいいですか？
-A. `-i`オプションを使用すると、既存のファイルを上書きする前に確認を求められます。`mv -i file.txt destination/`のように使います。
+#### Q1. `mv` コマンドでファイルを誤って上書きしてしまった場合、元に戻せますか？
+A. 通常は戻せません。`-b` オプションを使用していない限り、上書きされたデータは失われます。重要なファイルを扱う際は `-i` オプションを使用するか、バックアップを作成することをお勧めします。
 
-### Q2. 複数のファイルを一度に移動できますか？
-A. はい、`mv file1.txt file2.txt directory/`のように、最後の引数をディレクトリにして複数のファイルを指定できます。
+#### Q2. ディレクトリ内のすべてのファイルを移動するには？
+A. `mv directory/* destination/` のようにワイルドカード（`*`）を使用できます。ただし、隠しファイル（ドットで始まるファイル）は含まれないため注意が必要です。
 
-### Q3. ファイル名に特殊文字やスペースがある場合はどうすればいいですか？
-A. 引用符で囲むか、バックスラッシュでエスケープします。例：`mv "my file.txt" destination/`または`mv my\ file.txt destination/`
+#### Q3. `mv` と `cp` の違いは何ですか？
+A. `mv` はファイルを移動または名前変更し、元の場所からファイルが削除されます。一方、`cp` はファイルをコピーするため、元のファイルはそのまま残ります。
 
-### Q4. `mv`コマンドを使ってファイルをバックアップするにはどうすればいいですか？
-A. 元のファイル名に拡張子を追加します。例：`mv file.txt file.txt.bak`
+#### Q4. 移動先に同名のファイルが存在する場合どうなりますか？
+A. デフォルトでは確認なしに上書きされます。`-i` オプションを使用すると確認メッセージが表示され、`-n` オプションを使用すると上書きを防止できます。
 
-## 追加情報
-
-- `mv`コマンドはデフォルトでは確認なしに上書きするため、重要なファイルを扱う場合は`-i`オプションの使用をお勧めします。
-- macOSでは、`mv`コマンドの動作はLinuxとほぼ同じですが、一部のファイルシステム属性（拡張属性など）の扱いが異なる場合があります。
-- エイリアスを設定して`mv -i`をデフォルトにすることで、誤った上書きを防ぐことができます：`alias mv='mv -i'`
-
-## 参考情報
+## 参考
 
 https://www.gnu.org/software/coreutils/manual/html_node/mv-invocation.html
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

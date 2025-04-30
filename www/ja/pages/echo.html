@@ -46,66 +46,86 @@
   <div class="content">
     <main>
       
-  <h1>echoコマンド概要</h1>
-<p><code>echo</code>コマンドは、指定されたテキストや変数の内容を標準出力（通常は画面）に表示するシンプルなコマンドです。シェルスクリプトでの出力やコマンドラインでの簡単な表示に頻繁に使用されます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-n</strong>: 最後の改行を出力しません</p>
-<ul>
-<li>例: <code>echo -n &quot;Hello&quot;</code></li>
-</ul>
-</li>
-<li><p><strong>-e</strong>: バックスラッシュエスケープシーケンスを解釈します（\n, \t など）</p>
-<ul>
-<li>例: <code>echo -e &quot;Hello\nWorld&quot;</code></li>
-</ul>
-</li>
-<li><p><strong>-E</strong>: バックスラッシュエスケープシーケンスを解釈しません（デフォルト）</p>
-<ul>
-<li>例: <code>echo -E &quot;Hello\nWorld&quot;</code></li>
-</ul>
-</li>
-</ul>
+  <h1>echo コマンド</h1>
+<p>標準出力に文字列やテキストを表示します。</p>
+<h2>概要</h2>
+<p><code>echo</code>コマンドは、指定されたテキストや変数の内容を標準出力（通常は画面）に表示するシンプルなコマンドです。シェルスクリプトでの変数の値の確認や、単純なテキスト出力に広く使用されています。</p>
+<h2>オプション</h2>
+<h3><strong>-n</strong></h3>
+<p>改行を出力しません。通常、<code>echo</code>は出力の最後に改行を追加しますが、このオプションを使用すると改行が省略されます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span>
+<span style="color: #000; font-style: italic">Hello$</span>
+</pre></div>
+<p>出力の後にプロンプトが同じ行に表示されていることに注意してください。</p>
+<h3><strong>-e</strong></h3>
+<p>バックスラッシュエスケープシーケンスを解釈します。これにより、特殊文字（\n、\t など）を使用できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello\nWorld&quot;</span>
+<span style="color: #000; font-style: italic">Hello</span>
+<span style="color: #000; font-style: italic">World</span>
+</pre></div>
+<h3><strong>-E</strong></h3>
+<p>バックスラッシュエスケープシーケンスを解釈しません（多くのシステムでのデフォルト動作）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-E<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello\nWorld&quot;</span>
+<span style="color: #000; font-style: italic">Hello\nWorld</span>
+</pre></div>
 <h2>使用例</h2>
 <h3>基本的な使用法</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># テキストを表示</span>
-<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, World!&quot;</span>
-<span style="color: #8F5902; font-style: italic"># 出力</span>
-Hello,<span style="color: #F8F8F8"> </span>World!
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, World!&quot;</span>
+<span style="color: #000; font-style: italic">Hello, World!</span>
 </pre></div>
 <h3>変数の内容を表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 変数の内容を表示</span>
-<span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;Taro&quot;</span>
-<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;My name is </span><span style="color: #000">$name</span><span style="color: #4E9A06">&quot;</span>
-<span style="color: #8F5902; font-style: italic"># 出力</span>
-My<span style="color: #F8F8F8"> </span>name<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>Taro
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;Taro&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;My name is </span><span style="color: #000">$name</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">My name is Taro</span>
 </pre></div>
-<h3>改行なしで表示（-n オプション）</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 改行なしで表示</span>
-<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Enter your name: &quot;</span>
-<span style="color: #8F5902; font-style: italic"># 出力（カーソルが同じ行に残る）</span>
-Enter<span style="color: #F8F8F8"> </span>your<span style="color: #F8F8F8"> </span>name:<span style="color: #F8F8F8"> </span>_
+<h3>複数の引数を渡す</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>This<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span><span style="color: #204A87">test</span>
+<span style="color: #000; font-style: italic">This is a test</span>
 </pre></div>
-<h3>エスケープシーケンスを使用（-e オプション）</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 改行を含めて表示</span>
-<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Line 1\nLine 2\nLine 3&quot;</span>
-<span style="color: #8F5902; font-style: italic"># 出力</span>
-Line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>
-Line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
-Line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-
-<span style="color: #8F5902; font-style: italic"># タブを使用</span>
-<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Name:\tTaro\tAge:\t30&quot;</span>
-<span style="color: #8F5902; font-style: italic"># 出力</span>
-Name:<span style="color: #F8F8F8">	</span>Taro<span style="color: #F8F8F8">	</span>Age:<span style="color: #F8F8F8">	</span><span style="color: #0000CF; font-weight: bold">30</span>
+<h3>エスケープシーケンスを使用する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Tab:\t|\nNewline&quot;</span>
+<span style="color: #000; font-style: italic">Tab:	|</span>
+<span style="color: #000; font-style: italic">Newline</span>
 </pre></div>
-<h2>追加情報</h2>
+<h2>ヒント:</h2>
+<h3>クォートの違いを理解する</h3>
+<p>シングルクォート（'）はシェル変数の展開を防ぎ、ダブルクォート（&quot;）は変数展開を許可します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;Taro&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello </span><span style="color: #000">$name</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">Hello Taro</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;Hello $name&#39;</span>
+<span style="color: #000; font-style: italic">Hello $name</span>
+</pre></div>
+<h3>コマンド置換を活用する</h3>
+<p>バッククォート（<code>）または$(...)を使用して、コマンドの出力を</code>echo`に渡すことができます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Today is </span><span style="color: #204A87; font-weight: bold">$(</span>date<span style="color: #F8F8F8"> </span>+%Y-%m-%d<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">Today is 2025-04-30</span>
+</pre></div>
+<h3>複数行のテキストを出力する</h3>
+<p>ヒアドキュメント構文を使用して、複数行のテキストを出力できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>&lt;&lt;EOF
+<span style="color: #000; font-style: italic">&gt; Line 1</span>
+<span style="color: #000; font-style: italic">&gt; Line 2</span>
+<span style="color: #000; font-style: italic">&gt; Line 3</span>
+<span style="color: #000; font-style: italic">&gt; EOF</span>
+<span style="color: #000; font-style: italic">Line 1</span>
+<span style="color: #000; font-style: italic">Line 2</span>
+<span style="color: #000; font-style: italic">Line 3</span>
+</pre></div>
+<h2>よくある質問</h2>
+<h4>Q1. <code>echo</code>と<code>printf</code>の違いは何ですか？</h4>
+<p>A. <code>echo</code>はシンプルなテキスト出力に適していますが、<code>printf</code>はより複雑なフォーマット制御が可能です。<code>printf</code>はC言語のprintf関数に似た構文を持っています。</p>
+<h4>Q2. <code>echo</code>コマンドの出力をファイルに保存するにはどうすればよいですか？</h4>
+<p>A. リダイレクト演算子（&gt;）を使用します。例：<code>echo &quot;Hello&quot; &gt; file.txt</code></p>
+<h4>Q3. <code>echo</code>コマンドでカラーテキストを出力するにはどうすればよいですか？</h4>
+<p>A. ANSIエスケープシーケンスを使用します。例：<code>echo -e &quot;\033[31mRed text\033[0m&quot;</code></p>
+<h4>Q4. macOSと他のUnixシステムで<code>echo</code>の動作に違いはありますか？</h4>
+<p>A. はい。macOSの<code>echo</code>はデフォルトで<code>-e</code>オプションが有効になっていないため、エスケープシーケンスを使用するには明示的に<code>-e</code>を指定する必要があります。</p>
+<h2>参考資料</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/echo-invocation.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li>シングルクォート（'）を使うと変数展開が行われません：<code>echo '$HOME'</code> は文字通り「$HOME」と表示します</li>
-<li>ダブルクォート（&quot;）を使うと変数展開が行われます：<code>echo &quot;$HOME&quot;</code> はホームディレクトリのパスを表示します</li>
-<li>コマンド置換も可能です：<code>echo &quot;Today is $(date)&quot;</code></li>
-<li><code>echo</code>はシェルスクリプトでユーザーへのメッセージ表示や、デバッグ情報の出力によく使われます</li>
-<li>システムによって（特にBashとsh）、<code>echo</code>の動作やサポートされるオプションが若干異なる場合があります</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

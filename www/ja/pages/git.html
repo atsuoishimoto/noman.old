@@ -46,116 +46,167 @@
   <div class="content">
     <main>
       
-  <h1>Git コマンド概要</h1>
-<p>Git は分散型バージョン管理システムで、ファイルの変更履歴を追跡し、複数の開発者が協力して作業するためのツールです。コードの変更を記録、共有、管理することができます。</p>
-<h2>主なコマンド</h2>
-<ul>
-<li><p><strong>git init</strong>: 新しいGitリポジトリを作成します</p>
-<ul>
-<li>例: <code>git init</code></li>
-</ul>
-</li>
-<li><p><strong>git clone</strong>: リモートリポジトリのコピーを作成します</p>
-<ul>
-<li>例: <code>git clone https://github.com/username/repository.git</code></li>
-</ul>
-</li>
-<li><p><strong>git add</strong>: 変更をステージングエリアに追加します</p>
-<ul>
-<li>例: <code>git add ファイル名</code> または <code>git add .</code>（すべての変更をステージング）</li>
-</ul>
-</li>
-<li><p><strong>git commit</strong>: ステージングされた変更を記録します</p>
-<ul>
-<li>例: <code>git commit -m &quot;コミットメッセージ&quot;</code></li>
-</ul>
-</li>
-<li><p><strong>git status</strong>: 作業ディレクトリの状態を確認します</p>
-<ul>
-<li>例: <code>git status</code></li>
-</ul>
-</li>
-<li><p><strong>git pull</strong>: リモートリポジトリから変更を取得して統合します</p>
-<ul>
-<li>例: <code>git pull origin main</code></li>
-</ul>
-</li>
-<li><p><strong>git push</strong>: ローカルの変更をリモートリポジトリに送信します</p>
-<ul>
-<li>例: <code>git push origin main</code></li>
-</ul>
-</li>
-<li><p><strong>git branch</strong>: ブランチの作成、一覧表示、削除を行います</p>
-<ul>
-<li>例: <code>git branch</code> (一覧表示)、<code>git branch ブランチ名</code> (作成)</li>
-</ul>
-</li>
-<li><p><strong>git checkout</strong>: ブランチを切り替えます</p>
-<ul>
-<li>例: <code>git checkout ブランチ名</code> または <code>git checkout -b 新ブランチ名</code> (作成して切り替え)</li>
-</ul>
-</li>
-<li><p><strong>git merge</strong>: あるブランチの変更を現在のブランチに統合します</p>
-<ul>
-<li>例: <code>git merge ブランチ名</code></li>
-</ul>
-</li>
-</ul>
+  <h1>git command</h1>
+<p>バージョン管理システムで、ファイルの変更履歴を追跡し、複数の開発者との共同作業を可能にします。</p>
+<h2>概要</h2>
+<p>Git はファイルの変更履歴を追跡するための分散型バージョン管理システムです。ローカルでの作業とリモートリポジトリとの同期が可能で、複数の開発者が同じプロジェクトで並行して作業できます。ブランチ機能により、メインコードに影響を与えずに新機能開発やバグ修正が行えます。</p>
+<h2>オプション</h2>
+<h3><strong>git init</strong></h3>
+<p>新しいGitリポジトリを初期化します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>init
+<span style="color: #000; font-style: italic">Initialized empty Git repository in /path/to/project/.git/</span>
+</pre></div>
+<h3><strong>git clone</strong></h3>
+<p>既存のリポジトリをローカルにコピーします</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>clone<span style="color: #F8F8F8"> </span>https://github.com/username/repository.git
+<span style="color: #000; font-style: italic">Cloning into &#39;repository&#39;...</span>
+<span style="color: #000; font-style: italic">remote: Enumerating objects: 125, done.</span>
+<span style="color: #000; font-style: italic">remote: Counting objects: 100% (125/125), done.</span>
+<span style="color: #000; font-style: italic">remote: Compressing objects: 100% (80/80), done.</span>
+<span style="color: #000; font-style: italic">remote: Total 125 (delta 40), reused 120 (delta 35), pack-reused 0</span>
+<span style="color: #000; font-style: italic">Receiving objects: 100% (125/125), 2.01 MiB | 3.50 MiB/s, done.</span>
+<span style="color: #000; font-style: italic">Resolving deltas: 100% (40/40), done.</span>
+</pre></div>
+<h3><strong>git status</strong></h3>
+<p>作業ディレクトリの状態を表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>status
+<span style="color: #000; font-style: italic">On branch main</span>
+<span style="color: #000; font-style: italic">Your branch is up to date with &#39;origin/main&#39;.</span>
+
+<span style="color: #000; font-style: italic">Changes not staged for commit:</span>
+<span style="color: #000; font-style: italic">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span>
+<span style="color: #000; font-style: italic">  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)</span>
+<span style="color: #000; font-style: italic">        modified:   README.md</span>
+
+<span style="color: #000; font-style: italic">Untracked files:</span>
+<span style="color: #000; font-style: italic">  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)</span>
+<span style="color: #000; font-style: italic">        new-file.txt</span>
+
+<span style="color: #000; font-style: italic">no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)</span>
+</pre></div>
+<h3><strong>git add</strong></h3>
+<p>変更をステージングエリアに追加します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>README.md
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>status
+<span style="color: #000; font-style: italic">On branch main</span>
+<span style="color: #000; font-style: italic">Your branch is up to date with &#39;origin/main&#39;.</span>
+
+<span style="color: #000; font-style: italic">Changes to be committed:</span>
+<span style="color: #000; font-style: italic">  (use &quot;git restore --staged &lt;file&gt;...&quot; to unstage)</span>
+<span style="color: #000; font-style: italic">        modified:   README.md</span>
+
+<span style="color: #000; font-style: italic">Untracked files:</span>
+<span style="color: #000; font-style: italic">  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)</span>
+<span style="color: #000; font-style: italic">        new-file.txt</span>
+</pre></div>
+<h3><strong>git commit</strong></h3>
+<p>ステージングされた変更をリポジトリに記録します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Update README.md with new information&quot;</span>
+<span style="color: #000; font-style: italic">[main 5d7e9f4] Update README.md with new information</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 10 insertions(+), 2 deletions(-)</span>
+</pre></div>
+<h3><strong>git push</strong></h3>
+<p>ローカルの変更をリモートリポジトリに送信します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">Enumerating objects: 5, done.</span>
+<span style="color: #000; font-style: italic">Counting objects: 100% (5/5), done.</span>
+<span style="color: #000; font-style: italic">Delta compression using up to 8 threads</span>
+<span style="color: #000; font-style: italic">Compressing objects: 100% (3/3), done.</span>
+<span style="color: #000; font-style: italic">Writing objects: 100% (3/3), 340 bytes | 340.00 KiB/s, done.</span>
+<span style="color: #000; font-style: italic">Total 3 (delta 2), reused 0 (delta 0), pack-reused 0</span>
+<span style="color: #000; font-style: italic">remote: Resolving deltas: 100% (2/2), completed with 2 local objects.</span>
+<span style="color: #000; font-style: italic">To https://github.com/username/repository.git</span>
+<span style="color: #000; font-style: italic">   a1b2c3d..5d7e9f4  main -&gt; main</span>
+</pre></div>
+<h3><strong>git pull</strong></h3>
+<p>リモートリポジトリの変更をローカルに取り込みます</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">remote: Enumerating objects: 5, done.</span>
+<span style="color: #000; font-style: italic">remote: Counting objects: 100% (5/5), done.</span>
+<span style="color: #000; font-style: italic">remote: Compressing objects: 100% (1/1), done.</span>
+<span style="color: #000; font-style: italic">remote: Total 3 (delta 2), reused 3 (delta 2), pack-reused 0</span>
+<span style="color: #000; font-style: italic">Unpacking objects: 100% (3/3), 285 bytes | 95.00 KiB/s, done.</span>
+<span style="color: #000; font-style: italic">From https://github.com/username/repository</span>
+<span style="color: #000; font-style: italic"> * branch            main       -&gt; FETCH_HEAD</span>
+<span style="color: #000; font-style: italic">   a1b2c3d..e4f5g6h  main       -&gt; origin/main</span>
+<span style="color: #000; font-style: italic">Updating a1b2c3d..e4f5g6h</span>
+<span style="color: #000; font-style: italic">Fast-forward</span>
+<span style="color: #000; font-style: italic"> README.md | 5 +++++</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 5 insertions(+)</span>
+</pre></div>
 <h2>使用例</h2>
-<h3>基本的なワークフロー</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 新しいリポジトリを初期化</span>
-git<span style="color: #F8F8F8"> </span>init
+<h3>ブランチの作成と切り替え</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>feature-branch
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>checkout<span style="color: #F8F8F8"> </span>feature-branch
+<span style="color: #000; font-style: italic">Switched to branch &#39;feature-branch&#39;</span>
 
-<span style="color: #8F5902; font-style: italic"># ファイルを追加してコミット</span>
-git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>index.html
-git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;初期コミット&quot;</span>
-
-<span style="color: #8F5902; font-style: italic"># リモートリポジトリを追加</span>
-git<span style="color: #F8F8F8"> </span>remote<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>https://github.com/username/repository.git
-
-<span style="color: #8F5902; font-style: italic"># 変更をプッシュ</span>
-git<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>main
+<span style="color: #8F5902"># </span>または一行で
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>checkout<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>new-feature-branch
+<span style="color: #000; font-style: italic">Switched to a new branch &#39;new-feature-branch&#39;</span>
 </pre></div>
-<h3>ブランチの作成と操作</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 新しいブランチを作成して切り替え</span>
-git<span style="color: #F8F8F8"> </span>checkout<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>feature-branch
+<h3>変更履歴の確認</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>log
+<span style="color: #000; font-style: italic">commit 5d7e9f4a7e9f4a7e9f4a7e9f4a7e9f4a7e9f4a7e</span>
+<span style="color: #000; font-style: italic">Author: Your Name &lt;your.email@example.com&gt;</span>
+<span style="color: #000; font-style: italic">Date:   Wed Apr 30 10:00:00 2025 +0900</span>
 
-<span style="color: #8F5902; font-style: italic"># いくつかの変更を行った後</span>
-git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>.
-git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;新機能を追加&quot;</span>
+<span style="color: #000; font-style: italic">    Update README.md with new information</span>
 
-<span style="color: #8F5902; font-style: italic"># メインブランチに戻る</span>
-git<span style="color: #F8F8F8"> </span>checkout<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">commit a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4</span>
+<span style="color: #000; font-style: italic">Author: Your Name &lt;your.email@example.com&gt;</span>
+<span style="color: #000; font-style: italic">Date:   Tue Apr 29 15:30:00 2025 +0900</span>
 
-<span style="color: #8F5902; font-style: italic"># 変更をマージ</span>
-git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>feature-branch
+<span style="color: #000; font-style: italic">    Initial commit</span>
 </pre></div>
-<h3>リモートリポジトリとの連携</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># リモートリポジトリをクローン</span>
-git<span style="color: #F8F8F8"> </span>clone<span style="color: #F8F8F8"> </span>https://github.com/username/repository.git
-
-<span style="color: #8F5902; font-style: italic"># 変更を取得</span>
-git<span style="color: #F8F8F8"> </span>pull
-
-<span style="color: #8F5902; font-style: italic"># 変更を行った後、プッシュ</span>
-git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>.
-git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;バグ修正&quot;</span>
-git<span style="color: #F8F8F8"> </span>push
+<h3>マージの実行</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>checkout<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">Switched to branch &#39;main&#39;</span>
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>feature-branch
+<span style="color: #000; font-style: italic">Updating a1b2c3d..5d7e9f4</span>
+<span style="color: #000; font-style: italic">Fast-forward</span>
+<span style="color: #000; font-style: italic"> feature.txt | 20 ++++++++++++++++++++</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 20 insertions(+)</span>
+<span style="color: #000; font-style: italic"> create mode 100644 feature.txt</span>
 </pre></div>
-<h2>追加のヒント</h2>
+<h2>ヒント:</h2>
+<h3>コミットメッセージの書き方</h3>
+<p>良いコミットメッセージは、変更内容を明確に伝えるものです。最初の行は50文字以内の要約とし、必要に応じて空行の後に詳細な説明を追加しましょう。</p>
+<h3>.gitignoreファイルの活用</h3>
+<p><code>.gitignore</code>ファイルを作成して、バージョン管理に含めたくないファイル（ログファイル、ビルド成果物、個人設定ファイルなど）を指定できます。これにより、リポジトリを整理された状態に保てます。</p>
+<h3>ブランチ戦略の採用</h3>
+<p>「Git Flow」や「GitHub Flow」などのブランチ戦略を採用すると、チーム開発がスムーズになります。プロジェクトの規模や要件に合わせて適切な戦略を選びましょう。</p>
+<h3>エイリアスの設定</h3>
+<p>頻繁に使用するコマンドには、エイリアスを設定すると便利です。例えば：</p>
+<pre><code>git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.ci commit
+git config --global alias.st status
+</code></pre><h2>よくある質問</h2>
+<h4>Q1. Gitとは何ですか？</h4>
+<p>A. Gitは分散型バージョン管理システムで、ソースコードの変更履歴を追跡し、複数の開発者が効率的に協力して作業できるようにするツールです。</p>
+<h4>Q2. リモートリポジトリとローカルリポジトリの違いは何ですか？</h4>
+<p>A. ローカルリポジトリはあなたのコンピュータ上にあり、リモートリポジトリはサーバー上（GitHubなど）にあります。ローカルで作業した後、変更をリモートにプッシュして共有します。</p>
+<h4>Q3. コミットをやり直すにはどうすればよいですか？</h4>
+<p>A. 直前のコミットを修正するには <code>git commit --amend</code> を使用します。すでにプッシュしたコミットを変更する場合は注意が必要です。</p>
+<h4>Q4. 間違えてコミットした変更を元に戻すにはどうすればよいですか？</h4>
+<p>A. <code>git revert &lt;commit-hash&gt;</code> を使用すると、特定のコミットの変更を打ち消す新しいコミットが作成されます。履歴を書き換えずに変更を元に戻せます。</p>
+<h4>Q5. ブランチとは何ですか？</h4>
+<p>A. ブランチは独立した作業ラインで、メインコードに影響を与えずに新機能開発やバグ修正を行えます。作業が完了したら、メインブランチにマージできます。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSでは、Gitはデフォルトでインストールされていない場合があります。Xcodeコマンドラインツールをインストールするか、Homebrewを使用してインストールできます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xcode-select<span style="color: #F8F8F8"> </span>--install
+<span style="color: #8F5902"># </span>または
+<span style="color: #8F5902">$ </span>brew<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>git
+</pre></div>
+<p>また、macOSでは<code>.DS_Store</code>ファイルが自動生成されるため、グローバルな<code>.gitignore</code>ファイルに追加しておくと良いでしょう：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;.DS_Store&quot;</span><span style="color: #F8F8F8"> </span>&gt;&gt;<span style="color: #F8F8F8"> </span>~/.gitignore_global
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>config<span style="color: #F8F8F8"> </span>--global<span style="color: #F8F8F8"> </span>core.excludesfile<span style="color: #F8F8F8"> </span>~/.gitignore_global
+</pre></div>
+<h2>参考資料</h2>
+<p>https://git-scm.com/doc</p>
+<h2>改訂履歴</h2>
 <ul>
-<li><p><strong>git log</strong>: コミット履歴を表示します。<code>git log --oneline</code> で簡潔に表示できます。</p>
-</li>
-<li><p><strong>git diff</strong>: 変更内容を表示します。<code>git diff ファイル名</code> で特定ファイルの変更を確認できます。</p>
-</li>
-<li><p><strong>.gitignore</strong> ファイルを作成して、バージョン管理に含めたくないファイル（ログファイルや一時ファイルなど）を指定できます。</p>
-</li>
-<li><p>コミットメッセージは具体的かつ明確に書くことで、後から変更内容を理解しやすくなります。</p>
-</li>
-<li><p>大きな変更を行う前には、新しいブランチを作成することをお勧めします。これにより、メインコードに影響を与えずに作業できます。</p>
-</li>
-<li><p>コンフリクト（競合）が発生した場合は、該当ファイルを編集して解決し、<code>git add</code> してから <code>git commit</code> を実行します。</p>
-</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  passwd - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>passwd command</h1>
+<p>Change user password.</p>
+<h2>Overview</h2>
+<p>The <code>passwd</code> command allows users to change their own password or, for system administrators, to change or manage other users' passwords. It handles password authentication, modification, and enforces password policies on Unix-like systems.</p>
+<h2>Options</h2>
+<h3><strong>-d, --delete</strong></h3>
+<p>Delete a user's password (make it empty)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">Password for username deleted</span>
+</pre></div>
+<h3><strong>-l, --lock</strong></h3>
+<p>Lock a user's password (disable the account)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">Password for username has been locked</span>
+</pre></div>
+<h3><strong>-u, --unlock</strong></h3>
+<p>Unlock a user's password (re-enable the account)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">Password for username has been unlocked</span>
+</pre></div>
+<h3><strong>-e, --expire</strong></h3>
+<p>Force password expiration (user must change password at next login)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">Password for username has been expired</span>
+</pre></div>
+<h3><strong>-S, --status</strong></h3>
+<p>Display password status information for a user</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>passwd<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">username PS 2025-04-15 0 99999 7 -1</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Changing your own password</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>passwd
+<span style="color: #000; font-style: italic">Changing password for current_user</span>
+<span style="color: #000; font-style: italic">Current password: </span>
+<span style="color: #000; font-style: italic">New password: </span>
+<span style="color: #000; font-style: italic">Retype new password: </span>
+<span style="color: #000; font-style: italic">passwd: password updated successfully</span>
+</pre></div>
+<h3>Changing another user's password (requires root privileges)</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">New password: </span>
+<span style="color: #000; font-style: italic">Retype new password: </span>
+<span style="color: #000; font-style: italic">passwd: password updated successfully</span>
+</pre></div>
+<h3>Checking password status for a user</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>passwd<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">username PS 2025-04-15 0 99999 7 -1</span>
+</pre></div>
+<h2>Tips:</h2>
+<h3>Understanding Password Status Output</h3>
+<p>The output of <code>passwd -S</code> shows several fields: username, password status (PS=set, LK=locked, NP=no password), date of last change, minimum age, maximum age, warning period, and inactivity period.</p>
+<h3>Password Security</h3>
+<p>Create strong passwords with a mix of uppercase, lowercase, numbers, and special characters. Avoid using personal information or common words.</p>
+<h3>Root Password Management</h3>
+<p>Be extremely careful when changing the root password. If forgotten, recovery can be difficult and might require booting into single-user mode.</p>
+<h3>Password Files</h3>
+<p>The <code>passwd</code> command modifies <code>/etc/passwd</code> and <code>/etc/shadow</code> files. Never edit these files directly; always use the proper commands.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How do I change my own password?</h4>
+<p>A. Simply type <code>passwd</code> and follow the prompts to enter your current password and then your new password twice.</p>
+<h4>Q2. How can I force a user to change their password at next login?</h4>
+<p>A. Use <code>sudo passwd -e username</code> to expire a user's password.</p>
+<h4>Q3. What happens when I lock a user account?</h4>
+<p>A. The <code>passwd -l</code> command prepends the encrypted password with an exclamation mark (!), preventing the user from logging in with their password, but other authentication methods might still work.</p>
+<h4>Q4. Can I make a user account passwordless?</h4>
+<p>A. Yes, with <code>sudo passwd -d username</code>, but this is generally insecure and should be avoided in most cases.</p>
+<h4>Q5. How do I know if a password is locked?</h4>
+<p>A. Use <code>passwd -S username</code> and check if the status shows &quot;LK&quot; (locked).</p>
+<h2>References</h2>
+<p>https://man7.org/linux/man-pages/man1/passwd.1.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

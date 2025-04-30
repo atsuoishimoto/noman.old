@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  find - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>find command</h1>
+<p>Search for files in a directory hierarchy based on various criteria.</p>
+<h2>Overview</h2>
+<p>The <code>find</code> command searches for files and directories in a specified location based on criteria like name, size, type, or modification time. It's a powerful tool for locating files across your filesystem and can execute commands on the files it finds.</p>
+<h2>Options</h2>
+<h3><strong>-name pattern</strong></h3>
+<p>Search for files by name using a pattern (case-sensitive)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.txt&quot;</span>
+<span style="color: #000; font-style: italic">./documents/notes.txt</span>
+<span style="color: #000; font-style: italic">./readme.txt</span>
+<span style="color: #000; font-style: italic">./archive/old.txt</span>
+</pre></div>
+<h3><strong>-iname pattern</strong></h3>
+<p>Search for files by name using a pattern (case-insensitive)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-iname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;README*&quot;</span>
+<span style="color: #000; font-style: italic">./README.md</span>
+<span style="color: #000; font-style: italic">./projects/readme.txt</span>
+<span style="color: #000; font-style: italic">./docs/ReadMe.rst</span>
+</pre></div>
+<h3><strong>-type</strong></h3>
+<p>Search for files by type (f=regular file, d=directory, l=symbolic link)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>d
+<span style="color: #000; font-style: italic">.</span>
+<span style="color: #000; font-style: italic">./documents</span>
+<span style="color: #000; font-style: italic">./projects</span>
+<span style="color: #000; font-style: italic">./archive</span>
+</pre></div>
+<h3><strong>-mtime n</strong></h3>
+<p>Find files modified n days ago (use -n for less than n days, +n for more than n days)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-mtime<span style="color: #F8F8F8"> </span>-7
+<span style="color: #000; font-style: italic">./documents/recent.txt</span>
+<span style="color: #000; font-style: italic">./projects/new-feature.py</span>
+</pre></div>
+<h3><strong>-size n[cwbkMG]</strong></h3>
+<p>Find files by size (c=bytes, k=kilobytes, M=megabytes, G=gigabytes)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-size<span style="color: #F8F8F8"> </span>+10M
+<span style="color: #000; font-style: italic">./videos/tutorial.mp4</span>
+<span style="color: #000; font-style: italic">./backups/database.sql</span>
+</pre></div>
+<h3><strong>-exec command {} ;</strong></h3>
+<p>Execute a command on each found file (replace {} with the filename)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.log&quot;</span><span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>rm<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Finding and deleting files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/tmp<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;temp*&quot;</span><span style="color: #F8F8F8"> </span>-mtime<span style="color: #F8F8F8"> </span>+7<span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>rm<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span>
+</pre></div>
+<h3>Finding empty files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>~/documents<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>f<span style="color: #F8F8F8"> </span>-empty
+<span style="color: #000; font-style: italic">/home/user/documents/empty.txt</span>
+<span style="color: #000; font-style: italic">/home/user/documents/drafts/blank.md</span>
+</pre></div>
+<h3>Finding files with specific permissions</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/home<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>f<span style="color: #F8F8F8"> </span>-perm<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0777</span>
+<span style="color: #000; font-style: italic">/home/user/scripts/backup.sh</span>
+<span style="color: #000; font-style: italic">/home/user/bin/helper.sh</span>
+</pre></div>
+<h3>Finding and counting files by type</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.jpg&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>wc<span style="color: #F8F8F8"> </span>-l
+<span style="color: #000; font-style: italic">42</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Use -maxdepth to Limit Search Depth</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-maxdepth<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.txt&quot;</span>
+</pre></div>
+<p>This limits the search to the current directory and its immediate subdirectories, making searches faster.</p>
+<h3>Combine Multiple Conditions</h3>
+<p>Use <code>-and</code>, <code>-or</code>, and <code>-not</code> (or <code>!</code>) to create complex search criteria:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.log&quot;</span><span style="color: #F8F8F8"> </span>-and<span style="color: #F8F8F8"> </span>-size<span style="color: #F8F8F8"> </span>+1M<span style="color: #F8F8F8"> </span>-and<span style="color: #F8F8F8"> </span>-mtime<span style="color: #F8F8F8"> </span>+30
+</pre></div>
+<h3>Avoid Permission Denied Errors</h3>
+<p>Redirect error messages to /dev/null when searching system directories:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/etc<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.conf&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>&gt;/dev/null
+</pre></div>
+<h3>Use -print0 with xargs for Filenames with Spaces</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.mp3&quot;</span><span style="color: #F8F8F8"> </span>-print0<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-0<span style="color: #F8F8F8"> </span>cp<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>~/music/
+</pre></div>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How do I find files modified in the last 24 hours?</h4>
+<p>A. Use <code>find . -mtime -1</code> to find files modified less than 1 day ago.</p>
+<h4>Q2. How can I find all empty directories?</h4>
+<p>A. Use <code>find /path -type d -empty</code> to find all empty directories.</p>
+<h4>Q3. How do I search for files containing specific text?</h4>
+<p>A. Combine <code>find</code> with <code>grep</code>: <code>find . -type f -name &quot;*.txt&quot; -exec grep &quot;search text&quot; {} \;</code></p>
+<h4>Q4. How do I exclude directories from my search?</h4>
+<p>A. Use <code>-not -path</code>: <code>find . -type f -not -path &quot;./node_modules/*&quot;</code></p>
+<h4>Q5. Why is my find command so slow?</h4>
+<p>A. Large directory trees, network filesystems, or complex criteria can slow down searches. Use <code>-maxdepth</code> to limit the search depth.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/findutils/manual/html_node/find_html/index.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

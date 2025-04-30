@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  vmstat - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>vmstat command</h1>
+<p>Report virtual memory statistics, providing information about system processes, memory, paging, block I/O, traps, and CPU activity.</p>
+<h2>Overview</h2>
+<p><code>vmstat</code> (virtual memory statistics) displays information about system memory, processes, interrupts, paging, block I/O, and CPU utilization. It's particularly useful for monitoring system performance and identifying bottlenecks. The command can provide a snapshot of current system state or continuous monitoring with specified intervals.</p>
+<h2>Options</h2>
+<h3><strong>-a</strong></h3>
+<p>Display active and inactive memory statistics</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
+<span style="color: #000; font-style: italic"> r  b   swpd   free  inact active   si   so    bi    bo   in   cs us sy id wa st</span>
+<span style="color: #000; font-style: italic"> 1  0      0 1456892 1026300 1138752    0    0     0     1   88   79  1  0 99  0  0</span>
+</pre></div>
+<h3><strong>-s</strong></h3>
+<p>Display a table of various memory and swap statistics</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-s
+<span style="color: #000; font-style: italic">      4046848 K total memory</span>
+<span style="color: #000; font-style: italic">      1424804 K used memory</span>
+<span style="color: #000; font-style: italic">      1138752 K active memory</span>
+<span style="color: #000; font-style: italic">      1026300 K inactive memory</span>
+<span style="color: #000; font-style: italic">      1456892 K free memory</span>
+<span style="color: #000; font-style: italic">            0 K buffer memory</span>
+<span style="color: #000; font-style: italic">      1165152 K swap cache</span>
+<span style="color: #000; font-style: italic">      2097148 K total swap</span>
+<span style="color: #000; font-style: italic">            0 K used swap</span>
+<span style="color: #000; font-style: italic">      2097148 K free swap</span>
+<span style="color: #000; font-style: italic">        25128 non-nice user cpu ticks</span>
+<span style="color: #000; font-style: italic">          103 nice user cpu ticks</span>
+<span style="color: #000; font-style: italic">        10446 system cpu ticks</span>
+<span style="color: #000; font-style: italic">      3911130 idle cpu ticks</span>
+<span style="color: #000; font-style: italic">         1975 IO-wait cpu ticks</span>
+<span style="color: #000; font-style: italic">            0 IRQ cpu ticks</span>
+<span style="color: #000; font-style: italic">         1066 softirq cpu ticks</span>
+<span style="color: #000; font-style: italic">            0 stolen cpu ticks</span>
+<span style="color: #000; font-style: italic">       279889 pages paged in</span>
+<span style="color: #000; font-style: italic">       516874 pages paged out</span>
+<span style="color: #000; font-style: italic">            0 pages swapped in</span>
+<span style="color: #000; font-style: italic">            0 pages swapped out</span>
+<span style="color: #000; font-style: italic">      3519838 interrupts</span>
+<span style="color: #000; font-style: italic">      3341854 CPU context switches</span>
+<span style="color: #000; font-style: italic">   1619086394 boot time</span>
+<span style="color: #000; font-style: italic">        13058 forks</span>
+</pre></div>
+<h3><strong>-d</strong></h3>
+<p>Display disk statistics</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-d
+<span style="color: #000; font-style: italic">disk- ------------reads------------ ------------writes----------- -----IO------</span>
+<span style="color: #000; font-style: italic">       total merged sectors      ms  total merged sectors      ms    cur    sec</span>
+<span style="color: #000; font-style: italic">sda     5082      0  162624   12408   3853      0   30824   20224      0      8</span>
+<span style="color: #000; font-style: italic">sdb     2134      0   17072    3336    234      0    1872     468      0      0</span>
+</pre></div>
+<h3><strong>Interval and Count</strong></h3>
+<p>Monitor system at specified intervals (in seconds)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
+<span style="color: #000; font-style: italic"> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st</span>
+<span style="color: #000; font-style: italic"> 1  0      0 1456892      0 1165152    0    0     0     1   88   79  1  0 99  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 1456892      0 1165152    0    0     0     0   85   76  0  0 100  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 1456892      0 1165152    0    0     0     0   83   74  0  0 100  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 1456892      0 1165152    0    0     0     0   84   75  0  0 100  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 1456892      0 1165152    0    0     0     0   86   77  0  0 100  0  0</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic System Overview</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat
+<span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
+<span style="color: #000; font-style: italic"> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st</span>
+<span style="color: #000; font-style: italic"> 1  0      0 1456892      0 1165152    0    0     0     1   88   79  1  0 99  0  0</span>
+</pre></div>
+<h3>Continuous Monitoring During High Load</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
+<span style="color: #000; font-style: italic"> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st</span>
+<span style="color: #000; font-style: italic"> 2  0      0 1423456      0 1165152    0    0     0     1   88   79  1  0 99  0  0</span>
+<span style="color: #000; font-style: italic"> 3  1      0 1398276      0 1165152    0    0   128    64  156  142 15  5 75  5  0</span>
+<span style="color: #000; font-style: italic"> 1  2      0 1387544      0 1165152    0    0   256   128  178  165 25 10 55 10  0</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Understanding Output Columns</h3>
+<ul>
+<li><strong>procs</strong>: <code>r</code> shows runnable processes, <code>b</code> shows blocked processes</li>
+<li><strong>memory</strong>: <code>swpd</code> is virtual memory used, <code>free</code> is idle memory</li>
+<li><strong>swap</strong>: <code>si</code> is memory swapped in from disk, <code>so</code> is memory swapped to disk</li>
+<li><strong>io</strong>: <code>bi</code> is blocks received from a block device, <code>bo</code> is blocks sent to a block device</li>
+<li><strong>cpu</strong>: <code>us</code> is user time, <code>sy</code> is system time, <code>id</code> is idle time, <code>wa</code> is I/O wait time</li>
+</ul>
+<h3>First Line vs. Subsequent Lines</h3>
+<p>When using intervals, the first line of output shows averages since the last reboot, while subsequent lines show activity during the specified interval.</p>
+<h3>Identifying Performance Issues</h3>
+<ul>
+<li>High <code>wa</code> (wait) values indicate I/O bottlenecks</li>
+<li>High <code>r</code> values (&gt; number of CPUs) suggest CPU bottlenecks</li>
+<li>Consistent <code>si</code>/<code>so</code> activity indicates memory pressure</li>
+</ul>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What does the <code>r</code> column in vmstat output mean?</h4>
+<p>A. The <code>r</code> column shows the number of processes waiting for run time. If this number consistently exceeds the number of CPUs in your system, it indicates CPU contention.</p>
+<h4>Q2. How can I tell if my system is swapping too much?</h4>
+<p>A. Watch the <code>si</code> and <code>so</code> columns. Any non-zero values indicate swap activity. Consistent swap activity suggests your system needs more RAM.</p>
+<h4>Q3. What's the difference between <code>us</code>, <code>sy</code>, and <code>id</code> in CPU statistics?</h4>
+<p>A. <code>us</code> shows percentage of CPU time spent running user code, <code>sy</code> shows percentage spent in kernel code, and <code>id</code> shows percentage of time the CPU was idle.</p>
+<h4>Q4. How do I interpret the memory statistics?</h4>
+<p>A. <code>free</code> is unused memory, <code>buff</code> is memory used for buffers, and <code>cache</code> is memory used for caching. Low <code>free</code> memory isn't necessarily a problem if <code>cache</code> is high, as cached memory can be reclaimed when needed.</p>
+<h2>References</h2>
+<p>https://man7.org/linux/man-pages/man8/vmstat.8.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

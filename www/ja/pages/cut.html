@@ -46,65 +46,82 @@
   <div class="content">
     <main>
       
-  <h1>cut</h1>
-<p><code>cut</code>コマンドは、テキストファイルやパイプからの入力を行単位で処理し、指定した部分（列や文字）を抽出するためのコマンドです。</p>
+  <h1>cut コマンド</h1>
+<p>テキストファイルから特定の列や文字を抽出するためのコマンド。</p>
+<h2>概要</h2>
+<p><code>cut</code> コマンドは、テキストファイルやパイプからの入力から特定の部分（列や文字）を切り出すために使用します。区切り文字で分けられたフィールド（列）や文字位置を指定して必要な部分だけを抽出できるため、ログファイルの解析やCSVファイルの処理などに便利です。</p>
 <h2>オプション</h2>
-<h3><strong>-c, --characters=LIST</strong></h3>
-<p>指定した文字位置の文字を抽出します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, World!&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-5
-Hello
-</pre></div>
 <h3><strong>-f, --fields=LIST</strong></h3>
 <p>指定したフィールド（列）を抽出します。デフォルトの区切り文字はタブです。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;name:age:city&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d:<span style="color: #F8F8F8"> </span>-f2
-age
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;user1:password1:1000:John Doe&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>,4<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;:&quot;</span>
+<span style="color: #000; font-style: italic">user1:John Doe</span>
 </pre></div>
 <h3><strong>-d, --delimiter=DELIM</strong></h3>
 <p>フィールドの区切り文字を指定します。デフォルトはタブです。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;apple,orange,banana&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d,<span style="color: #F8F8F8"> </span>-f1,3
-apple,banana
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;apple,orange,banana&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;,&quot;</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
+<span style="color: #000; font-style: italic">orange</span>
+</pre></div>
+<h3><strong>-c, --characters=LIST</strong></h3>
+<p>指定した文字位置の文字を抽出します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, World!&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-5
+<span style="color: #000; font-style: italic">Hello</span>
 </pre></div>
 <h3><strong>--complement</strong></h3>
-<p>指定した部分を除外し、それ以外の部分を表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;apple,orange,banana&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d,<span style="color: #F8F8F8"> </span>-f2<span style="color: #F8F8F8"> </span>--complement
-apple,banana
+<p>指定したフィールドや文字以外の部分を抽出します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;user1:password1:1000:John Doe&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;:&quot;</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>--complement
+<span style="color: #000; font-style: italic">user1:1000:John Doe</span>
 </pre></div>
 <h2>使用例</h2>
 <h3>CSVファイルから特定の列を抽出する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>cat<span style="color: #F8F8F8"> </span>data.csv
-name,age,city
-John,25,Tokyo
-Mary,30,Osaka
-$<span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d,<span style="color: #F8F8F8"> </span>-f1,3<span style="color: #F8F8F8"> </span>data.csv
-name,city
-John,Tokyo
-Mary,Osaka
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.csv
+<span style="color: #000; font-style: italic">名前,年齢,職業</span>
+<span style="color: #000; font-style: italic">田中,25,エンジニア</span>
+<span style="color: #000; font-style: italic">佐藤,30,デザイナー</span>
+<span style="color: #000; font-style: italic">鈴木,28,マーケター</span>
+
+<span style="color: #8F5902">$ </span>cut<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;,&quot;</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>,3<span style="color: #F8F8F8"> </span>data.csv
+<span style="color: #000; font-style: italic">名前,職業</span>
+<span style="color: #000; font-style: italic">田中,エンジニア</span>
+<span style="color: #000; font-style: italic">佐藤,デザイナー</span>
+<span style="color: #000; font-style: italic">鈴木,マーケター</span>
+</pre></div>
+<h3>ログファイルから特定の情報を抽出する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>access.log
+<span style="color: #000; font-style: italic">192.168.1.1 - - [30/Apr/2025:10:00:15 +0900] &quot;GET /index.html HTTP/1.1&quot; 200 2326</span>
+<span style="color: #000; font-style: italic">192.168.1.2 - - [30/Apr/2025:10:01:20 +0900] &quot;POST /login HTTP/1.1&quot; 302 0</span>
+<span style="color: #000; font-style: italic">192.168.1.3 - - [30/Apr/2025:10:02:35 +0900] &quot;GET /dashboard HTTP/1.1&quot; 200 5432</span>
+
+<span style="color: #8F5902">$ </span>cut<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot; &quot;</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>,7<span style="color: #F8F8F8"> </span>access.log
+<span style="color: #000; font-style: italic">192.168.1.1 /index.html</span>
+<span style="color: #000; font-style: italic">192.168.1.2 /login</span>
+<span style="color: #000; font-style: italic">192.168.1.3 /dashboard</span>
 </pre></div>
 <h3>文字列の一部を抽出する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;abcdefghijklmnopqrstuvwxyz&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-5,20-22
-abcdet
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2025-04-30&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-4
+<span style="color: #000; font-style: italic">2025</span>
 </pre></div>
-<h3>区切り文字を指定して複数フィールドを抽出する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>cat<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-1<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d:<span style="color: #F8F8F8"> </span>-f1,6,7
-root:/var/root:/bin/sh
-</pre></div>
+<h2>ヒント:</h2>
+<h3>複数のフィールドを指定する方法</h3>
+<p>フィールドは単一の数字（例：<code>-f 1</code>）、範囲（例：<code>-f 1-3</code>）、またはカンマ区切りのリスト（例：<code>-f 1,3,5</code>）で指定できます。これらを組み合わせることも可能です（例：<code>-f 1-3,5,7-9</code>）。</p>
+<h3>区切り文字が連続する場合の注意点</h3>
+<p>デフォルトでは、連続する区切り文字は別々のフィールドとして扱われます。<code>-s</code>オプションを使用すると、連続する区切り文字を1つとして扱います。</p>
+<h3>パイプラインでの活用</h3>
+<p><code>cut</code>は他のコマンドと組み合わせて使うと非常に強力です。例えば、<code>grep</code>で特定の行を抽出した後に<code>cut</code>で必要な列だけを取り出すといった使い方ができます。</p>
 <h2>よくある質問</h2>
-<h3>Q1. cutコマンドで複数の列を指定するにはどうすればいいですか？</h3>
-<p>A. <code>-f</code>オプションでカンマ区切りで列番号を指定します。例：<code>cut -f1,3,5</code>。範囲指定も可能です：<code>cut -f1-3</code></p>
-<h3>Q2. 区切り文字がスペースの場合はどうすればいいですか？</h3>
-<p>A. <code>-d ' '</code>と指定します。ただし、連続したスペースは個別の区切り文字として扱われるため、<code>awk</code>コマンドの方が適している場合があります。</p>
-<h3>Q3. 特定の列を除外するにはどうすればいいですか？</h3>
-<p>A. <code>--complement</code>オプションを使用します。例えば<code>cut -f2 --complement</code>とすると、2列目以外のすべての列が表示されます。</p>
-<h3>Q4. 文字位置の範囲指定はどのように行いますか？</h3>
-<p>A. <code>-c</code>オプションで、例えば<code>cut -c 1-5</code>（1文字目から5文字目）、<code>cut -c -3</code>（先頭から3文字目まで）、<code>cut -c 5-</code>（5文字目から最後まで）のように指定できます。</p>
-<h2>追加情報</h2>
-<ul>
-<li><code>cut</code>は単純な列抽出には便利ですが、より複雑な処理が必要な場合は<code>awk</code>や<code>sed</code>の使用を検討してください。</li>
-<li>区切り文字が複数文字の場合、<code>cut</code>では処理できないため、<code>awk</code>などの他のコマンドを使用する必要があります。</li>
-<li>macOSのBSD版<code>cut</code>コマンドはGNU版と若干動作が異なる場合があります。特に<code>--complement</code>オプションがない場合があるため注意が必要です。</li>
-</ul>
-<h2>参考情報</h2>
+<h4>Q1. <code>cut</code>と<code>awk</code>の違いは何ですか？</h4>
+<p>A. <code>cut</code>はシンプルな列や文字の抽出に特化していますが、<code>awk</code>はより複雑なテキスト処理（計算や条件分岐など）ができます。単純な列抽出なら<code>cut</code>の方が簡潔に書けます。</p>
+<h4>Q2. 区切り文字に複数の文字を指定できますか？</h4>
+<p>A. いいえ、<code>cut</code>では区切り文字は1文字のみ指定できます。複数文字の区切りが必要な場合は、<code>awk</code>や<code>sed</code>などの他のコマンドを使用してください。</p>
+<h4>Q3. 出力の区切り文字を変更することはできますか？</h4>
+<p>A. いいえ、<code>cut</code>では出力の区切り文字を変更することはできません。入力と同じ区切り文字が使用されます。出力形式を変更したい場合は、<code>awk</code>などの他のコマンドを使用してください。</p>
+<h4>Q4. 特定の列を除外する方法はありますか？</h4>
+<p>A. <code>--complement</code>オプションを使用すると、指定した列以外のすべての列を表示できます。</p>
+<h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/cut-invocation.html</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
+</ul>
 
 
     </main>

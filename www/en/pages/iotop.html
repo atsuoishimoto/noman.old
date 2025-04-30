@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  iotop - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>iotop command</h1>
+<p>Monitor and display real-time I/O usage by processes.</p>
+<h2>Overview</h2>
+<p><code>iotop</code> is a top-like utility that shows I/O usage information for processes. It helps identify which processes are causing disk I/O load, making it useful for diagnosing system slowdowns related to disk activity. The command requires root privileges to access the necessary kernel information.</p>
+<h2>Options</h2>
+<h3><strong>-o, --only</strong></h3>
+<p>Show only processes or threads that are actually doing I/O</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>iotop<span style="color: #F8F8F8"> </span>-o
+<span style="color: #000; font-style: italic">Total DISK READ:         0.00 B/s | Total DISK WRITE:         7.81 K/s</span>
+<span style="color: #000; font-style: italic">Current DISK READ:       0.00 B/s | Current DISK WRITE:       0.00 B/s</span>
+<span style="color: #000; font-style: italic">    PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND</span>
+<span style="color: #000; font-style: italic">   1234  be/4  root        0.00 B      7.81 K  0.00 %  0.12 %  rsyslogd</span>
+<span style="color: #000; font-style: italic">   5678  be/4  mysql       0.00 B     15.62 K  0.00 %  0.05 %  mysqld</span>
+</pre></div>
+<h3><strong>-b, --batch</strong></h3>
+<p>Run in non-interactive mode, useful for logging</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>iotop<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #000; font-style: italic">Total DISK READ:       0.00 B/s | Total DISK WRITE:       7.81 K/s</span>
+<span style="color: #000; font-style: italic">Current DISK READ:     0.00 B/s | Current DISK WRITE:     0.00 B/s</span>
+<span style="color: #000; font-style: italic">    PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND</span>
+<span style="color: #000; font-style: italic">   1234  be/4  root        0.00 B      7.81 K  0.00 %  0.12 %  rsyslogd</span>
+<span style="color: #000; font-style: italic">[...]</span>
+</pre></div>
+<h3><strong>-n, --iter=NUM</strong></h3>
+<p>Exit after NUM iterations (when used with batch mode)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>iotop<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
+<span style="color: #000; font-style: italic">Total DISK READ:       0.00 B/s | Total DISK WRITE:       7.81 K/s</span>
+<span style="color: #000; font-style: italic">[...]</span>
+<span style="color: #000; font-style: italic">Total DISK READ:       0.00 B/s | Total DISK WRITE:       8.12 K/s</span>
+<span style="color: #000; font-style: italic">[...]</span>
+</pre></div>
+<h3><strong>-P, --processes</strong></h3>
+<p>Show only processes (not threads)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>iotop<span style="color: #F8F8F8"> </span>-P
+<span style="color: #000; font-style: italic">Total DISK READ:       0.00 B/s | Total DISK WRITE:       7.81 K/s</span>
+<span style="color: #000; font-style: italic">Current DISK READ:     0.00 B/s | Current DISK WRITE:     0.00 B/s</span>
+<span style="color: #000; font-style: italic">    PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND</span>
+<span style="color: #000; font-style: italic">   1234  be/4  root        0.00 B      7.81 K  0.00 %  0.12 %  rsyslogd</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Monitoring I/O with automatic updates</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>iotop
+<span style="color: #000; font-style: italic">Total DISK READ:       0.00 B/s | Total DISK WRITE:       7.81 K/s</span>
+<span style="color: #000; font-style: italic">Current DISK READ:     0.00 B/s | Current DISK WRITE:     0.00 B/s</span>
+<span style="color: #000; font-style: italic">    PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND</span>
+<span style="color: #000; font-style: italic">   1234  be/4  root        0.00 B      7.81 K  0.00 %  0.12 %  rsyslogd</span>
+<span style="color: #000; font-style: italic">   5678  be/4  mysql       0.00 B     15.62 K  0.00 %  0.05 %  mysqld</span>
+<span style="color: #000; font-style: italic">   9012  be/4  www-data    0.00 B      3.91 K  0.00 %  0.02 %  apache2</span>
+</pre></div>
+<h3>Logging I/O activity to a file</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>iotop<span style="color: #F8F8F8"> </span>-botq<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>disk_activity.log
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>disk_activity.log
+<span style="color: #000; font-style: italic">   1234  be/4  root        0.00 B      7.81 K  0.00 %  0.12 %  rsyslogd</span>
+<span style="color: #000; font-style: italic">   5678  be/4  mysql       0.00 B     15.62 K  0.00 %  0.05 %  mysqld</span>
+<span style="color: #000; font-style: italic">[...]</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Interactive Commands</h3>
+<p>While iotop is running in interactive mode, you can use these keys:</p>
+<ul>
+<li><code>o</code>: Toggle the --only option to show only active I/O processes</li>
+<li><code>p</code>: Toggle the --processes option to show only processes (not threads)</li>
+<li><code>a</code>: Toggle accumulated I/O instead of bandwidth</li>
+<li><code>q</code>: Quit the program</li>
+</ul>
+<h3>Focus on Accumulated I/O</h3>
+<p>Press 'a' in interactive mode to see the total I/O done by each process since iotop started, which helps identify processes that do sporadic I/O.</p>
+<h3>Combine with Other Tools</h3>
+<p>Use <code>iotop -b -n 5 | grep mysql</code> to monitor specific processes or services.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. Why do I get &quot;iotop: permission denied&quot; error?</h4>
+<p>A. <code>iotop</code> requires root privileges. Run it with <code>sudo iotop</code> or as the root user.</p>
+<h4>Q2. How can I see only processes that are actively using I/O?</h4>
+<p>A. Use <code>iotop -o</code> or press 'o' in interactive mode to toggle showing only active I/O processes.</p>
+<h4>Q3. How do I save iotop output to a file?</h4>
+<p>A. Use batch mode: <code>sudo iotop -b -n 10 &gt; output.log</code> to capture 10 iterations to a file.</p>
+<h4>Q4. What do the SWAPIN and IO columns mean?</h4>
+<p>A. SWAPIN shows the percentage of time the process spent swapping in, while IO shows the percentage of time the process spent waiting on I/O.</p>
+<h2>References</h2>
+<p>https://linux.die.net/man/1/iotop</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

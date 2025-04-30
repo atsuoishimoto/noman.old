@@ -1,57 +1,134 @@
-# gunzipコマンド概要
+# gunzip コマンド
 
-`gunzip`は圧縮ファイル（通常は`.gz`拡張子を持つファイル）を解凍するためのUNIXコマンドです。主にgzipで圧縮されたファイルを元に戻すために使用されます。
+圧縮ファイルを展開するコマンドです。
 
-## 主なオプション
+## 概要
 
-- **-c, --stdout**: 解凍したデータを標準出力に出力します。元の圧縮ファイルは削除されません。
-  - 例: `gunzip -c file.gz > file`
+`gunzip`は、gzipで圧縮されたファイルを元の状態に戻すコマンドです。デフォルトでは、元のファイルを展開した後に圧縮ファイルを削除します。主に`.gz`拡張子を持つファイルの展開に使用されます。
 
-- **-f, --force**: 強制的に解凍を実行します。既に同名のファイルが存在する場合でも上書きします。
-  - 例: `gunzip -f already_exists.gz`
+## オプション
 
-- **-k, --keep**: 解凍後も元の圧縮ファイルを保持します（通常は解凍後に削除されます）。
-  - 例: `gunzip -k important_archive.gz`
+### **-c, --stdout, --to-stdout**
 
-- **-l, --list**: 圧縮ファイルの内容を表示します（解凍せずに情報のみ表示）。
-  - 例: `gunzip -l files.gz`
+展開したデータを標準出力に出力し、元の圧縮ファイルを保持します。
 
-- **-r, --recursive**: ディレクトリを再帰的に処理し、見つかった全ての`.gz`ファイルを解凍します。
-  - 例: `gunzip -r directory/`
+```console
+$ gunzip -c archive.gz > extracted_file
+# 圧縮ファイルを保持したまま内容を展開して別ファイルに保存
+```
 
-- **-t, --test**: 圧縮ファイルの整合性をテストします（実際に解凍は行いません）。
-  - 例: `gunzip -t suspicious.gz`
+### **-f, --force**
+
+強制的に展開を行います。既に同名のファイルが存在する場合でも上書きします。
+
+```console
+$ gunzip -f already_exists.gz
+# 同名ファイルが存在しても強制的に展開
+```
+
+### **-k, --keep**
+
+展開後も元の圧縮ファイルを保持します。
+
+```console
+$ gunzip -k archive.gz
+# archive.gzを展開し、展開後もarchive.gzを残す
+```
+
+### **-l, --list**
+
+圧縮ファイル内の情報を表示します。ファイルを展開せずに内容の情報を確認できます。
+
+```console
+$ gunzip -l archive.gz
+         compressed        uncompressed  ratio uncompressed_name
+                547                1536  64.4% archive
+```
+
+### **-r, --recursive**
+
+ディレクトリを再帰的に処理し、すべてのサブディレクトリ内の圧縮ファイルも展開します。
+
+```console
+$ gunzip -r directory/
+# directory内のすべての.gzファイルを再帰的に展開
+```
 
 ## 使用例
 
-```bash
-# 基本的な使い方：ファイルの解凍
-gunzip file.gz
-# 結果：file.gzが解凍されてfileというファイルが作成され、元のfile.gzは削除される
+### 基本的な使い方
 
-# 複数ファイルの解凍
-gunzip file1.gz file2.gz file3.gz
-# 結果：指定した全てのファイルが解凍される
-
-# 元のファイルを保持したまま解凍
-gunzip -k important.gz
-# 結果：important.gzが解凍されてimportantというファイルが作成され、important.gzも保持される
-
-# 圧縮ファイルの内容を確認
-gunzip -l large_archive.gz
-# 出力例：
-#         compressed        uncompressed  ratio uncompressed_name
-#                1024               4096  75.0% large_archive
-
-# 標準出力への解凍（パイプラインで他のコマンドに渡す場合に便利）
-gunzip -c data.gz | grep "keyword"
-# 結果：data.gzを解凍した内容から"keyword"を含む行が表示される
+```console
+$ gunzip archive.gz
+# archive.gzを展開してarchiveファイルを作成し、archive.gzは削除される
 ```
 
-## 追加情報
+### 複数ファイルの展開
 
-- `gunzip`は実際には`gzip -d`と同等です。`gzip`コマンドの解凍モードとして機能します。
-- ファイル名に`.gz`拡張子がない場合でも、`gunzip`は自動的に`.gz`を追加して探そうとします。
-- 複数のファイルを一度に解凍する場合、一部のファイルでエラーが発生しても処理は続行されます。
-- `.tar.gz`や`.tgz`ファイル（tarボールと呼ばれる）は、`tar -xzf file.tar.gz`コマンドで一度に解凍・展開できます。
-- 大きなファイルを解凍する場合、十分なディスク容量があることを事前に確認しておくことをお勧めします。
+```console
+$ gunzip file1.gz file2.gz file3.gz
+# 複数のファイルを一度に展開
+```
+
+### 圧縮ファイルを保持したまま展開
+
+```console
+$ gunzip -k large_file.gz
+# large_file.gzを展開し、large_fileを作成。large_file.gzも保持される
+```
+
+### 標準出力への展開
+
+```console
+$ gunzip -c config.gz | grep "setting"
+# config.gzを展開して標準出力に送り、grepでフィルタリング
+```
+
+## ヒント:
+
+### 拡張子の自動処理
+
+`gunzip`は自動的に`.gz`拡張子を削除します。例えば、`file.txt.gz`は展開すると`file.txt`になります。
+
+### 複数の圧縮形式への対応
+
+多くのシステムでは、`gunzip`は`gzip -d`と同等です。また、`zcat`は`gunzip -c`と同等の機能を持ちます。
+
+### パイプラインでの使用
+
+`gunzip -c`を使うと、圧縮ファイルを展開してその内容を他のコマンドに渡すことができます。これはログファイルの分析などに便利です。
+
+### 大きなファイルの処理
+
+非常に大きなファイルを展開する場合は、十分なディスク容量があることを確認してください。圧縮ファイルは展開すると元のサイズに戻ります。
+
+## よくある質問
+
+#### Q1. `gunzip`と`gzip -d`の違いは何ですか？
+A. 機能的には同じです。`gunzip`は`gzip -d`のエイリアスとして実装されていることが多いです。
+
+#### Q2. 展開したファイルと圧縮ファイルの両方を保持するにはどうすればいいですか？
+A. `gunzip -k`（または`--keep`）オプションを使用すると、展開後も元の圧縮ファイルが保持されます。
+
+#### Q3. 圧縮ファイルの内容を確認するだけで展開したくない場合はどうすればいいですか？
+A. `gunzip -l`（または`--list`）オプションを使用すると、ファイルを展開せずに圧縮ファイルの情報を表示できます。
+
+#### Q4. 標準入力から圧縮データを受け取って展開するにはどうすればいいですか？
+A. `gunzip`に引数を指定せずに使用すると、標準入力からデータを読み取り、展開します。例：`cat file.gz | gunzip > extracted_file`
+
+## macOSでの注意点
+
+macOSの`gunzip`はGNU版と若干の違いがあります。特に`-r`（再帰）オプションがない場合があります。代わりに`find`コマンドと組み合わせて使用することができます：
+
+```console
+$ find . -name "*.gz" -exec gunzip {} \;
+# カレントディレクトリ以下のすべての.gzファイルを再帰的に展開
+```
+
+## 参照
+
+https://www.gnu.org/software/gzip/manual/gzip.html
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

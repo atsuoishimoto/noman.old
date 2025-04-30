@@ -46,78 +46,79 @@
   <div class="content">
     <main>
       
-  <h1><code>tail</code> コマンド概要</h1>
-<p><code>tail</code>コマンドはファイルの末尾部分を表示するためのコマンドです。デフォルトでは、ファイルの最後の10行を表示します。ログファイルの監視や最新の変更を確認する際に特に便利です。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-n, --lines=N</strong>: 表示する行数を指定します（デフォルトは10行）</p>
-<ul>
-<li>例: <code>tail -n 5 file.txt</code> （最後の5行を表示）</li>
-</ul>
-</li>
-<li><p><strong>-f, --follow</strong>: ファイルの更新をリアルタイムで監視し、新しく追加された行を表示し続けます</p>
-<ul>
-<li>例: <code>tail -f log.txt</code> （ログファイルの更新をリアルタイムで監視）</li>
-</ul>
-</li>
-<li><p><strong>-c, --bytes=N</strong>: 最後のN文字（バイト）を表示します</p>
-<ul>
-<li>例: <code>tail -c 20 file.txt</code> （最後の20バイトを表示）</li>
-</ul>
-</li>
-<li><p><strong>+N</strong>: ファイルのN行目から最後までを表示します</p>
-<ul>
-<li>例: <code>tail +100 file.txt</code> （100行目から最後まで表示）</li>
-</ul>
-</li>
-</ul>
-<h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ファイルの最後の10行を表示（デフォルト）</span>
-tail<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-This<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">91</span>
-This<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">92</span>
-This<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">93</span>
-This<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">94</span>
-This<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">95</span>
-This<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">96</span>
-This<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">97</span>
-This<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">98</span>
-This<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">99</span>
-This<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span>
-
-<span style="color: #8F5902; font-style: italic"># 最後の3行だけを表示</span>
-tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-This<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">98</span>
-This<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">99</span>
-This<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span>
-
-<span style="color: #8F5902; font-style: italic"># 複数のファイルの末尾を表示</span>
-tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #CE5C00; font-weight: bold">==</span>&gt;<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #CE5C00; font-weight: bold">==</span>
-Last<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span>of<span style="color: #F8F8F8"> </span>file1
-End<span style="color: #F8F8F8"> </span>of<span style="color: #F8F8F8"> </span><span style="color: #000">file1</span>
-
-<span style="color: #CE5C00; font-weight: bold">==</span>&gt;<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #CE5C00; font-weight: bold">==</span>
-Last<span style="color: #F8F8F8"> </span>line<span style="color: #F8F8F8"> </span>of<span style="color: #F8F8F8"> </span>file2
-End<span style="color: #F8F8F8"> </span>of<span style="color: #F8F8F8"> </span>file2
-
-<span style="color: #8F5902; font-style: italic"># ログファイルをリアルタイムで監視</span>
-tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/syslog
-<span style="color: #8F5902; font-style: italic"># 出力例（新しいログが追加されるたびに表示が更新される）</span>
-Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span>:23:01<span style="color: #F8F8F8"> </span>server<span style="color: #F8F8F8"> </span>systemd<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">]</span>:<span style="color: #F8F8F8"> </span>Starting<span style="color: #F8F8F8"> </span>Daily<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>upgrade<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span>clean<span style="color: #F8F8F8"> </span>activities...
-Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span>:23:01<span style="color: #F8F8F8"> </span>server<span style="color: #F8F8F8"> </span>systemd<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">]</span>:<span style="color: #F8F8F8"> </span>apt-daily-upgrade.service:<span style="color: #F8F8F8"> </span>Succeeded.
-Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span>:23:01<span style="color: #F8F8F8"> </span>server<span style="color: #F8F8F8"> </span>systemd<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">]</span>:<span style="color: #F8F8F8"> </span>Finished<span style="color: #F8F8F8"> </span>Daily<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>upgrade<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span>clean<span style="color: #F8F8F8"> </span>activities.
-...（新しいログが追加されると自動的に表示される）
+  <h1>tail コマンド</h1>
+<p>ファイルの末尾部分を表示します。</p>
+<h2>概要</h2>
+<p><code>tail</code> コマンドはファイルの末尾（最後の部分）を表示するためのコマンドです。デフォルトでは、ファイルの最後の10行を表示します。ログファイルの最新エントリの確認や、ファイルの更新をリアルタイムで監視する場合に特に便利です。</p>
+<h2>オプション</h2>
+<h3><strong>-n, --lines=N</strong></h3>
+<p>表示する行数を指定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>/var/log/syslog
+<span style="color: #000; font-style: italic">Apr 30 10:15:22 hostname service[1234]: 処理を完了しました</span>
+<span style="color: #000; font-style: italic">Apr 30 10:15:30 hostname service[1234]: 新しいリクエストを受信しました</span>
+<span style="color: #000; font-style: italic">Apr 30 10:15:35 hostname service[1234]: 処理を開始します</span>
+<span style="color: #000; font-style: italic">Apr 30 10:15:40 hostname service[1234]: データを処理中です</span>
+<span style="color: #000; font-style: italic">Apr 30 10:15:45 hostname service[1234]: 処理が完了しました</span>
 </pre></div>
-<h2>追加情報</h2>
+<h3><strong>-f, --follow</strong></h3>
+<p>ファイルの末尾を継続的に監視し、新しく追加された行をリアルタイムで表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/apache2/access.log
+<span style="color: #000; font-style: italic">192.168.1.100 - - [30/Apr/2025:10:20:15 +0900] &quot;GET /index.html HTTP/1.1&quot; 200 2326</span>
+<span style="color: #000; font-style: italic">192.168.1.101 - - [30/Apr/2025:10:20:18 +0900] &quot;GET /images/logo.png HTTP/1.1&quot; 200 4532</span>
+<span style="color: #000; font-style: italic">192.168.1.102 - - [30/Apr/2025:10:20:20 +0900] &quot;POST /login HTTP/1.1&quot; 302 0</span>
+</pre></div>
+<h3><strong>-c, --bytes=N</strong></h3>
+<p>最後のN バイトを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>example.txt
+<span style="color: #000; font-style: italic">の最後の20バイトです</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>複数ファイルの末尾を表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">==&gt; file1.txt &lt;==</span>
+<span style="color: #000; font-style: italic">file1の最後から2行目</span>
+<span style="color: #000; font-style: italic">file1の最後の行</span>
+
+<span style="color: #000; font-style: italic">==&gt; file2.txt &lt;==</span>
+<span style="color: #000; font-style: italic">file2の最後から2行目</span>
+<span style="color: #000; font-style: italic">file2の最後の行</span>
+</pre></div>
+<h3>バイト数指定で表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">50</span><span style="color: #F8F8F8"> </span>large_file.txt
+<span style="color: #000; font-style: italic">...ファイルの最後の50バイト分のテキストが表示される...</span>
+</pre></div>
+<h3>ファイルの更新を監視</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span>/var/log/syslog
+<span style="color: #8F5902"># </span>新しく追加される行だけをリアルタイムで表示する
+</pre></div>
+<h2>ヒント:</h2>
+<h3>ログ監視の効率化</h3>
+<p><code>tail -f</code> と <code>grep</code> を組み合わせることで、特定のパターンを含む新しいログエントリだけを監視できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/syslog<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>ERROR
+</pre></div>
+<h3>複数ファイルの監視</h3>
+<p><code>tail -f</code> で複数のファイルを同時に監視できます。各ファイルからの出力には、そのファイル名のヘッダーが付きます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/syslog<span style="color: #F8F8F8"> </span>/var/log/auth.log
+</pre></div>
+<h3>行数の代わりにプラス記号を使用</h3>
+<p><code>tail +N</code> を使うと、N行目から最後までを表示できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>+100<span style="color: #F8F8F8"> </span>large_file.txt
+<span style="color: #8F5902"># </span>100行目から最後までを表示する
+</pre></div>
+<h2>よくある質問</h2>
+<h4>Q1. <code>tail</code> と <code>head</code> の違いは何ですか？</h4>
+<p>A. <code>tail</code> はファイルの末尾（最後の部分）を表示するのに対し、<code>head</code> はファイルの先頭（最初の部分）を表示します。</p>
+<h4>Q2. <code>tail -f</code> を終了するにはどうすればいいですか？</h4>
+<p>A. <code>Ctrl+C</code> キーを押すことで、<code>tail -f</code> の実行を終了できます。</p>
+<h4>Q3. 特定の行から最後までを表示するにはどうすればいいですか？</h4>
+<p>A. <code>tail -n +N</code> を使用します。例えば、<code>tail -n +100</code> は100行目から最後までを表示します。</p>
+<h4>Q4. <code>tail -f</code> でファイルが削除されたり名前が変更されたりした場合はどうなりますか？</h4>
+<p>A. デフォルトでは監視を続けますが、<code>--follow=name</code> オプションを使うと、ファイル名に基づいて追跡するため、ログローテーションなどで名前が変わった場合に新しいファイルを追跡できます。</p>
+<h2>参考情報</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/tail-invocation.html</p>
+<h2>Revisions</h2>
 <ul>
-<li><code>tail -f</code>はサーバーのログ監視に非常に便利です。Ctrl+Cで監視を終了できます。</li>
-<li><code>tail -f</code>と<code>grep</code>を組み合わせると、特定のパターンを含む新しい行だけを監視できます：<code>tail -f log.txt | grep &quot;error&quot;</code></li>
-<li>複数のファイルを同時に監視するには：<code>tail -f file1.txt file2.txt</code></li>
-<li>最新のログを確認するために、システム管理者が最もよく使うコマンドの一つです。</li>
+<li>2025/04/30 First revision</li>
 </ul>
 
 

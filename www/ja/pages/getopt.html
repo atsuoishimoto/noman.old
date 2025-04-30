@@ -46,99 +46,95 @@
   <div class="content">
     <main>
       
-  <h1>getopt</h1>
-<p><code>getopt</code>は、コマンドラインオプションを解析するためのユーティリティです。シェルスクリプト内でコマンドライン引数を標準化された方法で処理するのに役立ちます。</p>
+  <h1>getopt コマンド</h1>
+<p>コマンドラインオプションを解析し、シェルスクリプト内でのオプション処理を簡素化します。</p>
+<h2>概要</h2>
+<p><code>getopt</code> はシェルスクリプト内でコマンドラインオプションを解析するためのユーティリティです。短いオプション（-a など）と長いオプション（--option など）の両方を処理でき、オプション引数の有無も管理できます。これにより、スクリプト内でのユーザー入力の処理が標準化され、堅牢なスクリプトを作成できます。</p>
 <h2>オプション</h2>
 <h3><strong>-o, --options</strong></h3>
-<p>短いオプション（一文字）を指定します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>getopt<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2
-<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;file1&#39;</span><span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;file2&#39;</span>
+<p>短いオプション（1文字）を指定します。コロン（:）を付けると、そのオプションは引数を必要とします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>value<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-c
+<span style="color: #000; font-style: italic"> -a &#39;value&#39; -b -c --</span>
 </pre></div>
 <h3><strong>-l, --longoptions</strong></h3>
-<p>長いオプション（単語）を指定します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>getopt<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>alpha:,beta,gamma<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2
-<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;file1&#39;</span><span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;file2&#39;</span>
+<p>長いオプション名を指定します。コンマで区切り、コロン（:）を付けると引数を必要とします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>alpha:,beta,gamma<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>--alpha<span style="color: #CE5C00; font-weight: bold">=</span>value<span style="color: #F8F8F8"> </span>--beta
+<span style="color: #000; font-style: italic"> -a &#39;value&#39; --beta --</span>
 </pre></div>
 <h3><strong>-n, --name</strong></h3>
 <p>エラーメッセージに表示するプログラム名を指定します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>getopt<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>myscript<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2
-<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;file1&#39;</span><span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;file2&#39;</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;myscript&quot;</span><span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">getopt: option requires an argument -- &#39;a&#39;</span>
 </pre></div>
 <h3><strong>-q, --quiet</strong></h3>
-<p>エラーメッセージを抑制します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>getopt<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-x<span style="color: #F8F8F8"> </span>file1
-<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;-x&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;file1&#39;</span>
-</pre></div>
-<h3><strong>-u, --unquoted</strong></h3>
-<p>出力を引用符で囲まないようにします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>getopt<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>file1
-<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>--
+<p>エラーメッセージを表示しません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-d
+<span style="color: #000; font-style: italic"> -- -d</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的なシェルスクリプトでの使用例</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic">#!/bin/bash</span>
-<span style="color: #8F5902; font-style: italic"># オプションを解析</span>
-<span style="color: #000">OPTS</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>getopt<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>ab:c<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>alpha,beta:,gamma<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$@</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
-<span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$OPTS</span><span style="color: #4E9A06">&quot;</span>
+<h3>基本的なシェルスクリプトでの使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>example.sh
+<span style="color: #8F5902">#</span>!/bin/bash
+<span style="color: #8F5902"># </span>オプションを解析
+<span style="color: #000; font-style: italic">OPTS=$(getopt -o a:bc -l alpha:,beta,gamma -n &quot;$(basename $0)&quot; -- &quot;$@&quot;)</span>
+<span style="color: #000; font-style: italic">if [ $? -ne 0 ]; then</span>
+<span style="color: #000; font-style: italic">    exit 1</span>
+<span style="color: #000; font-style: italic">fi</span>
+<span style="color: #000; font-style: italic">eval set -- &quot;$OPTS&quot;</span>
 
-<span style="color: #8F5902; font-style: italic"># オプションを処理</span>
-<span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
-<span style="color: #F8F8F8">  </span><span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$1</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
-<span style="color: #F8F8F8">    </span>-a<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>--alpha<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #000">ALPHA</span><span style="color: #CE5C00; font-weight: bold">=</span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">shift</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">    </span>-b<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>--beta<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #000">BETA</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$2</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">shift</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">    </span>-c<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>--gamma<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #000">GAMMA</span><span style="color: #CE5C00; font-weight: bold">=</span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">shift</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">    </span>--<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>shift<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">break</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">    </span>*<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;不明なオプション: </span><span style="color: #000">$1</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">exit</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">  </span><span style="color: #204A87; font-weight: bold">esac</span>
-<span style="color: #204A87; font-weight: bold">done</span>
+<span style="color: #8F5902"># </span>オプションを処理
+<span style="color: #000; font-style: italic">while true; do</span>
+<span style="color: #000; font-style: italic">    case &quot;$1&quot; in</span>
+<span style="color: #000; font-style: italic">        -a|--alpha) echo &quot;Alpha option with value: $2&quot;; shift 2 ;;</span>
+<span style="color: #000; font-style: italic">        -b|--beta) echo &quot;Beta option enabled&quot;; shift ;;</span>
+<span style="color: #000; font-style: italic">        -c|--gamma) echo &quot;Gamma option enabled&quot;; shift ;;</span>
+<span style="color: #000; font-style: italic">        --) shift; break ;;</span>
+<span style="color: #000; font-style: italic">        *) echo &quot;Internal error!&quot;; exit 1 ;;</span>
+<span style="color: #000; font-style: italic">    esac</span>
+<span style="color: #000; font-style: italic">done</span>
 
-<span style="color: #8F5902; font-style: italic"># 残りの引数を処理</span>
-<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ALPHA=</span><span style="color: #000">$ALPHA</span><span style="color: #4E9A06">&quot;</span>
-<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;BETA=</span><span style="color: #000">$BETA</span><span style="color: #4E9A06">&quot;</span>
-<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;GAMMA=</span><span style="color: #000">$GAMMA</span><span style="color: #4E9A06">&quot;</span>
-<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;残りの引数: </span><span style="color: #000">$@</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #8F5902"># </span>残りの引数を処理
+<span style="color: #000; font-style: italic">echo &quot;Remaining arguments: $@&quot;</span>
+
+<span style="color: #8F5902">$ </span>./example.sh<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hello world&quot;</span><span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2
+<span style="color: #000; font-style: italic">Alpha option with value: hello world</span>
+<span style="color: #000; font-style: italic">Beta option enabled</span>
+<span style="color: #000; font-style: italic">Remaining arguments: file1 file2</span>
 </pre></div>
-<h3>複雑なオプション処理の例</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic">#!/bin/bash</span>
-<span style="color: #8F5902; font-style: italic"># 値を必要とするオプションと値を必要としないオプションを混在させる</span>
-<span style="color: #000">OPTS</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>getopt<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc::d<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>alpha:,beta,charlie::,delta<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$@</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
-<span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$OPTS</span><span style="color: #4E9A06">&quot;</span>
-
-<span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
-<span style="color: #F8F8F8">  </span><span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$1</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
-<span style="color: #F8F8F8">    </span>-a<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>--alpha<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;alphaオプション: </span><span style="color: #000">$2</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">shift</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">    </span>-b<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>--beta<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;betaオプションが指定されました&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">shift</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">    </span>-c<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>--charlie<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>
-<span style="color: #F8F8F8">      </span><span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$2</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
-<span style="color: #F8F8F8">        </span><span style="color: #4E9A06">&quot;&quot;</span><span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;charlieオプション（値なし）&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">shift</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">        </span>*<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;charlieオプション: </span><span style="color: #000">$2</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">shift</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">      </span><span style="color: #204A87; font-weight: bold">esac</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">    </span>-d<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>--delta<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;deltaオプションが指定されました&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">shift</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">    </span>--<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>shift<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">break</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">    </span>*<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;エラー: 不明なオプション: </span><span style="color: #000">$1</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">exit</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">  </span><span style="color: #204A87; font-weight: bold">esac</span>
-<span style="color: #204A87; font-weight: bold">done</span>
-
-<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;残りの引数: </span><span style="color: #000">$@</span><span style="color: #4E9A06">&quot;</span>
+<h3>長いオプションの使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>./example.sh<span style="color: #F8F8F8"> </span>--alpha<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;hello world&quot;</span><span style="color: #F8F8F8"> </span>--gamma<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2
+<span style="color: #000; font-style: italic">Alpha option with value: hello world</span>
+<span style="color: #000; font-style: italic">Gamma option enabled</span>
+<span style="color: #000; font-style: italic">Remaining arguments: file1 file2</span>
 </pre></div>
+<h2>ヒント:</h2>
+<h3>GNU getopt と拡張 getopt の違い</h3>
+<p>多くのLinuxディストリビューションではGNU getoptが使用されていますが、一部のシステム（特に古いUnix系）では拡張機能（長いオプションなど）をサポートしていない場合があります。スクリプトの互換性を確保するには、最初に <code>getopt -T</code> でテストするとよいでしょう。</p>
+<h3>エラー処理を忘れずに</h3>
+<p>getoptの戻り値を確認し、オプション解析に失敗した場合は適切にエラー処理を行いましょう。</p>
+<h3>引数に空白やシェル特殊文字が含まれる場合</h3>
+<p>引数に空白やシェル特殊文字が含まれる場合は、<code>eval set -- &quot;$OPTS&quot;</code> を使用して適切に処理する必要があります。</p>
 <h2>よくある質問</h2>
-<h3>Q1. <code>getopt</code>と<code>getopts</code>の違いは何ですか？</h3>
-<p>A. <code>getopt</code>は外部コマンドで、長いオプション（<code>--option</code>形式）をサポートしています。一方、<code>getopts</code>はシェル組み込みコマンドで、短いオプション（<code>-o</code>形式）のみをサポートしますが、より移植性が高いです。</p>
-<h3>Q2. オプションが値を取るかどうかを指定するには？</h3>
-<p>A. <code>-o</code>オプションで、オプション文字の後に<code>:</code> を付けると値が必要、<code>::</code> を付けると値が任意になります。例：<code>-o a:b::c</code></p>
-<h3>Q3. <code>eval set -- &quot;$OPTS&quot;</code>の目的は何ですか？</h3>
-<p>A. <code>getopt</code>の出力を<code>eval set</code>することで、元のコマンドライン引数を整形された形式に置き換え、後続の処理を簡単にします。</p>
-<h3>Q4. エラー処理はどうすればよいですか？</h3>
-<p>A. <code>getopt</code>はオプションが無効な場合にエラーを返します。スクリプトでは通常、<code>getopt</code>の戻り値をチェックし、エラーが発生した場合は処理を中止します。</p>
-<h2>追加情報</h2>
+<h4>Q1. getoptとgetopts（シェル組み込みコマンド）の違いは何ですか？</h4>
+<p>A. <code>getopt</code>は外部コマンドで、長いオプション（--option形式）をサポートしています。一方、<code>getopts</code>はシェル組み込みコマンドで、短いオプション（-o形式）のみをサポートしますが、より移植性が高いです。</p>
+<h4>Q2. getoptでオプションの順序を強制できますか？</h4>
+<p>A. いいえ、getoptはオプションの順序を強制しません。ユーザーは任意の順序でオプションを指定できます。</p>
+<h4>Q3. getoptは必須オプションを指定できますか？</h4>
+<p>A. getopt自体には必須オプションを指定する機能はありません。スクリプト内でオプションが指定されているかどうかを確認する必要があります。</p>
+<h4>Q4. 長いオプションと短いオプションを関連付けるにはどうすればよいですか？</h4>
+<p>A. スクリプト内の<code>case</code>文で、<code>-a|--alpha)</code>のように両方のオプションを同じケースで処理します。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSのデフォルトの<code>getopt</code>は拡張機能（長いオプションなど）をサポートしていません。GNU getoptを使用するには、Homebrewを使ってインストールする必要があります：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>brew<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>gnu-getopt
+<span style="color: #8F5902">$ </span><span style="color: #000">PATH</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;/usr/local/opt/gnu-getopt/bin:</span><span style="color: #000">$PATH</span><span style="color: #4E9A06">&quot;</span>
+</pre></div>
+<p>または、macOSでは代わりに<code>getopts</code>（シェル組み込みコマンド）の使用を検討してください。</p>
+<h2>参考文献</h2>
+<p>https://man7.org/linux/man-pages/man1/getopt.1.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li><code>getopt</code>の新しいバージョン（enhanced getopt）と古いバージョンがあり、機能が異なります。Linux では通常、拡張版が使用されます。</li>
-<li>macOSのデフォルトの<code>getopt</code>は機能が限られているため、GNU版の<code>getopt</code>をインストールすることをお勧めします（<code>brew install gnu-getopt</code>でインストール可能）。</li>
-<li>複雑なオプション処理が必要な場合は、より強力な<code>argparse</code>などのPythonライブラリの使用も検討してください。</li>
-<li>オプション指定の標準的な形式は、単一文字オプションには<code>-</code>（例：<code>-a</code>）、単語オプションには<code>--</code>（例：<code>--alpha</code>）を使用します。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
-<h2>参考資料</h2>
-<p>https://www.gnu.org/software/libc/manual/html_node/Getopt.html</p>
 
 
     </main>

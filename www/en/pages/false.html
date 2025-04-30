@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  false - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>false command</h1>
+<p>Returns a failure status regardless of its arguments.</p>
+<h2>Overview</h2>
+<p>The <code>false</code> command is a simple Unix utility that does nothing except return an exit status of 1, indicating failure. It's often used in shell scripts to force a failure condition or as a placeholder in conditional statements.</p>
+<h2>Options</h2>
+<p>The <code>false</code> command doesn't have any functional options as its sole purpose is to return a failure status.</p>
+<h2>Usage Examples</h2>
+<h3>Basic usage</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">false</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$?</span>
+<span style="color: #000; font-style: italic">1</span>
+</pre></div>
+<p>The command silently exits with a status code of 1, which we can verify by checking the special <code>$?</code> variable that holds the exit status of the last command.</p>
+<h3>Using in conditional statements</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span>false<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;This won&#39;t print&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">else</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;This will print&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">fi</span>
+<span style="color: #000; font-style: italic">This will print</span>
+</pre></div>
+<p>Since <code>false</code> always returns a failure status, the <code>else</code> branch is executed.</p>
+<h3>Using in a loop</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>!<span style="color: #F8F8F8"> </span>false<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;This won&#39;t execute&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+</pre></div>
+<p>This loop won't execute at all because <code>false</code> always returns failure, so <code>! false</code> is always false.</p>
+<h2>Tips</h2>
+<h3>Opposite of true</h3>
+<p>The <code>false</code> command is the logical opposite of the <code>true</code> command, which always returns a success status (0).</p>
+<h3>Creating infinite loops</h3>
+<p>Be careful when using <code>false</code> in loop conditions. For example, <code>while false; do something; done</code> will never execute because the condition is always false.</p>
+<h3>Exit codes in scripts</h3>
+<p>In shell scripting, an exit code of 0 indicates success, while any non-zero value (like 1 from <code>false</code>) indicates failure. This is important to remember when checking command results.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What is the purpose of the <code>false</code> command?</h4>
+<p>A. Its sole purpose is to return a failure exit status (1), typically used in shell scripts to force a failure condition.</p>
+<h4>Q2. What is the exit status of the <code>false</code> command?</h4>
+<p>A. It always returns 1, indicating failure.</p>
+<h4>Q3. How does <code>false</code> differ from <code>true</code>?</h4>
+<p>A. <code>true</code> returns a success status (0), while <code>false</code> returns a failure status (1).</p>
+<h4>Q4. Can I use <code>false</code> to create an empty file?</h4>
+<p>A. No, unlike some commands, <code>false</code> doesn't create any files. Use <code>touch</code> instead to create empty files.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/false-invocation.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

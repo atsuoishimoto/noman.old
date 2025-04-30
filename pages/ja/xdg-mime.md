@@ -1,11 +1,16 @@
 # xdg-mime コマンド
 
-xdg-mime は Linux デスクトップ環境でファイルタイプの関連付けを管理するコマンドです。ファイルの MIME タイプの確認や、特定の MIME タイプに対するデフォルトアプリケーションの設定ができます。
+ファイルタイプとそれに関連付けられたアプリケーションを管理するコマンド。
+
+## 概要
+
+`xdg-mime` は Linux デスクトップ環境でファイルタイプ（MIME タイプ）とアプリケーションの関連付けを管理するためのコマンドです。ファイルの種類を調べたり、特定のファイルタイプを開くデフォルトアプリケーションを設定したりすることができます。このコマンドは XDG（X Desktop Group）標準の一部で、デスクトップ環境間での一貫性を提供します。
 
 ## オプション
 
 ### **query filetype**
-ファイルの MIME タイプを確認します。
+
+ファイルの MIME タイプを調査します。
 
 ```console
 $ xdg-mime query filetype document.pdf
@@ -13,25 +18,28 @@ application/pdf
 ```
 
 ### **query default**
-特定の MIME タイプに対するデフォルトアプリケーションを確認します。
+
+特定の MIME タイプに関連付けられたデフォルトアプリケーションを表示します。
 
 ```console
 $ xdg-mime query default application/pdf
-evince.desktop
+org.gnome.evince.desktop
 ```
 
 ### **default**
-MIME タイプに対するデフォルトアプリケーションを設定します。
+
+特定の MIME タイプに対するデフォルトアプリケーションを設定します。
 
 ```console
-$ xdg-mime default okular.desktop application/pdf
+$ xdg-mime default firefox.desktop text/html
 ```
 
 ### **install**
+
 新しい MIME タイプ情報をシステムにインストールします。
 
 ```console
-$ xdg-mime install --mode user mytype.xml
+$ xdg-mime install mytype.xml
 ```
 
 ## 使用例
@@ -39,52 +47,63 @@ $ xdg-mime install --mode user mytype.xml
 ### ファイルの MIME タイプを確認する
 
 ```console
-$ xdg-mime query filetype ~/Downloads/report.docx
-application/vnd.openxmlformats-officedocument.wordprocessingml.document
+$ xdg-mime query filetype image.jpg
+image/jpeg
 ```
 
 ### PDF ファイルのデフォルトアプリケーションを変更する
 
 ```console
-$ xdg-mime default org.gnome.Evince.desktop application/pdf
+$ xdg-mime default okular.desktop application/pdf
 ```
 
-### 複数の MIME タイプに同じアプリケーションを設定する
+### 現在の HTML ファイルのデフォルトブラウザを確認する
 
 ```console
-$ xdg-mime default org.gnome.Nautilus.desktop inode/directory
-$ xdg-mime default org.gnome.Nautilus.desktop application/x-gnome-saved-search
+$ xdg-mime query default text/html
+firefox.desktop
 ```
 
 ## ヒント:
 
-### MIME タイプの確認方法
-ファイルの正確な MIME タイプがわからない場合は、`xdg-mime query filetype ファイル名` を使用して確認できます。これは新しいファイル形式のアプリケーション関連付けを設定する際に役立ちます。
+### MIME タイプの詳細を調べる
+
+`file --mime-type` コマンドも使用して、ファイルの MIME タイプを確認できます。これは xdg-mime が利用できない環境でも役立ちます。
+
+```console
+$ file --mime-type document.pdf
+document.pdf: application/pdf
+```
 
 ### デスクトップファイルの場所
-`.desktop` ファイルは通常 `/usr/share/applications/` または `~/.local/share/applications/` にあります。正確なファイル名が必要な場合は、これらのディレクトリを確認してください。
+
+`.desktop` ファイルは通常 `/usr/share/applications/` または `~/.local/share/applications/` ディレクトリにあります。デフォルトアプリケーションを設定する際には、これらのディレクトリにある正確なファイル名を使用する必要があります。
 
 ### 変更の反映
-変更が即座に反映されない場合は、デスクトップ環境を再起動するか、`update-desktop-database` コマンドを実行してみてください。
+
+設定変更後、変更が反映されない場合は、アプリケーションを再起動するか、場合によってはログアウト/ログインが必要になることがあります。
 
 ## よくある質問
 
 #### Q1. xdg-mime とは何ですか？
-A. xdg-mime は Linux デスクトップ環境でファイルタイプとアプリケーションの関連付けを管理するためのコマンドラインツールです。
+A. Linux デスクトップ環境でファイルタイプとアプリケーションの関連付けを管理するためのコマンドラインツールです。
 
-#### Q2. 特定のファイルタイプのデフォルトアプリケーションを変更するにはどうすればよいですか？
-A. `xdg-mime default アプリケーション名.desktop MIMEタイプ` を使用します。例えば、`xdg-mime default firefox.desktop text/html` とすると、HTML ファイルのデフォルトブラウザが Firefox に設定されます。
+#### Q2. 特定のファイルタイプに対するデフォルトアプリケーションを変更するにはどうすればよいですか？
+A. `xdg-mime default アプリケーション名.desktop MIMEタイプ` を使用します。例えば、`xdg-mime default firefox.desktop text/html` のようにします。
 
-#### Q3. 変更はどこに保存されますか？
-A. ユーザーレベルの変更は `~/.config/mimeapps.list` ファイルに保存されます。システム全体の設定は `/usr/share/applications/mimeinfo.cache` などに保存されます。
+#### Q3. ファイルの MIME タイプを調べるにはどうすればよいですか？
+A. `xdg-mime query filetype ファイル名` を使用します。例えば、`xdg-mime query filetype document.pdf` のようにします。
 
-#### Q4. 設定した関連付けをリセットするにはどうすればよいですか？
-A. `~/.config/mimeapps.list` ファイルから該当する行を削除するか、別のアプリケーションを同じ MIME タイプのデフォルトとして設定します。
+#### Q4. 変更したデフォルトアプリケーションの設定はどこに保存されますか？
+A. 通常、`~/.config/mimeapps.list` ファイルに保存されます。
+
+#### Q5. xdg-mime コマンドはどのデスクトップ環境で動作しますか？
+A. GNOME、KDE、Xfce など、XDG 標準に準拠したほとんどの Linux デスクトップ環境で動作します。
 
 ## 参考資料
 
 https://portland.freedesktop.org/doc/xdg-mime.html
 
-## Revisions
+## 改訂履歴
 
-- 2025/04/26 初版作成。
+- 2025/04/30 初版作成

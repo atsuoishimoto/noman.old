@@ -46,53 +46,78 @@
   <div class="content">
     <main>
       
-  <h1>sleepコマンド概要</h1>
-<p><code>sleep</code>コマンドは、指定した時間だけプロセスを一時停止（スリープ）させるためのコマンドです。スクリプト内での待機時間の設定や、コマンドの実行タイミングを調整する際に使用されます。</p>
-<h2>主なオプション</h2>
+  <h1>sleep コマンド</h1>
+<p>指定した時間だけプロセスを一時停止（スリープ）させます。</p>
+<h2>概要</h2>
+<p><code>sleep</code> コマンドは、指定された時間だけシェルの実行を一時停止させるシンプルなコマンドです。スクリプト内での遅延の作成、コマンドの実行間隔の調整、またはバッチ処理のタイミング制御などに使用されます。デフォルトでは秒単位で指定しますが、他の時間単位も使用できます。</p>
+<h2>オプション</h2>
+<p><code>sleep</code> コマンド自体にはオプションがほとんどありませんが、時間の単位を指定することができます：</p>
+<h3><strong>時間の単位</strong></h3>
+<p>数値の後に以下の単位を付けることができます：</p>
 <ul>
-<li><p><strong>数値のみ</strong>: デフォルトでは秒単位で待機します</p>
-<ul>
-<li>例: <code>sleep 5</code>（5秒間待機）</li>
+<li><code>s</code>：秒（デフォルト）</li>
+<li><code>m</code>：分</li>
+<li><code>h</code>：時間</li>
+<li><code>d</code>：日</li>
 </ul>
-</li>
-<li><p><strong>時間単位の指定</strong>:</p>
-<ul>
-<li><strong>s</strong>: 秒（デフォルト）</li>
-<li><strong>m</strong>: 分</li>
-<li><strong>h</strong>: 時間</li>
-<li><strong>d</strong>: 日</li>
-<li>例: <code>sleep 1m</code>（1分間待機）、<code>sleep 2h</code>（2時間待機）</li>
-</ul>
-</li>
-</ul>
-<h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使い方（5秒間待機）</span>
-$<span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #8F5902; font-style: italic"># （5秒後にプロンプトが戻ります）</span>
-
-<span style="color: #8F5902; font-style: italic"># 複数の時間単位を組み合わせる</span>
-$<span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span>1m<span style="color: #F8F8F8"> </span>30s
-<span style="color: #8F5902; font-style: italic"># （1分30秒後にプロンプトが戻ります）</span>
-
-<span style="color: #8F5902; font-style: italic"># スクリプト内での使用例</span>
-$<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;処理を開始します&quot;</span>
-$<span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
-$<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2秒経過しました&quot;</span>
-処理を開始します
-（2秒待機）
-2秒経過しました
-
-<span style="color: #8F5902; font-style: italic"># コマンドを連続実行する例</span>
-$<span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;5秒経ちました&quot;</span>
-（5秒待機）
-5秒経ちました
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span>5s
+<span style="color: #8F5902"># </span>5秒間一時停止する
 </pre></div>
-<h2>追加情報</h2>
+<h2>使用例</h2>
+<h3>基本的な使用法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>
+<span style="color: #8F5902"># </span>10秒間一時停止する
+</pre></div>
+<h3>異なる時間単位の使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span>2m
+<span style="color: #8F5902"># </span>2分間一時停止する
+
+<span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span>1h
+<span style="color: #8F5902"># </span>1時間一時停止する
+
+<span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.5s
+<span style="color: #8F5902"># </span><span style="color: #0000CF; font-weight: bold">0</span>.5秒間一時停止する
+</pre></div>
+<h3>スクリプト内での使用例</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;処理を開始します&quot;</span>
+<span style="color: #000; font-style: italic">処理を開始します</span>
+<span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2秒経過しました&quot;</span>
+<span style="color: #000; font-style: italic">2秒経過しました</span>
+</pre></div>
+<h3>複数のコマンドを一定間隔で実行</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span>..3<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;繰り返し </span><span style="color: #000">$i</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+<span style="color: #000; font-style: italic">繰り返し 1</span>
+<span style="color: #000; font-style: italic">繰り返し 2</span>
+<span style="color: #000; font-style: italic">繰り返し 3</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>バックグラウンド実行</h3>
+<p><code>sleep</code> コマンドをバックグラウンドで実行するには、コマンドの末尾に <code>&amp;</code> を追加します。これにより、ターミナルをブロックせずに他のコマンドを実行できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">60</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">&amp;</span>
+<span style="color: #000; font-style: italic">[1] 1234</span>
+</pre></div>
+<h3>複数の時間単位を組み合わせる</h3>
+<p>複数の時間単位を組み合わせることができます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span>1h<span style="color: #F8F8F8"> </span>30m<span style="color: #F8F8F8"> </span>10s
+<span style="color: #8F5902"># </span>1時間30分10秒間一時停止する
+</pre></div>
+<h3>スクリプトでの活用</h3>
+<p>スクリプト内でAPIリクエストやサーバー接続の間に遅延を入れることで、レート制限やサーバー負荷を軽減できます。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>sleep</code> コマンドを中断するにはどうすればよいですか？</h4>
+<p>A. 実行中の <code>sleep</code> コマンドを中断するには、<code>Ctrl+C</code> を押します。</p>
+<h4>Q2. 小数点の時間を指定できますか？</h4>
+<p>A. はい、<code>sleep 0.5</code> のように小数点を使用して秒単位で指定できます。</p>
+<h4>Q3. <code>sleep</code> コマンドは CPU リソースを消費しますか？</h4>
+<p>A. いいえ、<code>sleep</code> はシステムコールを使用してプロセスを一時停止させるため、実質的に CPU リソースを消費しません。</p>
+<h4>Q4. 最大どれくらいの時間を指定できますか？</h4>
+<p>A. システムによって異なりますが、通常は非常に長い時間（数年単位）まで指定できます。ただし、実用的には数日以内の使用が一般的です。</p>
+<h2>参考情報</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/sleep-invocation.html</p>
+<h2>Revisions</h2>
 <ul>
-<li><code>sleep</code>コマンドは単体では出力を生成しません。実行中は何も表示されず、指定時間が経過するとプロンプトに戻ります。</li>
-<li>バックグラウンドで実行する場合は、コマンドの末尾に<code>&amp;</code>を付けます（例: <code>sleep 10 &amp;</code>）。</li>
-<li>スクリプト内でよく使われ、処理の間隔を空けたり、APIリクエストの間隔を制御したりする際に便利です。</li>
-<li>非常に長い時間を指定する場合は、システムの再起動などで中断される可能性があることに注意してください。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

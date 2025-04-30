@@ -1,84 +1,154 @@
-# nc コマンドの概要
+# nc コマンド
 
-`nc`（netcat）は、ネットワーク接続の読み書きを行うためのシンプルなユーティリティです。「ネットワークのスイスアーミーナイフ」とも呼ばれ、ポートスキャン、ファイル転送、チャットなど様々なネットワークタスクに使用できます。
+ネットワーク接続を読み書きするためのユーティリティ。
 
-## 主なオプション
+## 概要
 
-- **-l**: リッスンモード（サーバーとして動作）
-  - 例: `nc -l 8080`（8080ポートでの接続を待ち受けます）
+`nc`（netcat）は、TCP や UDP プロトコルを使用してネットワーク接続を確立し、データを送受信するためのシンプルなコマンドラインツールです。ポートスキャン、ファイル転送、チャット、サーバーのテストなど、さまざまなネットワーク関連タスクに使用できます。
 
-- **-p**: ポート番号の指定（クライアントモード時）
-  - 例: `nc -p 12345 example.com 80`（ローカルポート12345から接続）
+## オプション
 
-- **-v**: 詳細（verbose）出力
-  - 例: `nc -v example.com 80`（接続の詳細情報を表示）
+### **-l**：リッスンモード
 
-- **-z**: スキャンモード（接続せずにポートの開閉状態を確認）
-  - 例: `nc -z -v example.com 20-30`（20〜30番ポートをスキャン）
+サーバーとして動作し、指定したポートで接続を待ち受けます。
 
-- **-w**: タイムアウト時間の設定（秒）
-  - 例: `nc -w 5 example.com 80`（5秒でタイムアウト）
+```console
+$ nc -l 1234
+```
 
-- **-u**: UDPモード（デフォルトはTCP）
-  - 例: `nc -u example.com 53`（UDPで53番ポートに接続）
+### **-p**：ポート指定
+
+使用するローカルポート番号を指定します。
+
+```console
+$ nc -p 12345 example.com 80
+```
+
+### **-v**：詳細表示
+
+接続の詳細情報を表示します。デバッグに役立ちます。
+
+```console
+$ nc -v example.com 80
+Connection to example.com 80 port [tcp/http] succeeded!
+```
+
+### **-z**：スキャンモード
+
+接続を確立せずにポートスキャンを行います。
+
+```console
+$ nc -z -v example.com 20-30
+Connection to example.com 22 port [tcp/ssh] succeeded!
+Connection to example.com 25 port [tcp/smtp] succeeded!
+```
+
+### **-u**：UDP モード
+
+デフォルトの TCP の代わりに UDP プロトコルを使用します。
+
+```console
+$ nc -u -l 1234
+```
 
 ## 使用例
 
-### 1. 基本的な接続（HTTPリクエスト）
+### 簡易チャットサーバーの作成
 
-```bash
-# Webサーバーに接続してHTTPリクエストを送信
-nc example.com 80
-GET / HTTP/1.1
-Host: example.com
+```console
+# サーバー側
+$ nc -l 1234
+こんにちは！
+元気ですか？
 
-# 出力例
+# クライアント側
+$ nc localhost 1234
+こんにちは！
+元気ですか？
+```
+
+### ファイル転送
+
+```console
+# 受信側
+$ nc -l 1234 > received_file.txt
+
+# 送信側
+$ nc 192.168.1.100 1234 < file_to_send.txt
+```
+
+### ポートスキャン
+
+```console
+$ nc -z -v example.com 20-100
+Connection to example.com 22 port [tcp/ssh] succeeded!
+Connection to example.com 80 port [tcp/http] succeeded!
+Connection to example.com 443 port [tcp/https] succeeded!
+```
+
+### HTTP リクエストの送信
+
+```console
+$ echo -e "GET / HTTP/1.1\r\nHost: example.com\r\n\r\n" | nc example.com 80
 HTTP/1.1 200 OK
-Content-Type: text/html
+Content-Type: text/html; charset=UTF-8
+Date: Wed, 30 Apr 2025 12:00:00 GMT
 ...
 ```
 
-### 2. シンプルなチャットサーバー
+## ヒント:
 
-```bash
-# サーバー側（ポート8080でリッスン）
-nc -l 8080
+### タイムアウトの設定
 
-# クライアント側（サーバーに接続）
-nc 192.168.1.100 8080
+`-w` オプションを使用して接続のタイムアウト時間を秒単位で設定できます。これはスクリプト内で使用する際に特に便利です。
 
-# これで双方向のテキスト通信が可能になる
+```console
+$ nc -w 5 example.com 80
 ```
 
-### 3. ファイル転送
+### バナー情報の取得
 
-```bash
-# 受信側（サーバー）
-nc -l 8080 > received_file.txt
+サーバーのバナー情報を取得するには、単純に接続するだけで十分な場合があります。
 
-# 送信側（クライアント）
-nc 192.168.1.100 8080 < file_to_send.txt
+```console
+$ nc -v example.com 22
+SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.5
 ```
 
-### 4. ポートスキャン
+### 永続的なリスニングサーバー
 
-```bash
-# 特定のホストの複数ポートをスキャン
-nc -z -v example.com 20-25
+`-k` オプションを使用すると、クライアントが切断した後もリスニングを継続します。
 
-# 出力例
-nc: connect to example.com port 20 (tcp) failed: Connection refused
-nc: connect to example.com port 21 (tcp) succeeded!
-nc: connect to example.com port 22 (tcp) succeeded!
-...
+```console
+$ nc -k -l 1234
 ```
 
-## 追加情報
+## よくある質問
 
-- `nc`コマンドはセキュリティ監査やネットワークのデバッグに非常に便利ですが、悪意ある目的にも使用できるため、多くの組織ではその使用が制限されている場合があります。
+#### Q1. nc と telnet の違いは何ですか？
+A. `nc` は `telnet` よりも多機能で、TCP/UDP の両方をサポートし、ポートスキャンやファイル転送などの機能も提供します。`telnet` は主に対話型のリモート接続に使用されます。
 
-- 一部のシステムでは`nc`の代わりに`ncat`や`netcat`コマンドが使用されることがあります。機能は似ていますが、オプションが若干異なる場合があります。
+#### Q2. nc でファイアウォールをバイパスできますか？
+A. `nc` 自体はファイアウォールをバイパスする機能はありませんが、さまざまなポートやプロトコルを使用して接続を試みることができます。ただし、セキュリティ上の理由から、許可されたネットワークでのみ使用してください。
 
-- 長時間のリッスンや接続を維持するには、`-k`オプション（一部のバージョンでサポート）を使用すると、接続が切れた後もリッスンを継続できます。
+#### Q3. nc の代替コマンドはありますか？
+A. `socat`、`ncat`（Nmap プロジェクトの一部）、`telnet`（基本的な機能のみ）などがあります。`socat` は特に高度な機能を提供します。
 
-- セキュアな通信が必要な場合は、`ncat`の`--ssl`オプションや、代わりに`openssl s_client`/`s_server`コマンドの使用を検討してください。
+#### Q4. macOS と Linux の nc コマンドに違いはありますか？
+A. はい、macOS の `nc` は BSD バージョンで、Linux の多くのディストリビューションで使用される GNU バージョンとは一部のオプションが異なります。例えば、macOS の `nc` では `-k` オプション（接続後もリスニングを継続する）がサポートされていない場合があります。
+
+## macOS での注意点
+
+macOS に搭載されている `nc` は BSD バージョンであり、Linux の GNU バージョンとは一部の機能やオプションが異なります。特に以下の点に注意してください：
+
+- `-e` オプション（コマンド実行）は macOS の `nc` ではサポートされていません
+- 永続的なリスニング（`-k`）は macOS の一部のバージョンではサポートされていない場合があります
+- macOS で同様の機能が必要な場合は、Homebrew などを使用して GNU バージョンの netcat をインストールすることを検討してください
+
+## 参考資料
+
+https://man.openbsd.org/nc.1
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

@@ -1,121 +1,148 @@
 # tcpdump コマンド
-ネットワークインターフェイス上のパケットをキャプチャして分析するためのコマンドラインツール。
+
+ネットワークパケットをキャプチャして分析するためのコマンドラインツール。
 
 ## 概要
-tcpdumpはネットワークトラフィックをリアルタイムでキャプチャし、分析するためのパワフルなツールです。特定のインターフェイス上を流れるパケットをキャプチャし、その内容を表示したり、ファイルに保存したりすることができます。ネットワークの問題診断やセキュリティ監視に非常に役立ちます。
+
+`tcpdump`は、ネットワークインターフェイスを通過するパケットをキャプチャし、表示するためのパワフルなコマンドラインツールです。ネットワークのトラブルシューティングやセキュリティ分析、ネットワークトラフィックの監視に非常に役立ちます。特定のホスト、ポート、プロトコルに基づいてパケットをフィルタリングする機能も備えています。
 
 ## オプション
-### **-i**
-キャプチャするネットワークインターフェイスを指定します。
+
+### **-i インターフェイス**
+
+特定のネットワークインターフェイスからパケットをキャプチャします。
+
 ```console
-$ tcpdump -i eth0
+$ sudo tcpdump -i eth0
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
 listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
-13:45:22.123456 IP 192.168.1.100.52134 > 192.168.1.1.53: 12345+ A? example.com. (32)
-13:45:22.234567 IP 192.168.1.1.53 > 192.168.1.100.52134: 12345 1/0/0 A 93.184.216.34 (48)
+13:45:22.123456 IP 192.168.1.100.56789 > 8.8.8.8.53: 12345+ A? example.com. (32)
 ```
 
 ### **-n**
-ホスト名、ポート名などの名前解決を行わず、IPアドレスやポート番号をそのまま表示します。
+
+ホスト名、ポート名、サービス名の名前解決を行わず、IPアドレスとポート番号をそのまま表示します。
+
 ```console
-$ tcpdump -n
+$ sudo tcpdump -n
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
-listening on en0, link-type EN10MB (Ethernet), capture size 262144 bytes
-13:46:33.123456 IP 192.168.1.100.52134 > 8.8.8.8.53: 12345+ A? example.com. (32)
-13:46:33.234567 IP 8.8.8.8.53 > 192.168.1.100.52134: 12345 1/0/0 A 93.184.216.34 (48)
+listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+13:45:22.123456 IP 192.168.1.100.56789 > 8.8.8.8.53: 12345+ A? example.com. (32)
 ```
 
-### **-w**
-キャプチャしたパケットをファイルに保存します。
+### **-w ファイル名**
+
+キャプチャしたパケットをファイルに保存します。後で`tcpdump -r`や`Wireshark`で分析できます。
+
 ```console
-$ tcpdump -w capture.pcap
-tcpdump: listening on en0, link-type EN10MB (Ethernet), capture size 262144 bytes
+$ sudo tcpdump -w capture.pcap
+tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
 ^C
 45 packets captured
 50 packets received by filter
 0 packets dropped by kernel
 ```
 
-### **-r**
+### **-r ファイル名**
+
 保存されたパケットキャプチャファイルを読み込んで表示します。
+
 ```console
 $ tcpdump -r capture.pcap
 reading from file capture.pcap, link-type EN10MB (Ethernet)
-13:48:22.123456 IP host1.52134 > host2.53: 12345+ A? example.com. (32)
-13:48:22.234567 IP host2.53 > host1.52134: 12345 1/0/0 A 93.184.216.34 (48)
+13:45:22.123456 IP host1.56789 > host2.80: Flags [S], seq 1234567890, win 65535, length 0
+```
+
+### **-c 数**
+
+指定した数のパケットをキャプチャした後に停止します。
+
+```console
+$ sudo tcpdump -c 5
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+5 packets captured
+8 packets received by filter
+0 packets dropped by kernel
 ```
 
 ## 使用例
-### 特定のホストとの通信をキャプチャ
+
+### 特定のホストとのトラフィックをキャプチャ
+
 ```console
-$ tcpdump host 192.168.1.100
+$ sudo tcpdump host 192.168.1.100
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
-listening on en0, link-type EN10MB (Ethernet), capture size 262144 bytes
-13:50:22.123456 IP 192.168.1.100.52134 > dns.google.53: 12345+ A? example.com. (32)
-13:50:22.234567 IP dns.google.53 > 192.168.1.100.52134: 12345 1/0/0 A 93.184.216.34 (48)
+listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+13:45:22.123456 IP 192.168.1.100.56789 > 8.8.8.8.53: 12345+ A? example.com. (32)
+13:45:22.234567 IP 8.8.8.8.53 > 192.168.1.100.56789: 12345 1/0/0 A 93.184.216.34 (48)
 ```
 
-### 特定のポートの通信をキャプチャ
+### 特定のポートのトラフィックをキャプチャ
+
 ```console
-$ tcpdump port 80
+$ sudo tcpdump port 80
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
-listening on en0, link-type EN10MB (Ethernet), capture size 262144 bytes
-13:51:22.123456 IP client.52134 > server.80: Flags [S], seq 1234567890, win 65535, options [mss 1460], length 0
-13:51:22.234567 IP server.80 > client.52134: Flags [S.], seq 2345678901, ack 1234567891, win 65535, options [mss 1460], length 0
+listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+13:45:22.123456 IP host1.56789 > host2.80: Flags [S], seq 1234567890, win 65535, length 0
+13:45:22.234567 IP host2.80 > host1.56789: Flags [S.], seq 9876543210, ack 1234567891, win 65535, length 0
 ```
 
 ### HTTPトラフィックの内容を表示
+
 ```console
-$ tcpdump -A -s0 port 80
+$ sudo tcpdump -A -s 0 'tcp port 80'
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
-listening on en0, link-type EN10MB (Ethernet), capture size 262144 bytes
-13:52:22.123456 IP client.52134 > server.80: Flags [P.], seq 1:165, ack 1, win 65535, length 164
+listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+13:45:22.123456 IP host1.56789 > host2.80: Flags [P.], seq 1:165, ack 1, win 65535, length 164
 GET / HTTP/1.1
 Host: example.com
 User-Agent: Mozilla/5.0
 Accept: text/html,application/xhtml+xml
 Connection: keep-alive
 
-13:52:22.234567 IP server.80 > client.52134: Flags [P.], seq 1:239, ack 165, win 65535, length 238
-HTTP/1.1 200 OK
-Content-Type: text/html
-Content-Length: 1256
-Connection: keep-alive
-
-<!DOCTYPE html>...
 ```
 
 ## ヒント:
-### 権限の問題
-tcpdumpはパケットキャプチャのために特権が必要なため、通常はroot権限またはsudo経由で実行する必要があります。
 
-### フィルタ式の活用
-`host`、`port`、`tcp`、`udp`などのフィルタ式を組み合わせることで、必要なトラフィックだけをキャプチャできます。例えば `tcpdump 'tcp port 80 and host 192.168.1.100'` のように指定できます。
+### 管理者権限が必要
+
+ほとんどの場合、`tcpdump`を実行するには`sudo`または管理者権限が必要です。これはネットワークインターフェイスに直接アクセスするためです。
+
+### 複雑なフィルタ式
+
+`tcpdump`は強力なフィルタ式をサポートしています。例えば、`tcpdump 'tcp port 80 and (src host 192.168.1.100 or dst host 192.168.1.200)'`のように複数の条件を組み合わせることができます。
+
+### パケットサイズの制限を解除
+
+デフォルトでは、`tcpdump`は各パケットの先頭部分のみをキャプチャします。完全なパケット内容を取得するには、`-s 0`オプションを使用します。
 
 ### Wiresharkとの連携
-`-w` オプションで保存したキャプチャファイル（.pcap）はWiresharkで開いて詳細に分析することができます。
 
-### パケットサイズの調整
-デフォルトでは先頭の数バイトしかキャプチャしないことがあります。完全なパケットをキャプチャするには `-s0` オプションを使用します。
+`tcpdump -w file.pcap`でキャプチャしたファイルは、より詳細な分析のためにWiresharkで開くことができます。
 
 ## よくある質問
-#### Q1. tcpdumpを実行すると「permission denied」エラーが出ます。どうすればよいですか？
-A. tcpdumpはネットワークインターフェイスに直接アクセスするため、root権限が必要です。`sudo tcpdump` のように実行してください。
 
-#### Q2. 利用可能なネットワークインターフェイスを確認するにはどうすればよいですか？
-A. `tcpdump -D` コマンドを実行すると、利用可能なインターフェイスの一覧が表示されます。
+#### Q1. tcpdumpとWiresharkの違いは何ですか？
+A. `tcpdump`はコマンドラインツールで、リモートサーバーでも使いやすく、軽量です。Wiresharkはグラフィカルなインターフェイスを持ち、より詳細な分析機能を提供しますが、GUIが必要です。
 
-#### Q3. キャプチャしたパケットの数を制限するにはどうすればよいですか？
-A. `-c` オプションを使用します。例えば `tcpdump -c 100` とすると、100パケットをキャプチャした後に自動的に停止します。
+#### Q2. 特定のIPアドレスとポートのトラフィックだけをキャプチャするにはどうすればよいですか？
+A. `sudo tcpdump host 192.168.1.100 and port 80`のようにフィルタを組み合わせて使用します。
 
-#### Q4. 特定のプロトコルだけをキャプチャするにはどうすればよいですか？
-A. プロトコル名をフィルタとして指定します。例えば `tcpdump icmp` とすると、ICMPパケットのみをキャプチャします。
+#### Q3. キャプチャしたパケットをファイルに保存するにはどうすればよいですか？
+A. `sudo tcpdump -w filename.pcap`を使用します。このファイルは後で`tcpdump -r filename.pcap`やWiresharkで分析できます。
+
+#### Q4. パケットの内容を読みやすい形式で表示するにはどうすればよいですか？
+A. ASCII形式で表示するには`-A`オプション、16進数とASCII形式で表示するには`-X`オプションを使用します。
 
 ## macOSでの注意点
-macOSでは、セキュリティ設定によってtcpdumpの実行が制限される場合があります。システム環境設定のセキュリティとプライバシーで許可が必要になることがあります。また、最新のmacOSではパケットキャプチャのためのアクセス許可を明示的に与える必要がある場合があります。
 
-## 参考
+macOSでは、ネットワークインターフェイス名が異なる場合があります。利用可能なインターフェイスを確認するには、`ifconfig`または`networksetup -listallhardwareports`コマンドを使用してください。また、macOSのセキュリティ機能により、初回実行時に権限の承認が求められることがあります。
+
+## 参考資料
+
 https://www.tcpdump.org/manpages/tcpdump.1.html
 
 ## 改訂履歴
-- 2025/04/29 初版作成
+
+- 2025/04/30 初版作成

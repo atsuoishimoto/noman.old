@@ -47,139 +47,118 @@
     <main>
       
   <h1>uniq コマンド</h1>
-<p><code>uniq</code>コマンドは、テキストファイル内の連続する重複行を検出し、削除するためのコマンドです。主に<code>sort</code>コマンドと組み合わせて使用されます。</p>
+<p>テキストファイル内の重複行を検出または削除します。</p>
+<h2>概要</h2>
+<p><code>uniq</code> コマンドは、連続する重複行を検出し、削除するために使用されます。デフォルトでは、入力テキストから連続する重複行を1行だけ残して削除します。通常は <code>sort</code> コマンドと組み合わせて使用され、ファイル内のすべての重複行を処理します。</p>
 <h2>オプション</h2>
-<h3><strong>-c, --count</strong></h3>
-<p>各行の前に、その行が何回連続して出現したかを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>fruits.txt
+<h3><strong>-c (--count)</strong></h3>
+<p>各行の出現回数を行の先頭に表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>sample.txt
 <span style="color: #000; font-style: italic">apple</span>
 <span style="color: #000; font-style: italic">apple</span>
 <span style="color: #000; font-style: italic">banana</span>
 <span style="color: #000; font-style: italic">orange</span>
 <span style="color: #000; font-style: italic">orange</span>
 <span style="color: #000; font-style: italic">orange</span>
-
-<span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>fruits.txt
+<span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>sample.txt
 <span style="color: #000; font-style: italic">      2 apple</span>
 <span style="color: #000; font-style: italic">      1 banana</span>
 <span style="color: #000; font-style: italic">      3 orange</span>
 </pre></div>
-<h3><strong>-d, --repeated</strong></h3>
-<p>重複する行のみを表示します（各重複グループから1行）。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>fruits.txt
+<h3><strong>-d (--repeated)</strong></h3>
+<p>重複する行のみを出力します（各重複グループから1行）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>sample.txt
+<span style="color: #000; font-style: italic">apple</span>
+<span style="color: #000; font-style: italic">apple</span>
+<span style="color: #000; font-style: italic">banana</span>
+<span style="color: #000; font-style: italic">orange</span>
+<span style="color: #000; font-style: italic">orange</span>
+<span style="color: #000; font-style: italic">orange</span>
+<span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>sample.txt
 <span style="color: #000; font-style: italic">apple</span>
 <span style="color: #000; font-style: italic">orange</span>
 </pre></div>
-<h3><strong>-D, --all-repeated</strong></h3>
-<p>重複する行をすべて表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-D<span style="color: #F8F8F8"> </span>fruits.txt
+<h3><strong>-u (--unique)</strong></h3>
+<p>重複しない行のみを出力します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>sample.txt
 <span style="color: #000; font-style: italic">apple</span>
 <span style="color: #000; font-style: italic">apple</span>
+<span style="color: #000; font-style: italic">banana</span>
 <span style="color: #000; font-style: italic">orange</span>
 <span style="color: #000; font-style: italic">orange</span>
 <span style="color: #000; font-style: italic">orange</span>
-</pre></div>
-<h3><strong>-u, --unique</strong></h3>
-<p>重複しない行のみを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>fruits.txt
+<span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>sample.txt
 <span style="color: #000; font-style: italic">banana</span>
 </pre></div>
-<h3><strong>-i, --ignore-case</strong></h3>
+<h3><strong>-i (--ignore-case)</strong></h3>
 <p>大文字と小文字を区別せずに比較します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>mixed_case.txt
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">case</span>.txt
 <span style="color: #000; font-style: italic">Apple</span>
 <span style="color: #000; font-style: italic">apple</span>
 <span style="color: #000; font-style: italic">BANANA</span>
 <span style="color: #000; font-style: italic">banana</span>
-
-<span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>mixed_case.txt
+<span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">case</span>.txt
 <span style="color: #000; font-style: italic">Apple</span>
 <span style="color: #000; font-style: italic">BANANA</span>
-</pre></div>
-<h3><strong>-f N, --skip-fields=N</strong></h3>
-<p>比較する際に最初のN個のフィールド（空白で区切られた部分）をスキップします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.txt
-<span style="color: #000; font-style: italic">1 apple red</span>
-<span style="color: #000; font-style: italic">1 apple green</span>
-<span style="color: #000; font-style: italic">2 banana yellow</span>
-
-<span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>data.txt
-<span style="color: #000; font-style: italic">1 apple red</span>
-<span style="color: #000; font-style: italic">2 banana yellow</span>
-</pre></div>
-<h3><strong>-s N, --skip-chars=N</strong></h3>
-<p>比較する際に各行の最初のN文字をスキップします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>codes.txt
-<span style="color: #000; font-style: italic">ABC123</span>
-<span style="color: #000; font-style: italic">ABC456</span>
-<span style="color: #000; font-style: italic">DEF789</span>
-
-<span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>codes.txt
-<span style="color: #000; font-style: italic">ABC123</span>
-<span style="color: #000; font-style: italic">DEF789</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な使用法</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>fruits.txt
-<span style="color: #000; font-style: italic">apple</span>
-<span style="color: #000; font-style: italic">apple</span>
-<span style="color: #000; font-style: italic">banana</span>
-<span style="color: #000; font-style: italic">orange</span>
-<span style="color: #000; font-style: italic">orange</span>
-<span style="color: #000; font-style: italic">orange</span>
-<span style="color: #000; font-style: italic">grape</span>
-
-<span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>fruits.txt
-<span style="color: #000; font-style: italic">apple</span>
-<span style="color: #000; font-style: italic">banana</span>
-<span style="color: #000; font-style: italic">orange</span>
-<span style="color: #000; font-style: italic">grape</span>
-</pre></div>
-<h3>ソートしてから重複を削除</h3>
+<h3>sortと組み合わせた使用</h3>
+<p><code>uniq</code> は連続する重複行のみを処理するため、通常は <code>sort</code> と組み合わせて使用します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>unsorted.txt
 <span style="color: #000; font-style: italic">banana</span>
 <span style="color: #000; font-style: italic">apple</span>
-<span style="color: #000; font-style: italic">banana</span>
-<span style="color: #000; font-style: italic">apple</span>
 <span style="color: #000; font-style: italic">orange</span>
-
+<span style="color: #000; font-style: italic">apple</span>
+<span style="color: #000; font-style: italic">banana</span>
 <span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>unsorted.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq
 <span style="color: #000; font-style: italic">apple</span>
 <span style="color: #000; font-style: italic">banana</span>
 <span style="color: #000; font-style: italic">orange</span>
 </pre></div>
-<h3>重複行の数をカウントしてソート</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>fruits.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span>-nr
-<span style="color: #000; font-style: italic">      3 orange</span>
-<span style="color: #000; font-style: italic">      2 apple</span>
-<span style="color: #000; font-style: italic">      1 grape</span>
-<span style="color: #000; font-style: italic">      1 banana</span>
+<h3>重複行の数をカウントして降順に並べ替え</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>words.txt
+<span style="color: #000; font-style: italic">dog</span>
+<span style="color: #000; font-style: italic">cat</span>
+<span style="color: #000; font-style: italic">fish</span>
+<span style="color: #000; font-style: italic">dog</span>
+<span style="color: #000; font-style: italic">cat</span>
+<span style="color: #000; font-style: italic">dog</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>words.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span>-nr
+<span style="color: #000; font-style: italic">      3 dog</span>
+<span style="color: #000; font-style: italic">      2 cat</span>
+<span style="color: #000; font-style: italic">      1 fish</span>
 </pre></div>
-<h2>Tips</h2>
-<h3>隣接していない重複行を処理する</h3>
-<p><code>uniq</code>は隣接する行のみを比較するため、通常は<code>sort</code>コマンドと組み合わせて使用します：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq
+<h3>特定のフィールドのみを比較</h3>
+<p><code>-f</code> オプションを使用して、比較する前に指定した数のフィールドをスキップします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.txt
+<span style="color: #000; font-style: italic">1 John Smith</span>
+<span style="color: #000; font-style: italic">2 John Smith</span>
+<span style="color: #000; font-style: italic">3 Jane Doe</span>
+<span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>data.txt
+<span style="color: #000; font-style: italic">1 John Smith</span>
+<span style="color: #000; font-style: italic">3 Jane Doe</span>
 </pre></div>
-<h3>特定のフィールドに基づいて重複を削除</h3>
-<p>CSVファイルなどで特定の列だけを考慮したい場合は<code>-f</code>オプションが便利です：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>data.csv
-</pre></div>
-<h3>出現回数の多い順にソート</h3>
-<p>頻度の高い行を見つけるには、<code>-c</code>オプションと<code>sort</code>を組み合わせます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span>-nr
-</pre></div>
+<h2>ヒント:</h2>
+<h3>非連続の重複行を処理するには</h3>
+<p><code>uniq</code> は連続する重複行のみを処理します。ファイル全体の重複を処理するには、まず <code>sort</code> でファイルをソートしてから <code>uniq</code> を適用してください。</p>
+<h3>特定の列だけで比較する</h3>
+<p><code>-f</code> オプション（フィールドをスキップ）と <code>-s</code> オプション（文字をスキップ）を使用して、行の特定の部分だけを比較できます。</p>
+<h3>出力のカスタマイズ</h3>
+<p><code>-c</code>（カウント）、<code>-d</code>（重複のみ）、<code>-u</code>（ユニークのみ）を組み合わせることで、様々な出力形式を得ることができます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>uniq</code>と<code>sort -u</code>の違いは何ですか？</h4>
-<p>A. <code>sort -u</code>は、ファイル全体をソートしてから重複を削除します。<code>uniq</code>は隣接する重複行のみを削除するため、通常は<code>sort | uniq</code>として使用します。<code>sort -u</code>は<code>sort | uniq</code>と同等ですが、一般的に効率的です。</p>
-<h4>Q2. <code>uniq</code>は隣接していない重複行を削除できますか？</h4>
-<p>A. いいえ、<code>uniq</code>は隣接する行のみを比較します。隣接していない重複を削除するには、まず<code>sort</code>でファイルをソートする必要があります。</p>
-<h4>Q3. 大きなファイルで<code>uniq</code>を使う場合の注意点はありますか？</h4>
-<p>A. 大きなファイルの場合、メモリ使用量に注意が必要です。特に<code>sort</code>と組み合わせる場合は、<code>sort</code>の<code>-T</code>オプションで一時ディレクトリを指定することを検討してください。</p>
-<h2>参考情報</h2>
+<h4>Q1. <code>uniq</code> と <code>sort | uniq</code> の違いは何ですか？</h4>
+<p>A. <code>uniq</code> は連続する重複行のみを処理しますが、<code>sort | uniq</code> はファイル内のすべての重複行を処理します。ファイル全体から重複を削除したい場合は、まず <code>sort</code> でソートする必要があります。</p>
+<h4>Q2. 大文字と小文字を区別せずに重複を削除するにはどうすればよいですか？</h4>
+<p>A. <code>-i</code> または <code>--ignore-case</code> オプションを使用します。例：<code>uniq -i filename</code></p>
+<h4>Q3. 特定の列や文字数を無視して比較するにはどうすればよいですか？</h4>
+<p>A. <code>-f N</code>（最初のN個のフィールドをスキップ）または <code>-s N</code>（最初のN文字をスキップ）オプションを使用します。</p>
+<h4>Q4. 重複行の数を知りたい場合はどうすればよいですか？</h4>
+<p>A. <code>-c</code> または <code>--count</code> オプションを使用すると、各行の出現回数が表示されます。</p>
+<h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/uniq-invocation.html</p>
-<h2>改訂履歴</h2>
+<h2>Revisions</h2>
 <ul>
-<li>2025/04/26 ドキュメント全体を改訂し、フォーマットを統一。例を追加し、Tips、FAQセクションを追加。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

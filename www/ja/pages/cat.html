@@ -46,84 +46,82 @@
   <div class="content">
     <main>
       
-  <h1><code>cat</code> コマンド概要</h1>
-<p><code>cat</code>（concatenate の略）は、ファイルの内容を表示したり、複数のファイルを連結したりするためのシンプルな Unix コマンドです。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-n</strong>: 全ての行に行番号を付けて表示します</p>
-<ul>
-<li>例: <code>cat -n file.txt</code></li>
-</ul>
-</li>
-<li><p><strong>-b</strong>: 空行以外の行に行番号を付けて表示します</p>
-<ul>
-<li>例: <code>cat -b file.txt</code></li>
-</ul>
-</li>
-<li><p><strong>-s</strong>: 連続する空行を1行にまとめて表示します</p>
-<ul>
-<li>例: <code>cat -s file.txt</code></li>
-</ul>
-</li>
-<li><p><strong>-A</strong>: 制御文字や特殊文字を表示します（タブや改行など）</p>
-<ul>
-<li>例: <code>cat -A file.txt</code></li>
-</ul>
-</li>
-<li><p><strong>-E</strong>: 各行の末尾に「$」記号を表示します</p>
-<ul>
-<li>例: <code>cat -E file.txt</code></li>
-</ul>
-</li>
-<li><p><strong>-T</strong>: タブ文字を「^I」として表示します</p>
-<ul>
-<li>例: <code>cat -T file.txt</code></li>
-</ul>
-</li>
-</ul>
-<h2>使用例</h2>
-<h3>基本的な使用法：ファイルの内容を表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ファイルの内容を表示</span>
-cat<span style="color: #F8F8F8"> </span>sample.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-これはサンプルテキストです。
-catコマンドでファイルの内容を表示しています。
+  <h1>cat コマンド</h1>
+<p>ファイルの内容を表示したり、複数のファイルを連結したりします。</p>
+<h2>概要</h2>
+<p><code>cat</code>（concatenate の略）は、ファイルの内容を標準出力に表示するシンプルなコマンドです。複数のファイルを指定すると、それらを連結して出力します。また、標準入力からのデータを読み取ることもできます。テキストファイルの内容確認や、ファイルの結合、新しいファイルの作成など、日常的なファイル操作に便利です。</p>
+<h2>オプション</h2>
+<h3><strong>-n（行番号表示）</strong></h3>
+<p>各行の先頭に行番号を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>sample.txt
+<span style="color: #000; font-style: italic">     1  これは1行目です</span>
+<span style="color: #000; font-style: italic">     2  これは2行目です</span>
+<span style="color: #000; font-style: italic">     3  これは3行目です</span>
 </pre></div>
-<h3>複数ファイルの連結表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 複数のファイルを順番に表示</span>
-cat<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-file1の内容
-file1の2行目
-file2の内容
-file2の2行目
-</pre></div>
-<h3>行番号付きで表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 行番号を付けて表示</span>
-cat<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>sample.txt
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8">  </span>これはサンプルテキストです。
-<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8">  </span>catコマンドでファイルの内容を表示しています。
-<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8">  </span>空行も番号が振られます。
-</pre></div>
-<h3>ファイルの作成と追記</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 標準入力からファイルを作成</span>
-cat<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>newfile.txt
-入力したい内容を書きます
-Ctrl+D<span style="color: #F8F8F8"> </span>で終了
+<h3><strong>-b（空行以外に行番号表示）</strong></h3>
+<p>空行を除いた各行の先頭に行番号を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>sample.txt
+<span style="color: #000; font-style: italic">     1  これは1行目です</span>
+<span style="color: #000; font-style: italic">     2  これは2行目です</span>
 
-<span style="color: #8F5902; font-style: italic"># 既存ファイルに追記</span>
-cat<span style="color: #F8F8F8"> </span>&gt;&gt;<span style="color: #F8F8F8"> </span>existingfile.txt
-追記したい内容
-Ctrl+D<span style="color: #F8F8F8"> </span>で終了
+<span style="color: #000; font-style: italic">     3  これは4行目です</span>
 </pre></div>
-<h2>追加メモ</h2>
+<h3><strong>-s（連続する空行を圧縮）</strong></h3>
+<p>連続する空行を1行にまとめます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>sample.txt
+<span style="color: #000; font-style: italic">これは1行目です</span>
+<span style="color: #000; font-style: italic">これは2行目です</span>
+
+<span style="color: #000; font-style: italic">これは4行目です</span>
+</pre></div>
+<h3><strong>-A（すべての制御文字を表示）</strong></h3>
+<p>タブや改行などの制御文字を可視化します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span>sample.txt
+<span style="color: #000; font-style: italic">これは1行目です$</span>
+<span style="color: #000; font-style: italic">これは2行目です$</span>
+<span style="color: #8F5902">$</span>
+<span style="color: #000; font-style: italic">これは4行目です$</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>複数ファイルの連結表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">file1の内容</span>
+<span style="color: #000; font-style: italic">file2の内容</span>
+</pre></div>
+<h3>ファイルの作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>newfile.txt
+<span style="color: #000; font-style: italic">これは新しいファイルの内容です</span>
+<span style="color: #000; font-style: italic">（Ctrl+Dで入力終了）</span>
+</pre></div>
+<h3>ファイルの連結と保存</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>combined.txt
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>combined.txt
+<span style="color: #000; font-style: italic">file1の内容</span>
+<span style="color: #000; font-style: italic">file2の内容</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>パイプラインでの活用</h3>
+<p><code>cat</code>はパイプラインの最初のコマンドとしてよく使われます。ファイルの内容を他のコマンドに渡すことができます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>large_file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;検索語句&quot;</span>
+</pre></div>
+<h3>不要な使用を避ける</h3>
+<p><code>cat file | grep pattern</code>のような使い方は可能ですが、<code>grep pattern file</code>と直接指定する方が効率的である場合が多いです。</p>
+<h3>バイナリファイルの表示に注意</h3>
+<p>バイナリファイルを<code>cat</code>で表示すると、ターミナルが文字化けすることがあります。その場合は<code>reset</code>コマンドでターミナルをリセットできます。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>cat</code>コマンドの名前の由来は何ですか？</h4>
+<p>A. <code>cat</code>は「concatenate（連結する）」の略です。複数のファイルを連結して表示する機能に由来しています。</p>
+<h4>Q2. 大きなファイルを表示する場合、どうすればよいですか？</h4>
+<p>A. 大きなファイルは<code>less</code>や<code>more</code>コマンドを使うと、ページ単位で閲覧できるため便利です。</p>
+<h4>Q3. ファイルの最初の数行だけ表示するには？</h4>
+<p>A. <code>cat</code>の代わりに<code>head</code>コマンドを使用します。例えば<code>head -n 5 file.txt</code>で最初の5行を表示できます。</p>
+<h4>Q4. macOSと Linux で<code>cat</code>コマンドに違いはありますか？</h4>
+<p>A. 基本的な機能は同じですが、一部のオプションが異なる場合があります。macOSの<code>cat</code>はBSD由来で、Linuxの<code>cat</code>はGNU由来です。</p>
+<h2>参考資料</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/cat-invocation.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li><code>cat</code> は小さなファイルの表示に適していますが、大きなファイルには <code>less</code> や <code>more</code> コマンドの方が適しています。</li>
-<li>パイプ（<code>|</code>）と組み合わせて使うことで、出力を他のコマンドに渡すことができます（例：<code>cat file.txt | grep &quot;検索語&quot;</code>）。</li>
-<li><code>cat</code> コマンドを使ってファイルを作成する方法は初心者にも便利ですが、大量のテキストを入力する場合は専用のテキストエディタ（<code>nano</code>、<code>vim</code>、<code>emacs</code> など）を使用する方が効率的です。</li>
-<li>ファイルの内容を確認するだけなら <code>cat</code> は便利ですが、ファイルを編集したい場合は他のエディタを使用してください。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

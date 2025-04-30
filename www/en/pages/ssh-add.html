@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  ssh-add - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>ssh-add command</h1>
+<p>Add private keys to the SSH authentication agent for connection authentication.</p>
+<h2>Overview</h2>
+<p><code>ssh-add</code> manages the SSH authentication agent (ssh-agent) by adding private keys to its cache. This allows you to authenticate to SSH servers without entering your passphrase each time, as the agent securely holds your unlocked keys in memory for the duration of your session.</p>
+<h2>Options</h2>
+<h3><strong>-l (List)</strong></h3>
+<p>Lists fingerprints of all identities currently held by the agent</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-l
+<span style="color: #000; font-style: italic">2048 SHA256:abcdefghijklmnopqrstuvwxyz1234567890ABCD user@hostname (RSA)</span>
+</pre></div>
+<h3><strong>-d (Delete)</strong></h3>
+<p>Removes a specific identity from the agent</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa
+<span style="color: #000; font-style: italic">Identity removed: /Users/username/.ssh/id_rsa (user@hostname)</span>
+</pre></div>
+<h3><strong>-D (Delete All)</strong></h3>
+<p>Removes all identities from the agent</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-D
+<span style="color: #000; font-style: italic">All identities removed.</span>
+</pre></div>
+<h3><strong>-t (Timeout)</strong></h3>
+<p>Sets a timeout (in seconds) after which the key will be automatically removed</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3600</span><span style="color: #F8F8F8"> </span>~/.ssh/id_rsa
+<span style="color: #000; font-style: italic">Identity added: /Users/username/.ssh/id_rsa (user@hostname)</span>
+<span style="color: #000; font-style: italic">Lifetime set to 3600 seconds</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Adding a default key</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add
+<span style="color: #000; font-style: italic">Enter passphrase for /Users/username/.ssh/id_rsa: </span>
+<span style="color: #000; font-style: italic">Identity added: /Users/username/.ssh/id_rsa (user@hostname)</span>
+</pre></div>
+<h3>Adding a specific key</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>~/.ssh/github_rsa
+<span style="color: #000; font-style: italic">Enter passphrase for /Users/username/.ssh/github_rsa: </span>
+<span style="color: #000; font-style: italic">Identity added: /Users/username/.ssh/github_rsa (user@github)</span>
+</pre></div>
+<h3>Checking if agent has keys</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-l
+<span style="color: #000; font-style: italic">2048 SHA256:abcdefghijklmnopqrstuvwxyz1234567890ABCD user@hostname (RSA)</span>
+<span style="color: #000; font-style: italic">3072 SHA256:ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcd user@github (RSA)</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Start ssh-agent First</h3>
+<p>Make sure ssh-agent is running before using ssh-add. On many systems, you can start it with:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>ssh-agent<span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #000; font-style: italic">Agent pid 12345</span>
+</pre></div>
+<h3>Add Keys at Login</h3>
+<p>Add your SSH keys to your login session by including ssh-add commands in your shell startup files (like ~/.bashrc or ~/.zshrc).</p>
+<h3>Use SSH Config File</h3>
+<p>Combine ssh-add with an SSH config file (~/.ssh/config) to manage multiple keys for different hosts automatically.</p>
+<h3>Use Keychain on macOS</h3>
+<p>On macOS, use the -K option to store your passphrase in the keychain:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-K<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa
+</pre></div>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. Why do I need to use ssh-add?</h4>
+<p>A. It allows you to authenticate to SSH servers without entering your passphrase each time, as the agent securely holds your unlocked keys in memory.</p>
+<h4>Q2. How do I know if my keys are loaded in the agent?</h4>
+<p>A. Use <code>ssh-add -l</code> to list all loaded keys.</p>
+<h4>Q3. My keys keep disappearing after some time. Why?</h4>
+<p>A. SSH keys may be removed from the agent when you log out or restart. You can add them to your login scripts or use the -t option to set a specific timeout.</p>
+<h4>Q4. How do I use ssh-add with multiple keys?</h4>
+<p>A. Simply run ssh-add for each key: <code>ssh-add ~/.ssh/key1</code> followed by <code>ssh-add ~/.ssh/key2</code>.</p>
+<h2>macOS Specific Information</h2>
+<p>On macOS, you can use the <code>-K</code> option to store your passphrase in the macOS keychain. This allows your keys to be automatically loaded when you log in:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-K<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa
+</pre></div>
+<p>Note that in newer versions of macOS (Monterey and later), the <code>-K</code> option has been deprecated. Instead, use:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>--apple-use-keychain<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa
+</pre></div>
+<p>You may also need to add the following to your ~/.ssh/config file:</p>
+<pre><code>Host *
+  UseKeychain yes
+  AddKeysToAgent yes
+</code></pre><h2>References</h2>
+<p>https://man.openbsd.org/ssh-add.1</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

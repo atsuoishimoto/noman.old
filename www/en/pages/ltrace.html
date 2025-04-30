@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  ltrace - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>ltrace command</h1>
+<p>Trace library calls made by a program, showing function calls, arguments, and return values.</p>
+<h2>Overview</h2>
+<p><code>ltrace</code> is a debugging utility that intercepts and records dynamic library calls made by a program, as well as signals received by the program. It's particularly useful for understanding how a program interacts with libraries, troubleshooting issues, or reverse engineering applications when source code is unavailable.</p>
+<h2>Options</h2>
+<h3><strong>-c</strong></h3>
+<p>Count and summarize all function calls</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>ls
+<span style="color: #8F5902">% </span><span style="color: #204A87">time</span><span style="color: #F8F8F8">     </span>seconds<span style="color: #F8F8F8">  </span>usecs/call<span style="color: #F8F8F8">     </span>calls<span style="color: #F8F8F8">      </span><span style="color: #204A87; font-weight: bold">function</span>
+<span style="color: #000; font-style: italic">------ ----------- ----------- --------- --------------------</span>
+<span style="color: #000; font-style: italic"> 24.45    0.000212          30         7 malloc</span>
+<span style="color: #000; font-style: italic"> 15.67    0.000136          22         6 strlen</span>
+<span style="color: #000; font-style: italic"> 11.53    0.000100          16         6 __ctype_b_loc</span>
+<span style="color: #000; font-style: italic">  9.94    0.000086          14         6 __cxa_atexit</span>
+<span style="color: #000; font-style: italic">  8.92    0.000077          15         5 free</span>
+<span style="color: #000; font-style: italic">  [...]</span>
+</pre></div>
+<h3><strong>-f</strong></h3>
+<p>Trace child processes as they are created by the currently traced process</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>./program
+<span style="color: #000; font-style: italic">[pid 12345] malloc(32)                                  = 0x55d45e9a12a0</span>
+<span style="color: #000; font-style: italic">[pid 12345] fork()                                      = 12346</span>
+<span style="color: #000; font-style: italic">[pid 12346] malloc(64)                                  = 0x55d45e9a1340</span>
+<span style="color: #000; font-style: italic">[pid 12345] waitpid(12346, 0x7ffd8a7b5a9c, 0)           = 12346</span>
+</pre></div>
+<h3><strong>-e PATTERN</strong></h3>
+<p>Filter which library calls to trace using a pattern</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>malloc+free<span style="color: #F8F8F8"> </span>ls
+<span style="color: #000; font-style: italic">ls-&gt;malloc(32)                                         = 0x55d45e9a12a0</span>
+<span style="color: #000; font-style: italic">ls-&gt;malloc(64)                                         = 0x55d45e9a1340</span>
+<span style="color: #000; font-style: italic">ls-&gt;free(0x55d45e9a12a0)                               = &lt;void&gt;</span>
+<span style="color: #000; font-style: italic">ls-&gt;free(0x55d45e9a1340)                               = &lt;void&gt;</span>
+</pre></div>
+<h3><strong>-p PID</strong></h3>
+<p>Attach to a running process with the specified PID</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+<span style="color: #000; font-style: italic">[pid 1234] read(5, &quot;data&quot;, 1024)                       = 4</span>
+<span style="color: #000; font-style: italic">[pid 1234] write(1, &quot;data\n&quot;, 5)                       = 5</span>
+</pre></div>
+<h3><strong>-S</strong></h3>
+<p>Display system calls as well as library calls</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>ls
+<span style="color: #000; font-style: italic">SYS_brk(0)                                             = 0x55d45e9a1000</span>
+<span style="color: #000; font-style: italic">SYS_access(&quot;/etc/ld.so.preload&quot;, 04)                   = -2</span>
+<span style="color: #000; font-style: italic">ls-&gt;malloc(32)                                         = 0x55d45e9a12a0</span>
+<span style="color: #000; font-style: italic">SYS_write(1, &quot;file.txt\n&quot;, 9)                          = 9</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Tracing a specific program</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>./myprogram
+<span style="color: #000; font-style: italic">myprogram-&gt;printf(&quot;Hello, world!\n&quot;)                   = 14</span>
+<span style="color: #000; font-style: italic">myprogram-&gt;malloc(1024)                                = 0x55d45e9a12a0</span>
+<span style="color: #000; font-style: italic">myprogram-&gt;free(0x55d45e9a12a0)                        = &lt;void&gt;</span>
+<span style="color: #000; font-style: italic">myprogram-&gt;exit(0)                                     = &lt;no return&gt;</span>
+</pre></div>
+<h3>Limiting output depth</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>./myprogram
+<span style="color: #000; font-style: italic">myprogram-&gt;printf(&quot;Hello, world!\n&quot;) = 14</span>
+<span style="color: #000; font-style: italic">  -&gt; puts(&quot;Hello, world!&quot;) = 14</span>
+<span style="color: #000; font-style: italic">    -&gt; strlen(&quot;Hello, world!&quot;) = 13</span>
+<span style="color: #000; font-style: italic">      -&gt; ... &lt;deeper calls not shown&gt;</span>
+</pre></div>
+<h3>Saving trace output to a file</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>trace.log<span style="color: #F8F8F8"> </span>./myprogram
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>trace.log
+<span style="color: #000; font-style: italic">printf(&quot;Hello, world!\n&quot;)                              = 14</span>
+<span style="color: #000; font-style: italic">malloc(1024)                                           = 0x55d45e9a12a0</span>
+<span style="color: #000; font-style: italic">free(0x55d45e9a12a0)                                   = &lt;void&gt;</span>
+<span style="color: #000; font-style: italic">exit(0)                                                = &lt;no return&gt;</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Filter Noisy Functions</h3>
+<p>Use <code>-e</code> to filter out noisy functions that aren't relevant to your debugging:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;!__cxa_*&#39;</span><span style="color: #F8F8F8"> </span>./myprogram
+</pre></div>
+<h3>Increase String Length</h3>
+<p>By default, ltrace truncates string arguments. Use <code>-s</code> to increase the displayed length:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span>./myprogram
+</pre></div>
+<h3>Combine with strace</h3>
+<p>For comprehensive debugging, use both <code>ltrace</code> for library calls and <code>strace</code> for system calls:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>./myprogram
+</pre></div>
+<h3>Demangle C++ Names</h3>
+<p>Use <code>-C</code> to demangle C++ function names for better readability when tracing C++ programs.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between ltrace and strace?</h4>
+<p>A. <code>ltrace</code> traces library calls (functions from shared libraries), while <code>strace</code> traces system calls (interactions with the kernel). <code>ltrace</code> is better for understanding application logic, while <code>strace</code> is better for understanding OS interactions.</p>
+<h4>Q2. Why doesn't ltrace show all function calls?</h4>
+<p>A. <code>ltrace</code> only shows calls to external libraries, not internal function calls within the program itself. It also can't trace statically linked libraries.</p>
+<h4>Q3. Can ltrace affect program performance?</h4>
+<p>A. Yes, tracing adds significant overhead. Programs run much slower when being traced, so performance measurements under <code>ltrace</code> are not representative of normal execution.</p>
+<h4>Q4. How do I trace a specific set of functions?</h4>
+<p>A. Use the <code>-e</code> option with a pattern: <code>ltrace -e malloc+free+open ./program</code> to trace only malloc, free, and open calls.</p>
+<h2>References</h2>
+<p>https://man7.org/linux/man-pages/man1/ltrace.1.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

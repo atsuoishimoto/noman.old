@@ -1,153 +1,165 @@
 # wget コマンド
 
-wgetはウェブサーバーからファイルをダウンロードするためのコマンドラインツールです。HTTPやFTPなどのプロトコルを使用してコンテンツを取得できます。
+リモートサーバーからファイルをダウンロードするためのコマンドラインツールです。
+
+## 概要
+
+`wget`は、HTTP、HTTPS、FTPなどのプロトコルを使用してウェブサーバーからファイルをダウンロードするためのユーティリティです。オフラインでの閲覧のためにウェブサイト全体をミラーリングしたり、スクリプト内でファイルを自動的にダウンロードしたりするのに便利です。ネットワーク接続が不安定な場合でも、ダウンロードを再開する機能があります。
 
 ## オプション
 
 ### **-O, --output-document=FILE**
-ダウンロードしたファイルを指定した名前で保存します
+
+ダウンロードしたファイルを指定した名前で保存します。
 
 ```console
-$ wget -O example.zip https://example.com/file.zip
---2023-04-01 12:01:00--  https://example.com/file.zip
-Resolving example.com... 93.184.216.34
-Connecting to example.com|93.184.216.34|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 1024000 (1000K) [application/zip]
-Saving to: 'example.zip'
-
-example.zip     100%[===================>]   1000K   256KB/s    in 3.9s    
-
-2023-04-01 12:01:04 (256 KB/s) - 'example.zip' saved [1024000/1024000]
+$ wget -O latest-firefox.dmg https://download.mozilla.org/?product=firefox-latest
+--2025-04-30 10:15:23--  https://download.mozilla.org/?product=firefox-latest
+ファイル 'latest-firefox.dmg' に保存中
 ```
 
 ### **-c, --continue**
-部分的にダウンロードされたファイルの続きからダウンロードを再開します
+
+部分的にダウンロードされたファイルの続きからダウンロードを再開します。
 
 ```console
-$ wget -c https://example.com/largefile.iso
---2023-04-01 12:05:00--  https://example.com/largefile.iso
-Resolving example.com... 93.184.216.34
-Connecting to example.com|93.184.216.34|:443... connected.
-HTTP request sent, awaiting response... 206 Partial Content
-Length: 104857600 (100M), 52428800 (50M) remaining [application/octet-stream]
-Saving to: 'largefile.iso'
+$ wget -c https://example.com/largefile.zip
+--2025-04-30 10:16:45--  https://example.com/largefile.zip
+ファイル 'largefile.zip' の続きからダウンロードを再開します
+```
 
-largefile.iso   50%[========>         ]  50.0M   1.2MB/s    eta 41s
+### **-b, --background**
+
+バックグラウンドでダウンロードを実行します。ログは `wget-log` ファイルに保存されます。
+
+```console
+$ wget -b https://example.com/largefile.iso
+バックグラウンドで実行を継続します。pid 1234
+ログは 'wget-log' に出力されます
 ```
 
 ### **-r, --recursive**
-ウェブサイトを再帰的にダウンロードします
+
+リンクを再帰的にたどってダウンロードします。ウェブサイト全体をダウンロードする際に使用します。
 
 ```console
-$ wget -r https://example.com/docs/
---2023-04-01 12:02:00--  https://example.com/docs/
-Resolving example.com... 93.184.216.34
-Connecting to example.com|93.184.216.34|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 5120 (5.0K) [text/html]
-Saving to: 'example.com/docs/index.html'
+$ wget -r -np https://example.com/docs/
+--2025-04-30 10:18:12--  https://example.com/docs/
+ディレクトリ 'example.com/docs/' を再帰的にダウンロードしています
+```
 
-example.com/docs/index.html    100%[===================>]   5.0K   --.-KB/s    in 0.1s
+### **-np, --no-parent**
+
+親ディレクトリへのリンクをたどらないようにします。特定のディレクトリ以下のみをダウンロードする場合に便利です。
+
+```console
+$ wget -r -np https://example.com/docs/
+--2025-04-30 10:19:30--  https://example.com/docs/
+親ディレクトリへのリンクは無視されます
 ```
 
 ### **-P, --directory-prefix=PREFIX**
-ファイルを保存するディレクトリを指定します
+
+ダウンロードしたファイルを指定したディレクトリに保存します。
 
 ```console
 $ wget -P downloads/ https://example.com/file.zip
---2023-04-01 12:10:00--  https://example.com/file.zip
-Resolving example.com... 93.184.216.34
-Connecting to example.com|93.184.216.34|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 1024000 (1000K) [application/zip]
-Saving to: 'downloads/file.zip'
-
-downloads/file.zip  100%[===================>]   1000K   256KB/s    in 3.9s
+--2025-04-30 10:20:45--  https://example.com/file.zip
+ファイルを 'downloads/file.zip' に保存中
 ```
 
 ## 使用例
 
-### 基本的なファイルのダウンロード
+### 単一ファイルのダウンロード
 
 ```console
 $ wget https://example.com/file.zip
---2023-04-01 12:00:00--  https://example.com/file.zip
-Resolving example.com... 93.184.216.34
-Connecting to example.com|93.184.216.34|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 1024000 (1000K) [application/zip]
-Saving to: 'file.zip'
-
-file.zip            100%[===================>]   1000K   256KB/s    in 3.9s    
-
-2023-04-01 12:00:04 (256 KB/s) - 'file.zip' saved [1024000/1024000]
+--2025-04-30 10:22:10--  https://example.com/file.zip
+ファイル 'file.zip' に保存中
+100%[======================================>] 1,234,567   1.2MB/s   in 1.0s
+2025-04-30 10:22:11 (1.2 MB/s) - 'file.zip' へ保存完了 [1234567]
 ```
 
-### ウェブサイトの再帰的ダウンロード（深さと親ディレクトリ制限付き）
+### ウェブサイトのミラーリング
 
 ```console
-$ wget -r -l 2 -np https://example.com/docs/
---2023-04-01 12:02:00--  https://example.com/docs/
-Resolving example.com... 93.184.216.34
-Connecting to example.com|93.184.216.34|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 5120 (5.0K) [text/html]
-Saving to: 'example.com/docs/index.html'
-
-example.com/docs/index.html    100%[===================>]   5.0K   --.-KB/s    in 0.1s    
-
-2023-04-01 12:02:01 (50.0 KB/s) - 'example.com/docs/index.html' saved [5120/5120]
+$ wget -m -k -p https://example.com/
+--2025-04-30 10:23:30--  https://example.com/
+ウェブサイトをミラーリングしています
+リンクを変換しています...
 ```
+
+### 認証が必要なサイトからのダウンロード
+
+```console
+$ wget --user=username --password=password https://secure-example.com/private/file.pdf
+--2025-04-30 10:25:15--  https://secure-example.com/private/file.pdf
+ユーザー名/パスワードによる認証中...
+```
+
+### 複数URLのダウンロード（ファイルからURLリストを読み込む）
+
+```console
+$ wget -i url-list.txt
+--2025-04-30 10:26:40--  https://example.com/file1.zip
+ファイル 'file1.zip' に保存中
+--2025-04-30 10:26:45--  https://example.com/file2.zip
+ファイル 'file2.zip' に保存中
+```
+
+## ヒント:
 
 ### ダウンロード速度の制限
 
+帯域幅を節約したい場合は、`--limit-rate`オプションを使用してダウンロード速度を制限できます。
 ```console
 $ wget --limit-rate=200k https://example.com/largefile.iso
---2023-04-01 12:15:00--  https://example.com/largefile.iso
-Resolving example.com... 93.184.216.34
-Connecting to example.com|93.184.216.34|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 104857600 (100M) [application/octet-stream]
-Saving to: 'largefile.iso'
-
-largefile.iso   10%[===>              ]  10.0M   200KB/s    eta 7m 30s
 ```
 
-## Tips
+### ユーザーエージェントの変更
 
-### バックグラウンドでのダウンロード
-`-b`オプションを使用すると、ダウンロードをバックグラウンドで実行できます。進行状況は`wget-log`ファイルに記録されます。
+一部のウェブサイトはブラウザからのアクセスのみを許可しています。`--user-agent`オプションでブラウザのふりをすることができます。
+```console
+$ wget --user-agent="Mozilla/5.0" https://example.com/restricted-file.zip
+```
 
-### 複数ファイルのダウンロード
-URLリストを含むファイルを作成し、`-i`オプションで指定すると、複数のファイルを一度にダウンロードできます。
+### 再試行回数の設定
 
-### ミラーリング
-`--mirror`オプションは、`-r -N -l inf --no-remove-listing`の組み合わせで、サイトの完全なミラーを作成します。
+不安定なネットワーク環境では、`--tries`オプションで再試行回数を増やすことができます。
+```console
+$ wget --tries=10 https://example.com/important-file.zip
+```
+
+### ダウンロード履歴の保存
+
+`-o`オプションを使用して、ダウンロードの詳細なログを保存できます。
+```console
+$ wget -o download.log https://example.com/file.zip
+```
 
 ## よくある質問
 
-#### Q1. ダウンロードが途中で中断された場合はどうすればよいですか？
-A. `-c`オプションを使用すると、中断されたダウンロードを続きから再開できます。例：`wget -c https://example.com/largefile.iso`
+#### Q1. wgetとcurlの違いは何ですか？
+A. `wget`は主にファイルのダウンロードに特化しており、再帰的なダウンロードやダウンロードの再開機能があります。一方、`curl`はより多くのプロトコルをサポートし、データの送信にも使用できますが、再帰的なダウンロードは標準では行いません。
 
-#### Q2. ウェブサイト全体をダウンロードするにはどうすればよいですか？
-A. `-r`（再帰的）、`-np`（親ディレクトリに移動しない）、`-l`（深さレベル）オプションを組み合わせて使用します。例：`wget -r -np -l 2 https://example.com/`
+#### Q2. ダウンロードが途中で中断された場合、どうすればよいですか？
+A. `-c`（または`--continue`）オプションを使用すると、部分的にダウンロードされたファイルの続きからダウンロードを再開できます。
 
-#### Q3. ダウンロードをバックグラウンドで実行するにはどうすればよいですか？
-A. `-b`オプションを使用します。進行状況は`wget-log`ファイルに記録されます。例：`wget -b https://example.com/file.zip`
+#### Q3. ウェブサイト全体をダウンロードするにはどうすればよいですか？
+A. `-m`（または`--mirror`）オプションを使用します。これは`-r -N -l inf --no-remove-listing`の組み合わせと同等です。さらに`-k`（リンク変換）と`-p`（必要なファイルも取得）を追加するとオフライン閲覧に適しています。
 
-#### Q4. 認証が必要なサイトからダウンロードするにはどうすればよいですか？
-A. `--user=USER`と`--password=PASS`オプションを使用します。例：`wget --user=username --password=password https://example.com/private/file.zip`
+#### Q4. HTTPSサイトの証明書エラーを無視するにはどうすればよいですか？
+A. `--no-check-certificate`オプションを使用できますが、セキュリティ上のリスクがあるため注意が必要です。
 
 ## macOSでの注意点
 
-macOSでは、デフォルトではwgetがインストールされていません。Homebrewを使用して最新版のwgetをインストールできます：
+macOSにはデフォルトで`wget`がインストールされていません。Homebrewを使用してインストールできます：
 
 ```console
 $ brew install wget
 ```
 
-インストール後は、他のUnixシステムと同様に使用できます。
+また、macOSのセキュリティ設定によっては、ダウンロードしたファイルの実行に追加の許可が必要な場合があります。
 
 ## 参考資料
 
@@ -155,6 +167,4 @@ https://www.gnu.org/software/wget/manual/wget.html
 
 ## 改訂履歴
 
-- 2025/04/26 Tipsセクションを追加し、macOSでの注意点を独立したセクションに移動しました。
-- 2025/04/26 コマンドの概要を追加し、ドキュメント形式を改善しました。
-- 2025/04/01 ドキュメント形式を統一し、よくある質問と追加情報を整理しました。macOSに関する情報を追加しました。
+- 2025/04/30 初版作成

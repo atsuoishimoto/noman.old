@@ -46,55 +46,73 @@
   <div class="content">
     <main>
       
-  <h1>mkfifo コマンドの概要</h1>
-<p><code>mkfifo</code>は、名前付きパイプ（FIFO: First In First Out）を作成するためのUnixコマンドです。これにより、異なるプロセス間でデータを受け渡しするための特殊なファイルを作成できます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-m, --mode=MODE</strong>: パイプのパーミッション（アクセス権限）を設定します</p>
-<ul>
-<li>例: <code>mkfifo -m 644 mypipe</code></li>
-</ul>
-</li>
-<li><p><strong>-Z, --context=CTX</strong>: SELinuxセキュリティコンテキストを設定します（SELinux対応システムのみ）</p>
-<ul>
-<li>例: <code>mkfifo -Z user_u:object_r:user_tmp_t:s0 mypipe</code></li>
-</ul>
-</li>
-</ul>
+  <h1>mkfifo コマンド</h1>
+<p>名前付きパイプ（FIFO特殊ファイル）を作成します。</p>
+<h2>概要</h2>
+<p><code>mkfifo</code>コマンドは、プロセス間通信に使用される名前付きパイプ（FIFO: First-In-First-Out）を作成します。通常のファイルとは異なり、FIFOは一時的なデータストリームを提供し、あるプロセスが書き込んだデータを別のプロセスが読み取ることができます。これにより、関連のないプロセス間でデータを安全に転送できます。</p>
+<h2>オプション</h2>
+<h3><strong>-m, --mode=MODE</strong></h3>
+<p>作成するFIFOのパーミッションを設定します（デフォルトは0666）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0644</span><span style="color: #F8F8F8"> </span>myfifo
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>myfifo
+<span style="color: #000; font-style: italic">prw-r--r--  1 user  staff  0 Apr 30 10:00 myfifo</span>
+</pre></div>
+<h3><strong>-p, --parents</strong></h3>
+<p>必要に応じて親ディレクトリを作成します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>path/to/new/myfifo
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>path/to/new/myfifo
+<span style="color: #000; font-style: italic">prw-r--r--  1 user  staff  0 Apr 30 10:01 path/to/new/myfifo</span>
+</pre></div>
+<h3><strong>-Z, --context=CTX</strong></h3>
+<p>SELinuxセキュリティコンテキストを設定します（SELinux対応システムのみ）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>-Z<span style="color: #F8F8F8"> </span>user_u:object_r:user_tmp_t:s0<span style="color: #F8F8F8"> </span>myfifo
+</pre></div>
 <h2>使用例</h2>
 <h3>基本的な名前付きパイプの作成</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 名前付きパイプ「mypipe」を作成</span>
-mkfifo<span style="color: #F8F8F8"> </span>mypipe
-
-<span style="color: #8F5902; font-style: italic"># 確認（lsコマンドでは「p」がパイプを示す）</span>
-ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>mypipe
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-prw-r--r--<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8"> </span>group<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span>Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">12</span>:34<span style="color: #F8F8F8"> </span>mypipe
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>myfifo
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>myfifo
+<span style="color: #000; font-style: italic">prw-r--r--  1 user  staff  0 Apr 30 10:02 myfifo</span>
 </pre></div>
-<h3>パイプを使ったプロセス間通信</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ターミナル1で実行：パイプからデータを読み込む</span>
-cat<span style="color: #F8F8F8"> </span>mypipe
-
-<span style="color: #8F5902; font-style: italic"># ターミナル2で実行：パイプにデータを書き込む</span>
-<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello through the pipe&quot;</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>mypipe
-<span style="color: #8F5902; font-style: italic"># ターミナル1に「Hello through the pipe」と表示される</span>
+<h3>名前付きパイプを使ったプロセス間通信</h3>
+<p>ターミナル1で：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>myfifo
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>myfifo
+<span style="color: #000; font-style: italic">Hello, this is a test message.</span>
 </pre></div>
-<h3>特定のパーミッションでパイプを作成</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 所有者のみ読み書き可能なパイプを作成</span>
-mkfifo<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">600</span><span style="color: #F8F8F8"> </span>securepipe
-
-<span style="color: #8F5902; font-style: italic"># 確認</span>
-ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>securepipe
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-prw-------<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8"> </span>group<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span>Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">12</span>:40<span style="color: #F8F8F8"> </span>securepipe
+<p>ターミナル2で（同時に実行）：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>myfifo
+<span style="color: #000; font-style: italic">Hello, this is a test message.</span>
 </pre></div>
-<h2>追加情報</h2>
+<h3>コマンド出力のリダイレクト</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>myfifo
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>myfifo<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">&amp;</span>
+<span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;txt&quot;</span><span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>myfifo
+<span style="color: #000; font-style: italic">document.txt</span>
+<span style="color: #000; font-style: italic">notes.txt</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>FIFOは一度だけ使用可能</h3>
+<p>名前付きパイプからデータが読み取られると、そのデータは消費されます。複数のプロセスで同じデータを読み取りたい場合は、<code>tee</code>コマンドを使用するか、データを再送信する必要があります。</p>
+<h3>ブロッキング動作に注意</h3>
+<p>読み取り側がない状態で書き込みを行うと、書き込み側のプロセスはブロックされます（逆も同様）。これはデッドロックの原因になる可能性があるため、使用時には注意が必要です。</p>
+<h3>永続的なストレージではない</h3>
+<p>FIFOはデータの一時的な転送のみを目的としており、ファイルシステム上に存在しますが、データを永続的に保存するものではありません。</p>
+<h2>よくある質問</h2>
+<h4>Q1. 名前付きパイプと通常のパイプ（|）の違いは何ですか？</h4>
+<p>A. 通常のパイプ（|）は一時的で、コマンドライン上でのみ使用できますが、名前付きパイプはファイルシステム上に存在し、関連のないプロセス間でも通信できます。</p>
+<h4>Q2. 名前付きパイプはいつ削除されますか？</h4>
+<p>A. 名前付きパイプはファイルシステム上の通常のファイルと同様に扱われるため、明示的に削除（<code>rm</code>コマンドなど）するまで存在し続けます。ただし、システムの再起動後もデータは保持されません。</p>
+<h4>Q3. 名前付きパイプの最大サイズはどれくらいですか？</h4>
+<p>A. 名前付きパイプのバッファサイズはOSによって異なりますが、通常は数KBです（Linuxでは通常64KBまで）。バッファが一杯になると、書き込み側はブロックされます。</p>
+<h4>Q4. 複数のプロセスが同時に名前付きパイプに書き込むことはできますか？</h4>
+<p>A. はい、可能です。ただし、小さなデータチャンクが交互に書き込まれる可能性があるため、アプリケーションによっては問題が生じる場合があります。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSでは基本的にLinuxと同様に<code>mkfifo</code>が動作しますが、SELinux関連のオプション（-Z）はサポートされていません。また、macOSのパイプバッファサイズはLinuxとは異なる場合があります。</p>
+<h2>参考文献</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/mkfifo-invocation.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li>名前付きパイプは、関連のないプロセス間でデータを受け渡しするのに便利です。</li>
-<li>パイプからの読み取りは、誰かがパイプに書き込むまでブロック（待機）されます。</li>
-<li>パイプへの書き込みも、誰かがパイプから読み取るまでブロックされることがあります。</li>
-<li>通常のファイルとは異なり、パイプはデータを一時的に保持するだけで、ディスクに永続的に保存されません。</li>
-<li>パイプを削除するには通常のファイルと同様に <code>rm</code> コマンドを使用します。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

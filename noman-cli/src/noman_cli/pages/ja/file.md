@@ -1,55 +1,111 @@
-# `file` コマンド概要
+# file コマンド
 
-`file` コマンドはファイルの種類（タイプ）を判別するためのコマンドです。ファイルの内容を解析し、テキストファイル、実行ファイル、画像ファイルなどの種類を表示します。
+ファイルの種類を判別します。
 
-## 主なオプション
+## 概要
 
-- **-b, --brief**: ファイル名を表示せず、ファイルタイプのみを表示します
-  - 例: `file -b document.txt`
+`file` コマンドはファイルの内容を検査し、そのファイルの種類（テキスト、実行可能ファイル、画像など）を判定します。このコマンドは、拡張子がないファイルや、拡張子が実際の内容と一致しないファイルの種類を特定するのに役立ちます。
 
-- **-i, --mime**: MIMEタイプ形式でファイルタイプを表示します
-  - 例: `file -i image.jpg`
+## オプション
 
-- **-z, --uncompress**: 圧縮ファイルの内容を解析します
-  - 例: `file -z archive.gz`
+### **-b (--brief)**
 
-- **-L, --dereference**: シンボリックリンクをたどってリンク先のファイルタイプを表示します
-  - 例: `file -L symlink`
+ファイル名を表示せず、ファイルタイプのみを出力します。
+
+```console
+$ file -b sample.txt
+ASCII text
+```
+
+### **-i (--mime)**
+
+MIMEタイプ形式でファイルの種類を表示します。
+
+```console
+$ file -i sample.txt
+sample.txt: text/plain; charset=us-ascii
+```
+
+### **-z (--uncompress)**
+
+圧縮ファイルの内容を検査します。
+
+```console
+$ file -z archive.gz
+archive.gz: ASCII text (gzip compressed data, was "sample.txt")
+```
+
+### **-L (--dereference)**
+
+シンボリックリンクをたどり、リンク先のファイルの種類を表示します。
+
+```console
+$ file -L symlink.txt
+symlink.txt: ASCII text
+```
 
 ## 使用例
 
-```bash
-# 基本的な使い方
-$ file document.txt
-# 出力例
-document.txt: ASCII text
+### 基本的な使用法
 
-# 複数のファイルを一度に調べる
-$ file document.txt image.jpg script.sh
-# 出力例
-document.txt: ASCII text
-image.jpg: JPEG image data, JFIF standard 1.01
-script.sh: Bourne-Again shell script, ASCII text executable
+```console
+$ file sample.txt
+sample.txt: ASCII text
 
-# -b オプションでファイル名を省略
-$ file -b document.txt
-# 出力例
-ASCII text
-
-# -i オプションでMIMEタイプを表示
-$ file -i document.txt
-# 出力例
-document.txt: text/plain; charset=us-ascii
-
-# バイナリファイルの確認
-$ file /bin/ls
-# 出力例
-/bin/ls: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32
+$ file /bin/bash
+/bin/bash: Mach-O 64-bit executable x86_64
 ```
 
-## 追加メモ
+### 複数ファイルの種類を確認
 
-- ファイルに拡張子がない場合や、拡張子が実際の内容と一致しない場合に特に役立ちます。
-- `file` コマンドは「マジックナンバー」と呼ばれるファイル先頭のバイトパターンを解析して判定を行います。
-- スクリプトファイルの場合は、シバン（`#!`）行を検出して言語を判別します。
-- 大量のファイルを処理する場合は、`find` コマンドと組み合わせて使うと便利です。例：`find . -type f -exec file {} \;`
+```console
+$ file *
+document.txt:  ASCII text
+image.jpg:     JPEG image data, JFIF standard 1.01
+program:       Mach-O 64-bit executable x86_64
+archive.zip:   Zip archive data, at least v2.0 to extract
+```
+
+### ディレクトリの確認
+
+```console
+$ file /etc
+/etc: directory
+```
+
+## ヒント:
+
+### マジックナンバーによる判定
+
+`file` コマンドは「マジックナンバー」と呼ばれるファイル先頭のバイトパターンを検査して種類を判定しています。そのため、拡張子に関係なく実際の内容に基づいて判定できます。
+
+### スクリプトでの活用
+
+シェルスクリプト内で `file` コマンドを使用して、処理前にファイルの種類を確認することで、不適切なファイルタイプによるエラーを防ぐことができます。
+
+### バイナリファイルの識別
+
+テキストエディタで開く前にファイルがバイナリかテキストかを確認するのに役立ちます。バイナリファイルをテキストエディタで開くと文字化けの原因になります。
+
+## よくある質問
+
+#### Q1. `file` コマンドはどのようにファイルの種類を判定しますか？
+A. ファイルの先頭部分のバイトパターン（マジックナンバー）、テキスト分析、その他の特徴を調べて判定します。
+
+#### Q2. ファイルの拡張子と `file` コマンドの結果が異なる場合はどうすればよいですか？
+A. 通常は `file` コマンドの結果が実際のファイル内容を反映しています。必要に応じて拡張子を変更するか、適切なアプリケーションで開くことを検討してください。
+
+#### Q3. `file` コマンドが「data」や「ASCII text」としか表示しない場合はどうすればよいですか？
+A. これはファイルの内容が特定のパターンに一致しないか、一般的なテキストデータであることを示しています。より詳細な情報を得るには、ファイルの内容を直接確認する必要があるかもしれません。
+
+## macOSでの注意点
+
+macOSの `file` コマンドはBSD由来であり、Linux版と若干の違いがあります。特に `-z` オプションの動作が異なる場合があります。また、macOSでは実行可能ファイルの判定結果が「Mach-O」形式で表示されます。
+
+## 参考資料
+
+https://man7.org/linux/man-pages/man1/file.1.html
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

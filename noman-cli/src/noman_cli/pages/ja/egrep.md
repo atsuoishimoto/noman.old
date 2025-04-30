@@ -1,70 +1,143 @@
-# egrep コマンド概要
+# egrep コマンド
 
-`egrep`は拡張正規表現を使用してテキストパターンを検索するコマンドです。`grep -E`と同等の機能を持ち、複雑なパターンマッチングを簡潔な構文で実行できます。
+テキストファイル内でパターンを検索するための拡張正規表現を使用するコマンド。
 
-## 主なオプション
+## 概要
 
-- **-i**: 大文字と小文字を区別せずに検索します
-  - 例: `egrep -i "pattern" file.txt`
+`egrep`は`grep -E`と同等で、拡張正規表現を使ってファイル内のテキストパターンを検索するコマンドです。複雑な検索パターンを簡潔に表現できるため、テキスト処理やログ分析などで広く使われています。
 
-- **-v**: パターンに一致しない行を表示します（反転マッチ）
-  - 例: `egrep -v "pattern" file.txt`
+## オプション
 
-- **-c**: 一致した行数のみを表示します
-  - 例: `egrep -c "pattern" file.txt`
+### **-i**
 
-- **-n**: 一致した行の行番号も表示します
-  - 例: `egrep -n "pattern" file.txt`
+大文字と小文字を区別せずに検索します。
 
-- **-l**: パターンが含まれるファイル名のみを表示します
-  - 例: `egrep -l "pattern" *.txt`
+```console
+$ egrep -i "error" logfile.txt
+Error: Connection failed
+WARNING: error in configuration file
+System error detected at line 42
+```
 
-- **-r, -R**: ディレクトリを再帰的に検索します
-  - 例: `egrep -r "pattern" /path/to/directory`
+### **-v**
+
+パターンに一致しない行を表示します（反転マッチ）。
+
+```console
+$ egrep -v "success" logfile.txt
+Error: Connection failed
+Warning: Timeout occurred
+Process terminated unexpectedly
+```
+
+### **-n**
+
+マッチした行の行番号も表示します。
+
+```console
+$ egrep -n "error" logfile.txt
+3:Error: Connection failed
+7:System error detected at line 42
+15:Cannot proceed due to error condition
+```
+
+### **-c**
+
+マッチした行数のみを表示します。
+
+```console
+$ egrep -c "error" logfile.txt
+3
+```
+
+### **-l**
+
+マッチしたファイル名のみを表示します（複数ファイル検索時に便利）。
+
+```console
+$ egrep -l "error" *.log
+app.log
+system.log
+```
 
 ## 使用例
 
-### 基本的な使用法
-```bash
-# ファイル内で「apple」または「orange」を検索
-egrep "apple|orange" fruits.txt
-# 出力例
-apple is red
-orange is orange
+### 複数のパターンを検索（OR検索）
+
+```console
+$ egrep "error|warning|critical" logfile.txt
+Error: Connection failed
+Warning: Timeout occurred
+CRITICAL: System shutdown initiated
 ```
 
-### 複数のパターンと行番号表示
-```bash
-# 「user」または「admin」を含む行を行番号付きで表示
-egrep -n "user|admin" users.log
-# 出力例
-2: user1 logged in
-5: admin access granted
-7: user2 logged out
+### 特定の単語で始まる行を検索
+
+```console
+$ egrep "^Error" logfile.txt
+Error: Connection failed
+Error: Database unreachable
 ```
 
-### 再帰的な検索
-```bash
-# プロジェクト内のすべてのJavaファイルから「TODO」を検索
-egrep -r "TODO" --include="*.java" ./project/
-# 出力例
-./project/src/Main.java:45: // TODO: Fix this bug
-./project/src/User.java:23: // TODO: Implement authentication
+### 特定の単語で終わる行を検索
+
+```console
+$ egrep "failed$" logfile.txt
+Connection attempt failed
+Authentication failed
 ```
 
-### 複雑な正規表現
-```bash
-# 数字で始まる行を検索
-egrep "^[0-9]" data.txt
-# 出力例
-1. First item
-2. Second item
-9999 - Special code
+### 特定の形式の日付を含む行を検索
+
+```console
+$ egrep "[0-9]{4}-[0-9]{2}-[0-9]{2}" logfile.txt
+2025-04-30: System update completed
+2025-04-29: Backup failed
 ```
 
-## 追加情報
+## ヒント:
 
-- `egrep`は`grep -E`の別名であり、最近のシステムでは`grep -E`の使用が推奨されています。
-- 拡張正規表現では、`|`（OR）、`+`（1回以上の繰り返し）、`?`（0または1回の出現）、`()`（グループ化）などの特殊文字をエスケープなしで使用できます。
-- 検索パターンに空白やシェルの特殊文字が含まれる場合は、引用符（`""`）で囲むことをお勧めします。
-- 大量のファイルを検索する場合は、`--include`や`--exclude`オプションを使用して対象を絞り込むと効率的です。
+### 正規表現の基本記号
+
+- `|` - OR演算子（例：`pattern1|pattern2`）
+- `()` - グループ化
+- `?` - 直前の文字が0回または1回出現
+- `+` - 直前の文字が1回以上出現
+- `*` - 直前の文字が0回以上出現
+- `[]` - 文字クラス（例：`[0-9]`は任意の数字）
+- `^` - 行の先頭にマッチ
+- `$` - 行の末尾にマッチ
+
+### 検索結果の色付け
+
+`--color=auto`オプションを使うと、マッチした部分が色付けされて見やすくなります。
+
+### エスケープシーケンス
+
+特殊文字（`*`, `?`, `|`など）を検索する場合は、バックスラッシュ（`\`）でエスケープする必要があります。
+
+## よくある質問
+
+#### Q1. `egrep`と`grep -E`の違いは何ですか？
+A. 機能的には同じです。`egrep`は`grep -E`のエイリアスであり、拡張正規表現を使用するためのショートカットです。最近のシステムでは`grep -E`の使用が推奨されています。
+
+#### Q2. 複数のファイルから検索するにはどうすればいいですか？
+A. ファイル名にワイルドカードを使用するか、複数のファイル名を指定します。例：`egrep "pattern" file1.txt file2.txt`または`egrep "pattern" *.txt`
+
+#### Q3. 検索結果を別のファイルに保存するにはどうすればいいですか？
+A. リダイレクト演算子（`>`）を使用します。例：`egrep "pattern" file.txt > results.txt`
+
+#### Q4. 再帰的にディレクトリ内を検索するにはどうすればいいですか？
+A. `-r`オプションを使用します。例：`egrep -r "pattern" /path/to/directory`
+
+## macOSでの注意点
+
+macOSの`egrep`はBSD版であり、GNU版と若干の違いがあります。特に複雑な正規表現を使用する場合、動作が異なる可能性があります。また、macOSでは`grep -E`の使用が推奨されており、将来的に`egrep`は非推奨になる可能性があります。
+
+## 参考
+
+https://www.gnu.org/software/grep/manual/grep.html
+
+## 改訂
+
+- 2025/04/30 初版作成

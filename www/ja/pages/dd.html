@@ -46,71 +46,101 @@
   <div class="content">
     <main>
       
-  <h1>ddコマンド概要</h1>
-<p><code>dd</code>コマンドは、ファイルの変換とコピーを行うための低レベルなユーティリティです。主にディスクイメージの作成、バックアップ、データ復旧などに使用されます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>if=ファイル</strong>: 入力ファイルを指定します（input file）</p>
-<ul>
-<li>例: <code>dd if=/dev/sda</code>（ディスクからの読み取り）</li>
-</ul>
-</li>
-<li><p><strong>of=ファイル</strong>: 出力ファイルを指定します（output file）</p>
-<ul>
-<li>例: <code>dd of=backup.img</code>（イメージファイルへの書き込み）</li>
-</ul>
-</li>
-<li><p><strong>bs=バイト数</strong>: 一度に読み書きするブロックサイズを指定します（block size）</p>
-<ul>
-<li>例: <code>dd bs=4M</code>（4メガバイトのブロックサイズを使用）</li>
-</ul>
-</li>
-<li><p><strong>count=数</strong>: コピーするブロック数を指定します</p>
-<ul>
-<li>例: <code>dd count=10</code>（10ブロックだけコピー）</li>
-</ul>
-</li>
-<li><p><strong>status=progress</strong>: 処理の進行状況を表示します</p>
-<ul>
-<li>例: <code>dd status=progress</code>（コピー中の進捗を表示）</li>
-</ul>
-</li>
-<li><p><strong>conv=オプション</strong>: 変換オプションを指定します</p>
-<ul>
-<li>例: <code>dd conv=sync,noerror</code>（エラーを無視して同期モードでコピー）</li>
-</ul>
-</li>
-</ul>
+  <h1>dd コマンド</h1>
+<p>ファイルの変換とコピーを行うユーティリティ。</p>
+<h2>概要</h2>
+<p><code>dd</code> コマンドは、ファイルをブロック単位でコピー・変換するための低レベルなユーティリティです。主にディスクイメージの作成、バックアップ、データ復旧、ディスクのクローン作成などに使用されます。他のコピーコマンドと異なり、生のデバイスファイルを直接扱うことができるため、システム管理やフォレンジック調査で重宝されます。</p>
+<h2>オプション</h2>
+<h3><strong>if=ファイル</strong></h3>
+<p>入力ファイル（input file）を指定します。指定しない場合は標準入力から読み込みます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dd<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #CE5C00; font-weight: bold">=</span>/dev/zero<span style="color: #F8F8F8"> </span><span style="color: #000">of</span><span style="color: #CE5C00; font-weight: bold">=</span>zeros.bin<span style="color: #F8F8F8"> </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #000">bs</span><span style="color: #CE5C00; font-weight: bold">=</span>1M
+<span style="color: #000; font-style: italic">1+0 records in</span>
+<span style="color: #000; font-style: italic">1+0 records out</span>
+<span style="color: #000; font-style: italic">1048576 bytes (1.0 MB, 1.0 MiB) copied, 0.00209056 s, 501 MB/s</span>
+</pre></div>
+<h3><strong>of=ファイル</strong></h3>
+<p>出力ファイル（output file）を指定します。指定しない場合は標準出力に書き込みます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dd<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #CE5C00; font-weight: bold">=</span>/dev/urandom<span style="color: #F8F8F8"> </span><span style="color: #000">of</span><span style="color: #CE5C00; font-weight: bold">=</span>random.bin<span style="color: #F8F8F8"> </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #000">bs</span><span style="color: #CE5C00; font-weight: bold">=</span>1M
+<span style="color: #000; font-style: italic">1+0 records in</span>
+<span style="color: #000; font-style: italic">1+0 records out</span>
+<span style="color: #000; font-style: italic">1048576 bytes (1.0 MB, 1.0 MiB) copied, 0.0826016 s, 12.7 MB/s</span>
+</pre></div>
+<h3><strong>bs=バイト数</strong></h3>
+<p>一度に読み書きするブロックサイズを指定します。K（キロバイト）、M（メガバイト）、G（ギガバイト）などの単位を使用できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dd<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #CE5C00; font-weight: bold">=</span>/dev/zero<span style="color: #F8F8F8"> </span><span style="color: #000">of</span><span style="color: #CE5C00; font-weight: bold">=</span>test.img<span style="color: #F8F8F8"> </span><span style="color: #000">bs</span><span style="color: #CE5C00; font-weight: bold">=</span>1M<span style="color: #F8F8F8"> </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">10</span>
+<span style="color: #000; font-style: italic">10+0 records in</span>
+<span style="color: #000; font-style: italic">10+0 records out</span>
+<span style="color: #000; font-style: italic">10485760 bytes (10 MB, 10 MiB) copied, 0.0151831 s, 691 MB/s</span>
+</pre></div>
+<h3><strong>count=ブロック数</strong></h3>
+<p>コピーするブロック数を指定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dd<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #CE5C00; font-weight: bold">=</span>/dev/urandom<span style="color: #F8F8F8"> </span><span style="color: #000">of</span><span style="color: #CE5C00; font-weight: bold">=</span>small.bin<span style="color: #F8F8F8"> </span><span style="color: #000">bs</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">512</span><span style="color: #F8F8F8"> </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">2</span>
+<span style="color: #000; font-style: italic">2+0 records in</span>
+<span style="color: #000; font-style: italic">2+0 records out</span>
+<span style="color: #000; font-style: italic">1024 bytes (1.0 kB, 1.0 KiB) copied, 0.000246534 s, 4.2 MB/s</span>
+</pre></div>
+<h3><strong>status=progress</strong></h3>
+<p>コピー処理の進行状況をリアルタイムで表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dd<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #CE5C00; font-weight: bold">=</span>/dev/zero<span style="color: #F8F8F8"> </span><span style="color: #000">of</span><span style="color: #CE5C00; font-weight: bold">=</span>large.bin<span style="color: #F8F8F8"> </span><span style="color: #000">bs</span><span style="color: #CE5C00; font-weight: bold">=</span>1M<span style="color: #F8F8F8"> </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span><span style="color: #000">status</span><span style="color: #CE5C00; font-weight: bold">=</span>progress
+<span style="color: #000; font-style: italic">51380224 bytes (51 MB, 49 MiB) copied, 0.0507088 s, 1.0 GB/s</span>
+<span style="color: #000; font-style: italic">100+0 records in</span>
+<span style="color: #000; font-style: italic">100+0 records out</span>
+<span style="color: #000; font-style: italic">104857600 bytes (105 MB, 100 MiB) copied, 0.101418 s, 1.0 GB/s</span>
+</pre></div>
 <h2>使用例</h2>
-<h3>USBドライブにISOイメージを書き込む</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># LinuxディストリビューションのイメージをUSBドライブに書き込む</span>
-sudo<span style="color: #F8F8F8"> </span>dd<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #CE5C00; font-weight: bold">=</span>ubuntu.iso<span style="color: #F8F8F8"> </span><span style="color: #000">of</span><span style="color: #CE5C00; font-weight: bold">=</span>/dev/sdb<span style="color: #F8F8F8"> </span><span style="color: #000">bs</span><span style="color: #CE5C00; font-weight: bold">=</span>4M<span style="color: #F8F8F8"> </span><span style="color: #000">status</span><span style="color: #CE5C00; font-weight: bold">=</span>progress
-
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-1790MB<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>:00:42<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">42</span>.1MB/s<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[======================</span>&gt;<span style="color: #F8F8F8">       </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">45</span>%<span style="color: #F8F8F8"> </span>ETA<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>:00:51
+<h3>USBメモリにISOイメージを書き込む</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dd<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #CE5C00; font-weight: bold">=</span>ubuntu.iso<span style="color: #F8F8F8"> </span><span style="color: #000">of</span><span style="color: #CE5C00; font-weight: bold">=</span>/dev/sdb<span style="color: #F8F8F8"> </span><span style="color: #000">bs</span><span style="color: #CE5C00; font-weight: bold">=</span>4M<span style="color: #F8F8F8"> </span><span style="color: #000">status</span><span style="color: #CE5C00; font-weight: bold">=</span>progress
+<span style="color: #000; font-style: italic">1073741824 bytes (1.1 GB, 1.0 GiB) copied, 85.3209 s, 12.6 MB/s</span>
+<span style="color: #000; font-style: italic">1324+1 records in</span>
+<span style="color: #000; font-style: italic">1324+1 records out</span>
+<span style="color: #000; font-style: italic">5555200000 bytes (5.6 GB, 5.2 GiB) copied, 440.221 s, 12.6 MB/s</span>
 </pre></div>
 <h3>ディスクのバックアップを作成する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ディスク全体のバックアップを作成</span>
-sudo<span style="color: #F8F8F8"> </span>dd<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #CE5C00; font-weight: bold">=</span>/dev/sda<span style="color: #F8F8F8"> </span><span style="color: #000">of</span><span style="color: #CE5C00; font-weight: bold">=</span>/path/to/disk.img<span style="color: #F8F8F8"> </span><span style="color: #000">bs</span><span style="color: #CE5C00; font-weight: bold">=</span>8M<span style="color: #F8F8F8"> </span><span style="color: #000">status</span><span style="color: #CE5C00; font-weight: bold">=</span>progress
-
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">34359738368</span><span style="color: #F8F8F8"> </span>bytes<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">34</span><span style="color: #F8F8F8"> </span>GB,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">32</span><span style="color: #F8F8F8"> </span>GiB<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>copied,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1200</span><span style="color: #F8F8F8"> </span>s,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">28</span>.6<span style="color: #F8F8F8"> </span>MB/s
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dd<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #CE5C00; font-weight: bold">=</span>/dev/sda<span style="color: #F8F8F8"> </span><span style="color: #000">of</span><span style="color: #CE5C00; font-weight: bold">=</span>disk_backup.img<span style="color: #F8F8F8"> </span><span style="color: #000">bs</span><span style="color: #CE5C00; font-weight: bold">=</span>4M<span style="color: #F8F8F8"> </span><span style="color: #000">status</span><span style="color: #CE5C00; font-weight: bold">=</span>progress
+<span style="color: #000; font-style: italic">8589934592 bytes (8.6 GB, 8.0 GiB) copied, 180.5 s, 47.6 MB/s</span>
+<span style="color: #000; font-style: italic">2048+0 records in</span>
+<span style="color: #000; font-style: italic">2048+0 records out</span>
+<span style="color: #000; font-style: italic">8589934592 bytes (8.6 GB, 8.0 GiB) copied, 190.749 s, 45.0 MB/s</span>
 </pre></div>
 <h3>ファイルの一部を抽出する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ファイルの先頭1MBだけを抽出</span>
-dd<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #CE5C00; font-weight: bold">=</span>largefile.dat<span style="color: #F8F8F8"> </span><span style="color: #000">of</span><span style="color: #CE5C00; font-weight: bold">=</span>header.dat<span style="color: #F8F8F8"> </span><span style="color: #000">bs</span><span style="color: #CE5C00; font-weight: bold">=</span>1M<span style="color: #F8F8F8"> </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>
-
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">1</span>+0<span style="color: #F8F8F8"> </span>records<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
-<span style="color: #0000CF; font-weight: bold">1</span>+0<span style="color: #F8F8F8"> </span>records<span style="color: #F8F8F8"> </span>out
-<span style="color: #0000CF; font-weight: bold">1048576</span><span style="color: #F8F8F8"> </span>bytes<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span><span style="color: #0000CF; font-weight: bold">1</span>.0<span style="color: #F8F8F8"> </span>MB,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>.0<span style="color: #F8F8F8"> </span>MiB<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>copied,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.00253<span style="color: #F8F8F8"> </span>s,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">414</span><span style="color: #F8F8F8"> </span>MB/s
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dd<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #CE5C00; font-weight: bold">=</span>large_file.bin<span style="color: #F8F8F8"> </span><span style="color: #000">of</span><span style="color: #CE5C00; font-weight: bold">=</span>extract.bin<span style="color: #F8F8F8"> </span><span style="color: #000">bs</span><span style="color: #CE5C00; font-weight: bold">=</span>1M<span style="color: #F8F8F8"> </span><span style="color: #000">skip</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">5+0 records in</span>
+<span style="color: #000; font-style: italic">5+0 records out</span>
+<span style="color: #000; font-style: italic">5242880 bytes (5.2 MB, 5.0 MiB) copied, 0.00623305 s, 841 MB/s</span>
 </pre></div>
-<h2>追加情報</h2>
+<h2>ヒント:</h2>
+<h3>シグナルで進捗状況を確認する</h3>
+<p>長時間実行中の <code>dd</code> コマンドの進捗状況を確認するには、<code>USR1</code> シグナルを送信します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #8F5902; font-style: italic"># 別のターミナルで以下を実行</span>
+<span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-USR1<span style="color: #F8F8F8"> </span>dd
+</pre></div>
+<h3>データ消去に使用する</h3>
+<p>ディスクを安全に消去するには、ランダムデータで上書きします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dd<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #CE5C00; font-weight: bold">=</span>/dev/urandom<span style="color: #F8F8F8"> </span><span style="color: #000">of</span><span style="color: #CE5C00; font-weight: bold">=</span>/dev/sdb<span style="color: #F8F8F8"> </span><span style="color: #000">bs</span><span style="color: #CE5C00; font-weight: bold">=</span>4M<span style="color: #F8F8F8"> </span><span style="color: #000">status</span><span style="color: #CE5C00; font-weight: bold">=</span>progress
+</pre></div>
+<h3>注意点</h3>
+<p><code>dd</code> は「データ破壊者（Disk Destroyer）」とも呼ばれるほど危険なコマンドです。特に <code>of</code> パラメータには細心の注意を払い、間違ったデバイスを指定しないようにしましょう。</p>
+<h2>よくある質問</h2>
+<h4>Q1. ddコマンドの名前の由来は何ですか？</h4>
+<p>A. IBMのメインフレームJCLの「データ定義（Data Definition）」コマンドに由来するとされています。</p>
+<h4>Q2. ddコマンドとcpコマンドの違いは何ですか？</h4>
+<p>A. <code>dd</code> はブロック単位でデータをコピーし、生のデバイスファイルを扱えます。また、コピー中にデータ変換も可能です。一方、<code>cp</code> はファイルシステムレベルでのコピーに特化しています。</p>
+<h4>Q3. ddコマンドでUSBにISOを書き込む際の注意点は？</h4>
+<p>A. 出力先（<code>of=</code>）に正しいデバイスを指定することが重要です。間違えると重要なデータを失う可能性があります。また、書き込み前にUSBをアンマウントしておく必要があります。</p>
+<h4>Q4. ddコマンドの実行が遅いのですが、速くする方法はありますか？</h4>
+<p>A. <code>bs</code> パラメータを大きくすると（例：<code>bs=4M</code>）、一般的にパフォーマンスが向上します。ただし、あまり大きすぎる値は逆効果になることもあります。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSでは、デバイスパスが異なります。例えば、USBドライブは <code>/dev/diskN</code> の形式（Nは数字）で、<code>diskutil list</code> コマンドで確認できます。また、書き込み前に <code>diskutil unmountDisk /dev/diskN</code> でアンマウントする必要があります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diskutil<span style="color: #F8F8F8"> </span>list
+<span style="color: #8F5902">$ </span>diskutil<span style="color: #F8F8F8"> </span>unmountDisk<span style="color: #F8F8F8"> </span>/dev/disk2
+<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dd<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #CE5C00; font-weight: bold">=</span>image.iso<span style="color: #F8F8F8"> </span><span style="color: #000">of</span><span style="color: #CE5C00; font-weight: bold">=</span>/dev/disk2<span style="color: #F8F8F8"> </span><span style="color: #000">bs</span><span style="color: #CE5C00; font-weight: bold">=</span>1m
+</pre></div>
+<p>macOSでは、小文字の <code>m</code>（<code>bs=1m</code>）を使用することに注意してください。大文字の <code>M</code> はエラーになります。</p>
+<h2>参考資料</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/dd-invocation.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li><code>dd</code>コマンドは「ディスクデストロイヤー」とも呼ばれるほど強力なため、特に<code>of</code>パラメータの指定には細心の注意が必要です。間違ったデバイスを指定すると、データが完全に失われる可能性があります。</li>
-<li>大きなファイルをコピーする場合は、<code>bs</code>パラメータを大きくすると（例：4M、8M）パフォーマンスが向上することがあります。</li>
-<li><code>status=progress</code>オプションは新しいバージョンの<code>dd</code>でのみ使用可能です。古いバージョンでは、別のターミナルで<code>kill -USR1 $(pidof dd)</code>を実行することで進捗を確認できます。</li>
-<li>データ復旧の場合は、<code>conv=sync,noerror</code>オプションを使用すると、読み取りエラーがあっても処理を続行できます。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

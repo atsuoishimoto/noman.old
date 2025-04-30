@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  sort - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>sort command</h1>
+<p>Sorts lines of text files alphabetically or numerically.</p>
+<h2>Overview</h2>
+<p>The <code>sort</code> command arranges lines in text files or from standard input in alphabetical, numerical, or custom-defined order. It's commonly used for organizing data, preparing input for other commands, and performing simple data analysis tasks.</p>
+<h2>Options</h2>
+<h3><strong>-n (Numeric Sort)</strong></h3>
+<p>Sorts lines numerically instead of alphabetically</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>numbers.txt
+<span style="color: #000; font-style: italic">10</span>
+<span style="color: #000; font-style: italic">2</span>
+<span style="color: #000; font-style: italic">1</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>numbers.txt
+<span style="color: #000; font-style: italic">1</span>
+<span style="color: #000; font-style: italic">2</span>
+<span style="color: #000; font-style: italic">10</span>
+</pre></div>
+<h3><strong>-r (Reverse Sort)</strong></h3>
+<p>Reverses the sort order</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>names.txt
+<span style="color: #000; font-style: italic">Zack</span>
+<span style="color: #000; font-style: italic">Victor</span>
+<span style="color: #000; font-style: italic">Amy</span>
+</pre></div>
+<h3><strong>-k (Sort by Field)</strong></h3>
+<p>Sorts based on a specific field (column) in the input</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>employees.txt
+<span style="color: #000; font-style: italic">John 35 Developer</span>
+<span style="color: #000; font-style: italic">Alice 28 Designer</span>
+<span style="color: #000; font-style: italic">Bob 42 Manager</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-k2<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>employees.txt
+<span style="color: #000; font-style: italic">Alice 28 Designer</span>
+<span style="color: #000; font-style: italic">John 35 Developer</span>
+<span style="color: #000; font-style: italic">Bob 42 Manager</span>
+</pre></div>
+<h3><strong>-u (Unique)</strong></h3>
+<p>Removes duplicate lines from the output</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>duplicates.txt
+<span style="color: #000; font-style: italic">apple</span>
+<span style="color: #000; font-style: italic">banana</span>
+<span style="color: #000; font-style: italic">apple</span>
+<span style="color: #000; font-style: italic">orange</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>duplicates.txt
+<span style="color: #000; font-style: italic">apple</span>
+<span style="color: #000; font-style: italic">banana</span>
+<span style="color: #000; font-style: italic">orange</span>
+</pre></div>
+<h3><strong>-f (Ignore Case)</strong></h3>
+<p>Performs case-insensitive sorting</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>mixed.txt
+<span style="color: #000; font-style: italic">Apple</span>
+<span style="color: #000; font-style: italic">banana</span>
+<span style="color: #000; font-style: italic">Carrot</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>mixed.txt
+<span style="color: #000; font-style: italic">Apple</span>
+<span style="color: #000; font-style: italic">banana</span>
+<span style="color: #000; font-style: italic">Carrot</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Sorting a File and Saving the Result</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>names.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>sorted_names.txt
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>sorted_names.txt
+<span style="color: #000; font-style: italic">Amy</span>
+<span style="color: #000; font-style: italic">Victor</span>
+<span style="color: #000; font-style: italic">Zack</span>
+</pre></div>
+<h3>Combining Multiple Files and Sorting</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">[combined and sorted output of both files]</span>
+</pre></div>
+<h3>Sorting by Multiple Fields</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.csv
+<span style="color: #000; font-style: italic">John,35,1000</span>
+<span style="color: #000; font-style: italic">Alice,28,1200</span>
+<span style="color: #000; font-style: italic">Bob,42,900</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-t,<span style="color: #F8F8F8"> </span>-k2n<span style="color: #F8F8F8"> </span>-k3nr<span style="color: #F8F8F8"> </span>data.csv
+<span style="color: #000; font-style: italic">Alice,28,1200</span>
+<span style="color: #000; font-style: italic">John,35,1000</span>
+<span style="color: #000; font-style: italic">Bob,42,900</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Pipe with Other Commands</h3>
+<p>Combine <code>sort</code> with other commands like <code>uniq</code> to count occurrences:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>log.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-c
+<span style="color: #000; font-style: italic">      3 ERROR</span>
+<span style="color: #000; font-style: italic">     12 INFO</span>
+<span style="color: #000; font-style: italic">      5 WARNING</span>
+</pre></div>
+<h3>Memory Usage for Large Files</h3>
+<p>For very large files, use the <code>-S</code> option to specify buffer size or <code>--parallel</code> to utilize multiple cores:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>--parallel<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>1G<span style="color: #F8F8F8"> </span>huge_file.txt
+</pre></div>
+<h3>Stable Sort</h3>
+<p>Use <code>-s</code> for a stable sort when you want to preserve the original order of lines that would otherwise be considered equal:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>-k1,1<span style="color: #F8F8F8"> </span>data.txt
+</pre></div>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How do I sort a CSV file by a specific column?</h4>
+<p>A. Use <code>-t</code> to specify the delimiter and <code>-k</code> for the column: <code>sort -t, -k2 file.csv</code> sorts by the second column.</p>
+<h4>Q2. How can I sort IP addresses correctly?</h4>
+<p>A. Use version sort: <code>sort -V iplist.txt</code> will properly sort IP addresses and version numbers.</p>
+<h4>Q3. How do I sort by month names instead of alphabetically?</h4>
+<p>A. Use the <code>--month-sort</code> option or create a custom ordering with the <code>-k</code> option and a carefully crafted key definition.</p>
+<h4>Q4. Can sort handle very large files?</h4>
+<p>A. Yes, <code>sort</code> is designed to handle files larger than available memory using temporary files and efficient algorithms.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

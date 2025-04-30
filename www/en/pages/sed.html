@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  sed - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>sed command</h1>
+<p>Stream editor for filtering and transforming text.</p>
+<h2>Overview</h2>
+<p><code>sed</code> (stream editor) is a powerful utility that parses and transforms text, line by line. It reads input from files or standard input, applies specified operations, and outputs the result. Unlike interactive text editors, <code>sed</code> works with a scripted set of editing commands, making it ideal for automated text processing in scripts and pipelines.</p>
+<h2>Options</h2>
+<h3><strong>-e script</strong></h3>
+<p>Adds commands to the set of commands to be executed. Useful when specifying multiple editing commands.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/Hello/Hi/&#39;</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/World/there/&#39;</span>
+<span style="color: #000; font-style: italic">Hi there</span>
+</pre></div>
+<h3><strong>-i[suffix]</strong></h3>
+<p>Edits files in-place, optionally creating a backup with the specified suffix.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sed<span style="color: #F8F8F8"> </span>-i.bak<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/old/new/g&#39;</span><span style="color: #F8F8F8"> </span>file.txt
+</pre></div>
+<h3><strong>-n</strong></h3>
+<p>Suppresses automatic printing of pattern space. Used with commands like <code>p</code> to control output.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Line 1\nLine 2\nLine 3&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;2p&#39;</span>
+<span style="color: #000; font-style: italic">Line 2</span>
+</pre></div>
+<h3><strong>-r, -E</strong></h3>
+<p>Uses extended regular expressions, which are more powerful and readable.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;123 abc&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span>-E<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/[0-9]+/NUMBER/&#39;</span>
+<span style="color: #000; font-style: italic">NUMBER abc</span>
+</pre></div>
+<h2>Common Commands</h2>
+<h3><strong>s/pattern/replacement/flags</strong></h3>
+<p>Substitutes text matching a pattern with replacement text.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;The quick brown fox&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/brown/red/&#39;</span>
+<span style="color: #000; font-style: italic">The quick red fox</span>
+</pre></div>
+<h3><strong>d</strong></h3>
+<p>Deletes lines matching the address or pattern.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Line 1\nLine 2\nLine 3&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;2d&#39;</span>
+<span style="color: #000; font-style: italic">Line 1</span>
+<span style="color: #000; font-style: italic">Line 3</span>
+</pre></div>
+<h3><strong>p</strong></h3>
+<p>Prints lines matching the address or pattern (usually used with -n).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Line 1\nLine 2\nLine 3&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;/2/p&#39;</span>
+<span style="color: #000; font-style: italic">Line 2</span>
+</pre></div>
+<h3><strong>a, i, c\</strong></h3>
+<p>Appends, inserts, or changes lines.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;a\World&#39;</span>
+<span style="color: #000; font-style: italic">Hello</span>
+<span style="color: #000; font-style: italic">World</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic Substitution</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;The cat sat on the mat&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/cat/dog/&#39;</span>
+<span style="color: #000; font-style: italic">The dog sat on the mat</span>
+</pre></div>
+<h3>Global Substitution</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;The cat sat on the cat mat&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/cat/dog/g&#39;</span>
+<span style="color: #000; font-style: italic">The dog sat on the dog mat</span>
+</pre></div>
+<h3>Working with Line Numbers</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">Line 1</span>
+<span style="color: #000; font-style: italic">Line 2</span>
+<span style="color: #000; font-style: italic">Line 3</span>
+<span style="color: #000; font-style: italic">Line 4</span>
+<span style="color: #8F5902">$ </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;2,4d&#39;</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">Line 1</span>
+</pre></div>
+<h3>Multiple Operations</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/Hello/Hi/&#39;</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/World/Universe/&#39;</span>
+<span style="color: #000; font-style: italic">Hi Universe</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Use Delimiters Other Than '/'</h3>
+<p>When working with paths or URLs that contain slashes, use a different delimiter:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;/usr/local/bin&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s:/usr:/opt:g&#39;</span>
+<span style="color: #000; font-style: italic">/opt/local/bin</span>
+</pre></div>
+<h3>Create Backup Before Editing</h3>
+<p>Always use the <code>-i</code> option with a suffix to create backups before making in-place edits:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sed<span style="color: #F8F8F8"> </span>-i.bak<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/old/new/g&#39;</span><span style="color: #F8F8F8"> </span>important_file.txt
+</pre></div>
+<h3>Use Extended Regular Expressions</h3>
+<p>The <code>-E</code> option makes complex patterns more readable:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;abc123def&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span>-E<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/[a-z]+([0-9]+)[a-z]+/\1/&#39;</span>
+<span style="color: #000; font-style: italic">123</span>
+</pre></div>
+<h3>Combine Multiple Commands</h3>
+<p>Use semicolons or the <code>-e</code> option to apply multiple transformations:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/Hello/Hi/; s/World/there/&#39;</span>
+<span style="color: #000; font-style: italic">Hi there</span>
+</pre></div>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How do I replace text in a file permanently?</h4>
+<p>A. Use the <code>-i</code> option: <code>sed -i 's/old/new/g' file.txt</code>. Add a suffix like <code>-i.bak</code> to create a backup.</p>
+<h4>Q2. How can I delete specific lines from a file?</h4>
+<p>A. Use the <code>d</code> command with line numbers or patterns: <code>sed '3d' file.txt</code> deletes line 3, while <code>sed '/pattern/d' file.txt</code> deletes lines containing &quot;pattern&quot;.</p>
+<h4>Q3. How do I print only certain lines?</h4>
+<p>A. Use <code>-n</code> with the <code>p</code> command: <code>sed -n '2,4p' file.txt</code> prints only lines 2 through 4.</p>
+<h4>Q4. What's the difference between <code>sed</code> and <code>grep</code>?</h4>
+<p>A. <code>grep</code> is for searching and filtering text, while <code>sed</code> is for editing and transforming text. <code>sed</code> can do everything <code>grep</code> does and more.</p>
+<h4>Q5. How do I escape special characters in <code>sed</code>?</h4>
+<p>A. Use backslashes to escape special characters: <code>sed 's/file\.txt/doc\.txt/'</code> or use different delimiters.</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, the default <code>sed</code> is based on BSD rather than GNU. Key differences include:</p>
+<ul>
+<li>The <code>-i</code> option requires an extension even if you don't want backups (use <code>-i ''</code>)</li>
+<li>Some GNU extensions may not be available</li>
+<li>Consider installing GNU sed via Homebrew (<code>brew install gnu-sed</code>) for full compatibility with Linux examples</li>
+</ul>
+<h2>References</h2>
+<p>https://www.gnu.org/software/sed/manual/sed.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

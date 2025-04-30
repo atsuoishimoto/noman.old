@@ -1,84 +1,165 @@
-# grepコマンド概要
+# grep コマンド
 
-`grep`は、ファイルやテキスト入力から特定のパターン（文字列や正規表現）を検索するためのコマンドです。名前は「Global Regular Expression Print」に由来しています。
+テキストファイルやストリーム内のパターンを検索します。
 
-## 主なオプション
+## 概要
 
-- **-i**: 大文字と小文字を区別せずに検索します
-  - 例: `grep -i "hello" file.txt`
+`grep`は、ファイルやテキストストリーム内で正規表現パターンに一致する行を検索するコマンドです。テキスト検索、ログ解析、特定のパターンを含む行の抽出など、多くの場面で活用できます。基本的な使い方は `grep [オプション] パターン [ファイル...]` です。
 
-- **-v**: マッチしない行を表示します（反転検索）
-  - 例: `grep -v "error" log.txt`
+## オプション
 
-- **-r, -R**: ディレクトリ内のファイルを再帰的に検索します
-  - 例: `grep -r "TODO" ./src/`
+### **-i (--ignore-case)**
 
-- **-l**: マッチしたファイル名のみを表示します
-  - 例: `grep -l "function" *.js`
+大文字と小文字を区別せずに検索します。
 
-- **-n**: マッチした行の行番号も表示します
-  - 例: `grep -n "import" *.py`
+```console
+$ grep -i "hello" sample.txt
+Hello World
+hello everyone
+HELLO THERE
+```
 
-- **-c**: マッチした行数のみを表示します
-  - 例: `grep -c "ERROR" error.log`
+### **-v (--invert-match)**
 
-- **-A n**: マッチした行の後ろn行も表示します（After）
-  - 例: `grep -A 2 "exception" log.txt`
+パターンに一致しない行を表示します。
 
-- **-B n**: マッチした行の前n行も表示します（Before）
-  - 例: `grep -B 2 "exception" log.txt`
+```console
+$ grep -v "error" log.txt
+Starting application
+Loading configuration
+Application running
+Shutdown complete
+```
 
-- **-C n**: マッチした行の前後n行を表示します（Context）
-  - 例: `grep -C 2 "exception" log.txt`
+### **-r, -R (--recursive)**
 
-- **-E**: 拡張正規表現を使用します
-  - 例: `grep -E "apple|orange" fruits.txt`
+ディレクトリ内のすべてのファイルを再帰的に検索します。
+
+```console
+$ grep -r "function" src/
+src/main.js:function initialize() {
+src/utils.js:export function formatDate(date) {
+src/components/App.js:function App() {
+```
+
+### **-n (--line-number)**
+
+一致した行の行番号も表示します。
+
+```console
+$ grep -n "import" app.js
+3:import React from 'react';
+4:import { useState } from 'react';
+7:import './styles.css';
+```
+
+### **-c (--count)**
+
+一致した行数のみを表示します。
+
+```console
+$ grep -c "error" server.log
+42
+```
+
+### **-A, -B, -C (--after-context, --before-context, --context)**
+
+一致した行の前後の行も表示します。
+
+```console
+$ grep -A 2 "Exception" error.log
+java.lang.NullPointerException
+    at com.example.Main.process(Main.java:42)
+    at com.example.Main.main(Main.java:12)
+```
 
 ## 使用例
 
-```bash
-# 基本的な使い方：ファイル内で「error」を含む行を検索
-grep "error" log.txt
-# 出力例
-2023-04-01 12:34:56 error: connection refused
+### 複数のファイルから検索
 
-# 大文字小文字を区別せずに検索
-grep -i "error" log.txt
-# 出力例
-2023-04-01 12:34:56 error: connection refused
-2023-04-01 13:45:23 ERROR: timeout occurred
-
-# 複数ファイルから検索し、ファイル名も表示
-grep "function" *.js
-# 出力例
-app.js:function initialize() {
-utils.js:function formatDate(date) {
-
-# 行番号付きで表示
-grep -n "import" main.py
-# 出力例
-3:import os
-4:import sys
-10:import datetime
-
-# 再帰的にディレクトリ内を検索
-grep -r "TODO" ./project/
-# 出力例
-./project/src/main.js:// TODO: Implement error handling
-./project/docs/readme.md:TODO: Complete documentation
-
-# マッチした行の前後1行を表示
-grep -C 1 "exception" error.log
-# 出力例
-trying to connect to server
-exception occurred: connection timeout
-retrying in 5 seconds
+```console
+$ grep "config" *.conf
+app.conf:config.debug=true
+server.conf:config.port=8080
+db.conf:config.username=admin
 ```
 
-## 追加メモ
+### 正規表現を使用した検索
 
-- パイプ（`|`）と組み合わせて使うと非常に便利です。例えば `ps aux | grep "firefox"` でFirefoxプロセスを検索できます。
-- 正規表現を使うことで、より複雑なパターンマッチングが可能です。例えば `grep "^[0-9]"` で数字で始まる行を検索できます。
-- 検索パターンに空白やメタ文字が含まれる場合は、引用符で囲むことをお勧めします。
-- 大量のファイルを検索する場合は、`grep -l` でマッチするファイル名だけを先に確認すると効率的です。
-- 最近のLinuxディストリビューションでは、`grep`の出力は通常カラー表示されますが、`--color=auto`オプションで明示的に指定することもできます。
+```console
+$ grep "^[0-9]" data.txt
+123 Main St
+456 Oak Ave
+789 Pine Rd
+```
+
+### パイプラインでの使用
+
+```console
+$ ps aux | grep "firefox"
+user     12345  2.0  1.5 3521408 124800 ?      Sl   09:23   0:45 /usr/lib/firefox/firefox
+```
+
+### 複数のパターンを検索
+
+```console
+$ grep -E "error|warning|critical" application.log
+[2025-04-30 10:15:22] ERROR: Database connection failed
+[2025-04-30 10:16:45] WARNING: Low disk space
+[2025-04-30 11:30:12] CRITICAL: System shutdown initiated
+```
+
+## ヒント:
+
+### 色付き出力を使用する
+
+`--color=auto` オプションを使うと、マッチした部分が色付きで表示されるため、視認性が向上します。多くのLinuxディストリビューションでは、`grep` にこのオプションがエイリアスとして設定されています。
+
+### 正確なワード検索
+
+単語の一部ではなく完全な単語だけを検索したい場合は、`-w` (--word-regexp) オプションを使用します。
+
+```console
+$ grep -w "log" file.txt
+# "log" という単語のみマッチし、"logical" や "catalog" などはマッチしない
+```
+
+### 検索パターンをファイルから読み込む
+
+多数のパターンで検索する場合は、パターンをファイルに保存して `-f` オプションで指定できます。
+
+```console
+$ grep -f patterns.txt logfile.txt
+# patterns.txt に記載されたすべてのパターンで検索する
+```
+
+## よくある質問
+
+#### Q1. `grep` と `egrep` の違いは何ですか？
+A. `egrep` は `grep -E` と同等で、拡張正規表現を使用できます。現代のシステムでは `grep -E` の使用が推奨されています。
+
+#### Q2. 大きなファイルを効率的に検索するには？
+A. 大きなファイルでは `grep --mmap` オプションを使用すると、メモリマッピングによって検索が高速化される場合があります。
+
+#### Q3. バイナリファイルを検索から除外するには？
+A. `-I` オプションを使用すると、バイナリファイルをテキストファイルとして扱わないようになります。
+
+#### Q4. 検索結果をファイルに保存するには？
+A. リダイレクト演算子 `>` を使用します。例: `grep "error" log.txt > errors.txt`
+
+## macOSでの注意点
+
+macOSの `grep` は GNU grep と若干異なる場合があります。特に、`--include` や `--exclude` などの一部のオプションが利用できないか、異なる動作をする可能性があります。macOSで GNU grep と同等の機能が必要な場合は、Homebrewを使って `ggrep` をインストールすることをお勧めします。
+
+```console
+$ brew install grep
+$ ggrep [オプション] パターン [ファイル...]
+```
+
+## 参考資料
+
+https://www.gnu.org/software/grep/manual/grep.html
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  git-switch - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>git switch command</h1>
+<p>Switch branches or restore working tree files.</p>
+<h2>Overview</h2>
+<p>The <code>git switch</code> command allows you to switch between branches in a Git repository. It was introduced in Git 2.23 as a more user-friendly alternative to certain uses of <code>git checkout</code>. While <code>git checkout</code> serves multiple purposes, <code>git switch</code> is specifically designed for branch operations, making it clearer and less error-prone.</p>
+<h2>Options</h2>
+<h3><strong>-c, --create &lt;branch&gt;</strong></h3>
+<p>Create a new branch and switch to it.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>feature-login
+<span style="color: #000; font-style: italic">Switched to a new branch &#39;feature-login&#39;</span>
+</pre></div>
+<h3><strong>-d, --detach</strong></h3>
+<p>Switch to a commit in &quot;detached HEAD&quot; state.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>--detach<span style="color: #F8F8F8"> </span>HEAD~3
+<span style="color: #000; font-style: italic">Note: switching to &#39;HEAD~3&#39;.</span>
+
+<span style="color: #000; font-style: italic">You are in &#39;detached HEAD&#39; state...</span>
+<span style="color: #000; font-style: italic">HEAD is now at a1b2c3d Previous commit message</span>
+</pre></div>
+<h3><strong>-t, --track</strong></h3>
+<p>Set up tracking mode when switching to a remote branch.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>origin/feature
+<span style="color: #000; font-style: italic">Branch &#39;feature&#39; set up to track remote branch &#39;feature&#39; from &#39;origin&#39;.</span>
+<span style="color: #000; font-style: italic">Switched to a new branch &#39;feature&#39;</span>
+</pre></div>
+<h3><strong>--discard-changes</strong></h3>
+<p>Throw away local modifications before switching.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>--discard-changes<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">Switched to branch &#39;main&#39;</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Switching to an existing branch</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">Switched to branch &#39;main&#39;</span>
+</pre></div>
+<h3>Creating and switching to a new branch based on current HEAD</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>bugfix/issue-123
+<span style="color: #000; font-style: italic">Switched to a new branch &#39;bugfix/issue-123&#39;</span>
+</pre></div>
+<h3>Creating a new branch from a specific starting point</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>hotfix/security-patch<span style="color: #F8F8F8"> </span>v1.2.3
+<span style="color: #000; font-style: italic">Switched to a new branch &#39;hotfix/security-patch&#39;</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Use <code>git switch -</code> to quickly return to the previous branch</h3>
+<p>Similar to <code>cd -</code> in the shell, <code>git switch -</code> allows you to toggle between the current and previous branch.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>feature
+<span style="color: #000; font-style: italic">Switched to branch &#39;feature&#39;</span>
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">Switched to branch &#39;main&#39;</span>
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-
+<span style="color: #000; font-style: italic">Switched to branch &#39;feature&#39;</span>
+</pre></div>
+<h3>Combine with <code>git branch</code> to see available branches</h3>
+<p>Before switching, you might want to see what branches are available:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>branch
+<span style="color: #000; font-style: italic">  develop</span>
+<span style="color: #000; font-style: italic">* main</span>
+<span style="color: #000; font-style: italic">  feature-x</span>
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>develop
+<span style="color: #000; font-style: italic">Switched to branch &#39;develop&#39;</span>
+</pre></div>
+<h3>Prefer <code>git switch</code> over <code>git checkout</code> for branch operations</h3>
+<p>Using <code>git switch</code> for branch operations and <code>git restore</code> for file operations makes your intentions clearer and helps avoid accidental changes.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between <code>git switch</code> and <code>git checkout</code>?</h4>
+<p>A. <code>git switch</code> is focused solely on branch operations, while <code>git checkout</code> has multiple functions including branch switching and file restoration. <code>git switch</code> was introduced to provide a clearer, more focused command.</p>
+<h4>Q2. How do I create a new branch without switching to it?</h4>
+<p>A. Use <code>git branch &lt;new-branch&gt;</code> instead of <code>git switch</code>. The <code>switch</code> command always changes your current branch.</p>
+<h4>Q3. Can I switch to a branch that has uncommitted changes?</h4>
+<p>A. Yes, if the changes don't conflict with the target branch. If there are conflicts, Git will prevent the switch unless you use <code>--discard-changes</code> or stash your changes first.</p>
+<h4>Q4. How do I switch to a remote branch?</h4>
+<p>A. Use <code>git switch -t origin/branch-name</code> to create a local tracking branch and switch to it.</p>
+<h2>References</h2>
+<p>https://git-scm.com/docs/git-switch</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

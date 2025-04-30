@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  file - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>file command</h1>
+<p>Determine file type by examining file contents.</p>
+<h2>Overview</h2>
+<p>The <code>file</code> command identifies the type of a file by examining its contents, rather than relying on filename extensions. It can recognize text files, executables, images, archives, and many other formats by analyzing the file's data patterns, headers, and structure.</p>
+<h2>Options</h2>
+<h3><strong>-b, --brief</strong></h3>
+<p>Display the result without the filename prefix</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">ASCII text</span>
+</pre></div>
+<h3><strong>-i, --mime</strong></h3>
+<p>Display the MIME type of the file</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">document.txt: text/plain; charset=us-ascii</span>
+</pre></div>
+<h3><strong>-z, --uncompress</strong></h3>
+<p>Try to look inside compressed files</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>archive.tar.gz
+<span style="color: #000; font-style: italic">archive.tar.gz: gzip compressed data, from Unix, original size modulo 2^32 10240</span>
+</pre></div>
+<h3><strong>-L, --dereference</strong></h3>
+<p>Follow symbolic links</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>symlink
+<span style="color: #000; font-style: italic">symlink: ASCII text</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic file identification</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>document.txt<span style="color: #F8F8F8"> </span>image.png<span style="color: #F8F8F8"> </span>script.sh
+<span style="color: #000; font-style: italic">document.txt: ASCII text</span>
+<span style="color: #000; font-style: italic">image.png: PNG image data, 800 x 600, 8-bit/color RGB, non-interlaced</span>
+<span style="color: #000; font-style: italic">script.sh: Bourne-Again shell script, ASCII text executable</span>
+</pre></div>
+<h3>Checking multiple files at once</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>*
+<span style="color: #000; font-style: italic">document.txt:  ASCII text</span>
+<span style="color: #000; font-style: italic">image.jpg:     JPEG image data, JFIF standard 1.01</span>
+<span style="color: #000; font-style: italic">program:       ELF 64-bit LSB executable, x86-64</span>
+<span style="color: #000; font-style: italic">archive.zip:   Zip archive data, at least v2.0 to extract</span>
+</pre></div>
+<h3>Examining a binary file</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>/bin/ls
+<span style="color: #000; font-style: italic">/bin/ls: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=123456789abcdef, stripped</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Use with Directories</h3>
+<p>When used on a directory, <code>file</code> simply identifies it as a directory. To examine files within a directory, combine with <code>find</code>:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/path/to/dir<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>f<span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span>
+</pre></div>
+<h3>Examining Special Files</h3>
+<p>For device files or sockets, <code>file</code> may only report their type without detailed information.</p>
+<h3>Magic Database</h3>
+<p>The <code>file</code> command uses a &quot;magic&quot; database to identify file types. If you encounter incorrect identifications, your magic database might need updating.</p>
+<h3>Pipe Usage</h3>
+<p>You can pipe content to <code>file</code> using the special <code>-</code> argument:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>document.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>-
+<span style="color: #000; font-style: italic">/dev/stdin: ASCII text</span>
+</pre></div>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How does <code>file</code> determine a file's type?</h4>
+<p>A. <code>file</code> examines the file's content patterns, headers, and structure using a &quot;magic&quot; database of file signatures, rather than relying on filename extensions.</p>
+<h4>Q2. Can <code>file</code> identify the encoding of text files?</h4>
+<p>A. Yes, using <code>file -i</code> will often show the character encoding (charset) of text files.</p>
+<h4>Q3. Why does <code>file</code> sometimes misidentify my files?</h4>
+<p>A. <code>file</code> relies on pattern matching which isn't perfect. Some file formats are similar or ambiguous, and the magic database might be outdated for newer formats.</p>
+<h4>Q4. Can <code>file</code> identify files without extensions?</h4>
+<p>A. Yes, since <code>file</code> examines the content rather than the filename, it works perfectly well on files without extensions.</p>
+<h2>References</h2>
+<p>https://man7.org/linux/man-pages/man1/file.1.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

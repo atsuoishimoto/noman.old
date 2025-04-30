@@ -46,101 +46,94 @@
   <div class="content">
     <main>
       
-  <h1><code>date</code> コマンド概要</h1>
-<p><code>date</code>コマンドは、システムの現在の日付と時刻を表示したり、設定したりするためのUNIXコマンドです。デフォルトでは、現在のシステム時刻を表示します。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong><code>+FORMAT</code></strong>: 出力形式をカスタマイズします</p>
-<ul>
-<li>例: <code>date &quot;+%Y-%m-%d&quot;</code> → 年-月-日の形式で表示</li>
-</ul>
-</li>
-<li><p><strong><code>-d STRING</code>, <code>--date=STRING</code></strong>: 指定した日時を表示します（現在時刻ではなく）</p>
-<ul>
-<li>例: <code>date -d &quot;next day&quot;</code> → 明日の日付を表示</li>
-</ul>
-</li>
-<li><p><strong><code>-s STRING</code>, <code>--set=STRING</code></strong>: システムの日時を設定します（通常は管理者権限が必要）</p>
-<ul>
-<li>例: <code>sudo date -s &quot;2023-12-31 23:59:59&quot;</code> → システム時刻を設定</li>
-</ul>
-</li>
-<li><p><strong><code>-u</code>, <code>--utc</code>, <code>--universal</code></strong>: 協定世界時（UTC）で表示します</p>
-<ul>
-<li>例: <code>date -u</code> → UTC時間で表示</li>
-</ul>
-</li>
-</ul>
+  <h1>date コマンド</h1>
+<p>現在の日付と時刻を表示または設定します。</p>
+<h2>概要</h2>
+<p><code>date</code> コマンドは、システムの現在の日付と時刻を表示したり、システム時計を設定したりするために使用します。デフォルトでは、現在のローカル時間を表示しますが、様々なフォーマットオプションを使用して出力をカスタマイズすることができます。</p>
+<h2>オプション</h2>
+<h3><strong>-u (--utc, --universal)</strong></h3>
+<p>協定世界時（UTC）で日付と時刻を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-u
+<span style="color: #000; font-style: italic">水  5月  1 00:30:45 UTC 2025</span>
+</pre></div>
+<h3><strong>+FORMAT</strong></h3>
+<p>日付と時刻を指定したフォーマットで表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;+%Y-%m-%d %H:%M:%S&quot;</span>
+<span style="color: #000; font-style: italic">2025-04-30 15:30:45</span>
+</pre></div>
+<h3><strong>-d, --date=STRING</strong></h3>
+<p>現在の時刻ではなく、指定した日時を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;next day&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;+%Y-%m-%d&quot;</span>
+<span style="color: #000; font-style: italic">2025-05-01</span>
+</pre></div>
+<h3><strong>-s, --set=STRING</strong></h3>
+<p>システムの日付と時刻を設定します（通常は管理者権限が必要）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>date<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2025-04-30 15:30:00&quot;</span>
+<span style="color: #000; font-style: italic">水  4月 30 15:30:00 JST 2025</span>
+</pre></div>
 <h2>使用例</h2>
-<h3>基本的な使用法</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 現在の日時を表示</span>
-date
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-2023年12月25日<span style="color: #F8F8F8"> </span>月曜日<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span>:30:45<span style="color: #F8F8F8"> </span>JST
+<h3>基本的な日付表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date
+<span style="color: #000; font-style: italic">水  4月 30 15:30:45 JST 2025</span>
 </pre></div>
-<h3>カスタム形式での表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 年-月-日 形式で表示</span>
-date<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;+%Y-%m-%d&quot;</span>
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">2023</span>-12-25
-
-<span style="color: #8F5902; font-style: italic"># 年月日時分秒を表示</span>
-date<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;+%Y年%m月%d日 %H時%M分%S秒&quot;</span>
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-2023年12月25日<span style="color: #F8F8F8"> </span>15時30分45秒
-
-<span style="color: #8F5902; font-style: italic"># ISO 8601形式で表示</span>
-date<span style="color: #F8F8F8"> </span>-I
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">2023</span>-12-25
+<h3>カスタムフォーマットでの表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;+今日は%Y年%m月%d日、%A、%H時%M分%S秒です。&quot;</span>
+<span style="color: #000; font-style: italic">今日は2025年04月30日、水曜日、15時30分45秒です。</span>
 </pre></div>
-<h3>日時の計算</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 明日の日付</span>
-date<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;tomorrow&quot;</span>
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-2023年12月26日<span style="color: #F8F8F8"> </span>火曜日<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span>:30:45<span style="color: #F8F8F8"> </span>JST
-
-<span style="color: #8F5902; font-style: italic"># 1週間後</span>
-date<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;next week&quot;</span>
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-2024年1月1日<span style="color: #F8F8F8"> </span>月曜日<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span>:30:45<span style="color: #F8F8F8"> </span>JST
-
-<span style="color: #8F5902; font-style: italic"># 1ヶ月前</span>
-date<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;1 month ago&quot;</span>
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-2023年11月25日<span style="color: #F8F8F8"> </span>土曜日<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">15</span>:30:45<span style="color: #F8F8F8"> </span>JST
+<h3>特定の日付の計算</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2025-04-30 + 7 days&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;+%Y-%m-%d&quot;</span>
+<span style="color: #000; font-style: italic">2025-05-07</span>
 </pre></div>
-<h3>UNIXタイムスタンプの変換</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># UNIXタイムスタンプを人間が読める形式に変換</span>
-date<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>@1640995200
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-2022年1月1日<span style="color: #F8F8F8"> </span>土曜日<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">00</span>:00:00<span style="color: #F8F8F8"> </span>JST
-
-<span style="color: #8F5902; font-style: italic"># 現在のUNIXタイムスタンプを取得</span>
-date<span style="color: #F8F8F8"> </span>+%s
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">1703487045</span>
+<h3>ファイル名に日付を使用する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>backup-<span style="color: #204A87; font-weight: bold">$(</span>date<span style="color: #F8F8F8"> </span>+%Y%m%d<span style="color: #204A87; font-weight: bold">)</span>.tar.gz
+<span style="color: #8F5902">$ </span>ls
+<span style="color: #000; font-style: italic">backup-20250430.tar.gz</span>
 </pre></div>
-<h2>追加情報</h2>
+<h2>ヒント:</h2>
+<h3>よく使われるフォーマット指定子</h3>
 <ul>
-<li><p>主な書式指定子:</p>
-<ul>
-<li><code>%Y</code>: 4桁の年（例: 2023）</li>
+<li><code>%Y</code>: 4桁の年（例: 2025）</li>
 <li><code>%m</code>: 月（01-12）</li>
 <li><code>%d</code>: 日（01-31）</li>
 <li><code>%H</code>: 時（00-23）</li>
 <li><code>%M</code>: 分（00-59）</li>
 <li><code>%S</code>: 秒（00-59）</li>
-<li><code>%a</code>: 曜日の省略形</li>
-<li><code>%A</code>: 曜日の完全名</li>
-<li><code>%b</code> または <code>%h</code>: 月名の省略形</li>
-<li><code>%B</code>: 月名の完全名</li>
+<li><code>%A</code>: 曜日の名前（例: 水曜日）</li>
+<li><code>%a</code>: 曜日の短縮名（例: 水）</li>
+<li><code>%Z</code>: タイムゾーン（例: JST）</li>
 </ul>
-</li>
-<li><p>システム時刻の設定は通常、管理者権限（<code>sudo</code>）が必要です。</p>
-</li>
-<li><p>多くのシステムでは、時刻</p>
-</li>
+<h3>UNIXタイムスタンプの取得</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>+%s
+<span style="color: #000; font-style: italic">1745826645</span>
+</pre></div>
+<p>これはエポック（1970年1月1日 UTC）からの秒数であり、プログラミングやスクリプトで便利です。</p>
+<h2>よくある質問</h2>
+<h4>Q1. システム時刻を変更するには管理者権限が必要ですか？</h4>
+<p>A. はい、通常はシステム時刻を変更するには <code>sudo</code> などで管理者権限が必要です。</p>
+<h4>Q2. 特定のタイムゾーンで時刻を表示するにはどうすればいいですか？</h4>
+<p>A. <code>TZ</code> 環境変数を設定して実行します。例: <code>TZ=America/New_York date</code></p>
+<h4>Q3. 日付の計算はどのように行いますか？</h4>
+<p>A. <code>-d</code> オプションを使用して相対的な日付を指定できます。例えば、<code>date -d &quot;next month&quot;</code> や <code>date -d &quot;2 days ago&quot;</code> などです。</p>
+<h4>Q4. macOSでの date コマンドは Linux と同じですか？</h4>
+<p>A. macOSの <code>date</code> コマンドは BSD 由来で、Linux（GNU）版とは一部のオプションやフォーマット指定子が異なります。特に <code>-d</code> オプションは macOS では使用できません。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSでは、GNU版の <code>date</code> コマンドとは異なる BSD 版が使用されています。主な違いは以下の通りです：</p>
+<ul>
+<li><code>-d</code> オプションがありません。代わりに <code>-v</code> を使用して日付を調整できます。
+例: <code>date -v+1d</code> （1日後）</li>
+<li>日付を設定するには <code>-s</code> ではなく、別の構文を使用します。
+例: <code>sudo date MMDDHHmmYY</code></li>
+</ul>
+<p>GNU版の機能が必要な場合は、Homebrewで <code>coreutils</code> パッケージをインストールし、<code>gdate</code> コマンドを使用できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>brew<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>coreutils
+<span style="color: #8F5902">$ </span>gdate<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;next week&quot;</span><span style="color: #F8F8F8"> </span>+%Y-%m-%d
+<span style="color: #000; font-style: italic">2025-05-07</span>
+</pre></div>
+<h2>参考</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/date-invocation.html</p>
+<h2>改訂</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

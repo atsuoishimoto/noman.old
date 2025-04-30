@@ -46,94 +46,88 @@
   <div class="content">
     <main>
       
-  <h1><code>dig</code> コマンドの概要</h1>
-<p><code>dig</code>（Domain Information Groper）は、DNSサーバーに対してクエリを実行し、ドメイン名やIPアドレスなどのDNS情報を取得するためのコマンドラインツールです。ネットワークの問題診断やDNS設定の確認に役立ちます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>基本的な使い方</strong>: ドメイン名のDNS情報を取得します</p>
-<ul>
-<li>例: <code>dig example.com</code></li>
-</ul>
-</li>
-<li><p><strong>+short</strong>: 結果を簡潔に表示します（IPアドレスのみなど）</p>
-<ul>
-<li>例: <code>dig +short example.com</code></li>
-</ul>
-</li>
-<li><p><strong>-t [レコードタイプ]</strong>: 特定のDNSレコードタイプを指定します（A, MX, NS, TXT, CNAME など）</p>
-<ul>
-<li>例: <code>dig -t MX gmail.com</code></li>
-</ul>
-</li>
-<li><p><strong>@[DNSサーバー]</strong>: 特定のDNSサーバーに対してクエリを実行します</p>
-<ul>
-<li>例: <code>dig @8.8.8.8 example.com</code></li>
-</ul>
-</li>
-<li><p><strong>+trace</strong>: DNSの名前解決プロセスを追跡します</p>
-<ul>
-<li>例: <code>dig +trace example.com</code></li>
-</ul>
-</li>
-<li><p><strong>-x [IPアドレス]</strong>: 逆引き（IPアドレスからホスト名を取得）を行います</p>
-<ul>
-<li>例: <code>dig -x 8.8.8.8</code></li>
-</ul>
-</li>
-</ul>
+  <h1>dig コマンド</h1>
+<p>DNSサーバーに対してクエリを実行し、ドメイン名の情報を取得します。</p>
+<h2>概要</h2>
+<p><code>dig</code>（Domain Information Groper）は、DNSサーバーに対してクエリを送信し、ドメイン名の解決情報を取得するためのコマンドラインツールです。ネットワーク管理者やシステム管理者がDNSの問題をトラブルシューティングする際に非常に役立ちます。IPアドレス、メールサーバー、ネームサーバーなどの情報を確認できます。</p>
+<h2>オプション</h2>
+<h3><strong>+short</strong></h3>
+<p>結果を簡潔に表示します。IPアドレスのみなど、最小限の情報を取得したい場合に便利です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>google.com<span style="color: #F8F8F8"> </span>+short
+<span style="color: #000; font-style: italic">142.250.207.110</span>
+</pre></div>
+<h3><strong>-t</strong></h3>
+<p>特定のレコードタイプを指定します。一般的なタイプには、A（IPv4アドレス）、AAAA（IPv6アドレス）、MX（メールサーバー）、NS（ネームサーバー）、TXT（テキスト情報）などがあります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>MX<span style="color: #F8F8F8"> </span>gmail.com
+<span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
+<span style="color: #000; font-style: italic">gmail.com.		3599	IN	MX	10 alt1.gmail-smtp-in.l.google.com.</span>
+<span style="color: #000; font-style: italic">gmail.com.		3599	IN	MX	20 alt2.gmail-smtp-in.l.google.com.</span>
+<span style="color: #000; font-style: italic">gmail.com.		3599	IN	MX	30 alt3.gmail-smtp-in.l.google.com.</span>
+<span style="color: #000; font-style: italic">gmail.com.		3599	IN	MX	40 alt4.gmail-smtp-in.l.google.com.</span>
+<span style="color: #000; font-style: italic">gmail.com.		3599	IN	MX	5 gmail-smtp-in.l.google.com.</span>
+</pre></div>
+<h3><strong>@</strong></h3>
+<p>特定のDNSサーバーを指定してクエリを実行します。デフォルトでは、システムの設定に従ってDNSサーバーが選択されます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>@8.8.8.8<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
+<span style="color: #000; font-style: italic">example.com.		86400	IN	A	93.184.216.34</span>
+</pre></div>
+<h3><strong>+trace</strong></h3>
+<p>DNSの委任チェーン全体をたどり、ルートサーバーから始まる解決プロセスを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>+trace<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">;; Received 525 bytes from 192.168.1.1#53(192.168.1.1) in 30 ms</span>
+
+<span style="color: #000; font-style: italic">example.com.		172800	IN	NS	a.iana-servers.net.</span>
+<span style="color: #000; font-style: italic">example.com.		172800	IN	NS	b.iana-servers.net.</span>
+<span style="color: #000; font-style: italic">;; Received 170 bytes from 192.36.148.17#53(i.root-servers.net) in 40 ms</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
 <h2>使用例</h2>
-<h3>基本的な使い方</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ドメイン名のAレコード（IPアドレス）を取得</span>
-dig<span style="color: #F8F8F8"> </span>example.com
-
-<span style="color: #8F5902; font-style: italic"># 出力例（一部抜粋）</span>
-<span style="color: #000; font-weight: bold">;;</span><span style="color: #F8F8F8"> </span>ANSWER<span style="color: #F8F8F8"> </span>SECTION:
-example.com.<span style="color: #F8F8F8">		</span><span style="color: #0000CF; font-weight: bold">3600</span><span style="color: #F8F8F8">	</span>IN<span style="color: #F8F8F8">	</span>A<span style="color: #F8F8F8">	</span><span style="color: #0000CF; font-weight: bold">93</span>.184.216.34
+<h3>基本的なDNS検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
+<span style="color: #000; font-style: italic">example.com.		86400	IN	A	93.184.216.34</span>
 </pre></div>
-<h3>簡潔な出力</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># +shortオプションで結果を簡潔に表示</span>
-dig<span style="color: #F8F8F8"> </span>+short<span style="color: #F8F8F8"> </span>example.com
+<h3>複数のドメインを一度に検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>google.com<span style="color: #F8F8F8"> </span>amazon.com
+<span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
+<span style="color: #000; font-style: italic">google.com.		300	IN	A	142.250.207.110</span>
 
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-<span style="color: #0000CF; font-weight: bold">93</span>.184.216.34
+<span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
+<span style="color: #000; font-style: italic">amazon.com.		60	IN	A	52.94.236.248</span>
+<span style="color: #000; font-style: italic">amazon.com.		60	IN	A	54.239.28.85</span>
 </pre></div>
-<h3>特定のレコードタイプを指定</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># MXレコード（メールサーバー）を取得</span>
-dig<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>MX<span style="color: #F8F8F8"> </span>gmail.com
-
-<span style="color: #8F5902; font-style: italic"># 出力例（一部抜粋）</span>
-<span style="color: #000; font-weight: bold">;;</span><span style="color: #F8F8F8"> </span>ANSWER<span style="color: #F8F8F8"> </span>SECTION:
-gmail.com.<span style="color: #F8F8F8">		</span><span style="color: #0000CF; font-weight: bold">3599</span><span style="color: #F8F8F8">	</span>IN<span style="color: #F8F8F8">	</span>MX<span style="color: #F8F8F8">	</span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>alt1.gmail-smtp-in.l.google.com.
-gmail.com.<span style="color: #F8F8F8">		</span><span style="color: #0000CF; font-weight: bold">3599</span><span style="color: #F8F8F8">	</span>IN<span style="color: #F8F8F8">	</span>MX<span style="color: #F8F8F8">	</span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>alt2.gmail-smtp-in.l.google.com.
+<h3>逆引きDNS検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>-x<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>.8.8.8
+<span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
+<span style="color: #000; font-style: italic">8.8.8.8.in-addr.arpa.	21599	IN	PTR	dns.google.</span>
 </pre></div>
-<h3>特定のDNSサーバーを指用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># Google Public DNSを使用してクエリを実行</span>
-dig<span style="color: #F8F8F8"> </span>@8.8.8.8<span style="color: #F8F8F8"> </span>example.com
-
-<span style="color: #8F5902; font-style: italic"># 出力例は通常のdigコマンドと同様だが、指定したDNSサーバーを使用している</span>
+<h2>ヒント:</h2>
+<h3>応答時間の確認</h3>
+<p><code>dig</code>の出力の最後に表示される「Query time」を確認することで、DNSクエリの応答時間を確認できます。これはネットワークやDNSサーバーのパフォーマンスを評価するのに役立ちます。</p>
+<h3>統計情報の非表示</h3>
+<p><code>+nostats</code>オプションを使用すると、統計情報を非表示にできます。これにより、出力が簡潔になります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>google.com<span style="color: #F8F8F8"> </span>+nostats
 </pre></div>
-<h3>逆引き検索</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># IPアドレスからホスト名を取得</span>
-dig<span style="color: #F8F8F8"> </span>-x<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>.8.8.8
-
-<span style="color: #8F5902; font-style: italic"># 出力例（一部抜粋）</span>
-<span style="color: #000; font-weight: bold">;;</span><span style="color: #F8F8F8"> </span>ANSWER<span style="color: #F8F8F8"> </span>SECTION:
-<span style="color: #0000CF; font-weight: bold">8</span>.8.8.8.in-addr.arpa.<span style="color: #F8F8F8">	</span><span style="color: #0000CF; font-weight: bold">21599</span><span style="color: #F8F8F8">	</span>IN<span style="color: #F8F8F8">	</span>PTR<span style="color: #F8F8F8">	</span>dns.google.
+<h3>特定のセクションのみ表示</h3>
+<p><code>+noall +answer</code>オプションを使用すると、回答セクションのみを表示できます。これは、必要な情報だけを素早く確認したい場合に便利です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>google.com<span style="color: #F8F8F8"> </span>+noall<span style="color: #F8F8F8"> </span>+answer
+<span style="color: #000; font-style: italic">google.com.		300	IN	A	142.250.207.110</span>
 </pre></div>
-<h2>追加情報</h2>
+<h2>よくある質問</h2>
+<h4>Q1. digとnslookupの違いは何ですか？</h4>
+<p>A. <code>dig</code>はより詳細な情報を提供し、スクリプトでの使用に適しています。一方、<code>nslookup</code>はよりシンプルで対話的な使用に向いています。<code>dig</code>は一般的に、より多くのDNS関連の情報を表示します。</p>
+<h4>Q2. 特定のDNSサーバーを使用するにはどうすればよいですか？</h4>
+<p>A. <code>@</code>記号の後にDNSサーバーのIPアドレスを指定します。例：<code>dig @8.8.8.8 example.com</code></p>
+<h4>Q3. TTL（Time To Live）とは何ですか？</h4>
+<p>A. TTLは、DNSレコードがキャッシュに保存される秒数を示します。この値が小さいほど、DNSの変更が反映されるのが早くなりますが、DNSサーバーへのクエリ数が増加します。</p>
+<h4>Q4. SOAレコードとは何ですか？</h4>
+<p>A. SOA（Start of Authority）レコードは、ゾーンの管理情報を含むDNSレコードです。ゾーンの権威あるネームサーバー、管理者のメールアドレス、シリアル番号、更新間隔などの情報が含まれています。</p>
+<h2>参考資料</h2>
+<p>https://linux.die.net/man/1/dig</p>
+<h2>Revisions</h2>
 <ul>
-<li><p><code>dig</code>コマンドは、デフォルトでは詳細な情報を表示しますが、<code>+noall +answer</code>オプションを使うと回答セクションのみを表示できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>dig<span style="color: #F8F8F8"> </span>+noall<span style="color: #F8F8F8"> </span>+answer<span style="color: #F8F8F8"> </span>example.com
-</pre></div>
-</li>
-<li><p>複数のドメインやレコードタイプを一度に調査したい場合は、一行で指定できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>dig<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span>google.com<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>A<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>MX
-</pre></div>
-</li>
-<li><p>TTL（Time To Live）値は、DNSレコードがキャッシュに保存される時間（秒）を示しています。これはDNS設定変更の反映時間を予測するのに役立ちます。</p>
-</li>
-<li><p>ネットワークトラブルシューティングでは、<code>dig</code>の結果と<code>ping</code>や<code>traceroute</code>の結果を比較することで、問題の原因を特定しやすくなります。</p>
-</li>
+<li>2025/04/30 First revision</li>
 </ul>
 
 

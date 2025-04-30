@@ -1,68 +1,137 @@
-# journalctl コマンドの概要
+# journalctl コマンド
 
-`journalctl` は systemd のジャーナルログを閲覧するためのコマンドです。システムやサービスのログを効率的に検索・フィルタリングできます。
+システムログを表示・管理するためのコマンドです。
 
-## 主なオプション
+## 概要
 
-- **基本的な使用法**: オプションなしで実行すると、すべてのログエントリを表示します
-  - 例: `journalctl`
+`journalctl` は systemd のジャーナルログを閲覧するためのコマンドです。システムの起動メッセージ、サービスのログ、カーネルメッセージなど、システム全体のログを時系列で表示します。デフォルトでは、すべてのログエントリを表示しますが、様々なオプションを使用して特定のサービス、時間範囲、優先度などでフィルタリングすることができます。
 
-- **-f, --follow**: リアルタイムでログを追跡表示します（tail -f と同様）
-  - 例: `journalctl -f`
+## オプション
 
-- **-u, --unit=名前**: 特定のサービスユニットのログのみを表示します
-  - 例: `journalctl -u ssh.service`
+### **-f, --follow**
 
-- **-b, --boot[=ID]**: 現在または特定の起動時のログを表示します
-  - 例: `journalctl -b` (現在の起動)
-  - 例: `journalctl -b -1` (前回の起動)
+リアルタイムでログを追跡表示します（tail -f のような動作）
 
-- **--since=日時, --until=日時**: 指定した時間範囲のログを表示します
-  - 例: `journalctl --since="2023-04-01" --until="2023-04-02"`
-  - 例: `journalctl --since="1 hour ago"`
+```console
+$ journalctl -f
+4月 30 10:15:23 hostname systemd[1]: Started User Manager for UID 1000.
+4月 30 10:15:24 hostname sshd[1234]: Accepted publickey for user from 192.168.1.10 port 54321
+4月 30 10:15:25 hostname sudo[1235]: user : TTY=pts/0 ; PWD=/home/user ; USER=root ; COMMAND=/bin/systemctl restart nginx
+-- ログが追加されるたびに表示が更新される --
+```
 
-- **-p, --priority=レベル**: 指定した優先度以上のログを表示します
-  - 例: `journalctl -p err` (エラー以上の重要度)
+### **-u, --unit=**
 
-- **-n, --lines=行数**: 表示する行数を制限します
-  - 例: `journalctl -n 20`
+特定のサービスユニットのログのみを表示します
 
-- **-o, --output=フォーマット**: 出力形式を指定します
-  - 例: `journalctl -o json`
+```console
+$ journalctl -u nginx.service
+4月 29 08:30:12 hostname systemd[1]: Starting A high performance web server and a reverse proxy server...
+4月 29 08:30:12 hostname systemd[1]: Started A high performance web server and a reverse proxy server.
+4月 30 10:15:26 hostname systemd[1]: Restarting A high performance web server and a reverse proxy server...
+4月 30 10:15:26 hostname systemd[1]: Started A high performance web server and a reverse proxy server.
+```
+
+### **-b, --boot**
+
+現在の起動セッションのログのみを表示します
+
+```console
+$ journalctl -b
+4月 30 08:00:01 hostname kernel: Linux version 5.15.0-25-generic (gcc version 11.2.0)
+4月 30 08:00:02 hostname systemd[1]: Detected virtualization kvm.
+4月 30 08:00:03 hostname systemd[1]: Detected architecture x86-64.
+-- 現在の起動セッションのログが表示される --
+```
+
+### **--since=, --until=**
+
+指定した時間範囲のログを表示します
+
+```console
+$ journalctl --since="2025-04-30 09:00:00" --until="2025-04-30 10:00:00"
+4月 30 09:00:05 hostname systemd[1]: Started Daily apt download activities.
+4月 30 09:15:01 hostname CRON[1234]: (root) CMD (command -v debian-sa1 > /dev/null && debian-sa1 1 1)
+4月 30 09:45:23 hostname sshd[1235]: Accepted publickey for user from 192.168.1.10 port 54321
+-- 指定した時間範囲のログが表示される --
+```
+
+### **-p, --priority=**
+
+指定した優先度以上のログを表示します（0=emerg, 1=alert, 2=crit, 3=err, 4=warning, 5=notice, 6=info, 7=debug）
+
+```console
+$ journalctl -p err
+4月 29 15:45:12 hostname kernel: CPU: 0 PID: 1234 Comm: process Tainted: G        W  5.15.0-25-generic
+4月 30 02:30:45 hostname nginx[5678]: [error] 5678#5678: *1 open() "/var/www/html/favicon.ico" failed (2: No such file or directory)
+-- エラー以上の重要度のログのみ表示される --
+```
 
 ## 使用例
 
-```bash
-# 基本的な使用法 - すべてのログを表示
-journalctl
-# 出力例
-Apr 01 10:00:00 hostname systemd[1]: Starting System...
-Apr 01 10:00:05 hostname sshd[1234]: Server listening on port 22.
-...
+### 特定のプロセスIDのログを表示
 
-# SSHサービスのログのみを表示
-journalctl -u ssh.service
-# 出力例
-Apr 01 10:00:05 hostname sshd[1234]: Server listening on port 22.
-Apr 01 10:30:15 hostname sshd[1456]: Accepted password for user from 192.168.1.10
-
-# 今日のエラーログのみを表示
-journalctl --since=today -p err
-# 出力例
-Apr 01 11:23:45 hostname app[2345]: Error: Could not connect to database
-
-# リアルタイムでログを監視
-journalctl -f
-# 出力例（リアルタイムで更新される）
-Apr 01 14:30:22 hostname systemd[1]: Started Service.
-Apr 01 14:30:25 hostname app[3456]: Processing request...
-...
+```console
+$ journalctl _PID=1234
+4月 30 10:15:24 hostname sshd[1234]: Accepted publickey for user from 192.168.1.10 port 54321
+4月 30 10:20:15 hostname sshd[1234]: Received disconnect from 192.168.1.10 port 54321:11: disconnected by user
+4月 30 10:20:15 hostname sshd[1234]: Disconnected from user 192.168.1.10 port 54321
 ```
 
-## 追加のヒント
+### 最新の起動から特定のサービスのログを表示
 
-- `journalctl` は通常、ページャー（lessなど）を通して表示されるため、スペースキーで次のページ、`q`キーで終了できます。
-- `grep` と組み合わせて特定のキーワードを検索することもできます：`journalctl | grep "キーワード"`
-- ログが多い場合は `--disk-usage` オプションでジャーナルの使用容量を確認できます。
-- `--vacuum-size=サイズ` オプションで古いログを削除し、ディスク容量を解放できます（例：`journalctl --vacuum-size=1G`）。
-- `_SYSTEMD_UNIT`, `_HOSTNAME`, `_PID` などのフィールドを使って詳細なフィルタリングも可能です：`journalctl _PID=1234`
+```console
+$ journalctl -b -u ssh.service
+4月 30 08:00:45 hostname systemd[1]: Starting OpenBSD Secure Shell server...
+4月 30 08:00:46 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.
+4月 30 08:00:46 hostname sshd[1234]: Server listening on :: port 22.
+4月 30 08:00:46 hostname systemd[1]: Started OpenBSD Secure Shell server.
+```
+
+### ログの出力形式を変更（JSON形式）
+
+```console
+$ journalctl -b -u ssh.service -o json
+{"_HOSTNAME":"hostname","_SYSTEMD_UNIT":"ssh.service","MESSAGE":"Starting OpenBSD Secure Shell server...","__REALTIME_TIMESTAMP":"1714521645000000"}
+{"_HOSTNAME":"hostname","_SYSTEMD_UNIT":"ssh.service","MESSAGE":"Server listening on 0.0.0.0 port 22.","__REALTIME_TIMESTAMP":"1714521646000000"}
+```
+
+## ヒント:
+
+### ディスク使用量の確認と管理
+
+`journalctl --disk-usage` でジャーナルが使用しているディスク容量を確認できます。容量を節約するには `sudo journalctl --vacuum-size=500M` のようにして古いログを削除できます。
+
+### カーネルメッセージの確認
+
+`journalctl -k` または `journalctl --dmesg` でカーネルメッセージのみを表示できます。これはシステムの問題を診断する際に役立ちます。
+
+### 出力のページャーを無効化
+
+`journalctl --no-pager` を使用すると、lessなどのページャーを使わずに出力を直接表示します。これはログをファイルにリダイレクトする場合に便利です。
+
+### 出力形式のカスタマイズ
+
+`-o` オプションで出力形式を変更できます。例えば `journalctl -o json` でJSON形式、`-o short-precise` で精密なタイムスタンプ付きの短い形式で表示できます。
+
+## よくある質問
+
+#### Q1. journalctlとsyslogの違いは何ですか？
+A. journalctlはsystemdのジャーナルシステムを使用し、バイナリ形式で構造化されたログを保存します。従来のsyslogはテキストファイルベースです。journalctlはより多くのメタデータを保持し、検索やフィルタリングが容易です。
+
+#### Q2. ログはどこに保存されていますか？
+A. ジャーナルログは通常 `/var/log/journal/` ディレクトリに保存されています。ただし、設定によっては `/run/log/journal/`（揮発性）に保存される場合もあります。
+
+#### Q3. 古いログを削除するにはどうすればよいですか？
+A. `sudo journalctl --vacuum-time=1month`（1ヶ月より古いログを削除）や `sudo journalctl --vacuum-size=1G`（ログサイズを1GBに制限）などのコマンドを使用できます。
+
+#### Q4. 特定のユーザーのログだけを見るにはどうすればよいですか？
+A. `journalctl _UID=1000` のように、ユーザーIDを指定してフィルタリングできます。
+
+## 参考
+
+https://www.freedesktop.org/software/systemd/man/journalctl.html
+
+## 改訂
+
+- 2025/04/30 初版作成

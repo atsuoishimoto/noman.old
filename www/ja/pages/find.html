@@ -46,76 +46,88 @@
   <div class="content">
     <main>
       
-  <h1><code>find</code> コマンドの概要</h1>
-<p><code>find</code>コマンドは、ファイルシステム内でファイルやディレクトリを検索するための強力なツールです。条件に基づいてファイルを見つけ、さらにそれらに対して操作を実行することができます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-name</strong>: ファイル名で検索します</p>
-<ul>
-<li>例: <code>find . -name &quot;*.txt&quot;</code>（カレントディレクトリ以下のすべての.txtファイルを検索）</li>
-</ul>
-</li>
-<li><p><strong>-type</strong>: ファイルタイプで検索します</p>
-<ul>
-<li><code>f</code>（通常ファイル）、<code>d</code>（ディレクトリ）、<code>l</code>（シンボリックリンク）など</li>
-<li>例: <code>find . -type d</code>（カレントディレクトリ以下のすべてのディレクトリを検索）</li>
-</ul>
-</li>
-<li><p><strong>-size</strong>: ファイルサイズで検索します</p>
-<ul>
-<li>例: <code>find . -size +10M</code>（10MB以上のファイルを検索）</li>
-<li>単位: <code>c</code>（バイト）、<code>k</code>（キロバイト）、<code>M</code>（メガバイト）、<code>G</code>（ギガバイト）</li>
-</ul>
-</li>
-<li><p><strong>-mtime</strong>/<strong>-atime</strong>/<strong>-ctime</strong>: 時間に基づいて検索します</p>
-<ul>
-<li><code>-mtime</code>（更新時間）、<code>-atime</code>（アクセス時間）、<code>-ctime</code>（ステータス変更時間）</li>
-<li>例: <code>find . -mtime -7</code>（7日以内に更新されたファイルを検索）</li>
-</ul>
-</li>
-<li><p><strong>-exec</strong>: 見つかったファイルに対してコマンドを実行します</p>
-<ul>
-<li>例: <code>find . -name &quot;*.txt&quot; -exec grep &quot;検索語&quot; {} \;</code>（すべてのテキストファイルから「検索語」を検索）</li>
-</ul>
-</li>
-<li><p><strong>-maxdepth</strong>/<strong>-mindepth</strong>: 検索する深さを制限します</p>
-<ul>
-<li>例: <code>find . -maxdepth 2 -name &quot;*.log&quot;</code>（カレントディレクトリと1階層下までの.logファイルを検索）</li>
-</ul>
-</li>
-</ul>
-<h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># カレントディレクトリ以下のすべての.jpgファイルを検索</span>
-find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.jpg&quot;</span>
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-./photos/vacation/beach.jpg
-./photos/family/birthday.jpg
-./wallpaper.jpg
-
-<span style="color: #8F5902; font-style: italic"># 7日以内に更新された100KB以上のファイルを検索</span>
-find<span style="color: #F8F8F8"> </span>/home/user<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>f<span style="color: #F8F8F8"> </span>-size<span style="color: #F8F8F8"> </span>+100k<span style="color: #F8F8F8"> </span>-mtime<span style="color: #F8F8F8"> </span>-7
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-/home/user/documents/report.pdf
-/home/user/downloads/software.zip
-
-<span style="color: #8F5902; font-style: italic"># 空のファイルを検索して削除</span>
-find<span style="color: #F8F8F8"> </span>/tmp<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>f<span style="color: #F8F8F8"> </span>-size<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>rm<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span>
-<span style="color: #8F5902; font-style: italic"># 出力例はないが、条件に合うファイルが削除される</span>
-
-<span style="color: #8F5902; font-style: italic"># 特定のディレクトリ内の古いログファイルを検索して圧縮</span>
-find<span style="color: #F8F8F8"> </span>/var/log<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.log&quot;</span><span style="color: #F8F8F8"> </span>-mtime<span style="color: #F8F8F8"> </span>+30<span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>gzip<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span>
-<span style="color: #8F5902; font-style: italic"># 出力例はないが、30日以上前のログファイルが圧縮される</span>
+  <h1>find コマンド</h1>
+<p>ファイルシステム内でファイルやディレクトリを検索します。</p>
+<h2>概要</h2>
+<p><code>find</code>コマンドは、指定したディレクトリ階層内でファイルやディレクトリを検索するための強力なツールです。名前、サイズ、更新日時、パーミッションなど、様々な条件に基づいて検索できます。また、検索結果に対して追加のアクションを実行することも可能です。</p>
+<h2>オプション</h2>
+<h3><strong>-name パターン</strong></h3>
+<p>ファイル名でファイルを検索します。ワイルドカード（*、?など）が使用できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.txt&quot;</span>
+<span style="color: #000; font-style: italic">./documents/note.txt</span>
+<span style="color: #000; font-style: italic">./readme.txt</span>
 </pre></div>
-<h2>追加のヒント</h2>
+<h3><strong>-type タイプ</strong></h3>
+<p>ファイルタイプで検索します。一般的な値は <code>f</code>（通常ファイル）、<code>d</code>（ディレクトリ）、<code>l</code>（シンボリックリンク）です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>d
+<span style="color: #000; font-style: italic">.</span>
+<span style="color: #000; font-style: italic">./documents</span>
+<span style="color: #000; font-style: italic">./images</span>
+<span style="color: #000; font-style: italic">./projects</span>
+</pre></div>
+<h3><strong>-mtime 日数</strong></h3>
+<p>指定した日数以内に変更されたファイルを検索します。<code>-mtime -7</code> は7日以内に変更されたファイルを検索します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-mtime<span style="color: #F8F8F8"> </span>-3
+<span style="color: #000; font-style: italic">./documents/report.docx</span>
+<span style="color: #000; font-style: italic">./projects/script.py</span>
+</pre></div>
+<h3><strong>-size サイズ</strong></h3>
+<p>特定のサイズのファイルを検索します。<code>+</code>は「より大きい」、<code>-</code>は「より小さい」を意味します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-size<span style="color: #F8F8F8"> </span>+1M
+<span style="color: #000; font-style: italic">./images/photo.jpg</span>
+<span style="color: #000; font-style: italic">./videos/clip.mp4</span>
+</pre></div>
+<h3><strong>-exec コマンド {} ;</strong></h3>
+<p>検索結果の各ファイルに対してコマンドを実行します。<code>{}</code>は検索されたファイル名に置き換えられます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.txt&quot;</span><span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>cat<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span>
+<span style="color: #000; font-style: italic">これはnote.txtの内容です。</span>
+<span style="color: #000; font-style: italic">これはreadme.txtの内容です。</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>特定の拡張子を持つファイルを検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/home/user<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.jpg&quot;</span>
+<span style="color: #000; font-style: italic">/home/user/pictures/vacation.jpg</span>
+<span style="color: #000; font-style: italic">/home/user/documents/scan.jpg</span>
+</pre></div>
+<h3>最近変更されたファイルを検索して詳細表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/var/log<span style="color: #F8F8F8"> </span>-mtime<span style="color: #F8F8F8"> </span>-1<span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 root root 15340 4月 30 10:23 /var/log/syslog</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 root root 7823 4月 30 09:15 /var/log/auth.log</span>
+</pre></div>
+<h3>空のファイルを検索して削除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/tmp<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>f<span style="color: #F8F8F8"> </span>-size<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span>-delete
+</pre></div>
+<h3>特定のユーザーが所有するファイルを検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/home<span style="color: #F8F8F8"> </span>-user<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">/home/username</span>
+<span style="color: #000; font-style: italic">/home/username/.bashrc</span>
+<span style="color: #000; font-style: italic">/home/username/documents</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>パフォーマンスの向上</h3>
+<p>大きなディレクトリ構造を検索する場合は、検索範囲を制限するか、<code>-type</code>や<code>-name</code>などのフィルターを早めに指定すると処理が速くなります。</p>
+<h3>複数条件の組み合わせ</h3>
+<p><code>-a</code>（AND、デフォルト）や<code>-o</code>（OR）、<code>!</code>（NOT）を使用して複数の検索条件を組み合わせることができます。例：<code>find . -name &quot;*.txt&quot; -a -size +1k</code></p>
+<h3>権限エラーの回避</h3>
+<p>権限エラーを無視するには、<code>2&gt;/dev/null</code>を追加します。例：<code>find / -name &quot;config.xml&quot; 2&gt;/dev/null</code></p>
+<h3>検索結果の処理</h3>
+<p><code>-exec</code>の代わりに、パイプとxargsを使用することもできます：<code>find . -name &quot;*.log&quot; | xargs grep &quot;error&quot;</code></p>
+<h2>よくある質問</h2>
+<h4>Q1. findコマンドの基本的な構文は？</h4>
+<p>A. 基本構文は <code>find [検索開始パス] [検索条件] [アクション]</code> です。例えば <code>find . -name &quot;*.txt&quot;</code> は現在のディレクトリから始めて、.txtで終わるファイルを検索します。</p>
+<h4>Q2. 特定の日付範囲内のファイルを検索するには？</h4>
+<p>A. <code>-mtime</code>や<code>-newer</code>オプションを使用します。例えば、<code>find . -mtime -7 -a -mtime +1</code>は1日以上7日以内に変更されたファイルを検索します。</p>
+<h4>Q3. 検索結果を別のコマンドに渡すにはどうすればいいですか？</h4>
+<p>A. <code>-exec</code>オプションを使用するか、パイプとxargsを組み合わせます。例：<code>find . -name &quot;*.txt&quot; | xargs grep &quot;keyword&quot;</code></p>
+<h4>Q4. 検索から特定のディレクトリを除外するには？</h4>
+<p>A. <code>-path &quot;./dir&quot; -prune -o</code>を使用します。例：<code>find . -path &quot;./node_modules&quot; -prune -o -name &quot;*.js&quot; -print</code></p>
+<h2>macOSでの注意点</h2>
+<p>macOSのfindコマンドはGNU findとは若干異なります。特に、<code>-delete</code>オプションの動作や正規表現の扱いが異なる場合があります。また、macOSでは<code>-path</code>オプションの代わりに<code>-not -path</code>を使用することが多いです。</p>
+<h2>参考文献</h2>
+<p>https://www.gnu.org/software/findutils/manual/html_mono/find.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li>ワイルドカード（<code>*</code>、<code>?</code>など）を使用する場合は、引用符で囲むことを忘れないでください。そうしないとシェルが展開してしまいます。</li>
-<li><code>-name</code>は大文字と小文字を区別します。大文字小文字を区別せずに検索するには<code>-iname</code>を使用します。</li>
-<li>複数の条件を組み合わせる場合は、<code>-and</code>（デフォルト）、<code>-or</code>、<code>-not</code>（または<code>!</code>）を使用できます。<ul>
-<li>例: <code>find . -name &quot;*.txt&quot; -or -name &quot;*.pdf&quot;</code></li>
-</ul>
-</li>
-<li>権限のないディレクトリでの検索エラーを無視するには、<code>2&gt;/dev/null</code>を追加します。</li>
-<li>大量のファイルを扱う場合、<code>-exec</code>の代わりに<code>-exec command {} \+</code>を使用すると効率的です（複数のファイルを一度にコマンドに渡します）。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

@@ -1,86 +1,138 @@
-# sftpコマンド概要
+# sftp コマンド
 
-sftpは「SSH File Transfer Protocol」の略で、SSHプロトコルを使用してリモートサーバーとの間でファイルを安全に転送するためのコマンドです。通常のFTPと違い、暗号化された接続を使用するため、データ転送がより安全です。
+セキュアなファイル転送プロトコル（SSH File Transfer Protocol）を使用してファイルを転送します。
 
-## 主なオプション
+## 概要
 
-- **-P port**: 接続先のSSHポート番号を指定します（デフォルトは22）
-  - 例: `sftp -P 2222 user@example.com`
+`sftp`は、SSHプロトコルを使用してリモートサーバーとの間でファイルを安全に転送するためのコマンドです。FTPと似た操作性を持ちながら、通信が暗号化されるため、セキュリティが確保されます。ファイルのアップロード、ダウンロード、リモートディレクトリの操作などが可能です。
 
-- **-i identity_file**: 認証に使用する秘密鍵ファイルを指定します
-  - 例: `sftp -i ~/.ssh/my_key user@example.com`
+## オプション
 
-- **-b batchfile**: バッチファイルからコマンドを読み込んで実行します
-  - 例: `sftp -b commands.txt user@example.com`
+### **-P port**
 
-- **-r**: ディレクトリを再帰的にアップロード/ダウンロードします
-  - 例: `get -r remote_dir local_dir`（sftpセッション内で使用）
+接続先のポート番号を指定します。
 
-## 基本的な使い方
-
-### 接続方法
-
-```bash
-# ユーザー名とホスト名を指定して接続
-sftp user@example.com
-
-# 接続成功時の出力例
+```console
+$ sftp -P 2222 user@example.com
 Connected to example.com.
 sftp>
 ```
 
-### sftpセッション内のコマンド
+### **-i identity_file**
 
-```bash
-# リモートディレクトリの内容を表示
-sftp> ls
-# 出力例
-file1.txt  documents/  images/
+SSH認証に使用する秘密鍵ファイルを指定します。
 
-# ローカルディレクトリの内容を表示
-sftp> lls
-# 出力例
-Downloads/  Desktop/  local_file.txt
-
-# カレントディレクトリの変更（リモート）
-sftp> cd documents
-
-# カレントディレクトリの変更（ローカル）
-sftp> lcd Downloads
-
-# ファイルのダウンロード
-sftp> get file1.txt
-# 出力例
-Fetching /home/user/file1.txt to file1.txt
-
-# ファイルのアップロード
-sftp> put local_file.txt
-# 出力例
-Uploading local_file.txt to /home/user/local_file.txt
-
-# ディレクトリの再帰的ダウンロード
-sftp> get -r documents
-# 出力例
-Fetching /home/user/documents/ to documents/
-
-# セッションの終了
-sftp> exit
+```console
+$ sftp -i ~/.ssh/my_key user@example.com
+Connected to example.com.
+sftp>
 ```
 
-## 追加情報
+### **-b batchfile**
 
-- sftpはインタラクティブモードとバッチモードの両方で使用できます。バッチモードは自動化スクリプトに便利です。
+バッチファイルからコマンドを読み込んで実行します。
 
-- ワイルドカードを使用したファイル転送も可能です：
-  ```bash
-  sftp> get *.txt
-  ```
+```console
+$ cat commands.txt
+cd /remote/dir
+get important.txt
+bye
 
-- 転送速度を確認するには `-v`（詳細表示）オプションを使用します：
-  ```bash
-  sftp -v user@example.com
-  ```
+$ sftp -b commands.txt user@example.com
+# コマンドが自動実行される
+```
 
-- 多くのsftpコマンドはFTPと似ていますが、すべての通信が暗号化されるため、公共のネットワークでも安全に使用できます。
+### **-r**
 
-- パスワード認証よりも公開鍵認証（`-i`オプション）を使用する方が安全で便利です。
+ディレクトリを再帰的にコピーします（get/putコマンドと組み合わせて使用）。
+
+```console
+sftp> get -r remote_directory
+Fetching /remote_directory/ to remote_directory
+...
+sftp>
+```
+
+## 使用例
+
+### リモートサーバーへの接続
+
+```console
+$ sftp user@example.com
+Connected to example.com.
+sftp>
+```
+
+### ファイルのダウンロード
+
+```console
+sftp> get remote_file.txt
+Fetching /home/user/remote_file.txt to remote_file.txt
+/home/user/remote_file.txt                        100%  1234     1.2KB/s   00:01
+sftp>
+```
+
+### ファイルのアップロード
+
+```console
+sftp> put local_file.txt
+Uploading local_file.txt to /home/user/local_file.txt
+local_file.txt                                    100%  2345     2.3KB/s   00:01
+sftp>
+```
+
+### リモートディレクトリの操作
+
+```console
+sftp> pwd
+Remote working directory: /home/user
+sftp> cd documents
+sftp> ls
+file1.txt    file2.txt    projects/
+sftp> mkdir new_folder
+sftp>
+```
+
+## ヒント:
+
+### 対話モードでのコマンド補完
+
+sftpの対話モードでは、Tabキーを使ってコマンドやファイル名を補完できます。長いファイル名を入力する手間が省けます。
+
+### ローカルコマンドの実行
+
+コマンドの前に「!」をつけると、ローカルシェルでコマンドを実行できます。例えば、`!ls`でローカルディレクトリの内容を表示できます。
+
+### 複数ファイルの転送
+
+ワイルドカードを使用して複数のファイルを一度に転送できます。例：`get *.txt`
+
+### 対話モードでのヘルプ表示
+
+`help`または`?`コマンドを使用すると、利用可能なコマンドの一覧が表示されます。
+
+## よくある質問
+
+#### Q1. sftpとscpの違いは何ですか？
+A. sftpは対話的なセッションを提供し、複数の操作を連続して行えます。一方、scpは単一のファイル転送操作に特化しています。sftpはより多機能ですが、scpはシンプルな転送には便利です。
+
+#### Q2. sftpセッション内でファイルの権限を変更できますか？
+A. はい、`chmod`コマンドを使用してリモートファイルの権限を変更できます。例：`chmod 644 file.txt`
+
+#### Q3. 転送速度を向上させる方法はありますか？
+A. `-C`オプションを使用して圧縮を有効にすると、低速ネットワークでの転送速度が向上する場合があります。また、適切な暗号化アルゴリズムを選択することも効果的です。
+
+#### Q4. sftpセッションを終了するにはどうすればよいですか？
+A. `exit`、`quit`、または`bye`コマンドを使用するか、Ctrl+Dを押すことでセッションを終了できます。
+
+## macOSでの注意点
+
+macOSでは、OpenSSHのバージョンが古い場合があります。最新の機能を利用するには、Homebrewなどのパッケージマネージャーを使用してOpenSSHを更新することをお勧めします。また、macOSのキーチェーンとの連携により、パスフレーズの入力を省略できる場合があります。
+
+## 参考
+
+https://man.openbsd.org/sftp.1
+
+## 改訂
+
+- 2025/04/30 初版作成

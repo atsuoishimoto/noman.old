@@ -46,92 +46,103 @@
   <div class="content">
     <main>
       
-  <h1>seqコマンド概要</h1>
-<p><code>seq</code>コマンドは、指定された範囲の数値を順番に出力するシンプルなコマンドです。スクリプト内のループや、連番ファイルの作成などに便利です。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>基本構文</strong>: <code>seq [オプション] 最終値</code> または <code>seq [オプション] 開始値 最終値</code> または <code>seq [オプション] 開始値 増分 最終値</code></p>
-<ul>
-<li>例: <code>seq 5</code> は 1から5までの数字を出力</li>
-</ul>
-</li>
-<li><p><strong>-s, --separator=文字列</strong>: 数字の間の区切り文字を指定（デフォルトは改行）</p>
-<ul>
-<li>例: <code>seq -s &quot; &quot; 5</code> は数字をスペースで区切る</li>
-</ul>
-</li>
-<li><p><strong>-f, --format=フォーマット</strong>: 出力のフォーマットを指定（printf形式）</p>
-<ul>
-<li>例: <code>seq -f &quot;Number: %g&quot; 3</code> は各数字に「Number: 」を付ける</li>
-</ul>
-</li>
-<li><p><strong>-w, --equal-width</strong>: 全ての数字を同じ桁数で表示（先頭に0を埋める）</p>
-<ul>
-<li>例: <code>seq -w 8 12</code> は「08 09 10 11 12」と出力</li>
-</ul>
-</li>
-</ul>
+  <h1>seq コマンド</h1>
+<p>指定された範囲の数値を順番に出力します。</p>
+<h2>概要</h2>
+<p><code>seq</code> コマンドは、指定された開始値から終了値までの連続した数値を生成します。デフォルトでは1から始まり、1ずつ増加して指定された数値まで出力します。ステップ値（増分）を変更することも可能です。シェルスクリプトでループ処理を行う際や、連番ファイルを作成する場合などに便利です。</p>
+<h2>オプション</h2>
+<h3><strong>-s, --separator=STRING</strong></h3>
+<p>数値の間に挿入する区切り文字を指定します（デフォルトは改行）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot; &quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">1 2 3 4 5</span>
+</pre></div>
+<h3><strong>-f, --format=FORMAT</strong></h3>
+<p>出力形式を printf スタイルで指定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Number %g&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #000; font-style: italic">Number 1</span>
+<span style="color: #000; font-style: italic">Number 2</span>
+<span style="color: #000; font-style: italic">Number 3</span>
+</pre></div>
+<h3><strong>-w, --equal-width</strong></h3>
+<p>ゼロパディングを行い、すべての数値を同じ幅で出力します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>
+<span style="color: #000; font-style: italic">08</span>
+<span style="color: #000; font-style: italic">09</span>
+<span style="color: #000; font-style: italic">10</span>
+</pre></div>
 <h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使い方（1から5まで）</span>
-$<span style="color: #F8F8F8"> </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #0000CF; font-weight: bold">1</span>
-<span style="color: #0000CF; font-weight: bold">2</span>
-<span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #0000CF; font-weight: bold">4</span>
-<span style="color: #0000CF; font-weight: bold">5</span>
-
-<span style="color: #8F5902; font-style: italic"># 開始値と最終値を指定</span>
-$<span style="color: #F8F8F8"> </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">7</span>
-<span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #0000CF; font-weight: bold">4</span>
-<span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #0000CF; font-weight: bold">6</span>
-<span style="color: #0000CF; font-weight: bold">7</span>
-
-<span style="color: #8F5902; font-style: italic"># 開始値、増分、最終値を指定</span>
-$<span style="color: #F8F8F8"> </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>
-<span style="color: #0000CF; font-weight: bold">0</span>
-<span style="color: #0000CF; font-weight: bold">2</span>
-<span style="color: #0000CF; font-weight: bold">4</span>
-<span style="color: #0000CF; font-weight: bold">6</span>
-<span style="color: #0000CF; font-weight: bold">8</span>
-<span style="color: #0000CF; font-weight: bold">10</span>
-
-<span style="color: #8F5902; font-style: italic"># 区切り文字をカンマに変更</span>
-$<span style="color: #F8F8F8"> </span>seq<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;,&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #0000CF; font-weight: bold">1</span>,2,3,4,5
-
-<span style="color: #8F5902; font-style: italic"># 同じ桁数で表示（ゼロ埋め）</span>
-$<span style="color: #F8F8F8"> </span>seq<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">12</span>
-<span style="color: #0000CF; font-weight: bold">08</span>
-<span style="color: #0000CF; font-weight: bold">09</span>
-<span style="color: #0000CF; font-weight: bold">10</span>
-<span style="color: #0000CF; font-weight: bold">11</span>
-<span style="color: #0000CF; font-weight: bold">12</span>
-
-<span style="color: #8F5902; font-style: italic"># フォーマットを指定</span>
-$<span style="color: #F8F8F8"> </span>seq<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;file_%02g.txt&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-file_01.txt
-file_02.txt
-file_03.txt
+<h3>基本的な使用方法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">1</span>
+<span style="color: #000; font-style: italic">2</span>
+<span style="color: #000; font-style: italic">3</span>
+<span style="color: #000; font-style: italic">4</span>
+<span style="color: #000; font-style: italic">5</span>
 </pre></div>
-<h2>追加情報</h2>
+<h3>開始値と終了値を指定</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">7</span>
+<span style="color: #000; font-style: italic">3</span>
+<span style="color: #000; font-style: italic">4</span>
+<span style="color: #000; font-style: italic">5</span>
+<span style="color: #000; font-style: italic">6</span>
+<span style="color: #000; font-style: italic">7</span>
+</pre></div>
+<h3>開始値、ステップ値、終了値を指定</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>
+<span style="color: #000; font-style: italic">1</span>
+<span style="color: #000; font-style: italic">3</span>
+<span style="color: #000; font-style: italic">5</span>
+<span style="color: #000; font-style: italic">7</span>
+<span style="color: #000; font-style: italic">9</span>
+</pre></div>
+<h3>シェルのforループで使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #204A87; font-weight: bold">)</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Processing item </span><span style="color: #000">$i</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+<span style="color: #000; font-style: italic">Processing item 1</span>
+<span style="color: #000; font-style: italic">Processing item 2</span>
+<span style="color: #000; font-style: italic">Processing item 3</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>逆順に数値を生成</h3>
+<p>負のステップ値を使用して、大きい数から小さい数へ逆順に生成できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>-1<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>
+<span style="color: #000; font-style: italic">5</span>
+<span style="color: #000; font-style: italic">4</span>
+<span style="color: #000; font-style: italic">3</span>
+<span style="color: #000; font-style: italic">2</span>
+<span style="color: #000; font-style: italic">1</span>
+</pre></div>
+<h3>ゼロパディング</h3>
+<p>桁数を揃えたい場合は <code>-w</code> オプションを使用します。これはファイル名の連番などで役立ちます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>files.txt
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>files.txt
+<span style="color: #000; font-style: italic">01</span>
+<span style="color: #000; font-style: italic">02</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">10</span>
+</pre></div>
+<h3>小数点の使用</h3>
+<p><code>seq</code> は小数点を含む数値も扱えます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.5<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.5<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>.5
+<span style="color: #000; font-style: italic">0.5</span>
+<span style="color: #000; font-style: italic">1.0</span>
+<span style="color: #000; font-style: italic">1.5</span>
+<span style="color: #000; font-style: italic">2.0</span>
+<span style="color: #000; font-style: italic">2.5</span>
+</pre></div>
+<h2>よくある質問</h2>
+<h4>Q1. <code>seq</code> コマンドの代替方法はありますか？</h4>
+<p>A. Bashでは <code>{start..end..step}</code> という記法も使えます。例: <code>echo {1..5}</code> または <code>echo {1..10..2}</code></p>
+<h4>Q2. 大量の数値を生成する場合のパフォーマンスは？</h4>
+<p>A. 非常に大きな範囲の数値を生成する場合、メモリ使用量に注意が必要です。パイプを使って処理することをお勧めします。</p>
+<h4>Q3. macOSでの <code>seq</code> コマンドの違いはありますか？</h4>
+<p>A. macOSのデフォルトの <code>seq</code> はGNU版と若干異なる場合があります。Homebrewで <code>coreutils</code> をインストールすると、GNU版の <code>gseq</code> が使用できます。</p>
+<h4>Q4. 出力をファイルに保存するには？</h4>
+<p>A. リダイレクトを使用します: <code>seq 1 100 &gt; numbers.txt</code></p>
+<h2>参考情報</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/seq-invocation.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li><p>シェルスクリプトでループを作成する際に便利です：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #204A87; font-weight: bold">)</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
-<span style="color: #F8F8F8">  </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;処理 </span><span style="color: #000">$i</span><span style="color: #4E9A06"> を実行中&quot;</span>
-<span style="color: #204A87; font-weight: bold">done</span>
-</pre></div>
-</li>
-<li><p>最近のBashでは <code>{1..5}</code> という記法も使えるので、単純な連番なら <code>seq</code> の代わりに使えます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span>..5<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 1 2 3 4 5 と出力</span>
-<span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span>..10..2<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #F8F8F8"> </span><span style="color: #8F5902; font-style: italic"># 1 3 5 7 9 と出力（増分指定）</span>
-</pre></div>
-</li>
-<li><p>小数点を含む数値も扱えます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.5<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.5<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>.5<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># 0.5 1.0 1.5 2.0 2.5 と出力</span>
-</pre></div>
-</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  while - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>while command</h1>
+<p>Execute commands repeatedly as long as a condition is true.</p>
+<h2>Overview</h2>
+<p>The <code>while</code> command is a shell construct that creates a loop, executing a set of commands repeatedly as long as a specified condition evaluates to true. It's commonly used for iterating a fixed number of times, processing input line by line, or running commands until a specific condition changes.</p>
+<h2>Options</h2>
+<p>The <code>while</code> command doesn't have traditional command-line options as it's a shell construct rather than a standalone program. Instead, it uses a specific syntax structure.</p>
+<h3><strong>Basic Syntax</strong></h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>condition<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span>
+<span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># commands to execute</span>
+<span style="color: #204A87; font-weight: bold">done</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Counting with a numeric condition</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">i</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$i</span><span style="color: #F8F8F8"> </span>-le<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span>
+<span style="color: #000; font-style: italic">&gt; do</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;Count: $i&quot;</span>
+<span style="color: #000; font-style: italic">&gt;   i=$((i+1))</span>
+<span style="color: #000; font-style: italic">&gt; done</span>
+<span style="color: #000; font-style: italic">Count: 1</span>
+<span style="color: #000; font-style: italic">Count: 2</span>
+<span style="color: #000; font-style: italic">Count: 3</span>
+<span style="color: #000; font-style: italic">Count: 4</span>
+<span style="color: #000; font-style: italic">Count: 5</span>
+</pre></div>
+<h3>Reading file line by line</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">read</span><span style="color: #F8F8F8"> </span>line
+<span style="color: #000; font-style: italic">&gt; do</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;Line: $line&quot;</span>
+<span style="color: #000; font-style: italic">&gt; done &lt; file.txt</span>
+<span style="color: #000; font-style: italic">Line: This is the first line</span>
+<span style="color: #000; font-style: italic">Line: This is the second line</span>
+<span style="color: #000; font-style: italic">Line: This is the third line</span>
+</pre></div>
+<h3>Running until a condition changes</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>!<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>stop_file.txt<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span>
+<span style="color: #000; font-style: italic">&gt; do</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;Waiting for stop file to appear...&quot;</span>
+<span style="color: #000; font-style: italic">&gt;   sleep 5</span>
+<span style="color: #000; font-style: italic">&gt; done</span>
+<span style="color: #000; font-style: italic">Waiting for stop file to appear...</span>
+<span style="color: #000; font-style: italic">Waiting for stop file to appear...</span>
+<span style="color: #000; font-style: italic">Waiting for stop file to appear...</span>
+</pre></div>
+<h3>Infinite loop with break</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">i</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">true</span>
+<span style="color: #000; font-style: italic">&gt; do</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;Iteration: $i&quot;</span>
+<span style="color: #000; font-style: italic">&gt;   if [ $i -eq 3 ]; then</span>
+<span style="color: #000; font-style: italic">&gt;     echo &quot;Breaking out of loop&quot;</span>
+<span style="color: #000; font-style: italic">&gt;     break</span>
+<span style="color: #000; font-style: italic">&gt;   fi</span>
+<span style="color: #000; font-style: italic">&gt;   i=$((i+1))</span>
+<span style="color: #000; font-style: italic">&gt; done</span>
+<span style="color: #000; font-style: italic">Iteration: 1</span>
+<span style="color: #000; font-style: italic">Iteration: 2</span>
+<span style="color: #000; font-style: italic">Iteration: 3</span>
+<span style="color: #000; font-style: italic">Breaking out of loop</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Use Control-C to Exit Infinite Loops</h3>
+<p>If your <code>while</code> loop becomes stuck in an infinite loop, press Control-C to interrupt and terminate the execution.</p>
+<h3>Check Your Condition Carefully</h3>
+<p>Ensure your condition will eventually become false, or use a <code>break</code> statement to exit the loop, otherwise you'll create an infinite loop.</p>
+<h3>Use the <code>continue</code> Statement</h3>
+<p>The <code>continue</code> statement skips the rest of the current iteration and jumps to the next iteration, useful for filtering or skipping certain cases.</p>
+<h3>Combine with Command Substitution</h3>
+<p>You can use command substitution to process command output in a loop:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">read</span><span style="color: #F8F8F8"> </span>line<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Processing: </span><span style="color: #000">$line</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span><span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>&lt;<span style="color: #CE5C00; font-weight: bold">(</span>ls<span style="color: #F8F8F8"> </span>-1<span style="color: #CE5C00; font-weight: bold">)</span>
+</pre></div>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between <code>while</code> and <code>for</code> loops?</h4>
+<p>A. <code>while</code> loops continue as long as a condition is true, making them suitable for situations where the number of iterations isn't known in advance. <code>for</code> loops typically iterate over a predefined list of items.</p>
+<h4>Q2. How do I create an infinite loop?</h4>
+<p>A. Use <code>while true</code> or <code>while :</code> to create an infinite loop. Make sure to include a way to exit the loop (like a <code>break</code> statement) to avoid having to forcibly terminate it.</p>
+<h4>Q3. How can I read a file line by line?</h4>
+<p>A. Use <code>while read line; do commands; done &lt; file.txt</code> to process each line of a file.</p>
+<h4>Q4. Can I use <code>while</code> to wait for a condition?</h4>
+<p>A. Yes, <code>while</code> is often used to wait for conditions like file existence or process completion. For example: <code>while [ ! -f file.txt ]; do sleep 1; done</code></p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

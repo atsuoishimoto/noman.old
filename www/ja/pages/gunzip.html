@@ -46,71 +46,82 @@
   <div class="content">
     <main>
       
-  <h1>gunzipコマンド概要</h1>
-<p><code>gunzip</code>は圧縮ファイル（通常は<code>.gz</code>拡張子を持つファイル）を解凍するためのUNIXコマンドです。主にgzipで圧縮されたファイルを元に戻すために使用されます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-c, --stdout</strong>: 解凍したデータを標準出力に出力します。元の圧縮ファイルは削除されません。</p>
-<ul>
-<li>例: <code>gunzip -c file.gz &gt; file</code></li>
-</ul>
-</li>
-<li><p><strong>-f, --force</strong>: 強制的に解凍を実行します。既に同名のファイルが存在する場合でも上書きします。</p>
-<ul>
-<li>例: <code>gunzip -f already_exists.gz</code></li>
-</ul>
-</li>
-<li><p><strong>-k, --keep</strong>: 解凍後も元の圧縮ファイルを保持します（通常は解凍後に削除されます）。</p>
-<ul>
-<li>例: <code>gunzip -k important_archive.gz</code></li>
-</ul>
-</li>
-<li><p><strong>-l, --list</strong>: 圧縮ファイルの内容を表示します（解凍せずに情報のみ表示）。</p>
-<ul>
-<li>例: <code>gunzip -l files.gz</code></li>
-</ul>
-</li>
-<li><p><strong>-r, --recursive</strong>: ディレクトリを再帰的に処理し、見つかった全ての<code>.gz</code>ファイルを解凍します。</p>
-<ul>
-<li>例: <code>gunzip -r directory/</code></li>
-</ul>
-</li>
-<li><p><strong>-t, --test</strong>: 圧縮ファイルの整合性をテストします（実際に解凍は行いません）。</p>
-<ul>
-<li>例: <code>gunzip -t suspicious.gz</code></li>
-</ul>
-</li>
-</ul>
-<h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使い方：ファイルの解凍</span>
-gunzip<span style="color: #F8F8F8"> </span>file.gz
-<span style="color: #8F5902; font-style: italic"># 結果：file.gzが解凍されてfileというファイルが作成され、元のfile.gzは削除される</span>
-
-<span style="color: #8F5902; font-style: italic"># 複数ファイルの解凍</span>
-gunzip<span style="color: #F8F8F8"> </span>file1.gz<span style="color: #F8F8F8"> </span>file2.gz<span style="color: #F8F8F8"> </span>file3.gz
-<span style="color: #8F5902; font-style: italic"># 結果：指定した全てのファイルが解凍される</span>
-
-<span style="color: #8F5902; font-style: italic"># 元のファイルを保持したまま解凍</span>
-gunzip<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>important.gz
-<span style="color: #8F5902; font-style: italic"># 結果：important.gzが解凍されてimportantというファイルが作成され、important.gzも保持される</span>
-
-<span style="color: #8F5902; font-style: italic"># 圧縮ファイルの内容を確認</span>
-gunzip<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>large_archive.gz
-<span style="color: #8F5902; font-style: italic"># 出力例：</span>
-<span style="color: #8F5902; font-style: italic">#         compressed        uncompressed  ratio uncompressed_name</span>
-<span style="color: #8F5902; font-style: italic">#                1024               4096  75.0% large_archive</span>
-
-<span style="color: #8F5902; font-style: italic"># 標準出力への解凍（パイプラインで他のコマンドに渡す場合に便利）</span>
-gunzip<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>data.gz<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;keyword&quot;</span>
-<span style="color: #8F5902; font-style: italic"># 結果：data.gzを解凍した内容から&quot;keyword&quot;を含む行が表示される</span>
+  <h1>gunzip コマンド</h1>
+<p>圧縮ファイルを展開するコマンドです。</p>
+<h2>概要</h2>
+<p><code>gunzip</code>は、gzipで圧縮されたファイルを元の状態に戻すコマンドです。デフォルトでは、元のファイルを展開した後に圧縮ファイルを削除します。主に<code>.gz</code>拡張子を持つファイルの展開に使用されます。</p>
+<h2>オプション</h2>
+<h3><strong>-c, --stdout, --to-stdout</strong></h3>
+<p>展開したデータを標準出力に出力し、元の圧縮ファイルを保持します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>archive.gz<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>extracted_file
+<span style="color: #8F5902"># </span>圧縮ファイルを保持したまま内容を展開して別ファイルに保存
 </pre></div>
-<h2>追加情報</h2>
+<h3><strong>-f, --force</strong></h3>
+<p>強制的に展開を行います。既に同名のファイルが存在する場合でも上書きします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>already_exists.gz
+<span style="color: #8F5902"># </span>同名ファイルが存在しても強制的に展開
+</pre></div>
+<h3><strong>-k, --keep</strong></h3>
+<p>展開後も元の圧縮ファイルを保持します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>archive.gz
+<span style="color: #8F5902"># </span>archive.gzを展開し、展開後もarchive.gzを残す
+</pre></div>
+<h3><strong>-l, --list</strong></h3>
+<p>圧縮ファイル内の情報を表示します。ファイルを展開せずに内容の情報を確認できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>archive.gz
+<span style="color: #000; font-style: italic">         compressed        uncompressed  ratio uncompressed_name</span>
+<span style="color: #000; font-style: italic">                547                1536  64.4% archive</span>
+</pre></div>
+<h3><strong>-r, --recursive</strong></h3>
+<p>ディレクトリを再帰的に処理し、すべてのサブディレクトリ内の圧縮ファイルも展開します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>directory/
+<span style="color: #8F5902"># </span>directory内のすべての.gzファイルを再帰的に展開
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的な使い方</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>archive.gz
+<span style="color: #8F5902"># </span>archive.gzを展開してarchiveファイルを作成し、archive.gzは削除される
+</pre></div>
+<h3>複数ファイルの展開</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>file1.gz<span style="color: #F8F8F8"> </span>file2.gz<span style="color: #F8F8F8"> </span>file3.gz
+<span style="color: #8F5902"># </span>複数のファイルを一度に展開
+</pre></div>
+<h3>圧縮ファイルを保持したまま展開</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>large_file.gz
+<span style="color: #8F5902"># </span>large_file.gzを展開し、large_fileを作成。large_file.gzも保持される
+</pre></div>
+<h3>標準出力への展開</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gunzip<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>config.gz<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;setting&quot;</span>
+<span style="color: #8F5902"># </span>config.gzを展開して標準出力に送り、grepでフィルタリング
+</pre></div>
+<h2>ヒント:</h2>
+<h3>拡張子の自動処理</h3>
+<p><code>gunzip</code>は自動的に<code>.gz</code>拡張子を削除します。例えば、<code>file.txt.gz</code>は展開すると<code>file.txt</code>になります。</p>
+<h3>複数の圧縮形式への対応</h3>
+<p>多くのシステムでは、<code>gunzip</code>は<code>gzip -d</code>と同等です。また、<code>zcat</code>は<code>gunzip -c</code>と同等の機能を持ちます。</p>
+<h3>パイプラインでの使用</h3>
+<p><code>gunzip -c</code>を使うと、圧縮ファイルを展開してその内容を他のコマンドに渡すことができます。これはログファイルの分析などに便利です。</p>
+<h3>大きなファイルの処理</h3>
+<p>非常に大きなファイルを展開する場合は、十分なディスク容量があることを確認してください。圧縮ファイルは展開すると元のサイズに戻ります。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>gunzip</code>と<code>gzip -d</code>の違いは何ですか？</h4>
+<p>A. 機能的には同じです。<code>gunzip</code>は<code>gzip -d</code>のエイリアスとして実装されていることが多いです。</p>
+<h4>Q2. 展開したファイルと圧縮ファイルの両方を保持するにはどうすればいいですか？</h4>
+<p>A. <code>gunzip -k</code>（または<code>--keep</code>）オプションを使用すると、展開後も元の圧縮ファイルが保持されます。</p>
+<h4>Q3. 圧縮ファイルの内容を確認するだけで展開したくない場合はどうすればいいですか？</h4>
+<p>A. <code>gunzip -l</code>（または<code>--list</code>）オプションを使用すると、ファイルを展開せずに圧縮ファイルの情報を表示できます。</p>
+<h4>Q4. 標準入力から圧縮データを受け取って展開するにはどうすればいいですか？</h4>
+<p>A. <code>gunzip</code>に引数を指定せずに使用すると、標準入力からデータを読み取り、展開します。例：<code>cat file.gz | gunzip &gt; extracted_file</code></p>
+<h2>macOSでの注意点</h2>
+<p>macOSの<code>gunzip</code>はGNU版と若干の違いがあります。特に<code>-r</code>（再帰）オプションがない場合があります。代わりに<code>find</code>コマンドと組み合わせて使用することができます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.gz&quot;</span><span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>gunzip<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span>
+<span style="color: #8F5902"># </span>カレントディレクトリ以下のすべての.gzファイルを再帰的に展開
+</pre></div>
+<h2>参照</h2>
+<p>https://www.gnu.org/software/gzip/manual/gzip.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li><code>gunzip</code>は実際には<code>gzip -d</code>と同等です。<code>gzip</code>コマンドの解凍モードとして機能します。</li>
-<li>ファイル名に<code>.gz</code>拡張子がない場合でも、<code>gunzip</code>は自動的に<code>.gz</code>を追加して探そうとします。</li>
-<li>複数のファイルを一度に解凍する場合、一部のファイルでエラーが発生しても処理は続行されます。</li>
-<li><code>.tar.gz</code>や<code>.tgz</code>ファイル（tarボールと呼ばれる）は、<code>tar -xzf file.tar.gz</code>コマンドで一度に解凍・展開できます。</li>
-<li>大きなファイルを解凍する場合、十分なディスク容量があることを事前に確認しておくことをお勧めします。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

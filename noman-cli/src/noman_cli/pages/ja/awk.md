@@ -1,107 +1,141 @@
-# awk コマンド概要
+# awk コマンド
 
-`awk` はテキスト処理のためのプログラミング言語であり、パターンマッチングとテキスト操作に特化したコマンドです。ファイルやパイプからのデータを行単位で処理し、フィールド（列）ごとに操作できます。
+テキストファイルを処理し、パターンマッチングに基づいて特定のアクションを実行するテキスト処理ツール。
+
+## 概要
+
+`awk` はテキストファイルを行単位で処理するプログラミング言語兼コマンドラインツールです。入力テキストをレコード（通常は行）とフィールド（通常は空白で区切られた列）に分割し、パターンマッチングに基づいて様々な処理を行うことができます。データの抽出、変換、レポート生成などに非常に便利です。
 
 ## オプション
 
-### **-F** (フィールドセパレータ)
+### **-F** (フィールド区切り文字の指定)
 
-入力データのフィールド区切り文字を指定します。デフォルトは空白（スペースまたはタブ）です。
+入力テキストのフィールド区切り文字を指定します。デフォルトは空白（スペースまたはタブ）です。
 
-```bash
+```console
 $ echo "apple,orange,banana" | awk -F, '{print $2}'
 orange
 ```
 
-### **-v** (変数設定)
+### **-v** (変数の設定)
 
 awk プログラム内で使用する変数に値を設定します。
 
-```bash
-$ awk -v name="Taro" '{print "Hello, " name "! This is line " NR}' sample.txt
-Hello, Taro! This is line 1
-Hello, Taro! This is line 2
+```console
+$ awk -v name="John" 'BEGIN {print "Hello, " name "!"}'
+Hello, John!
 ```
 
-### **-f** (ファイル指定)
+### **-f** (プログラムファイルの指定)
 
 awk プログラムをファイルから読み込みます。
 
-```bash
+```console
 $ cat program.awk
 {print $1, $3}
 $ awk -f program.awk data.txt
-# data.txtの各行の1列目と3列目が表示される
+# data.txtの1列目と3列目が表示される
 ```
 
 ## 使用例
 
-### 基本的な列の抽出
+### 特定の列を抽出する
 
-```bash
+```console
 $ cat data.txt
-John 25 Tokyo
-Mary 30 Osaka
-Bob 22 Kyoto
+John 25 Engineer
+Mary 30 Doctor
+Bob 22 Student
 $ awk '{print $1, $3}' data.txt
-John Tokyo
-Mary Osaka
-Bob Kyoto
+John Engineer
+Mary Doctor
+Bob Student
 ```
 
-### 条件付き処理
+### 条件に一致する行を抽出する
 
-```bash
-$ awk '$2 > 25 {print $1 "さんは" $2 "歳です"}' data.txt
-Mary さんは30歳です
+```console
+$ awk '$2 > 25' data.txt
+Mary 30 Doctor
 ```
 
-### 合計値の計算
+### 列の合計を計算する
 
-```bash
+```console
 $ cat numbers.txt
-10
-20
-30
-40
+10 20
+30 40
+50 60
 $ awk '{sum += $1} END {print "合計: " sum}' numbers.txt
-合計: 100
+合計: 90
 ```
 
-### CSVファイルの特定列を抽出
+### CSVファイルの処理
 
-```bash
+```console
 $ cat data.csv
-名前,年齢,都市
-田中,25,東京
-佐藤,30,大阪
-鈴木,22,京都
-$ awk -F, '{print $1 "さんは" $3 "に住んでいます"}' data.csv
-名前さんは都市に住んでいます
-田中さんは東京に住んでいます
-佐藤さんは大阪に住んでいます
-鈴木さんは京都に住んでいます
+名前,年齢,職業
+John,25,Engineer
+Mary,30,Doctor
+$ awk -F, 'NR>1 {print "名前: " $1 ", 職業: " $3}' data.csv
+名前: John, 職業: Engineer
+名前: Mary, 職業: Doctor
+```
+
+## ヒント:
+
+### 組み込み変数を活用する
+
+`NR`（現在の行番号）や`NF`（現在の行のフィールド数）などの組み込み変数を使うと便利です。
+
+```console
+$ awk '{print NR ":", $0}' data.txt
+1: John 25 Engineer
+2: Mary 30 Doctor
+3: Bob 22 Student
+```
+
+### BEGIN/END ブロックを使う
+
+`BEGIN`ブロックは処理開始前に、`END`ブロックは処理終了後に実行されます。
+
+```console
+$ awk 'BEGIN {print "処理開始"} {count++} END {print "合計行数: " count}' data.txt
+処理開始
+合計行数: 3
+```
+
+### 正規表現を活用する
+
+パターンマッチングには正規表現が使えます。
+
+```console
+$ awk '/Engineer/' data.txt
+John 25 Engineer
 ```
 
 ## よくある質問
 
-### Q1. awk の基本的な構文は？
-A. 基本構文は `awk 'パターン {アクション}' ファイル名` です。パターンに一致する行に対してアクションが実行されます。
+#### Q1. awkとgrepの違いは何ですか？
+A. `grep`は単純なパターンマッチングに特化していますが、`awk`はより高度なテキスト処理（列の抽出、計算、条件処理など）ができます。
 
-### Q2. 特定の列だけを表示するには？
-A. `awk '{print $1, $3}' ファイル名` のように、`$n` で n 番目の列を指定できます。
+#### Q2. awkで複数の区切り文字を指定するには？
+A. `-F`オプションに正規表現を使用します。例：`awk -F'[,|]'`はカンマまたはパイプを区切り文字として扱います。
 
-### Q3. 行番号を表示するには？
-A. 組み込み変数 `NR` を使用します：`awk '{print NR, $0}' ファイル名`
+#### Q3. awkスクリプトを保存して再利用するには？
+A. スクリプトをファイルに保存し、`-f`オプションで指定します：`awk -f script.awk data.txt`
 
-### Q4. ヘッダー行をスキップするには？
-A. `awk 'NR > 1 {print $1}' ファイル名` のように、NR（行番号）を使って条件付けできます。
+#### Q4. awkで特定の列の合計を計算するには？
+A. `{sum += $2} END {print sum}`のように、変数に加算して最後に表示します。
 
-## 追加情報
+## macOSでの注意点
 
-- `$0` は行全体を表します
-- `NF` は各行のフィールド（列）数を表す変数です
-- `BEGIN {...}` はファイル処理前に実行されるブロックです
-- `END {...}` はファイル処理後に実行されるブロックです
-- 複雑な処理には、条件文（if-else）やループ（for, while）も使用できます
-- 正規表現を使ったパターンマッチングも強力な機能です：`awk '/pattern/ {print}'`
+macOSのデフォルトの`awk`はBSD版で、GNU版と若干の違いがあります。より高度な機能が必要な場合は、Homebrewで`gawk`（GNU awk）をインストールすることをお勧めします：`brew install gawk`
+
+## 参考文献
+
+https://www.gnu.org/software/gawk/manual/gawk.html
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

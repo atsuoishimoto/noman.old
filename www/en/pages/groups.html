@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  groups - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>groups command</h1>
+<p>Display the groups a user belongs to.</p>
+<h2>Overview</h2>
+<p>The <code>groups</code> command shows all the groups that a specified user is a member of. If no user is specified, it displays the groups for the current user. Groups are used in Unix/Linux systems to manage permissions and access control.</p>
+<h2>Options</h2>
+<p>The <code>groups</code> command has very few options as it's a simple utility.</p>
+<h3><strong>Default usage (current user)</strong></h3>
+<p>Shows groups for the currently logged-in user</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups
+<span style="color: #000; font-style: italic">staff admin wheel</span>
+</pre></div>
+<h3><strong>Specific user</strong></h3>
+<p>Shows groups for a specified username</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">username : staff admin</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Checking your own groups</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups
+<span style="color: #000; font-style: italic">user wheel admin staff</span>
+</pre></div>
+<h3>Checking multiple users' groups</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups<span style="color: #F8F8F8"> </span>root<span style="color: #F8F8F8"> </span>admin
+<span style="color: #000; font-style: italic">root : wheel admin</span>
+<span style="color: #000; font-style: italic">admin : admin staff wheel</span>
+</pre></div>
+<h3>Using with other commands</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;My groups are: </span><span style="color: #204A87; font-weight: bold">$(</span>groups<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">My groups are: user wheel admin staff</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Understanding Group Membership</h3>
+<p>Group membership determines what files you can access and what system operations you can perform. The first group listed is typically your primary group.</p>
+<h3>Checking Effective Groups</h3>
+<p>The <code>id</code> command provides more detailed information about user and group IDs, including the effective group ID: <code>id -g</code> shows your effective group ID.</p>
+<h3>Group Files Location</h3>
+<p>Group definitions are stored in <code>/etc/group</code>. You can view this file with <code>cat /etc/group</code> to see all groups defined on the system.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How do I add a user to a group?</h4>
+<p>A. Use <code>sudo usermod -aG groupname username</code> to add a user to a group.</p>
+<h4>Q2. What's the difference between <code>groups</code> and <code>id -Gn</code>?</h4>
+<p>A. They provide similar information, but <code>id -Gn</code> is part of the <code>id</code> command which can show more detailed user and group information.</p>
+<h4>Q3. How can I see all groups on the system?</h4>
+<p>A. Use <code>getent group</code> or <code>cat /etc/group</code> to see all groups defined on the system.</p>
+<h4>Q4. Why do I need to know my groups?</h4>
+<p>A. Understanding your group membership helps troubleshoot permission issues and determine what resources you can access on the system.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/groups-invocation.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

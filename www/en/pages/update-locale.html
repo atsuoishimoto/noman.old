@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  update-locale - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>update-locale command</h1>
+<p>Updates system locale settings by modifying locale configuration files.</p>
+<h2>Overview</h2>
+<p><code>update-locale</code> is a command used to modify system-wide locale settings on Debian-based Linux distributions. It updates the <code>/etc/default/locale</code> file, which defines environment variables that determine language, character encoding, and regional formatting preferences for the system.</p>
+<h2>Options</h2>
+<h3><strong>VARIABLE=value</strong></h3>
+<p>Sets a locale variable to the specified value</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-locale<span style="color: #F8F8F8"> </span><span style="color: #000">LANG</span><span style="color: #CE5C00; font-weight: bold">=</span>en_US.UTF-8
+</pre></div>
+<h3><strong>--reset</strong></h3>
+<p>Removes all locale settings, resetting to system defaults</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-locale<span style="color: #F8F8F8"> </span>--reset
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Setting multiple locale variables at once</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-locale<span style="color: #F8F8F8"> </span><span style="color: #000">LANG</span><span style="color: #CE5C00; font-weight: bold">=</span>en_GB.UTF-8<span style="color: #F8F8F8"> </span><span style="color: #000">LC_TIME</span><span style="color: #CE5C00; font-weight: bold">=</span>en_GB.UTF-8<span style="color: #F8F8F8"> </span><span style="color: #000">LC_PAPER</span><span style="color: #CE5C00; font-weight: bold">=</span>en_GB.UTF-8
+</pre></div>
+<h3>Checking current locale settings</h3>
+<p>First set the locale, then verify the changes:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-locale<span style="color: #F8F8F8"> </span><span style="color: #000">LANG</span><span style="color: #CE5C00; font-weight: bold">=</span>de_DE.UTF-8
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>/etc/default/locale
+<span style="color: #000; font-style: italic">LANG=de_DE.UTF-8</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Available Locales</h3>
+<p>Before setting a locale, ensure it's available on your system. You can check available locales with:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>locale<span style="color: #F8F8F8"> </span>-a
+</pre></div>
+<p>If your desired locale isn't listed, you may need to generate it using <code>locale-gen</code>.</p>
+<h3>System-wide vs User Settings</h3>
+<p><code>update-locale</code> changes system-wide settings. For user-specific locale settings, modify <code>~/.profile</code> or <code>~/.bashrc</code> instead.</p>
+<h3>Applying Changes</h3>
+<p>Changes made with <code>update-locale</code> take effect for new login sessions. To apply changes immediately in the current session, use:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>/etc/default/locale
+</pre></div>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between LANG and LC_ALL?</h4>
+<p>A. <code>LANG</code> is the default locale for all categories, while <code>LC_ALL</code> overrides all other locale settings. Use <code>LANG</code> for general settings and specific <code>LC_*</code> variables for fine-tuning.</p>
+<h4>Q2. How do I know which locales are available on my system?</h4>
+<p>A. Use <code>locale -a</code> to list all available locales.</p>
+<h4>Q3. Do I need to restart my system after changing locale settings?</h4>
+<p>A. A full restart isn't necessary, but you need to log out and log back in for the changes to take effect in your user session.</p>
+<h4>Q4. How can I remove a specific locale setting?</h4>
+<p>A. Use <code>update-locale VARIABLE=</code> (with empty value) to remove a specific variable.</p>
+<h2>References</h2>
+<p>https://manpages.debian.org/bullseye/locales/update-locale.8.en.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

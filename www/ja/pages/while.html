@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  while - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>while コマンド</h1>
+<p>条件が真である間、コマンドを繰り返し実行します。</p>
+<h2>概要</h2>
+<p><code>while</code> コマンドは、指定された条件が真（終了ステータスが0）である限り、コマンドブロックを繰り返し実行するシェルの制御構造です。ループ処理やバックグラウンドタスクの監視など、繰り返し処理が必要な場合に使用されます。</p>
+<h2>構文</h2>
+<h3><strong>基本構文</strong></h3>
+<p><code>while</code> の基本的な構文は以下の通りです：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>条件コマンド
+<span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #F8F8F8">  </span>実行コマンド
+<span style="color: #204A87; font-weight: bold">done</span>
+</pre></div>
+<p>条件コマンドが真（終了ステータス0）を返す限り、実行コマンドが繰り返し実行されます。</p>
+<h3><strong>break と continue</strong></h3>
+<p>ループ内で制御を変更するには：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>条件
+<span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #F8F8F8">  </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span>別の条件<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87; font-weight: bold">break</span><span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># ループを完全に抜ける</span>
+<span style="color: #F8F8F8">  </span><span style="color: #204A87; font-weight: bold">fi</span>
+<span style="color: #F8F8F8">  </span>
+<span style="color: #F8F8F8">  </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span>別の条件2<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87; font-weight: bold">continue</span><span style="color: #F8F8F8"> </span><span style="color: #8F5902; font-style: italic"># 現在の繰り返しをスキップして次の繰り返しへ</span>
+<span style="color: #F8F8F8">  </span><span style="color: #204A87; font-weight: bold">fi</span>
+<span style="color: #F8F8F8">  </span>
+<span style="color: #F8F8F8">  </span>コマンド
+<span style="color: #204A87; font-weight: bold">done</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>数値カウントアップ</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">i</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$i</span><span style="color: #F8F8F8"> </span>-le<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span>
+<span style="color: #000; font-style: italic">&gt; do</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;カウント: $i&quot;</span>
+<span style="color: #000; font-style: italic">&gt;   i=$((i+1))</span>
+<span style="color: #000; font-style: italic">&gt; done</span>
+<span style="color: #000; font-style: italic">カウント: 1</span>
+<span style="color: #000; font-style: italic">カウント: 2</span>
+<span style="color: #000; font-style: italic">カウント: 3</span>
+<span style="color: #000; font-style: italic">カウント: 4</span>
+<span style="color: #000; font-style: italic">カウント: 5</span>
+</pre></div>
+<h3>ファイルの各行を処理</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>names.txt
+<span style="color: #000; font-style: italic">Alice</span>
+<span style="color: #000; font-style: italic">Bob</span>
+<span style="color: #000; font-style: italic">Charlie</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">read</span><span style="color: #F8F8F8"> </span>name
+<span style="color: #000; font-style: italic">&gt; do</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;こんにちは、$nameさん&quot;</span>
+<span style="color: #000; font-style: italic">&gt; done &lt; names.txt</span>
+<span style="color: #000; font-style: italic">こんにちは、Aliceさん</span>
+<span style="color: #000; font-style: italic">こんにちは、Bobさん</span>
+<span style="color: #000; font-style: italic">こんにちは、Charlieさん</span>
+</pre></div>
+<h3>無限ループ（Ctrl+Cで停止）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">true</span>
+<span style="color: #000; font-style: italic">&gt; do</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;Ctrl+Cで停止するまで実行し続けます&quot;</span>
+<span style="color: #000; font-style: italic">&gt;   sleep 1</span>
+<span style="color: #000; font-style: italic">&gt; done</span>
+<span style="color: #000; font-style: italic">Ctrl+Cで停止するまで実行し続けます</span>
+<span style="color: #000; font-style: italic">Ctrl+Cで停止するまで実行し続けます</span>
+<span style="color: #000; font-style: italic">Ctrl+Cで停止するまで実行し続けます</span>
+<span style="color: #000; font-style: italic">^C</span>
+</pre></div>
+<h3>コマンドの実行結果を条件にする</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>/dev/null
+<span style="color: #000; font-style: italic">&gt; do</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;サーバーは応答しています&quot;</span>
+<span style="color: #000; font-style: italic">&gt;   sleep 5</span>
+<span style="color: #000; font-style: italic">&gt; done</span>
+<span style="color: #000; font-style: italic">サーバーは応答しています</span>
+<span style="color: #000; font-style: italic">サーバーは応答しています</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>無限ループに注意</h3>
+<p><code>while true</code> や <code>while :</code> は無限ループを作成します。必ず内部に終了条件を設けるか、<code>break</code>文を使用してループを抜ける手段を用意しましょう。</p>
+<h3>変数の更新を忘れない</h3>
+<p>条件に使用している変数を更新しないと、無限ループになる可能性があります。例えば、カウンタ変数は必ず増減させましょう。</p>
+<h3>ファイル処理の効率化</h3>
+<p>ファイルを1行ずつ処理する場合は、<code>cat file | while read line</code> よりも <code>while read line &lt; file</code> または <code>while read line; do ...; done &lt; file</code> の方が効率的です。</p>
+<h3>シェル変数のスコープに注意</h3>
+<p>パイプを使用した <code>while</code> ループ（<code>command | while read line</code>）では、ループ内で設定した変数はサブシェルで実行されるため、ループ終了後にアクセスできません。</p>
+<h2>よくある質問</h2>
+<h4>Q1. while ループと for ループの違いは何ですか？</h4>
+<p>A. <code>while</code> ループは条件が真である限り繰り返しますが、<code>for</code> ループは指定されたリストの各要素に対して1回ずつ実行します。不定回数の繰り返しには <code>while</code> が適しています。</p>
+<h4>Q2. while ループを途中で終了するにはどうすればよいですか？</h4>
+<p>A. ループ内で <code>break</code> コマンドを使用すると、即座にループを終了します。条件付きで終了する場合は <code>if</code> 文と組み合わせて使用します。</p>
+<h4>Q3. ループの現在の繰り返しをスキップするにはどうすればよいですか？</h4>
+<p>A. <code>continue</code> コマンドを使用すると、現在の繰り返しの残りの部分をスキップして、次の繰り返しに進みます。</p>
+<h4>Q4. 無限ループを作成するにはどうすればよいですか？</h4>
+<p>A. <code>while true</code> または <code>while :</code> を使用すると無限ループを作成できます。ただし、必ず内部に終了条件を設けるか、Ctrl+Cで停止できるようにしてください。</p>
+<h2>参照</h2>
+<p>https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html</p>
+<h2>改訂</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

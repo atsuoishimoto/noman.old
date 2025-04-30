@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  http - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>http command</h1>
+<p>Send HTTP requests from the command line and display responses.</p>
+<h2>Overview</h2>
+<p>The <code>http</code> command is a user-friendly HTTP client for the command line, provided by HTTPie. It allows you to make HTTP requests, test APIs, and interact with web services using a simple syntax. HTTPie is designed to be more intuitive than curl, with colorized output and JSON support built-in.</p>
+<h2>Options</h2>
+<h3><strong>-f, --form</strong></h3>
+<p>Send data as form-encoded (similar to browser form submission)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span>John<span style="color: #F8F8F8"> </span><span style="color: #000">age</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">30</span>
+<span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
+<span style="color: #000; font-style: italic">Content-Type: application/json</span>
+
+<span style="color: #000; font-style: italic">{</span>
+<span style="color: #000; font-style: italic">    &quot;message&quot;: &quot;Form data received&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;form&quot;: {</span>
+<span style="color: #000; font-style: italic">        &quot;name&quot;: &quot;John&quot;,</span>
+<span style="color: #000; font-style: italic">        &quot;age&quot;: &quot;30&quot;</span>
+<span style="color: #000; font-style: italic">    }</span>
+<span style="color: #000; font-style: italic">}</span>
+</pre></div>
+<h3><strong>-j, --json</strong></h3>
+<p>Send data as JSON (default for sending data)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-j<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span>John<span style="color: #F8F8F8"> </span>age:<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">30</span>
+<span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
+<span style="color: #000; font-style: italic">Content-Type: application/json</span>
+
+<span style="color: #000; font-style: italic">{</span>
+<span style="color: #000; font-style: italic">    &quot;message&quot;: &quot;JSON data received&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;json&quot;: {</span>
+<span style="color: #000; font-style: italic">        &quot;name&quot;: &quot;John&quot;,</span>
+<span style="color: #000; font-style: italic">        &quot;age&quot;: 30</span>
+<span style="color: #000; font-style: italic">    }</span>
+<span style="color: #000; font-style: italic">}</span>
+</pre></div>
+<h3><strong>-v, --verbose</strong></h3>
+<p>Show the full HTTP exchange (request and response headers)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">GET / HTTP/1.1</span>
+<span style="color: #000; font-style: italic">Host: example.com</span>
+<span style="color: #000; font-style: italic">User-Agent: HTTPie/3.2.1</span>
+<span style="color: #000; font-style: italic">Accept-Encoding: gzip, deflate</span>
+<span style="color: #000; font-style: italic">Accept: */*</span>
+<span style="color: #000; font-style: italic">Connection: keep-alive</span>
+
+<span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
+<span style="color: #000; font-style: italic">Age: 595934</span>
+<span style="color: #000; font-style: italic">Cache-Control: max-age=604800</span>
+<span style="color: #000; font-style: italic">Content-Type: text/html; charset=UTF-8</span>
+<span style="color: #000; font-style: italic">Date: Fri, 30 Apr 2025 12:34:56 GMT</span>
+<span style="color: #000; font-style: italic">Etag: &quot;3147526947+ident&quot;</span>
+<span style="color: #000; font-style: italic">Expires: Fri, 07 May 2025 12:34:56 GMT</span>
+<span style="color: #000; font-style: italic">Last-Modified: Thu, 17 Oct 2024 07:18:26 GMT</span>
+<span style="color: #000; font-style: italic">Server: ECS (dcb/7F83)</span>
+<span style="color: #000; font-style: italic">Vary: Accept-Encoding</span>
+<span style="color: #000; font-style: italic">X-Cache: HIT</span>
+<span style="color: #000; font-style: italic">Content-Length: 1256</span>
+
+<span style="color: #000; font-style: italic">&lt;!doctype html&gt;</span>
+<span style="color: #000; font-style: italic">&lt;html&gt;</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>-a, --auth</strong></h3>
+<p>Add authentication to the request</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>username:password<span style="color: #F8F8F8"> </span>example.com/api/protected
+<span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
+<span style="color: #000; font-style: italic">Content-Type: application/json</span>
+
+<span style="color: #000; font-style: italic">{</span>
+<span style="color: #000; font-style: italic">    &quot;authenticated&quot;: true,</span>
+<span style="color: #000; font-style: italic">    &quot;user&quot;: &quot;username&quot;</span>
+<span style="color: #000; font-style: italic">}</span>
+</pre></div>
+<h3><strong>-h, --headers</strong></h3>
+<p>Show only the response headers</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
+<span style="color: #000; font-style: italic">Age: 595934</span>
+<span style="color: #000; font-style: italic">Cache-Control: max-age=604800</span>
+<span style="color: #000; font-style: italic">Content-Type: text/html; charset=UTF-8</span>
+<span style="color: #000; font-style: italic">Date: Fri, 30 Apr 2025 12:34:56 GMT</span>
+<span style="color: #000; font-style: italic">Etag: &quot;3147526947+ident&quot;</span>
+<span style="color: #000; font-style: italic">Expires: Fri, 07 May 2025 12:34:56 GMT</span>
+<span style="color: #000; font-style: italic">Last-Modified: Thu, 17 Oct 2024 07:18:26 GMT</span>
+<span style="color: #000; font-style: italic">Server: ECS (dcb/7F83)</span>
+<span style="color: #000; font-style: italic">Vary: Accept-Encoding</span>
+<span style="color: #000; font-style: italic">X-Cache: HIT</span>
+<span style="color: #000; font-style: italic">Content-Length: 1256</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic GET request</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
+<span style="color: #000; font-style: italic">Content-Type: text/html; charset=UTF-8</span>
+<span style="color: #000; font-style: italic">Content-Length: 1256</span>
+
+<span style="color: #000; font-style: italic">&lt;!doctype html&gt;</span>
+<span style="color: #000; font-style: italic">&lt;html&gt;</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3>POST request with JSON data</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>api.example.com/users<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span>John<span style="color: #F8F8F8"> </span><span style="color: #000">email</span><span style="color: #CE5C00; font-weight: bold">=</span>john@example.com
+<span style="color: #000; font-style: italic">HTTP/1.1 201 Created</span>
+<span style="color: #000; font-style: italic">Content-Type: application/json</span>
+
+<span style="color: #000; font-style: italic">{</span>
+<span style="color: #000; font-style: italic">    &quot;id&quot;: 123,</span>
+<span style="color: #000; font-style: italic">    &quot;name&quot;: &quot;John&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;email&quot;: &quot;john@example.com&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;created_at&quot;: &quot;2025-04-30T12:34:56Z&quot;</span>
+<span style="color: #000; font-style: italic">}</span>
+</pre></div>
+<h3>Adding custom headers</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>example.com/api<span style="color: #F8F8F8"> </span>X-API-Token:abc123<span style="color: #F8F8F8"> </span>Accept:application/json
+<span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
+<span style="color: #000; font-style: italic">Content-Type: application/json</span>
+
+<span style="color: #000; font-style: italic">{</span>
+<span style="color: #000; font-style: italic">    &quot;status&quot;: &quot;success&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;data&quot;: { ... }</span>
+<span style="color: #000; font-style: italic">}</span>
+</pre></div>
+<h3>Downloading a file</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>--download<span style="color: #F8F8F8"> </span>https://example.com/file.zip
+<span style="color: #000; font-style: italic">Downloading to &quot;file.zip&quot;</span>
+<span style="color: #000; font-style: italic">Done. 15.43 MB in 2.32s (6.65 MB/s)</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>JSON Data Types</h3>
+<p>When sending JSON data, use <code>:=</code> for numbers, booleans, and null: <code>count:=42 active:=true data:=null</code></p>
+<h3>URL Parameters</h3>
+<p>Add URL parameters with <code>==</code>: <code>http example.com/search q==httpie</code></p>
+<h3>File Upload</h3>
+<p>Upload files using <code>@</code> symbol: <code>http POST example.com/upload file@/path/to/file.txt</code></p>
+<h3>Session Support</h3>
+<p>Use <code>--session=NAME</code> to maintain cookies between requests: <code>http --session=logged-in -a user:pass example.com</code></p>
+<h3>Redirect Output</h3>
+<p>Save response body to a file: <code>http example.com/file.pdf &gt; file.pdf</code></p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How is HTTPie different from curl?</h4>
+<p>A. HTTPie has a more intuitive syntax, colorized output, and built-in JSON support. It's designed to be more user-friendly for API testing and development.</p>
+<h4>Q2. How do I install HTTPie?</h4>
+<p>A. You can install it via pip (<code>pip install httpie</code>), Homebrew on macOS (<code>brew install httpie</code>), or apt on Ubuntu/Debian (<code>apt install httpie</code>).</p>
+<h4>Q3. How do I send form data vs. JSON data?</h4>
+<p>A. Use <code>-f</code> or <code>--form</code> for form data, and <code>-j</code> or <code>--json</code> for JSON data (JSON is the default when sending data).</p>
+<h4>Q4. How can I see the full HTTP request being sent?</h4>
+<p>A. Use the <code>-v</code> or <code>--verbose</code> flag to see the complete HTTP exchange, including all request and response headers.</p>
+<h4>Q5. How do I set cookies for a request?</h4>
+<p>A. Use the <code>Cookie:</code> header: <code>http example.com Cookie:'name=value; another=value2'</code></p>
+<h2>References</h2>
+<p>https://httpie.io/docs/cli</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

@@ -1,77 +1,85 @@
-# git-stash
+# git stash コマンド
 
-`git stash`は、作業中の変更を一時的に保存し、ワーキングディレクトリをクリーンな状態に戻すためのGitコマンドです。ブランチの切り替えやプル操作の前に、コミットしたくない変更を一時的に退避させるのに便利です。
+作業中の変更を一時的に保存し、クリーンな作業ディレクトリに戻すためのコマンド。
+
+## 概要
+
+`git stash`は、コミットしていない変更（追跡されているファイルの変更とステージングされた変更）を一時的に保存し、作業ディレクトリをクリーンな状態に戻します。これにより、ブランチの切り替えやプル操作などを行う際に、コミットせずに作業を一時退避させることができます。保存した変更は後で元に戻すことができます。
 
 ## オプション
 
-### **git stash save [メッセージ]**
+### **stash save [メッセージ]**
 
-変更を保存し、オプションでわかりやすいメッセージを付けることができます。
+変更を保存し、オプションでメッセージを付けることができます。
 
-```bash
-$ git stash save "ログイン機能の途中作業"
-Saved working directory and index state On main: ログイン機能の途中作業
+```console
+$ git stash save "作業中のログイン機能"
+Saved working directory and index state On main: 作業中のログイン機能
 ```
 
-### **git stash list**
+### **stash list**
 
 保存されたスタッシュの一覧を表示します。
 
-```bash
+```console
 $ git stash list
-stash@{0}: On main: ログイン機能の途中作業
-stash@{1}: On feature-branch: バグ修正の途中
+stash@{0}: On main: 作業中のログイン機能
+stash@{1}: On feature-branch: ナビゲーションバーの修正
 ```
 
-### **git stash apply [stash@{n}]**
+### **stash apply [stash@{n}]**
 
-保存した変更を現在のブランチに適用します。スタッシュは削除されません。
+保存した変更を現在の作業ディレクトリに適用します。スタッシュは削除されません。
 
-```bash
+```console
 $ git stash apply stash@{0}
 On branch main
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
         modified:   login.js
+
+no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
-### **git stash pop [stash@{n}]**
+### **stash pop [stash@{n}]**
 
 保存した変更を適用し、スタッシュリストから削除します。
 
-```bash
+```console
 $ git stash pop
 On branch main
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
         modified:   login.js
+
+no changes added to commit (use "git add" and/or "git commit -a")
 Dropped refs/stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)
 ```
 
-### **git stash drop [stash@{n}]**
+### **stash drop [stash@{n}]**
 
 特定のスタッシュを削除します。
 
-```bash
+```console
 $ git stash drop stash@{1}
-Dropped stash@{1} (fedcba9876543210abcdef0123456789abcdef01)
+Dropped stash@{1} (f1e2d3c4b5a6)
 ```
 
-### **git stash clear**
+### **stash clear**
 
 すべてのスタッシュを削除します。
 
-```bash
+```console
 $ git stash clear
 ```
 
-### **git stash show [stash@{n}]**
+### **stash show [stash@{n}]**
 
-スタッシュの内容を表示します。`-p`オプションで詳細な差分を確認できます。
+スタッシュの内容を表示します。`-p`オプションで詳細な差分を表示できます。
 
-```bash
+```console
 $ git stash show stash@{0}
  login.js | 15 +++++++++++++++
  1 file changed, 15 insertions(+)
@@ -82,100 +90,93 @@ index 1234567..abcdefg 100644
 --- a/login.js
 +++ b/login.js
 @@ -10,6 +10,21 @@ function validateForm() {
-   // 追加されたコード
-+  function checkCredentials() {
-+    // ログイン処理
+   // 入力検証のコード
++  function authenticateUser() {
++    // 認証処理のコード
 +  }
-```
-
-### **git stash branch <ブランチ名> [stash@{n}]**
-
-スタッシュから新しいブランチを作成し、そこに変更を適用します。
-
-```bash
-$ git stash branch login-feature stash@{0}
-Switched to a new branch 'login-feature'
-On branch login-feature
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-        modified:   login.js
-Dropped stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)
 ```
 
 ## 使用例
 
-### 基本的な使い方
+### 作業中の変更を一時保存してブランチを切り替える
 
-```bash
-# 変更を一時保存
+```console
+$ git status
+On branch feature-login
+Changes not staged for commit:
+  modified:   login.js
+
 $ git stash
-Saved working directory and index state WIP on main: abc1234 最後のコミットメッセージ
+Saved working directory and index state WIP on feature-login: abc1234 最後のコミットメッセージ
 
-# 別のブランチで作業
-$ git checkout another-branch
-Switched to branch 'another-branch'
-
-# 元のブランチに戻る
 $ git checkout main
 Switched to branch 'main'
 
-# 保存した変更を復元して削除
+# 作業後、元のブランチに戻って変更を復元
+$ git checkout feature-login
+Switched to branch 'feature-login'
+
 $ git stash pop
-On branch main
+On branch feature-login
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-        modified:   login.js
-Dropped refs/stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)
+  modified:   login.js
 ```
 
-### 複数のスタッシュを管理する
+### 未追跡ファイルも含めてスタッシュする
 
-```bash
-# 変更を説明付きで保存
-$ git stash save "ログイン機能の途中作業"
-Saved working directory and index state On main: ログイン機能の途中作業
-
-# 別の変更を保存
-$ git stash save "ナビゲーションバーの修正"
-Saved working directory and index state On main: ナビゲーションバーの修正
-
-# スタッシュ一覧を確認
-$ git stash list
-stash@{0}: On main: ナビゲーションバーの修正
-stash@{1}: On main: ログイン機能の途中作業
-
-# 特定のスタッシュを適用
-$ git stash apply stash@{1}
-On branch main
+```console
+$ git status
+On branch feature-login
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-        modified:   login.js
+  modified:   login.js
+Untracked files:
+  auth.js
+
+$ git stash -u
+Saved working directory and index state WIP on feature-login: abc1234 最後のコミットメッセージ
 ```
+
+## ヒント:
+
+### 意味のあるメッセージを付ける
+
+`git stash save "メッセージ"`を使って、スタッシュに説明的なメッセージを付けると、後で内容を思い出しやすくなります。
+
+### 部分的なスタッシュ
+
+`git stash -p`（または `--patch`）を使うと、変更の一部だけをスタッシュできます。各変更ハンクごとに保存するかどうか選択できるため、関連する変更だけをグループ化できます。
+
+### ブランチの作成とスタッシュの適用
+
+```console
+$ git stash
+$ git stash branch new-branch stash@{0}
+```
+
+このコマンドは新しいブランチを作成し、そこにスタッシュを適用して、成功したらスタッシュを削除します。コンフリクトが発生した場合に便利です。
+
+### スタッシュの定期的なクリーンアップ
+
+古いスタッシュは定期的に確認し、不要なものは削除しましょう。長期間放置されたスタッシュは混乱の原因になります。
 
 ## よくある質問
 
-#### Q1. `git stash`と`git stash save`の違いは何ですか？
-A. 基本的に同じ機能ですが、`git stash save`ではメッセージを付けることができます。Git 2.16以降では`git stash push`の使用が推奨されています。
+#### Q1. スタッシュした変更を間違って削除してしまった場合、復元できますか？
+A. 通常のスタッシュ操作では、`git stash drop`や`git stash clear`で削除したスタッシュを復元することはできません。ただし、Gitのreflogを使って最近削除されたスタッシュを見つけられる場合があります。
 
-#### Q2. スタッシュを適用する際に競合が発生した場合はどうすればよいですか？
-A. 通常のマージ競合と同様に解決します。競合ファイルを編集し、`git add`でマークしてから作業を続けます。
+#### Q2. 複数のブランチで同じスタッシュを適用できますか？
+A. はい、`git stash apply`を使えば同じスタッシュを複数のブランチに適用できます。ただし、コンフリクトが発生する可能性があるので注意が必要です。
 
-#### Q3. 特定のファイルだけをスタッシュに保存できますか？
-A. はい、Git 2.13以降では`git stash push -m "メッセージ" [ファイルパス]`を使用できます。
+#### Q3. スタッシュはリモートリポジトリに共有されますか？
+A. いいえ、スタッシュはローカルリポジトリにのみ保存され、`git push`でリモートに送信されることはありません。
 
-#### Q4. スタッシュした変更を誤って削除してしまった場合、復元できますか？
-A. 通常のスタッシュコマンドでは復元できませんが、`git fsck --unreachable`と`git show`を組み合わせて復元できる場合があります。ただし確実ではありません。
-
-## 追加のヒント
-
-- スタッシュはブランチをまたいで適用できますが、競合に注意が必要です。
-- 長期間保存する変更はスタッシュではなく、トピックブランチを作成することをお勧めします。
-- スタッシュにはインデックスに追加されていない（`git add`していない）ファイルも含まれますが、新規作成した未追跡ファイルは含まれません。未追跡ファイルも含めるには`git stash -u`または`git stash --include-untracked`を使用します。
-- スタッシュは内部的にはコミットとして保存されるため、Git履歴を圧迫することはありません。
+#### Q4. スタッシュとコミットの違いは何ですか？
+A. スタッシュは一時的な保存場所で、履歴に残りません。コミットはリポジトリの履歴に永続的に記録されます。スタッシュは短期的な作業の退避に、コミットは意味のある変更の記録に使用します。
 
 ## 参考資料
 
 https://git-scm.com/docs/git-stash
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

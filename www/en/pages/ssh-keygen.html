@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  ssh-keygen - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>ssh-keygen command</h1>
+<p>Generate, manage, and convert authentication keys for SSH.</p>
+<h2>Overview</h2>
+<p><code>ssh-keygen</code> creates public/private key pairs for SSH authentication, allowing secure passwordless logins to remote systems. It can also manage existing keys, convert between formats, and change key passphrases. The tool is essential for setting up secure remote access and automated connections between systems.</p>
+<h2>Options</h2>
+<h3><strong>-t type</strong></h3>
+<p>Specifies the type of key to create (rsa, ed25519, ecdsa, dsa)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-keygen<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>ed25519
+<span style="color: #000; font-style: italic">Generating public/private ed25519 key pair.</span>
+<span style="color: #000; font-style: italic">Enter file in which to save the key (/home/user/.ssh/id_ed25519): </span>
+<span style="color: #000; font-style: italic">Enter passphrase (empty for no passphrase): </span>
+<span style="color: #000; font-style: italic">Enter same passphrase again: </span>
+<span style="color: #000; font-style: italic">Your identification has been saved in /home/user/.ssh/id_ed25519</span>
+<span style="color: #000; font-style: italic">Your public key has been saved in /home/user/.ssh/id_ed25519.pub</span>
+</pre></div>
+<h3><strong>-f filename</strong></h3>
+<p>Specifies the filename of the key file</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-keygen<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>rsa<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>~/.ssh/github_key
+<span style="color: #000; font-style: italic">Generating public/private rsa key pair.</span>
+<span style="color: #000; font-style: italic">Enter passphrase (empty for no passphrase): </span>
+<span style="color: #000; font-style: italic">Enter same passphrase again: </span>
+<span style="color: #000; font-style: italic">Your identification has been saved in /home/user/.ssh/github_key</span>
+<span style="color: #000; font-style: italic">Your public key has been saved in /home/user/.ssh/github_key.pub</span>
+</pre></div>
+<h3><strong>-b bits</strong></h3>
+<p>Specifies the number of bits in the key (higher is more secure)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-keygen<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>rsa<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4096</span>
+<span style="color: #000; font-style: italic">Generating public/private rsa key pair.</span>
+<span style="color: #000; font-style: italic">Enter file in which to save the key (/home/user/.ssh/id_rsa): </span>
+<span style="color: #000; font-style: italic">Enter passphrase (empty for no passphrase): </span>
+<span style="color: #000; font-style: italic">Enter same passphrase again: </span>
+<span style="color: #000; font-style: italic">Your identification has been saved in /home/user/.ssh/id_rsa</span>
+<span style="color: #000; font-style: italic">Your public key has been saved in /home/user/.ssh/id_rsa.pub</span>
+</pre></div>
+<h3><strong>-p</strong></h3>
+<p>Changes the passphrase of an existing private key</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-keygen<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa
+<span style="color: #000; font-style: italic">Enter old passphrase: </span>
+<span style="color: #000; font-style: italic">Enter new passphrase (empty for no passphrase): </span>
+<span style="color: #000; font-style: italic">Enter same passphrase again: </span>
+<span style="color: #000; font-style: italic">Your identification has been saved with the new passphrase.</span>
+</pre></div>
+<h3><strong>-c</strong></h3>
+<p>Changes the comment for a key</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-keygen<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;work laptop&quot;</span>
+<span style="color: #000; font-style: italic">Enter passphrase: </span>
+<span style="color: #000; font-style: italic">Key comment changed.</span>
+<span style="color: #000; font-style: italic">The comment in your key file has been changed.</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Creating a default SSH key</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-keygen
+<span style="color: #000; font-style: italic">Generating public/private rsa key pair.</span>
+<span style="color: #000; font-style: italic">Enter file in which to save the key (/home/user/.ssh/id_rsa): </span>
+<span style="color: #000; font-style: italic">Enter passphrase (empty for no passphrase): </span>
+<span style="color: #000; font-style: italic">Enter same passphrase again: </span>
+<span style="color: #000; font-style: italic">Your identification has been saved in /home/user/.ssh/id_rsa</span>
+<span style="color: #000; font-style: italic">Your public key has been saved in /home/user/.ssh/id_rsa.pub</span>
+<span style="color: #000; font-style: italic">The key fingerprint is:</span>
+<span style="color: #000; font-style: italic">SHA256:abcdefghijklmnopqrstuvwxyz123456789ABCDEFG user@hostname</span>
+</pre></div>
+<h3>Generating a key with custom settings</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-keygen<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>ed25519<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>~/.ssh/server_key<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;server access key&quot;</span><span style="color: #F8F8F8"> </span>-N<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;mypassphrase&quot;</span>
+<span style="color: #000; font-style: italic">Generating public/private ed25519 key pair.</span>
+<span style="color: #000; font-style: italic">Your identification has been saved in /home/user/.ssh/server_key</span>
+<span style="color: #000; font-style: italic">Your public key has been saved in /home/user/.ssh/server_key.pub</span>
+<span style="color: #000; font-style: italic">The key fingerprint is:</span>
+<span style="color: #000; font-style: italic">SHA256:abcdefghijklmnopqrstuvwxyz123456789ABCDEFG server access key</span>
+</pre></div>
+<h3>Viewing a key's fingerprint</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-keygen<span style="color: #F8F8F8"> </span>-lf<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa.pub
+<span style="color: #000; font-style: italic">3072 SHA256:abcdefghijklmnopqrstuvwxyz123456789ABCDEFG user@hostname (RSA)</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Choose the Right Key Type</h3>
+<p>Ed25519 keys are recommended for most users as they provide strong security with smaller key sizes. RSA keys should be at least 3072 bits for good security.</p>
+<h3>Protect Your Private Keys</h3>
+<p>Always keep your private keys secure and consider using a passphrase for important keys. The passphrase adds an extra layer of protection if someone gains access to your key file.</p>
+<h3>Backup Your Keys</h3>
+<p>Store backups of your SSH keys in a secure location. Losing access to your private keys can mean losing access to systems that use them for authentication.</p>
+<h3>Key Organization</h3>
+<p>Use meaningful filenames and comments for your keys to keep track of what each key is used for, especially if you maintain multiple keys for different services.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What is the difference between RSA and Ed25519 keys?</h4>
+<p>A. Ed25519 keys are newer, smaller, faster, and generally more secure than RSA keys. RSA keys are more widely supported but require larger key sizes (3072+ bits) for good security.</p>
+<h4>Q2. How do I add my SSH key to a remote server?</h4>
+<p>A. Copy your public key to the server using <code>ssh-copy-id username@server</code> or manually add the contents of your public key file to the server's <code>~/.ssh/authorized_keys</code> file.</p>
+<h4>Q3. Should I use a passphrase for my SSH key?</h4>
+<p>A. Yes, for better security. A passphrase protects your private key if someone gains access to your key file. For automation needs where typing a passphrase isn't practical, you can use ssh-agent to cache your passphrase.</p>
+<h4>Q4. How do I change or remove a key's passphrase?</h4>
+<p>A. Use <code>ssh-keygen -p -f ~/.ssh/your_key_file</code> to change the passphrase. Enter an empty passphrase to remove it entirely.</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, SSH keys are stored in the same location (<code>~/.ssh/</code>), but you may need to adjust permissions with <code>chmod 600 ~/.ssh/id_rsa</code> and <code>chmod 700 ~/.ssh</code> to ensure proper security. macOS also includes Keychain integration that can store your SSH key passphrases securely.</p>
+<h2>References</h2>
+<p>https://man.openbsd.org/ssh-keygen.1</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

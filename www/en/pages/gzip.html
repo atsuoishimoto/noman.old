@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  gzip - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>gzip command</h1>
+<p>Compress or expand files using the gzip algorithm.</p>
+<h2>Overview</h2>
+<p><code>gzip</code> is a compression utility that reduces the size of files using Lempel-Ziv coding (LZ77). It replaces the original file with a compressed version having a <code>.gz</code> extension, preserving the original file's ownership, permissions, and timestamp. It's commonly used to save disk space and reduce file transfer times.</p>
+<h2>Options</h2>
+<h3><strong>-d, --decompress</strong></h3>
+<p>Decompress files (same as using <code>gunzip</code>)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>file.gz
+</pre></div>
+<h3><strong>-c, --stdout</strong></h3>
+<p>Write output to standard output and keep original files</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>file.txt.gz
+</pre></div>
+<h3><strong>-k, --keep</strong></h3>
+<p>Keep (don't delete) input files during compression or decompression</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>file.txt
+</pre></div>
+<h3><strong>-r, --recursive</strong></h3>
+<p>Recursively compress files in directories</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>directory/
+</pre></div>
+<h3><strong>-[1-9], --fast, --best</strong></h3>
+<p>Set compression level (1=fastest/least, 9=slowest/best)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-9<span style="color: #F8F8F8"> </span>file.txt
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic Compression</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  10240 Apr 30 10:00 largefile.txt</span>
+
+<span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>largefile.txt
+
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  2048 Apr 30 10:00 largefile.txt.gz</span>
+</pre></div>
+<h3>Compressing Multiple Files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt
+
+<span style="color: #8F5902">$ </span>ls
+<span style="color: #000; font-style: italic">file1.txt.gz  file2.txt.gz  file3.txt.gz</span>
+</pre></div>
+<h3>Viewing Compressed Files Without Decompressing</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>file.txt.gz
+<span style="color: #8F5902">$ </span>zcat<span style="color: #F8F8F8"> </span>file.txt.gz
+<span style="color: #000; font-style: italic">[contents of file displayed without decompressing]</span>
+</pre></div>
+<h3>Comparing Compression Levels</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>largefile.txt<span style="color: #F8F8F8"> </span>test1.txt
+<span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>largefile.txt<span style="color: #F8F8F8"> </span>test9.txt
+
+<span style="color: #8F5902">$ </span><span style="color: #204A87">time</span><span style="color: #F8F8F8"> </span>gzip<span style="color: #F8F8F8"> </span>-1<span style="color: #F8F8F8"> </span>test1.txt
+<span style="color: #000; font-style: italic">real    0m0.032s</span>
+
+<span style="color: #8F5902">$ </span><span style="color: #204A87">time</span><span style="color: #F8F8F8"> </span>gzip<span style="color: #F8F8F8"> </span>-9<span style="color: #F8F8F8"> </span>test9.txt
+<span style="color: #000; font-style: italic">real    0m0.187s</span>
+
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>test*.gz
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  2300 Apr 30 10:00 test1.txt.gz</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  2048 Apr 30 10:00 test9.txt.gz</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Check Compression Ratio</h3>
+<p>Use <code>gzip -l</code> on compressed files to see statistics about the compression ratio:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>file.gz
+<span style="color: #000; font-style: italic">         compressed        uncompressed  ratio uncompressed_name</span>
+<span style="color: #000; font-style: italic">                2048              10240  80.0% file</span>
+</pre></div>
+<h3>Combine with tar</h3>
+<p>For compressing multiple files or directories while preserving structure, combine with <code>tar</code>:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-czf<span style="color: #F8F8F8"> </span>archive.tar.gz<span style="color: #F8F8F8"> </span>directory/
+</pre></div>
+<h3>Use zcat, zless for Viewing</h3>
+<p>Instead of decompressing files to view them, use <code>zcat</code>, <code>zless</code>, or <code>zmore</code> to view compressed content directly.</p>
+<h3>Preserve Original Files</h3>
+<p>Always use <code>-k</code> option when you want to keep the original files, especially for important data.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How do I decompress a .gz file?</h4>
+<p>A. Use <code>gzip -d filename.gz</code> or <code>gunzip filename.gz</code>.</p>
+<h4>Q2. Can gzip compress directories?</h4>
+<p>A. Not directly. Use <code>gzip -r</code> to compress all files in a directory individually, or use <code>tar</code> with <code>gzip</code> (<code>tar -czf</code>) to compress entire directories.</p>
+<h4>Q3. What's the difference between gzip, bzip2, and xz?</h4>
+<p>A. They use different compression algorithms. Generally, gzip is fastest but has lower compression ratios, bzip2 is in the middle, and xz offers the best compression but is slowest.</p>
+<h4>Q4. How do I compress without losing the original file?</h4>
+<p>A. Use <code>gzip -k filename</code> to keep the original file.</p>
+<h4>Q5. How can I see what's in a .gz file without decompressing it?</h4>
+<p>A. Use <code>zcat</code>, <code>zless</code>, or <code>zmore</code> to view the contents without decompression.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/gzip/manual/gzip.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  tail - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>tail command</h1>
+<p>Display the last part of files.</p>
+<h2>Overview</h2>
+<p>The <code>tail</code> command outputs the last portion of files, typically the last 10 lines by default. It's particularly useful for viewing recent entries in log files, monitoring file changes in real-time, and checking the end of large files without opening them entirely.</p>
+<h2>Options</h2>
+<h3><strong>-n, --lines=NUM</strong></h3>
+<p>Display the last NUM lines instead of the default 10 lines</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>/var/log/syslog
+<span style="color: #000; font-style: italic">Apr 30 10:15:22 server systemd[1]: Started Daily apt upgrade and clean activities.</span>
+<span style="color: #000; font-style: italic">Apr 30 10:15:22 server systemd[1]: apt-daily-upgrade.service: Deactivated successfully.</span>
+<span style="color: #000; font-style: italic">Apr 30 10:17:01 server CRON[12345]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)</span>
+<span style="color: #000; font-style: italic">Apr 30 10:30:01 server CRON[12346]: (root) CMD ([ -x /etc/init.d/anacron ] &amp;&amp; /etc/init.d/anacron start)</span>
+<span style="color: #000; font-style: italic">Apr 30 10:45:01 server CRON[12347]: (user) CMD (/usr/local/bin/backup.sh)</span>
+</pre></div>
+<h3><strong>-f, --follow</strong></h3>
+<p>Output appended data as the file grows (follow mode)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/apache2/access.log
+<span style="color: #000; font-style: italic">192.168.1.101 - - [30/Apr/2025:10:42:15 +0000] &quot;GET /index.html HTTP/1.1&quot; 200 1234</span>
+<span style="color: #000; font-style: italic">192.168.1.102 - - [30/Apr/2025:10:42:18 +0000] &quot;GET /images/logo.png HTTP/1.1&quot; 200 5678</span>
+<span style="color: #000; font-style: italic">192.168.1.103 - - [30/Apr/2025:10:42:20 +0000] &quot;POST /login HTTP/1.1&quot; 302 0</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>-c, --bytes=NUM</strong></h3>
+<p>Output the last NUM bytes instead of lines</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">50</span><span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">end of the document with the last 50 characters only.</span>
+</pre></div>
+<h3><strong>-q, --quiet, --silent</strong></h3>
+<p>Never output headers giving file names</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">Last lines of file1.txt</span>
+<span style="color: #000; font-style: italic">Last lines of file2.txt</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Following multiple files simultaneously</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/syslog<span style="color: #F8F8F8"> </span>/var/log/auth.log
+<span style="color: #000; font-style: italic">==&gt; /var/log/syslog &lt;==</span>
+<span style="color: #000; font-style: italic">Apr 30 11:01:22 server systemd[1]: Started Session 123 of user admin.</span>
+
+<span style="color: #000; font-style: italic">==&gt; /var/log/auth.log &lt;==</span>
+<span style="color: #000; font-style: italic">Apr 30 11:01:22 server sshd[12345]: Accepted publickey for admin from 192.168.1.10</span>
+</pre></div>
+<h3>Monitoring a log file with line numbers</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>/var/log/nginx/error.log
+<span style="color: #000; font-style: italic">2025/04/30 11:05:12 [error] 12345#0: *67 open() &quot;/var/www/html/favicon.ico&quot; failed (2: No such file or directory)</span>
+<span style="color: #000; font-style: italic">2025/04/30 11:05:15 [error] 12345#0: *68 connect() failed (111: Connection refused) while connecting to upstream</span>
+<span style="color: #000; font-style: italic">2025/04/30 11:05:20 [notice] 12345#0: signal process started</span>
+</pre></div>
+<h3>Viewing the last 20 lines with a specific pattern</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>access.log<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;404&quot;</span>
+<span style="color: #000; font-style: italic">192.168.1.105 - - [30/Apr/2025:11:10:15 +0000] &quot;GET /missing-page.html HTTP/1.1&quot; 404 345</span>
+<span style="color: #000; font-style: italic">192.168.1.106 - - [30/Apr/2025:11:12:18 +0000] &quot;GET /old-link.php HTTP/1.1&quot; 404 345</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Monitor Multiple Files Efficiently</h3>
+<p>When monitoring multiple log files, use <code>tail -f file1 file2 file3</code> instead of running multiple tail commands. This is more efficient and keeps your terminal organized.</p>
+<h3>Combine with grep for Filtering</h3>
+<p>Pipe <code>tail</code> output to <code>grep</code> to filter for specific patterns: <code>tail -f log.txt | grep ERROR</code> will show only lines containing &quot;ERROR&quot; as they appear.</p>
+<h3>Use --follow=name for Rotating Logs</h3>
+<p>For log files that get rotated (renamed and recreated), use <code>tail --follow=name logfile</code> to continue following the file even after rotation.</p>
+<h3>Limit Buffer Size for Long-Running Tail</h3>
+<p>For long-running <code>tail -f</code> sessions, consider using <code>tail -f -n 0</code> to start with zero lines and only show new content, reducing initial output.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. How do I stop a running tail -f command?</h4>
+<p>A. Press Ctrl+C to terminate the command and return to the prompt.</p>
+<h4>Q2. Can tail show lines from the beginning of a file?</h4>
+<p>A. No, use the <code>head</code> command instead. <code>tail</code> only shows the end of files.</p>
+<h4>Q3. How can I see both the beginning and end of a file?</h4>
+<p>A. Use <code>head</code> for the beginning and <code>tail</code> for the end, or use <code>less</code> to navigate through the entire file.</p>
+<h4>Q4. Does tail work with compressed files?</h4>
+<p>A. Not directly. For compressed files, use tools like <code>zcat file.gz | tail</code> or specialized commands like <code>zless</code>.</p>
+<h4>Q5. How can I monitor a file for specific changes?</h4>
+<p>A. Use <code>tail -f file | grep &quot;pattern&quot;</code> to monitor and filter for specific content.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/tail-invocation.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

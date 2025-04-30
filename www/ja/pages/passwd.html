@@ -46,75 +46,80 @@
   <div class="content">
     <main>
       
-  <h1><code>passwd</code> コマンドの概要</h1>
-<p><code>passwd</code>は、ユーザーアカウントのパスワードを変更するためのコマンドです。自分自身のパスワードを変更したり、管理者権限で他のユーザーのパスワードを変更したりすることができます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>オプションなし</strong>: 自分自身のパスワードを変更します</p>
-<ul>
-<li>例: <code>passwd</code></li>
-</ul>
-</li>
-<li><p><strong>-l</strong>: ユーザーアカウントをロック（使用不可）にします（root権限が必要）</p>
-<ul>
-<li>例: <code>sudo passwd -l username</code></li>
-</ul>
-</li>
-<li><p><strong>-u</strong>: ロックされたユーザーアカウントのロックを解除します（root権限が必要）</p>
-<ul>
-<li>例: <code>sudo passwd -u username</code></li>
-</ul>
-</li>
-<li><p><strong>-d</strong>: ユーザーのパスワードを削除します（パスワードなしでログイン可能になる場合があります）（root権限が必要）</p>
-<ul>
-<li>例: <code>sudo passwd -d username</code></li>
-</ul>
-</li>
-<li><p><strong>-e</strong>: ユーザーのパスワードの有効期限を即時に切れた状態にします（次回ログイン時にパスワード変更を強制）（root権限が必要）</p>
-<ul>
-<li>例: <code>sudo passwd -e username</code></li>
-</ul>
-</li>
-<li><p><strong>-S</strong>: アカウントのパスワード状態を表示します（root権限が必要）</p>
-<ul>
-<li>例: <code>sudo passwd -S username</code></li>
-</ul>
-</li>
-</ul>
-<h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 自分のパスワードを変更する</span>
-passwd
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-Current<span style="color: #F8F8F8"> </span>password:<span style="color: #F8F8F8"> </span>（現在のパスワードを入力）
-New<span style="color: #F8F8F8"> </span>password:<span style="color: #F8F8F8"> </span>（新しいパスワードを入力）
-Retype<span style="color: #F8F8F8"> </span>new<span style="color: #F8F8F8"> </span>password:<span style="color: #F8F8F8"> </span>（新しいパスワードを再入力）
-passwd:<span style="color: #F8F8F8"> </span>password<span style="color: #F8F8F8"> </span>updated<span style="color: #F8F8F8"> </span>successfully
-
-<span style="color: #8F5902; font-style: italic"># 管理者として他のユーザーのパスワードを変更する</span>
-sudo<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>username
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-New<span style="color: #F8F8F8"> </span>password:<span style="color: #F8F8F8"> </span>（新しいパスワードを入力）
-Retype<span style="color: #F8F8F8"> </span>new<span style="color: #F8F8F8"> </span>password:<span style="color: #F8F8F8"> </span>（新しいパスワードを再入力）
-passwd:<span style="color: #F8F8F8"> </span>password<span style="color: #F8F8F8"> </span>updated<span style="color: #F8F8F8"> </span>successfully
-
-<span style="color: #8F5902; font-style: italic"># ユーザーアカウントをロックする</span>
-sudo<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>username
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-passwd:<span style="color: #F8F8F8"> </span>password<span style="color: #F8F8F8"> </span>expiry<span style="color: #F8F8F8"> </span>information<span style="color: #F8F8F8"> </span>changed.
-
-<span style="color: #8F5902; font-style: italic"># ユーザーアカウントのパスワード状態を確認する</span>
-sudo<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>username
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-username<span style="color: #F8F8F8"> </span>P<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">04</span>/15/2023<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">99999</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">7</span><span style="color: #F8F8F8"> </span>-1
-<span style="color: #8F5902; font-style: italic"># P=パスワードあり、L=ロック済み、NP=パスワードなし</span>
+  <h1>passwd コマンド</h1>
+<p>ユーザーアカウントのパスワードを変更します。</p>
+<h2>概要</h2>
+<p><code>passwd</code> コマンドは、ユーザーアカウントのパスワードを変更するために使用されます。引数なしで実行すると、現在ログインしているユーザーのパスワードを変更します。root ユーザーは、システム上の任意のユーザーのパスワードを変更することができます。</p>
+<h2>オプション</h2>
+<h3><strong>-d</strong></h3>
+<p>ユーザーのパスワードを削除し、パスワードなしのログインを許可します（root 権限が必要）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">passwd: パスワードは正常に削除されました</span>
 </pre></div>
-<h2>追加情報</h2>
+<h3><strong>-l</strong></h3>
+<p>ユーザーアカウントをロックします（root 権限が必要）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">passwd: パスワードは正常に更新されました</span>
+<span style="color: #000; font-style: italic">passwd: アカウントはロックされています。</span>
+</pre></div>
+<h3><strong>-u</strong></h3>
+<p>ロックされたユーザーアカウントのロックを解除します（root 権限が必要）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">passwd: パスワードは正常に更新されました</span>
+<span style="color: #000; font-style: italic">passwd: アカウントのロックは解除されています。</span>
+</pre></div>
+<h3><strong>-e</strong></h3>
+<p>ユーザーに次回ログイン時にパスワードの変更を強制します（root 権限が必要）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">passwd: パスワードは正常に期限切れになりました</span>
+</pre></div>
+<h3><strong>-S</strong></h3>
+<p>ユーザーアカウントのパスワードステータスを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>passwd<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">username PS 2025-04-15 0 99999 7 -1</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>自分のパスワードを変更する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>passwd
+<span style="color: #000; font-style: italic">現在のパスワード: </span>
+<span style="color: #000; font-style: italic">新しいパスワード: </span>
+<span style="color: #000; font-style: italic">新しいパスワードを再入力してください: </span>
+<span style="color: #000; font-style: italic">passwd: パスワードは正常に更新されました</span>
+</pre></div>
+<h3>他のユーザーのパスワードを変更する（root権限が必要）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">新しいパスワード: </span>
+<span style="color: #000; font-style: italic">新しいパスワードを再入力してください: </span>
+<span style="color: #000; font-style: italic">passwd: パスワードは正常に更新されました</span>
+</pre></div>
+<h3>パスワードステータスの確認</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">username PS 2025-04-30 0 99999 7 -1</span>
+</pre></div>
+<p>出力の意味: ユーザー名、パスワードステータス（PS=設定済み）、最終変更日、最小有効期間（日）、最大有効期間（日）、警告期間（日）、非アクティブ期間（日）</p>
+<h2>ヒント:</h2>
+<h3>強力なパスワードを使用する</h3>
+<p>セキュリティのために、大文字、小文字、数字、特殊文字を組み合わせた長いパスワードを使用しましょう。多くのシステムでは、弱いパスワードは拒否されます。</p>
+<h3>パスワードポリシーの確認</h3>
+<p>システムによってはパスワードの複雑さや長さに関する要件があります。<code>/etc/security/pwquality.conf</code>（または類似のファイル）でパスワードポリシーを確認できます。</p>
+<h3>root権限の注意点</h3>
+<p>root権限でパスワードを変更する場合、現在のパスワードを入力する必要はありません。これは便利ですが、権限を持つユーザーは注意して使用する必要があります。</p>
+<h2>よくある質問</h2>
+<h4>Q1. パスワードを忘れた場合はどうすればいいですか？</h4>
+<p>A. 一般ユーザーの場合は、システム管理者（root権限を持つユーザー）に連絡してパスワードをリセットしてもらう必要があります。root パスワードを忘れた場合は、シングルユーザーモードで起動するか、ライブCDから起動して回復する必要があります。</p>
+<h4>Q2. パスワードの最小長はどのくらいですか？</h4>
+<p>A. システムの設定によって異なりますが、多くのLinuxシステムでは最低8文字以上を推奨しています。実際の最小長は <code>/etc/login.defs</code> や <code>/etc/security/pwquality.conf</code> で設定されています。</p>
+<h4>Q3. パスワードの有効期限を確認するにはどうすればいいですか？</h4>
+<p>A. <code>passwd -S ユーザー名</code> または <code>chage -l ユーザー名</code> コマンドでパスワードの有効期限情報を確認できます。</p>
+<h4>Q4. パスワードなしでユーザーを作成できますか？</h4>
+<p>A. はい、ユーザーを作成した後、<code>sudo passwd -d ユーザー名</code> を実行してパスワードを削除できます。ただし、これはセキュリティリスクとなる可能性があります。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSでは、<code>passwd</code> コマンドの動作が若干異なります。多くのオプションはサポートされておらず、主にパスワード変更の基本機能のみが利用可能です。また、macOSではユーザー管理に「システム環境設定」の「ユーザーとグループ」パネルを使用することも一般的です。</p>
+<h2>参考資料</h2>
+<p>man passwd</p>
+<h2>改訂履歴</h2>
 <ul>
-<li>パスワード変更時は、セキュリティのため入力内容は画面に表示されません。</li>
-<li>一般ユーザーは自分自身のパスワードのみ変更できます。他のユーザーのパスワードを変更するには管理者権限（root）が必要です。</li>
-<li>システムによっては、パスワードの複雑さ（長さ、文字種類など）に関する要件があります。要件を満たさないパスワードは拒否されます。</li>
-<li>パスワードポリシーはシステム管理者によって設定されており、<code>/etc/security/pwquality.conf</code>などのファイルで確認できる場合があります。</li>
-<li>パスワードを忘れた場合は、自分で変更することはできません。システム管理者に連絡する必要があります。</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

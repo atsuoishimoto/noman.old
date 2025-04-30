@@ -1,68 +1,124 @@
-# `install` コマンドの概要
+# install コマンド
 
-`install` コマンドは、ファイルをコピーし、同時に権限やオーナーシップを設定するためのコマンドです。通常のコピー（`cp`）と違い、ファイルモードや所有者、グループを指定できます。
+ファイルをコピーし、モード、所有者、グループを設定するコマンドです。
 
-## 主なオプション
+## 概要
 
-- **-m, --mode=MODE**: コピー先のファイルに権限を設定する
-  - 例: `install -m 755 script.sh /usr/local/bin/`
+`install` コマンドは、ファイルをコピーして、同時にパーミッション（アクセス権限）、所有者、グループを設定できるユーティリティです。主にソフトウェアのインストールスクリプトで使用され、実行可能ファイルやライブラリ、設定ファイルなどを適切な場所に配置する際に便利です。`cp` コマンドの拡張版と考えることができます。
 
-- **-o, --owner=OWNER**: コピー先のファイルの所有者を設定する
-  - 例: `install -o root myfile /etc/`
+## オプション
 
-- **-g, --group=GROUP**: コピー先のファイルのグループを設定する
-  - 例: `install -g admin myfile /var/log/`
+### **-m, --mode=MODE**
 
-- **-d, --directory**: 指定したディレクトリを作成する（ファイルのコピーは行わない）
-  - 例: `install -d -m 755 /opt/myapp/logs`
+コピー先のファイルのパーミッションを設定します。
 
-- **-s, --strip**: 実行可能ファイルからデバッグシンボルを削除する
-  - 例: `install -s myprogram /usr/local/bin/`
+```console
+$ install -m 755 myprogram /usr/local/bin/
+# myprogram を /usr/local/bin/ にコピーし、実行権限を付与する
+```
 
-- **-v, --verbose**: 実行中の処理を詳細に表示する
-  - 例: `install -v -m 644 config.txt /etc/`
+### **-o, --owner=OWNER**
+
+コピー先のファイルの所有者を設定します（通常はroot権限が必要）。
+
+```console
+$ sudo install -o root myfile /etc/
+# myfile を /etc/ にコピーし、所有者を root に設定する
+```
+
+### **-g, --group=GROUP**
+
+コピー先のファイルのグループを設定します（通常はroot権限が必要）。
+
+```console
+$ sudo install -g wheel myfile /usr/local/etc/
+# myfile を /usr/local/etc/ にコピーし、グループを wheel に設定する
+```
+
+### **-d, --directory**
+
+指定したディレクトリを作成します（存在しない場合）。
+
+```console
+$ install -d -m 755 /path/to/new/directory
+# 新しいディレクトリを作成し、パーミッションを 755 に設定する
+```
+
+### **-s, --strip**
+
+バイナリファイルからシンボルテーブルを削除します。
+
+```console
+$ install -s myprogram /usr/local/bin/
+# シンボル情報を削除してバイナリサイズを小さくしてからコピーする
+```
 
 ## 使用例
 
-### 基本的な使い方（ファイルのコピーと権限設定）
+### 実行可能ファイルのインストール
 
-```bash
-# スクリプトを実行可能な形で /usr/local/bin にコピー
-install -m 755 myscript.sh /usr/local/bin/
-
-# 出力は通常ないが、成功すると終了コード 0 を返す
+```console
+$ sudo install -m 755 myprogram /usr/local/bin/
+# myprogram を /usr/local/bin/ にコピーし、実行権限を付与する
 ```
 
-### 所有者とグループを指定してファイルをコピー
+### 設定ファイルのインストール
 
-```bash
-# 設定ファイルを root:wheel の所有権で /etc にコピー
-sudo install -m 644 -o root -g wheel config.conf /etc/
-
-# 出力は通常ないが、成功すると終了コード 0 を返す
+```console
+$ sudo install -m 644 -o root -g wheel config.conf /etc/
+# config.conf を /etc/ にコピーし、パーミッションを 644、所有者を root、グループを wheel に設定する
 ```
 
-### ディレクトリの作成
+### 複数のディレクトリを一度に作成
 
-```bash
-# 権限 755 でディレクトリを作成
-install -d -m 755 /opt/myapp/data
-
-# 出力は通常ないが、成功すると終了コード 0 を返す
+```console
+$ install -d -m 755 dir1 dir2 dir3
+# dir1、dir2、dir3 ディレクトリを作成し、パーミッションを 755 に設定する
 ```
 
-### 複数ファイルを一度にコピー
+### バックアップの作成
 
-```bash
-# 複数のファイルを /usr/local/bin にコピー
-install -m 755 script1.sh script2.sh script3.sh /usr/local/bin/
-
-# 出力は通常ないが、成功すると終了コード 0 を返す
+```console
+$ install -b config.conf /etc/
+# config.conf を /etc/ にコピーし、既存のファイルがある場合はバックアップを作成する
 ```
 
-## 追加メモ
+## ヒント:
 
-- `install` コマンドは主にソフトウェアのインストールスクリプトやMakefileで使用されることが多いです。
-- `cp` コマンドと違い、コピー先のディレクトリが存在しない場合はエラーになります（`-d` オプションで事前に作成する必要があります）。
-- 権限変更だけなら `chmod`、所有者変更だけなら `chown` を使う方がシンプルですが、`install` はこれらの操作を一度に行えるため便利です。
-- 多くの場合、システムファイルを操作するため `sudo` と組み合わせて使用します。
+### cp コマンドとの違い
+
+`install` コマンドは `cp` コマンドと似ていますが、一度の操作でパーミッション設定や所有者変更ができるため、システムファイルのインストールに適しています。
+
+### Makefile での利用
+
+ソフトウェアの `Makefile` では、`install` コマンドがよく使われます。これにより、ビルドしたバイナリを適切な権限で正しい場所にインストールできます。
+
+### ディレクトリ構造の作成
+
+`install -d` は `mkdir -p` と似ていますが、同時にパーミッションも設定できるため、セキュアなディレクトリ構造を作成する際に便利です。
+
+## よくある質問
+
+#### Q1. install コマンドと cp コマンドの主な違いは何ですか？
+A. `install` はファイルのコピーと同時にパーミッション、所有者、グループを設定できます。また、ディレクトリの作成やバイナリのストリップなど、ソフトウェアインストール向けの機能があります。
+
+#### Q2. sudo を使わずに install コマンドを実行できますか？
+A. はい、自分が所有するディレクトリ内であれば `sudo` なしで実行できます。ただし、所有者やグループを変更する場合や、システムディレクトリにファイルをコピーする場合は `sudo` が必要です。
+
+#### Q3. install コマンドでディレクトリ全体をコピーできますか？
+A. いいえ、`install` は基本的に単一ファイルのコピーに対応しています。ディレクトリ全体をコピーするには、`cp -r` や `rsync` などの他のコマンドを使用するか、シェルスクリプトで個別のファイルに対して `install` を実行する必要があります。
+
+#### Q4. install -d と mkdir -p の違いは何ですか？
+A. どちらも必要に応じて親ディレクトリを作成しますが、`install -d` はパーミッションも同時に設定できます。`mkdir -p` の後に `chmod` を実行するのと同等です。
+
+## macOS での注意点
+
+macOSの `install` コマンドは GNU バージョンと若干異なる場合があります。特に、一部のオプション（`--compare`、`--preserve-timestamps` など）がサポートされていない可能性があります。macOS で GNU 互換の `install` コマンドを使用したい場合は、Homebrew などのパッケージマネージャで `coreutils` をインストールし、`ginstall` として使用できます。
+
+## 参考文献
+
+https://www.gnu.org/software/coreutils/manual/html_node/install-invocation.html
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

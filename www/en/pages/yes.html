@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  yes - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>yes command</h1>
+<p>Repeatedly output a string until interrupted.</p>
+<h2>Overview</h2>
+<p>The <code>yes</code> command continuously outputs a string (by default &quot;y&quot;) until it is terminated. It's primarily used to automatically respond to prompts in scripts or commands that require confirmation.</p>
+<h2>Options</h2>
+<h3><strong>Default (no options)</strong></h3>
+<p>Outputs &quot;y&quot; repeatedly until interrupted with Ctrl+C.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes
+<span style="color: #000; font-style: italic">y</span>
+<span style="color: #000; font-style: italic">y</span>
+<span style="color: #000; font-style: italic">y</span>
+<span style="color: #000; font-style: italic">y</span>
+<span style="color: #000; font-style: italic">[continues until interrupted]</span>
+</pre></div>
+<h3><strong>Custom string</strong></h3>
+<p>Outputs the specified string repeatedly until interrupted.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;I agree&quot;</span>
+<span style="color: #000; font-style: italic">I agree</span>
+<span style="color: #000; font-style: italic">I agree</span>
+<span style="color: #000; font-style: italic">I agree</span>
+<span style="color: #000; font-style: italic">[continues until interrupted]</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Automatically confirming prompts</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>rm<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>*.txt
+</pre></div>
+<p>This automatically answers &quot;y&quot; to all confirmation prompts when removing text files.</p>
+<h3>Creating a test file of repeated content</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;test data&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>testfile.txt
+</pre></div>
+<p>This creates a file with &quot;test data&quot; repeated 100 times.</p>
+<h3>Stress testing</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>/dev/null
+</pre></div>
+<p>This can be used as a simple CPU stress test as it generates continuous output.</p>
+<h2>Tips</h2>
+<h3>Terminating the Command</h3>
+<p>Always remember to use Ctrl+C to terminate the <code>yes</code> command, as it will run indefinitely otherwise.</p>
+<h3>Piping with Caution</h3>
+<p>When piping <code>yes</code> to other commands, ensure the receiving command will eventually terminate on its own, or you'll need to manually interrupt the process.</p>
+<h3>Resource Usage</h3>
+<p>The <code>yes</code> command can consume significant CPU resources when running for extended periods, as it continuously generates output.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What is the purpose of the <code>yes</code> command?</h4>
+<p>A. The primary purpose is to automatically respond &quot;y&quot; (or a custom string) to commands that require interactive confirmation.</p>
+<h4>Q2. How do I stop the <code>yes</code> command?</h4>
+<p>A. Press Ctrl+C to terminate the command.</p>
+<h4>Q3. Can I use <code>yes</code> with multiple words?</h4>
+<p>A. Yes, just enclose the phrase in quotes: <code>yes &quot;multiple words here&quot;</code>.</p>
+<h4>Q4. Does <code>yes</code> consume a lot of system resources?</h4>
+<p>A. It can consume significant CPU if left running, as it continuously generates output.</p>
+<h2>References</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/yes-invocation.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

@@ -47,79 +47,78 @@
     <main>
       
   <h1>w コマンド</h1>
-<p><code>w</code> コマンドは、システムにログインしているユーザーの情報と、各ユーザーが何をしているかを表示します。uptime 情報も同時に表示されます。</p>
+<p>現在ログインしているユーザーとその活動状況を表示します。</p>
+<h2>概要</h2>
+<p><code>w</code> コマンドは、システムにログインしているユーザーの一覧と、各ユーザーが何をしているかを表示します。システムの稼働時間、負荷平均、ログインユーザー数なども確認できます。システム管理者やユーザーが、誰がシステムを使用しているか、どのようなプロセスを実行しているかを把握するのに役立ちます。</p>
 <h2>オプション</h2>
-<h3><strong>-h</strong></h3>
-<p>ヘッダー行を表示しません。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>w<span style="color: #F8F8F8"> </span>-h
-user<span style="color: #F8F8F8">     </span>tty<span style="color: #F8F8F8">      </span>from<span style="color: #F8F8F8">             </span>login@<span style="color: #F8F8F8">   </span>idle<span style="color: #F8F8F8">   </span>JCPU<span style="color: #F8F8F8">   </span>PCPU<span style="color: #F8F8F8">  </span>what
-tanaka<span style="color: #F8F8F8">   </span>pts/0<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.5<span style="color: #F8F8F8">      </span><span style="color: #0000CF; font-weight: bold">10</span>:15<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">0</span>.00s<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.05s<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.01s<span style="color: #F8F8F8">  </span>w<span style="color: #F8F8F8"> </span>-h
-yamada<span style="color: #F8F8F8">   </span>pts/1<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.10<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">09</span>:30<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">5</span>:22<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">0</span>.28s<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.28s<span style="color: #F8F8F8">  </span>vim<span style="color: #F8F8F8"> </span>document.txt
+<h3><strong>-h (--no-header)</strong></h3>
+<p>ヘッダー情報（システムの稼働時間、負荷平均など）を表示しません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>-h
+<span style="color: #000; font-style: italic">user     tty      from             login@   idle   JCPU   PCPU  what</span>
+<span style="color: #000; font-style: italic">yamada   pts/0    192.168.1.5      08:30    2:35   0.10s  0.05s  vim report.txt</span>
+<span style="color: #000; font-style: italic">tanaka   pts/1    192.168.1.10     09:15    0.00s  0.25s  0.25s  w</span>
 </pre></div>
-<h3><strong>-s</strong></h3>
-<p>短い形式で表示します。ログイン時間、JCPU、PCPU の列が省略されます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>w<span style="color: #F8F8F8"> </span>-s
-<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>:30:25<span style="color: #F8F8F8"> </span>up<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">3</span>:45,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>users,<span style="color: #F8F8F8">  </span>load<span style="color: #F8F8F8"> </span>average:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.08,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.03,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.01
-USER<span style="color: #F8F8F8">     </span>TTY<span style="color: #F8F8F8">      </span>FROM<span style="color: #F8F8F8">              </span>IDLE<span style="color: #F8F8F8"> </span>WHAT
-tanaka<span style="color: #F8F8F8">   </span>pts/0<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.5<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">0</span>.00s<span style="color: #F8F8F8"> </span>w<span style="color: #F8F8F8"> </span>-s
-yamada<span style="color: #F8F8F8">   </span>pts/1<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.10<span style="color: #F8F8F8">      </span><span style="color: #0000CF; font-weight: bold">5</span>:22<span style="color: #F8F8F8">  </span>vim<span style="color: #F8F8F8"> </span>document.txt
+<h3><strong>-s (--short)</strong></h3>
+<p>短い形式で表示します。ログイン時間、JCPU、PCPUの列を省略します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>-s
+<span style="color: #000; font-style: italic"> 10:30:25 up  3:45,  2 users,  load average: 0.08, 0.12, 0.10</span>
+<span style="color: #000; font-style: italic">USER     TTY      FROM             IDLE   WHAT</span>
+<span style="color: #000; font-style: italic">yamada   pts/0    192.168.1.5      2:35   vim report.txt</span>
+<span style="color: #000; font-style: italic">tanaka   pts/1    192.168.1.10     0.00s  w -s</span>
 </pre></div>
-<h3><strong>-f</strong></h3>
-<p>FROM フィールド（リモートホスト名）の表示をオン/オフします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>w<span style="color: #F8F8F8"> </span>-f
-<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>:30:25<span style="color: #F8F8F8"> </span>up<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">3</span>:45,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>users,<span style="color: #F8F8F8">  </span>load<span style="color: #F8F8F8"> </span>average:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.08,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.03,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.01
-USER<span style="color: #F8F8F8">     </span>TTY<span style="color: #F8F8F8">      </span>FROM<span style="color: #F8F8F8">              </span>LOGIN@<span style="color: #F8F8F8">   </span>IDLE<span style="color: #F8F8F8">   </span>JCPU<span style="color: #F8F8F8">   </span>PCPU<span style="color: #F8F8F8"> </span>WHAT
-tanaka<span style="color: #F8F8F8">   </span>pts/0<span style="color: #F8F8F8">                      </span><span style="color: #0000CF; font-weight: bold">10</span>:15<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">0</span>.00s<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.05s<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.01s<span style="color: #F8F8F8"> </span>w<span style="color: #F8F8F8"> </span>-f
-yamada<span style="color: #F8F8F8">   </span>pts/1<span style="color: #F8F8F8">                      </span><span style="color: #0000CF; font-weight: bold">09</span>:30<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">5</span>:22<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">0</span>.28s<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.28s<span style="color: #F8F8F8"> </span>vim<span style="color: #F8F8F8"> </span>document.txt
-</pre></div>
-<h3><strong>-i</strong></h3>
-<p>IP アドレスの代わりにホスト名を表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>w<span style="color: #F8F8F8"> </span>-i
-<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>:30:25<span style="color: #F8F8F8"> </span>up<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">3</span>:45,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>users,<span style="color: #F8F8F8">  </span>load<span style="color: #F8F8F8"> </span>average:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.08,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.03,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.01
-USER<span style="color: #F8F8F8">     </span>TTY<span style="color: #F8F8F8">      </span>FROM<span style="color: #F8F8F8">              </span>LOGIN@<span style="color: #F8F8F8">   </span>IDLE<span style="color: #F8F8F8">   </span>JCPU<span style="color: #F8F8F8">   </span>PCPU<span style="color: #F8F8F8"> </span>WHAT
-tanaka<span style="color: #F8F8F8">   </span>pts/0<span style="color: #F8F8F8">    </span>workstation5<span style="color: #F8F8F8">      </span><span style="color: #0000CF; font-weight: bold">10</span>:15<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">0</span>.00s<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.05s<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.01s<span style="color: #F8F8F8"> </span>w<span style="color: #F8F8F8"> </span>-i
-yamada<span style="color: #F8F8F8">   </span>pts/1<span style="color: #F8F8F8">    </span>workstation10<span style="color: #F8F8F8">     </span><span style="color: #0000CF; font-weight: bold">09</span>:30<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">5</span>:22<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">0</span>.28s<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.28s<span style="color: #F8F8F8"> </span>vim<span style="color: #F8F8F8"> </span>document.txt
+<h3><strong>-u (--no-current)</strong></h3>
+<p>現在のプロセス名とCPU時間の計算をスキップします。表示が高速になります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>-u
+<span style="color: #000; font-style: italic"> 10:30:25 up  3:45,  2 users,  load average: 0.08, 0.12, 0.10</span>
+<span style="color: #000; font-style: italic">USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT</span>
+<span style="color: #000; font-style: italic">yamada   pts/0    192.168.1.5      08:30    2:35   ?      ?    -</span>
+<span style="color: #000; font-style: italic">tanaka   pts/1    192.168.1.10     09:15    0.00s  ?      ?    -</span>
 </pre></div>
 <h2>使用例</h2>
 <h3>基本的な使用方法</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>w
-<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>:30:25<span style="color: #F8F8F8"> </span>up<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">3</span>:45,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>users,<span style="color: #F8F8F8">  </span>load<span style="color: #F8F8F8"> </span>average:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.08,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.03,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.01
-USER<span style="color: #F8F8F8">     </span>TTY<span style="color: #F8F8F8">      </span>FROM<span style="color: #F8F8F8">              </span>LOGIN@<span style="color: #F8F8F8">   </span>IDLE<span style="color: #F8F8F8">   </span>JCPU<span style="color: #F8F8F8">   </span>PCPU<span style="color: #F8F8F8"> </span>WHAT
-tanaka<span style="color: #F8F8F8">   </span>pts/0<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.5<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">10</span>:15<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">0</span>.00s<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.05s<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.01s<span style="color: #F8F8F8"> </span>w
-yamada<span style="color: #F8F8F8">   </span>pts/1<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.10<span style="color: #F8F8F8">      </span><span style="color: #0000CF; font-weight: bold">09</span>:30<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">5</span>:22<span style="color: #F8F8F8">   </span><span style="color: #0000CF; font-weight: bold">0</span>.28s<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.28s<span style="color: #F8F8F8"> </span>vim<span style="color: #F8F8F8"> </span>document.txt
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w
+<span style="color: #000; font-style: italic"> 10:30:25 up  3:45,  2 users,  load average: 0.08, 0.12, 0.10</span>
+<span style="color: #000; font-style: italic">USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT</span>
+<span style="color: #000; font-style: italic">yamada   pts/0    192.168.1.5      08:30    2:35   0.10s  0.05s vim report.txt</span>
+<span style="color: #000; font-style: italic">tanaka   pts/1    192.168.1.10     09:15    0.00s  0.25s  0.25s w</span>
 </pre></div>
 <h3>特定のユーザーの情報を表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>$<span style="color: #F8F8F8"> </span>w<span style="color: #F8F8F8"> </span>tanaka
-<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>:30:25<span style="color: #F8F8F8"> </span>up<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">3</span>:45,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>users,<span style="color: #F8F8F8">  </span>load<span style="color: #F8F8F8"> </span>average:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.08,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.03,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.01
-USER<span style="color: #F8F8F8">     </span>TTY<span style="color: #F8F8F8">      </span>FROM<span style="color: #F8F8F8">              </span>LOGIN@<span style="color: #F8F8F8">   </span>IDLE<span style="color: #F8F8F8">   </span>JCPU<span style="color: #F8F8F8">   </span>PCPU<span style="color: #F8F8F8"> </span>WHAT
-tanaka<span style="color: #F8F8F8">   </span>pts/0<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.5<span style="color: #F8F8F8">       </span><span style="color: #0000CF; font-weight: bold">10</span>:15<span style="color: #F8F8F8">    </span><span style="color: #0000CF; font-weight: bold">0</span>.00s<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.05s<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.01s<span style="color: #F8F8F8"> </span>w<span style="color: #F8F8F8"> </span>tanaka
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>yamada
+<span style="color: #000; font-style: italic"> 10:30:25 up  3:45,  2 users,  load average: 0.08, 0.12, 0.10</span>
+<span style="color: #000; font-style: italic">USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT</span>
+<span style="color: #000; font-style: italic">yamada   pts/0    192.168.1.5      08:30    2:35   0.10s  0.05s vim report.txt</span>
 </pre></div>
+<h2>ヒント:</h2>
+<h3>出力の見方</h3>
+<ul>
+<li><strong>USER</strong>: ログインしているユーザー名</li>
+<li><strong>TTY</strong>: ユーザーが接続しているターミナル</li>
+<li><strong>FROM</strong>: ユーザーがログインした場所（IPアドレスなど）</li>
+<li><strong>LOGIN@</strong>: ログインした時刻</li>
+<li><strong>IDLE</strong>: アイドル時間（何も操作していない時間）</li>
+<li><strong>JCPU</strong>: そのターミナルに関連するすべてのプロセスが使用したCPU時間</li>
+<li><strong>PCPU</strong>: 現在実行中のプロセスが使用したCPU時間</li>
+<li><strong>WHAT</strong>: 現在実行中のコマンド</li>
+</ul>
+<h3>関連コマンド</h3>
+<p><code>who</code> や <code>users</code> コマンドも同様にログインユーザーの情報を表示しますが、<code>w</code> コマンドはより詳細な情報を提供します。</p>
+<h3>システム負荷の確認</h3>
+<p>ヘッダー部分の「load average」の値が継続的に高い場合（例：1.0以上）、システムに負荷がかかっている可能性があります。</p>
 <h2>よくある質問</h2>
-<h3>Q1. <code>w</code> コマンドの出力の各列は何を意味していますか？</h3>
-<p>A. 主な列の意味は以下の通りです：</p>
-<ul>
-<li>USER: ログインしているユーザー名</li>
-<li>TTY: ユーザーが使用している端末</li>
-<li>FROM: ユーザーがログインしている場所（IPアドレスやホスト名）</li>
-<li>LOGIN@: ログインした時刻</li>
-<li>IDLE: アイドル時間（何も操作していない時間）</li>
-<li>JCPU: この端末で実行されたすべてのプロセスの CPU 時間</li>
-<li>PCPU: 現在実行中のプロセスの CPU 時間</li>
-<li>WHAT: ユーザーが実行しているコマンド</li>
-</ul>
-<h3>Q2. <code>w</code> と <code>who</code> コマンドの違いは何ですか？</h3>
-<p>A. <code>w</code> は <code>who</code> の拡張版で、ログインユーザーの情報に加えて、システムの負荷情報やユーザーが実行しているコマンドも表示します。<code>who</code> はより基本的な情報のみを表示します。</p>
-<h3>Q3. システムの負荷平均（load average）の数値は何を意味していますか？</h3>
-<p>A. 負荷平均は、過去1分、5分、15分間のシステム負荷を示します。値が1.0の場合、CPUが100%使用されていることを意味します。マルチコアシステムでは、コア数に応じて高い値でも正常な場合があります。</p>
-<h2>追加情報</h2>
-<ul>
-<li><code>w</code> コマンドは、システム管理者がサーバーの使用状況を監視するのに役立ちます。</li>
-<li>出力の最初の行は <code>uptime</code> コマンドと同じ情報を表示します。</li>
-<li>macOS では Linux 版と比較して表示される情報が若干異なる場合があります。特に FROM フィールドの表示方法が異なることがあります。</li>
-<li>セキュリティ上の理由から、一般ユーザーは他のユーザーが実行しているコマンドの詳細情報を見ることができない場合があります。</li>
-</ul>
-<h2>参考情報</h2>
+<h4>Q1. <code>w</code> コマンドと <code>who</code> コマンドの違いは何ですか？</h4>
+<p>A. <code>w</code> コマンドは <code>who</code> コマンドの情報に加えて、システムの稼働時間、負荷平均、各ユーザーが実行しているプロセスなどの詳細情報も表示します。</p>
+<h4>Q2. IDLE列の時間が長いユーザーはどういう意味ですか？</h4>
+<p>A. そのユーザーが指定された時間の間、キーボードやマウスなどの入力を行っていないことを示します。長時間アイドル状態のセッションは、放置されている可能性があります。</p>
+<h4>Q3. 負荷平均（load average）の値はどう解釈すればよいですか？</h4>
+<p>A. 負荷平均は直近1分、5分、15分のシステム負荷を示します。一般的に、この値がCPUコア数を超えると、システムが過負荷状態にあると考えられます。</p>
+<h4>Q4. macOSでの注意点はありますか？</h4>
+<p>A. macOSでは一部のオプションが異なる場合があります。特に <code>-u</code> オプションの動作がLinuxとは異なることがあるため、<code>man w</code> で確認することをお勧めします。</p>
+<h2>参照</h2>
 <p>https://man7.org/linux/man-pages/man1/w.1.html</p>
+<h2>改訂</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
+</ul>
 
 
     </main>

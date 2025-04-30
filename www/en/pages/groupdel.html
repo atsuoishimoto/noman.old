@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  groupdel - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>groupdel command</h1>
+<p>Delete a group from the system.</p>
+<h2>Overview</h2>
+<p><code>groupdel</code> is a command-line utility that removes a specified group from the system. It deletes the group's entry from system account files like <code>/etc/group</code> and <code>/etc/gshadow</code>. This command is typically used by system administrators when a group is no longer needed.</p>
+<h2>Options</h2>
+<h3><strong>-f, --force</strong></h3>
+<p>Force removal of the group, even if it is the primary group of a user.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupdel<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>developers
+</pre></div>
+<h3><strong>-h, --help</strong></h3>
+<p>Display help message and exit.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groupdel<span style="color: #F8F8F8"> </span>--help
+<span style="color: #000; font-style: italic">Usage: groupdel [options] GROUP</span>
+
+<span style="color: #000; font-style: italic">Options:</span>
+<span style="color: #000; font-style: italic">  -h, --help                    display this help message and exit</span>
+<span style="color: #000; font-style: italic">  -R, --root CHROOT_DIR         directory to chroot into</span>
+<span style="color: #000; font-style: italic">  -P, --prefix PREFIX_DIR       prefix directory where are located the /etc/* files</span>
+<span style="color: #000; font-style: italic">  -f, --force                   delete group even if it is the primary group of a user</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic Group Deletion</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupdel<span style="color: #F8F8F8"> </span>marketing
+</pre></div>
+<h3>Deleting a Group with Force Option</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupdel<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>projectx
+</pre></div>
+<h2>Tips:</h2>
+<h3>Check Group Dependencies First</h3>
+<p>Before deleting a group, check if any users have it as their primary group using <code>grep groupname /etc/passwd</code>. This helps avoid orphaned files or permission issues.</p>
+<h3>Backup Group Information</h3>
+<p>Consider backing up group information before deletion with <code>getent group groupname &gt; backup.txt</code>. This provides a record of group members if you need to recreate it later.</p>
+<h3>Verify Group Deletion</h3>
+<p>After running groupdel, verify the group was successfully removed by checking <code>/etc/group</code> with <code>getent group groupname</code>. If no output appears, the deletion was successful.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What happens to files owned by a deleted group?</h4>
+<p>A. Files previously owned by the deleted group will still exist but will display the group's numeric GID instead of the group name. You may want to reassign these files to another group before deletion.</p>
+<h4>Q2. Can I delete a group if users are still members of it?</h4>
+<p>A. Yes, you can delete a group even if users are still members of it. The users will simply no longer be members of that group.</p>
+<h4>Q3. How do I delete a group that is a primary group for some users?</h4>
+<p>A. Use <code>groupdel -f groupname</code>. However, it's better to first change the primary group of those users with <code>usermod -g newgroup username</code>.</p>
+<h4>Q4. Can regular users delete groups?</h4>
+<p>A. No, only users with root privileges (or sudo access) can delete groups from the system.</p>
+<h2>References</h2>
+<p>https://linux.die.net/man/8/groupdel</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

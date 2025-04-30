@@ -1,108 +1,177 @@
-# OpenSSL コマンド概要
+# openssl コマンド
 
-OpenSSLは暗号化、SSL/TLS通信、証明書管理などのセキュリティ機能を提供するオープンソースのツールキットです。データの暗号化、ハッシュ生成、証明書の作成・管理などに使用されます。
+暗号化、証明書管理、ハッシュ計算などの暗号操作を実行するためのツールです。
 
-## 主なオプション
+## 概要
 
-- **s_client**: SSLサーバーに接続してテストを行います
-  - 例: `openssl s_client -connect example.com:443`
+OpenSSLは、SSL/TLS暗号化プロトコルの実装を提供するオープンソースのツールキットです。このコマンドを使用して、証明書の生成・管理、暗号化・復号化、ハッシュ値の計算、SSL/TLS接続のテストなど、さまざまな暗号操作を実行できます。
 
-- **s_server**: テスト用のSSLサーバーを起動します
-  - 例: `openssl s_server -cert server.crt -key server.key -port 4433`
+## オプション
 
-- **req**: 証明書署名要求(CSR)や自己署名証明書を作成します
-  - 例: `openssl req -new -key private.key -out request.csr`
+OpenSSLは多くのサブコマンドを持つ複合コマンドです。主要なサブコマンドとその使い方を紹介します。
 
-- **x509**: 証明書の管理や情報表示を行います
-  - 例: `openssl x509 -in certificate.crt -text -noout`
+### **s_client**
 
-- **genrsa**: RSA秘密鍵を生成します
-  - 例: `openssl genrsa -out private.key 2048`
+サーバーへのSSL/TLS接続をテストするためのクライアントです。
 
-- **rsa**: RSA鍵の処理や変換を行います
-  - 例: `openssl rsa -in private.key -pubout -out public.key`
-
-- **enc**: ファイルやデータの暗号化・復号を行います
-  - 例: `openssl enc -aes-256-cbc -in file.txt -out file.enc`
-
-- **dgst**: メッセージダイジェスト（ハッシュ値）を計算します
-  - 例: `openssl dgst -sha256 file.txt`
-
-## 使用例
-
-### SSL/TLS接続のテスト
-```bash
-# サーバーへのSSL接続をテスト
-openssl s_client -connect example.com:443
-
-# 出力例（一部）
+```console
+$ openssl s_client -connect example.com:443
 CONNECTED(00000003)
 depth=2 C = US, O = DigiCert Inc, OU = www.digicert.com, CN = DigiCert Global Root CA
-verify return:1
+...
+---
+Certificate chain
+ 0 s:CN = *.example.org
+   i:C = US, O = Let's Encrypt, CN = R3
 ...
 ```
 
-### 証明書の情報表示
-```bash
-# 証明書の詳細情報を表示
-openssl x509 -in certificate.crt -text -noout
+### **x509**
 
-# 出力例（一部）
+X.509証明書の表示、変換、署名などを行います。
+
+```console
+$ openssl x509 -in certificate.crt -text -noout
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            12:34:56:78:9a:bc:de:f0
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=US, O=Let's Encrypt, CN=R3
+...
+```
+
+### **genrsa**
+
+RSA秘密鍵を生成します。
+
+```console
+$ openssl genrsa -out private.key 2048
+Generating RSA private key, 2048 bit long modulus
+.....+++
+.....+++
+e is 65537 (0x10001)
+```
+
+### **req**
+
+証明書署名要求(CSR)の作成や自己署名証明書の生成を行います。
+
+```console
+$ openssl req -new -key private.key -out request.csr
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+...
+Country Name (2 letter code) []:JP
+State or Province Name []:Tokyo
+...
+```
+
+### **dgst**
+
+ファイルのハッシュ値（ダイジェスト）を計算します。
+
+```console
+$ openssl dgst -sha256 file.txt
+SHA256(file.txt)= 8c17424f2e26d971060a5a82c5a1d7851e0c4bc8e0e347f223f95bb4a0d766af
+```
+
+## 使用例
+
+### SSL証明書の情報を表示する
+
+```console
+$ openssl x509 -in certificate.crt -text -noout
 Certificate:
     Data:
         Version: 3 (0x2)
         Serial Number: 12345678 (0xbc614e)
-    Signature Algorithm: sha256WithRSAEncryption
-    Issuer: C=US, O=Let's Encrypt, CN=Let's Encrypt Authority X3
+    # 証明書の詳細情報が表示される
+```
+
+### 自己署名証明書を生成する
+
+```console
+$ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
+Generating a 4096 bit RSA private key
 ...
+writing new private key to 'key.pem'
+Enter PEM pass phrase: ******
+Verifying - Enter PEM pass phrase: ******
+# 対話形式で証明書情報を入力
 ```
 
-### 秘密鍵と証明書署名要求(CSR)の作成
-```bash
-# 2048ビットのRSA秘密鍵を生成
-openssl genrsa -out private.key 2048
+### リモートサーバーのSSL/TLS設定を確認する
 
-# CSRを作成
-openssl req -new -key private.key -out request.csr
-# 対話式プロンプトが表示され、証明書情報を入力する
+```console
+$ openssl s_client -connect example.com:443 -servername example.com
+CONNECTED(00000003)
+depth=2 C = US, O = DigiCert Inc, OU = www.digicert.com, CN = DigiCert Global Root CA
+# 接続情報と証明書チェーンが表示される
 ```
 
-### ファイルの暗号化と復号
-```bash
-# ファイルをAES-256-CBCで暗号化
-openssl enc -aes-256-cbc -salt -in secret.txt -out secret.enc
+### ファイルのSHA-256ハッシュを計算する
 
-# 暗号化されたファイルを復号
-openssl enc -d -aes-256-cbc -in secret.enc -out secret_decrypted.txt
+```console
+$ openssl dgst -sha256 document.pdf
+SHA256(document.pdf)= a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6
 ```
 
-### ハッシュ値の計算
-```bash
-# SHA-256ハッシュを計算
-openssl dgst -sha256 file.txt
+## ヒント:
 
-# 出力例
-SHA256(file.txt)= e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+### 証明書情報の確認
+
+証明書ファイルの内容を確認する際は、`-text -noout`オプションを使用すると読みやすい形式で表示されます。
+
+```console
+$ openssl x509 -in cert.pem -text -noout
 ```
 
-## 追加情報
+### パスワード入力の自動化
 
-- 証明書や鍵の形式変換（PEM、DER、PKCS#12など）も行えます。例えば：
-  ```bash
-  # PEM形式からDER形式への変換
-  openssl x509 -in cert.pem -outform DER -out cert.der
-  ```
+スクリプト内でOpenSSLを使用する場合、`-passin`オプションでパスワードを指定できます。ただし、セキュリティ上の理由から本番環境では注意が必要です。
 
-- パスワード保護された鍵ファイルを作成する場合は `-passout` オプションを使用できます：
-  ```bash
-  openssl genrsa -des3 -out private.key 2048
-  ```
+```console
+$ openssl rsa -in encrypted.key -out decrypted.key -passin pass:mypassword
+```
 
-- 自己署名証明書を一度に作成するには：
-  ```bash
-  openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365
-  ```
+### 証明書チェーンの検証
 
-- 最新のバージョンでは、より安全なアルゴリズム（例：Ed25519）もサポートしています。
+証明書チェーンを検証するには、`verify`コマンドを使用します。
 
-- 実際の運用環境では、適切な鍵長や暗号化アルゴリズムの選択が重要です。セキュリティ要件に応じて適切なオプションを選択してください。
+```console
+$ openssl verify -CAfile ca-bundle.crt certificate.crt
+```
+
+## よくある質問
+
+#### Q1. OpenSSLで自己署名証明書を作成するにはどうすればよいですか？
+A. `openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365`コマンドを使用します。これにより、2048ビットのRSA鍵と365日間有効な自己署名証明書が生成されます。
+
+#### Q2. リモートサーバーのSSL/TLS設定を確認するにはどうすればよいですか？
+A. `openssl s_client -connect example.com:443`コマンドを使用します。これにより、サーバーの証明書情報やSSL/TLS設定が表示されます。
+
+#### Q3. 証明書の有効期限を確認するにはどうすればよいですか？
+A. `openssl x509 -in certificate.crt -noout -dates`コマンドを使用します。これにより、証明書の開始日と終了日が表示されます。
+
+#### Q4. 暗号化されたRSA秘密鍵のパスワードを削除するにはどうすればよいですか？
+A. `openssl rsa -in encrypted.key -out decrypted.key`コマンドを使用します。パスワードを入力すると、パスワードなしの秘密鍵が生成されます。
+
+## macOSでの注意点
+
+macOSに搭載されているOpenSSLは、LibreSSLという別の実装に置き換えられている場合があります。一部のコマンドやオプションが標準のOpenSSLと異なる可能性があるため、最新のOpenSSLが必要な場合はHomebrewなどでインストールすることをお勧めします。
+
+```console
+$ brew install openssl
+```
+
+インストール後は、`/usr/local/opt/openssl/bin/openssl`または`/opt/homebrew/bin/openssl`にインストールされます。
+
+## 参考資料
+
+https://www.openssl.org/docs/
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

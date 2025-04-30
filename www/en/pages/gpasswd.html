@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  gpasswd - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>gpasswd command</h1>
+<p>Manage group memberships and passwords in the system's group database.</p>
+<h2>Overview</h2>
+<p><code>gpasswd</code> is a command for administering the <code>/etc/group</code> and <code>/etc/gshadow</code> files. It allows system administrators to add and remove users from groups, set group administrators, and manage group passwords. This tool is primarily used for group management on Linux systems.</p>
+<h2>Options</h2>
+<h3><strong>-a user</strong></h3>
+<p>Add a user to the specified group</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>gpasswd<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>john<span style="color: #F8F8F8"> </span>developers
+<span style="color: #000; font-style: italic">Adding user john to group developers</span>
+</pre></div>
+<h3><strong>-d user</strong></h3>
+<p>Remove a user from the specified group</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>gpasswd<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>john<span style="color: #F8F8F8"> </span>developers
+<span style="color: #000; font-style: italic">Removing user john from group developers</span>
+</pre></div>
+<h3><strong>-A user1,user2,...</strong></h3>
+<p>Set the list of administrative users for the group</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>gpasswd<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span>jane,mike<span style="color: #F8F8F8"> </span>developers
+</pre></div>
+<h3><strong>-M user1,user2,...</strong></h3>
+<p>Set the list of members for the group, replacing the current member list</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>gpasswd<span style="color: #F8F8F8"> </span>-M<span style="color: #F8F8F8"> </span>john,jane,mike<span style="color: #F8F8F8"> </span>developers
+</pre></div>
+<h3><strong>-r</strong></h3>
+<p>Remove the password from the specified group</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>gpasswd<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>developers
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Adding a user to multiple groups</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>gpasswd<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>sarah<span style="color: #F8F8F8"> </span>developers
+<span style="color: #000; font-style: italic">Adding user sarah to group developers</span>
+<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>gpasswd<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>sarah<span style="color: #F8F8F8"> </span>designers
+<span style="color: #000; font-style: italic">Adding user sarah to group designers</span>
+</pre></div>
+<h3>Setting a group password</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>gpasswd<span style="color: #F8F8F8"> </span>developers
+<span style="color: #000; font-style: italic">New Password: </span>
+<span style="color: #000; font-style: italic">Re-enter new password:</span>
+</pre></div>
+<h3>Making a user a group administrator</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>gpasswd<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span>mike<span style="color: #F8F8F8"> </span>developers
+</pre></div>
+<h2>Tips:</h2>
+<h3>Check Group Membership</h3>
+<p>Use the <code>groups</code> command to check which groups a user belongs to:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups<span style="color: #F8F8F8"> </span>john
+<span style="color: #000; font-style: italic">john : users developers docker</span>
+</pre></div>
+<h3>View Group Information</h3>
+<p>The <code>/etc/group</code> file contains all group information. You can view it with:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>/etc/group<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>developers
+<span style="color: #000; font-style: italic">developers:x:1001:john,jane,mike</span>
+</pre></div>
+<h3>Root Privileges Required</h3>
+<p>Most <code>gpasswd</code> operations require root privileges or sudo access. Regular users can only use <code>gpasswd</code> to change their own group password if they're group administrators.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between <code>gpasswd</code> and <code>usermod</code> for adding users to groups?</h4>
+<p>A. Both can add users to groups, but <code>gpasswd</code> is specifically designed for group management with more group-specific options. <code>usermod -aG</code> is often used for simple group additions.</p>
+<h4>Q2. Can regular users use <code>gpasswd</code>?</h4>
+<p>A. Regular users can only use <code>gpasswd</code> if they've been designated as group administrators with the <code>-A</code> option, and even then, they can only add/remove members.</p>
+<h4>Q3. How do I see all members of a group?</h4>
+<p>A. Use <code>getent group groupname</code> to see all members of a specific group.</p>
+<h4>Q4. What happens when I set a group password?</h4>
+<p>A. When a group has a password, users who aren't members of the group can temporarily gain group privileges by using the <code>newgrp</code> command and entering the password.</p>
+<h2>References</h2>
+<p>https://linux.die.net/man/1/gpasswd</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

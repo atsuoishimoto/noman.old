@@ -1,49 +1,46 @@
-# env
+# env コマンド
 
-環境変数を表示したり、指定した環境変数の下でコマンドを実行したりするためのコマンドです。
+現在の環境変数を表示または変更します。
+
+## 概要
+
+`env` コマンドは、現在のシェル環境の環境変数を表示したり、一時的に環境変数を設定してコマンドを実行したりするために使用します。環境変数はシステム全体やプログラムの動作に影響を与える設定値で、プロセスが利用できる情報を保持しています。
 
 ## オプション
 
 ### **-i, --ignore-environment**
 
-すべての継承された環境変数を無視して、空の環境でコマンドを実行します。
+すべての継承された環境変数を無視して、クリーンな環境でコマンドを実行します。
 
-```bash
-$ env -i bash -c 'echo $PATH'
-
+```console
+$ env -i python3 -c "import os; print(os.environ)"
+{}
 ```
-
-上記の例では、空の環境で新しいbashシェルを起動し、PATHが設定されていないことを確認しています。
 
 ### **-u, --unset=NAME**
 
-指定した環境変数を削除してからコマンドを実行します。
+指定した環境変数を削除します。
 
-```bash
-$ env -u HOME echo $HOME
-
+```console
+$ env -u HOME python3 -c "import os; print('HOME' in os.environ)"
+False
 ```
 
-この例では、HOME環境変数を削除してからechoコマンドを実行しています。
+### **--**
 
-### **NAME=VALUE**
+それ以降の引数をオプションとして解釈しないようにします。
 
-指定した環境変数を設定してからコマンドを実行します。
-
-```bash
-$ env LANG=ja_JP.UTF-8 date
-2023年 4月 10日 月曜日 15:30:45 JST
+```console
+$ env -- echo $HOME
+/home/user
 ```
-
-この例では、LANG環境変数を日本語に設定してからdateコマンドを実行しています。
 
 ## 使用例
 
-### 現在の環境変数をすべて表示
+### 現在の環境変数をすべて表示する
 
-```bash
+```console
 $ env
-TERM=xterm-256color
 SHELL=/bin/bash
 USER=username
 PATH=/usr/local/bin:/usr/bin:/bin
@@ -52,40 +49,74 @@ HOME=/home/username
 ...
 ```
 
-### 特定の環境変数を設定してコマンドを実行
+### 一時的に環境変数を設定してコマンドを実行する
 
-```bash
-$ env HTTP_PROXY=http://proxy.example.com:8080 curl example.com
-<!doctype html>
-<html>
-...
-</html>
+```console
+$ env DEBUG=true python3 app.py
+デバッグモードで起動しています
 ```
 
-### 環境変数を追加・変更してコマンドを実行
+### 特定の環境変数だけを表示する
 
-```bash
-$ env PATH=$PATH:/opt/custom/bin DEBUG=true python script.py
-デバッグモードで実行中...
+```console
+$ env | grep PATH
+PATH=/usr/local/bin:/usr/bin:/bin
+```
+
+## ヒント:
+
+### 環境変数のソート表示
+
+`env` の出力を `sort` コマンドにパイプすると、アルファベット順に環境変数を表示できます。
+
+```console
+$ env | sort
+HOME=/home/user
+PATH=/usr/local/bin:/usr/bin:/bin
+SHELL=/bin/bash
+...
+```
+
+### 環境変数の一時的な変更
+
+スクリプトやプログラムをテストする際に、環境変数を一時的に変更して実行できます。これはグローバルな環境を変更せずにテストするのに便利です。
+
+```console
+$ env NODE_ENV=production node server.js
+本番モードでサーバーを起動しています
+```
+
+### 環境変数の数を確認する
+
+現在設定されている環境変数の数を確認するには、次のコマンドを使用します。
+
+```console
+$ env | wc -l
+53
 ```
 
 ## よくある質問
 
-### Q1. envコマンドとprintenvコマンドの違いは何ですか？
-A. `env`は環境変数の表示だけでなく、環境変数を設定してコマンドを実行する機能も持っています。一方、`printenv`は環境変数の表示のみを行います。
+#### Q1. `env` と `export` の違いは何ですか？
+A. `env` はコマンドを実行する際に一時的に環境変数を設定しますが、`export` はシェルセッション中に永続的に環境変数を設定します。
 
-### Q2. 特定の環境変数だけを表示するにはどうすればいいですか？
-A. `env | grep 変数名` を使用します。例えば、`env | grep PATH` とすると、PATH関連の環境変数だけが表示されます。
+#### Q2. 環境変数を永続的に設定するにはどうすればよいですか？
+A. `.bashrc`、`.bash_profile`、`.zshrc` などのシェル設定ファイルに `export VAR=value` の形式で追加します。
 
-### Q3. 一時的に環境変数を変更するにはどうすればいいですか？
-A. `env 変数名=値 コマンド` の形式で実行します。これにより、現在のシェルの環境変数は変更されず、指定したコマンドの実行時のみ環境変数が変更されます。
+#### Q3. 特定のプログラムだけに環境変数を設定するにはどうすればよいですか？
+A. `env VAR=value command` の形式で実行します。これにより、そのコマンドの実行中だけ環境変数が設定されます。
 
-## 追加情報
+#### Q4. 環境変数をクリアしてコマンドを実行するにはどうすればよいですか？
+A. `env -i command` を使用すると、すべての環境変数をクリアした状態でコマンドを実行できます。
 
-- `env`コマンドは、異なる環境設定でプログラムをテストする際に非常に便利です。
-- スクリプトの先頭に `#!/usr/bin/env プログラム名` と記述することで、環境に依存しないシバン（shebang）行を作成できます。
-- macOSでは、`env`コマンドはBSD由来のバージョンが使用されており、GNU版と若干オプションが異なる場合があります。
+## macOSでの注意点
 
-## 参考情報
+macOSでは、システム全体の環境変数は `/etc/launchd.conf` や `~/.launchd.conf` で設定できますが、最新のmacOSバージョンではこの方法は推奨されていません。代わりに、`~/.zshrc`（または使用しているシェルの設定ファイル）で環境変数を設定することをお勧めします。
+
+## 参考資料
 
 https://www.gnu.org/software/coreutils/manual/html_node/env-invocation.html
+
+## 改訂履歴
+
+- 2025/04/30 初版作成

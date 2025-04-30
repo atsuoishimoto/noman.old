@@ -1,73 +1,117 @@
 # update-locale コマンド
-システムのロケール設定を更新するコマンドです。
+
+システムのロケール設定を表示または変更するコマンド。
 
 ## 概要
-`update-locale`は、システム全体のロケール設定を表示または変更するために使用されます。ロケールはシステムの言語、日付形式、数値形式などの地域固有の設定を定義します。このコマンドは主にDebian系のLinuxディストリビューションで使用されます。
+
+`update-locale`は、Linuxシステム（特にDebian系ディストリビューション）でシステム全体のロケール設定を管理するためのコマンドです。ロケールとは、言語、日付形式、数値形式などの地域固有の設定のことで、このコマンドを使用することで、これらの設定を簡単に変更できます。
 
 ## オプション
+
 ### **--help**
+
 ヘルプメッセージを表示します。
+
 ```console
 $ update-locale --help
-使用法: update-locale [オプション] [ロケール定義]...
-システムのデフォルトロケール設定を更新します。
-
-オプション:
-  --help                   このヘルプを表示します
-  --reset                  すべてのロケール定義をリセットします
+Usage: update-locale [OPTIONS] [VARIABLE=VALUE ...]
+Options:
+  --help                   このヘルプを表示する
+  --reset                  すべてのロケール変数をリセットする
+  --no-checks              変数の値をチェックしない
 ```
 
 ### **--reset**
+
 すべてのロケール設定をリセットします。
+
 ```console
 $ sudo update-locale --reset
-システムのロケール設定がリセットされました
+```
+
+### **VARIABLE=VALUE**
+
+特定のロケール変数を設定します。
+
+```console
+$ sudo update-locale LANG=ja_JP.UTF-8
 ```
 
 ## 使用例
+
 ### 現在のロケール設定を表示する
+
 ```console
 $ update-locale
-LANG=ja_JP.UTF-8
-LC_NUMERIC=ja_JP.UTF-8
-LC_TIME=ja_JP.UTF-8
-LC_MONETARY=ja_JP.UTF-8
+LANG=en_US.UTF-8
+LANGUAGE=en_US:en
+LC_CTYPE="en_US.UTF-8"
+LC_NUMERIC="en_US.UTF-8"
+LC_TIME="en_US.UTF-8"
+LC_COLLATE="en_US.UTF-8"
+LC_MONETARY="en_US.UTF-8"
+LC_MESSAGES="en_US.UTF-8"
+LC_PAPER="en_US.UTF-8"
+LC_NAME="en_US.UTF-8"
+LC_ADDRESS="en_US.UTF-8"
+LC_TELEPHONE="en_US.UTF-8"
+LC_MEASUREMENT="en_US.UTF-8"
+LC_IDENTIFICATION="en_US.UTF-8"
 ```
 
-### 特定のロケール変数を設定する
+### システム全体の言語を日本語に変更する
+
 ```console
-$ sudo update-locale LANG=en_US.UTF-8
-LANG=en_US.UTF-8に設定されました
+$ sudo update-locale LANG=ja_JP.UTF-8
 ```
 
-### 複数のロケール変数を一度に設定する
+### 複数のロケール設定を一度に変更する
+
 ```console
-$ sudo update-locale LANG=ja_JP.UTF-8 LC_TIME=en_US.UTF-8
-LANG=ja_JP.UTF-8、LC_TIME=en_US.UTF-8に設定されました
+$ sudo update-locale LANG=ja_JP.UTF-8 LC_TIME=ja_JP.UTF-8 LC_MESSAGES=en_US.UTF-8
 ```
 
 ## ヒント:
-### 設定の反映
-ロケール設定の変更は、次回ログイン時またはシステム再起動後に完全に反映されます。すぐに反映させるには、ログアウトして再ログインしてください。
+
+### 変更の反映
+
+ロケール設定を変更した後は、変更を反映させるためにログアウトして再ログインするか、システムを再起動する必要があります。
 
 ### 利用可能なロケールの確認
-`locale -a`コマンドを使用して、システムで利用可能なすべてのロケールを確認できます。
 
-### 設定ファイルの場所
-`update-locale`コマンドは通常、`/etc/default/locale`ファイルを更新します。このファイルはシステム起動時に読み込まれます。
+設定する前に、システムで利用可能なロケールを確認するには以下のコマンドを使用します：
+
+```console
+$ locale -a
+C
+C.UTF-8
+en_US.utf8
+ja_JP.utf8
+...
+```
+
+### 部分的なロケール設定
+
+すべてのロケール設定を同じ値にする必要はありません。例えば、インターフェースは英語（`LANG=en_US.UTF-8`）で、日付形式は日本式（`LC_TIME=ja_JP.UTF-8`）というように設定できます。
 
 ## よくある質問
-#### Q1. ロケールとは何ですか？
-A. ロケールはシステムの言語、日付形式、通貨記号などの地域固有の設定を定義するものです。適切なロケール設定により、アプリケーションはユーザーの地域や言語に合わせた表示ができます。
 
-#### Q2. 変更したロケール設定が反映されていません。どうすればよいですか？
-A. ロケール設定の変更は通常、次回ログイン時に反映されます。すぐに反映させるには、ログアウトして再ログインするか、`source /etc/default/locale`コマンドを実行してみてください。
+#### Q1. update-localeとlocaleコマンドの違いは何ですか？
+A. `locale`コマンドは現在のロケール設定を表示するだけですが、`update-locale`はシステム全体のロケール設定を変更できます。
 
-#### Q3. 特定のアプリケーションだけ異なるロケールで実行するには？
-A. 特定のコマンドの前にロケール変数を設定することで、そのコマンドだけ異なるロケールで実行できます。例：`LANG=en_US.UTF-8 command`
+#### Q2. 変更したロケール設定はどこに保存されますか？
+A. 通常は`/etc/default/locale`ファイルに保存されます。
+
+#### Q3. 特定のユーザーだけのロケールを変更するにはどうすればいいですか？
+A. `update-locale`はシステム全体の設定を変更します。特定のユーザーだけのロケールを変更するには、そのユーザーの`.bashrc`や`.profile`などの設定ファイルに`export LANG=ja_JP.UTF-8`のような行を追加します。
+
+#### Q4. 設定したロケールが反映されない場合はどうすればいいですか？
+A. 該当するロケールがシステムにインストールされているか確認してください。必要に応じて`sudo apt-get install language-pack-ja`などでロケールパッケージをインストールします。
 
 ## 参考資料
+
 https://manpages.debian.org/buster/locales/update-locale.8.en.html
 
 ## 改訂履歴
-- 2025/04/29 初版作成
+
+- 2025/04/30 初版作成

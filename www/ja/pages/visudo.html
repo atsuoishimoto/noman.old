@@ -46,71 +46,68 @@
   <div class="content">
     <main>
       
-  <h1>visudo コマンドの概要</h1>
-<p><code>visudo</code>は、sudoers ファイルを安全に編集するためのコマンドです。このコマンドは、構文エラーをチェックし、複数のユーザーが同時に編集することを防ぎます。</p>
-<h2>主なオプション</h2>
-<ul>
-<li><p><strong>-c</strong>: sudoers ファイルの構文チェックのみを行います</p>
-<ul>
-<li>例: <code>visudo -c</code></li>
-</ul>
-</li>
-<li><p><strong>-f ファイル名</strong>: 指定したファイルを編集します（デフォルトは /etc/sudoers）</p>
-<ul>
-<li>例: <code>visudo -f /etc/sudoers.d/custom</code></li>
-</ul>
-</li>
-<li><p><strong>-s</strong>: 標準入力から読み込んだ内容の構文チェックを行います</p>
-<ul>
-<li>例: <code>cat /etc/sudoers | visudo -s</code></li>
-</ul>
-</li>
-<li><p><strong>-V</strong>: バージョン情報を表示します</p>
-<ul>
-<li>例: <code>visudo -V</code></li>
-</ul>
-</li>
-<li><p><strong>-q</strong>: 静かモード（エラーメッセージのみ表示）</p>
-<ul>
-<li>例: <code>visudo -q -c</code></li>
-</ul>
-</li>
-</ul>
+  <h1>visudo コマンド</h1>
+<p>sudoers ファイルを安全に編集するためのコマンド。</p>
+<h2>概要</h2>
+<p><code>visudo</code> は、システム管理者が sudo の設定ファイル（/etc/sudoers）を安全に編集するためのコマンドです。このコマンドは、編集中に他のユーザーが同時に変更できないようにファイルをロックし、保存前に構文チェックを行うことで、設定ミスによるシステムアクセス不能を防ぎます。</p>
+<h2>オプション</h2>
+<h3><strong>-c</strong></h3>
+<p>sudoers ファイルの構文チェックのみを行います。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-c
+<span style="color: #000; font-style: italic">/etc/sudoers: OK</span>
+</pre></div>
+<h3><strong>-f ファイル</strong></h3>
+<p>デフォルトの /etc/sudoers ではなく、指定したファイルを編集します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/etc/sudoers.d/custom
+</pre></div>
+<h3><strong>-s</strong></h3>
+<p>厳格なパーサーモードを有効にします。警告も全てエラーとして扱われます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-s
+</pre></div>
+<h3><strong>-q</strong></h3>
+<p>静かモード。構文エラーのみを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-q
+</pre></div>
 <h2>使用例</h2>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 基本的な使用方法（sudoersファイルを編集）</span>
-sudo<span style="color: #F8F8F8"> </span>visudo
-
-<span style="color: #8F5902; font-style: italic"># 出力例（エディタが開き、以下のような内容が表示される）</span>
-<span style="color: #8F5902; font-style: italic"># /etc/sudoers ファイルの内容</span>
-<span style="color: #8F5902; font-style: italic"># ユーザー権限の指定</span>
-root<span style="color: #F8F8F8"> </span><span style="color: #000">ALL</span><span style="color: #CE5C00; font-weight: bold">=(</span>ALL:ALL<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>ALL
-%admin<span style="color: #F8F8F8"> </span><span style="color: #000">ALL</span><span style="color: #CE5C00; font-weight: bold">=(</span>ALL<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>ALL
-%sudo<span style="color: #F8F8F8"> </span><span style="color: #000">ALL</span><span style="color: #CE5C00; font-weight: bold">=(</span>ALL:ALL<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>ALL
+<h3>基本的な使用方法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo
+<span style="color: #8F5902"># </span>標準のエディタで<span style="color: #F8F8F8"> </span>/etc/sudoers<span style="color: #F8F8F8"> </span>ファイルが開かれる
 </pre></div>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># 特定のディレクトリ内のsudoersファイルを編集</span>
-sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/etc/sudoers.d/myusers
-
-<span style="color: #8F5902; font-style: italic"># 構文チェックのみを実行</span>
-sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-c
-<span style="color: #8F5902; font-style: italic"># 出力例</span>
-/etc/sudoers:<span style="color: #F8F8F8"> </span>パースOK
-/etc/sudoers.d/myusers:<span style="color: #F8F8F8"> </span>パースOK
+<h3>別のエディタを使用する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span><span style="color: #000">EDITOR</span><span style="color: #CE5C00; font-weight: bold">=</span>nano<span style="color: #F8F8F8"> </span>visudo
+<span style="color: #8F5902"># </span>nanoエディタで<span style="color: #F8F8F8"> </span>/etc/sudoers<span style="color: #F8F8F8"> </span>ファイルが開かれる
 </pre></div>
-<h2>追加情報</h2>
+<h3>カスタム設定ファイルの作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/etc/sudoers.d/developers
+<span style="color: #8F5902"># </span>/etc/sudoers.d/developers<span style="color: #F8F8F8"> </span>ファイルを編集する
+</pre></div>
+<h2>ヒント:</h2>
+<h3>エディタの変更</h3>
+<p>デフォルトでは <code>visudo</code> は vi エディタを使用しますが、<code>EDITOR</code> または <code>VISUAL</code> 環境変数を設定することで別のエディタを使用できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span><span style="color: #000">EDITOR</span><span style="color: #CE5C00; font-weight: bold">=</span>nano<span style="color: #F8F8F8"> </span>visudo
+</pre></div>
+<h3>sudoers.d ディレクトリの活用</h3>
+<p>個別の設定ファイルを <code>/etc/sudoers.d/</code> ディレクトリに作成することで、メインの sudoers ファイルを変更せずに設定を追加できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/etc/sudoers.d/myconfig
+</pre></div>
+<h3>構文エラーの防止</h3>
+<p><code>visudo</code> は保存時に構文チェックを行い、エラーがある場合は警告を表示します。これにより、誤った設定でシステムがロックされることを防ぎます。</p>
+<h2>よくある質問</h2>
+<h4>Q1. なぜ直接 /etc/sudoers ファイルを編集せず、visudo を使うべきですか？</h4>
+<p>A. <code>visudo</code> は構文チェックを行い、複数のユーザーによる同時編集を防ぐため、システムがロックされるリスクを減らします。</p>
+<h4>Q2. visudo で使用するエディタを変更するにはどうすればよいですか？</h4>
+<p>A. <code>EDITOR</code> または <code>VISUAL</code> 環境変数を設定します。例: <code>sudo EDITOR=nano visudo</code></p>
+<h4>Q3. sudoers ファイルを編集中に構文エラーがあった場合はどうなりますか？</h4>
+<p>A. <code>visudo</code> は保存時にエラーを検出し、修正するか無視するかの選択肢を提供します。無視を選んでも、ファイルは保存されません。</p>
+<h4>Q4. sudoers.d ディレクトリとは何ですか？</h4>
+<p>A. <code>/etc/sudoers.d/</code> は追加の sudo 設定ファイルを格納するディレクトリです。メインの sudoers ファイルを変更せずに設定を追加できます。</p>
+<h2>macOS での注意点</h2>
+<p>macOSでは、sudoers ファイルは <code>/private/etc/sudoers</code> にあります。また、macOS のアップデート後に変更が上書きされる可能性があるため、<code>/private/etc/sudoers.d/</code> ディレクトリに独自の設定ファイルを作成することをお勧めします。</p>
+<h2>参考文献</h2>
+<p>https://www.sudo.ws/docs/man/visudo.man/</p>
+<h2>改訂履歴</h2>
 <ul>
-<li><p><code>visudo</code>は通常、環境変数<code>EDITOR</code>で指定されたエディタを使用します。デフォルトではviですが、<code>EDITOR=nano visudo</code>のように別のエディタを指定することもできます。</p>
-</li>
-<li><p>sudoersファイルを直接編集せず、必ず<code>visudo</code>を使用してください。直接編集して構文エラーがあると、sudoコマンドが使えなくなる可能性があります。</p>
-</li>
-<li><p>一般的な設定パターン:</p>
-<pre><code># ユーザーにパスワードなしでコマンドを実行させる
-username ALL=(ALL) NOPASSWD: /path/to/command
-
-# グループにsudo権限を与える
-%groupname ALL=(ALL:ALL) ALL
-</code></pre></li>
-<li><p><code>/etc/sudoers.d/</code>ディレクトリにファイルを作成することで、メインのsudoersファイルを変更せずに設定を追加できます。</p>
-</li>
+<li>2025/04/30 初版作成</li>
 </ul>
 
 

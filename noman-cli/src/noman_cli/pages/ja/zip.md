@@ -1,113 +1,131 @@
-# zipコマンド
+# zip コマンド
 
-zipコマンドは、ファイルを圧縮して.zipアーカイブを作成するためのUnixコマンドです。複数のファイルやディレクトリを一つのアーカイブにまとめて、サイズを小さくすることができます。
+ファイルを圧縮して ZIP アーカイブを作成します。
+
+## 概要
+
+`zip` コマンドは、ファイルやディレクトリを圧縮して ZIP 形式のアーカイブを作成するためのツールです。Windows や macOS など、ほとんどのオペレーティングシステムで互換性のある形式であるため、クロスプラットフォームでのファイル共有に適しています。
 
 ## オプション
 
-### **-r**（再帰的圧縮）
-ディレクトリを再帰的に圧縮します。ディレクトリ内のすべてのファイルとサブディレクトリを含めます。
+### **-r (再帰的)**
+
+ディレクトリとその中身を再帰的に圧縮します。
 
 ```console
-$ zip -r archive.zip Documents/
-  adding: Documents/ (stored 0%)
-  adding: Documents/report.pdf (deflated 15%)
-  adding: Documents/images/ (stored 0%)
-  adding: Documents/images/photo.jpg (stored 0%)
+$ zip -r archive.zip directory/
+  adding: directory/ (stored 0%)
+  adding: directory/file1.txt (stored 0%)
+  adding: directory/file2.txt (deflated 35%)
+  adding: directory/subdirectory/ (stored 0%)
+  adding: directory/subdirectory/file3.txt (deflated 42%)
 ```
 
-### **-e**（暗号化）
-パスワード保護されたアーカイブを作成します。
+### **-e (暗号化)**
+
+パスワード保護された ZIP ファイルを作成します。
 
 ```console
-$ zip -e secure.zip confidential.pdf
+$ zip -e secure.zip confidential.txt
 Enter password: 
 Verify password: 
-  adding: confidential.pdf (deflated 12%)
+  adding: confidential.txt (deflated 45%)
 ```
 
-### **-u**（更新）
-アーカイブを更新します。新しいファイルを追加したり、変更されたファイルを更新したりします。
+### **-u (更新)**
+
+既存の ZIP アーカイブを更新し、新しいファイルを追加したり、変更されたファイルを置き換えたりします。
 
 ```console
-$ zip -u archive.zip newfile.txt updatedfile.txt
-  adding: newfile.txt (stored 0%)
-  updating: updatedfile.txt (deflated 32%)
+$ zip -u archive.zip newfile.txt
+  adding: newfile.txt (deflated 30%)
 ```
 
-### **-d**（削除）
-アーカイブから指定したファイルを削除します。
+### **-d (削除)**
+
+ZIP アーカイブから特定のファイルを削除します。
 
 ```console
-$ zip -d archive.zip oldfile.txt
-deleting: oldfile.txt
+$ zip -d archive.zip unwanted.txt
+deleting: unwanted.txt
 ```
 
-### **-j**（junkパス）
-ディレクトリ構造を保存せず、ファイル名のみを使用します。
+### **-j (ジャンク・パス)**
+
+ディレクトリ構造を保存せずにファイルを圧縮します。
 
 ```console
-$ zip -j flat.zip Documents/file1.txt Projects/file2.txt
-  adding: file1.txt (deflated 10%)
-  adding: file2.txt (deflated 15%)
-```
-
-### **-q**（静かモード）
-処理中のメッセージを表示しません。
-
-```console
-$ zip -q archive.zip file1 file2
+$ zip -j flat.zip directory/subdirectory/file.txt
+  adding: file.txt (deflated 33%)
 ```
 
 ## 使用例
 
-### 基本的な使用方法
+### 複数のファイルを圧縮する
 
 ```console
-$ zip archive.zip file1.txt file2.txt file3.txt
-  adding: file1.txt (stored 0%)
-  adding: file2.txt (stored 0%)
-  adding: file3.txt (deflated 45%)
+$ zip documents.zip report.pdf spreadsheet.xlsx presentation.pptx
+  adding: report.pdf (deflated 12%)
+  adding: spreadsheet.xlsx (deflated 57%)
+  adding: presentation.pptx (deflated 62%)
 ```
 
-### 複数のディレクトリを一つのアーカイブに圧縮
+### 圧縮レベルを指定する
 
 ```console
-$ zip -r backup.zip Documents/ Pictures/ important.txt
-  adding: Documents/ (stored 0%)
-  adding: Documents/report.doc (deflated 67%)
-  adding: Pictures/ (stored 0%)
-  adding: Pictures/vacation.jpg (stored 0%)
-  adding: important.txt (deflated 42%)
-```
-
-### 圧縮レベルの指定
-
-```console
-$ zip -9 highly-compressed.zip largefile.dat
+$ zip -9 highly_compressed.zip largefile.dat
   adding: largefile.dat (deflated 75%)
 ```
 
+### 除外パターンを使用する
+
+```console
+$ zip -r project.zip src/ -x "*.log" "*.tmp" "*/.git/*"
+  adding: src/ (stored 0%)
+  adding: src/main.c (deflated 45%)
+  adding: src/utils.c (deflated 38%)
+```
+
+## ヒント:
+
+### 圧縮レベルの調整
+
+`-0`（無圧縮）から`-9`（最大圧縮）までの数字を使って圧縮レベルを指定できます。大きなファイルを素早く圧縮したい場合は低い値を、サイズを最小化したい場合は高い値を使用します。
+
+### 進捗状況の表示
+
+大きなファイルを圧縮する際は `-v` オプションを使用すると詳細な進捗状況が表示されます。
+
+### 自己解凍アーカイブの作成
+
+`-A` オプションを使用すると、Windows で自己解凍可能な実行ファイルを作成できます（ただし追加のツールが必要です）。
+
 ## よくある質問
 
-#### Q1. zipとgzipの違いは何ですか？
-A. zipは複数ファイルを一つのアーカイブにまとめて圧縮できますが、gzipは単一ファイルのみを圧縮します。zipはWindowsとの互換性が高いという利点があります。
+#### Q1. ZIP と TAR の違いは何ですか？
+A. ZIP は圧縮とアーカイブを同時に行いますが、TAR はアーカイブのみを作成し、通常は gzip などの別のツールと組み合わせて圧縮します。ZIP は Windows との互換性が高く、個別のファイルを抽出しやすいという利点があります。
 
-#### Q2. zipアーカイブのパスワードはどれくらい安全ですか？
-A. zipの標準暗号化は比較的弱いです。重要なデータには、gpgなどのより強力な暗号化ツールの使用を検討してください。
+#### Q2. ZIP ファイルのパスワードを忘れた場合はどうすればよいですか？
+A. ZIP のパスワード保護は比較的弱いため、パスワード解析ツールで復元できる場合がありますが、強力なパスワードを使用していた場合は復元が困難です。重要なデータには強力なパスワードマネージャーの使用をお勧めします。
 
-#### Q3. 既存のzipアーカイブにファイルを追加するにはどうすればよいですか？
-A. `-u`オプションを使用して、`zip -u archive.zip newfile.txt`のように実行します。
+#### Q3. 大きなファイルを ZIP で圧縮する際の注意点は？
+A. 非常に大きなファイル（数GB以上）を圧縮する場合、ZIP には4GBのファイルサイズ制限があるため、代わりに `zip64` 形式をサポートする実装を使用するか、分割アーカイブの作成を検討してください。
 
-#### Q4. 大きなディレクトリを圧縮する際のベストプラクティスは？
-A. `-r`オプションを使用し、必要に応じて`-9`（最高圧縮率）や`-q`（静かモード）を組み合わせます。例：`zip -r9q archive.zip large_directory/`
+#### Q4. macOS で作成した ZIP ファイルに隠しファイルが含まれてしまうのはなぜですか？
+A. macOS では `.DS_Store` や `__MACOSX` などのメタデータファイルが自動的に含まれることがあります。これらを除外するには `-X` オプションを使用します。
 
-## 追加メモ
+## macOS での注意点
 
-* Windowsとの互換性が高く、クロスプラットフォームでファイル共有する際に便利です。
-* 大量のファイルを圧縮する場合は、`-9`オプションで最高圧縮率を指定できますが、処理時間が長くなります。
-* macOSでは日本語ファイル名を含むアーカイブを作成する場合、文字化けを防ぐために適切な文字エンコーディングを指定することが重要な場合があります。
-* macOSでは標準でzipコマンドが利用可能ですが、より多くの機能が必要な場合はHomebrewなどでInfo-ZIPバージョンをインストールすることができます。
+macOS の Finder から ZIP ファイルを作成すると、`.DS_Store` や `__MACOSX` ディレクトリなどのメタデータファイルが含まれることがあります。コマンドラインで ZIP を作成する際に `-X` オプションを使用すると、これらの macOS 固有のファイルを除外できます。
 
-## 参考
+```console
+$ zip -X -r clean_archive.zip directory/
+```
+
+## 参考資料
 
 https://linux.die.net/man/1/zip
+
+## 改訂履歴
+
+- 2025/04/30 初版作成
