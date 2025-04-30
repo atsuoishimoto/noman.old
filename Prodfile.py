@@ -7,17 +7,24 @@ import yaml
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markupsafe import Markup, escape
-import md2html
 from pathlib import Path
 import re
 import sys
 import subprocess
+import mistune
+from pygments import highlight
+from pygments.formatters import html
+from pygments.lexers import get_lexer_by_name
+from pathlib import Path
 
 load_dotenv()
 
-import gen_noman
+from anthropic import Anthropic
+
+api_key = os.environ["NOMAN_ANTHROPIC_API_KEY"]
+client = Anthropic(api_key=api_key)
+
 import make_summary
-from md2html import md_to_html
 from pathlib import Path
 
 
@@ -57,6 +64,43 @@ def build_command_dir(target):
     p.write_text("")
 
 
+def generate_document(*prompts, max_tokens):
+    contents = []
+    for prompt in prompts:
+        if not prompt.strip():
+            continue
+        message = {
+            "type": "text",
+            "text": prompt,
+        }
+        contents.append(message)
+
+    messages = [{
+        "role": "user",
+        "content": contents
+     }]
+
+    import pprint
+    pprint.pprint(messages)
+
+    # check OverloadedError?
+    response = client.messages.create(
+        model="claude-3-7-sonnet-20250219",
+        max_tokens=max_tokens,
+        temperature=0.2,
+        messages=messages,
+    )
+    if str(response.stop_reason) != "end_turn":
+        raise ValueError(
+            f"generate_document failed: "
+            f"stop_reason: {response.stop_reason!s} "
+            f"usage: {response.usage}\n"
+            f"{response.content[0].text}"
+        )
+
+    return response.content[0].text, response.stop_reason, response.usage
+
+
 @rule(
     "pages/*/%.md",
     uses="commands/%/.empty",
@@ -79,7 +123,7 @@ TODAY is {TODAY}.
         current = target.read_text()
         prompts.append(f"<current-documnent>{current}</current-document>")
 
-    text, stop_reason, usage = gen_noman.generate_document(
+    text, stop_reason, usage = generate_document(
         *prompts, max_tokens=MAX_TOKENS
     )
 
@@ -138,8 +182,25 @@ def make_summary(dir):
 
     return sorted(d.items())
 
+
+
+class HighlightRenderer(mistune.HTMLRenderer):
+    def block_code(self, code, info=None):
+        if info:
+            if info == "mermaid":
+                return "<pre class='mermaid'>\n" + mistune.escape(code) + "\n</pre>"
+            else:
+                lexer = get_lexer_by_name(info, stripall=True)
+                formatter = html.HtmlFormatter(noclasses=True, style="tango")
+                return highlight(code, lexer, formatter)
+        return "<pre><code>" + mistune.escape(code) + "</code></pre>"
+
+
+renderer = HighlightRenderer()
+markdown = mistune.create_markdown(renderer=renderer)
+
 @task
-def build_html():
+def build_www():
     command = JINJA.get_template("command.html.j2")
     commandlist = JINJA.get_template("commandlist.html.j2")
 
@@ -147,7 +208,7 @@ def build_html():
         dest = WWW / lang
         pagedir =  Path(f"pages/{lang}")
         for md in pagedir.glob("*.md"):
-            html = Markup(md2html.md_to_html(md))
+            html = Markup(markdown(md.read_text()))
             commandname = md.stem
             page = command.render(lang="ja", content=html, command=commandname)
             (dest / "pages" / (commandname+".html")).write_text(page)

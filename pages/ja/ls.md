@@ -158,6 +158,7 @@ https://www.gnu.org/software/coreutils/manual/html_node/ls-invocation.html
 
 ## Revisions
 
+- 2025/04/30 内容を確認し、現在の形式に合わせて更新。
 - 2025/04/29 ディレクトリのみ表示するヒントを追加。
 - 2025/04/27 概要セクションを追加し、全体的な構成を改善。
 - 2025/04/27 macOSでの注意点を追加し、ヒントセクションを改善。よくある質問を追加。
