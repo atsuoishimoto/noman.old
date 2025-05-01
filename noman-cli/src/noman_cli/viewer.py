@@ -1,13 +1,12 @@
 import locale
-import os
 import argparse
 import curses
 from importlib import resources
-
+from collections import defaultdict
 import sys
 import subprocess
 import mistune
-from pathlib import Path
+import random
 from . import ansi_renderer
 
 
@@ -26,6 +25,28 @@ def detect_terminal_background():
                 return "light"
     except Exception:
         pass
+
+
+def levenshtein_distance(s1, s2):
+    len_s1, len_s2 = len(s1), len(s2)
+
+    dp = [[0] * (len_s2 + 1) for _ in range(len_s1 + 1)]
+
+    for i in range(len_s1 + 1):
+        dp[i][0] = i
+    for j in range(len_s2 + 1):
+        dp[0][j] = j
+
+    for i in range(1, len_s1 + 1):
+        for j in range(1, len_s2 + 1):
+            if s1[i - 1] == s2[j - 1]:
+                cost = 0
+            else:
+                cost = 1
+
+            dp[i][j] = min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost)
+
+    return dp[len_s1][len_s2]
 
 
 renderer = ansi_renderer.ANSIRenderer()
@@ -51,7 +72,7 @@ parser.add_argument(
     "-L",
     "--language",
     choices=SUPPORTED_LANGUAGES,
-    help="Language to use for syntax highlighting(valid: en, ja)",
+    help="Language to display noman page (valid: en, ja)",
 )
 
 parser.add_argument(
@@ -75,7 +96,6 @@ parser.add_argument("name", nargs="?", help="Name of the page to view")
 
 def main():
     args = parser.parse_args()
-    import noman_cli.pages.ja as ja
 
     if args.version:
         print("noman 0.1")
@@ -106,7 +126,17 @@ def main():
     file = (root / args.name).with_suffix(".md")
 
     if not file.exists():
-        print(f"Page {args.name} not found")
+        candidates = defaultdict(list)
+        for name in [n.stem for n in root.iterdir()]:
+            d = levenshtein_distance(name, args.name)
+            candidates[d].append(name)
+
+        candidates = sorted(candidates.items())[0][1]
+        if len(candidates) > 3:
+            candidates = random.choices(candidates, k=3)
+        print(
+            f"Page {args.name} not found. Did you mean {' '.join(c + '?' for c in candidates)}"
+        )
         sys.exit(1)
 
     src = file.read_text()

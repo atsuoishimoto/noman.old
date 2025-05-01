@@ -1,6 +1,5 @@
-import pprint
 from textwrap import indent
-from typing import Any, Dict, Iterable, List, cast
+from typing import Any, Dict, Iterable, cast
 from contextlib import contextmanager
 from mistune.core import BaseRenderer, BlockState
 from mistune.util import strip_end

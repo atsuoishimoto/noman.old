@@ -1,10 +1,9 @@
-import sys
 import mistune
 from pygments import highlight
 from pygments.formatters import html
 from pygments.lexers import get_lexer_by_name
-from pathlib import Path
 import ansi_renderer
+
 
 class HighlightRenderer(mistune.HTMLRenderer):
     def block_code(self, code, info=None):
@@ -21,7 +20,9 @@ class HighlightRenderer(mistune.HTMLRenderer):
 
 renderer = ansi_renderer.ANSIRenderer()
 markdown = mistune.create_markdown(renderer=renderer)
-dump = mistune.create_markdown(renderer=lambda tokens, state: ansi_renderer.dump(tokens))
+dump = mistune.create_markdown(
+    renderer=lambda tokens, state: ansi_renderer.dump(tokens)
+)
 
 src = """
 text1 test1-1  
@@ -95,7 +96,6 @@ if 0:
     print("-------------")
     print(s)
     print(repr(s))
-
 
 
 if 0:

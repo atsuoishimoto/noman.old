@@ -57,8 +57,10 @@ RESET_BG = "\033[49m"
 def color(c):
     return "\033[%dm" % COLORS[c]
 
+
 def bgcolor(c):
     return "\033[%dm" % HIGHLIGHTS[c]
+
 
 def attr(a):
     return "\033[%dm" % ATTRIBUTES[a]
@@ -67,4 +69,3 @@ def attr(a):
 print(color("yellow"), "黄色", color("red"), "赤色", RESET)
 print(bgcolor("on_cyan"), color("yellow"), "黄色", RESET_BG, "赤色", RESET)
 print(color("yellow"), "黄色", attr("bold"), "赤色", RESET)
-
