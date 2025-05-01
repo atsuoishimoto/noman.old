@@ -209,16 +209,21 @@ markdown = mistune.create_markdown(renderer=renderer)
 
 @task
 def build_www():
+    index = JINJA.get_template("index.html.j2")
     command = JINJA.get_template("command.html.j2")
     commandlist = JINJA.get_template("commandlist.html.j2")
 
     for lang in ["ja", "en"]:
         dest = WWW / lang
         pagedir = Path(f"pages/{lang}")
+
+        page = index.render(lang=lang)
+        (dest / "index.html").write_text(page)
+
         for md in pagedir.glob("*.md"):
             html = Markup(markdown(md.read_text()))
             commandname = md.stem
-            page = command.render(lang="ja", content=html, command=commandname)
+            page = command.render(lang=lang, content=html, command=commandname)
             (dest / "pages" / (commandname + ".html")).write_text(page)
 
             src = md.read_text()
