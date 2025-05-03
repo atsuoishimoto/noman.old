@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  docker - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>docker コマンド</h1>
+<p>コンテナの作成、管理、実行を行うためのコマンドラインツール。</p>
+<h2>概要</h2>
+<p>Docker は、アプリケーションをコンテナとして実行するためのプラットフォームです。コンテナは軽量な仮想環境で、アプリケーションとその依存関係をパッケージ化し、どこでも同じように実行できます。<code>docker</code> コマンドを使用して、イメージの作成・管理、コンテナの起動・停止、ネットワークやボリュームの管理などを行うことができます。</p>
+<h2>オプション</h2>
+<h3><strong>docker run</strong></h3>
+<p>コンテナを作成して起動します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">80</span>:80<span style="color: #F8F8F8"> </span>--name<span style="color: #F8F8F8"> </span>webserver<span style="color: #F8F8F8"> </span>nginx
+<span style="color: #000; font-style: italic">b1a0dc2f37e9e48c5dfcbed288a3d38f42ce70cd75bce1005b3a4972e0d3a5a5</span>
+</pre></div>
+<h3><strong>docker ps</strong></h3>
+<p>実行中のコンテナを一覧表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>ps
+<span style="color: #000; font-style: italic">CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS                               NAMES</span>
+<span style="color: #000; font-style: italic">b1a0dc2f37e9   nginx     &quot;/docker-entrypoint.…&quot;   10 seconds ago   Up 9 seconds    0.0.0.0:80-&gt;80/tcp, :::80-&gt;80/tcp   webserver</span>
+</pre></div>
+<h3><strong>docker images</strong></h3>
+<p>ローカルに保存されているイメージを一覧表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>images
+<span style="color: #000; font-style: italic">REPOSITORY   TAG       IMAGE ID       CREATED        SIZE</span>
+<span style="color: #000; font-style: italic">nginx        latest    605c77e624dd   3 weeks ago    141MB</span>
+<span style="color: #000; font-style: italic">ubuntu       latest    ba6acccedd29   4 weeks ago    72.8MB</span>
+</pre></div>
+<h3><strong>docker build</strong></h3>
+<p>Dockerfileからイメージを構築します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:1.0<span style="color: #F8F8F8"> </span>.
+<span style="color: #000; font-style: italic">[+] Building 25.3s (10/10) FINISHED</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile                       0.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring dockerfile: 215B                                       0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load .dockerignore                                          0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring context: 2B                                            0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load metadata for docker.io/library/node:14                 1.2s</span>
+<span style="color: #000; font-style: italic"> =&gt; [1/5] FROM docker.io/library/node:14@sha256:fcb6...                    0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load build context                                          0.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring context: 3.25kB                                        0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; [2/5] WORKDIR /app                                                     0.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; [3/5] COPY package*.json ./                                            0.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; [4/5] RUN npm install                                                 20.5s</span>
+<span style="color: #000; font-style: italic"> =&gt; [5/5] COPY . .                                                         0.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; exporting to image                                                     3.2s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; exporting layers                                                    3.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; writing image sha256:d8f...                                         0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; naming to docker.io/library/myapp:1.0                               0.0s</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>コンテナの対話的実行</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-it<span style="color: #F8F8F8"> </span>ubuntu<span style="color: #F8F8F8"> </span>bash
+<span style="color: #8F5902">root@7b8b7c5c8e6a:/# </span>ls
+<span style="color: #000; font-style: italic">bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var</span>
+</pre></div>
+<h3>バックグラウンドでのコンテナ実行とポート転送</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>:80<span style="color: #F8F8F8"> </span>--name<span style="color: #F8F8F8"> </span>webserver<span style="color: #F8F8F8"> </span>nginx
+<span style="color: #000; font-style: italic">a72df3b3b5b7e48c5dfcbed288a3d38f42ce70cd75bce1005b3a4972e0d3a5a5</span>
+
+<span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>localhost:8080
+<span style="color: #000; font-style: italic">&lt;!DOCTYPE html&gt;</span>
+<span style="color: #000; font-style: italic">&lt;html&gt;</span>
+<span style="color: #000; font-style: italic">&lt;head&gt;</span>
+<span style="color: #000; font-style: italic">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3>コンテナの停止と削除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>stop<span style="color: #F8F8F8"> </span>webserver
+<span style="color: #000; font-style: italic">webserver</span>
+
+<span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>rm<span style="color: #F8F8F8"> </span>webserver
+<span style="color: #000; font-style: italic">webserver</span>
+</pre></div>
+<h3>ボリュームマウント</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>:80<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span><span style="color: #204A87">pwd</span><span style="color: #204A87; font-weight: bold">)</span>/html:/usr/share/nginx/html<span style="color: #F8F8F8"> </span>--name<span style="color: #F8F8F8"> </span>webserver<span style="color: #F8F8F8"> </span>nginx
+<span style="color: #000; font-style: italic">c1b0dc2f37e9e48c5dfcbed288a3d38f42ce70cd75bce1005b3a4972e0d3a5a5</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>コンテナのシェルに接続する</h3>
+<p>実行中のコンテナに接続するには <code>docker exec -it コンテナ名 bash</code> を使用します。これはデバッグやトラブルシューティングに役立ちます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span><span style="color: #204A87">exec</span><span style="color: #F8F8F8"> </span>-it<span style="color: #F8F8F8"> </span>webserver<span style="color: #F8F8F8"> </span>bash
+<span style="color: #8F5902">root@b1a0dc2f37e9:/# </span>ls
+<span style="color: #000; font-style: italic">bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var</span>
+</pre></div>
+<h3>不要なリソースのクリーンアップ</h3>
+<p>使用していないコンテナ、イメージ、ネットワーク、ボリュームを削除するには <code>docker system prune</code> を使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>system<span style="color: #F8F8F8"> </span>prune
+<span style="color: #000; font-style: italic">WARNING! This will remove:</span>
+<span style="color: #000; font-style: italic">  - all stopped containers</span>
+<span style="color: #000; font-style: italic">  - all networks not used by at least one container</span>
+<span style="color: #000; font-style: italic">  - all dangling images</span>
+<span style="color: #000; font-style: italic">  - all dangling build cache</span>
+
+<span style="color: #000; font-style: italic">Are you sure you want to continue? [y/N] y</span>
+<span style="color: #000; font-style: italic">Deleted Containers:</span>
+<span style="color: #000; font-style: italic">f9a3...</span>
+
+<span style="color: #000; font-style: italic">Total reclaimed space: 1.2GB</span>
+</pre></div>
+<h3>Dockerfileのベストプラクティス</h3>
+<ul>
+<li>マルチステージビルドを使用して最終イメージのサイズを小さくする</li>
+<li>キャッシュを効率的に利用するため、変更頻度の低いレイヤーを先に配置する</li>
+<li>必要最小限のファイルだけをコピーする（.dockerignoreファイルを活用）</li>
+</ul>
+<h2>よくある質問</h2>
+<h4>Q1. Dockerとは何ですか？</h4>
+<p>A. Dockerはコンテナ化技術を使用して、アプリケーションとその依存関係を一緒にパッケージ化し、どの環境でも同じように実行できるようにするプラットフォームです。</p>
+<h4>Q2. DockerとVMの違いは何ですか？</h4>
+<p>A. VMは完全なOSを仮想化しますが、DockerコンテナはホストOSのカーネルを共有し、アプリケーションの実行に必要な部分だけを含むため、より軽量で起動が速いです。</p>
+<h4>Q3. Docker Hubとは何ですか？</h4>
+<p>A. Docker Hubは、Dockerの公式イメージリポジトリで、様々なアプリケーションやOSのイメージを公開・共有できるプラットフォームです。<code>docker pull</code> コマンドでイメージをダウンロードできます。</p>
+<h4>Q4. コンテナ内のデータを永続化するにはどうすればよいですか？</h4>
+<p>A. ボリュームを使用します。<code>docker run -v ホストパス:コンテナパス</code> または <code>docker volume create</code> と <code>docker run --mount</code> を使用してデータを永続化できます。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSでDockerを実行する場合、以下の点に注意してください：</p>
+<ol>
+<li>macOSではDocker Desktopをインストールする必要があります</li>
+<li>リソース制限：CPUやメモリなどのリソース割り当てはDocker Desktopの設定から調整できます</li>
+<li>ファイル共有：デフォルトでは <code>/Users</code> ディレクトリのみがDockerコンテナからアクセス可能です。他のディレクトリを使用する場合は、Docker Desktopの設定で「File sharing」を設定する必要があります</li>
+<li>パフォーマンス：macOSでのDockerはLinuxと比較して若干パフォーマンスが低下する場合があります</li>
+</ol>
+<h2>参考</h2>
+<p>https://docs.docker.com/engine/reference/commandline/cli/</p>
+<h2>改訂</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

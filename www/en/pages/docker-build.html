@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/en/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  docker-build - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/en/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>docker build command</h1>
+<p>Build Docker images from a Dockerfile and a context.</p>
+<h2>Overview</h2>
+<p>The <code>docker build</code> command creates Docker images from a Dockerfile and a build context. It executes the instructions in the Dockerfile to assemble a new image layer by layer. The build context is the set of files located in the specified PATH or URL.</p>
+<h2>Options</h2>
+<h3><strong>-t, --tag</strong></h3>
+<p>Tag the built image with a name and optionally a tag in the 'name:tag' format.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:1.0<span style="color: #F8F8F8"> </span>.
+<span style="color: #000; font-style: italic">[+] Building 10.5s (10/10) FINISHED</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile                       0.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring dockerfile: 215B                                       0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load .dockerignore                                          0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring context: 2B                                            0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load metadata for docker.io/library/node:14                 1.2s</span>
+<span style="color: #000; font-style: italic"> =&gt; [1/5] FROM docker.io/library/node:14@sha256:123abc...                  0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load build context                                          0.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring context: 32.5kB                                        0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; [2/5] WORKDIR /app                                                     0.3s</span>
+<span style="color: #000; font-style: italic"> =&gt; [3/5] COPY package*.json ./                                            0.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; [4/5] RUN npm install                                                  7.5s</span>
+<span style="color: #000; font-style: italic"> =&gt; [5/5] COPY . .                                                         0.2s</span>
+<span style="color: #000; font-style: italic"> =&gt; exporting to image                                                     1.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; exporting layers                                                    0.9s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; writing image sha256:def456...                                      0.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; naming to docker.io/library/myapp:1.0                               0.0s</span>
+</pre></div>
+<h3><strong>-f, --file</strong></h3>
+<p>Specify the name of the Dockerfile (default is 'PATH/Dockerfile').</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>Dockerfile.prod<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:prod<span style="color: #F8F8F8"> </span>.
+<span style="color: #000; font-style: italic">[+] Building 12.3s (10/10) FINISHED</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile.prod                  0.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring dockerfile: 245B                                       0.0s</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>--no-cache</strong></h3>
+<p>Do not use cache when building the image.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>--no-cache<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp<span style="color: #F8F8F8"> </span>.
+<span style="color: #000; font-style: italic">[+] Building 25.7s (10/10) FINISHED</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile                       0.1s</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>--build-arg</strong></h3>
+<p>Set build-time variables defined in the Dockerfile with ARG.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>--build-arg<span style="color: #F8F8F8"> </span><span style="color: #000">NODE_ENV</span><span style="color: #CE5C00; font-weight: bold">=</span>production<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp<span style="color: #F8F8F8"> </span>.
+<span style="color: #000; font-style: italic">[+] Building 11.2s (10/10) FINISHED</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile                       0.1s</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>--target</strong></h3>
+<p>Set the target build stage to build in a multi-stage build.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>--target<span style="color: #F8F8F8"> </span>development<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:dev<span style="color: #F8F8F8"> </span>.
+<span style="color: #000; font-style: italic">[+] Building 8.5s (8/8) FINISHED</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile                       0.1s</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Building an image with a tag</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:latest<span style="color: #F8F8F8"> </span>.
+<span style="color: #000; font-style: italic">[+] Building 15.2s (10/10) FINISHED</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3>Building with multiple tags</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:latest<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:1.0<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>registry.example.com/myapp:1.0<span style="color: #F8F8F8"> </span>.
+<span style="color: #000; font-style: italic">[+] Building 15.5s (10/10) FINISHED</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3>Building from a Git repository</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp<span style="color: #F8F8F8"> </span>https://github.com/user/repo.git#main
+<span style="color: #000; font-style: italic">[+] Building 20.3s (10/10) FINISHED</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3>Building with a specific build context</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>./docker/Dockerfile<span style="color: #F8F8F8"> </span>./app
+<span style="color: #000; font-style: italic">[+] Building 14.8s (10/10) FINISHED</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Use .dockerignore Files</h3>
+<p>Create a <code>.dockerignore</code> file to exclude files and directories from the build context, similar to <code>.gitignore</code>. This reduces build time and image size by preventing unnecessary files from being sent to the Docker daemon.</p>
+<h3>Leverage Build Cache</h3>
+<p>Docker caches intermediate layers. Order your Dockerfile instructions so that the ones least likely to change (like installing dependencies) come before those that change frequently (like copying source code).</p>
+<h3>Use Multi-stage Builds</h3>
+<p>Multi-stage builds allow you to use multiple FROM statements in your Dockerfile. This is useful for creating smaller production images by copying only the necessary artifacts from a build stage.</p>
+<h3>Minimize Layer Count</h3>
+<p>Combine related commands with <code>&amp;&amp;</code> and clean up in the same RUN instruction to reduce the number of layers and image size.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What is the build context?</h4>
+<p>A. The build context is the set of files at a specified location (PATH or URL) that are sent to the Docker daemon during the build. The Dockerfile is usually located at the root of the build context.</p>
+<h4>Q2. How can I reduce Docker image size?</h4>
+<p>A. Use multi-stage builds, minimize the number of layers, clean up after package installations, and use a smaller base image like Alpine.</p>
+<h4>Q3. Why is my build slow?</h4>
+<p>A. Large build contexts, not using build cache, or complex build operations can slow down builds. Use <code>.dockerignore</code> to exclude unnecessary files and optimize your Dockerfile.</p>
+<h4>Q4. How do I pass environment variables to the build process?</h4>
+<p>A. Use the <code>--build-arg</code> flag to pass variables that can be used with ARG instructions in your Dockerfile.</p>
+<h4>Q5. How do I build only a specific stage in a multi-stage Dockerfile?</h4>
+<p>A. Use the <code>--target</code> flag followed by the name of the build stage you want to build up to.</p>
+<h2>References</h2>
+<p>https://docs.docker.com/engine/reference/commandline/build/</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

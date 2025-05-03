@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/en/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  apt-file - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/en/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>apt-file command</h1>
+<p>Search for files within packages in Debian-based Linux distributions, even if the package is not installed.</p>
+<h2>Overview</h2>
+<p><code>apt-file</code> is a command-line utility that allows you to search for files in packages available in Debian-based Linux distributions (like Ubuntu). It's particularly useful when you need to find which package provides a specific file, or to list all files contained in a package without installing it.</p>
+<h2>Options</h2>
+<h3><strong>-l, --list</strong></h3>
+<p>List the contents of a package</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt-file<span style="color: #F8F8F8"> </span>list<span style="color: #F8F8F8"> </span>firefox
+<span style="color: #000; font-style: italic">firefox: /etc/apparmor.d/usr.bin.firefox</span>
+<span style="color: #000; font-style: italic">firefox: /etc/firefox/syspref.js</span>
+<span style="color: #000; font-style: italic">firefox: /usr/bin/firefox</span>
+<span style="color: #000; font-style: italic">firefox: /usr/lib/firefox/browser/chrome.manifest</span>
+<span style="color: #000; font-style: italic">firefox: /usr/lib/firefox/browser/features/formautofill@mozilla.org.xpi</span>
+<span style="color: #000; font-style: italic">[more output...]</span>
+</pre></div>
+<h3><strong>-s, --search</strong></h3>
+<p>Search for packages containing a specific file</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt-file<span style="color: #F8F8F8"> </span>search<span style="color: #F8F8F8"> </span>/usr/bin/python3
+<span style="color: #000; font-style: italic">python3-minimal: /usr/bin/python3</span>
+<span style="color: #000; font-style: italic">python3.10-minimal: /usr/bin/python3.10</span>
+<span style="color: #000; font-style: italic">python3.11-minimal: /usr/bin/python3.11</span>
+</pre></div>
+<h3><strong>-u, --update</strong></h3>
+<p>Update the package database</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt-file<span style="color: #F8F8F8"> </span>update
+<span style="color: #000; font-style: italic">Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease</span>
+<span style="color: #000; font-style: italic">Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]</span>
+<span style="color: #000; font-style: italic">[more output...]</span>
+<span style="color: #000; font-style: italic">Processing apt file indexes... Done</span>
+</pre></div>
+<h3><strong>-x, --regexp</strong></h3>
+<p>Search using regular expressions</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt-file<span style="color: #F8F8F8"> </span>search<span style="color: #F8F8F8"> </span>-x<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;.*bin/gcc$&#39;</span>
+<span style="color: #000; font-style: italic">gcc-11: /usr/bin/gcc</span>
+<span style="color: #000; font-style: italic">gcc-12: /usr/bin/gcc</span>
+<span style="color: #000; font-style: italic">gcc-9: /usr/bin/gcc</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Finding which package provides a specific command</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt-file<span style="color: #F8F8F8"> </span>search<span style="color: #F8F8F8"> </span>/usr/bin/curl
+<span style="color: #000; font-style: italic">curl: /usr/bin/curl</span>
+</pre></div>
+<h3>Listing all files in a package before installing it</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt-file<span style="color: #F8F8F8"> </span>list<span style="color: #F8F8F8"> </span>htop
+<span style="color: #000; font-style: italic">htop: /usr/bin/htop</span>
+<span style="color: #000; font-style: italic">htop: /usr/share/applications/htop.desktop</span>
+<span style="color: #000; font-style: italic">htop: /usr/share/doc/htop/AUTHORS</span>
+<span style="color: #000; font-style: italic">htop: /usr/share/doc/htop/NEWS.gz</span>
+<span style="color: #000; font-style: italic">htop: /usr/share/doc/htop/README</span>
+<span style="color: #000; font-style: italic">[more output...]</span>
+</pre></div>
+<h3>Finding a library file needed by an application</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt-file<span style="color: #F8F8F8"> </span>search<span style="color: #F8F8F8"> </span>libncurses.so.6
+<span style="color: #000; font-style: italic">libncurses6:amd64: /lib/x86_64-linux-gnu/libncurses.so.6</span>
+<span style="color: #000; font-style: italic">libncurses6:amd64: /lib/x86_64-linux-gnu/libncurses.so.6.2</span>
+<span style="color: #000; font-style: italic">libncurses6:i386: /lib/i386-linux-gnu/libncurses.so.6</span>
+<span style="color: #000; font-style: italic">libncurses6:i386: /lib/i386-linux-gnu/libncurses.so.6.2</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Update the Database Regularly</h3>
+<p>The apt-file database needs to be updated regularly to ensure you have the latest package information. Run <code>sudo apt-file update</code> periodically, especially after changing repositories.</p>
+<h3>Install Missing Dependencies</h3>
+<p>When you encounter &quot;command not found&quot; or missing library errors, use apt-file to find which package provides the missing file, then install it with <code>apt install</code>.</p>
+<h3>Combine with Grep for Better Filtering</h3>
+<p>For complex searches, pipe the output to grep: <code>apt-file search bin | grep python</code> to find Python-related binaries.</p>
+<h3>Initial Setup</h3>
+<p>When first installing apt-file, you must run <code>sudo apt-file update</code> before you can use it to search for files.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between <code>apt-file</code> and <code>dpkg -S</code>?</h4>
+<p>A. <code>dpkg -S</code> only searches within installed packages, while <code>apt-file</code> searches all available packages, even those not installed.</p>
+<h4>Q2. Do I need to run apt-file as root?</h4>
+<p>A. You only need root privileges for the <code>apt-file update</code> command. Searches can be performed as a regular user.</p>
+<h4>Q3. How do I install apt-file?</h4>
+<p>A. Install it with <code>sudo apt install apt-file</code>, then run <code>sudo apt-file update</code> to initialize the database.</p>
+<h4>Q4. Why is apt-file search not finding my file?</h4>
+<p>A. Make sure you've run <code>sudo apt-file update</code> recently. Also, try using the full path to the file or use the <code>-x</code> option with a regular expression.</p>
+<h2>References</h2>
+<p>https://manpages.debian.org/bullseye/apt-file/apt-file.1.en.html</p>
+<h2>Revisions</h2>
+<ul>
+<li>2025/04/30 First revision</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

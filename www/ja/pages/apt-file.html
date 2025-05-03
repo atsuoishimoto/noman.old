@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  apt-file - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>apt-file コマンド</h1>
+<p>Debian系ディストリビューションでパッケージに含まれるファイルを検索するツール。</p>
+<h2>概要</h2>
+<p><code>apt-file</code>は、Debian系Linuxディストリビューション（UbuntuやDebian）で、インストール済みまたはリポジトリ内のパッケージに含まれるファイルを検索するためのコマンドラインツールです。特定のファイルがどのパッケージに含まれているかを調べたり、インストールされていないパッケージ内のファイルを探したりする際に便利です。</p>
+<h2>オプション</h2>
+<h3><strong>search</strong></h3>
+<p>指定したパターンに一致するファイルを含むパッケージを検索します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt-file<span style="color: #F8F8F8"> </span>search<span style="color: #F8F8F8"> </span>libssl.so
+<span style="color: #000; font-style: italic">libssl-dev: /usr/lib/x86_64-linux-gnu/libssl.so</span>
+<span style="color: #000; font-style: italic">libssl1.1: /usr/lib/x86_64-linux-gnu/libssl.so.1.1</span>
+</pre></div>
+<h3><strong>list</strong></h3>
+<p>指定したパッケージに含まれるすべてのファイルを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt-file<span style="color: #F8F8F8"> </span>list<span style="color: #F8F8F8"> </span>vim
+<span style="color: #000; font-style: italic">vim: /usr/bin/vim</span>
+<span style="color: #000; font-style: italic">vim: /usr/share/applications/vim.desktop</span>
+<span style="color: #000; font-style: italic">vim: /usr/share/doc/vim/changelog.Debian.gz</span>
+<span style="color: #000; font-style: italic">vim: /usr/share/doc/vim/copyright</span>
+<span style="color: #000; font-style: italic">vim: /usr/share/man/man1/vim.1.gz</span>
+</pre></div>
+<h3><strong>update</strong></h3>
+<p>apt-fileのデータベースを更新します。初回使用時や最新の情報を取得するために実行します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt-file<span style="color: #F8F8F8"> </span>update
+<span style="color: #000; font-style: italic">Processing 1 index files...</span>
+<span style="color: #000; font-style: italic">Processing index: 100%</span>
+</pre></div>
+<h3><strong>-x, --regexp</strong></h3>
+<p>正規表現を使用してファイルを検索します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt-file<span style="color: #F8F8F8"> </span>-x<span style="color: #F8F8F8"> </span>search<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;bin/python[0-9]&quot;</span>
+<span style="color: #000; font-style: italic">python3.8: /usr/bin/python3.8</span>
+<span style="color: #000; font-style: italic">python3.9: /usr/bin/python3.9</span>
+<span style="color: #000; font-style: italic">python3.10: /usr/bin/python3.10</span>
+</pre></div>
+<h3><strong>-i, --ignore-case</strong></h3>
+<p>大文字と小文字を区別せずに検索します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt-file<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>search<span style="color: #F8F8F8"> </span>makefile
+<span style="color: #000; font-style: italic">build-essential: /usr/share/build-essential/essential-packages-list</span>
+<span style="color: #000; font-style: italic">make: /usr/share/doc/make/Makefile.example</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>特定のファイルを含むパッケージを検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt-file<span style="color: #F8F8F8"> </span>search<span style="color: #F8F8F8"> </span>/usr/bin/python3
+<span style="color: #000; font-style: italic">python3: /usr/bin/python3</span>
+</pre></div>
+<h3>複数のファイルパターンを検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt-file<span style="color: #F8F8F8"> </span>search<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;bin/gcc&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;cpp&quot;</span>
+<span style="color: #000; font-style: italic">gcc: /usr/bin/gcc</span>
+<span style="color: #000; font-style: italic">gcc-9: /usr/bin/gcc-9</span>
+<span style="color: #000; font-style: italic">gcc-10: /usr/bin/gcc-10</span>
+</pre></div>
+<h3>インストールされていないライブラリを探す</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt-file<span style="color: #F8F8F8"> </span>search<span style="color: #F8F8F8"> </span>libncurses.so
+<span style="color: #000; font-style: italic">libncurses-dev: /usr/lib/x86_64-linux-gnu/libncurses.so</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>初回使用時はデータベースの更新が必要</h3>
+<p>初めて<code>apt-file</code>を使用する前に、<code>sudo apt-file update</code>を実行してデータベースを更新する必要があります。これにより、最新のパッケージ情報が取得されます。</p>
+<h3>パッケージのインストール</h3>
+<p><code>apt-file</code>自体はデフォルトではインストールされていないため、使用前に<code>sudo apt install apt-file</code>でインストールする必要があります。</p>
+<h3>検索結果の絞り込み</h3>
+<p>検索結果が多すぎる場合は、<code>grep</code>と組み合わせて結果を絞り込むことができます。例：<code>apt-file search libssl | grep &quot;\.so$&quot;</code></p>
+<h3>依存関係の解決</h3>
+<p>「コマンドが見つかりません」などのエラーが出た場合、<code>apt-file search</code>を使って必要なパッケージを特定できます。</p>
+<h2>よくある質問</h2>
+<h4>Q1. apt-fileとdpkgの違いは何ですか？</h4>
+<p>A. <code>dpkg -S</code>はインストール済みのパッケージのみを検索しますが、<code>apt-file</code>はリポジトリ内のすべてのパッケージ（インストールされていないものも含む）を検索できます。</p>
+<h4>Q2. apt-fileのデータベースはどのくらいの頻度で更新すべきですか？</h4>
+<p>A. システムの更新（<code>apt update</code>）を行った後や、最新のパッケージ情報が必要な場合に<code>apt-file update</code>を実行するとよいでしょう。</p>
+<h4>Q3. apt-fileの検索が遅い場合はどうすればよいですか？</h4>
+<p>A. 検索パターンをより具体的にすることで結果が絞られ、検索速度が向上します。また、正規表現を使用する場合は、できるだけ効率的なパターンを使用してください。</p>
+<h4>Q4. apt-fileはどのディストリビューションで使えますか？</h4>
+<p>A. Debian、Ubuntu、Linux Mintなど、Debian系のディストリビューションで使用できます。</p>
+<h2>参考文献</h2>
+<p>https://manpages.debian.org/buster/apt-file/apt-file.1.en.html</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/04/30 初版作成</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>

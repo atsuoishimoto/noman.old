@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+        <link rel="stylesheet" href="/css/reset.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/search.css" />
+      
+
+      
+        <script src="/ja/summary.js"></script>
+        <script src="/js/search.js"></script>
+        <script src="/js/language-switcher.js"></script>
+      
+      <title>
+        
+  docker-run - noman
+
+      </title>
+
+      
+
+      
+    
+  </head>
+  <body>
+    
+  <nav>
+    <div class="nav-logo">
+      <a href="/"><img src="../../../images/white.png" height="50px" /></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+      </div>
+      <div class="nav-links">
+        <a href="/ja/commandlist.html">Commands</a>
+        <span id="language-switcher"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <main>
+      
+  <h1>docker run コマンド</h1>
+<p>新しいコンテナを作成し、指定されたイメージから起動するコマンドです。</p>
+<h2>概要</h2>
+<p><code>docker run</code> コマンドは、新しいコンテナを作成し、指定されたイメージから起動します。このコマンドは、イメージのダウンロード（必要な場合）、コンテナの作成、起動、そして指定されたコマンドの実行までを一度に行います。開発環境の構築、アプリケーションのテスト、本番環境へのデプロイなど、Dockerを使用する際の基本的なコマンドです。</p>
+<h2>オプション</h2>
+<h3><strong>-i, --interactive</strong></h3>
+<p>コンテナの標準入力を開いたままにします。通常は <code>-t</code> オプションと組み合わせて使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>ubuntu
+<span style="color: #8F5902"># </span>標準入力が開いたままになる
+</pre></div>
+<h3><strong>-t, --tty</strong></h3>
+<p>疑似TTY（ターミナル）を割り当てます。対話型シェルを使用する場合に便利です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-it<span style="color: #F8F8F8"> </span>ubuntu<span style="color: #F8F8F8"> </span>bash
+<span style="color: #8F5902">root@f8d9c7b6a5:/# </span>ls
+<span style="color: #000; font-style: italic">bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var</span>
+</pre></div>
+<h3><strong>--rm</strong></h3>
+<p>コンテナ終了時に自動的に削除します。一時的な作業やテストに便利です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>--rm<span style="color: #F8F8F8"> </span>alpine<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, World!&quot;</span>
+<span style="color: #000; font-style: italic">Hello, World!</span>
+<span style="color: #8F5902"># </span>コンテナは実行後に自動的に削除される
+</pre></div>
+<h2>使用例</h2>
+<h3>対話型シェルの起動</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-it<span style="color: #F8F8F8"> </span>ubuntu<span style="color: #F8F8F8"> </span>bash
+<span style="color: #8F5902">root@f8d9c7b6a5:/# </span>ls
+<span style="color: #000; font-style: italic">bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var</span>
+</pre></div>
+<p>このコマンドはUbuntuコンテナを対話モードで起動し、bashシェルを実行している。</p>
+<h3>バックグラウンドでのWebサーバー起動</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>:80<span style="color: #F8F8F8"> </span>--name<span style="color: #F8F8F8"> </span>my-web-server<span style="color: #F8F8F8"> </span>nginx
+<span style="color: #000; font-style: italic">b8a5f8d9c9e8f7d6e5c4b3a2</span>
+</pre></div>
+<p>このコマンドはnginxコンテナをバックグラウンドで起動し、ホストの8080ポートをコンテナの80ポートにマッピングしている。</p>
+<h3>一時的なコンテナでのコマンド実行</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>--rm<span style="color: #F8F8F8"> </span>alpine<span style="color: #F8F8F8"> </span>ls<span style="color: #F8F8F8"> </span>-la
+<span style="color: #000; font-style: italic">total 64</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x    1 root     root          4096 Apr 30 12:34 .</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x    1 root     root          4096 Apr 30 12:34 ..</span>
+<span style="color: #000; font-style: italic">-rwxr-xr-x    1 root     root             0 Apr 30 12:34 .dockerenv</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x    2 root     root          4096 Mar 23 00:00 bin</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x    5 root     root           340 Apr 30 12:34 dev</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<p>このコマンドはAlpineコンテナを起動してls -laコマンドを実行し、終了後にコンテナを削除している。</p>
+<h2>ヒント:</h2>
+<h3>コンテナの名前付け</h3>
+<p><code>--name</code> オプションを使用して、コンテナに分かりやすい名前を付けると、後で参照しやすくなります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>--name<span style="color: #F8F8F8"> </span>my-app-container<span style="color: #F8F8F8"> </span>nginx
+</pre></div>
+<h3>環境変数の設定</h3>
+<p><code>-e</code> または <code>--env</code> オプションを使用して、コンテナ内で使用する環境変数を設定できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #000">DB_HOST</span><span style="color: #CE5C00; font-weight: bold">=</span>localhost<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #000">DB_PORT</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">5432</span><span style="color: #F8F8F8"> </span>my-app
+</pre></div>
+<h3>ボリュームマウントの活用</h3>
+<p>開発中は <code>-v</code> オプションを使ってソースコードをマウントすると、コンテナを再ビルドせずに変更を反映できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span><span style="color: #204A87">pwd</span><span style="color: #204A87; font-weight: bold">)</span>:/app<span style="color: #F8F8F8"> </span>my-dev-image
+</pre></div>
+<h2>よくある質問</h2>
+<h4>Q1. <code>-i</code> と <code>-t</code> オプションの違いは何ですか？</h4>
+<p>A. <code>-i</code>（interactive）はコンテナの標準入力を開いたままにし、<code>-t</code>（tty）は疑似ターミナルを割り当てます。通常は <code>-it</code> として一緒に使用し、対話型シェルを実現します。</p>
+<h4>Q2. コンテナを一時的に使用するにはどうすればよいですか？</h4>
+<p>A. <code>--rm</code> オプションを使用すると、コンテナが停止した後に自動的に削除されます。一時的な作業やテストに便利です。</p>
+<h4>Q3. コンテナ内で実行されるデフォルトのコマンドを上書きするにはどうすればよいですか？</h4>
+<p>A. <code>docker run</code> コマンドの最後にコマンドを指定することで、イメージのデフォルトコマンドを上書きできます。例：<code>docker run ubuntu echo &quot;Hello&quot;</code></p>
+<h4>Q4. macOSでボリュームマウントが遅い場合はどうすればよいですか？</h4>
+<p>A. macOSでは、特に大量のファイルを扱う場合、ボリュームマウントのパフォーマンスが低下することがあります。Docker Desktop for Macの設定で、ファイル共有の最適化オプションを確認するか、Docker Volumeを使用することを検討してください。</p>
+<h2>参考文献</h2>
+<p>https://docs.docker.com/engine/reference/commandline/run/</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/04/30 -i, -t, --rmオプションの詳細説明を追加し、使用例を更新</li>
+<li>2025/04/30 初版作成</li>
+</ul>
+
+
+    </main>
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 noman project | <a href="https://github.com/atsuoishimoto/noman">GitHub</a> | MIT License
+    </p>
+  </footer>
+
+  </body>
+</html>
