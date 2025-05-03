@@ -39,6 +39,7 @@ JINJA = Environment(
         enabled_extensions=("html", "xml", "j2"),
         default_for_string=True,
     ),
+    extensions=['jinja2.ext.i18n']
 )
 
 

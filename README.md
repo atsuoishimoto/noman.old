@@ -1,6 +1,6 @@
 # noman – AI-powered, human-friendly man pages
 
-**Noman** is a command-line tool and website that offers simplified, AI-generated man pages for Unix commands.  
+**Noman** is a command-line tool and website that offers simplified, AI-generated documentation for Unix commands.  
 Traditional `man` pages are thorough but often hard to digest—especially for beginners or those who need quick, practical help.  
 Noman fixes that by generating concise, example-rich documentation that's easy to read, color-formatted for terminal use, and instantly available.
 
@@ -54,8 +54,6 @@ It's a safer, faster, and more beginner-friendly way to learn command-line tools
 ```bash
 curl -sSL https://noman.sh/install.sh | bash
 ```
-
-Or just visit the site: https://noman.net
 
 ## License
 
