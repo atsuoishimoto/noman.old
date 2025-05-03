@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import yaml
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from babel.support import Translations
 from markupsafe import Markup
 import re
 import sys
@@ -32,16 +33,6 @@ PROMPT = Path("./prompts/prompt")
 FORMAT = Path("./prompts/format")
 MAX_TOKENS = 10000
 WWW = Path("./www")
-
-JINJA = Environment(
-    loader=FileSystemLoader("./templates"),
-    autoescape=select_autoescape(
-        enabled_extensions=("html", "xml", "j2"),
-        default_for_string=True,
-    ),
-    extensions=['jinja2.ext.i18n']
-)
-
 
 def lang_prompt(target, stem):
     lang = str(target).split("/")[1]
@@ -210,11 +201,23 @@ markdown = mistune.create_markdown(renderer=renderer)
 
 @task
 def build_www():
-    index = JINJA.get_template("index.html.j2")
-    command = JINJA.get_template("command.html.j2")
-    commandlist = JINJA.get_template("commandlist.html.j2")
-
     for lang in ["ja", "en"]:
+        JINJA = Environment(
+            loader=FileSystemLoader("./templates"),
+            autoescape=select_autoescape(
+                enabled_extensions=("html", "xml", "j2"),
+                default_for_string=True,
+            ),
+            extensions=['jinja2.ext.i18n']
+        )
+
+        translations = Translations.load('templates/locale', [lang])
+        JINJA.install_gettext_translations(translations)
+
+        index = JINJA.get_template("index.html.j2")
+        command = JINJA.get_template("command.html.j2")
+        commandlist = JINJA.get_template("commandlist.html.j2")
+
         dest = WWW / lang
         pagedir = Path(f"pages/{lang}")
 
