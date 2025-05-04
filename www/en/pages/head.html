@@ -49,10 +49,10 @@
   <h1>head command</h1>
 <p>Display the first part of files.</p>
 <h2>Overview</h2>
-<p>The <code>head</code> command outputs the beginning of files, showing the first 10 lines by default. It's useful for quickly previewing file contents without displaying the entire file, especially when working with large files.</p>
+<p>The <code>head</code> command outputs the first part of files to standard output. By default, it prints the first 10 lines of each specified file. If multiple files are specified, it precedes each with a header identifying the file name.</p>
 <h2>Options</h2>
-<h3><strong>-n, --lines=NUM</strong></h3>
-<p>Display the first NUM lines instead of the default 10</p>
+<h3><strong>-n, --lines=[-]NUM</strong></h3>
+<p>Print the first NUM lines instead of the default 10. With a leading '-', print all but the last NUM lines of each file.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>file.txt
 <span style="color: #000; font-style: italic">Line 1</span>
 <span style="color: #000; font-style: italic">Line 2</span>
@@ -60,19 +60,19 @@
 <span style="color: #000; font-style: italic">Line 4</span>
 <span style="color: #000; font-style: italic">Line 5</span>
 </pre></div>
-<h3><strong>-c, --bytes=SIZE</strong></h3>
-<p>Display the first SIZE bytes of the file</p>
+<h3><strong>-c, --bytes=[-]NUM</strong></h3>
+<p>Print the first NUM bytes instead of lines. With a leading '-', print all but the last NUM bytes of each file.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>file.txt
 <span style="color: #000; font-style: italic">This is the first 20</span>
 </pre></div>
 <h3><strong>-q, --quiet, --silent</strong></h3>
-<p>Suppress the header that shows the filename when displaying multiple files</p>
+<p>Never print headers giving file names.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #8F5902">(content of file1.txt)</span>
-<span style="color: #8F5902">(content of file2.txt)</span>
+<span style="color: #8F5902">(Content of file1.txt)</span>
+<span style="color: #8F5902">(Content of file2.txt)</span>
 </pre></div>
 <h3><strong>-v, --verbose</strong></h3>
-<p>Always display the filename header when showing file contents</p>
+<p>Always print headers giving file names.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>file.txt
 <span style="color: #000; font-style: italic">==&gt; file.txt &lt;==</span>
 <span style="color: #000; font-style: italic">Line 1</span>
@@ -81,47 +81,60 @@
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Viewing the beginning of a log file</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>/var/log/system.log
-<span style="color: #000; font-style: italic">Apr 30 09:15:23 hostname process[123]: Started service</span>
-<span style="color: #000; font-style: italic">Apr 30 09:15:24 hostname process[123]: Initialized components</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>/var/log/syslog
+<span style="color: #000; font-style: italic">May  3 14:22:01 hostname systemd[1]: Starting Daily apt download activities...</span>
+<span style="color: #000; font-style: italic">May  3 14:22:01 hostname systemd[1]: apt-daily.service: Succeeded.</span>
+<span style="color: #000; font-style: italic">May  3 14:22:01 hostname systemd[1]: Finished Daily apt download activities.</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
 <h3>Viewing multiple files at once</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
 <span style="color: #000; font-style: italic">==&gt; file1.txt &lt;==</span>
-<span style="color: #000; font-style: italic">First lines of file1</span>
+<span style="color: #000; font-style: italic">First line of file1</span>
+<span style="color: #000; font-style: italic">Second line of file1</span>
 
 <span style="color: #000; font-style: italic">==&gt; file2.txt &lt;==</span>
-<span style="color: #000; font-style: italic">First lines of file2</span>
+<span style="color: #000; font-style: italic">First line of file2</span>
+<span style="color: #000; font-style: italic">Second line of file2</span>
 </pre></div>
-<h3>Combining with other commands using pipes</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #000; font-style: italic">total 128</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  15 user  staff  480 Apr 29 14:22 Documents</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  12 user  staff  384 Apr 28 10:15 Downloads</span>
+<h3>Viewing all but the last N lines</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>-2<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">Line 1</span>
+<span style="color: #000; font-style: italic">Line 2</span>
+<span style="color: #000; font-style: italic">Line 3</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #8F5902">(all lines except the last 2)</span>
 </pre></div>
 <h2>Tips</h2>
-<h3>Quickly Check File Format</h3>
-<p>Use <code>head</code> to quickly check the format of data files like CSV or JSON without loading the entire file.</p>
-<h3>Combine with tail for Middle Content</h3>
-<p>Use <code>head</code> with <code>tail</code> to view a specific section in the middle of a file: <code>head -n 20 file.txt | tail -n 10</code> shows lines 11-20.</p>
-<h3>Use with Process Substitution</h3>
-<p>In bash, you can use process substitution to compare the beginnings of files: <code>diff &lt;(head file1) &lt;(head file2)</code>.</p>
+<h3>Combine with other commands</h3>
+<p>Use <code>head</code> with pipes to limit output from other commands:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+</pre></div>
+<p>This shows only the first 5 entries from a directory listing.</p>
+<h3>View beginning of large files</h3>
+<p>For very large files, use <code>head</code> to preview content without loading the entire file:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>huge_log.txt
+</pre></div>
+<h3>Use with tail for middle sections</h3>
+<p>Combine <code>head</code> with <code>tail</code> to extract a section from the middle of a file:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>
+</pre></div>
+<p>This shows lines 11-20 of the file.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How do I view a specific number of lines?</h4>
-<p>A. Use <code>head -n NUMBER file.txt</code> where NUMBER is the number of lines you want to see.</p>
-<h4>Q2. Can I view multiple files at once?</h4>
-<p>A. Yes, simply list all the files you want to view: <code>head file1.txt file2.txt file3.txt</code>.</p>
-<h4>Q3. How do I view the beginning of a file by bytes instead of lines?</h4>
-<p>A. Use <code>head -c NUMBER file.txt</code> where NUMBER is the number of bytes to display.</p>
-<h4>Q4. How can I hide the filename headers when viewing multiple files?</h4>
+<h4>Q1. How do I view a specific number of lines from a file?</h4>
+<p>A. Use <code>head -n NUMBER filename</code> to view the first NUMBER lines.</p>
+<h4>Q2. Can I view multiple files at once with head?</h4>
+<p>A. Yes, simply list all filenames: <code>head file1.txt file2.txt file3.txt</code>.</p>
+<h4>Q3. How do I view the first few bytes instead of lines?</h4>
+<p>A. Use <code>head -c NUMBER filename</code> to view the first NUMBER bytes.</p>
+<h4>Q4. How can I view all lines except the last few?</h4>
+<p>A. Use <code>head -n -NUMBER filename</code> to view all lines except the last NUMBER lines.</p>
+<h4>Q5. How do I suppress the filename headers when viewing multiple files?</h4>
 <p>A. Use the <code>-q</code> option: <code>head -q file1.txt file2.txt</code>.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/head-invocation.html</p>
 <h2>Revisions</h2>
-<ul>
-<li>2025/04/30 First revision</li>
-</ul>
+<p>2025/05/04 First revision</p>
 
 
     </main>

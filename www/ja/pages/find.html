@@ -47,95 +47,103 @@
     <main>
       
   <h1>find コマンド</h1>
-<p>ファイルシステム内でファイルやディレクトリを検索します。</p>
+<p>ディレクトリ階層内でファイルを検索します。</p>
 <h2>概要</h2>
-<p><code>find</code>コマンドは、指定したディレクトリ階層内でファイルやディレクトリを検索するための強力なツールです。名前、サイズ、更新日時、パーミッションなど、様々な条件に基づいて検索できます。また、検索結果に対して追加のアクションを実行することも可能です。</p>
+<p><code>find</code> コマンドは、名前、タイプ、サイズ、更新時間などの様々な条件に基づいて、ディレクトリ階層内のファイルを検索するツールです。ファイルを見つけ出し、一致した結果に対して操作を実行するための強力なツールです。</p>
 <h2>オプション</h2>
-<h3><strong>-name パターン</strong></h3>
-<p>ファイル名でファイルを検索します。ワイルドカード（*、?など）が使用できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.txt&quot;</span>
-<span style="color: #000; font-style: italic">./documents/note.txt</span>
-<span style="color: #000; font-style: italic">./readme.txt</span>
-</pre></div>
 <h3><strong>-iname パターン</strong></h3>
-<p>ファイル名で大文字・小文字を区別せずに検索します。<code>-name</code>と同様にワイルドカードが使用できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-iname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;readme*&quot;</span>
-<span style="color: #000; font-style: italic">./README.md</span>
-<span style="color: #000; font-style: italic">./docs/readme.txt</span>
-<span style="color: #000; font-style: italic">./projects/ReadMe.rst</span>
+<p>大文字と小文字を区別せずに、名前がパターンに一致するファイルを検索します。これは <code>-name</code> に似ていますが、大文字小文字を区別しない検索を行います。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-iname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.txt&quot;</span>
+<span style="color: #000; font-style: italic">./notes.txt</span>
+<span style="color: #000; font-style: italic">./Documents/README.txt</span>
+<span style="color: #000; font-style: italic">./Documents/report.TXT</span>
+</pre></div>
+<h3><strong>-name パターン</strong></h3>
+<p>大文字と小文字を区別して、名前がパターンに一致するファイルを検索します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.txt&quot;</span>
+<span style="color: #000; font-style: italic">./notes.txt</span>
+<span style="color: #000; font-style: italic">./Documents/README.txt</span>
 </pre></div>
 <h3><strong>-type タイプ</strong></h3>
-<p>ファイルタイプで検索します。一般的な値は <code>f</code>（通常ファイル）、<code>d</code>（ディレクトリ）、<code>l</code>（シンボリックリンク）です。</p>
+<p>特定のタイプのファイルを検索します。一般的なタイプには以下があります：</p>
+<ul>
+<li><code>f</code> は通常のファイル</li>
+<li><code>d</code> はディレクトリ</li>
+<li><code>l</code> はシンボリックリンク</li>
+</ul>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>d
 <span style="color: #000; font-style: italic">.</span>
-<span style="color: #000; font-style: italic">./documents</span>
-<span style="color: #000; font-style: italic">./images</span>
-<span style="color: #000; font-style: italic">./projects</span>
+<span style="color: #000; font-style: italic">./Documents</span>
+<span style="color: #000; font-style: italic">./Downloads</span>
+<span style="color: #000; font-style: italic">./Pictures</span>
 </pre></div>
-<h3><strong>-mtime 日数</strong></h3>
-<p>指定した日数以内に変更されたファイルを検索します。<code>-mtime -7</code> は7日以内に変更されたファイルを検索します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-mtime<span style="color: #F8F8F8"> </span>-3
-<span style="color: #000; font-style: italic">./documents/report.docx</span>
-<span style="color: #000; font-style: italic">./projects/script.py</span>
+<h3><strong>-size n[cwbkMG]</strong></h3>
+<p>サイズに基づいてファイルを検索します：</p>
+<ul>
+<li><code>c</code> はバイト単位</li>
+<li><code>k</code> はキロバイト単位</li>
+<li><code>M</code> はメガバイト単位</li>
+<li><code>G</code> はギガバイト単位</li>
+<li><code>+</code> 接頭辞は「より大きい」を意味します</li>
+<li><code>-</code> 接頭辞は「より小さい」を意味します</li>
+</ul>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-size<span style="color: #F8F8F8"> </span>+10M
+<span style="color: #000; font-style: italic">./Videos/movie.mp4</span>
+<span style="color: #000; font-style: italic">./Downloads/installer.iso</span>
 </pre></div>
-<h3><strong>-size サイズ</strong></h3>
-<p>特定のサイズのファイルを検索します。<code>+</code>は「より大きい」、<code>-</code>は「より小さい」を意味します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-size<span style="color: #F8F8F8"> </span>+1M
-<span style="color: #000; font-style: italic">./images/photo.jpg</span>
-<span style="color: #000; font-style: italic">./videos/clip.mp4</span>
-</pre></div>
-<h3><strong>-exec コマンド {} ;</strong></h3>
-<p>検索結果の各ファイルに対してコマンドを実行します。<code>{}</code>は検索されたファイル名に置き換えられます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.txt&quot;</span><span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>cat<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span>
-<span style="color: #000; font-style: italic">これはnote.txtの内容です。</span>
-<span style="color: #000; font-style: italic">これはreadme.txtの内容です。</span>
+<h3><strong>-mtime n</strong></h3>
+<p>n日前に変更されたファイルを検索します。<code>+n</code> は「n日より前」、<code>-n</code> は「n日以内」を意味します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-mtime<span style="color: #F8F8F8"> </span>-7
+<span style="color: #000; font-style: italic">./Documents/recent-report.txt</span>
+<span style="color: #000; font-style: italic">./Downloads/recent-file.zip</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>大文字小文字を区別せずにファイルを検索</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>~/Documents<span style="color: #F8F8F8"> </span>-iname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*report*&quot;</span>
-<span style="color: #000; font-style: italic">/home/user/Documents/annual_Report.docx</span>
-<span style="color: #000; font-style: italic">/home/user/Documents/reports/weekly_report.pdf</span>
-<span style="color: #000; font-style: italic">/home/user/Documents/REPORT_template.xlsx</span>
+<h3>特定の権限を持つファイルを検索する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/home<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>f<span style="color: #F8F8F8"> </span>-perm<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">644</span>
+<span style="color: #000; font-style: italic">/home/user/file1.txt</span>
+<span style="color: #000; font-style: italic">/home/user/file2.txt</span>
 </pre></div>
-<h3>特定の拡張子を持つファイルを検索</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/home/user<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.jpg&quot;</span>
-<span style="color: #000; font-style: italic">/home/user/pictures/vacation.jpg</span>
-<span style="color: #000; font-style: italic">/home/user/documents/scan.jpg</span>
+<h3>一致するファイルに対してコマンドを実行する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.log&quot;</span><span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>rm<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span>
 </pre></div>
-<h3>最近変更されたファイルを検索して詳細表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/var/log<span style="color: #F8F8F8"> </span>-mtime<span style="color: #F8F8F8"> </span>-1<span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span>
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 root root 15340 4月 30 10:23 /var/log/syslog</span>
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 root root 7823 4月 30 09:15 /var/log/auth.log</span>
+<h3>空のファイルを検索する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/var/log<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>f<span style="color: #F8F8F8"> </span>-empty
+<span style="color: #000; font-style: italic">/var/log/empty.log</span>
 </pre></div>
-<h3>空のファイルを検索して削除</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/tmp<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>f<span style="color: #F8F8F8"> </span>-size<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span>-delete
+<h3>過去24時間以内に変更されたファイルを検索する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/home/user<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>f<span style="color: #F8F8F8"> </span>-mtime<span style="color: #F8F8F8"> </span>-1
+<span style="color: #000; font-style: italic">/home/user/recent-document.txt</span>
+<span style="color: #000; font-style: italic">/home/user/today-notes.md</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>大文字小文字を区別しない検索の活用</h3>
-<p>ファイル名の大文字小文字が不確かな場合は、<code>-iname</code>を使用すると便利です。特にチーム作業や異なるOSからのファイル転送時に役立ちます。</p>
-<h3>パフォーマンスの向上</h3>
-<p>大きなディレクトリ構造を検索する場合は、検索範囲を制限するか、<code>-type</code>や<code>-name</code>などのフィルターを早めに指定すると処理が速くなります。</p>
-<h3>複数条件の組み合わせ</h3>
-<p><code>-a</code>（AND、デフォルト）や<code>-o</code>（OR）、<code>!</code>（NOT）を使用して複数の検索条件を組み合わせることができます。例：<code>find . -name &quot;*.txt&quot; -a -size +1k</code></p>
-<h3>権限エラーの回避</h3>
-<p>権限エラーを無視するには、<code>2&gt;/dev/null</code>を追加します。例：<code>find / -name &quot;config.xml&quot; 2&gt;/dev/null</code></p>
+<h3>大文字小文字を区別しない検索には <code>-iname</code> を使用する</h3>
+<p>ファイル名の正確な大文字小文字が不明な場合は、<code>-name</code> の代わりに <code>-iname</code> を使用して、大文字小文字に関係なくファイルを一致させることができます。</p>
+<h3>論理演算子で複数の条件を組み合わせる</h3>
+<p><code>-and</code>、<code>-or</code>、<code>-not</code>（または <code>!</code>）を使用して複雑な検索条件を作成できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>f<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.txt&quot;</span><span style="color: #F8F8F8"> </span>-and<span style="color: #F8F8F8"> </span>-size<span style="color: #F8F8F8"> </span>+1M
+</pre></div>
+<h3><code>-maxdepth</code> でディレクトリの深さを制限する</h3>
+<p><code>-maxdepth</code> を使用して <code>find</code> の検索深度を制御できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-maxdepth<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.jpg&quot;</span>
+</pre></div>
+<h3>エラーメッセージをリダイレクトする</h3>
+<p>「Permission denied」エラーを非表示にするには <code>2&gt;/dev/null</code> を使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;config.xml&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>&gt;/dev/null
+</pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. <code>-name</code>と<code>-iname</code>の違いは何ですか？</h4>
-<p>A. <code>-name</code>は大文字と小文字を区別しますが、<code>-iname</code>は区別しません。例えば、<code>-iname &quot;readme*&quot;</code>は「README.md」や「readme.txt」などにマッチします。</p>
-<h4>Q2. findコマンドの基本的な構文は？</h4>
-<p>A. 基本構文は <code>find [検索開始パス] [検索条件] [アクション]</code> です。例えば <code>find . -name &quot;*.txt&quot;</code> は現在のディレクトリから始めて、.txtで終わるファイルを検索します。</p>
-<h4>Q3. 特定の日付範囲内のファイルを検索するには？</h4>
-<p>A. <code>-mtime</code>や<code>-newer</code>オプションを使用します。例えば、<code>find . -mtime -7 -a -mtime +1</code>は1日以上7日以内に変更されたファイルを検索します。</p>
-<h4>Q4. 検索結果を別のコマンドに渡すにはどうすればいいですか？</h4>
-<p>A. <code>-exec</code>オプションを使用するか、パイプとxargsを組み合わせます。例：<code>find . -name &quot;*.txt&quot; | xargs grep &quot;keyword&quot;</code></p>
-<h2>macOSでの注意点</h2>
-<p>macOSのfindコマンドはGNU findとは若干異なります。特に、<code>-delete</code>オプションの動作や正規表現の扱いが異なる場合があります。また、macOSでは<code>-path</code>オプションの代わりに<code>-not -path</code>を使用することが多いです。<code>-iname</code>オプションは両方のバージョンで同様に動作しますが、複雑な正規表現パターンを使用する場合は注意が必要です。</p>
-<h2>参考文献</h2>
-<p>https://www.gnu.org/software/findutils/manual/html_mono/find.html</p>
+<h4>Q1. 名前でファイルを検索するにはどうすればよいですか？</h4>
+<p>A. 大文字小文字を区別する検索には <code>find /検索パス -name &quot;ファイル名&quot;</code> を、大文字小文字を区別しない検索には <code>find /検索パス -iname &quot;ファイル名&quot;</code> を使用します。</p>
+<h4>Q2. 最近変更されたファイルを検索するにはどうすればよいですか？</h4>
+<p>A. <code>find /検索パス -mtime -n</code> を使用します。nは日数です。例えば、<code>-mtime -7</code> は過去7日以内に変更されたファイルを検索します。</p>
+<h4>Q3. ファイルを検索して削除するにはどうすればよいですか？</h4>
+<p>A. <code>find /検索パス -name &quot;パターン&quot; -delete</code> または <code>find /検索パス -name &quot;パターン&quot; -exec rm {} \;</code> を使用します。</p>
+<h4>Q4. 検索からディレクトリを除外するにはどうすればよいですか？</h4>
+<p>A. <code>! -path &quot;*/除外するディレクトリ/*&quot;</code> または <code>-not -path &quot;*/除外するディレクトリ/*&quot;</code> を使用します。</p>
+<h2>参考資料</h2>
+<p>https://www.gnu.org/software/findutils/manual/html_node/find_html/index.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 -iname オプションの説明を追加し、使用例と関連するFAQを更新</li>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

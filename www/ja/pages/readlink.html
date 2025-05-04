@@ -47,92 +47,83 @@
     <main>
       
   <h1>readlink コマンド</h1>
-<p>シンボリックリンクの参照先（リンク先）を表示します。</p>
+<p>シンボリックリンクの解決先またはファイルの正規名を表示します。</p>
 <h2>概要</h2>
-<p><code>readlink</code>コマンドは、シンボリックリンクが指し示す実際のファイルやディレクトリのパスを表示します。シンボリックリンクの解決や、スクリプト内で実際のファイルパスを取得する際に便利です。</p>
+<p><code>readlink</code>コマンドは、シンボリックリンクのターゲットやファイルの正規パスを表示します。パス内のシンボリックリンクを解決し、実際の参照先を示します。多くのシンボリックリンクを含むファイルシステムで、ファイルの実際の場所を特定するのに役立ちます。</p>
 <h2>オプション</h2>
 <h3><strong>-f, --canonicalize</strong></h3>
-<p>すべてのシンボリックリンクを再帰的に解決し、正規化された絶対パスを表示します。</p>
+<p>指定されたパスの各コンポーネントのシンボリックリンクを再帰的にたどり、正規化します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>mylink
 <span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>mylink
 <span style="color: #000; font-style: italic">/etc/hosts</span>
 </pre></div>
 <h3><strong>-e, --canonicalize-existing</strong></h3>
-<p>すべてのコンポーネント（パスの各部分）が存在する場合のみ、正規化された絶対パスを表示します。</p>
+<p>指定されたパスの各コンポーネントのシンボリックリンクを再帰的にたどり正規化しますが、すべてのコンポーネントが存在する必要があります</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>mylink
 <span style="color: #000; font-style: italic">/etc/hosts</span>
-
-<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>non_existent_link
-<span style="color: #8F5902"># </span>存在しないリンクの場合は何も出力されない
+<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>nonexistent
+<span style="color: #8F5902"># </span>ファイルが存在しないため出力なし
 </pre></div>
 <h3><strong>-m, --canonicalize-missing</strong></h3>
-<p>コンポーネント（パスの各部分）が存在しなくても、正規化された絶対パスを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>/path/to/non_existent_file
-<span style="color: #000; font-style: italic">/path/to/non_existent_file</span>
+<p>指定されたパスの各コンポーネントのシンボリックリンクを再帰的にたどり正規化しますが、コンポーネントの存在は必要ありません</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>/nonexistent/path/file.txt
+<span style="color: #000; font-style: italic">/nonexistent/path/file.txt</span>
 </pre></div>
 <h3><strong>-n, --no-newline</strong></h3>
-<p>出力の最後に改行を付けません。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>mylink<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot; (これはリンク先です)&quot;</span>
-<span style="color: #000; font-style: italic">/etc/hosts (これはリンク先です)</span>
+<p>末尾の区切り文字（改行）を出力しません</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>mylink<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot; (この文は同じ行に続きます)&quot;</span>
+<span style="color: #000; font-style: italic">/etc/hosts (この文は同じ行に続きます)</span>
+</pre></div>
+<h3><strong>-z, --zero</strong></h3>
+<p>各出力行を改行ではなくNUL文字で終了します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>mylink<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hexdump<span style="color: #F8F8F8"> </span>-C
+<span style="color: #000; font-style: italic">00000000  2f 65 74 63 2f 68 6f 73  74 73 00                 |/etc/hosts.|</span>
+<span style="color: #000; font-style: italic">0000000b</span>
+</pre></div>
+<h3><strong>-v, --verbose</strong></h3>
+<p>エラーを報告します（すべてのシステムで実装されているわけではありません）</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>nonexistent
+<span style="color: #000; font-style: italic">readlink: nonexistent: そのようなファイルやディレクトリはありません</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な使い方</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/var/log/syslog<span style="color: #F8F8F8"> </span>loglink
-<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>loglink
-<span style="color: #000; font-style: italic">/var/log/syslog</span>
+<h3>シンボリックリンクの基本的な読み取り</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/usr/bin/python3<span style="color: #F8F8F8"> </span>python
+<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>python
+<span style="color: #000; font-style: italic">/usr/bin/python3</span>
 </pre></div>
-<h3>スクリプト内での使用例</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>get_real_path.sh
-<span style="color: #8F5902">#</span>!/bin/bash
-<span style="color: #000; font-style: italic">SCRIPT_PATH=$(readlink -f &quot;$0&quot;)</span>
-<span style="color: #000; font-style: italic">SCRIPT_DIR=$(dirname &quot;$SCRIPT_PATH&quot;)</span>
-<span style="color: #000; font-style: italic">echo &quot;このスクリプトの実際のパス: $SCRIPT_PATH&quot;</span>
-<span style="color: #000; font-style: italic">echo &quot;このスクリプトのディレクトリ: $SCRIPT_DIR&quot;</span>
-
-<span style="color: #8F5902">$ </span>./get_real_path.sh
-<span style="color: #000; font-style: italic">このスクリプトの実際のパス: /home/user/scripts/get_real_path.sh</span>
-<span style="color: #000; font-style: italic">このスクリプトのディレクトリ: /home/user/scripts</span>
+<h3>複数のシンボリックリンクを持つファイルの正規パスを見つける</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span>passwd_link
+<span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>passwd_link<span style="color: #F8F8F8"> </span>passwd_link2
+<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>passwd_link2
+<span style="color: #000; font-style: italic">/etc/passwd</span>
 </pre></div>
-<h3>複数のシンボリックリンクを解決する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>test/subdir
-<span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>test/subdir<span style="color: #F8F8F8"> </span>link1
-<span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>link1<span style="color: #F8F8F8"> </span>link2
-<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>link2
-<span style="color: #000; font-style: italic">link1</span>
-<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>link2
-<span style="color: #000; font-style: italic">/home/user/test/subdir</span>
+<h3>相対パスでの作業</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>dir1/dir2
+<span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>dir1/dir2<span style="color: #F8F8F8"> </span>mydir
+<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>mydir
+<span style="color: #000; font-style: italic">/home/user/dir1/dir2</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>シンボリックリンクとハードリンクの違い</h3>
-<p><code>readlink</code>はシンボリックリンク（ソフトリンク）にのみ機能します。ハードリンクは別のファイル名を持つ同じファイルであるため、<code>readlink</code>では解決できません。</p>
-<h3>スクリプトの実際のパスを取得する</h3>
-<p>スクリプト内で自身の実際のパスを取得するには、<code>readlink -f &quot;$0&quot;</code>を使用します。これはシンボリックリンク経由で実行された場合でも正確なパスを返します。</p>
-<h3>存在しないパスの扱い</h3>
-<p><code>-f</code>オプションは、リンク先が存在しない場合でもパスを解決しようとしますが、<code>-e</code>オプションは全てのコンポーネントが存在する場合のみ結果を返します。</p>
+<h3>直接解決と完全解決の区別</h3>
+<p>シンボリックリンクの直接のターゲットだけを見るには通常の<code>readlink</code>を使用し、シンボリックリンクのチェーンを最終的な宛先まで追跡するには<code>readlink -f</code>を使用します。</p>
+<h3>パスがシンボリックリンクかどうかを確認する</h3>
+<p><code>readlink</code>が何も返さずに非ゼロのステータスで終了する場合、そのパスはシンボリックリンクではありません。これはスクリプトでファイルがシンボリックリンクかどうかをテストするのに使えます。</p>
+<h3>他のコマンドと組み合わせる</h3>
+<p>シンボリックリンクではなく実際のファイルに対して操作する必要がある場合は、<code>readlink</code>の出力を他のコマンドにパイプすると便利です。</p>
 <h2>よくある質問</h2>
 <h4>Q1. <code>readlink</code>と<code>realpath</code>の違いは何ですか？</h4>
-<p>A. どちらもシンボリックリンクを解決しますが、<code>realpath</code>はデフォルトで絶対パスを返し、より多くのオプションを提供します。<code>readlink</code>は単純にリンク先を表示することに特化しています。</p>
-<h4>Q2. シンボリックリンクでないファイルに<code>readlink</code>を使うとどうなりますか？</h4>
-<p>A. 通常のファイルに対しては何も出力せず、エラーコードを返します。<code>-f</code>オプションを使用した場合は、そのファイルの絶対パスを返します。</p>
-<h4>Q3. 複数のシンボリックリンクが連鎖している場合はどうなりますか？</h4>
-<p>A. 基本的な<code>readlink</code>は最初のリンク先のみを表示しますが、<code>-f</code>オプションを使用すると、最終的な実ファイルまですべてのリンクを解決します。</p>
-<h4>Q4. macOSでの<code>readlink</code>は GNU版と同じですか？</h4>
-<p>A. いいえ、macOSのデフォルトの<code>readlink</code>は GNU版と比べて機能が制限されています。特に<code>-f</code>オプションがありません。代わりに<code>greadlink</code>（GNU readlink）をインストールするか、<code>realpath</code>コマンドを使用することをお勧めします。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSのデフォルトの<code>readlink</code>コマンドは GNU版と互換性がなく、<code>-f</code>などの重要なオプションがありません。Homebrewを使って GNU coreutils をインストールすることで、<code>greadlink</code>として GNU版を使用できます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>brew<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>coreutils
-<span style="color: #8F5902">$ </span>greadlink<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>mylink
-<span style="color: #000; font-style: italic">/etc/hosts</span>
-</pre></div>
-<p>または、macOSでは代わりに<code>realpath</code>コマンドを使用することもできます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>realpath<span style="color: #F8F8F8"> </span>mylink
-<span style="color: #000; font-style: italic">/etc/hosts</span>
-</pre></div>
+<p>A. どちらもシンボリックリンクを解決しますが、<code>realpath</code>は常に絶対パスを提供するのに対し、基本的な<code>readlink</code>はシンボリックリンクの直接のターゲットのみを表示します。<code>readlink -f</code>は<code>realpath</code>に似ています。</p>
+<h4>Q2. オプションなしの<code>readlink</code>が何も返さないことがあるのはなぜですか？</h4>
+<p>A. オプションなしの<code>readlink</code>はシンボリックリンクに対してのみ機能します。通常のファイルやディレクトリに使用すると、何も返さずにエラーコードで終了します。</p>
+<h4>Q3. シェルスクリプトで<code>readlink</code>を安全に使用するにはどうすればよいですか？</h4>
+<p>A. <code>readlink -f &quot;$path&quot;</code>を使用して正規パスを取得すると、適切に引用符で囲まれていれば、スペースや特殊文字を正しく処理できます。</p>
+<h4>Q4. シンボリックリンクが存在しないファイルを指している場合はどうなりますか？</h4>
+<p>A. 基本的な<code>readlink</code>は、ターゲットが存在しなくてもターゲットパスを表示します。<code>readlink -e</code>は失敗しますが、<code>readlink -f</code>と<code>readlink -m</code>は可能な限り解決します。</p>
 <h2>参照</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/readlink-invocation.html</p>
-<h2>改訂</h2>
+<h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

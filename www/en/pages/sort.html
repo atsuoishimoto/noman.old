@@ -47,12 +47,12 @@
     <main>
       
   <h1>sort command</h1>
-<p>Sorts lines of text files alphabetically or numerically.</p>
+<p>Sort lines of text files alphabetically or numerically.</p>
 <h2>Overview</h2>
-<p>The <code>sort</code> command arranges lines in text files or from standard input in alphabetical, numerical, or custom-defined order. It's commonly used for organizing data, preparing input for other commands, and performing simple data analysis tasks.</p>
+<p>The <code>sort</code> command arranges lines in text files or from standard input in alphabetical, numerical, or custom-defined order. It can merge multiple sorted files, remove duplicate lines, and perform various other sorting operations. This utility is commonly used in data processing pipelines and for organizing text-based information.</p>
 <h2>Options</h2>
-<h3><strong>-n (Numeric Sort)</strong></h3>
-<p>Sorts lines numerically instead of alphabetically</p>
+<h3><strong>-n, --numeric-sort</strong></h3>
+<p>Sort numerically instead of alphabetically. Recognizes numbers at the start of fields.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>numbers.txt
 <span style="color: #000; font-style: italic">10</span>
 <span style="color: #000; font-style: italic">2</span>
@@ -62,15 +62,16 @@
 <span style="color: #000; font-style: italic">2</span>
 <span style="color: #000; font-style: italic">10</span>
 </pre></div>
-<h3><strong>-r (Reverse Sort)</strong></h3>
-<p>Reverses the sort order</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>names.txt
-<span style="color: #000; font-style: italic">Zack</span>
-<span style="color: #000; font-style: italic">Victor</span>
-<span style="color: #000; font-style: italic">Amy</span>
+<h3><strong>-r, --reverse</strong></h3>
+<p>Reverse the result of comparisons, sorting in descending order.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>fruits.txt
+<span style="color: #000; font-style: italic">watermelon</span>
+<span style="color: #000; font-style: italic">orange</span>
+<span style="color: #000; font-style: italic">banana</span>
+<span style="color: #000; font-style: italic">apple</span>
 </pre></div>
-<h3><strong>-k (Sort by Field)</strong></h3>
-<p>Sorts based on a specific field (column) in the input</p>
+<h3><strong>-k, --key=POS1[,POS2]</strong></h3>
+<p>Sort based on a specific field (column) in the input.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>employees.txt
 <span style="color: #000; font-style: italic">John 35 Developer</span>
 <span style="color: #000; font-style: italic">Alice 28 Designer</span>
@@ -80,81 +81,106 @@
 <span style="color: #000; font-style: italic">John 35 Developer</span>
 <span style="color: #000; font-style: italic">Bob 42 Manager</span>
 </pre></div>
-<h3><strong>-u (Unique)</strong></h3>
-<p>Removes duplicate lines from the output</p>
+<h3><strong>-t, --field-separator=SEP</strong></h3>
+<p>Specify a field separator character (default is whitespace).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.csv
+<span style="color: #000; font-style: italic">name,age,role</span>
+<span style="color: #000; font-style: italic">John,35,Developer</span>
+<span style="color: #000; font-style: italic">Alice,28,Designer</span>
+<span style="color: #000; font-style: italic">Bob,42,Manager</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-t,<span style="color: #F8F8F8"> </span>-k2<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>data.csv
+<span style="color: #000; font-style: italic">name,age,role</span>
+<span style="color: #000; font-style: italic">Alice,28,Designer</span>
+<span style="color: #000; font-style: italic">John,35,Developer</span>
+<span style="color: #000; font-style: italic">Bob,42,Manager</span>
+</pre></div>
+<h3><strong>-u, --unique</strong></h3>
+<p>Output only the first of an equal run (remove duplicates).</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>duplicates.txt
 <span style="color: #000; font-style: italic">apple</span>
 <span style="color: #000; font-style: italic">banana</span>
 <span style="color: #000; font-style: italic">apple</span>
 <span style="color: #000; font-style: italic">orange</span>
+<span style="color: #000; font-style: italic">banana</span>
 <span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>duplicates.txt
 <span style="color: #000; font-style: italic">apple</span>
 <span style="color: #000; font-style: italic">banana</span>
 <span style="color: #000; font-style: italic">orange</span>
 </pre></div>
-<h3><strong>-f (Ignore Case)</strong></h3>
-<p>Performs case-insensitive sorting</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>mixed.txt
+<h3><strong>-f, --ignore-case</strong></h3>
+<p>Ignore case when sorting alphabetically.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>mixed-case.txt
 <span style="color: #000; font-style: italic">Apple</span>
 <span style="color: #000; font-style: italic">banana</span>
 <span style="color: #000; font-style: italic">Carrot</span>
-<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>mixed.txt
+<span style="color: #000; font-style: italic">apple</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>mixed-case.txt
 <span style="color: #000; font-style: italic">Apple</span>
+<span style="color: #000; font-style: italic">apple</span>
 <span style="color: #000; font-style: italic">banana</span>
 <span style="color: #000; font-style: italic">Carrot</span>
+</pre></div>
+<h3><strong>-h, --human-numeric-sort</strong></h3>
+<p>Compare human-readable numbers (e.g., 2K, 1M).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>sizes.txt
+<span style="color: #000; font-style: italic">1K</span>
+<span style="color: #000; font-style: italic">5M</span>
+<span style="color: #000; font-style: italic">10G</span>
+<span style="color: #000; font-style: italic">2K</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>sizes.txt
+<span style="color: #000; font-style: italic">1K</span>
+<span style="color: #000; font-style: italic">2K</span>
+<span style="color: #000; font-style: italic">5M</span>
+<span style="color: #000; font-style: italic">10G</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Sorting a File and Saving the Result</h3>
+<h3>Sorting a file and saving the output</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>names.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>sorted_names.txt
-<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>sorted_names.txt
-<span style="color: #000; font-style: italic">Amy</span>
-<span style="color: #000; font-style: italic">Victor</span>
-<span style="color: #000; font-style: italic">Zack</span>
 </pre></div>
-<h3>Combining Multiple Files and Sorting</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">[combined and sorted output of both files]</span>
+<h3>Merging multiple sorted files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>sorted1.txt<span style="color: #F8F8F8"> </span>sorted2.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>merged.txt
 </pre></div>
-<h3>Sorting by Multiple Fields</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.csv
-<span style="color: #000; font-style: italic">John,35,1000</span>
-<span style="color: #000; font-style: italic">Alice,28,1200</span>
-<span style="color: #000; font-style: italic">Bob,42,900</span>
-<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-t,<span style="color: #F8F8F8"> </span>-k2n<span style="color: #F8F8F8"> </span>-k3nr<span style="color: #F8F8F8"> </span>data.csv
-<span style="color: #000; font-style: italic">Alice,28,1200</span>
-<span style="color: #000; font-style: italic">John,35,1000</span>
-<span style="color: #000; font-style: italic">Bob,42,900</span>
+<h3>Sorting by multiple fields</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.txt
+<span style="color: #000; font-style: italic">John Smith 35 Developer</span>
+<span style="color: #000; font-style: italic">Alice Johnson 28 Designer</span>
+<span style="color: #000; font-style: italic">Bob Williams 42 Manager</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-k4,4<span style="color: #F8F8F8"> </span>-k1,1<span style="color: #F8F8F8"> </span>data.txt
+<span style="color: #000; font-style: italic">Alice Johnson 28 Designer</span>
+<span style="color: #000; font-style: italic">John Smith 35 Developer</span>
+<span style="color: #000; font-style: italic">Bob Williams 42 Manager</span>
+</pre></div>
+<h3>Finding unique values in a column</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>logs.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d<span style="color: #4E9A06">&#39; &#39;</span><span style="color: #F8F8F8"> </span>-f3<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span>-u
+<span style="color: #000; font-style: italic">ERROR</span>
+<span style="color: #000; font-style: italic">INFO</span>
+<span style="color: #000; font-style: italic">WARNING</span>
 </pre></div>
 <h2>Tips</h2>
-<h3>Pipe with Other Commands</h3>
-<p>Combine <code>sort</code> with other commands like <code>uniq</code> to count occurrences:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>log.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-c
-<span style="color: #000; font-style: italic">      3 ERROR</span>
-<span style="color: #000; font-style: italic">     12 INFO</span>
-<span style="color: #000; font-style: italic">      5 WARNING</span>
-</pre></div>
-<h3>Memory Usage for Large Files</h3>
-<p>For very large files, use the <code>-S</code> option to specify buffer size or <code>--parallel</code> to utilize multiple cores:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>--parallel<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>1G<span style="color: #F8F8F8"> </span>huge_file.txt
-</pre></div>
 <h3>Stable Sort</h3>
-<p>Use <code>-s</code> for a stable sort when you want to preserve the original order of lines that would otherwise be considered equal:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>-k1,1<span style="color: #F8F8F8"> </span>data.txt
-</pre></div>
+<p>Use <code>sort -s</code> for a stable sort, which preserves the original order of lines with equal sort keys. This is useful when sorting by multiple criteria in sequence.</p>
+<h3>Memory Usage</h3>
+<p>For very large files, use <code>sort -S</code> to specify memory buffer size or <code>sort -T</code> to specify a temporary directory with more space. For example: <code>sort -S 1G -T /tmp bigfile.txt</code>.</p>
+<h3>Check If Already Sorted</h3>
+<p>Use <code>sort -c</code> to check if a file is already sorted without producing any output. The exit status will indicate if the file is sorted (0) or not (1).</p>
+<h3>Random Sort</h3>
+<p>Use <code>sort -R</code> to randomize the order of lines, which is useful for selecting random samples from data.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How do I sort a CSV file by a specific column?</h4>
-<p>A. Use <code>-t</code> to specify the delimiter and <code>-k</code> for the column: <code>sort -t, -k2 file.csv</code> sorts by the second column.</p>
-<h4>Q2. How can I sort IP addresses correctly?</h4>
-<p>A. Use version sort: <code>sort -V iplist.txt</code> will properly sort IP addresses and version numbers.</p>
-<h4>Q3. How do I sort by month names instead of alphabetically?</h4>
-<p>A. Use the <code>--month-sort</code> option or create a custom ordering with the <code>-k</code> option and a carefully crafted key definition.</p>
-<h4>Q4. Can sort handle very large files?</h4>
-<p>A. Yes, <code>sort</code> is designed to handle files larger than available memory using temporary files and efficient algorithms.</p>
+<h4>Q1. How do I sort a file numerically?</h4>
+<p>A. Use <code>sort -n filename</code> to sort numerically instead of alphabetically.</p>
+<h4>Q2. How can I sort by a specific column?</h4>
+<p>A. Use <code>sort -k COLUMN_NUMBER filename</code>. For example, <code>sort -k 2 filename</code> sorts by the second column.</p>
+<h4>Q3. How do I remove duplicate lines while sorting?</h4>
+<p>A. Use <code>sort -u filename</code> to output only unique lines.</p>
+<h4>Q4. How can I sort in reverse order?</h4>
+<p>A. Use <code>sort -r filename</code> to sort in descending order.</p>
+<h4>Q5. How do I sort a CSV file by a specific column?</h4>
+<p>A. Use <code>sort -t, -k COLUMN_NUMBER filename.csv</code> where <code>-t,</code> specifies the comma as the field separator.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

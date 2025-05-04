@@ -47,55 +47,75 @@
     <main>
       
   <h1>true コマンド</h1>
-<p>何も実行せずに常に成功（終了コード 0）を返す。</p>
+<p>常に成功の終了ステータス（0）を返します。</p>
 <h2>概要</h2>
-<p><code>true</code> コマンドは何も実行せず、常に成功（終了コード 0）を返すシンプルなコマンドです。主にシェルスクリプトやコマンドラインでの条件分岐、無限ループの作成などに使用されます。</p>
+<p><code>true</code> コマンドは何も実行せず、単に成功の終了ステータス（0）を返すだけのシンプルなユーティリティです。シェルスクリプト、条件文、ループなどで、常に成功するコマンドが必要な場合によく使用されます。</p>
 <h2>オプション</h2>
-<p><code>true</code> コマンドにはオプションがありません。引数を与えても無視されます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">true</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$?</span>
-<span style="color: #000; font-style: italic">0</span>
+<p><code>true</code> コマンドは、成功ステータスで終了することが唯一の目的であるため、機能的なオプションはありません。</p>
+<h3><strong>--help</strong></h3>
+<p>ヘルプ情報を表示して終了します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">true</span><span style="color: #F8F8F8"> </span>--help
+<span style="color: #000; font-style: italic">Usage: true [ignored command line arguments]</span>
+<span style="color: #000; font-style: italic">  or:  true OPTION</span>
+<span style="color: #000; font-style: italic">Exit with a status code indicating success.</span>
+
+<span style="color: #000; font-style: italic">      --help     display this help and exit</span>
+<span style="color: #000; font-style: italic">      --version  output version information and exit</span>
+
+<span style="color: #000; font-style: italic">NOTE: your shell may have its own version of true, which usually supersedes</span>
+<span style="color: #000; font-style: italic">the version described here.  Please refer to your shell&#39;s documentation</span>
+<span style="color: #000; font-style: italic">for details about the options it supports.</span>
+</pre></div>
+<h3><strong>--version</strong></h3>
+<p>バージョン情報を出力して終了します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">true</span><span style="color: #F8F8F8"> </span>--version
+<span style="color: #000; font-style: italic">true (GNU coreutils) 8.32</span>
+<span style="color: #000; font-style: italic">Copyright (C) 2020 Free Software Foundation, Inc.</span>
+<span style="color: #000; font-style: italic">License GPLv3+: GNU GPL version 3 or later &lt;https://gnu.org/licenses/gpl.html&gt;.</span>
+<span style="color: #000; font-style: italic">This is free software: you are free to change and redistribute it.</span>
+<span style="color: #000; font-style: italic">There is NO WARRANTY, to the extent permitted by law.</span>
+
+<span style="color: #000; font-style: italic">Written by Jim Meyering.</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>無限ループの作成</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;無限ループ&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
-<span style="color: #000; font-style: italic">無限ループ</span>
-<span style="color: #000; font-style: italic">無限ループ</span>
-<span style="color: #000; font-style: italic">無限ループ</span>
-<span style="color: #000; font-style: italic">[Ctrl+C で停止]</span>
+<h3>条件文での使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;これは常に実行されます&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">fi</span>
+<span style="color: #000; font-style: italic">これは常に実行されます</span>
 </pre></div>
-<h3>条件分岐での使用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;常に実行される&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">fi</span>
-<span style="color: #000; font-style: italic">常に実行される</span>
+<h3>ループでの使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Ctrl+Cで終了&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+<span style="color: #000; font-style: italic">Ctrl+Cで終了</span>
+<span style="color: #000; font-style: italic">Ctrl+Cで終了</span>
+<span style="color: #000; font-style: italic">Ctrl+Cで終了</span>
+<span style="color: #000; font-style: italic">^C</span>
 </pre></div>
-<h3>シェルスクリプトでの使用例</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>example.sh
-<span style="color: #8F5902">#</span>!/bin/bash
-<span style="color: #000; font-style: italic">true || echo &quot;これは表示されない&quot;</span>
-<span style="color: #000; font-style: italic">false || echo &quot;これは表示される&quot;</span>
-
-<span style="color: #8F5902">$ </span>bash<span style="color: #F8F8F8"> </span>example.sh
-<span style="color: #000; font-style: italic">これは表示される</span>
+<h3>プレースホルダーとして</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">true</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">||</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;これは決して実行されません&quot;</span>
+<span style="color: #8F5902">$</span>
 </pre></div>
 <h2>ヒント:</h2>
 <h3>無限ループの作成</h3>
-<p><code>while true; do ... done</code> は、シェルスクリプトで無限ループを作成する最も一般的な方法です。ただし、必ず終了条件やCtrl+Cなどの中断手段を用意しておきましょう。</p>
-<h3>条件分岐のデフォルト値として</h3>
-<p>条件分岐で常に真の結果が必要な場合に使用できます。例えば、<code>if true; then ... fi</code> は常に条件が真として扱われます。</p>
-<h3>falseコマンドとの対比</h3>
-<p><code>true</code> の反対は <code>false</code> コマンドで、常に失敗（終了コード 1）を返します。両方を理解することで、より柔軟なシェルスクリプトが書けるようになります。</p>
+<p><code>while true; do [コマンド]; done</code> は、Ctrl+Cで手動終了するか、ループ内のbreak文で終了させる必要がある無限ループを作成します。</p>
+<h3>エラーの抑制</h3>
+<p><code>command || true</code> を使用すると、コマンドが失敗してもスクリプトが継続されます。これは <code>true</code> コマンドが常に成功を返すためです。</p>
+<h3>空の関数</h3>
+<p>シェルスクリプトでは、存在する必要があるが何もする必要がない関数の本体として <code>true</code> を使用できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>empty_function<span style="color: #CE5C00; font-weight: bold">()</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #F8F8F8"> </span>true<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">}</span>
+</pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. <code>true</code> コマンドは何のために使われますか？</h4>
-<p>A. 主にシェルスクリプトで無限ループの作成や、常に成功する条件が必要な場合に使用されます。</p>
-<h4>Q2. <code>true</code> コマンドと <code>:</code> (コロン) コマンドの違いは何ですか？</h4>
-<p>A. 機能的にはほぼ同じですが、<code>:</code> はシェルのビルトインコマンドであるのに対し、<code>true</code> は通常は独立した実行ファイルです。どちらも常に成功（終了コード 0）を返します。</p>
-<h4>Q3. <code>true</code> コマンドを使った無限ループを安全に終了するにはどうすればよいですか？</h4>
-<p>A. Ctrl+C（割り込み信号）を送信するか、ループ内に条件付きの <code>break</code> ステートメントを含めることで終了できます。</p>
-<h2>参考情報</h2>
+<h4>Q1. <code>true</code> と <code>:</code> の違いは何ですか？</h4>
+<p>A. ほとんどのシェルでは、<code>:</code> (コロン) も <code>true</code> と同様に成功 (0) を返すビルトインコマンドです。コロンはシェルのビルトインであり、外部コマンドを実行する必要がないため、スクリプトではよく使用されます。</p>
+<h4>Q2. <code>true</code> を使って空のファイルを作成できますか？</h4>
+<p>A. いいえ、代わりに <code>touch ファイル名</code> を使用してください。<code>true &gt; ファイル名</code> で空のファイルを作成できますが、コマンドの本来の用途ではありません。</p>
+<h4>Q3. <code>true</code> で無限ループを作成するにはどうすればよいですか？</h4>
+<p>A. <code>while true; do コマンド; done</code> を使用します。ループから抜け出す方法を含めないと永遠に実行され続けることに注意してください。</p>
+<h4>Q4. <code>true</code> の終了ステータスは何ですか？</h4>
+<p>A. 終了ステータスは常に0で、成功を示します。</p>
+<h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/true-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

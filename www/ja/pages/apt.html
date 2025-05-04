@@ -47,156 +47,145 @@
     <main>
       
   <h1>apt コマンド</h1>
-<p>Debian系Linuxディストリビューションでパッケージの検索、インストール、更新、削除を行うパッケージ管理ツール。</p>
+<p>Debian系Linuxディストリビューション（Ubuntuなど）用のパッケージ管理ユーティリティです。</p>
 <h2>概要</h2>
-<p><code>apt</code>（Advanced Package Tool）は、Debian系のLinuxディストリビューション（Ubuntu、Linux Mintなど）でソフトウェアパッケージを管理するためのコマンドラインツールです。<code>apt-get</code>や<code>apt-cache</code>などの古いコマンドの機能を統合し、より使いやすいインターフェースを提供します。パッケージのインストール、更新、削除、検索などの操作を簡単に行うことができます。</p>
+<p><code>apt</code>（Advanced Package Tool）は、Debian系Linuxディストリビューションでソフトウェアパッケージのインストール、更新、削除、管理を行うためのコマンドラインユーティリティです。依存関係を自動的に処理し、<code>dpkg</code>などの低レベルツールと比較してユーザーフレンドリーなインターフェースを提供することで、パッケージ管理を簡素化します。</p>
 <h2>オプション</h2>
-<h3><strong>update</strong></h3>
-<p>パッケージリストを更新します。新しいパッケージをインストールする前に実行することをお勧めします。</p>
+<h3><strong>-y, --yes, --assume-yes</strong></h3>
+<p>プロンプトに自動的に「yes」と答え、非対話的な使用を可能にします</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>firefox<span style="color: #F8F8F8"> </span>-y
+<span style="color: #000; font-style: italic">Reading package lists... Done</span>
+<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
+<span style="color: #000; font-style: italic">Reading state information... Done</span>
+<span style="color: #000; font-style: italic">firefox is already the newest version (115.0+build2-0ubuntu0.22.04.1).</span>
+<span style="color: #000; font-style: italic">0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.</span>
+</pre></div>
+<h3><strong>-q, --quiet</strong></h3>
+<p>進行状況インジケータを省略し、ログ記録に適した出力を生成します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>update<span style="color: #F8F8F8"> </span>-q
+<span style="color: #000; font-style: italic">Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease</span>
+<span style="color: #000; font-style: italic">Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]</span>
+<span style="color: #000; font-style: italic">Fetched 110 kB in 1s (110 kB/s)</span>
+<span style="color: #000; font-style: italic">Reading package lists...</span>
+<span style="color: #000; font-style: italic">Building dependency tree...</span>
+<span style="color: #000; font-style: italic">Reading state information...</span>
+<span style="color: #000; font-style: italic">All packages are up to date.</span>
+</pre></div>
+<h3><strong>--no-install-recommends</strong></h3>
+<p>推奨パッケージのインストールをスキップし、必須の依存関係のみをインストールします</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>gimp<span style="color: #F8F8F8"> </span>--no-install-recommends
+<span style="color: #000; font-style: italic">Reading package lists... Done</span>
+<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
+<span style="color: #000; font-style: italic">Reading state information... Done</span>
+<span style="color: #000; font-style: italic">The following packages will be installed:</span>
+<span style="color: #000; font-style: italic">  gimp gimp-data libbabl-0.1-0 libgegl-0.4-0 [...]</span>
+</pre></div>
+<h3><strong>-s, --simulate, --just-print, --dry-run, --recon, --no-act</strong></h3>
+<p>アクションをシミュレートしますが、実際にはシステムを変更しません</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>remove<span style="color: #F8F8F8"> </span>firefox<span style="color: #F8F8F8"> </span>-s
+<span style="color: #000; font-style: italic">NOTE: This is only a simulation!</span>
+<span style="color: #000; font-style: italic">      apt needs root privileges for real execution.</span>
+<span style="color: #000; font-style: italic">Reading package lists... Done</span>
+<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
+<span style="color: #000; font-style: italic">Reading state information... Done</span>
+<span style="color: #000; font-style: italic">The following packages will be REMOVED:</span>
+<span style="color: #000; font-style: italic">  firefox</span>
+<span style="color: #000; font-style: italic">0 upgraded, 0 newly installed, 1 to remove and 0 not upgraded.</span>
+<span style="color: #000; font-style: italic">Remv firefox [115.0+build2-0ubuntu0.22.04.1]</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>パッケージのインストール</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>vlc
+<span style="color: #000; font-style: italic">Reading package lists... Done</span>
+<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
+<span style="color: #000; font-style: italic">Reading state information... Done</span>
+<span style="color: #000; font-style: italic">The following additional packages will be installed:</span>
+<span style="color: #000; font-style: italic">  libvlc-bin libvlc5 libvlccore9 vlc-bin vlc-data vlc-plugin-base</span>
+<span style="color: #000; font-style: italic">Suggested packages:</span>
+<span style="color: #000; font-style: italic">  vlc-plugin-access-extra vlc-plugin-video-output vlc-plugin-video-splitter</span>
+<span style="color: #000; font-style: italic">  vlc-plugin-visualization</span>
+<span style="color: #000; font-style: italic">The following NEW packages will be installed:</span>
+<span style="color: #000; font-style: italic">  libvlc-bin libvlc5 libvlccore9 vlc vlc-bin vlc-data vlc-plugin-base</span>
+<span style="color: #000; font-style: italic">0 upgraded, 7 newly installed, 0 to remove and 0 not upgraded.</span>
+<span style="color: #000; font-style: italic">Need to get 7,192 kB of archives.</span>
+<span style="color: #000; font-style: italic">After this operation, 32.8 MB of additional disk space will be used.</span>
+<span style="color: #000; font-style: italic">Do you want to continue? [Y/n] y</span>
+</pre></div>
+<h3>パッケージリストの更新</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>update
-<span style="color: #000; font-style: italic">[sudo] password for user: </span>
-<span style="color: #000; font-style: italic">Hit:1 http://jp.archive.ubuntu.com/ubuntu jammy InRelease</span>
-<span style="color: #000; font-style: italic">Get:2 http://jp.archive.ubuntu.com/ubuntu jammy-updates InRelease [119 kB]</span>
-<span style="color: #000; font-style: italic">Get:3 http://jp.archive.ubuntu.com/ubuntu jammy-security InRelease [110 kB]</span>
+<span style="color: #000; font-style: italic">Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease</span>
+<span style="color: #000; font-style: italic">Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]</span>
+<span style="color: #000; font-style: italic">Get:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [119 kB]</span>
 <span style="color: #000; font-style: italic">Fetched 229 kB in 2s (114 kB/s)</span>
 <span style="color: #000; font-style: italic">Reading package lists... Done</span>
 <span style="color: #000; font-style: italic">Building dependency tree... Done</span>
 <span style="color: #000; font-style: italic">Reading state information... Done</span>
 <span style="color: #000; font-style: italic">All packages are up to date.</span>
 </pre></div>
-<h3><strong>install</strong></h3>
-<p>指定したパッケージをインストールします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #000; font-style: italic">Reading package lists... Done</span>
-<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
-<span style="color: #000; font-style: italic">Reading state information... Done</span>
-<span style="color: #000; font-style: italic">The following packages will be upgraded:</span>
-<span style="color: #000; font-style: italic">  firefox</span>
-<span style="color: #000; font-style: italic">1 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.</span>
-<span style="color: #000; font-style: italic">Need to get 65.4 MB of archives.</span>
-<span style="color: #000; font-style: italic">After this operation, 12.3 MB of additional disk space will be used.</span>
-<span style="color: #000; font-style: italic">Do you want to continue? [Y/n] y</span>
-</pre></div>
-<h3><strong>upgrade</strong></h3>
-<p>インストール済みのパッケージを最新バージョンにアップグレードします。</p>
+<h3>インストール済みパッケージのアップグレード</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>upgrade
 <span style="color: #000; font-style: italic">Reading package lists... Done</span>
 <span style="color: #000; font-style: italic">Building dependency tree... Done</span>
 <span style="color: #000; font-style: italic">Reading state information... Done</span>
 <span style="color: #000; font-style: italic">Calculating upgrade... Done</span>
 <span style="color: #000; font-style: italic">The following packages will be upgraded:</span>
-<span style="color: #000; font-style: italic">  firefox libreoffice-calc libreoffice-writer</span>
-<span style="color: #000; font-style: italic">3 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.</span>
-<span style="color: #000; font-style: italic">Need to get 112 MB of archives.</span>
-<span style="color: #000; font-style: italic">After this operation, 15.6 MB of additional disk space will be used.</span>
+<span style="color: #000; font-style: italic">  firefox libnss3 python3-software-properties software-properties-common</span>
+<span style="color: #000; font-style: italic">4 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.</span>
+<span style="color: #000; font-style: italic">Need to get 75.8 MB of archives.</span>
+<span style="color: #000; font-style: italic">After this operation, 1,024 B of additional disk space will be used.</span>
 <span style="color: #000; font-style: italic">Do you want to continue? [Y/n] y</span>
 </pre></div>
-<h3><strong>remove</strong></h3>
-<p>指定したパッケージを削除します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>remove<span style="color: #F8F8F8"> </span>firefox
+<h3>パッケージの削除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>remove<span style="color: #F8F8F8"> </span>gimp
 <span style="color: #000; font-style: italic">Reading package lists... Done</span>
 <span style="color: #000; font-style: italic">Building dependency tree... Done</span>
 <span style="color: #000; font-style: italic">Reading state information... Done</span>
 <span style="color: #000; font-style: italic">The following packages will be REMOVED:</span>
-<span style="color: #000; font-style: italic">  firefox</span>
+<span style="color: #000; font-style: italic">  gimp</span>
 <span style="color: #000; font-style: italic">0 upgraded, 0 newly installed, 1 to remove and 0 not upgraded.</span>
-<span style="color: #000; font-style: italic">After this operation, 212 MB disk space will be freed.</span>
+<span style="color: #000; font-style: italic">After this operation, 20.5 MB disk space will be freed.</span>
 <span style="color: #000; font-style: italic">Do you want to continue? [Y/n] y</span>
 </pre></div>
-<h3><strong>search</strong></h3>
-<p>パッケージを検索します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt<span style="color: #F8F8F8"> </span>search<span style="color: #F8F8F8"> </span>text<span style="color: #F8F8F8"> </span>editor
+<h3>パッケージの検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt<span style="color: #F8F8F8"> </span>search<span style="color: #F8F8F8"> </span>text-editor
 <span style="color: #000; font-style: italic">Sorting... Done</span>
 <span style="color: #000; font-style: italic">Full Text Search... Done</span>
-<span style="color: #000; font-style: italic">gedit/jammy,now 41.0-1 amd64 [installed]</span>
-<span style="color: #000; font-style: italic">  GNU Emacs editor for the GNOME desktop</span>
+<span style="color: #000; font-style: italic">gedit/jammy,now 41.0-3 amd64 [installed]</span>
+<span style="color: #000; font-style: italic">  GNU text editor for the GNOME desktop environment</span>
+
+<span style="color: #000; font-style: italic">mousepad/jammy 0.5.8-1 amd64</span>
+<span style="color: #000; font-style: italic">  simple Xfce oriented text editor</span>
 
 <span style="color: #000; font-style: italic">nano/jammy,now 6.2-1 amd64 [installed]</span>
 <span style="color: #000; font-style: italic">  small, friendly text editor inspired by Pico</span>
-
-<span style="color: #000; font-style: italic">vim/jammy 2:8.2.3995-1ubuntu2 amd64</span>
-<span style="color: #000; font-style: italic">  Vi IMproved - enhanced vi editor</span>
-</pre></div>
-<h2>使用例</h2>
-<h3>パッケージのインストールと更新</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>update<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>upgrade
-<span style="color: #000; font-style: italic">[sudo] password for user: </span>
-<span style="color: #000; font-style: italic">Hit:1 http://jp.archive.ubuntu.com/ubuntu jammy InRelease</span>
-<span style="color: #000; font-style: italic">Get:2 http://jp.archive.ubuntu.com/ubuntu jammy-updates InRelease [119 kB]</span>
-<span style="color: #000; font-style: italic">Reading package lists... Done</span>
-<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
-<span style="color: #000; font-style: italic">Reading state information... Done</span>
-<span style="color: #000; font-style: italic">Calculating upgrade... Done</span>
-<span style="color: #000; font-style: italic">The following packages will be upgraded:</span>
-<span style="color: #000; font-style: italic">  firefox libreoffice-calc</span>
-<span style="color: #000; font-style: italic">2 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.</span>
-<span style="color: #000; font-style: italic">Do you want to continue? [Y/n] y</span>
-</pre></div>
-<h3>特定のパッケージに関する情報の表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt<span style="color: #F8F8F8"> </span>show<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #000; font-style: italic">Package: firefox</span>
-<span style="color: #000; font-style: italic">Version: 124.0.1+build1-0ubuntu0.22.04.1</span>
-<span style="color: #000; font-style: italic">Priority: optional</span>
-<span style="color: #000; font-style: italic">Section: web</span>
-<span style="color: #000; font-style: italic">Origin: Ubuntu</span>
-<span style="color: #000; font-style: italic">Maintainer: Ubuntu Mozilla Team &lt;ubuntu-mozillateam@lists.ubuntu.com&gt;</span>
-<span style="color: #000; font-style: italic">Installed-Size: 256 MB</span>
-<span style="color: #000; font-style: italic">Provides: gnome-www-browser, www-browser</span>
-<span style="color: #000; font-style: italic">Depends: lsb-release, libasound2, libatk1.0-0, ...</span>
-<span style="color: #000; font-style: italic">Homepage: https://www.mozilla.org/firefox/</span>
-<span style="color: #000; font-style: italic">Download-Size: 65.4 MB</span>
-<span style="color: #000; font-style: italic">APT-Sources: http://jp.archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages</span>
-<span style="color: #000; font-style: italic">Description: Safe and easy web browser from Mozilla</span>
-<span style="color: #000; font-style: italic"> Firefox delivers safe, easy web browsing. A familiar user interface,</span>
-<span style="color: #000; font-style: italic"> enhanced security features including protection from online identity theft,</span>
-<span style="color: #000; font-style: italic"> and integrated search let you get the most out of the web.</span>
-</pre></div>
-<h3>パッケージの完全削除（設定ファイルも含む）</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>purge<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #000; font-style: italic">Reading package lists... Done</span>
-<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
-<span style="color: #000; font-style: italic">Reading state information... Done</span>
-<span style="color: #000; font-style: italic">The following packages will be REMOVED:</span>
-<span style="color: #000; font-style: italic">  firefox*</span>
-<span style="color: #000; font-style: italic">0 upgraded, 0 newly installed, 1 to remove and 0 not upgraded.</span>
-<span style="color: #000; font-style: italic">After this operation, 212 MB disk space will be freed.</span>
-<span style="color: #000; font-style: italic">Do you want to continue? [Y/n] y</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>自動応答でインストールする</h3>
-<p><code>-y</code>オプションを使用すると、確認プロンプトに自動的に「yes」と応答します。スクリプト内でaptを使用する場合に便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>-y<span style="color: #F8F8F8"> </span>firefox
-</pre></div>
-<h3>不要なパッケージの削除</h3>
-<p><code>apt autoremove</code>を使用すると、依存関係として自動的にインストールされたが、現在は不要になったパッケージを削除できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>autoremove
-<span style="color: #000; font-style: italic">Reading package lists... Done</span>
-<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
-<span style="color: #000; font-style: italic">Reading state information... Done</span>
-<span style="color: #000; font-style: italic">The following packages will be REMOVED:</span>
-<span style="color: #000; font-style: italic">  libllvm13 linux-headers-5.15.0-60 linux-headers-5.15.0-60-generic</span>
-<span style="color: #000; font-style: italic">0 upgraded, 0 newly installed, 3 to remove and 0 not upgraded.</span>
-<span style="color: #000; font-style: italic">After this operation, 122 MB disk space will be freed.</span>
-<span style="color: #000; font-style: italic">Do you want to continue? [Y/n] y</span>
-</pre></div>
-<h3>パッケージリストのクリーンアップ</h3>
-<p><code>apt clean</code>を使用すると、ダウンロードしたパッケージファイルのローカルリポジトリをクリーンアップできます。ディスク容量を節約したい場合に役立ちます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>clean
-</pre></div>
+<h3>apt-getの代わりにaptを使用する</h3>
+<p><code>apt</code>は古い<code>apt-get</code>コマンドと比較して、プログレスバーやカラー出力を備えたよりユーザーフレンドリーなインターフェースを提供しながら、最も一般的に使用される機能を提供します。</p>
+<h3>未使用パッケージのクリーンアップ</h3>
+<p><code>sudo apt autoremove</code>を定期的に実行して、依存関係として自動的にインストールされたが、もはや必要とされないパッケージを削除しましょう。</p>
+<h3>壊れたパッケージの修復</h3>
+<p>パッケージのインストールに問題が発生した場合は、<code>sudo apt --fix-broken install</code>を試して依存関係の問題を解決してください。</p>
+<h3>利用可能なディスク容量の確認</h3>
+<p>大規模なインストールやアップグレードの前に、<code>df -h</code>で利用可能なディスク容量を確認しましょう。容量不足になるとパッケージ操作が失敗する可能性があります。</p>
+<h3>apt-markでパッケージを保護する</h3>
+<p><code>sudo apt-mark hold パッケージ名</code>を使用して、パッケージが自動的にアップグレード、削除、またはインストールされるのを防ぐことができます。</p>
 <h2>よくある質問</h2>
 <h4>Q1. aptとapt-getの違いは何ですか？</h4>
-<p>A. <code>apt</code>は<code>apt-get</code>や<code>apt-cache</code>などの古いコマンドの機能を統合し、より使いやすいインターフェースを提供します。進行状況バーの表示や色分けされた出力など、ユーザーフレンドリーな機能が追加されています。</p>
-<h4>Q2. パッケージをインストールせずに、ダウンロードだけするにはどうすればいいですか？</h4>
-<p>A. <code>apt download パッケージ名</code>を使用すると、パッケージをインストールせずにダウンロードだけ行えます。</p>
-<h4>Q3. インストール可能なパッケージのバージョンを確認するにはどうすればいいですか？</h4>
-<p>A. <code>apt policy パッケージ名</code>または<code>apt-cache policy パッケージ名</code>を使用すると、利用可能なバージョンとインストール候補を確認できます。</p>
-<h4>Q4. 特定のパッケージが依存しているパッケージを確認するにはどうすればいいですか？</h4>
-<p>A. <code>apt depends パッケージ名</code>を使用すると、そのパッケージが依存している他のパッケージを確認できます。</p>
+<p>A. <code>apt</code>は、<code>apt-get</code>と<code>apt-cache</code>の最も一般的に使用される機能を組み合わせた、より使いやすい新しいコマンドで、出力フォーマットと進行状況の情報が改善されています。</p>
+<h4>Q2. 設定ファイルを含めてパッケージを完全に削除するにはどうすればよいですか？</h4>
+<p>A. <code>remove</code>の代わりに<code>sudo apt purge パッケージ名</code>を使用します。不要になった依存関係も削除するには、<code>autoremove</code>を追加します：<code>sudo apt purge パッケージ名 &amp;&amp; sudo apt autoremove</code>。</p>
+<h4>Q3. 特定のバージョンのパッケージをインストールするにはどうすればよいですか？</h4>
+<p>A. <code>sudo apt install パッケージ名=バージョン</code>を使用します。例：<code>sudo apt install nginx=1.18.0-0ubuntu1</code>。</p>
+<h4>Q4. 「Unable to lock the administration directory」エラーを修正するにはどうすればよいですか？</h4>
+<p>A. これは通常、別のパッケージマネージャーが実行中であることを意味します。終了するのを待つか、<code>ps aux | grep apt</code>で停止したプロセスを確認し、必要に応じて終了させてください。また、<code>sudo rm /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/lib/dpkg/lock*</code>でロックファイルを削除する必要がある場合もあります。</p>
+<h4>Q5. 単一のパッケージを更新するにはどうすればよいですか？</h4>
+<p>A. <code>sudo apt install --only-upgrade パッケージ名</code>を使用します。</p>
 <h2>参考資料</h2>
 <p>https://manpages.ubuntu.com/manpages/jammy/man8/apt.8.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

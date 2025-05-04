@@ -4,13 +4,13 @@ Display the first part of files.
 
 ## Overview
 
-The `head` command outputs the beginning of files, showing the first 10 lines by default. It's useful for quickly previewing file contents without displaying the entire file, especially when working with large files.
+The `head` command outputs the first part of files to standard output. By default, it prints the first 10 lines of each specified file. If multiple files are specified, it precedes each with a header identifying the file name.
 
 ## Options
 
-### **-n, --lines=NUM**
+### **-n, --lines=[-]NUM**
 
-Display the first NUM lines instead of the default 10
+Print the first NUM lines instead of the default 10. With a leading '-', print all but the last NUM lines of each file.
 
 ```console
 $ head -n 5 file.txt
@@ -21,9 +21,9 @@ Line 4
 Line 5
 ```
 
-### **-c, --bytes=SIZE**
+### **-c, --bytes=[-]NUM**
 
-Display the first SIZE bytes of the file
+Print the first NUM bytes instead of lines. With a leading '-', print all but the last NUM bytes of each file.
 
 ```console
 $ head -c 20 file.txt
@@ -32,17 +32,17 @@ This is the first 20
 
 ### **-q, --quiet, --silent**
 
-Suppress the header that shows the filename when displaying multiple files
+Never print headers giving file names.
 
 ```console
 $ head -q file1.txt file2.txt
-(content of file1.txt)
-(content of file2.txt)
+(Content of file1.txt)
+(Content of file2.txt)
 ```
 
 ### **-v, --verbose**
 
-Always display the filename header when showing file contents
+Always print headers giving file names.
 
 ```console
 $ head -v file.txt
@@ -57,58 +57,82 @@ Line 2
 ### Viewing the beginning of a log file
 
 ```console
-$ head /var/log/system.log
-Apr 30 09:15:23 hostname process[123]: Started service
-Apr 30 09:15:24 hostname process[123]: Initialized components
+$ head /var/log/syslog
+May  3 14:22:01 hostname systemd[1]: Starting Daily apt download activities...
+May  3 14:22:01 hostname systemd[1]: apt-daily.service: Succeeded.
+May  3 14:22:01 hostname systemd[1]: Finished Daily apt download activities.
 ...
 ```
 
 ### Viewing multiple files at once
 
 ```console
-$ head file1.txt file2.txt
+$ head -n 2 file1.txt file2.txt
 ==> file1.txt <==
-First lines of file1
+First line of file1
+Second line of file1
 
 ==> file2.txt <==
-First lines of file2
+First line of file2
+Second line of file2
 ```
 
-### Combining with other commands using pipes
+### Viewing all but the last N lines
 
 ```console
-$ ls -l | head -n 3
-total 128
-drwxr-xr-x  15 user  staff  480 Apr 29 14:22 Documents
-drwxr-xr-x  12 user  staff  384 Apr 28 10:15 Downloads
+$ head -n -2 file.txt
+Line 1
+Line 2
+Line 3
+...
+(all lines except the last 2)
 ```
 
 ## Tips
 
-### Quickly Check File Format
+### Combine with other commands
 
-Use `head` to quickly check the format of data files like CSV or JSON without loading the entire file.
+Use `head` with pipes to limit output from other commands:
 
-### Combine with tail for Middle Content
+```console
+$ ls -l | head -n 5
+```
 
-Use `head` with `tail` to view a specific section in the middle of a file: `head -n 20 file.txt | tail -n 10` shows lines 11-20.
+This shows only the first 5 entries from a directory listing.
 
-### Use with Process Substitution
+### View beginning of large files
 
-In bash, you can use process substitution to compare the beginnings of files: `diff <(head file1) <(head file2)`.
+For very large files, use `head` to preview content without loading the entire file:
+
+```console
+$ head -n 20 huge_log.txt
+```
+
+### Use with tail for middle sections
+
+Combine `head` with `tail` to extract a section from the middle of a file:
+
+```console
+$ head -n 20 file.txt | tail -n 10
+```
+
+This shows lines 11-20 of the file.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I view a specific number of lines?
-A. Use `head -n NUMBER file.txt` where NUMBER is the number of lines you want to see.
+#### Q1. How do I view a specific number of lines from a file?
+A. Use `head -n NUMBER filename` to view the first NUMBER lines.
 
-#### Q2. Can I view multiple files at once?
-A. Yes, simply list all the files you want to view: `head file1.txt file2.txt file3.txt`.
+#### Q2. Can I view multiple files at once with head?
+A. Yes, simply list all filenames: `head file1.txt file2.txt file3.txt`.
 
-#### Q3. How do I view the beginning of a file by bytes instead of lines?
-A. Use `head -c NUMBER file.txt` where NUMBER is the number of bytes to display.
+#### Q3. How do I view the first few bytes instead of lines?
+A. Use `head -c NUMBER filename` to view the first NUMBER bytes.
 
-#### Q4. How can I hide the filename headers when viewing multiple files?
+#### Q4. How can I view all lines except the last few?
+A. Use `head -n -NUMBER filename` to view all lines except the last NUMBER lines.
+
+#### Q5. How do I suppress the filename headers when viewing multiple files?
 A. Use the `-q` option: `head -q file1.txt file2.txt`.
 
 ## References
@@ -117,4 +141,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/head-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+2025/05/04 First revision

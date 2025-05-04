@@ -4,7 +4,7 @@ Delete a group from the system.
 
 ## Overview
 
-`groupdel` is a command-line utility that removes a specified group from the system. It deletes the group's entry from system account files like `/etc/group` and `/etc/gshadow`. This command is typically used by system administrators when a group is no longer needed.
+`groupdel` is a command-line utility that removes a specified group from the system. It deletes the group's entry from the system group database (usually `/etc/group` and `/etc/gshadow`). This command is typically used by system administrators to manage group accounts on Linux and Unix-like systems.
 
 ## Options
 
@@ -32,52 +32,68 @@ Options:
 
 ```
 
+### **-R, --root CHROOT_DIR**
+
+Apply changes in the CHROOT_DIR directory and use the configuration files from the CHROOT_DIR directory.
+
+```console
+$ sudo groupdel -R /mnt/system developers
+```
+
+### **-P, --prefix PREFIX_DIR**
+
+Use prefix directory where the /etc/* files are located.
+
+```console
+$ sudo groupdel -P /mnt/etc developers
+```
+
 ## Usage Examples
 
 ### Basic Group Deletion
 
 ```console
-$ sudo groupdel marketing
+$ sudo groupdel developers
 ```
 
-### Deleting a Group with Force Option
+### Force Deletion of a Primary Group
 
 ```console
-$ sudo groupdel -f projectx
+$ sudo groupdel -f projectteam
 ```
 
 ## Tips:
 
-### Check Group Dependencies First
+### Check Group Dependencies Before Deletion
 
-Before deleting a group, check if any users have it as their primary group using `grep groupname /etc/passwd`. This helps avoid orphaned files or permission issues.
+Before deleting a group, check if any users have it as their primary group using `grep groupname /etc/passwd`. If users depend on the group, you may need to change their primary group first or use the `-f` option.
+
+### Verify Group Existence
+
+Use `getent group groupname` to verify a group exists before attempting to delete it.
 
 ### Backup Group Information
 
-Consider backing up group information before deletion with `getent group groupname > backup.txt`. This provides a record of group members if you need to recreate it later.
-
-### Verify Group Deletion
-
-After running groupdel, verify the group was successfully removed by checking `/etc/group` with `getent group groupname`. If no output appears, the deletion was successful.
+Consider backing up your `/etc/group` and `/etc/gshadow` files before making changes to group structures, especially in production environments.
 
 ## Frequently Asked Questions
 
 #### Q1. What happens to files owned by a deleted group?
-A. Files previously owned by the deleted group will still exist but will display the group's numeric GID instead of the group name. You may want to reassign these files to another group before deletion.
+A. Files previously owned by the deleted group will still exist but will display the group ID number instead of a name. You may want to reassign these files to another group before deletion.
 
-#### Q2. Can I delete a group if users are still members of it?
-A. Yes, you can delete a group even if users are still members of it. The users will simply no longer be members of that group.
+#### Q2. Can I delete a group that users belong to?
+A. Yes, but this will affect file access permissions. Users who had this as a supplementary group will lose access to files restricted to that group.
 
 #### Q3. How do I delete a group that is a primary group for some users?
-A. Use `groupdel -f groupname`. However, it's better to first change the primary group of those users with `usermod -g newgroup username`.
+A. Use `groupdel -f groupname`. However, it's better practice to first change the users' primary group with `usermod -g newgroup username` for each affected user.
 
-#### Q4. Can regular users delete groups?
-A. No, only users with root privileges (or sudo access) can delete groups from the system.
+#### Q4. Can I recover a deleted group?
+A. No, once deleted, you must recreate the group manually. This is why backing up system files before making changes is important.
 
 ## References
 
-https://linux.die.net/man/8/groupdel
+https://man7.org/linux/man-pages/man8/groupdel.8.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

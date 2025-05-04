@@ -47,79 +47,99 @@
     <main>
       
   <h1>ssh-add コマンド</h1>
-<p>SSH 認証エージェントに秘密鍵を追加・管理するコマンドです。</p>
+<p>SSH認証エージェントに秘密鍵を追加し、接続認証に使用します。</p>
 <h2>概要</h2>
-<p><code>ssh-add</code> は SSH 認証エージェント（ssh-agent）に SSH 秘密鍵を追加するためのコマンドです。これにより、SSH 接続時にパスフレーズを毎回入力する必要がなくなります。また、鍵の一覧表示や削除などの管理機能も提供します。</p>
+<p><code>ssh-add</code>はSSH認証に使用される秘密鍵を管理します。SSHエージェント（ssh-agent）に鍵を追加することで、復号化された秘密鍵をメモリに安全に保存し、リモートサーバーに接続するたびにパスフレーズを再入力する必要がなくなります。</p>
 <h2>オプション</h2>
-<h3><strong>-l</strong>（リスト表示）</h3>
-<p>認証エージェントに登録されている鍵の一覧を表示します。</p>
+<h3><strong>-l</strong> / <strong>--list</strong></h3>
+<p>エージェントに現在登録されているすべての鍵の指紋を一覧表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-l
 <span style="color: #000; font-style: italic">2048 SHA256:abcdefghijklmnopqrstuvwxyz1234567890ABCD user@hostname (RSA)</span>
 </pre></div>
-<h3><strong>-d</strong>（削除）</h3>
-<p>指定した鍵を認証エージェントから削除します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa
-<span style="color: #000; font-style: italic">Identity removed: /Users/username/.ssh/id_rsa (user@hostname)</span>
-</pre></div>
-<h3><strong>-D</strong>（全削除）</h3>
-<p>認証エージェントに登録されているすべての鍵を削除します。</p>
+<h3><strong>-D</strong> / <strong>--delete-all</strong></h3>
+<p>エージェントからすべての鍵を削除します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-D
 <span style="color: #000; font-style: italic">All identities removed.</span>
 </pre></div>
-<h3><strong>-t</strong>（有効期限設定）</h3>
-<p>鍵の有効期限を秒単位で設定します。</p>
+<h3><strong>-d</strong> / <strong>--delete</strong></h3>
+<p>指定した鍵をエージェントから削除します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa
+<span style="color: #000; font-style: italic">Identity removed: /home/user/.ssh/id_rsa (user@hostname)</span>
+</pre></div>
+<h3><strong>-t</strong> / <strong>--lifetime seconds</strong></h3>
+<p>エージェントに鍵を追加する際に最大有効期間を設定します。この時間が経過すると、鍵は自動的に削除されます。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3600</span><span style="color: #F8F8F8"> </span>~/.ssh/id_rsa
-<span style="color: #000; font-style: italic">Identity added: /Users/username/.ssh/id_rsa (user@hostname)</span>
+<span style="color: #000; font-style: italic">Identity added: /home/user/.ssh/id_rsa (user@hostname)</span>
 <span style="color: #000; font-style: italic">Lifetime set to 3600 seconds</span>
 </pre></div>
+<h3><strong>-k</strong> / <strong>--lock-agent</strong></h3>
+<p>パスワードでエージェントをロックします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-k
+<span style="color: #000; font-style: italic">Enter lock password: </span>
+<span style="color: #000; font-style: italic">Again: </span>
+<span style="color: #000; font-style: italic">Agent locked.</span>
+</pre></div>
+<h3><strong>-x</strong> / <strong>--lock</strong></h3>
+<p>パスワードでエージェントをロックします（-kの代替）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-x
+<span style="color: #000; font-style: italic">Enter lock password: </span>
+<span style="color: #000; font-style: italic">Again: </span>
+<span style="color: #000; font-style: italic">Agent locked.</span>
+</pre></div>
+<h3><strong>-X</strong> / <strong>--unlock</strong></h3>
+<p>エージェントのロックを解除します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-X
+<span style="color: #000; font-style: italic">Enter unlock password: </span>
+<span style="color: #000; font-style: italic">Agent unlocked.</span>
+</pre></div>
 <h2>使用例</h2>
-<h3>標準の鍵を追加する</h3>
+<h3>ファイルを指定せずに鍵を追加する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add
-<span style="color: #000; font-style: italic">Enter passphrase for /Users/username/.ssh/id_rsa: </span>
-<span style="color: #000; font-style: italic">Identity added: /Users/username/.ssh/id_rsa (user@hostname)</span>
+<span style="color: #000; font-style: italic">Enter passphrase for /home/user/.ssh/id_rsa: </span>
+<span style="color: #000; font-style: italic">Identity added: /home/user/.ssh/id_rsa (user@hostname)</span>
 </pre></div>
 <h3>特定の鍵ファイルを追加する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>~/.ssh/my_custom_key
-<span style="color: #000; font-style: italic">Enter passphrase for /Users/username/.ssh/my_custom_key: </span>
-<span style="color: #000; font-style: italic">Identity added: /Users/username/.ssh/my_custom_key (user@hostname)</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>~/.ssh/github_key
+<span style="color: #000; font-style: italic">Enter passphrase for /home/user/.ssh/github_key: </span>
+<span style="color: #000; font-style: italic">Identity added: /home/user/.ssh/github_key (user@github)</span>
 </pre></div>
-<h3>鍵のフィンガープリントを表示する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>-E<span style="color: #F8F8F8"> </span>md5
-<span style="color: #000; font-style: italic">2048 MD5:aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99 user@hostname (RSA)</span>
+<h3>エージェントに鍵が登録されているか確認する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-l
+<span style="color: #000; font-style: italic">The agent has no identities.</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>ssh-agent の起動確認</h3>
-<p><code>ssh-add</code> を使用する前に、ssh-agent が実行されていることを確認してください。実行されていない場合は、<code>eval $(ssh-agent)</code> コマンドで起動できます。</p>
-<h3>ログイン時に自動で鍵を追加</h3>
-<p><code>.bashrc</code> や <code>.zshrc</code> などのシェル設定ファイルに <code>ssh-add</code> コマンドを追加することで、ログイン時に自動的に鍵を追加できます。</p>
-<h3>パスフレーズなしでの使用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa
+<h3>ssh-addを使用する前にssh-agentを起動する</h3>
+<p>SSH鍵を追加する前にSSHエージェントが実行されている必要があります。ほとんどのシステムでは、次のコマンドで起動できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>ssh-agent<span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #000; font-style: italic">Agent pid 12345</span>
 </pre></div>
-<p>macOS では <code>-k</code> オプションを使用すると、キーチェーンに保存されたパスフレーズを使用して鍵を追加できます。</p>
-<h2>よくある質問</h2>
-<h4>Q1. ssh-add と ssh-agent の違いは何ですか？</h4>
-<p>A. <code>ssh-agent</code> は認証情報を保持するバックグラウンドプロセスで、<code>ssh-add</code> はそのエージェントに鍵を追加するためのコマンドです。</p>
-<h4>Q2. ログアウト後も鍵を保持するにはどうすればよいですか？</h4>
-<p>A. macOS では <code>-K</code> オプションを使用してキーチェーンに保存できます。Linux では <code>keychain</code> などのツールを使用するか、systemd や screen/tmux で ssh-agent を永続化する方法があります。</p>
-<h4>Q3. 追加した鍵が使われているか確認するにはどうすればよいですか？</h4>
-<p>A. <code>ssh -v user@host</code> コマンドを実行すると、詳細なデバッグ情報が表示され、どの鍵が試行されているかを確認できます。</p>
-<h2>macOS での注意点</h2>
-<p>macOS では、Sierra (10.12.2) 以降、デフォルトでキーチェーンと連携するようになりました。以下のオプションが特に重要です：</p>
-<ul>
-<li><code>-K</code>: 追加した鍵のパスフレーズをキーチェーンに保存します</li>
-<li><code>-A</code>: ローカルの ssh-agent から転送先のマシンの ssh-agent に鍵を転送します</li>
-<li><code>-k</code>: キーチェーンから鍵のパスフレーズを読み込みます</li>
-</ul>
-<p>macOS Monterey 以降では、<code>~/.ssh/config</code> に以下の設定を追加することで、キーチェーンとの連携を強化できます：</p>
-<pre><code>Host *
-  UseKeychain yes
-  AddKeysToAgent yes
-</code></pre><h2>参考資料</h2>
+<h3>ログイン時に自動的に鍵を追加する</h3>
+<p>シェルの起動ファイル（<code>.bashrc</code>や<code>.zshrc</code>など）に以下を追加すると、ログイン時に自動的に鍵が追加されます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$SSH_AUTH_SOCK</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">   </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>ssh-agent<span style="color: #F8F8F8"> </span>-s<span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #F8F8F8">   </span>ssh-add
+<span style="color: #204A87; font-weight: bold">fi</span>
+</pre></div>
+<h3>SSH設定ファイルで鍵管理を行う</h3>
+<p>手動で鍵を追加する代わりに、<code>~/.ssh/config</code>で特定のホストに使用する鍵を指定できます：</p>
+<pre><code>Host github.com
+  IdentityFile ~/.ssh/github_key
+</code></pre><h2>よくある質問</h2>
+<h4>Q1. なぜssh-addを使用する必要があるのですか？</h4>
+<p>A. <code>ssh-add</code>を使うと、秘密鍵を一度復号化してメモリに保存できるため、サーバーに接続するたびにパスフレーズを入力する必要がなくなります。</p>
+<h4>Q2. 鍵がすでに追加されているかどうかを確認するにはどうすればよいですか？</h4>
+<p>A. <code>ssh-add -l</code>を実行すると、現在エージェントに読み込まれているすべての鍵が表示されます。</p>
+<h4>Q3. ssh-addコマンドで「Could not open a connection to your authentication agent」というエラーが表示されます</h4>
+<p>A. これはSSHエージェントが実行されていないことを意味します。まず<code>eval $(ssh-agent)</code>でエージェントを起動してください。</p>
+<h4>Q4. 再起動後もssh-addで鍵を記憶させるにはどうすればよいですか？</h4>
+<p>A. SSHエージェントは再起動後も維持されません。<code>keychain</code>などのツールを使用するか、ログインスクリプトに鍵追加コマンドを追加してください。</p>
+<h2>macOSに関する注意点</h2>
+<p>macOSでは、SSHエージェントがKeychainと統合されているため、<code>ssh-add -K</code>（大文字のK）で追加された鍵はKeychainに保存され、ログイン時に自動的に読み込まれます。新しいmacOSバージョン（Monterey以降）では、<code>-K</code>の代わりに<code>--apple-use-keychain</code>を使用してください。</p>
+<h2>参考資料</h2>
 <p>https://man.openbsd.org/ssh-add.1</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 macOS での注意点を追加。</li>
-<li>2025/04/30 初版作成。</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

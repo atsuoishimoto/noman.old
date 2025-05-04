@@ -49,80 +49,102 @@
   <h1>ps コマンド</h1>
 <p>実行中のプロセスに関する情報を表示します。</p>
 <h2>概要</h2>
-<p><code>ps</code>コマンドは、システム上で現在実行中のプロセスのスナップショットを表示します。引数なしで実行すると、現在のターミナルに関連するプロセスのみを表示しますが、オプションを使用することで、システム全体のプロセスや詳細情報を確認できます。</p>
+<p><code>ps</code> コマンドはシステム上で現在実行中のプロセスのスナップショットを表示します。プロセスID（PID）、CPU使用率、メモリ消費量、その他のプロセス関連情報の詳細を提供します。このコマンドは多数のオプションで高度にカスタマイズでき、必要に応じて出力をフィルタリングしたりフォーマットしたりすることができます。</p>
 <h2>オプション</h2>
-<h3><strong>-e (すべてのプロセス)</strong></h3>
-<p>システム上のすべてのプロセスを表示します。</p>
+<h3><strong>-e, --everyone</strong></h3>
+<p>すべてのプロセスに関する情報を表示します（-Aと同等）</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-e
 <span style="color: #000; font-style: italic">  PID TTY          TIME CMD</span>
 <span style="color: #000; font-style: italic">    1 ?        00:00:03 systemd</span>
 <span style="color: #000; font-style: italic">    2 ?        00:00:00 kthreadd</span>
-<span style="color: #000; font-style: italic">  943 ?        00:00:00 sshd</span>
-<span style="color: #000; font-style: italic"> 1028 ?        00:00:02 nginx</span>
+<span style="color: #000; font-style: italic">   11 ?        00:00:00 rcu_sched</span>
+<span style="color: #000; font-style: italic">  950 ?        00:00:00 sshd</span>
+<span style="color: #000; font-style: italic"> 1050 ?        00:00:01 bash</span>
+<span style="color: #000; font-style: italic"> 1234 ?        00:00:00 ps</span>
 </pre></div>
-<h3><strong>-f (フル形式)</strong></h3>
-<p>プロセスの詳細情報（UID、PID、PPID、C、STIME、TTY、TIME、CMD）を表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-f
+<h3><strong>-f, --forest</strong></h3>
+<p>プロセス階層をツリー状のフォーマットで表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-ef
 <span style="color: #000; font-style: italic">UID        PID  PPID  C STIME TTY          TIME CMD</span>
-<span style="color: #000; font-style: italic">user     12345 12344  0 10:30 pts/0    00:00:00 bash</span>
-<span style="color: #000; font-style: italic">user     12346 12345  0 10:31 pts/0    00:00:00 ps -f</span>
+<span style="color: #000; font-style: italic">root         1     0  0 May01 ?        00:00:03 /sbin/init</span>
+<span style="color: #000; font-style: italic">root         2     0  0 May01 ?        00:00:00 [kthreadd]</span>
+<span style="color: #000; font-style: italic">user      1050   950  0 May01 pts/0    00:00:01 bash</span>
+<span style="color: #000; font-style: italic">user      1234  1050  0 10:15 pts/0    00:00:00 ps -ef</span>
 </pre></div>
-<h3><strong>-u ユーザー名 (特定ユーザーのプロセス)</strong></h3>
-<p>指定したユーザーが所有するプロセスのみを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>user1
+<h3><strong>-u, --user</strong></h3>
+<p>特定のユーザーのプロセスを表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>username
 <span style="color: #000; font-style: italic">  PID TTY          TIME CMD</span>
-<span style="color: #000; font-style: italic">12345 pts/0    00:00:00 bash</span>
-<span style="color: #000; font-style: italic">12346 pts/0    00:00:00 vim</span>
-<span style="color: #000; font-style: italic">12347 pts/0    00:00:00 python3</span>
+<span style="color: #000; font-style: italic"> 1050 pts/0    00:00:01 bash</span>
+<span style="color: #000; font-style: italic"> 1234 pts/0    00:00:00 ps</span>
+<span style="color: #000; font-style: italic"> 1500 pts/1    00:00:03 vim</span>
 </pre></div>
-<h3><strong>aux (BSD形式の詳細表示)</strong></h3>
-<p>すべてのプロセスの詳細情報をBSD形式で表示します。最も一般的に使用されるオプションの一つです。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>aux
-<span style="color: #000; font-style: italic">USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND</span>
-<span style="color: #000; font-style: italic">root         1  0.0  0.1 168940  9128 ?        Ss   Apr29   0:03 /sbin/init</span>
-<span style="color: #000; font-style: italic">user1     1234  0.2  0.5 157812 42312 pts/0    Ss   10:15   0:02 firefox</span>
-<span style="color: #000; font-style: italic">user1     1235  1.5  0.8 254680 65432 pts/0    R+   10:20   0:05 chrome</span>
+<h3><strong>-a, --all</strong></h3>
+<p>セッションリーダーと端末に関連付けられていないプロセスを除く、すべてのユーザーのプロセスを表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">  PID TTY          TIME CMD</span>
+<span style="color: #000; font-style: italic"> 1234 pts/0    00:00:00 ps</span>
+<span style="color: #000; font-style: italic"> 1500 pts/1    00:00:03 vim</span>
+</pre></div>
+<h3><strong>-x, --all</strong></h3>
+<p>制御端末のないプロセスも含めます</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-ax
+<span style="color: #000; font-style: italic">  PID TTY      STAT   TIME COMMAND</span>
+<span style="color: #000; font-style: italic">    1 ?        Ss     0:03 /sbin/init</span>
+<span style="color: #000; font-style: italic">    2 ?        S      0:00 [kthreadd]</span>
+<span style="color: #000; font-style: italic"> 1050 pts/0    Ss     0:01 bash</span>
+<span style="color: #000; font-style: italic"> 1234 pts/0    R+     0:00 ps -ax</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>プロセスIDで検索</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
-<span style="color: #000; font-style: italic">  PID TTY          TIME CMD</span>
-<span style="color: #000; font-style: italic"> 1234 pts/0    00:00:02 firefox</span>
+<h3>詳細情報付きでプロセスを表示する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-ef<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>firefox
+<span style="color: #000; font-style: italic">user      2345  1050  2 10:20 ?        00:00:45 /usr/lib/firefox/firefox</span>
+<span style="color: #000; font-style: italic">user      2346  2345  0 10:20 ?        00:00:02 /usr/lib/firefox/firefox-bin</span>
 </pre></div>
-<h3>プロセス名でフィルタリング</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>aux<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>nginx
-<span style="color: #000; font-style: italic">root      1028  0.0  0.1  66104  5256 ?        Ss   Apr29   0:02 nginx: master process</span>
-<span style="color: #000; font-style: italic">www-data  1029  0.0  0.0  66460  3928 ?        S    Apr29   0:00 nginx: worker process</span>
-</pre></div>
-<h3>メモリ使用量でソート</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>aux<span style="color: #F8F8F8"> </span>--sort<span style="color: #CE5C00; font-weight: bold">=</span>-%mem<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-5
+<h3>メモリ使用量でソートしたプロセスを表示する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>aux<span style="color: #F8F8F8"> </span>--sort<span style="color: #CE5C00; font-weight: bold">=</span>-%mem
 <span style="color: #000; font-style: italic">USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND</span>
-<span style="color: #000; font-style: italic">user1     1235  1.5  0.8 254680 65432 pts/0    R+   10:20   0:05 chrome</span>
-<span style="color: #000; font-style: italic">user1     1236  0.8  0.7 234560 58976 pts/0    S    10:21   0:03 firefox</span>
-<span style="color: #000; font-style: italic">root      1237  0.5  0.6 198432 49152 ?        Ss   10:22   0:02 dockerd</span>
-<span style="color: #000; font-style: italic">user1     1238  0.3  0.5 176128 40960 pts/0    S+   10:23   0:01 code</span>
+<span style="color: #000; font-style: italic">user      2345  2.0  5.4 1254208 220800 ?      Sl   10:20   0:45 /usr/lib/firefox/firefox</span>
+<span style="color: #000; font-style: italic">mysql     1234  1.2  3.2  987654 130400 ?      Ssl  May01   2:34 /usr/sbin/mysqld</span>
+</pre></div>
+<h3>特定ユーザーのプロセスツリーを表示する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>--forest<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">UID        PID  PPID  C STIME TTY          TIME CMD</span>
+<span style="color: #000; font-style: italic">user      1050   950  0 May01 pts/0    00:00:01 bash</span>
+<span style="color: #000; font-style: italic">user      2345  1050  2 10:20 ?        00:00:45  \_ firefox</span>
+<span style="color: #000; font-style: italic">user      2346  2345  0 10:20 ?        00:00:02      \_ firefox-bin</span>
+<span style="color: #000; font-style: italic">user      1500  1050  0 10:15 pts/0    00:00:03  \_ vim document.txt</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>プロセスツリーの表示</h3>
-<p><code>ps -ef --forest</code>を使用すると、プロセスの親子関係がツリー形式で表示されます。これにより、どのプロセスがどのプロセスから派生したかが視覚的に理解しやすくなります。</p>
-<h3>リアルタイム監視</h3>
-<p><code>ps</code>はスナップショットを提供するだけなので、リアルタイムでプロセスを監視したい場合は<code>top</code>や<code>htop</code>コマンドを使用するとよいでしょう。</p>
-<h3>CPU/メモリ使用率の高いプロセスを特定</h3>
-<p><code>ps aux --sort=-%cpu</code>または<code>ps aux --sort=-%mem</code>を使用すると、CPU使用率やメモリ使用率の高いプロセスを特定できます。</p>
+<h3>出力フォーマットのカスタマイズ</h3>
+<p><code>-o</code> オプションを使用して、表示したい列を正確に指定できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-eo<span style="color: #F8F8F8"> </span>pid,ppid,cmd,%mem,%cpu<span style="color: #F8F8F8"> </span>--sort<span style="color: #CE5C00; font-weight: bold">=</span>-%mem
+</pre></div>
+<h3>リソースを大量に消費するプロセスを見つける</h3>
+<p><code>ps</code> と <code>sort</code> を組み合わせて、最もリソースを消費しているプロセスを特定できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>aux<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span>-nrk<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-5<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># CPU使用率の高い上位5つのプロセス</span>
+</pre></div>
+<h3>grepでフィルタリングする</h3>
+<p><code>ps</code> の出力を <code>grep</code> にパイプして特定のプロセスを見つけることができます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-ef<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>nginx
+</pre></div>
+<p>grep プロセス自体を除外するには：<code>ps -ef | grep [n]ginx</code> を使用するとよい</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>ps</code>と<code>top</code>の違いは何ですか？</h4>
-<p>A. <code>ps</code>はプロセスの静的なスナップショットを提供するのに対し、<code>top</code>はリアルタイムで更新される動的な表示を提供します。</p>
-<h4>Q2. 特定のプロセスを名前で検索するにはどうすればよいですか？</h4>
-<p>A. <code>ps aux | grep プロセス名</code>を使用します。ただし、grepプロセス自体も結果に含まれることに注意してください。</p>
-<h4>Q3. プロセスのCPU使用率とメモリ使用率を確認するにはどうすればよいですか？</h4>
-<p>A. <code>ps aux</code>コマンドを使用すると、%CPUと%MEMの列にそれぞれの使用率が表示されます。</p>
-<h4>Q4. macOSでの<code>ps</code>コマンドは他のUNIXシステムと違いがありますか？</h4>
-<p>A. macOSの<code>ps</code>コマンドはBSD由来であり、LinuxのようなGNU/Linuxシステムとは若干オプションの動作が異なる場合があります。例えば、<code>ps aux</code>は両方で動作しますが、一部の詳細オプションは異なります。</p>
-<h2>参考文献</h2>
+<h4>Q1. 特定のプロセスのPIDを見つけるにはどうすればよいですか？</h4>
+<p>A. <code>ps -C プロセス名</code> または <code>ps -ef | grep プロセス名</code> を使用して特定のプロセスのPIDを見つけることができます。</p>
+<h4>Q2. 端末を持たないプロセスを含むすべてのプロセスを表示するにはどうすればよいですか？</h4>
+<p>A. <code>ps aux</code> または <code>ps -ef</code> を使用してシステム上のすべてのプロセスを表示できます。</p>
+<h4>Q3. プロセスをリアルタイムで監視するにはどうすればよいですか？</h4>
+<p>A. <code>ps</code> はスナップショットを提供しますが、プロセスのリアルタイム監視には <code>top</code> または <code>htop</code> を使用します。</p>
+<h4>Q4. ps aux と ps -ef の違いは何ですか？</h4>
+<p>A. どちらもすべてのプロセスを表示しますが、<code>ps aux</code> はBSD構文を使用し、%CPUと%MEM列を含み、<code>ps -ef</code> はUNIX構文を使用し、PPID（親プロセスID）を表示します。</p>
+<h2>macOSに関する注意点</h2>
+<p>macOSでは、<code>ps</code> コマンドはLinuxとは若干異なるオプションを持っています。BSD形式のオプション（ダッシュなし）がより一般的に使用されます。例えば、<code>ps aux</code> はmacOSで動作しますが、<code>--forest</code> のようなGNU固有のオプションは利用できない場合があります。</p>
+<h2>参考資料</h2>
 <p>https://man7.org/linux/man-pages/man1/ps.1.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

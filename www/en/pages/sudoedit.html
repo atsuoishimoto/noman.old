@@ -47,58 +47,66 @@
     <main>
       
   <h1>sudoedit command</h1>
-<p>Edit files securely as a superuser while using your own user's editor configuration.</p>
+<p>Edit files securely as a privileged user while maintaining file ownership and permissions.</p>
 <h2>Overview</h2>
-<p><code>sudoedit</code> (also accessible as <code>sudo -e</code>) allows you to edit files that require elevated privileges while using your own editor preferences and configuration. It works by creating a temporary copy of the target file, letting you edit that copy with your regular user permissions, and then copying the changes back to the original file with superuser privileges.</p>
+<p><code>sudoedit</code> (also available as <code>sudo -e</code>) allows users to edit files that require elevated privileges while using their own editor preferences and preserving the file's original ownership and permissions. Unlike direct editing with <code>sudo vim</code>, <code>sudoedit</code> creates a temporary copy of the file that you edit with your preferred editor, then copies the changes back to the original file when you're done.</p>
 <h2>Options</h2>
-<h3><strong>-u username</strong></h3>
-<p>Specify which user's identity to assume when editing the file</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>root<span style="color: #F8F8F8"> </span>/etc/hosts
+<h3><strong>-u username/ID</strong> / <strong>--user=username/ID</strong></h3>
+<p>Edit the file as the specified user rather than root</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>www-data<span style="color: #F8F8F8"> </span>/var/www/html/index.html
 </pre></div>
-<h3><strong>-H</strong></h3>
-<p>Set the HOME environment variable to the target user's home directory</p>
+<h3><strong>-H</strong> / <strong>--set-home</strong></h3>
+<p>Sets the HOME environment variable to the target user's home directory</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>-H<span style="color: #F8F8F8"> </span>/etc/ssh/sshd_config
 </pre></div>
-<h3><strong>-C directory</strong></h3>
-<p>Change to the specified directory before editing</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span>/etc<span style="color: #F8F8F8"> </span>/ssh/sshd_config
+<h3><strong>-C num</strong> / <strong>--close-from=num</strong></h3>
+<p>Closes all file descriptors greater than or equal to num before executing a command</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>/etc/hosts
+</pre></div>
+<h3><strong>-E</strong> / <strong>--preserve-env</strong></h3>
+<p>Preserves the user's environment variables when editing</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>-E<span style="color: #F8F8F8"> </span>/etc/nginx/nginx.conf
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Basic file editing</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>/etc/ssh/sshd_config
-<span style="color: #000; font-style: italic">[Your default editor opens with the file contents]</span>
+<span style="color: #000; font-style: italic">[Your default editor opens with the file]</span>
 </pre></div>
 <h3>Using sudo -e (equivalent to sudoedit)</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>/etc/hosts
-<span style="color: #000; font-style: italic">[Your default editor opens with the file contents]</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>/etc/fstab
+<span style="color: #000; font-style: italic">[Your default editor opens with the file]</span>
 </pre></div>
-<h3>Editing multiple files</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>/etc/resolv.conf
-<span style="color: #000; font-style: italic">[Your default editor opens with each file in sequence]</span>
+<h3>Editing multiple files at once</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>/etc/hostname
+<span style="color: #000; font-style: italic">[Your default editor opens with the first file, then the second]</span>
 </pre></div>
-<h2>Tips:</h2>
+<h2>Tips</h2>
 <h3>Setting Your Preferred Editor</h3>
-<p><code>sudoedit</code> uses the EDITOR or VISUAL environment variables to determine which editor to launch. Set these in your shell configuration:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;export EDITOR=nano&#39;</span><span style="color: #F8F8F8"> </span>&gt;&gt;<span style="color: #F8F8F8"> </span>~/.bashrc
+<p><code>sudoedit</code> uses the SUDO_EDITOR, VISUAL, or EDITOR environment variables (in that order) to determine which editor to use. Set one of these in your shell configuration:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;export EDITOR=vim&#39;</span><span style="color: #F8F8F8"> </span>&gt;&gt;<span style="color: #F8F8F8"> </span>~/.bashrc
 </pre></div>
-<h3>Security Benefits</h3>
-<p>Unlike running your editor directly with sudo (e.g., <code>sudo vim file</code>), <code>sudoedit</code> prevents editor plugins or configurations from running with elevated privileges, reducing security risks.</p>
-<h3>Temporary File Location</h3>
-<p>The temporary copy is created in the same directory as the original file. If you don't have write permissions to that directory, use the TMPDIR environment variable to specify an alternative location.</p>
+<h3>Checking Differences Before Saving</h3>
+<p>When editing critical system files, you can use the diff command to verify your changes before they're applied:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>/etc/ssh/sshd_config<span style="color: #F8F8F8"> </span>/tmp/sshd_config.tmp
+</pre></div>
+<h3>Security Advantage</h3>
+<p>Using <code>sudoedit</code> is more secure than <code>sudo vim</code> because it minimizes the time spent with elevated privileges and prevents editor plugins from potentially executing malicious code with root privileges.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between <code>sudoedit</code> and <code>sudo vim</code>?</h4>
-<p>A. <code>sudoedit</code> creates a temporary copy that you edit with your normal user privileges, then copies it back with sudo privileges. <code>sudo vim</code> runs the entire editor with elevated privileges, which can be a security risk if your editor has plugins or runs external commands.</p>
-<h4>Q2. How do I specify which editor to use?</h4>
-<p>A. Set the EDITOR or VISUAL environment variable in your shell configuration file (e.g., <code>~/.bashrc</code>).</p>
-<h4>Q3. Can I use <code>sudoedit</code> to edit multiple files at once?</h4>
-<p>A. Yes, simply list multiple files as arguments: <code>sudoedit file1 file2 file3</code>.</p>
-<h4>Q4. Why does <code>sudoedit</code> sometimes fail with &quot;sudoedit: unable to stat file: No such file or directory&quot;?</h4>
-<p>A. This typically happens when the directory containing the file doesn't exist or when you don't have permission to access the directory structure leading to the file.</p>
+<p>A. <code>sudoedit</code> creates a temporary copy of the file that you edit with your normal privileges, then copies it back with sudo privileges. This is more secure than running the entire editor as root with <code>sudo vim</code>.</p>
+<h4>Q2. How do I specify which editor to use with <code>sudoedit</code>?</h4>
+<p>A. Set the SUDO_EDITOR, VISUAL, or EDITOR environment variable in your shell configuration file (e.g., ~/.bashrc).</p>
+<h4>Q3. Can I edit multiple files at once with <code>sudoedit</code>?</h4>
+<p>A. Yes, simply list all the files you want to edit as arguments: <code>sudoedit file1 file2 file3</code>.</p>
+<h4>Q4. Why does <code>sudoedit</code> sometimes fail with &quot;sudoedit: no writable temporary directory found&quot;?</h4>
+<p>A. This occurs when <code>sudoedit</code> cannot find a temporary directory with appropriate permissions. Try setting the TMPDIR environment variable to a directory you can write to.</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, <code>sudoedit</code> works similarly to Linux, but the default editor might be different. macOS typically uses nano as the default editor. To change this, set your EDITOR environment variable in your ~/.zshrc or ~/.bash_profile file.</p>
 <h2>References</h2>
 <p>https://www.sudo.ws/docs/man/sudoedit.man/</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

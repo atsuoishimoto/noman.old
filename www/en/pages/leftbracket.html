@@ -47,72 +47,100 @@
     <main>
       
   <h1>[ command</h1>
-<p>Evaluates conditional expressions and returns a status based on the evaluation.</p>
+<p>Evaluates conditional expressions and returns a status based on the evaluation result.</p>
 <h2>Overview</h2>
-<p>The <code>[</code> command (also known as <code>test</code>) is used to check file types, compare strings, and evaluate arithmetic expressions. It's commonly used in shell scripts for conditional operations like <code>if</code> statements. The command returns a status of 0 (true) or 1 (false) based on the evaluation of the expression.</p>
+<p>The <code>[</code> command (also known as <code>test</code>) is a shell builtin that evaluates conditional expressions and returns a status of 0 (true) or 1 (false). It's commonly used in shell scripts for conditional testing of file attributes, string comparisons, and arithmetic operations. The command requires a closing <code>]</code> to complete its syntax.</p>
 <h2>Options</h2>
 <h3><strong>File Tests</strong></h3>
-<p>Tests for file properties and characteristics</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Regular file exists&quot;</span>
+<p>Tests for file properties and attributes</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Regular file exists&quot;</span>
 <span style="color: #000; font-style: italic">Regular file exists</span>
-
-<span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>/tmp<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Directory exists&quot;</span>
-<span style="color: #000; font-style: italic">Directory exists</span>
 </pre></div>
 <h3><strong>String Tests</strong></h3>
 <p>Compares strings or checks string properties</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hello&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hello&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Strings are equal&quot;</span>
-<span style="color: #000; font-style: italic">Strings are equal</span>
-
-<span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;String is empty&quot;</span>
-<span style="color: #000; font-style: italic">String is empty</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;John&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$name</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;John&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Names match&quot;</span>
+<span style="color: #000; font-style: italic">Names match</span>
 </pre></div>
-<h3><strong>Integer Comparison</strong></h3>
+<h3><strong>Integer Tests</strong></h3>
 <p>Compares integer values</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>-eq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Numbers are equal&quot;</span>
-<span style="color: #000; font-style: italic">Numbers are equal</span>
-
-<span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>-gt<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;10 is greater than 5&quot;</span>
-<span style="color: #000; font-style: italic">10 is greater than 5</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">age</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">25</span>
+<span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$age</span><span style="color: #F8F8F8"> </span>-gt<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">18</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Adult&quot;</span>
+<span style="color: #000; font-style: italic">Adult</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>In if statements</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;The passwd file exists&quot;</span>
+<h3>Testing if a file exists</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;File exists&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">||</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;File does not exist&quot;</span>
+<span style="color: #000; font-style: italic">File exists</span>
+</pre></div>
+<h3>Checking if a directory is writable</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span>/tmp<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Directory is writable&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">||</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Directory is not writable&quot;</span>
+<span style="color: #000; font-style: italic">Directory is writable</span>
+</pre></div>
+<h3>Comparing string values in an if statement</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">fruit</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;apple&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$fruit</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;apple&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;It&#39;s an apple&quot;</span>
+<span style="color: #000; font-style: italic">&gt; else</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;It&#39;s not an apple&quot;</span>
 <span style="color: #000; font-style: italic">&gt; fi</span>
-<span style="color: #000; font-style: italic">The passwd file exists</span>
+<span style="color: #000; font-style: italic">It&#39;s an apple</span>
 </pre></div>
-<h3>With logical operators</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>/tmp<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span>/tmp<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;tmp directory exists and is writable&quot;</span>
-<span style="color: #000; font-style: italic">tmp directory exists and is writable</span>
+<h2>Common File Test Operators</h2>
+<p>| Operator | Description |
+|----------|-------------|
+| <code>-e file</code> | True if file exists |
+| <code>-f file</code> | True if file is a regular file |
+| <code>-d file</code> | True if file is a directory |
+| <code>-r file</code> | True if file is readable |
+| <code>-w file</code> | True if file is writable |
+| <code>-x file</code> | True if file is executable |
+| <code>-s file</code> | True if file exists and has size greater than zero |</p>
+<h2>Common String Test Operators</h2>
+<p>| Operator | Description |
+|----------|-------------|
+| <code>-z string</code> | True if string length is zero |
+| <code>-n string</code> | True if string length is non-zero |
+| <code>string1 = string2</code> | True if strings are equal |
+| <code>string1 != string2</code> | True if strings are not equal |</p>
+<h2>Common Integer Comparison Operators</h2>
+<p>| Operator | Description |
+|----------|-------------|
+| <code>int1 -eq int2</code> | True if integers are equal |
+| <code>int1 -ne int2</code> | True if integers are not equal |
+| <code>int1 -lt int2</code> | True if int1 is less than int2 |
+| <code>int1 -le int2</code> | True if int1 is less than or equal to int2 |
+| <code>int1 -gt int2</code> | True if int1 is greater than int2 |
+| <code>int1 -ge int2</code> | True if int1 is greater than or equal to int2 |</p>
+<h2>Tips</h2>
+<h3>Always Quote Variables</h3>
+<p>Always quote variables in test expressions to prevent word splitting and globbing issues:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$variable</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;value&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># Correct</span>
 </pre></div>
-<h3>Checking command-line arguments</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$#</span><span style="color: #F8F8F8"> </span>-eq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;No arguments provided&quot;</span>
-<span style="color: #000; font-style: italic">No arguments provided</span>
+<h3>Use Double Brackets When Possible</h3>
+<p>In Bash, consider using <code>[[</code> instead of <code>[</code> for more advanced features and fewer surprises:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$string</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span>~<span style="color: #F8F8F8"> </span>^<span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">0</span>-9<span style="color: #CE5C00; font-weight: bold">]</span>+$<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Numeric&quot;</span>
 </pre></div>
-<h2>Tips:</h2>
-<h3>Always Use Spaces</h3>
-<p>Always put spaces around the brackets and operators. <code>[ -f file.txt ]</code> works, but <code>[-f file.txt]</code> will fail.</p>
-<h3>Remember the Closing Bracket</h3>
-<p>The <code>[</code> command requires a closing <code>]</code> at the end of the expression. Forgetting it will cause syntax errors.</p>
-<h3>Use Double Brackets in Bash</h3>
-<p>In Bash scripts, consider using <code>[[</code> instead of <code>[</code> for more features and fewer quirks with string comparisons and pattern matching.</p>
-<h3>Quote Variables</h3>
-<p>Always quote variables to prevent word splitting: <code>[ -f &quot;$filename&quot; ]</code> instead of <code>[ -f $filename ]</code>.</p>
+<h3>Remember the Spaces</h3>
+<p>The <code>[</code> command requires spaces after the opening bracket and before the closing bracket:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># Correct</span>
+<span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span>-f<span style="color: #F8F8F8"> </span>file.txt<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># Incorrect - will fail</span>
+</pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between <code>[</code> and <code>test</code>?</h4>
-<p>A. They are functionally equivalent. <code>[</code> is just another name for the <code>test</code> command, but requires a closing <code>]</code> at the end.</p>
-<h4>Q2. Can I use <code>[</code> for mathematical operations?</h4>
-<p>A. It's limited to basic integer comparisons. For complex math, use <code>(( ))</code> in Bash or the <code>expr</code> command.</p>
-<h4>Q3. How do I check if a file doesn't exist?</h4>
-<p>A. Use the negation operator: <code>[ ! -f filename ]</code></p>
-<h4>Q4. What's the difference between <code>[</code> and <code>[[</code>?</h4>
-<p>A. <code>[[</code> is a Bash-specific extension with more features like pattern matching and better handling of empty variables, while <code>[</code> is POSIX-compliant and works in all shells.</p>
+<h4>Q1. What's the difference between <code>[</code> and <code>[[</code>?</h4>
+<p>A. <code>[</code> is a command (also known as <code>test</code>) available in all POSIX shells, while <code>[[</code> is a shell keyword in Bash and other modern shells that offers extended functionality like pattern matching and logical operators.</p>
+<h4>Q2. Why do I need spaces around the brackets?</h4>
+<p>A. The <code>[</code> is actually a command (like <code>ls</code> or <code>grep</code>), so it needs spaces to separate it from its arguments. The closing <code>]</code> is its final argument.</p>
+<h4>Q3. How do I test multiple conditions?</h4>
+<p>A. Use <code>-a</code> (AND) or <code>-o</code> (OR) operators:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;File exists and is readable&quot;</span>
+</pre></div>
+<p>With <code>[[</code>, you can use <code>&amp;&amp;</code> and <code>||</code> instead.</p>
 <h2>References</h2>
 <p>https://pubs.opengroup.org/onlinepubs/9699919799/utilities/test.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

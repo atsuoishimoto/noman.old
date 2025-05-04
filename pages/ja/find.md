@@ -1,150 +1,151 @@
 # find コマンド
 
-ファイルシステム内でファイルやディレクトリを検索します。
+ディレクトリ階層内でファイルを検索します。
 
 ## 概要
 
-`find`コマンドは、指定したディレクトリ階層内でファイルやディレクトリを検索するための強力なツールです。名前、サイズ、更新日時、パーミッションなど、様々な条件に基づいて検索できます。また、検索結果に対して追加のアクションを実行することも可能です。
+`find` コマンドは、名前、タイプ、サイズ、更新時間などの様々な条件に基づいて、ディレクトリ階層内のファイルを検索するツールです。ファイルを見つけ出し、一致した結果に対して操作を実行するための強力なツールです。
 
 ## オプション
 
+### **-iname パターン**
+
+大文字と小文字を区別せずに、名前がパターンに一致するファイルを検索します。これは `-name` に似ていますが、大文字小文字を区別しない検索を行います。
+
+```console
+$ find . -iname "*.txt"
+./notes.txt
+./Documents/README.txt
+./Documents/report.TXT
+```
+
 ### **-name パターン**
 
-ファイル名でファイルを検索します。ワイルドカード（*、?など）が使用できます。
+大文字と小文字を区別して、名前がパターンに一致するファイルを検索します。
 
 ```console
 $ find . -name "*.txt"
-./documents/note.txt
-./readme.txt
-```
-
-### **-iname パターン**
-
-ファイル名で大文字・小文字を区別せずに検索します。`-name`と同様にワイルドカードが使用できます。
-
-```console
-$ find . -iname "readme*"
-./README.md
-./docs/readme.txt
-./projects/ReadMe.rst
+./notes.txt
+./Documents/README.txt
 ```
 
 ### **-type タイプ**
 
-ファイルタイプで検索します。一般的な値は `f`（通常ファイル）、`d`（ディレクトリ）、`l`（シンボリックリンク）です。
+特定のタイプのファイルを検索します。一般的なタイプには以下があります：
+- `f` は通常のファイル
+- `d` はディレクトリ
+- `l` はシンボリックリンク
 
 ```console
 $ find . -type d
 .
-./documents
-./images
-./projects
+./Documents
+./Downloads
+./Pictures
 ```
 
-### **-mtime 日数**
+### **-size n[cwbkMG]**
 
-指定した日数以内に変更されたファイルを検索します。`-mtime -7` は7日以内に変更されたファイルを検索します。
+サイズに基づいてファイルを検索します：
+- `c` はバイト単位
+- `k` はキロバイト単位
+- `M` はメガバイト単位
+- `G` はギガバイト単位
+- `+` 接頭辞は「より大きい」を意味します
+- `-` 接頭辞は「より小さい」を意味します
 
 ```console
-$ find . -mtime -3
-./documents/report.docx
-./projects/script.py
+$ find . -size +10M
+./Videos/movie.mp4
+./Downloads/installer.iso
 ```
 
-### **-size サイズ**
+### **-mtime n**
 
-特定のサイズのファイルを検索します。`+`は「より大きい」、`-`は「より小さい」を意味します。
-
-```console
-$ find . -size +1M
-./images/photo.jpg
-./videos/clip.mp4
-```
-
-### **-exec コマンド {} \;**
-
-検索結果の各ファイルに対してコマンドを実行します。`{}`は検索されたファイル名に置き換えられます。
+n日前に変更されたファイルを検索します。`+n` は「n日より前」、`-n` は「n日以内」を意味します。
 
 ```console
-$ find . -name "*.txt" -exec cat {} \;
-これはnote.txtの内容です。
-これはreadme.txtの内容です。
+$ find . -mtime -7
+./Documents/recent-report.txt
+./Downloads/recent-file.zip
 ```
 
 ## 使用例
 
-### 大文字小文字を区別せずにファイルを検索
+### 特定の権限を持つファイルを検索する
 
 ```console
-$ find ~/Documents -iname "*report*"
-/home/user/Documents/annual_Report.docx
-/home/user/Documents/reports/weekly_report.pdf
-/home/user/Documents/REPORT_template.xlsx
+$ find /home -type f -perm 644
+/home/user/file1.txt
+/home/user/file2.txt
 ```
 
-### 特定の拡張子を持つファイルを検索
+### 一致するファイルに対してコマンドを実行する
 
 ```console
-$ find /home/user -name "*.jpg"
-/home/user/pictures/vacation.jpg
-/home/user/documents/scan.jpg
+$ find . -name "*.log" -exec rm {} \;
 ```
 
-### 最近変更されたファイルを検索して詳細表示
+### 空のファイルを検索する
 
 ```console
-$ find /var/log -mtime -1 -exec ls -l {} \;
--rw-r--r-- 1 root root 15340 4月 30 10:23 /var/log/syslog
--rw-r--r-- 1 root root 7823 4月 30 09:15 /var/log/auth.log
+$ find /var/log -type f -empty
+/var/log/empty.log
 ```
 
-### 空のファイルを検索して削除
+### 過去24時間以内に変更されたファイルを検索する
 
 ```console
-$ find /tmp -type f -size 0 -delete
+$ find /home/user -type f -mtime -1
+/home/user/recent-document.txt
+/home/user/today-notes.md
 ```
 
 ## ヒント:
 
-### 大文字小文字を区別しない検索の活用
+### 大文字小文字を区別しない検索には `-iname` を使用する
 
-ファイル名の大文字小文字が不確かな場合は、`-iname`を使用すると便利です。特にチーム作業や異なるOSからのファイル転送時に役立ちます。
+ファイル名の正確な大文字小文字が不明な場合は、`-name` の代わりに `-iname` を使用して、大文字小文字に関係なくファイルを一致させることができます。
 
-### パフォーマンスの向上
+### 論理演算子で複数の条件を組み合わせる
 
-大きなディレクトリ構造を検索する場合は、検索範囲を制限するか、`-type`や`-name`などのフィルターを早めに指定すると処理が速くなります。
+`-and`、`-or`、`-not`（または `!`）を使用して複雑な検索条件を作成できます：
+```console
+$ find . -type f -name "*.txt" -and -size +1M
+```
 
-### 複数条件の組み合わせ
+### `-maxdepth` でディレクトリの深さを制限する
 
-`-a`（AND、デフォルト）や`-o`（OR）、`!`（NOT）を使用して複数の検索条件を組み合わせることができます。例：`find . -name "*.txt" -a -size +1k`
+`-maxdepth` を使用して `find` の検索深度を制御できます：
+```console
+$ find . -maxdepth 2 -name "*.jpg"
+```
 
-### 権限エラーの回避
+### エラーメッセージをリダイレクトする
 
-権限エラーを無視するには、`2>/dev/null`を追加します。例：`find / -name "config.xml" 2>/dev/null`
+「Permission denied」エラーを非表示にするには `2>/dev/null` を使用します：
+```console
+$ find / -name "config.xml" 2>/dev/null
+```
 
 ## よくある質問
 
-#### Q1. `-name`と`-iname`の違いは何ですか？
-A. `-name`は大文字と小文字を区別しますが、`-iname`は区別しません。例えば、`-iname "readme*"`は「README.md」や「readme.txt」などにマッチします。
+#### Q1. 名前でファイルを検索するにはどうすればよいですか？
+A. 大文字小文字を区別する検索には `find /検索パス -name "ファイル名"` を、大文字小文字を区別しない検索には `find /検索パス -iname "ファイル名"` を使用します。
 
-#### Q2. findコマンドの基本的な構文は？
-A. 基本構文は `find [検索開始パス] [検索条件] [アクション]` です。例えば `find . -name "*.txt"` は現在のディレクトリから始めて、.txtで終わるファイルを検索します。
+#### Q2. 最近変更されたファイルを検索するにはどうすればよいですか？
+A. `find /検索パス -mtime -n` を使用します。nは日数です。例えば、`-mtime -7` は過去7日以内に変更されたファイルを検索します。
 
-#### Q3. 特定の日付範囲内のファイルを検索するには？
-A. `-mtime`や`-newer`オプションを使用します。例えば、`find . -mtime -7 -a -mtime +1`は1日以上7日以内に変更されたファイルを検索します。
+#### Q3. ファイルを検索して削除するにはどうすればよいですか？
+A. `find /検索パス -name "パターン" -delete` または `find /検索パス -name "パターン" -exec rm {} \;` を使用します。
 
-#### Q4. 検索結果を別のコマンドに渡すにはどうすればいいですか？
-A. `-exec`オプションを使用するか、パイプとxargsを組み合わせます。例：`find . -name "*.txt" | xargs grep "keyword"`
+#### Q4. 検索からディレクトリを除外するにはどうすればよいですか？
+A. `! -path "*/除外するディレクトリ/*"` または `-not -path "*/除外するディレクトリ/*"` を使用します。
 
-## macOSでの注意点
+## 参考資料
 
-macOSのfindコマンドはGNU findとは若干異なります。特に、`-delete`オプションの動作や正規表現の扱いが異なる場合があります。また、macOSでは`-path`オプションの代わりに`-not -path`を使用することが多いです。`-iname`オプションは両方のバージョンで同様に動作しますが、複雑な正規表現パターンを使用する場合は注意が必要です。
-
-## 参考文献
-
-https://www.gnu.org/software/findutils/manual/html_mono/find.html
+https://www.gnu.org/software/findutils/manual/html_node/find_html/index.html
 
 ## 改訂履歴
 
-- 2025/04/30 -iname オプションの説明を追加し、使用例と関連するFAQを更新
-- 2025/04/30 初版作成
+- 2025/05/04 初回改訂

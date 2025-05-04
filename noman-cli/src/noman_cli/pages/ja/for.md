@@ -1,165 +1,151 @@
 # for コマンド
 
-指定した範囲の値や項目に対して繰り返し処理を実行します。
+リスト内の各項目に対してコマンドまたはコマンドセットを実行します。
 
 ## 概要
 
-`for` コマンドは、シェルスクリプトで繰り返し処理を行うための基本的な制御構造です。リスト内の各項目、数値範囲、ファイル名パターンに一致するファイルなどに対して、同じコマンドや処理を繰り返し実行することができます。
+`for` コマンドはシェルのループ構文で、値のリストを反復処理し、各値に対して指定されたコマンドを一度ずつ実行します。シェルスクリプトでのバッチ処理、自動化、繰り返しタスクによく使用されます。ループ変数はリスト内の各値を順番に取り、単一のコマンド構造で複数の項目に対して操作を実行できるようにします。
 
 ## オプション
 
-`for` コマンド自体にはオプションはありませんが、さまざまな構文形式があります。
+`for` コマンドはシェル組み込みコマンドであり、スタンドアロンプログラムのような従来のコマンドラインオプションはありません。代わりに、異なる構文のバリエーションがあります：
 
-### **基本的な for ループ**
+### **基本構文**
 
-シェル変数にリスト内の各値を順番に代入して処理を繰り返します。
+単語のリストを反復処理する標準的な形式です。
 
 ```console
-$ for name in Alice Bob Charlie; do
->   echo "Hello, $name!"
-> done
-Hello, Alice!
-Hello, Bob!
-Hello, Charlie!
+$ for i in one two three; do echo "番号: $i"; done
+番号: one
+番号: two
+番号: three
 ```
 
-### **数値範囲を使用した for ループ**
+### **C言語スタイル構文**
 
-連続した数値に対して処理を繰り返します。
-
-```console
-$ for i in {1..5}; do
->   echo "Number: $i"
-> done
-Number: 1
-Number: 2
-Number: 3
-Number: 4
-Number: 5
-```
-
-### **C言語スタイルの for ループ (Bash)**
-
-Bashでは、C言語に似た構文でループを記述できます。
+bashやその他のシェルで利用可能な、数値反復のためのC言語風の構文です。
 
 ```console
-$ for ((i=1; i<=5; i++)); do
->   echo "Count: $i"
-> done
-Count: 1
-Count: 2
-Count: 3
-Count: 4
-Count: 5
+$ for ((i=1; i<=3; i++)); do echo "カウント: $i"; done
+カウント: 1
+カウント: 2
+カウント: 3
 ```
 
 ## 使用例
 
-### ディレクトリ内のすべてのファイルを処理する
+### ファイルに対する反復処理
 
 ```console
-$ for file in *.txt; do
->   echo "Processing $file..."
->   wc -l "$file"
-> done
-Processing document.txt...
-      20 document.txt
-Processing notes.txt...
-      15 notes.txt
-Processing readme.txt...
-      35 readme.txt
+$ for file in *.txt; do echo "処理中: $file"; cat "$file"; done
+処理中: notes.txt
+これはnotes.txtの内容です
+処理中: readme.txt
+これはreadme.txtの内容です
 ```
 
-### 複数のコマンドを実行する
+### コマンド出力に対する反復処理
 
 ```console
-$ for server in server1 server2 server3; do
->   echo "Checking $server..."
->   ping -c 1 $server
->   echo "-------------------"
-> done
-Checking server1...
-PING server1 (192.168.1.1): 56 data bytes
-64 bytes from 192.168.1.1: icmp_seq=0 ttl=64 time=0.733 ms
--------------------
-Checking server2...
-PING server2 (192.168.1.2): 56 data bytes
-64 bytes from 192.168.1.2: icmp_seq=0 ttl=64 time=1.240 ms
--------------------
-Checking server3...
-PING server3 (192.168.1.3): 56 data bytes
-64 bytes from 192.168.1.3: icmp_seq=0 ttl=64 time=0.890 ms
--------------------
+$ for user in $(cut -d: -f1 /etc/passwd | head -3); do echo "ユーザー: $user"; done
+ユーザー: root
+ユーザー: daemon
+ユーザー: bin
 ```
 
-### 増分値を指定した数値範囲
+### 数値範囲に対する反復処理
 
 ```console
-$ for i in {0..10..2}; do
->   echo "Value: $i"
-> done
-Value: 0
-Value: 2
-Value: 4
-Value: 6
-Value: 8
-Value: 10
+$ for i in {1..5}; do echo "数字 $i"; done
+数字 1
+数字 2
+数字 3
+数字 4
+数字 5
+```
+
+### ステップ値を使用した反復処理
+
+```console
+$ for i in {0..10..2}; do echo "偶数: $i"; done
+偶数: 0
+偶数: 2
+偶数: 4
+偶数: 6
+偶数: 8
+偶数: 10
 ```
 
 ## ヒント:
 
-### 変数名の選択
+### 適切な引用符の使用
 
-変数名は意味のある名前を選ぶと、コードの可読性が向上します。例えば、ファイルを処理する場合は `i` よりも `file` を使用するとよいでしょう。
-
-### IFSの活用
-
-IFS（Internal Field Separator）を変更することで、特定の区切り文字でリストを分割できます。
+ループ内の変数は常に引用符で囲み、スペースを含むファイル名や値を正しく処理できるようにしましょう：
 
 ```console
-$ IFS=","
-$ data="apple,banana,cherry"
-$ for fruit in $data; do
->   echo "Fruit: $fruit"
-> done
-Fruit: apple
-Fruit: banana
-Fruit: cherry
+$ for file in *.txt; do echo "処理中: '$file'"; done
 ```
 
-### ワイルドカードの展開に注意
+### break と continue
 
-ワイルドカードを使用する場合、一致するファイルがない場合はワイルドカードがそのまま変数に代入されます。これを防ぐには、nullglob オプションを設定するか、条件分岐で対処します。
+`break` を使用してループを早期に終了し、`continue` を使用して次の反復にスキップできます：
+
+```console
+$ for i in {1..10}; do
+>   if [ $i -eq 5 ]; then continue; fi
+>   if [ $i -eq 8 ]; then break; fi
+>   echo $i
+> done
+1
+2
+3
+4
+6
+7
+```
+
+### ネストしたループ
+
+より複雑な反復処理のために `for` ループをネストできます：
+
+```console
+$ for i in {1..3}; do
+>   for j in a b c; do
+>     echo "$i-$j"
+>   done
+> done
+1-a
+1-b
+1-c
+2-a
+2-b
+2-c
+3-a
+3-b
+3-c
+```
 
 ## よくある質問
 
-#### Q1. `for` ループと `while` ループの違いは何ですか？
-A. `for` ループは事前に定義された項目のリストを反復処理するのに適しています。一方、`while` ループは条件が真である限り繰り返し実行され、終了条件が動的に変化する場合に適しています。
+#### Q1. 数値の範囲を反復処理するにはどうすればよいですか？
+A. 波括弧展開を使用します：`for i in {1..10}; do echo $i; done` または C言語スタイル構文：`for ((i=1; i<=10; i++)); do echo $i; done`。
 
-#### Q2. `for` ループを途中で終了するにはどうすればよいですか？
-A. `break` コマンドを使用すると、ループを即座に終了できます。特定の条件でループの現在の反復をスキップするには、`continue` コマンドを使用します。
+#### Q2. ファイルの各行を処理するにはどうすればよいですか？
+A. `for` を使用することもできますが、`while` ループと `read` を使用する方が良いでしょう：`while read line; do echo "$line"; done < file.txt`。
 
-#### Q3. 配列の各要素に対して `for` ループを実行するにはどうすればよいですか？
-A. Bashでは、以下のように配列を反復処理できます：
-```bash
-array=("item1" "item2" "item3")
-for item in "${array[@]}"; do
-  echo "$item"
-done
-```
+#### Q3. 配列要素を反復処理するにはどうすればよいですか？
+A. `for element in "${array[@]}"; do echo "$element"; done` を使用します。
 
-#### Q4. ファイル内の各行に対して処理を行うには？
-A. `for` よりも `while read` を使用する方が適しています：
-```bash
-while read -r line; do
-  echo "Line: $line"
-done < file.txt
-```
+#### Q4. コマンド出力を反復処理するために `for` を使用できますか？
+A. はい、コマンド置換を使用します：`for item in $(command); do echo "$item"; done`。
+
+#### Q5. 数値範囲でステップ値を指定するにはどうすればよいですか？
+A. 拡張波括弧展開を使用します：`for i in {開始..終了..ステップ}; do echo $i; done`。
 
 ## 参考文献
 
 https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html
 
-## Revisions
+## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

@@ -4,143 +4,142 @@ Send ICMP ECHO_REQUEST packets to network hosts to verify connectivity.
 
 ## Overview
 
-`ping` is a network diagnostic tool that tests if a host is reachable on an IP network. It works by sending Internet Control Message Protocol (ICMP) echo request packets to the target host and waiting for a response. This command is commonly used to troubleshoot network connectivity issues, measure network latency, and verify if a remote system is online.
+The `ping` command is a network diagnostic tool that tests the reachability of a host on an IP network. It measures the round-trip time for messages sent from the originating host to a destination computer and back. Ping works by sending Internet Control Message Protocol (ICMP) Echo Request packets to the target host and waiting for an ICMP Echo Reply.
 
 ## Options
 
-### **-c count**
+### **-c count** / **--count=count**
 
-Limit the number of echo requests to be sent
+Stop after sending (and receiving) count ECHO_REQUEST packets.
 
 ```console
 $ ping -c 4 google.com
-PING google.com (142.250.190.78): 56 data bytes
-64 bytes from 142.250.190.78: icmp_seq=0 ttl=116 time=14.308 ms
-64 bytes from 142.250.190.78: icmp_seq=1 ttl=116 time=14.417 ms
-64 bytes from 142.250.190.78: icmp_seq=2 ttl=116 time=14.303 ms
-64 bytes from 142.250.190.78: icmp_seq=3 ttl=116 time=14.264 ms
+PING google.com (142.250.190.78) 56(84) bytes of data.
+64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=1 ttl=116 time=15.2 ms
+64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=2 ttl=116 time=14.8 ms
+64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=3 ttl=116 time=15.0 ms
+64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=4 ttl=116 time=14.9 ms
 
 --- google.com ping statistics ---
-4 packets transmitted, 4 packets received, 0.0% packet loss
-round-trip min/avg/max/stddev = 14.264/14.323/14.417/0.057 ms
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/mdev = 14.816/14.979/15.201/0.158 ms
 ```
 
-### **-i interval**
+### **-i interval** / **--interval=interval**
 
-Wait the specified number of seconds between sending each packet
+Wait interval seconds between sending each packet. The default is to wait for one second between each packet.
 
 ```console
-$ ping -i 2 -c 3 example.com
-PING example.com (93.184.216.34): 56 data bytes
-64 bytes from 93.184.216.34: icmp_seq=0 ttl=56 time=11.632 ms
-64 bytes from 93.184.216.34: icmp_seq=1 ttl=56 time=11.726 ms
-64 bytes from 93.184.216.34: icmp_seq=2 ttl=56 time=11.978 ms
+$ ping -c 3 -i 2 example.com
+PING example.com (93.184.216.34) 56(84) bytes of data.
+64 bytes from 93.184.216.34: icmp_seq=1 ttl=56 time=11.8 ms
+64 bytes from 93.184.216.34: icmp_seq=2 ttl=56 time=12.1 ms
+64 bytes from 93.184.216.34: icmp_seq=3 ttl=56 time=11.9 ms
 
 --- example.com ping statistics ---
-3 packets transmitted, 3 packets received, 0.0% packet loss
-round-trip min/avg/max/stddev = 11.632/11.779/11.978/0.146 ms
+3 packets transmitted, 3 received, 0% packet loss, time 4005ms
+rtt min/avg/max/mdev = 11.823/11.941/12.102/0.115 ms
 ```
 
-### **-t ttl**
+### **-t ttl** / **--ttl=ttl**
 
-Set the IP Time to Live (TTL) for outgoing packets
+Set the IP Time to Live (TTL) for outgoing packets.
 
 ```console
-$ ping -t 64 -c 2 github.com
-PING github.com (140.82.121.4): 56 data bytes
-64 bytes from 140.82.121.4: icmp_seq=0 ttl=64 time=15.321 ms
-64 bytes from 140.82.121.4: icmp_seq=1 ttl=64 time=15.256 ms
+$ ping -c 2 -t 64 github.com
+PING github.com (140.82.114.3) 56(84) bytes of data.
+64 bytes from 140.82.114.3: icmp_seq=1 ttl=64 time=29.7 ms
+64 bytes from 140.82.114.3: icmp_seq=2 ttl=64 time=29.5 ms
 
 --- github.com ping statistics ---
-2 packets transmitted, 2 packets received, 0.0% packet loss
-round-trip min/avg/max/stddev = 15.256/15.289/15.321/0.033 ms
+2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+rtt min/avg/max/mdev = 29.532/29.636/29.741/0.104 ms
 ```
 
-### **-s packetsize**
+### **-s packetsize** / **--size=packetsize**
 
-Specify the number of data bytes to be sent
+Specifies the number of data bytes to be sent. The default is 56, which translates into 64 ICMP data bytes when combined with the 8 bytes of ICMP header data.
 
 ```console
-$ ping -s 100 -c 2 8.8.8.8
-PING 8.8.8.8 (8.8.8.8): 100 data bytes
-108 bytes from 8.8.8.8: icmp_seq=0 ttl=116 time=14.308 ms
-108 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=14.417 ms
+$ ping -c 2 -s 100 cloudflare.com
+PING cloudflare.com (104.16.132.229) 100(128) bytes of data.
+108 bytes from 104.16.132.229: icmp_seq=1 ttl=57 time=10.3 ms
+108 bytes from 104.16.132.229: icmp_seq=2 ttl=57 time=10.1 ms
 
---- 8.8.8.8 ping statistics ---
-2 packets transmitted, 2 packets received, 0.0% packet loss
-round-trip min/avg/max/stddev = 14.308/14.363/14.417/0.055 ms
+--- cloudflare.com ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 10.143/10.245/10.348/0.102 ms
 ```
 
 ## Usage Examples
 
-### Basic connectivity test
+### Basic Connectivity Test
 
 ```console
 $ ping google.com
-PING google.com (142.250.190.78): 56 data bytes
-64 bytes from 142.250.190.78: icmp_seq=0 ttl=116 time=14.308 ms
-64 bytes from 142.250.190.78: icmp_seq=1 ttl=116 time=14.417 ms
-64 bytes from 142.250.190.78: icmp_seq=2 ttl=116 time=14.303 ms
+PING google.com (142.250.190.78) 56(84) bytes of data.
+64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=1 ttl=116 time=15.2 ms
+64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=2 ttl=116 time=14.8 ms
 ^C
 --- google.com ping statistics ---
-3 packets transmitted, 3 packets received, 0.0% packet loss
-round-trip min/avg/max/stddev = 14.303/14.343/14.417/0.052 ms
+2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+rtt min/avg/max/mdev = 14.816/15.008/15.201/0.192 ms
 ```
 
-### Checking network latency
+### Checking Network Latency
 
 ```console
-$ ping -c 10 8.8.8.8 | grep time=
-64 bytes from 8.8.8.8: icmp_seq=0 ttl=116 time=14.308 ms
-64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=14.417 ms
-64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=14.303 ms
-64 bytes from 8.8.8.8: icmp_seq=3 ttl=116 time=14.264 ms
-64 bytes from 8.8.8.8: icmp_seq=4 ttl=116 time=14.512 ms
-64 bytes from 8.8.8.8: icmp_seq=5 ttl=116 time=14.398 ms
-64 bytes from 8.8.8.8: icmp_seq=6 ttl=116 time=14.356 ms
-64 bytes from 8.8.8.8: icmp_seq=7 ttl=116 time=14.287 ms
-64 bytes from 8.8.8.8: icmp_seq=8 ttl=116 time=14.329 ms
-64 bytes from 8.8.8.8: icmp_seq=9 ttl=116 time=14.301 ms
+$ ping -c 5 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=9.82 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=9.75 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=116 time=9.79 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=116 time=9.86 ms
+64 bytes from 8.8.8.8: icmp_seq=5 ttl=116 time=9.80 ms
+
+--- 8.8.8.8 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4006ms
+rtt min/avg/max/mdev = 9.752/9.804/9.861/0.039 ms
 ```
 
 ## Tips
 
-### Stop Ping with Ctrl+C
+### Continuous Pinging
 
-By default, ping runs continuously until you stop it manually. Press Ctrl+C to terminate the command and see the summary statistics.
+By default, ping continues until interrupted with Ctrl+C. Use `-c` to limit the number of packets sent.
 
-### Use Hostnames or IP Addresses
+### Troubleshooting Network Issues
 
-You can ping using either domain names (like google.com) or IP addresses (like 8.8.8.8). Using IP addresses bypasses DNS resolution, which can help identify if a connectivity issue is related to DNS.
+If ping fails, it could indicate network connectivity problems. Check your network connection, DNS settings, or if a firewall is blocking ICMP packets.
 
-### Interpret Packet Loss
+### Measuring Network Quality
 
-Packet loss (shown in the statistics) indicates network congestion or connectivity issues. 0% loss means perfect connectivity, while higher percentages indicate problems.
+Use ping to measure packet loss and latency. High latency (>100ms) or packet loss indicates potential network issues.
 
-### Check for Firewall Restrictions
+### Flood Ping
 
-Many networks and servers block ICMP packets for security reasons. If ping fails, it doesn't necessarily mean the host is down—it might just be configured not to respond to ping requests.
+The `-f` (flood) option can be used to send packets as fast as possible, but requires root privileges and should be used with caution as it can overwhelm networks.
 
 ## Frequently Asked Questions
 
-#### Q1. What does ping actually measure?
-A. Ping measures the round-trip time (RTT) for messages sent from the source to a destination and back. It helps determine network latency and connectivity.
+#### Q1. What does "Request timeout" or "Destination host unreachable" mean?
+A. These messages indicate that the target host is not responding. This could be due to the host being offline, a network issue, or a firewall blocking ICMP packets.
 
-#### Q2. How do I stop a ping command?
-A. Press Ctrl+C to stop the ping command. This will display summary statistics of the packets sent and received.
+#### Q2. How do I interpret ping results?
+A. Look at the round-trip time (RTT) and packet loss percentage. Lower RTT values indicate better connectivity. Any packet loss suggests network issues.
 
-#### Q3. Why might ping fail even when a website is accessible?
-A. Some networks and servers block ICMP packets (used by ping) for security reasons. You might be able to access a website via HTTP/HTTPS even if ping is blocked.
+#### Q3. Can ping tell me if a specific port is open?
+A. No, ping only tests basic connectivity using ICMP. To test if a specific port is open, use tools like `telnet` or `nc` (netcat).
 
-#### Q4. What's a good ping time?
-A. For most internet connections, ping times under 50ms are considered excellent, 50-100ms good, 100-300ms acceptable, and over 300ms may cause noticeable lag in real-time applications.
-
-#### Q5. How can I ping multiple hosts at once?
-A. The standard ping command doesn't support pinging multiple hosts simultaneously. You would need to use a script or a specialized tool like fping.
+#### Q4. Why does ping sometimes resolve to an IP address different from what I expected?
+A. This can happen due to DNS load balancing, CDNs (Content Delivery Networks), or multiple IP addresses associated with a domain name.
 
 ## macOS Considerations
 
-On macOS, ping continues indefinitely by default until stopped with Ctrl+C, unlike some Linux distributions that stop after a certain number of pings. Also, some options might have slightly different syntax compared to Linux versions.
+On macOS, some ping options differ from Linux:
+- The `-i` option requires root privileges for intervals less than 1 second
+- There is no `--count` long option format; use `-c` instead
+- The flood ping (`-f`) option requires root privileges and works differently than on Linux
 
 ## References
 
@@ -148,4 +147,4 @@ https://linux.die.net/man/8/ping
 
 ## Revisions
 
-- 2025/04/30 First revision
+2025/05/04 First revision

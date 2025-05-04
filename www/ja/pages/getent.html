@@ -47,70 +47,77 @@
     <main>
       
   <h1>getent コマンド</h1>
-<p>データベースエントリを取得し表示するコマンド。</p>
+<p>管理データベース（ホスト、ユーザー、グループなど）からエントリを取得します。</p>
 <h2>概要</h2>
-<p><code>getent</code>は、様々なネームサービススイッチ（NSS）データベースからエントリを取得して表示するコマンドです。ユーザー情報、グループ情報、ホスト名、ネットワークサービスなどの情報を簡単に検索できます。これらの情報は、ローカルファイル（/etc/passwd など）や LDAP、NIS などの外部ソースから取得されます。</p>
+<p><code>getent</code> は、Name Service Switch (NSS) ライブラリによってサポートされている様々な管理データベースからエントリを取得します。ユーザー、グループ、ホスト、ネットワーク、サービス、プロトコルなどの情報をローカルまたはリモートに保存されているかに関わらず、システムデータベースから検索するために一般的に使用されます。</p>
 <h2>オプション</h2>
-<h3><strong>データベース</strong></h3>
-<p>検索するデータベースを指定します。主なデータベースには passwd, group, hosts, services, protocols などがあります。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>root
-<span style="color: #000; font-style: italic">root:x:0:0:root:/root:/bin/bash</span>
-</pre></div>
-<h3><strong>-s SOURCE</strong></h3>
-<p>特定のソースからのみ情報を取得します。</p>
+<h3><strong>-s, --service=CONFIG</strong></h3>
+<p>使用するサービスプロバイダを指定します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>files<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>root
 <span style="color: #000; font-style: italic">root:x:0:0:root:/root:/bin/bash</span>
 </pre></div>
-<h3><strong>-i</strong></h3>
-<p>大文字小文字を区別せずに検索します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>hosts<span style="color: #F8F8F8"> </span>localhost
-<span style="color: #000; font-style: italic">127.0.0.1       localhost</span>
+<h3><strong>-i, --no-idn</strong></h3>
+<p>hostsデータベースに対するIDNエンコーディングを無効にします</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>hosts<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">93.184.216.34    example.com</span>
+</pre></div>
+<h3><strong>-h, --help</strong></h3>
+<p>ヘルプ情報を表示して終了します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>--help
+<span style="color: #000; font-style: italic">Usage: getent [OPTION...] database [key ...]</span>
+<span style="color: #000; font-style: italic">Get entries from administrative database.</span>
+
+<span style="color: #000; font-style: italic">  -i, --no-idn               Disable IDN encoding</span>
+<span style="color: #000; font-style: italic">  -s, --service=CONFIG       Service configuration to be used</span>
+<span style="color: #000; font-style: italic">  -?, --help                 Give this help list</span>
+<span style="color: #000; font-style: italic">      --usage                Give a short usage message</span>
+<span style="color: #000; font-style: italic">  -V, --version              Print program version</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>ユーザー情報の取得</h3>
+<h3>ユーザー情報の検索</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>username
-<span style="color: #000; font-style: italic">username:x:1000:1000:Full Name:/home/username:/bin/bash</span>
+<span style="color: #000; font-style: italic">username:x:1000:1000:John Doe:/home/username:/bin/bash</span>
 </pre></div>
-<h3>ホスト名の解決</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>hosts<span style="color: #F8F8F8"> </span>example.com
-<span style="color: #000; font-style: italic">93.184.216.34   example.com</span>
+<h3>ホストのIPアドレスを検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>hosts<span style="color: #F8F8F8"> </span>github.com
+<span style="color: #000; font-style: italic">140.82.121.4     github.com</span>
 </pre></div>
-<h3>サービスのポート番号確認</h3>
+<h3>すべてのグループを一覧表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>group
+<span style="color: #000; font-style: italic">root:x:0:</span>
+<span style="color: #000; font-style: italic">daemon:x:1:</span>
+<span style="color: #000; font-style: italic">bin:x:2:</span>
+<span style="color: #000; font-style: italic">sys:x:3:</span>
+<span style="color: #000; font-style: italic">adm:x:4:syslog,username</span>
+<span style="color: #000; font-style: italic">[追加のグループ...]</span>
+</pre></div>
+<h3>サービスポートの検索</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>services<span style="color: #F8F8F8"> </span>ssh
 <span style="color: #000; font-style: italic">ssh                  22/tcp</span>
 </pre></div>
-<h3>グループメンバーの確認</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>group<span style="color: #F8F8F8"> </span>sudo
-<span style="color: #000; font-style: italic">sudo:x:27:user1,user2</span>
-</pre></div>
 <h2>ヒント:</h2>
-<h3>複数のエントリを一度に取得</h3>
-<p>キーを指定しない場合、データベース内のすべてのエントリが表示されます。これは大量の情報を取得したい場合に便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>hosts<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-3
-<span style="color: #000; font-style: italic">127.0.0.1       localhost</span>
-<span style="color: #000; font-style: italic">::1             localhost ip6-localhost ip6-loopback</span>
-</pre></div>
-<h3>パイプラインでの活用</h3>
-<p><code>getent</code>の出力は他のコマンドと組み合わせて使用できます。例えば、特定のユーザーのホームディレクトリを取得するには：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>passwd<span style="color: #F8F8F8"> </span>username<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d:<span style="color: #F8F8F8"> </span>-f6
-<span style="color: #000; font-style: italic">/home/username</span>
-</pre></div>
-<h3>ネットワークトラブルシューティング</h3>
-<p>DNSの問題をデバッグする際に<code>getent hosts</code>を使用すると、システムがホスト名をどのように解決しているかを確認できます。</p>
+<h3>ユーザーの存在確認</h3>
+<p><code>getent passwd username</code> を使用して、システム内にユーザーが存在するかどうかを確認できます。コマンドが出力を返せばユーザーは存在し、何も返さなければ存在しません。</p>
+<h3>グループのすべてのメンバーを見つける</h3>
+<p><code>getent group groupname</code> を使用して、特定のグループに所属するすべてのユーザーを確認できます。</p>
+<h3>名前解決のテスト</h3>
+<p><code>getent hosts hostname</code> を使用して、ホスト名が解決できるかテストできます。これはDNSからでもローカルのhostsファイルからでも解決元に関わらず機能します。</p>
+<h3>利用可能なデータベース</h3>
+<p>クエリできる一般的なデータベースには、<code>passwd</code>、<code>group</code>、<code>hosts</code>、<code>services</code>、<code>protocols</code>、<code>networks</code>、<code>netgroup</code> などがあります。正確なリストはシステム構成によって異なります。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>getent</code>と<code>cat /etc/passwd</code>の違いは何ですか？</h4>
-<p>A. <code>getent passwd</code>はローカルファイルだけでなく、LDAP、NIS、その他のNSSソースからも情報を取得します。一方、<code>cat /etc/passwd</code>はローカルファイルのみを表示します。</p>
-<h4>Q2. 特定のユーザーがシステムに存在するか確認するには？</h4>
-<p>A. <code>getent passwd username</code>を実行し、出力があればそのユーザーは存在します。コマンドの終了ステータスでも確認できます。</p>
-<h4>Q3. ホスト名のIPv4とIPv6両方のアドレスを取得するには？</h4>
-<p>A. <code>getent ahosts hostname</code>を使用すると、IPv4とIPv6の両方のアドレスを取得できます。</p>
-<h4>Q4. <code>getent</code>でサポートされているデータベースを確認するには？</h4>
-<p>A. <code>getent --help</code>または<code>man getent</code>で確認できます。一般的なデータベースには passwd, group, hosts, services, protocols, networks などがあります。</p>
+<h4>Q1. <code>getent hosts</code> と <code>ping</code> の違いは何ですか？</h4>
+<p>A. <code>getent hosts</code> はパケットを送信せずに名前解決のみを実行しますが、<code>ping</code> は実際にICMPパケットをホストに送信します。<code>getent</code> はホスト名がIPアドレスに解決できるかどうかを確認するだけに便利です。</p>
+<h4>Q2. <code>getent</code> をスクリプトで使用できますか？</h4>
+<p>A. はい、<code>getent</code> はユーザー、グループ、ホストが存在するかどうかを確認してから操作を実行するために、シェルスクリプトでよく使用されます。</p>
+<h4>Q3. なぜ <code>getent passwd username</code> が <code>/etc/passwd</code> を見るのと異なる結果を示すことがありますか？</h4>
+<p>A. <code>getent</code> は設定されたすべてのNSSソースをクエリするため、ローカルの <code>/etc/passwd</code> ファイルだけでなく、LDAP、NIS、その他のネットワーク認証システムも含まれる可能性があります。</p>
+<h4>Q4. 利用可能なすべてのデータベースを確認するにはどうすればよいですか？</h4>
+<p>A. 利用可能なデータベースはシステム構成によって異なります。一般的なものには passwd、group、hosts、services、protocols、networks、netgroup などがあります。</p>
 <h2>参考資料</h2>
 <p>https://man7.org/linux/man-pages/man1/getent.1.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

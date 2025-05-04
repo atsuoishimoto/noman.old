@@ -1,34 +1,38 @@
 # openssl コマンド
 
-暗号化、証明書管理、ハッシュ計算などの暗号操作を実行するためのツールです。
+暗号化通信、証明書管理、および様々な暗号操作のための暗号機能を提供します。
 
 ## 概要
 
-OpenSSLは、SSL/TLS暗号化プロトコルの実装を提供するオープンソースのツールキットです。このコマンドを使用して、証明書の生成・管理、暗号化・復号化、ハッシュ値の計算、SSL/TLS接続のテストなど、さまざまな暗号操作を実行できます。
+OpenSSLは、Secure Sockets Layer (SSL)およびTransport Layer Security (TLS)プロトコルを実装する強力なツールキットで、汎用の高強度暗号化ライブラリも備えています。コマンドラインから証明書の作成、鍵の管理、ファイルの暗号化/復号化、メッセージダイジェストの生成など、多くの暗号操作を実行できます。
 
 ## オプション
 
-OpenSSLは多くのサブコマンドを持つ複合コマンドです。主要なサブコマンドとその使い方を紹介します。
+OpenSSLはコマンドベースの構造を使用しており、メインコマンドの後にサブコマンドとそのオプションが続きます。
 
-### **s_client**
+### **s_client** - SSL/TLSクライアント
 
-サーバーへのSSL/TLS接続をテストするためのクライアントです。
+SSL/TLSを使用してリモートホストに接続する汎用SSL/TLSクライアントを実装します。
 
 ```console
 $ openssl s_client -connect example.com:443
 CONNECTED(00000003)
-depth=2 C = US, O = DigiCert Inc, OU = www.digicert.com, CN = DigiCert Global Root CA
-...
+depth=2 C = US, O = Internet Security Research Group, CN = ISRG Root X1
+verify return:1
+depth=1 C = US, O = Let's Encrypt, CN = R3
+verify return:1
+depth=0 CN = example.com
+verify return:1
 ---
 Certificate chain
- 0 s:CN = *.example.org
+ 0 s:CN = example.com
    i:C = US, O = Let's Encrypt, CN = R3
 ...
 ```
 
-### **x509**
+### **x509** - 証明書表示と署名ユーティリティ
 
-X.509証明書の表示、変換、署名などを行います。
+証明書情報の表示、様々な形式への証明書の変換、証明書リクエストの署名を行います。
 
 ```console
 $ openssl x509 -in certificate.crt -text -noout
@@ -36,142 +40,148 @@ Certificate:
     Data:
         Version: 3 (0x2)
         Serial Number:
-            12:34:56:78:9a:bc:de:f0
+            04:e5:7b:d2:1d:d5:e5:2c:...
         Signature Algorithm: sha256WithRSAEncryption
         Issuer: C=US, O=Let's Encrypt, CN=R3
 ...
 ```
 
-### **genrsa**
+### **genrsa** - RSA秘密鍵の生成
 
 RSA秘密鍵を生成します。
 
 ```console
 $ openssl genrsa -out private.key 2048
-Generating RSA private key, 2048 bit long modulus
-.....+++
-.....+++
-e is 65537 (0x10001)
+Generating RSA private key, 2048 bit long modulus (2 primes)
+.....+++++
+.....+++++
+e is 65537 (0x010001)
 ```
 
-### **req**
+### **req** - PKCS#10証明書リクエストと証明書生成ユーティリティ
 
-証明書署名要求(CSR)の作成や自己署名証明書の生成を行います。
+PKCS#10形式の証明書リクエストを作成および処理します。
 
 ```console
-$ openssl req -new -key private.key -out request.csr
+$ openssl req -new -key private.key -out certificate.csr
 You are about to be asked to enter information that will be incorporated
 into your certificate request.
-...
-Country Name (2 letter code) []:JP
-State or Province Name []:Tokyo
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:US
+State or Province Name (full name) [Some-State]:California
 ...
 ```
 
-### **dgst**
+### **enc** - 暗号を使用したエンコーディング
 
-ファイルのハッシュ値（ダイジェスト）を計算します。
+様々な暗号アルゴリズムを使用して暗号化または復号化します。
 
 ```console
-$ openssl dgst -sha256 file.txt
-SHA256(file.txt)= 8c17424f2e26d971060a5a82c5a1d7851e0c4bc8e0e347f223f95bb4a0d766af
+$ openssl enc -aes-256-cbc -salt -in plaintext.txt -out encrypted.txt
+enter aes-256-cbc encryption password:
+Verifying - enter aes-256-cbc encryption password:
 ```
 
 ## 使用例
 
-### SSL証明書の情報を表示する
-
-```console
-$ openssl x509 -in certificate.crt -text -noout
-Certificate:
-    Data:
-        Version: 3 (0x2)
-        Serial Number: 12345678 (0xbc614e)
-    # 証明書の詳細情報が表示される
-```
-
-### 自己署名証明書を生成する
-
-```console
-$ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
-Generating a 4096 bit RSA private key
-...
-writing new private key to 'key.pem'
-Enter PEM pass phrase: ******
-Verifying - Enter PEM pass phrase: ******
-# 対話形式で証明書情報を入力
-```
-
-### リモートサーバーのSSL/TLS設定を確認する
+### リモートSSL/TLSサーバーの確認
 
 ```console
 $ openssl s_client -connect example.com:443 -servername example.com
 CONNECTED(00000003)
-depth=2 C = US, O = DigiCert Inc, OU = www.digicert.com, CN = DigiCert Global Root CA
-# 接続情報と証明書チェーンが表示される
+depth=2 C = US, O = Internet Security Research Group, CN = ISRG Root X1
+verify return:1
+...
 ```
 
-### ファイルのSHA-256ハッシュを計算する
+### 自己署名証明書の作成
 
 ```console
-$ openssl dgst -sha256 document.pdf
-SHA256(document.pdf)= a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6
-```
-
-## ヒント:
-
-### 証明書情報の確認
-
-証明書ファイルの内容を確認する際は、`-text -noout`オプションを使用すると読みやすい形式で表示されます。
-
-```console
-$ openssl x509 -in cert.pem -text -noout
-```
-
-### パスワード入力の自動化
-
-スクリプト内でOpenSSLを使用する場合、`-passin`オプションでパスワードを指定できます。ただし、セキュリティ上の理由から本番環境では注意が必要です。
-
-```console
-$ openssl rsa -in encrypted.key -out decrypted.key -passin pass:mypassword
+$ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+Generating a RSA private key
+.....++++
+.....++++
+writing new private key to 'key.pem'
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+...
 ```
 
 ### 証明書チェーンの検証
 
-証明書チェーンを検証するには、`verify`コマンドを使用します。
-
 ```console
 $ openssl verify -CAfile ca-bundle.crt certificate.crt
+certificate.crt: OK
+```
+
+### ランダムパスワードの生成
+
+```console
+$ openssl rand -base64 12
+Ew6Y9RzYxAQeFA==
+```
+
+## ヒント:
+
+### 適切な鍵のパーミッションを設定する
+
+秘密鍵には常に制限的なパーミッションを設定して、不正アクセスを防止しましょう：
+
+```console
+$ chmod 600 private.key
+```
+
+### 証明書の有効期限を確認する
+
+予期しないサービス中断を避けるため、証明書の有効期限を確認しましょう：
+
+```console
+$ openssl x509 -enddate -noout -in certificate.crt
+notAfter=May 15 12:00:00 2026 GMT
+```
+
+### 証明書フォーマットの変換
+
+OpenSSLは異なる証明書フォーマット（PEM、DER、PKCS#12）間の変換ができます：
+
+```console
+$ openssl x509 -in cert.pem -inform PEM -out cert.der -outform DER
+```
+
+### 自動化には -passin と -passout を使用する
+
+スクリプト作成時には、これらのオプションを使用して非対話的にパスワードを提供できます：
+
+```console
+$ openssl rsa -in encrypted.key -out decrypted.key -passin file:password.txt
 ```
 
 ## よくある質問
 
-#### Q1. OpenSSLで自己署名証明書を作成するにはどうすればよいですか？
-A. `openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365`コマンドを使用します。これにより、2048ビットのRSA鍵と365日間有効な自己署名証明書が生成されます。
+#### Q1. CSR（証明書署名リクエスト）はどのように作成しますか？
+A. `openssl req -new -key private.key -out request.csr` を使用します。証明書情報の入力を求められます。
 
-#### Q2. リモートサーバーのSSL/TLS設定を確認するにはどうすればよいですか？
-A. `openssl s_client -connect example.com:443`コマンドを使用します。これにより、サーバーの証明書情報やSSL/TLS設定が表示されます。
+#### Q2. 証明書の内容を確認するにはどうすればよいですか？
+A. `openssl x509 -in certificate.crt -text -noout` を使用して証明書の詳細を表示します。
 
-#### Q3. 証明書の有効期限を確認するにはどうすればよいですか？
-A. `openssl x509 -in certificate.crt -noout -dates`コマンドを使用します。これにより、証明書の開始日と終了日が表示されます。
+#### Q3. 証明書をPEM形式からPKCS#12形式に変換するにはどうすればよいですか？
+A. `openssl pkcs12 -export -out certificate.pfx -inkey private.key -in certificate.crt -certfile ca-chain.crt` を使用します。
 
-#### Q4. 暗号化されたRSA秘密鍵のパスワードを削除するにはどうすればよいですか？
-A. `openssl rsa -in encrypted.key -out decrypted.key`コマンドを使用します。パスワードを入力すると、パスワードなしの秘密鍵が生成されます。
+#### Q4. ウェブサイトへのセキュア接続をテストするにはどうすればよいですか？
+A. `openssl s_client -connect example.com:443 -servername example.com` を使用して接続を確立し、証明書の詳細を表示します。
 
-## macOSでの注意点
-
-macOSに搭載されているOpenSSLは、LibreSSLという別の実装に置き換えられている場合があります。一部のコマンドやオプションが標準のOpenSSLと異なる可能性があるため、最新のOpenSSLが必要な場合はHomebrewなどでインストールすることをお勧めします。
-
-```console
-$ brew install openssl
-```
-
-インストール後は、`/usr/local/opt/openssl/bin/openssl`または`/opt/homebrew/bin/openssl`にインストールされます。
+#### Q5. 強力なランダムパスワードを生成するにはどうすればよいですか？
+A. `openssl rand -base64 16` を使用して、base64でエンコードされた16バイトのランダム文字列を生成します。
 
 ## 参考資料
 
-https://www.openssl.org/docs/
+https://www.openssl.org/docs/man1.1.1/man1/
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初回改訂

@@ -49,71 +49,69 @@
   <h1>visudo command</h1>
 <p>Edit the sudoers file safely with syntax checking.</p>
 <h2>Overview</h2>
-<p><code>visudo</code> is a command-line utility that provides a safe way to edit the sudoers configuration file, which controls sudo access permissions. It locks the sudoers file during editing, performs syntax checking before saving changes, and prevents multiple simultaneous edits that could corrupt the file.</p>
+<p><code>visudo</code> is a command-line utility that provides a safe way to edit the <code>/etc/sudoers</code> file, which controls sudo access permissions. It locks the sudoers file to prevent multiple simultaneous edits, performs syntax checking before saving changes, and helps prevent configuration errors that could lock users out of the system.</p>
 <h2>Options</h2>
-<h3><strong>-c</strong></h3>
-<p>Check the sudoers file for syntax errors without making any changes.</p>
+<h3><strong>-c, --check</strong></h3>
+<p>Check the sudoers file for syntax errors only, without making any changes.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-c
 <span style="color: #000; font-style: italic">/etc/sudoers: parsed OK</span>
 <span style="color: #000; font-style: italic">/etc/sudoers.d/custom: parsed OK</span>
 </pre></div>
-<h3><strong>-f [file]</strong></h3>
-<p>Specify an alternate sudoers file location to edit instead of the default.</p>
+<h3><strong>-f, --file=file</strong></h3>
+<p>Specify an alternate sudoers file location instead of the default <code>/etc/sudoers</code>.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/etc/sudoers.d/custom
 </pre></div>
-<h3><strong>-s</strong></h3>
-<p>Enable strict checking of the sudoers file. Warnings are treated as errors.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-s
-<span style="color: #000; font-style: italic">&gt;&gt;&gt; /etc/sudoers: syntax error near line 28 &lt;&lt;&lt;</span>
-<span style="color: #000; font-style: italic">What now?</span>
-</pre></div>
-<h3><strong>-q</strong></h3>
-<p>Enable quiet mode that will not print error messages.</p>
+<h3><strong>-q, --quiet</strong></h3>
+<p>Enable quiet mode, which suppresses most warning messages.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>-c
+</pre></div>
+<h3><strong>-s, --strict</strong></h3>
+<p>Enable strict checking of the sudoers file. Will cause visudo to exit with an error if there are any parse errors.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/etc/sudoers.d/test
+<span style="color: #000; font-style: italic">&gt;&gt;&gt; /etc/sudoers.d/test: syntax error near line 2 &lt;&lt;&lt;</span>
+<span style="color: #000; font-style: italic">parse error in /etc/sudoers.d/test near line 2</span>
+<span style="color: #000; font-style: italic">visudo: fatal error, exiting.</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Basic Usage</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo
 </pre></div>
-<p>This opens the default sudoers file in the system's default editor. After making changes, save and exit to have visudo check the syntax.</p>
-<h3>Creating a New Configuration File</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/etc/sudoers.d/developers
+<p>This opens the default <code>/etc/sudoers</code> file in the editor specified by the EDITOR environment variable.</p>
+<h3>Editing a Custom Sudoers File</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/etc/sudoers.d/local
 </pre></div>
-<p>This creates or edits a file in the sudoers.d directory, which is commonly used for custom sudo configurations.</p>
-<h3>Checking Multiple Files</h3>
+<p>This opens a custom sudoers file located in the <code>/etc/sudoers.d</code> directory.</p>
+<h3>Checking Syntax Without Editing</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-c
 <span style="color: #000; font-style: italic">/etc/sudoers: parsed OK</span>
 <span style="color: #000; font-style: italic">/etc/sudoers.d/custom: parsed OK</span>
-<span style="color: #000; font-style: italic">/etc/sudoers.d/developers: parsed OK</span>
 </pre></div>
 <h2>Tips</h2>
-<h3>Use EDITOR Environment Variable</h3>
-<p>Set your preferred editor before running visudo:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">EDITOR</span><span style="color: #CE5C00; font-weight: bold">=</span>nano<span style="color: #F8F8F8"> </span>sudo<span style="color: #F8F8F8"> </span>visudo
+<h3>Set Your Preferred Editor</h3>
+<p>Before running visudo, you can set your preferred editor by setting the EDITOR or VISUAL environment variable:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">export</span><span style="color: #F8F8F8"> </span><span style="color: #000">EDITOR</span><span style="color: #CE5C00; font-weight: bold">=</span>nano
+<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo
 </pre></div>
-<h3>Create User-Specific Rules in Separate Files</h3>
-<p>Instead of editing the main sudoers file, create separate files in <code>/etc/sudoers.d/</code> for different users or groups. This makes management easier and safer.</p>
-<h3>Always Use visudo, Never Edit Directly</h3>
-<p>Never edit <code>/etc/sudoers</code> with a regular text editor. If you introduce syntax errors, you might lock yourself out of sudo access, which can be difficult to recover from.</p>
-<h3>Common Sudoers Syntax</h3>
-<p>Basic syntax for giving a user full sudo access:</p>
-<pre><code>username ALL=(ALL) ALL
-</code></pre><p>For passwordless sudo:</p>
-<pre><code>username ALL=(ALL) NOPASSWD: ALL
-</code></pre><h2>Frequently Asked Questions</h2>
-<h4>Q1. What happens if I save a sudoers file with syntax errors?</h4>
-<p>A. visudo will alert you to the error and give you options to re-edit the file, write it to a different location, or abandon your changes. This prevents you from corrupting the sudoers file.</p>
-<h4>Q2. How do I change the default editor used by visudo?</h4>
-<p>A. Set the EDITOR or VISUAL environment variable before running visudo: <code>EDITOR=nano sudo visudo</code></p>
-<h4>Q3. Can I use visudo to edit files other than the main sudoers file?</h4>
-<p>A. Yes, use the <code>-f</code> option to specify an alternate file: <code>sudo visudo -f /etc/sudoers.d/myconfig</code></p>
-<h4>Q4. What's the difference between /etc/sudoers and files in /etc/sudoers.d/?</h4>
-<p>A. The main <code>/etc/sudoers</code> file is the primary configuration file, while <code>/etc/sudoers.d/</code> is a directory for additional configuration files that are included in the main configuration. Using separate files in this directory helps organize sudo rules.</p>
+<h3>Use Includes Instead of Direct Edits</h3>
+<p>Instead of editing the main sudoers file, create separate files in <code>/etc/sudoers.d/</code> for custom configurations. This makes management easier and safer.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/etc/sudoers.d/myusers
+</pre></div>
+<h3>Always Check Syntax Before Exiting</h3>
+<p>When editing the sudoers file, always use visudo's built-in syntax checking before saving. If you make a syntax error, visudo will warn you and give you a chance to fix it before saving.</p>
+<h2>Frequently Asked Questions</h2>
+<h4>Q1. What happens if I edit the sudoers file directly without using visudo?</h4>
+<p>A. Editing <code>/etc/sudoers</code> directly with a regular text editor is dangerous. If you introduce syntax errors, you might lose sudo access entirely, potentially locking yourself out of administrative functions.</p>
+<h4>Q2. How do I add a new user to sudoers?</h4>
+<p>A. Run <code>sudo visudo</code> and add a line like <code>username ALL=(ALL:ALL) ALL</code> to grant full sudo privileges to a user.</p>
+<h4>Q3. What's the difference between /etc/sudoers and files in /etc/sudoers.d/?</h4>
+<p>A. The main <code>/etc/sudoers</code> file is the primary configuration file, while <code>/etc/sudoers.d/</code> is a directory for additional configuration files that are included in the main configuration. Using separate files in this directory is often cleaner and safer.</p>
+<h4>Q4. How do I change the default editor used by visudo?</h4>
+<p>A. Set the EDITOR or VISUAL environment variable before running visudo: <code>export EDITOR=nano</code>.</p>
 <h2>References</h2>
-<p>https://www.sudo.ws/docs/man/visudo.man/</p>
+<p>https://www.sudo.ws/docs/man/1.9.13/visudo.man/</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

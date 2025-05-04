@@ -1,59 +1,73 @@
 # apt-file command
 
-Search for files within packages in Debian-based Linux distributions, even if the package is not installed.
+Search for files within packages in the APT package management system.
 
 ## Overview
 
-`apt-file` is a command-line utility that allows you to search for files in packages available in Debian-based Linux distributions (like Ubuntu). It's particularly useful when you need to find which package provides a specific file, or to list all files contained in a package without installing it.
+`apt-file` is a command-line utility that allows you to search for files in packages available in the APT repositories, even if they are not installed on your system. It's particularly useful for finding which package provides a specific file, or for exploring the contents of packages before installing them.
 
 ## Options
 
 ### **-l, --list**
 
-List the contents of a package
+List the contents of a specified package.
 
 ```console
 $ apt-file list firefox
-firefox: /etc/apparmor.d/usr.bin.firefox
 firefox: /etc/firefox/syspref.js
+firefox: /etc/xul-ext/ubufox.js
 firefox: /usr/bin/firefox
 firefox: /usr/lib/firefox/browser/chrome.manifest
-firefox: /usr/lib/firefox/browser/features/formautofill@mozilla.org.xpi
-[more output...]
+firefox: /usr/lib/firefox/browser/chrome/icons/default/default128.png
+[...]
 ```
 
 ### **-s, --search**
 
-Search for packages containing a specific file
+Search for packages containing a specific file or pattern.
 
 ```console
-$ apt-file search /usr/bin/python3
-python3-minimal: /usr/bin/python3
-python3.10-minimal: /usr/bin/python3.10
-python3.11-minimal: /usr/bin/python3.11
-```
-
-### **-u, --update**
-
-Update the package database
-
-```console
-$ sudo apt-file update
-Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
-Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
-[more output...]
-Processing apt file indexes... Done
+$ apt-file search bin/ls
+coreutils: /bin/ls
 ```
 
 ### **-x, --regexp**
 
-Search using regular expressions
+Use regular expressions for searching.
 
 ```console
-$ apt-file search -x '.*bin/gcc$'
-gcc-11: /usr/bin/gcc
-gcc-12: /usr/bin/gcc
-gcc-9: /usr/bin/gcc
+$ apt-file -x search '.*bin/python3$'
+python3-minimal: /usr/bin/python3
+```
+
+### **-a, --architecture**
+
+Specify the architecture to search in.
+
+```console
+$ apt-file -a arm64 search bin/ls
+coreutils: /bin/ls
+```
+
+### **-c, --cache**
+
+Use a specific cache directory.
+
+```console
+$ apt-file -c /tmp/apt-file-cache search bin/ls
+coreutils: /bin/ls
+```
+
+### **-u, --update**
+
+Update the package lists cache.
+
+```console
+$ sudo apt-file update
+Processing 'main' component lists
+Processing 'universe' component lists
+Processing 'restricted' component lists
+Processing 'multiverse' component lists
 ```
 
 ## Usage Examples
@@ -61,68 +75,80 @@ gcc-9: /usr/bin/gcc
 ### Finding which package provides a specific command
 
 ```console
-$ apt-file search /usr/bin/curl
-curl: /usr/bin/curl
+$ apt-file search bin/grep
+grep: /bin/grep
 ```
 
-### Listing all files in a package before installing it
+### Listing all files in a package
 
 ```console
-$ apt-file list htop
-htop: /usr/bin/htop
-htop: /usr/share/applications/htop.desktop
-htop: /usr/share/doc/htop/AUTHORS
-htop: /usr/share/doc/htop/NEWS.gz
-htop: /usr/share/doc/htop/README
-[more output...]
+$ apt-file list coreutils | head -5
+coreutils: /bin/cat
+coreutils: /bin/chgrp
+coreutils: /bin/chmod
+coreutils: /bin/chown
+coreutils: /bin/cp
 ```
 
-### Finding a library file needed by an application
+### Searching for a library file
 
 ```console
-$ apt-file search libncurses.so.6
-libncurses6:amd64: /lib/x86_64-linux-gnu/libncurses.so.6
-libncurses6:amd64: /lib/x86_64-linux-gnu/libncurses.so.6.2
-libncurses6:i386: /lib/i386-linux-gnu/libncurses.so.6
-libncurses6:i386: /lib/i386-linux-gnu/libncurses.so.6.2
+$ apt-file search libssl.so.1.1
+libssl1.1: /usr/lib/x86_64-linux-gnu/libssl.so.1.1
 ```
 
 ## Tips
 
-### Update the Database Regularly
+### Update the Cache First
 
-The apt-file database needs to be updated regularly to ensure you have the latest package information. Run `sudo apt-file update` periodically, especially after changing repositories.
+Always run `sudo apt-file update` before using apt-file for the first time or if you haven't used it in a while. This ensures you have the latest package information.
 
-### Install Missing Dependencies
+### Narrow Down Results with Grep
 
-When you encounter "command not found" or missing library errors, use apt-file to find which package provides the missing file, then install it with `apt install`.
+When apt-file returns too many results, pipe the output through grep to filter:
 
-### Combine with Grep for Better Filtering
+```console
+$ apt-file search .so | grep ssl
+```
 
-For complex searches, pipe the output to grep: `apt-file search bin | grep python` to find Python-related binaries.
+### Use with Package Installation
 
-### Initial Setup
+When you encounter a "command not found" error, use apt-file to find which package provides that command:
 
-When first installing apt-file, you must run `sudo apt-file update` before you can use it to search for files.
+```console
+$ apt-file search bin/missing-command
+```
+
+### Combine with Other APT Tools
+
+Use apt-file alongside apt-cache and apt to get comprehensive package information:
+
+```console
+$ apt-file search bin/python3
+$ apt-cache show python3-minimal
+```
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `apt-file` and `dpkg -S`?
-A. `dpkg -S` only searches within installed packages, while `apt-file` searches all available packages, even those not installed.
+#### Q1. How do I install apt-file?
+A. Install it using `sudo apt install apt-file`, then update the cache with `sudo apt-file update`.
 
-#### Q2. Do I need to run apt-file as root?
-A. You only need root privileges for the `apt-file update` command. Searches can be performed as a regular user.
+#### Q2. Why does apt-file search return no results?
+A. You may need to update the apt-file cache with `sudo apt-file update`. Also, ensure you're using the correct file path.
 
-#### Q3. How do I install apt-file?
-A. Install it with `sudo apt install apt-file`, then run `sudo apt-file update` to initialize the database.
+#### Q3. Can apt-file search for files in packages not installed on my system?
+A. Yes, that's one of its main features. It searches all packages in the configured repositories.
 
-#### Q4. Why is apt-file search not finding my file?
-A. Make sure you've run `sudo apt-file update` recently. Also, try using the full path to the file or use the `-x` option with a regular expression.
+#### Q4. How is apt-file different from dpkg -S?
+A. `dpkg -S` only searches for files in installed packages, while `apt-file` searches all available packages in repositories.
+
+#### Q5. How do I search for files with a specific extension?
+A. Use the regexp option: `apt-file -x search '\.so$'` to find all .so files.
 
 ## References
 
-https://manpages.debian.org/bullseye/apt-file/apt-file.1.en.html
+https://manpages.debian.org/stable/apt-file/apt-file.1.en.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

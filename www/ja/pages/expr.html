@@ -47,88 +47,101 @@
     <main>
       
   <h1>expr コマンド</h1>
-<p>式を評価し、その結果を標準出力に表示します。</p>
+<p>式を評価し、結果を出力します。</p>
 <h2>概要</h2>
-<p><code>expr</code> コマンドは、与えられた式（数値計算や文字列操作など）を評価し、その結果を出力します。基本的な算術演算、文字列操作、論理比較などを行うことができます。シェルスクリプト内で計算や条件判定に使用されることが多いです。</p>
+<p><code>expr</code> は式を評価して結果を出力するコマンドラインユーティリティです。算術演算、文字列操作、論理比較を実行できます。このコマンドは主にシェルスクリプト内で、シェル組み込みコマンドだけでは難しい計算や文字列操作を行うために使用されます。</p>
 <h2>オプション</h2>
-<p><code>expr</code> コマンド自体にはオプションがほとんどありませんが、様々な演算子を使用して式を構築します。</p>
-<h3><strong>算術演算子</strong></h3>
-<p>基本的な数値計算を行います（<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>）。</p>
+<h3><strong>--help</strong></h3>
+<p>ヘルプメッセージを表示して終了します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>--help
+<span style="color: #000; font-style: italic">Usage: expr EXPRESSION</span>
+<span style="color: #000; font-style: italic">  or:  expr OPTION</span>
+<span style="color: #000; font-style: italic">Print the value of EXPRESSION to standard output.</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>--version</strong></h3>
+<p>バージョン情報を出力して終了します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>--version
+<span style="color: #000; font-style: italic">expr (GNU coreutils) 9.0</span>
+<span style="color: #000; font-style: italic">Copyright (C) 2021 Free Software Foundation, Inc.</span>
+<span style="color: #000; font-style: italic">License GPLv3+: GNU GPL version 3 or later &lt;https://gnu.org/licenses/gpl.html&gt;.</span>
+<span style="color: #000; font-style: italic">This is free software: you are free to change and redistribute it.</span>
+<span style="color: #000; font-style: italic">There is NO WARRANTY, to the extent permitted by law.</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的な算術演算</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
 <span style="color: #000; font-style: italic">8</span>
 <span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>-<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span>
 <span style="color: #000; font-style: italic">6</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\*</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 乗算には \ でエスケープが必要</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\*</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span>
 <span style="color: #000; font-style: italic">12</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>/<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span>
-<span style="color: #000; font-style: italic">5</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 剰余（余り）</span>
-<span style="color: #000; font-style: italic">1</span>
-</pre></div>
-<h3><strong>比較演算子</strong></h3>
-<p>値の比較を行います（<code>=</code>, <code>!=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code>）。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #000">5</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8">     </span><span style="color: #8F5902; font-style: italic"># 等しい場合は 1、そうでなければ 0</span>
-<span style="color: #000; font-style: italic">1</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>!<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 等しくない場合は 1、そうでなければ 0</span>
-<span style="color: #000; font-style: italic">0</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\&gt;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8">   </span><span style="color: #8F5902; font-style: italic"># 大なり記号はエスケープが必要</span>
-<span style="color: #000; font-style: italic">1</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\&lt;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 小なり記号もエスケープが必要</span>
-<span style="color: #000; font-style: italic">1</span>
-</pre></div>
-<h3><strong>文字列操作</strong></h3>
-<p>文字列の長さや部分文字列の抽出などを行います。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>length<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span><span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 文字列の長さを取得</span>
-<span style="color: #000; font-style: italic">5</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>substr<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">7</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 部分文字列の抽出（開始位置7から5文字）</span>
-<span style="color: #000; font-style: italic">World</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>index<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;l&quot;</span><span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 文字が最初に現れる位置</span>
-<span style="color: #000; font-style: italic">3</span>
-</pre></div>
-<h2>使用例</h2>
-<h3>変数の増分</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>
-<span style="color: #8F5902">$ </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">`</span>expr<span style="color: #F8F8F8"> </span><span style="color: #000">$count</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #4E9A06">`</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$count</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>/<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">4</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
 <span style="color: #000; font-style: italic">2</span>
 </pre></div>
-<h3>文字列の長さを取得</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">str</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;Hello, World!&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #000">len</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">`</span>expr<span style="color: #F8F8F8"> </span>length<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$str</span><span style="color: #4E9A06">&quot;`</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$len</span>
-<span style="color: #000; font-style: italic">13</span>
+<h3>文字列操作</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>length<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span>
+<span style="color: #000; font-style: italic">11</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>substr<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">7</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">World</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>index<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;W&quot;</span>
+<span style="color: #000; font-style: italic">7</span>
 </pre></div>
-<h3>条件分岐での使用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">`</span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #4E9A06">`</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;偶数である&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">else</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;奇数である&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">fi</span>
-<span style="color: #000; font-style: italic">偶数である</span>
+<h3>論理比較</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\&gt;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #000; font-style: italic">1</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\&lt;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #000; font-style: italic">0</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #000">5</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">1</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>!<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">0</span>
+</pre></div>
+<h3>シェルスクリプトでの使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">a</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">b</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">c</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>expr<span style="color: #F8F8F8"> </span><span style="color: #000">$a</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #000">$b</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$c</span>
+<span style="color: #000; font-style: italic">8</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>シェルの特殊文字をエスケープする</h3>
-<p><code>*</code>, <code>(</code>, <code>)</code>, <code>&lt;</code>, <code>&gt;</code> などの文字はシェルで特別な意味を持つため、<code>expr</code> で使用する際は <code>\</code> でエスケープする必要があります。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\*</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># * はエスケープしないとファイル名展開として解釈される</span>
-<span style="color: #000; font-style: italic">12</span>
+<h3>特殊文字のエスケープ</h3>
+<p>乗算（*）、除算（/）など、シェルで特別な意味を持つ文字はバックスラッシュ（\）でエスケープする必要があります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\*</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #000; font-style: italic">15</span>
 </pre></div>
-<h3>現代的な代替手段</h3>
-<p>最近のシェルでは、<code>$(( ))</code> 構文や <code>$[ ]</code> 構文を使用した算術展開の方が簡潔で高速です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$((</span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">*</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #204A87; font-weight: bold">))</span><span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># bash や zsh での算術展開</span>
-<span style="color: #000; font-style: italic">12</span>
+<h3>スペースの要件</h3>
+<p><code>expr</code> は演算子とオペランドの間にスペースが必要です。スペースがないと、コマンドは正しく動作しません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>+3<span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 間違い</span>
+<span style="color: #000; font-style: italic">5+3</span>
+<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># 正しい</span>
+<span style="color: #000; font-style: italic">8</span>
 </pre></div>
-<h3>戻り値に注意</h3>
-<p><code>expr</code> は評価結果を標準出力に出力するだけでなく、結果が 0 または空文字列の場合は終了ステータス 1 を返します。それ以外は 0 を返します。</p>
+<h3>戻り値</h3>
+<p><code>expr</code> は式が0以外かつ空でない値に評価される場合は0を、式が0または空の場合は1を、式が無効な場合は2を返します。</p>
+<h3>変数のインクリメントに使用</h3>
+<p><code>expr</code> の一般的な使用法はシェルスクリプトでカウンターをインクリメントすることです：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">i</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">i</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>expr<span style="color: #F8F8F8"> </span><span style="color: #000">$i</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$i</span>
+<span style="color: #000; font-style: italic">2</span>
+</pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. <code>expr</code> と <code>$(( ))</code> の違いは何ですか？</h4>
-<p>A. <code>expr</code> は独立したコマンドであり、すべてのUNIX系システムで利用可能です。一方、<code>$(( ))</code> はシェルの機能（算術展開）で、bashやzshなどの現代的なシェルでのみ使用できますが、より高速で使いやすいです。</p>
-<h4>Q2. 文字列が数値かどうかを確認するにはどうすればよいですか？</h4>
-<p>A. <code>expr &quot;$string&quot; + 0</code> を使用すると、文字列が数値でない場合はエラーが発生します。これを利用して判定できます。</p>
-<h4>Q3. <code>expr</code> で小数点の計算はできますか？</h4>
-<p>A. いいえ、<code>expr</code> は整数計算のみをサポートしています。小数点計算には <code>bc</code> や <code>awk</code> などの他のコマンドを使用してください。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSの <code>expr</code> は BSD 由来であり、GNU 版と若干の違いがあります。特に複雑な式を扱う場合は、エスケープの扱いや一部の機能に違いがある可能性があるため注意が必要です。</p>
-<h2>参照</h2>
-<p>https://pubs.opengroup.org/onlinepubs/9699919799/utilities/expr.html</p>
+<h4>Q1. <code>expr</code> とシェルの算術演算の違いは何ですか？</h4>
+<p>A. 現代のシェルは <code>$(( ))</code> で算術演算をサポートしていますが、<code>expr</code> は異なるシェル間でより移植性が高く、追加の文字列操作関数を提供します。</p>
+<h4>Q2. なぜ <code>expr</code> での乗算が失敗するのですか？</h4>
+<p>A. アスタリスクをバックスラッシュでエスケープする必要があります：<code>expr 5 \* 3</code>。そうしないと、シェルはワイルドカードとして解釈します。</p>
+<h4>Q3. 文字列操作に <code>expr</code> をどのように使用できますか？</h4>
+<p>A. <code>expr</code> は文字列操作のために <code>length</code>、<code>substr</code>、<code>index</code> などの関数を提供しています。例えば：<code>expr length &quot;string&quot;</code> や <code>expr substr &quot;string&quot; 1 3</code> などです。</p>
+<h4>Q4. 現代のシェルスクリプティングでも <code>expr</code> は関連性がありますか？</h4>
+<p>A. 新しいシェルには組み込みの算術機能がありますが、<code>expr</code> は文字列操作関数や、異なるシェル環境間で移植性が必要なスクリプトに引き続き有用です。</p>
+<h2>参考資料</h2>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/expr-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

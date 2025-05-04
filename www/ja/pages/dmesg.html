@@ -47,97 +47,90 @@
     <main>
       
   <h1>dmesg コマンド</h1>
-<p>カーネルのリングバッファからシステムメッセージを表示します。</p>
+<p>カーネルメッセージバッファを表示または制御します。</p>
 <h2>概要</h2>
-<p><code>dmesg</code>（display message）コマンドは、Linuxカーネルが起動時や実行中に生成するメッセージを表示します。これらのメッセージには、ハードウェアの検出、ドライバの読み込み、エラー、警告などの重要な情報が含まれています。システム管理者やトラブルシューティングを行うユーザーにとって非常に役立つツールです。</p>
+<p><code>dmesg</code>コマンドは、システムリングバッファからカーネルメッセージを表示します。このバッファにはハードウェア、デバイスドライバ、システム初期化に関する情報が含まれています。ハードウェアの問題のトラブルシューティング、起動メッセージの確認、カーネルイベントの監視に特に役立ちます。</p>
 <h2>オプション</h2>
-<h3><strong>-H, --human</strong></h3>
-<p>人間が読みやすい形式で出力を表示します。タイムスタンプの相対表示や色分けなどが含まれます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-H
-<span style="color: #000; font-style: italic">[Apr30 10:15] Linux version 5.10.0-8-amd64 (debian-kernel@lists.debian.org)</span>
-<span style="color: #000; font-style: italic">[  +0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-5.10.0-8-amd64 root=UUID=...</span>
-<span style="color: #000; font-style: italic">[  +0.000073] KERNEL supported cpus:</span>
-<span style="color: #000; font-style: italic">[  +0.000002]   Intel GenuineIntel</span>
-<span style="color: #000; font-style: italic">[  +0.000001]   AMD AuthenticAMD</span>
-</pre></div>
 <h3><strong>-c, --clear</strong></h3>
-<p>メッセージを表示した後、カーネルのリングバッファをクリアします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-c
-<span style="color: #000; font-style: italic">[    0.000000] Linux version 5.10.0-8-amd64 (debian-kernel@lists.debian.org)</span>
-<span style="color: #000; font-style: italic">[    0.000073] Command line: BOOT_IMAGE=/boot/vmlinuz-5.10.0-8-amd64 root=UUID=...</span>
-<span style="color: #000; font-style: italic">...</span>
-<span style="color: #8F5902"># </span>バッファがクリアされるため、再度実行すると何も表示されない
-<span style="color: #8F5902">$ </span>dmesg
+<p>内容を表示した後にリングバッファをクリアします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dmesg<span style="color: #F8F8F8"> </span>-c
+<span style="color: #000; font-style: italic">[    0.000000] Linux version 5.15.0-76-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #83-Ubuntu SMP</span>
+<span style="color: #000; font-style: italic">[...]</span>
+</pre></div>
+<h3><strong>-H, --human</strong></h3>
+<p>色付き、相対的なタイムスタンプ、適切な改行を含む人間が読みやすい出力を有効にします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-H
+<span style="color: #000; font-style: italic">[May 4 09:15] Linux version 5.15.0-76-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #83-Ubuntu SMP</span>
+<span style="color: #000; font-style: italic">[...]</span>
 </pre></div>
 <h3><strong>-l, --level</strong></h3>
-<p>指定したレベルのメッセージのみを表示します。レベルには emerg, alert, crit, err, warn, notice, info, debug があります。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>--level<span style="color: #CE5C00; font-weight: bold">=</span>err,warn
-<span style="color: #000; font-style: italic">[    1.234567] WARNING: CPU: 0 PID: 42 at drivers/usb/core/urb.c:377</span>
-<span style="color: #000; font-style: italic">[    2.345678] usb 1-1: device descriptor read/64, error -110</span>
+<p>指定された優先度レベル（カンマ区切りリスト）に出力を制限します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>err,warn
+<span style="color: #000; font-style: italic">[    5.123456] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.GFX0.DD1F], AE_NOT_FOUND</span>
+<span style="color: #000; font-style: italic">[    7.654321] WARNING: CPU: 2 PID: 123 at drivers/gpu/drm/i915/intel_runtime_pm.c:655</span>
 </pre></div>
 <h3><strong>-f, --facility</strong></h3>
-<p>指定した機能（facility）のメッセージのみを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>kern
-<span style="color: #000; font-style: italic">[    0.000000] Linux version 5.10.0-8-amd64 (debian-kernel@lists.debian.org)</span>
-<span style="color: #000; font-style: italic">[    0.000073] Command line: BOOT_IMAGE=/boot/vmlinuz-5.10.0-8-amd64 root=UUID=...</span>
+<p>指定されたファシリティ（カンマ区切りリスト）に出力を制限します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>kern,daemon
+<span style="color: #000; font-style: italic">[    0.123456] kernel: Memory: 16123456K/16777216K available</span>
+<span style="color: #000; font-style: italic">[    1.234567] systemd[1]: Detected virtualization kvm.</span>
 </pre></div>
-<h3><strong>-T, --ctime</strong></h3>
-<p>タイムスタンプを人間が読める形式で表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-T
-<span style="color: #000; font-style: italic">[Wed Apr 30 10:15:30 2025] Linux version 5.10.0-8-amd64 (debian-kernel@lists.debian.org)</span>
-<span style="color: #000; font-style: italic">[Wed Apr 30 10:15:30 2025] Command line: BOOT_IMAGE=/boot/vmlinuz-5.10.0-8-amd64 root=UUID=...</span>
+<h3><strong>-t, --notime</strong></h3>
+<p>タイムスタンプを表示しません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-t
+<span style="color: #000; font-style: italic">Linux version 5.15.0-76-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #83-Ubuntu SMP</span>
+<span style="color: #000; font-style: italic">[...]</span>
+</pre></div>
+<h3><strong>-w, --follow</strong></h3>
+<p>新しいメッセージを待機します（<code>tail -f</code>と同様）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-w
+<span style="color: #000; font-style: italic">[    0.000000] Linux version 5.15.0-76-generic</span>
+<span style="color: #000; font-style: italic">[...]</span>
+<span style="color: #000; font-style: italic">[  123.456789] usb 1-2: new high-speed USB device number 3 using xhci_hcd</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>特定のキーワードでフィルタリング</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>USB
-<span style="color: #000; font-style: italic">[    2.123456] usb 1-1: new high-speed USB device number 2 using ehci-pci</span>
-<span style="color: #000; font-style: italic">[    2.234567] usb 1-1: New USB device found, idVendor=0781, idProduct=5567</span>
+<h3>USBに関連するメッセージのフィルタリング</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>usb
+<span style="color: #000; font-style: italic">[    2.123456] usb 1-1: new high-speed USB device number 2 using xhci_hcd</span>
+<span style="color: #000; font-style: italic">[    2.234567] usb 1-1: New USB device found, idVendor=8087, idProduct=0024, bcdDevice= 0.01</span>
+<span style="color: #000; font-style: italic">[    2.345678] usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0</span>
 </pre></div>
-<h3>最新のメッセージを監視</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-w
-<span style="color: #000; font-style: italic">[    0.000000] Linux version 5.10.0-8-amd64 (debian-kernel@lists.debian.org)</span>
-<span style="color: #000; font-style: italic">...</span>
-<span style="color: #8F5902"># </span>新しいメッセージが発生すると自動的に表示される
-<span style="color: #000; font-style: italic">[   15.678901] usb 2-1: new high-speed USB device number 3 using xhci_hcd</span>
-</pre></div>
-<h3>エラーメッセージの確認</h3>
+<h3>ハードウェアエラーの確認</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>--level<span style="color: #CE5C00; font-weight: bold">=</span>err
-<span style="color: #000; font-style: italic">[    3.456789] EXT4-fs (sda1): re-mounted. Opts: errors=remount-ro</span>
-<span style="color: #000; font-style: italic">[    5.678901] nouveau 0000:01:00.0: DRM: failed to create kernel channel, -22</span>
+<span style="color: #000; font-style: italic">[    5.123456] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.GFX0.DD1F], AE_NOT_FOUND</span>
+<span style="color: #000; font-style: italic">[   10.234567] EXT4-fs error (device sda1): ext4_lookup:1809: inode #2: comm systemd-journal: deleted inode referenced: 12345</span>
+</pre></div>
+<h3>リアルタイムでのカーネルメッセージの監視</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dmesg<span style="color: #F8F8F8"> </span>--follow<span style="color: #F8F8F8"> </span>--human
+<span style="color: #000; font-style: italic">[May 4 09:20] Linux version 5.15.0-76-generic</span>
+<span style="color: #000; font-style: italic">[...]</span>
+<span style="color: #000; font-style: italic">[+0.005678] Booting paravirtualized kernel on bare hardware</span>
+<span style="color: #000; font-style: italic">[+1.234567] usb 1-2: new high-speed USB device number 3 using xhci_hcd</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>起動時の問題を診断する</h3>
-<p>システムの起動に問題がある場合、<code>dmesg</code>を使用して起動プロセス中に発生したエラーや警告を確認できます。特に「error」や「fail」などのキーワードで検索すると効果的です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>error
-</pre></div>
-<h3>ハードウェアの問題を特定する</h3>
-<p>新しいハードウェアを接続した後に問題が発生した場合、<code>dmesg</code>を使用して認識状況やエラーメッセージを確認できます。</p>
-<h3>ログの保存</h3>
-<p>重要なシステムメッセージを保存したい場合は、出力をファイルにリダイレクトします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>dmesg_log.txt
-</pre></div>
+<h3>読みやすさを向上させるために人間が読みやすい形式を使用する</h3>
+<p><code>-H</code>または<code>--human</code>オプションを使用すると、相対的なタイムスタンプ、色付き、適切なフォーマットで出力が読みやすくなります。</p>
+<h3>対象を絞ったトラブルシューティングのためにgrepと組み合わせる</h3>
+<p>特定のハードウェアのトラブルシューティングを行う場合は、<code>dmesg</code>の出力を「usb」、「wifi」、「error」などの関連キーワードで<code>grep</code>にパイプすると効果的です。</p>
+<h3>読み取り後にバッファをクリアする</h3>
+<p><code>sudo dmesg -c</code>を使用して、読み取り後にバッファをクリアします。これは、特定のアクションの後に表示される新しいメッセージのみを監視したい場合に役立ちます。</p>
+<h3>後で分析するために起動メッセージを保存する</h3>
+<p>起動後、<code>dmesg &gt; boot_log.txt</code>でカーネルメッセージを保存しておくと、後で分析や比較ができます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. dmesgの出力が多すぎる場合、どうすれば必要な情報だけを見つけられますか？</h4>
-<p>A. <code>grep</code>コマンドと組み合わせて特定のキーワードでフィルタリングするか、<code>--level</code>オプションを使用して特定の重要度のメッセージだけを表示できます。</p>
-<h4>Q2. dmesgの出力にタイムスタンプが数字で表示されますが、これは何を意味していますか？</h4>
-<p>A. デフォルトでは、タイムスタンプはシステム起動からの経過秒数を表示します。人間が読みやすい形式で表示するには、<code>-T</code>または<code>-H</code>オプションを使用してください。</p>
-<h4>Q3. rootユーザーでないとdmesgが使えないのはなぜですか？</h4>
-<p>A. 最近のLinuxディストリビューションでは、セキュリティ上の理由からrootユーザーまたはsudo権限を持つユーザーのみがdmesgを使用できるように制限されています。</p>
-<h4>Q4. dmesgの出力をリアルタイムで監視するにはどうすればよいですか？</h4>
-<p>A. <code>dmesg -w</code>または<code>dmesg --follow</code>を使用すると、新しいメッセージが発生するたびに表示されます。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは<code>dmesg</code>コマンドの動作がLinuxとは異なります。macOSでは<code>syslog</code>システムを使用しており、システムログを表示するには代わりに以下のコマンドを使用することをお勧めします：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>log<span style="color: #F8F8F8"> </span>show<span style="color: #F8F8F8"> </span>--predicate<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;eventMessage contains &quot;kernel&quot;&#39;</span><span style="color: #F8F8F8"> </span>--last<span style="color: #F8F8F8"> </span>10m
-</pre></div>
-<p>または、より古いバージョンのmacOSでは：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>syslog<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>Sender<span style="color: #F8F8F8"> </span>kernel
-</pre></div>
+<h4>Q1. 「dmesg: read kernel buffer failed: Operation not permitted」というエラーが出るのはなぜですか？</h4>
+<p>A. 多くのシステムでは、カーネルバッファにアクセスするには root 権限が必要です。代わりに <code>sudo dmesg</code> を使用してください。</p>
+<h4>Q2. 最近のメッセージだけを見るにはどうすればいいですか？</h4>
+<p>A. <code>dmesg | tail</code> を使用して最新のメッセージを表示するか、<code>dmesg -T</code> を使用して人間が読みやすいタイムスタンプを表示し、時間でフィルタリングします。</p>
+<h4>Q3. dmesg 出力のタイムスタンプをどう解釈すればいいですか？</h4>
+<p>A. デフォルトでは、タイムスタンプは起動からの秒数を示します。人間が読みやすいタイムスタンプには <code>-T</code> または <code>--ctime</code> を、相対的なタイムスタンプには <code>-H</code> を使用してください。</p>
+<h4>Q4. tail -f のように dmesg を継続的に監視できますか？</h4>
+<p>A. はい、<code>dmesg -w</code> または <code>dmesg --follow</code> を使用して、新しいカーネルメッセージを継続的に監視できます。</p>
+<h2>macOSに関する注意点</h2>
+<p>macOSでは、<code>dmesg</code>コマンドのオプションはLinuxよりも少なくなっています。<code>--human</code>や<code>--follow</code>などのオプションはサポートされていません。macOSでより詳細なシステムログを取得するには、代わりに<code>log</code>コマンドの使用を検討してください。例えば、<code>log show --predicate 'eventMessage contains &quot;kernel&quot;'</code>などです。</p>
 <h2>参考資料</h2>
 <p>https://man7.org/linux/man-pages/man1/dmesg.1.html</p>
 <h2>改訂履歴</h2>
-<ul>
-<li>2025/04/30 初版作成</li>
-</ul>
+<p>2025/05/04 初版作成</p>
 
 
     </main>

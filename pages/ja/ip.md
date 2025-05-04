@@ -1,16 +1,77 @@
 # ip コマンド
 
-ネットワークインターフェース、ルーティング、トンネルなどのネットワーク設定を表示・管理します。
+Linuxシステム上のネットワークインターフェース、ルーティング、トンネルを表示および操作します。
 
 ## 概要
 
-`ip` コマンドは、Linux システムでネットワーク設定を管理するための強力なツールです。ネットワークインターフェースの設定、IPアドレスの割り当て、ルーティングテーブルの管理、ARPテーブルの表示など、さまざまなネットワーク関連のタスクを実行できます。従来の `ifconfig` や `route` コマンドの代替として開発されました。
+`ip` コマンドは、Linux でネットワークインターフェース、ルーティングテーブル、トンネルを設定するための強力なユーティリティです。iproute2 パッケージの一部であり、`ifconfig` や `route` などの古いネットワークコマンドよりも多くの機能を提供します。このコマンドは階層構造を使用しており、オブジェクト（link、address、route など）の後にコマンドとオプションが続きます。
 
 ## オプション
 
-### **ip addr (address)**
+### **-s, --stats, --statistics**
 
-ネットワークインターフェースのIPアドレス情報を表示・管理します。
+より詳細な情報や統計を表示します
+
+```console
+$ ip -s link show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    RX: bytes  packets  errors  dropped overrun mcast   
+    3500       35       0       0       0       0      
+    TX: bytes  packets  errors  dropped carrier collsns 
+    3500       35       0       0       0       0      
+```
+
+### **-c, --color**
+
+読みやすさを向上させるためにカラー出力を使用します
+
+```console
+$ ip -c addr show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+```
+
+### **-br, --brief**
+
+簡潔な出力（オブジェクトごとに1行）を表示します
+
+```console
+$ ip -br addr show
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+eth0             UP             192.168.1.10/24 fe80::1234:5678:abcd:ef01/64
+```
+
+### **-d, --details**
+
+詳細情報を表示します
+
+```console
+$ ip -d link show dev eth0
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether 00:11:22:33:44:55 brd ff:ff:ff:ff:ff:ff promiscuity 0 
+    altname enp0s3
+    vlan protocol 802.1Q
+    vlan id 1 <REORDER_HDR> 
+```
+
+## 使用例
+
+### ネットワークインターフェースの表示
+
+```console
+$ ip link show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether 00:11:22:33:44:55 brd ff:ff:ff:ff:ff:ff
+```
+
+### IPアドレスの表示
 
 ```console
 $ ip addr show
@@ -18,139 +79,95 @@ $ ip addr show
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     inet 127.0.0.1/8 scope host lo
        valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
 2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
-    link/ether 00:0c:29:b0:xx:xx brd ff:ff:ff:ff:ff:ff
-    inet 192.168.1.100/24 brd 192.168.1.255 scope global eth0
+    link/ether 00:11:22:33:44:55 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.10/24 brd 192.168.1.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::1234:5678:abcd:ef01/64 scope link 
        valid_lft forever preferred_lft forever
 ```
 
-### **ip link**
-
-ネットワークインターフェースの状態を表示・管理します。
+### IPアドレスの設定
 
 ```console
-$ ip link show
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
-    link/ether 00:0c:29:b0:xx:xx brd ff:ff:ff:ff:ff:ff
+$ sudo ip addr add 192.168.1.100/24 dev eth0
 ```
 
-### **ip route**
+### インターフェースの有効化または無効化
 
-ルーティングテーブルを表示・管理します。
+```console
+$ sudo ip link set eth0 up
+$ sudo ip link set eth0 down
+```
+
+### ルーティングテーブルの表示
 
 ```console
 $ ip route show
 default via 192.168.1.1 dev eth0 proto static 
-192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.100
+192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.10
 ```
 
-### **ip neigh (neighbour)**
-
-ARPテーブル（ネイバーテーブル）を表示・管理します。
+### 静的ルートの追加
 
 ```console
-$ ip neigh show
-192.168.1.1 dev eth0 lladdr 00:11:22:33:44:55 REACHABLE
-192.168.1.5 dev eth0 lladdr aa:bb:cc:dd:ee:ff STALE
-```
-
-## 使用例
-
-### IPアドレスの追加
-
-```console
-$ sudo ip addr add 192.168.1.200/24 dev eth0
-# eth0インターフェースに192.168.1.200/24のIPアドレスを追加
-```
-
-### インターフェースの有効化/無効化
-
-```console
-$ sudo ip link set eth0 up
-# eth0インターフェースを有効化
-
-$ sudo ip link set eth0 down
-# eth0インターフェースを無効化
-```
-
-### ルートの追加
-
-```console
-$ sudo ip route add 10.0.0.0/24 via 192.168.1.1
-# 10.0.0.0/24ネットワークへのルートを192.168.1.1ゲートウェイ経由で追加
-```
-
-### 特定のインターフェースの詳細情報表示
-
-```console
-$ ip -s link show eth0
-# eth0インターフェースの統計情報を含む詳細を表示
-2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
-    link/ether 00:0c:29:b0:xx:xx brd ff:ff:ff:ff:ff:ff
-    RX: bytes  packets  errors  dropped overrun mcast   
-    1234567    12345    0       0       0       123     
-    TX: bytes  packets  errors  dropped carrier collsns 
-    7654321    54321    0       0       0       0
+$ sudo ip route add 10.0.0.0/24 via 192.168.1.254
 ```
 
 ## ヒント:
 
-### 読みやすい出力形式
+### 一般的なコマンドのショートカットを使用する
 
-`-h` または `--human` オプションを使用すると、数値が読みやすい形式で表示されます。
+`ip` コマンドはサブコマンドの短縮版を使用できます：
+- `ip a` は `ip addr show` の代わりに
+- `ip l` は `ip link show` の代わりに
+- `ip r` は `ip route show` の代わりに
+
+### 設定の保存と復元
+
+現在のIP設定を保存し、後で復元することができます：
 
 ```console
-$ ip -h addr show
-# 数値が読みやすい形式で表示される
+$ ip addr save > ip-config.txt
+$ ip addr restore < ip-config.txt
 ```
 
-### JSONフォーマットでの出力
+### 一時的な変更と永続的な変更
 
-`-j` または `--json` オプションを使用すると、出力がJSON形式で表示されます。これはスクリプトでの処理に便利です。
+`ip` コマンドで行った変更は再起動後には保持されません。永続的な変更を行うには、ディストリビューションのネットワーク設定ファイルを変更する必要があります。
 
-```console
-$ ip -j addr show
-# JSON形式で出力される
-```
+### ネットワーク分離のための名前空間の使用
 
-### 色付き出力
-
-`-c` または `--color` オプションを使用すると、出力に色が付きます。これにより視認性が向上します。
+ネットワーク名前空間を使用すると、分離されたネットワーク環境を作成できます：
 
 ```console
-$ ip -c addr show
-# 色付きで出力される
-```
-
-### 特定のインターフェースのみ表示
-
-特定のインターフェースに関する情報だけを表示したい場合は、インターフェース名を指定します。
-
-```console
-$ ip addr show eth0
-# eth0インターフェースの情報のみ表示
+$ sudo ip netns add mynetwork
+$ sudo ip netns exec mynetwork ip addr
 ```
 
 ## よくある質問
 
-#### Q1. `ip` コマンドと `ifconfig` コマンドの違いは何ですか？
-A. `ip` コマンドは `ifconfig` の後継として開発され、より多くの機能を持ち、最新のネットワーク技術に対応しています。`ifconfig` は多くのLinuxディストリビューションでは非推奨または廃止されつつあります。
+#### Q1. `ip` と `ifconfig` の違いは何ですか？
+A. `ip` はより新しく、強力で、`ifconfig` よりも多くの機能を提供します。ルーティング、トンネリング、ポリシーベースのルーティングを管理できますが、`ifconfig` は基本的なインターフェース設定に限られています。
 
-#### Q2. 一時的なIPアドレス変更と永続的な変更の違いは？
-A. `ip` コマンドでの変更はシステム再起動後に失われます。永続的な変更を行うには、ディストリビューションに応じたネットワーク設定ファイル（例：`/etc/network/interfaces`、`/etc/sysconfig/network-scripts/`など）を編集する必要があります。
+#### Q2. IPアドレスを確認するにはどうすればよいですか？
+A. `ip addr show` または短縮形の `ip a` を使用して、システム上のすべてのIPアドレスを表示します。
 
-#### Q3. デフォルトゲートウェイを変更するには？
-A. `sudo ip route replace default via 新しいゲートウェイIP dev インターフェース名` を使用します。例：`sudo ip route replace default via 192.168.1.254 dev eth0`
+#### Q3. 一時的なIPアドレスを追加するにはどうすればよいですか？
+A. `sudo ip addr add IPアドレス/ネットマスク dev インターフェース` を使用します。例：`sudo ip addr add 192.168.1.100/24 dev eth0`。
 
-#### Q4. ネットワークインターフェースのMACアドレスを変更できますか？
-A. はい、`sudo ip link set dev インターフェース名 address 新しいMAC` で変更できます。例：`sudo ip link set dev eth0 address 00:11:22:33:44:55`
+#### Q4. ルーティングテーブルを確認するにはどうすればよいですか？
+A. `ip route show` または短縮形の `ip r` を使用して、ルーティングテーブルを表示します。
 
-## 参考
+#### Q5. インターフェースからIPアドレスを削除するにはどうすればよいですか？
+A. `sudo ip addr flush dev インターフェース` を使用します。例：`sudo ip addr flush dev eth0`。
+
+## 参考資料
 
 https://man7.org/linux/man-pages/man8/ip.8.html
 
-## 改訂
+## 改訂履歴
 
-- 2025/04/30 初版作成
+2025/05/04 初回改訂

@@ -1,118 +1,126 @@
 # basename コマンド
 
-ファイルパスからディレクトリ部分を削除し、ファイル名のみを取得します。
+パス名からファイル名やディレクトリ名を抽出します。
 
 ## 概要
 
-`basename` コマンドは、ファイルパスからディレクトリ部分を取り除き、ファイル名だけを表示します。オプションを使用すると、ファイル名から拡張子を削除することもできます。シェルスクリプトでファイル名の処理を行う際によく使用されます。
+`basename` コマンドは、指定されたパスからディレクトリ部分や指定された接尾辞を取り除き、ファイル名や最終的なディレクトリ名だけを残します。シェルスクリプトでフルパスからファイル名を抽出したり、ファイル拡張子を削除したりする際によく使用されます。
 
 ## オプション
 
 ### **-a, --multiple**
 
-複数のパスを一度に処理します。
+複数の引数を処理し、それぞれを NAME として扱います。
 
 ```console
-$ basename -a /usr/bin/zip /usr/bin/gzip
-zip
-gzip
+$ basename -a /usr/bin/sort /usr/bin/cut
+sort
+cut
 ```
 
-### **-s, --suffix=接尾辞**
+### **-s, --suffix=SUFFIX**
 
-指定した接尾辞（拡張子など）をファイル名から削除します。
+各 NAME から末尾の SUFFIX を削除します。
 
 ```console
-$ basename -s .txt /home/user/document.txt
-document
+$ basename -s .txt file.txt
+file
 ```
 
 ### **-z, --zero**
 
-出力の区切り文字として改行ではなくNULL文字を使用します。
+各出力行を改行ではなく NUL で終了します。
 
 ```console
-$ basename -z file1.txt file2.txt | hexdump -C
-00000000  66 69 6c 65 31 00 66 69  6c 65 32 00              |file1.file2.|
-0000000c
+$ basename -z file.txt | hexdump -C
+00000000  66 69 6c 65 2e 74 78 74  00                       |file.txt.|
+00000009
 ```
 
 ## 使用例
 
-### 基本的な使用方法
+### 基本的なファイル名抽出
 
 ```console
-$ basename /usr/local/bin/python3
-python3
+$ basename /usr/local/bin/example.sh
+example.sh
 ```
 
-### 拡張子の削除
+### ファイル拡張子の削除
 
 ```console
-$ basename /var/log/syslog.1.gz .gz
-syslog.1
+$ basename /home/user/documents/report.pdf .pdf
+report
 ```
 
-### シェルスクリプトでの使用例
+### シェルスクリプトでの使用
 
 ```console
-$ filename=$(basename "$filepath")
-$ echo "ファイル名は $filename です"
-ファイル名は document.txt です
+$ filename=$(basename "$path")
+$ echo "The filename is: $filename"
+The filename is: example.txt
+```
+
+### 複数のパスの処理
+
+```console
+$ basename -a /var/log/syslog /etc/passwd /usr/bin/bash
+syslog
+passwd
+bash
 ```
 
 ## ヒント:
 
-### パスとファイル名の分離
+### dirname と組み合わせる
 
-`dirname` コマンドと組み合わせると、パスとファイル名を完全に分離できます。
+`basename` を `dirname` と組み合わせてパスをコンポーネントに分割できます：
 
 ```console
-$ filepath="/home/user/documents/report.pdf"
-$ dirname "$filepath"  # パス部分を取得
-/home/user/documents
-$ basename "$filepath"  # ファイル名部分を取得
-report.pdf
+$ path="/home/user/documents/report.pdf"
+$ dir=$(dirname "$path")
+$ file=$(basename "$path")
+$ echo "Directory: $dir, File: $file"
+Directory: /home/user/documents, File: report.pdf
 ```
 
-### 複数の拡張子の処理
+### 引数を引用符で囲む
 
-複数の拡張子（例：.tar.gz）を持つファイルを処理する場合は、`basename` を複数回使用するか、パターンマッチングを使用します。
+スペースや特殊文字を含むファイル名を扱う場合は、常に引数を引用符で囲みましょう：
 
 ```console
-$ filename="archive.tar.gz"
-$ basename "$filename" .gz | basename -s .tar
-archive
+$ basename "/path/to/my file.txt"
+my file.txt
 ```
 
-### 変数展開での代替方法
+### パラメータ展開の使用
 
-Bashでは、変数展開を使って同様の処理を行うこともできます。
+Bashでは、`basename` の代わりにパラメータ展開を使用できることがあります：
 
 ```console
-$ filepath="/home/user/documents/report.pdf"
-$ echo "${filepath##*/}"  # basename と同等
+$ path="/home/user/documents/report.pdf"
+$ echo "${path##*/}"
 report.pdf
 ```
 
 ## よくある質問
 
 #### Q1. `basename` と `dirname` の違いは何ですか？
-A. `basename` はパスからファイル名部分を抽出し、`dirname` はディレクトリ部分を抽出します。
+A. `basename` はパスから最後のコンポーネント（ファイル名またはディレクトリ名）を抽出し、`dirname` はパスからディレクトリ部分を抽出します。
 
-#### Q2. 拡張子なしのファイル名を取得するにはどうすればよいですか？
-A. `basename filename.ext .ext` のように、第2引数に拡張子を指定します。
+#### Q2. 複数の拡張子（.tar.gz など）を削除するにはどうすればよいですか？
+A. `basename` は一度に1つの接尾辞しか削除できません。複数の拡張子の場合は、複数回使用するかシェルのパラメータ展開を使用する必要があります。
 
-#### Q3. シェルスクリプトで `basename` を使わずに同じ結果を得る方法はありますか？
-A. Bashでは `${filepath##*/}` のような変数展開パターンを使用できます。
+#### Q3. `basename` は相対パスでも動作しますか？
+A. はい、絶対パスと相対パスの両方で動作し、常に最後のコンポーネントを返します。
 
-#### Q4. macOSと Linux で `basename` の動作に違いはありますか？
-A. 基本的な機能は同じですが、一部のオプション（特に GNU 拡張）は macOS では利用できない場合があります。
+#### Q4. `basename` はスペースを含むパスを処理できますか？
+A. はい、できますが、シェルがスペースを引数の区切り文字として解釈しないように、引数を引用符で囲む必要があります。
 
-## 参考資料
+## 参照
 
 https://www.gnu.org/software/coreutils/manual/html_node/basename-invocation.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初回改訂

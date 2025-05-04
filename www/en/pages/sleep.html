@@ -49,66 +49,104 @@
   <h1>sleep command</h1>
 <p>Suspends execution for a specified amount of time.</p>
 <h2>Overview</h2>
-<p>The <code>sleep</code> command pauses the execution of a script or command line for a specified duration. It's commonly used in shell scripts to introduce delays between commands, wait for processes to complete, or create timed intervals for repeated tasks.</p>
+<p>The <code>sleep</code> command pauses the execution of a script or command line for a specified duration. It's commonly used in shell scripts to introduce delays between commands, wait for resources to become available, or create timed operations.</p>
 <h2>Options</h2>
-<h3><strong>Duration</strong></h3>
-<p>Specify how long to pause execution. By default, the duration is in seconds, but you can use suffixes to specify other units.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<h3><strong>-s, --suffix=SUFFIX</strong></h3>
+<p>Specifies the unit of time (s for seconds, m for minutes, h for hours, d for days).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span>5s
+<span style="color: #000; font-style: italic">[pauses for 5 seconds]</span>
 </pre></div>
-<p>This command pauses execution for 5 seconds.</p>
-<h3><strong>Time Suffixes</strong></h3>
-<p>You can use suffixes to specify different time units:</p>
-<ul>
-<li><code>s</code> for seconds (default)</li>
-<li><code>m</code> for minutes</li>
-<li><code>h</code> for hours</li>
-<li><code>d</code> for days</li>
-</ul>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span>2m
+<h3><strong>--help</strong></h3>
+<p>Displays help information and exits.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span>--help
+<span style="color: #000; font-style: italic">Usage: sleep NUMBER[SUFFIX]...</span>
+<span style="color: #000; font-style: italic">  or:  sleep OPTION</span>
+<span style="color: #000; font-style: italic">Pause for NUMBER seconds.  SUFFIX may be &#39;s&#39; for seconds (the default),</span>
+<span style="color: #000; font-style: italic">&#39;m&#39; for minutes, &#39;h&#39; for hours or &#39;d&#39; for days.  NUMBER may be an</span>
+<span style="color: #000; font-style: italic">arbitrary floating point number.  Given two or more arguments, pause for</span>
+<span style="color: #000; font-style: italic">the sum of their values.</span>
+
+<span style="color: #000; font-style: italic">      --help     display this help and exit</span>
+<span style="color: #000; font-style: italic">      --version  output version information and exit</span>
 </pre></div>
-<p>This pauses execution for 2 minutes.</p>
+<h3><strong>--version</strong></h3>
+<p>Outputs version information and exits.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span>--version
+<span style="color: #000; font-style: italic">sleep (GNU coreutils) 9.0</span>
+<span style="color: #000; font-style: italic">Copyright (C) 2022 Free Software Foundation, Inc.</span>
+<span style="color: #000; font-style: italic">License GPLv3+: GNU GPL version 3 or later &lt;https://gnu.org/licenses/gpl.html&gt;.</span>
+<span style="color: #000; font-style: italic">This is free software: you are free to change and redistribute it.</span>
+<span style="color: #000; font-style: italic">There is NO WARRANTY, to the extent permitted by law.</span>
+
+<span style="color: #000; font-style: italic">Written by Jim Meyering and Paul Eggert.</span>
+</pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic delay in a script</h3>
+<h3>Basic usage</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">[pauses for 5 seconds]</span>
+</pre></div>
+<h3>Using different time units</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span>1m
+<span style="color: #000; font-style: italic">[pauses for 1 minute]</span>
+
+<span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span>2h
+<span style="color: #000; font-style: italic">[pauses for 2 hours]</span>
+
+<span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span>1d
+<span style="color: #000; font-style: italic">[pauses for 1 day]</span>
+</pre></div>
+<h3>Using decimal values</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.5
+<span style="color: #000; font-style: italic">[pauses for half a second]</span>
+</pre></div>
+<h3>Combining multiple values</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span>1m<span style="color: #F8F8F8"> </span>30s
+<span style="color: #000; font-style: italic">[pauses for 1 minute and 30 seconds]</span>
+</pre></div>
+<h3>Using in a script</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Starting task...&quot;</span>
 <span style="color: #000; font-style: italic">Starting task...</span>
-<span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Task resumed after 3 seconds&quot;</span>
-<span style="color: #000; font-style: italic">Task resumed after 3 seconds</span>
+<span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Task completed after 2 seconds&quot;</span>
+<span style="color: #000; font-style: italic">Task completed after 2 seconds</span>
 </pre></div>
-<h3>Using multiple time units together</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span>1h<span style="color: #F8F8F8"> </span>30m<span style="color: #F8F8F8"> </span>45s
+<h2>Tips</h2>
+<h3>Interrupt a Sleep Command</h3>
+<p>You can interrupt a running sleep command by pressing Ctrl+C.</p>
+<h3>Background Sleep</h3>
+<p>Run sleep in the background with <code>&amp;</code> to continue using the terminal:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">60</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">&amp;</span>
+<span style="color: #000; font-style: italic">[1] 12345</span>
 </pre></div>
-<p>This will pause for 1 hour, 30 minutes, and 45 seconds.</p>
-<h3>Creating a countdown timer</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">10</span>..1<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$i</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Time&#39;s up!&quot;</span>
-<span style="color: #000; font-style: italic">10</span>
-<span style="color: #000; font-style: italic">9</span>
-<span style="color: #000; font-style: italic">8</span>
-<span style="color: #000; font-style: italic">...</span>
-<span style="color: #000; font-style: italic">1</span>
-<span style="color: #000; font-style: italic">Time&#39;s up!</span>
+<h3>Combine with Other Commands</h3>
+<p>Use sleep with other commands to create timed operations:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">(</span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Message after 5 seconds&quot;</span><span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">&amp;</span>
 </pre></div>
-<h2>Tips:</h2>
-<h3>Interrupt a sleep command</h3>
-<p>You can interrupt a sleep command by pressing Ctrl+C. This is useful when you've started a long sleep and need to cancel it.</p>
-<h3>Use with watch command</h3>
-<p>Combine with the <code>watch</code> command to periodically run a command: <code>watch -n 5 command</code> is equivalent to running a command every 5 seconds.</p>
-<h3>Fractional sleep times</h3>
-<p>Most modern versions of sleep support fractional times like <code>sleep 0.5</code> for half a second, useful for more precise timing.</p>
+<h3>Use in Loops</h3>
+<p>Sleep is useful in loops to prevent excessive resource usage:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span>..5<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Iteration </span><span style="color: #000">$i</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+<span style="color: #000; font-style: italic">Iteration 1</span>
+<span style="color: #000; font-style: italic">Iteration 2</span>
+<span style="color: #000; font-style: italic">Iteration 3</span>
+<span style="color: #000; font-style: italic">Iteration 4</span>
+<span style="color: #000; font-style: italic">Iteration 5</span>
+</pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. Can sleep accept decimal values?</h4>
-<p>A. Yes, most modern implementations of <code>sleep</code> accept decimal values like <code>sleep 0.5</code> for half a second.</p>
-<h4>Q2. How accurate is the sleep command?</h4>
-<p>A. While generally reliable, <code>sleep</code> may not be perfectly precise for very short durations (milliseconds) due to system scheduling and load.</p>
-<h4>Q3. Can I combine different time units?</h4>
-<p>A. Yes, you can combine units like <code>sleep 1h 30m 15s</code> to specify hours, minutes, and seconds together.</p>
-<h4>Q4. Does sleep consume significant system resources?</h4>
-<p>A. No, <code>sleep</code> is very lightweight and uses minimal CPU while waiting.</p>
+<h4>Q1. What happens if I don't specify a unit?</h4>
+<p>A. If no unit is specified, sleep uses seconds as the default unit.</p>
+<h4>Q2. Can I use decimal values with sleep?</h4>
+<p>A. Yes, sleep accepts decimal values like <code>0.5</code> for half a second.</p>
+<h4>Q3. How do I make a script wait for a specific time?</h4>
+<p>A. Use sleep with the appropriate time value, e.g., <code>sleep 10m</code> to wait for 10 minutes.</p>
+<h4>Q4. Can I combine different time units?</h4>
+<p>A. Yes, you can provide multiple arguments that will be added together, e.g., <code>sleep 1h 30m</code> for 1.5 hours.</p>
+<h4>Q5. Does sleep consume a lot of system resources?</h4>
+<p>A. No, sleep is very lightweight and uses minimal CPU resources while waiting.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/sleep-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

@@ -47,76 +47,86 @@
     <main>
       
   <h1>sudo コマンド</h1>
-<p>他のユーザー（通常はroot）の権限でコマンドを実行します。</p>
+<p>別のユーザー（通常は管理者権限を持つユーザー）として、コマンドを実行します。</p>
 <h2>概要</h2>
-<p><code>sudo</code>（superuser do）は、一般ユーザーが管理者（root）権限を一時的に借りてコマンドを実行するためのコマンドです。システム管理タスクやセキュリティ上の理由で制限されている操作を実行する際に使用します。パスワード認証が必要で、実行権限はシステム管理者によって<code>/etc/sudoers</code>ファイルで設定されます。</p>
+<p><code>sudo</code>（superuser do）は、認可されたユーザーが別のユーザー（デフォルトではスーパーユーザー/root）のセキュリティ権限でコマンドを実行できるようにします。これにより、rootユーザーとしてログインせずに管理タスクを実行でき、特権アクセスを制限することでシステムセキュリティを向上させます。</p>
 <h2>オプション</h2>
-<h3><strong>-u, --user=ユーザー名</strong></h3>
-<p>指定したユーザーの権限でコマンドを実行します。</p>
+<h3><strong>-u, --user=USER</strong></h3>
+<p>デフォルトのターゲットユーザー（root）以外のユーザーとしてコマンドを実行します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>postgres<span style="color: #F8F8F8"> </span>psql
-<span style="color: #000; font-style: italic">postgres=# \q</span>
+<span style="color: #000; font-style: italic">psql (14.5)</span>
+<span style="color: #000; font-style: italic">Type &quot;help&quot; for help.</span>
+
+<span style="color: #000; font-style: italic">postgres=#</span>
 </pre></div>
 <h3><strong>-i, --login</strong></h3>
-<p>ターゲットユーザーのログインシェルを起動します（rootユーザーになります）。</p>
+<p>ターゲットユーザーとしてログインシェルを実行します。完全なログインをシミュレートします</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-i
-<span style="color: #8F5902"># </span>whoami
-<span style="color: #000; font-style: italic">root</span>
-<span style="color: #8F5902"># </span><span style="color: #204A87">exit</span>
+<span style="color: #8F5902">[root@hostname ~]#</span>
 </pre></div>
 <h3><strong>-s, --shell</strong></h3>
-<p>現在のシェル環境でrootシェルを起動します。</p>
+<p>ターゲットユーザーのパスワードデータベースエントリで指定されたシェルを実行します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-s
-<span style="color: #8F5902"># </span>whoami
-<span style="color: #000; font-style: italic">root</span>
-<span style="color: #8F5902"># </span><span style="color: #204A87">exit</span>
+<span style="color: #8F5902">root@hostname:/home/user#</span>
 </pre></div>
 <h3><strong>-l, --list</strong></h3>
-<p>現在のユーザーが実行できる<code>sudo</code>コマンドを一覧表示します。</p>
+<p>呼び出しユーザーに許可された（および禁止された）コマンドを一覧表示します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-l
-<span style="color: #000; font-style: italic">User username may run the following commands on hostname:</span>
-<span style="color: #000; font-style: italic">    (ALL) ALL</span>
+<span style="color: #000; font-style: italic">User user may run the following commands on hostname:</span>
+<span style="color: #000; font-style: italic">    (ALL : ALL) ALL</span>
+</pre></div>
+<h3><strong>-v, --validate</strong></h3>
+<p>ユーザーのキャッシュされた認証情報を更新し、sudoのタイムアウトを延長します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-v
+<span style="color: #000; font-style: italic">[sudo] password for user:</span>
+</pre></div>
+<h3><strong>-k, --reset-timestamp</strong></h3>
+<p>ユーザーのキャッシュされた認証情報を無効にします</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-k
 </pre></div>
 <h2>使用例</h2>
-<h3>パッケージのインストール</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>nginx
-<span style="color: #000; font-style: italic">[sudo] password for username: </span>
-<span style="color: #000; font-style: italic">Reading package lists... Done</span>
-<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
+<h3>root権限でコマンドを実行する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>update
+<span style="color: #000; font-style: italic">[sudo] password for user: </span>
+<span style="color: #000; font-style: italic">Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease</span>
+<span style="color: #000; font-style: italic">Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3>ファイルの編集（rootが所有するファイル）</h3>
+<h3>システム設定ファイルを編集する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>nano<span style="color: #F8F8F8"> </span>/etc/hosts
-<span style="color: #000; font-style: italic">[sudo] password for username:</span>
+<span style="color: #000; font-style: italic">[sudo] password for user:</span>
 </pre></div>
-<h3>サービスの再起動</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>systemctl<span style="color: #F8F8F8"> </span>restart<span style="color: #F8F8F8"> </span>nginx
-<span style="color: #000; font-style: italic">[sudo] password for username:</span>
+<h3>別のユーザーとしてコマンドを実行する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>www-data<span style="color: #F8F8F8"> </span>ls<span style="color: #F8F8F8"> </span>-la<span style="color: #F8F8F8"> </span>/var/www/html
+<span style="color: #000; font-style: italic">total 16</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x 2 www-data www-data 4096 May  4 10:15 .</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x 3 root     root     4096 May  4 10:14 ..</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 www-data www-data  612 May  4 10:15 index.html</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>パスワード入力の省略</h3>
-<p><code>sudo</code>コマンドを実行すると、デフォルトで5分間はパスワード入力が不要になります。連続して管理者権限が必要な作業を行う場合は効率的です。</p>
-<h3>sudoersファイルの編集</h3>
-<p>sudoersファイルを編集する場合は、必ず<code>visudo</code>コマンドを使用してください。これにより構文エラーを防ぎ、システムがロックされるのを防ぎます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>visudo
-</pre></div>
-<h3>コマンドの実行履歴</h3>
-<p><code>sudo</code>で実行したコマンドは通常ログに記録されるため、システム管理者はユーザーのアクションを追跡できます。セキュリティ上重要なコマンドを実行する際は注意しましょう。</p>
+<h3><code>sudo !!</code> を使用して前のコマンドをsudoで繰り返す</h3>
+<p>sudoが必要なコマンドを実行する際にsudoを付け忘れた場合、<code>sudo !!</code>と入力すると、前のコマンドをsudo権限で繰り返すことができます。</p>
+<h3>特定のコマンドに対してパスワードなしでsudoを設定する</h3>
+<p><code>sudo visudo</code>でsudoersファイルを編集し、特定のコマンドをパスワードプロンプトなしで実行できるようにします。例：</p>
+<pre><code>username ALL=(ALL) NOPASSWD: /usr/bin/apt update
+</code></pre><h3><code>sudo -E</code>を使用して環境変数を保持する</h3>
+<p>sudoでコマンドを実行する際に現在の環境変数を保持する必要がある場合は、<code>-E</code>オプションを使用します。</p>
+<h3>sudoersファイルの編集には常に<code>visudo</code>を使用する</h3>
+<p><code>/etc/sudoers</code>を直接編集しないでください。常に<code>sudo visudo</code>を使用してください。これは保存前に構文エラーをチェックし、sudo権限へのアクセスをロックしてしまうことを防ぎます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. sudoとsuの違いは何ですか？</h4>
-<p>A. <code>sudo</code>は特定のコマンドだけを管理者権限で実行するのに対し、<code>su</code>はユーザーを完全に切り替えます。<code>sudo</code>はより安全で、実行ログが残り、rootパスワードを共有せずに済みます。</p>
-<h4>Q2. sudoコマンドを実行する権限がないとどうなりますか？</h4>
-<p>A. 権限がない場合、「username is not in the sudoers file. This incident will be reported.」というメッセージが表示され、コマンドは実行されません。</p>
-<h4>Q3. sudoコマンドでパスワードを間違えるとどうなりますか？</h4>
-<p>A. 通常3回までパスワード入力のチャンスがあり、それ以上間違えると一定時間<code>sudo</code>コマンドが使用できなくなります。</p>
-<h4>Q4. sudoの設定はどこで行いますか？</h4>
-<p>A. <code>/etc/sudoers</code>ファイルで設定します。ただし、直接編集せず<code>visudo</code>コマンドを使用してください。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは<code>sudo</code>コマンドの動作はLinuxと基本的に同じですが、管理者グループは「admin」と呼ばれます。また、macOSではセキュリティ強化のため、一部のシステムディレクトリは「System Integrity Protection (SIP)」によって保護されており、<code>sudo</code>でも変更できない場合があります。</p>
+<h4>Q1. <code>sudo -i</code>と<code>sudo -s</code>の違いは何ですか？</h4>
+<p>A. <code>sudo -i</code>は完全なログインをシミュレートし、ターゲットユーザーのホームディレクトリに移動して環境を設定します。<code>sudo -s</code>はターゲットユーザーとしてシェルを起動するだけで、現在の環境と作業ディレクトリを保持します。</p>
+<h4>Q2. sudo認証はどれくらいの期間有効ですか？</h4>
+<p>A. デフォルトでは、sudoは認証情報を15分間キャッシュします。<code>sudo -v</code>で延長したり、<code>sudo -k</code>でリセットしたりできます。</p>
+<h4>Q3. 複数のコマンドをsudoで実行するにはどうすればよいですか？</h4>
+<p>A. <code>sudo sh -c &quot;command1 &amp;&amp; command2&quot;</code>を使用するか、<code>sudo -i</code>でrootシェルを起動してからコマンドを実行します。</p>
+<h4>Q4. ユーザーをsudoersに追加するにはどうすればよいですか？</h4>
+<p>A. Debian/Ubuntuでは<code>usermod -aG sudo username</code>でユーザーをsudoグループに追加します。RHEL/CentOSシステムではwheelグループに追加します。</p>
 <h2>参考資料</h2>
 <p>https://www.sudo.ws/docs/man/sudo.man/</p>
-<h2>改訂履歴</h2>
+<h2>Revisions</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回リビジョン</li>
 </ul>
 
 

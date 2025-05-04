@@ -1,16 +1,16 @@
 # diff3 command
 
-Compare three files line by line and show differences between them.
+Compare three files line by line and show differences.
 
 ## Overview
 
-`diff3` is a text comparison utility that analyzes three files and identifies the differences between them. It's particularly useful for comparing an original file with two different modified versions, making it valuable for resolving merge conflicts in version control systems or for comparing different revisions of a document.
+`diff3` is a utility that compares three files and identifies the differences between them. It's particularly useful when merging changes from multiple versions of a file, such as in version control systems. The command shows which lines are unique to each file and which are common across files.
 
 ## Options
 
 ### **-A, --show-all**
 
-Output all changes, including conflicts, in a unified format that's easier to read
+Output all changes, bracketing conflicts between files.
 
 ```console
 $ diff3 -A file1 file2 file3
@@ -18,29 +18,14 @@ $ diff3 -A file1 file2 file3
 This is in file1
 ||||||| file2
 This is in file2
-======= file3
+======= 
 This is in file3
->>>>>>> file3
-```
-
-### **-m, --merge**
-
-Produce output in a merge format suitable for further editing
-
-```console
-$ diff3 -m file1 file2 file3
-<<<<<<< file1
-Content from file1
-||||||| file2
-Content from file2
-======= file3
-Content from file3
 >>>>>>> file3
 ```
 
 ### **-e, --ed**
 
-Create an ed script that can be used to incorporate changes from file1 to file3 into file2
+Create an ed script that incorporates all changes from file1 to file3 into file2.
 
 ```console
 $ diff3 -e file1 file2 file3
@@ -48,20 +33,50 @@ w
 q
 ```
 
+### **-m, --merge**
+
+Output the merged file directly instead of an ed script.
+
+```console
+$ diff3 -m file1 file2 file3
+Common text
+<<<<<<< file1
+Text from file1
+||||||| file2
+Text from file2
+=======
+Text from file3
+>>>>>>> file3
+More common text
+```
+
+### **-T, --initial-tab**
+
+Make tabs line up by prefixing a tab to output lines.
+
+```console
+$ diff3 -T file1 file2 file3
+	====1
+	line from file1
+	====2
+	line from file2
+	====3
+	line from file3
+```
+
 ### **-x, --overlap-only**
 
-Show only the overlapping changes (conflicts)
+Show only overlapping changes.
 
 ```console
 $ diff3 -x file1 file2 file3
 ====
 1:1c
-This is file1
+line in file1
 2:1c
-This is file2
+line in file2
 3:1c
-This is file3
-====
+line in file3
 ```
 
 ## Usage Examples
@@ -69,58 +84,69 @@ This is file3
 ### Basic Comparison
 
 ```console
-$ diff3 original.txt yours.txt theirs.txt
+$ diff3 file1 file2 file3
 ====
 1:1c
-This is the original file
+This is file1
 2:1c
-This is your modified version
+This is file2
 3:1c
-This is their modified version
-====
+This is file3
 ```
 
 ### Creating a Merged File
 
 ```console
-$ diff3 -m original.txt yours.txt theirs.txt > merged.txt
-$ cat merged.txt
-<<<<<<< original.txt
-This is the original file
-||||||| yours.txt
-This is your modified version
-======= theirs.txt
-This is their modified version
->>>>>>> theirs.txt
+$ diff3 -m file1 file2 file3 > merged_file
+$ cat merged_file
+Common text
+<<<<<<< file1
+Text from file1
+||||||| file2
+Text from file2
+=======
+Text from file3
+>>>>>>> file3
+More common text
+```
+
+### Resolving Conflicts Automatically
+
+```console
+$ diff3 --merge --easy-only file1 file2 file3 > merged_file
 ```
 
 ## Tips
 
 ### Understanding the Output Format
 
-The default output format shows line numbers and content from each file. The numbers before the colon indicate which file (1, 2, or 3) the content comes from, and the letter after the colon indicates the type of change (a for add, c for change, d for delete).
+In standard output, `diff3` uses `====` to mark the beginning of a difference block, followed by line numbers and change types. For example, `1:1c` means line 1 in file1 is changed.
 
-### Using diff3 for Version Control
+### Merging Files Effectively
 
-When resolving merge conflicts in Git or other version control systems, understanding diff3 output can help you better interpret what changes were made by different parties.
+When using `-m` (merge), conflicts are marked with `<<<<<<<`, `|||||||`, `=======`, and `>>>>>>>`. You'll need to manually edit these sections to resolve conflicts.
 
-### Automating Merges
+### Automating Conflict Resolution
 
-Use the `-m` option to create a merged file that you can then edit manually to resolve conflicts. This is often more efficient than trying to merge files by hand.
+Use `--easy-only` with `--merge` to automatically incorporate non-conflicting changes, leaving only true conflicts for manual resolution.
+
+### Working with Version Control
+
+`diff3` is often used behind the scenes in version control systems like Git when resolving merge conflicts between branches.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between diff and diff3?
-A. `diff` compares two files, while `diff3` compares three files, making it useful for comparing an original file with two different modified versions.
+#### Q1. What's the difference between `diff` and `diff3`?
+A. `diff` compares two files, while `diff3` compares three files, making it useful for merging changes from multiple sources.
 
-#### Q2. How do I interpret the output of diff3?
-A. The output shows sections where the files differ, with line numbers and content from each file. The numbers (1:, 2:, 3:) indicate which file the content comes from.
+#### Q2. How do I interpret the output of `diff3`?
+A. The output shows line numbers and content from each file. Lines marked with `====` indicate differences, followed by line numbers and content from each file.
 
-#### Q3. Can diff3 automatically resolve conflicts?
-A. No, diff3 can identify conflicts but cannot automatically resolve them. It can produce a merged file with conflict markers that you must resolve manually.
+#### Q3. Can `diff3` automatically resolve conflicts?
+A. Partially. Using `--merge --easy-only` will automatically resolve non-conflicting changes, but you'll still need to manually resolve true conflicts.
 
-#### Q4. How do I save the output to a file?
-A. Use output redirection: `diff3 file1 file2 file3 > output.txt` or use the `-m` option to create a merged file.
+#### Q4. How do I save the merged output to a file?
+A. Use redirection: `diff3 -m file1 file2 file3 > merged_file`
 
 ## References
 
@@ -128,4 +154,4 @@ https://www.gnu.org/software/diffutils/manual/html_node/Invoking-diff3.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

@@ -47,66 +47,68 @@
     <main>
       
   <h1>xdg-mime コマンド</h1>
-<p>ファイルタイプとそれに関連付けられたアプリケーションを管理するコマンド。</p>
+<p>デスクトップ環境でファイルタイプの関連付けを照会・設定します。</p>
 <h2>概要</h2>
-<p><code>xdg-mime</code> は Linux デスクトップ環境でファイルタイプ（MIME タイプ）とアプリケーションの関連付けを管理するためのコマンドです。ファイルの種類を調べたり、特定のファイルタイプを開くデフォルトアプリケーションを設定したりすることができます。このコマンドは XDG（X Desktop Group）標準の一部で、デスクトップ環境間での一貫性を提供します。</p>
+<p><code>xdg-mime</code>は、Linuxデスクトップ環境でファイルタイプの関連付けを管理するためのコマンドラインツールです。特定のファイルタイプ（MIMEタイプ）に関連付けられたアプリケーションの照会、ファイルタイプのデフォルトアプリケーションの設定、システムへの新しいMIMEタイプ情報の追加などが可能です。</p>
 <h2>オプション</h2>
-<h3><strong>query filetype</strong></h3>
-<p>ファイルの MIME タイプを調査します。</p>
+<h3><strong>query default [mimetype]</strong></h3>
+<p>特定のMIMEタイプに対するデフォルトアプリケーションを照会します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>text/plain
+<span style="color: #000; font-style: italic">gedit.desktop</span>
+</pre></div>
+<h3><strong>query filetype [file]</strong></h3>
+<p>ファイルのMIMEタイプを判定します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>filetype<span style="color: #F8F8F8"> </span>document.pdf
 <span style="color: #000; font-style: italic">application/pdf</span>
 </pre></div>
-<h3><strong>query default</strong></h3>
-<p>特定の MIME タイプに関連付けられたデフォルトアプリケーションを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>application/pdf
-<span style="color: #000; font-style: italic">org.gnome.evince.desktop</span>
-</pre></div>
-<h3><strong>default</strong></h3>
-<p>特定の MIME タイプに対するデフォルトアプリケーションを設定します。</p>
+<h3><strong>default [application.desktop] [mimetype(s)]</strong></h3>
+<p>1つまたは複数のMIMEタイプに対するデフォルトアプリケーションを設定します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>firefox.desktop<span style="color: #F8F8F8"> </span>text/html
 </pre></div>
-<h3><strong>install</strong></h3>
-<p>新しい MIME タイプ情報をシステムにインストールします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>mytype.xml
+<h3><strong>install [--mode mode] [--novendor] mimetypes-file</strong></h3>
+<p>ファイルから新しいMIMEタイプ情報をインストールします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>--mode<span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8"> </span>myapplication-mime.xml
 </pre></div>
 <h2>使用例</h2>
-<h3>ファイルの MIME タイプを確認する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>filetype<span style="color: #F8F8F8"> </span>image.jpg
+<h3>PDFファイルを開くアプリケーションを確認する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>application/pdf
+<span style="color: #000; font-style: italic">evince.desktop</span>
+</pre></div>
+<h3>Firefoxをデフォルトブラウザとして設定する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>firefox.desktop<span style="color: #F8F8F8"> </span>x-scheme-handler/http<span style="color: #F8F8F8"> </span>x-scheme-handler/https
+</pre></div>
+<h3>ファイルのMIMEタイプを確認する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>filetype<span style="color: #F8F8F8"> </span>myimage.jpg
 <span style="color: #000; font-style: italic">image/jpeg</span>
 </pre></div>
-<h3>PDF ファイルのデフォルトアプリケーションを変更する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>okular.desktop<span style="color: #F8F8F8"> </span>application/pdf
-</pre></div>
-<h3>現在の HTML ファイルのデフォルトブラウザを確認する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>text/html
-<span style="color: #000; font-style: italic">firefox.desktop</span>
+<h3>テキストファイル用に別のテキストエディタを設定する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>code.desktop<span style="color: #F8F8F8"> </span>text/plain
 </pre></div>
 <h2>ヒント:</h2>
-<h3>MIME タイプの詳細を調べる</h3>
-<p><code>file --mime-type</code> コマンドも使用して、ファイルの MIME タイプを確認できます。これは xdg-mime が利用できない環境でも役立ちます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span>--mime-type<span style="color: #F8F8F8"> </span>document.pdf
-<span style="color: #000; font-style: italic">document.pdf: application/pdf</span>
+<h3>デスクトップエントリファイルの場所</h3>
+<p>デスクトップエントリファイル（<code>.desktop</code>）は通常、<code>/usr/share/applications/</code>または<code>~/.local/share/applications/</code>にあります。デフォルトアプリケーションを設定する際には、これらのファイルを参照する必要があります。</p>
+<h3>システム全体とユーザー固有の設定</h3>
+<p>システム全体の変更を行うには<code>--mode system</code>（root権限が必要）を、ユーザー固有の設定には<code>--mode user</code>（デフォルト）を使用します。</p>
+<h3>利用可能なデスクトップファイルを見つける</h3>
+<p>デフォルト設定に使用できるデスクトップファイルを確認するには、次のようにリストアップできます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>/usr/share/applications/*.desktop
 </pre></div>
-<h3>デスクトップファイルの場所</h3>
-<p><code>.desktop</code> ファイルは通常 <code>/usr/share/applications/</code> または <code>~/.local/share/applications/</code> ディレクトリにあります。デフォルトアプリケーションを設定する際には、これらのディレクトリにある正確なファイル名を使用する必要があります。</p>
-<h3>変更の反映</h3>
-<p>設定変更後、変更が反映されない場合は、アプリケーションを再起動するか、場合によってはログアウト/ログインが必要になることがあります。</p>
+<h3>MIMEタイプの参照</h3>
+<p>一般的なMIMEタイプには、テキストファイル用の<code>text/plain</code>、PDF用の<code>application/pdf</code>、JPEG画像用の<code>image/jpeg</code>、MP4ビデオ用の<code>video/mp4</code>などがあります。</p>
 <h2>よくある質問</h2>
-<h4>Q1. xdg-mime とは何ですか？</h4>
-<p>A. Linux デスクトップ環境でファイルタイプとアプリケーションの関連付けを管理するためのコマンドラインツールです。</p>
-<h4>Q2. 特定のファイルタイプに対するデフォルトアプリケーションを変更するにはどうすればよいですか？</h4>
-<p>A. <code>xdg-mime default アプリケーション名.desktop MIMEタイプ</code> を使用します。例えば、<code>xdg-mime default firefox.desktop text/html</code> のようにします。</p>
-<h4>Q3. ファイルの MIME タイプを調べるにはどうすればよいですか？</h4>
-<p>A. <code>xdg-mime query filetype ファイル名</code> を使用します。例えば、<code>xdg-mime query filetype document.pdf</code> のようにします。</p>
-<h4>Q4. 変更したデフォルトアプリケーションの設定はどこに保存されますか？</h4>
-<p>A. 通常、<code>~/.config/mimeapps.list</code> ファイルに保存されます。</p>
-<h4>Q5. xdg-mime コマンドはどのデスクトップ環境で動作しますか？</h4>
-<p>A. GNOME、KDE、Xfce など、XDG 標準に準拠したほとんどの Linux デスクトップ環境で動作します。</p>
-<h2>参考資料</h2>
+<h4>Q1. 特定のファイルを開くアプリケーションを調べるにはどうすればよいですか？</h4>
+<p>A. <code>xdg-mime query default $(xdg-mime query filetype ファイル名)</code>を使用して、まずファイルのMIMEタイプを判定し、次にそのMIMEタイプに関連付けられているアプリケーションを照会します。</p>
+<h4>Q2. ファイルの関連付けをシステムのデフォルトにリセットするにはどうすればよいですか？</h4>
+<p>A. xdg-mimeには直接のリセットコマンドはありません。<code>~/.config/mimeapps.list</code>の関連エントリを削除するか、手動で希望するデフォルトに設定する必要があります。</p>
+<h4>Q3. 新しいファイル関連付けが機能しないのはなぜですか？</h4>
+<p>A. 一部のデスクトップ環境ではMIME関連付けをキャッシュしています。ログアウトして再度ログインするか、ファイルマネージャーを再起動してみてください。また、<code>.desktop</code>ファイルが存在し、適切にフォーマットされていることを確認してください。</p>
+<h4>Q4. 1つのファイルタイプに複数のアプリケーションを関連付けることはできますか？</h4>
+<p>A. <code>xdg-mime</code>はデフォルトアプリケーションのみを設定します。代替アプリケーションは、デスクトップ環境のファイルプロパティダイアログで設定できます。</p>
+<h2>参照</h2>
 <p>https://portland.freedesktop.org/doc/xdg-mime.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

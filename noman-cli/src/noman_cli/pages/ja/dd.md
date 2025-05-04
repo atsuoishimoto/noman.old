@@ -1,153 +1,145 @@
 # dd コマンド
 
-ファイルの変換とコピーを行うユーティリティ。
+ファイルのブロックレベル操作によるコピーと変換を行います。
 
 ## 概要
 
-`dd` コマンドは、ファイルをブロック単位でコピー・変換するための低レベルなユーティリティです。主にディスクイメージの作成、バックアップ、データ復旧、ディスクのクローン作成などに使用されます。他のコピーコマンドと異なり、生のデバイスファイルを直接扱うことができるため、システム管理やフォレンジック調査で重宝されます。
+`dd`はデータのコピーと変換を行うコマンドラインユーティリティです。標準的なコピーコマンドとは異なり、ブロックサイズ、バイト順序、データ変換を精密に制御できます。ディスクイメージの作成、パーティションのバックアップ、ファイル形式の変換、低レベルデータ操作によく使用されます。
 
 ## オプション
 
-### **if=ファイル**
+### **if=FILE, --input=FILE**
 
-入力ファイル（input file）を指定します。指定しない場合は標準入力から読み込みます。
+読み込み元の入力ファイルを指定します（デフォルトは標準入力）
 
 ```console
-$ dd if=/dev/zero of=zeros.bin count=1 bs=1M
-1+0 records in
-1+0 records out
-1048576 bytes (1.0 MB, 1.0 MiB) copied, 0.00209056 s, 501 MB/s
+$ dd if=/dev/sda
 ```
 
-### **of=ファイル**
+### **of=FILE, --output=FILE**
 
-出力ファイル（output file）を指定します。指定しない場合は標準出力に書き込みます。
+書き込み先の出力ファイルを指定します（デフォルトは標準出力）
 
 ```console
-$ dd if=/dev/urandom of=random.bin count=1 bs=1M
-1+0 records in
-1+0 records out
-1048576 bytes (1.0 MB, 1.0 MiB) copied, 0.0826016 s, 12.7 MB/s
+$ dd if=/dev/sda of=/dev/sdb
 ```
 
-### **bs=バイト数**
+### **bs=BYTES, --block-size=BYTES**
 
-一度に読み書きするブロックサイズを指定します。K（キロバイト）、M（メガバイト）、G（ギガバイト）などの単位を使用できます。
+入力と出力の両方のブロックサイズをBYTESに設定します
 
 ```console
-$ dd if=/dev/zero of=test.img bs=1M count=10
+$ dd if=/dev/zero of=testfile bs=1M count=10
 10+0 records in
 10+0 records out
-10485760 bytes (10 MB, 10 MiB) copied, 0.0151831 s, 691 MB/s
+10485760 bytes (10 MB, 10 MiB) copied, 0.0119631 s, 876 MB/s
 ```
 
-### **count=ブロック数**
+### **count=N, --count=N**
 
-コピーするブロック数を指定します。
+N個の入力ブロックだけをコピーします
 
 ```console
-$ dd if=/dev/urandom of=small.bin bs=512 count=2
-2+0 records in
-2+0 records out
-1024 bytes (1.0 kB, 1.0 KiB) copied, 0.000246534 s, 4.2 MB/s
+$ dd if=/dev/urandom of=random.dat bs=1M count=5
+5+0 records in
+5+0 records out
+5242880 bytes (5.2 MB, 5.0 MiB) copied, 0.0452266 s, 116 MB/s
 ```
 
-### **status=progress**
+### **status=LEVEL, --status=LEVEL**
 
-コピー処理の進行状況をリアルタイムで表示します。
+表示される情報のレベルを制御します（none, noxfer, progress）
 
 ```console
-$ dd if=/dev/zero of=large.bin bs=1M count=100 status=progress
-51380224 bytes (51 MB, 49 MiB) copied, 0.0507088 s, 1.0 GB/s
+$ dd if=/dev/zero of=testfile bs=1M count=100 status=progress
+51380224 bytes (51 MB, 49 MiB) copied, 0.0519088 s, 990 MB/s
 100+0 records in
 100+0 records out
-104857600 bytes (105 MB, 100 MiB) copied, 0.101418 s, 1.0 GB/s
+104857600 bytes (105 MB, 100 MiB) copied, 0.105822 s, 991 MB/s
+```
+
+### **conv=CONVS, --conv=CONVS**
+
+カンマ区切りの記号リストに従ってファイルを変換します
+
+```console
+$ dd if=input.txt of=output.txt conv=ucase
 ```
 
 ## 使用例
 
-### USBメモリにISOイメージを書き込む
+### ディスクイメージの作成
 
 ```console
-$ sudo dd if=ubuntu.iso of=/dev/sdb bs=4M status=progress
-1073741824 bytes (1.1 GB, 1.0 GiB) copied, 85.3209 s, 12.6 MB/s
-1324+1 records in
-1324+1 records out
-5555200000 bytes (5.6 GB, 5.2 GiB) copied, 440.221 s, 12.6 MB/s
-```
-
-### ディスクのバックアップを作成する
-
-```console
-$ sudo dd if=/dev/sda of=disk_backup.img bs=4M status=progress
-8589934592 bytes (8.6 GB, 8.0 GiB) copied, 180.5 s, 47.6 MB/s
+$ dd if=/dev/sda of=disk.img bs=4M status=progress
+8589934592 bytes (8.6 GB, 8.0 GiB) copied, 126 s, 68.2 MB/s
 2048+0 records in
 2048+0 records out
-8589934592 bytes (8.6 GB, 8.0 GiB) copied, 190.749 s, 45.0 MB/s
+8589934592 bytes (8.6 GB, 8.0 GiB) copied, 126.453 s, 67.9 MB/s
 ```
 
-### ファイルの一部を抽出する
+### ブート可能なUSBドライブの作成
 
 ```console
-$ dd if=large_file.bin of=extract.bin bs=1M skip=10 count=5
-5+0 records in
-5+0 records out
-5242880 bytes (5.2 MB, 5.0 MiB) copied, 0.00623305 s, 841 MB/s
+$ sudo dd if=ubuntu.iso of=/dev/sdb bs=4M status=progress conv=fsync
+1073741824 bytes (1.1 GB, 1.0 GiB) copied, 35.6279 s, 30.1 MB/s
+256+0 records in
+256+0 records out
+1073741824 bytes (1.1 GB, 1.0 GiB) copied, 35.6423 s, 30.1 MB/s
+```
+
+### ゼロで埋められたファイルの作成
+
+```console
+$ dd if=/dev/zero of=zeros.bin bs=1M count=100
+100+0 records in
+100+0 records out
+104857600 bytes (105 MB, 100 MiB) copied, 0.101822 s, 1.0 GB/s
 ```
 
 ## ヒント:
 
-### シグナルで進捗状況を確認する
+### 長時間の操作にはstatus=progressを使用する
 
-長時間実行中の `dd` コマンドの進捗状況を確認するには、`USR1` シグナルを送信します。
+時間のかかる操作では、`status=progress`を使用してコピー処理のリアルタイム情報を確認できます。
 
-```console
-$ # 別のターミナルで以下を実行
-$ killall -USR1 dd
-```
+### ブロックデバイスの取り扱いに注意
 
-### データ消去に使用する
+`/dev/sda`のようなブロックデバイスを扱う場合は、実行前にコマンドを二重チェックしてください。間違えると重要なデータが上書きされる可能性があります。
 
-ディスクを安全に消去するには、ランダムデータで上書きします。
+### ブロックサイズでパフォーマンスを最適化
 
-```console
-$ sudo dd if=/dev/urandom of=/dev/sdb bs=4M status=progress
-```
+大きな転送には大きなブロックサイズ（`bs=4M`や`bs=8M`など）を使用するとパフォーマンスが向上しますが、非常に大きな値が常に良いとは限りません。
 
-### 注意点
+### USBドライブにはfsyncを使用
 
-`dd` は「データ破壊者（Disk Destroyer）」とも呼ばれるほど危険なコマンドです。特に `of` パラメータには細心の注意を払い、間違ったデバイスを指定しないようにしましょう。
+USBドライブに書き込む場合は、`conv=fsync`を追加して、ddが完了する前にすべてのデータがデバイスに書き込まれるようにしましょう。
+
+### MBRのバックアップ
+
+マスターブートレコードだけをバックアップするには：`sudo dd if=/dev/sda of=mbr.bin bs=512 count=1`
 
 ## よくある質問
 
-#### Q1. ddコマンドの名前の由来は何ですか？
-A. IBMのメインフレームJCLの「データ定義（Data Definition）」コマンドに由来するとされています。
+#### Q1. ハードドライブ全体をクローンするにはどうすればよいですか？
+A. `dd if=/dev/source_drive of=/dev/destination_drive bs=4M status=progress`を使用します。コピー先のドライブがコピー元と同じかそれ以上のサイズであることを確認してください。
 
-#### Q2. ddコマンドとcpコマンドの違いは何ですか？
-A. `dd` はブロック単位でデータをコピーし、生のデバイスファイルを扱えます。また、コピー中にデータ変換も可能です。一方、`cp` はファイルシステムレベルでのコピーに特化しています。
+#### Q2. なぜddは「ディスクデストロイヤー」と呼ばれるのですか？
+A. この愛称は、誤って使用するとデータ損失を引き起こす可能性があることに由来します。ddコマンドを実行する前に、必ずデバイス名を二重確認してください。
 
-#### Q3. ddコマンドでUSBにISOを書き込む際の注意点は？
-A. 出力先（`of=`）に正しいデバイスを指定することが重要です。間違えると重要なデータを失う可能性があります。また、書き込み前にUSBをアンマウントしておく必要があります。
+#### Q3. ddを高速化するにはどうすればよいですか？
+A. ブロックサイズ（bs）パラメータを4Mや8Mなどの値に増やし、不要な変換を避けてください。
 
-#### Q4. ddコマンドの実行が遅いのですが、速くする方法はありますか？
-A. `bs` パラメータを大きくすると（例：`bs=4M`）、一般的にパフォーマンスが向上します。ただし、あまり大きすぎる値は逆効果になることもあります。
+#### Q4. 特定のサイズのファイルを作成するにはどうすればよいですか？
+A. `dd if=/dev/zero of=ファイル名 bs=1M count=X`を使用します。Xは希望するサイズ（メガバイト単位）です。
 
-## macOSでの注意点
+#### Q5. ddの進行状況を監視するにはどうすればよいですか？
+A. 新しいバージョンでは`status=progress`オプションを使用します。古いバージョンでは、ddプロセスにUSR1シグナルを送信できます：`kill -USR1 $(pgrep dd)`
 
-macOSでは、デバイスパスが異なります。例えば、USBドライブは `/dev/diskN` の形式（Nは数字）で、`diskutil list` コマンドで確認できます。また、書き込み前に `diskutil unmountDisk /dev/diskN` でアンマウントする必要があります。
-
-```console
-$ diskutil list
-$ diskutil unmountDisk /dev/disk2
-$ sudo dd if=image.iso of=/dev/disk2 bs=1m
-```
-
-macOSでは、小文字の `m`（`bs=1m`）を使用することに注意してください。大文字の `M` はエラーになります。
-
-## 参考資料
+## References
 
 https://www.gnu.org/software/coreutils/manual/html_node/dd-invocation.html
 
-## 改訂履歴
+## Revisions
 
-- 2025/04/30 初版作成
+- 2025/05/04 初回リビジョン

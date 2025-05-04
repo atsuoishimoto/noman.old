@@ -47,21 +47,26 @@
     <main>
       
   <h1>which コマンド</h1>
-<p>指定したコマンドの実行ファイルのパスを表示します。</p>
+<p>PATH環境変数を検索してコマンドの場所を特定します。</p>
 <h2>概要</h2>
-<p><code>which</code> コマンドは、シェルが実行するコマンドの完全なパスを特定するために使用されます。コマンド名を引数として与えると、環境変数 <code>PATH</code> に設定されているディレクトリを検索し、最初に見つかった実行可能ファイルのパスを表示します。これにより、どのバージョンのコマンドが実行されるかを確認できます。</p>
+<p><code>which</code>コマンドは、PATHに含まれる実行可能ファイルの場所を見つけます。コマンドラインでプログラム名を入力した際にどのバージョンが実行されるかを判断するのに役立ち、実行ファイルへのフルパスを表示します。</p>
 <h2>オプション</h2>
-<h3><strong>-a (--all)</strong></h3>
-<p>指定したコマンド名に一致するすべての実行可能ファイルを表示します。デフォルトでは最初に見つかったものだけを表示します。</p>
+<h3><strong>-a, --all</strong></h3>
+<p>PATHに含まれる一致する全ての実行ファイルを表示します（最初の一つだけではなく）。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>python
 <span style="color: #000; font-style: italic">/usr/bin/python</span>
 <span style="color: #000; font-style: italic">/usr/local/bin/python</span>
 </pre></div>
-<h3><strong>-s (--silent)</strong></h3>
-<p>出力を表示せず、終了ステータスのみを返します。コマンドが見つかった場合は 0、見つからなかった場合は 1 を返します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>ls
+<h3><strong>-s, --silent, --quiet</strong></h3>
+<p>通常の出力を抑制します。実行ファイルが見つかった場合は終了ステータス0を、見つからなかった場合は1を返します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>python
 <span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$?</span>
 <span style="color: #000; font-style: italic">0</span>
+</pre></div>
+<h3><strong>-v, --version</strong></h3>
+<p>バージョン情報を表示して終了します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>--version
+<span style="color: #000; font-style: italic">GNU which v2.21, Copyright (C) 1999 - 2015 Carlo Wood.</span>
 </pre></div>
 <h2>使用例</h2>
 <h3>基本的な使い方</h3>
@@ -69,48 +74,43 @@
 <span style="color: #000; font-style: italic">/bin/ls</span>
 </pre></div>
 <h3>複数のコマンドを一度に検索</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>ls<span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>find
-<span style="color: #000; font-style: italic">/bin/ls</span>
-<span style="color: #000; font-style: italic">/usr/bin/grep</span>
-<span style="color: #000; font-style: italic">/usr/bin/find</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>bash<span style="color: #F8F8F8"> </span>python<span style="color: #F8F8F8"> </span>grep
+<span style="color: #000; font-style: italic">/bin/bash</span>
+<span style="color: #000; font-style: italic">/usr/bin/python</span>
+<span style="color: #000; font-style: italic">/bin/grep</span>
 </pre></div>
-<h3>存在しないコマンドを検索</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>nonexistentcommand
-<span style="color: #000; font-style: italic">which: no nonexistentcommand in (/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin)</span>
+<h3>他のコマンドと組み合わせる</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>which<span style="color: #F8F8F8"> </span>python<span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #000; font-style: italic">/usr/bin/python: symbolic link to python3</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>エイリアスの確認</h3>
-<p><code>which</code> はエイリアスを解決しません。エイリアスの実体を確認するには <code>type</code> コマンドを使用するとよいでしょう。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">alias</span><span style="color: #F8F8F8"> </span><span style="color: #000">ll</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&#39;ls -l&#39;</span>
-<span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>ll
-<span style="color: #000; font-style: italic">which: no ll in (/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin)</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">type</span><span style="color: #F8F8F8"> </span>ll
-<span style="color: #000; font-style: italic">ll is aliased to &#39;ls -l&#39;</span>
+<h3>コマンドが存在するか確認する</h3>
+<p>条件文と組み合わせて、コマンドを使用する前に利用可能かどうかを確認できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span>which<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>&gt;/dev/null<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Gitがインストールされています&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">else</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Gitがインストールされていません&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">fi</span>
+<span style="color: #000; font-style: italic">Gitがインストールされています</span>
 </pre></div>
-<h3>スクリプトの場所を確認</h3>
-<p>自作スクリプトがどこにインストールされているか確認するのに便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>my_script
-<span style="color: #000; font-style: italic">/usr/local/bin/my_script</span>
+<h3>より詳細な情報を得るために<code>type</code>と組み合わせる</h3>
+<p><code>type</code>コマンドはコマンドについてより詳細な情報（ビルトイン、エイリアス、実行ファイルなど）を提供します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">type</span><span style="color: #F8F8F8"> </span>ls
+<span style="color: #000; font-style: italic">ls is aliased to `ls --color=auto&#39;</span>
 </pre></div>
-<h3>PATH の優先順位を理解する</h3>
-<p>同じ名前のコマンドが複数存在する場合、<code>which</code> は <code>PATH</code> 環境変数の順序に従って最初に見つかったものを表示します。これにより、どのバージョンが実行されるかを確認できます。</p>
+<h3>PATHの順序が重要</h3>
+<p>PATHで最初に一致する実行ファイルが実行されます。<code>which -a</code>を使用すると、可能な全ての一致を確認できます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>which</code> と <code>whereis</code> の違いは何ですか？</h4>
-<p>A. <code>which</code> はコマンドの実行ファイルのパスのみを表示しますが、<code>whereis</code> はバイナリ、ソース、マニュアルページの場所も検索します。</p>
-<h4>Q2. <code>which</code> がコマンドを見つけられない場合はどうなりますか？</h4>
-<p>A. コマンドが見つからない場合、エラーメッセージを表示し、終了ステータス 1 を返します。</p>
-<h4>Q3. <code>which</code> はシェルの組み込みコマンドを検出できますか？</h4>
-<p>A. いいえ、<code>which</code> はシェルの組み込みコマンド（例：<code>cd</code>、<code>echo</code>）を検出できません。これらは実行ファイルではなくシェル自体の一部であるためです。</p>
-<h4>Q4. <code>which</code> と <code>type</code> の違いは何ですか？</h4>
-<p>A. <code>which</code> はコマンドの実行ファイルのパスのみを表示しますが、<code>type</code> はコマンドの種類（エイリアス、関数、組み込みコマンド、実行ファイル）も識別できます。</p>
-<h2>macOS での注意点</h2>
-<p>macOSの <code>which</code> コマンドは GNU バージョンと若干動作が異なります。特に、macOS では <code>-a</code> オプションがサポートされていない場合があります。代わりに、すべてのパスを表示するには <code>whereis</code> コマンドを使用するか、Homebrew などでGNU版の coreutils をインストールして <code>gwhich</code> を使用することを検討してください。</p>
+<h4>Q1. <code>which</code>と<code>whereis</code>の違いは何ですか？</h4>
+<p>A. <code>which</code>はPATH内の実行ファイルの場所のみを表示しますが、<code>whereis</code>はマニュアルページやソースファイルも検索します。</p>
+<h4>Q2. なぜ<code>which</code>はシェルのビルトインやエイリアスを見つけられないのですか？</h4>
+<p>A. <code>which</code>はPATH内の実行ファイルのみを検索します。シェルのビルトイン、エイリアス、関数については、代わりに<code>type</code>コマンドを使用してください。</p>
+<h4>Q3. PATH内のコマンドの全てのインスタンスを見つけるにはどうすればよいですか？</h4>
+<p>A. <code>which -a コマンド名</code>を使用すると、最初の一つだけでなく、一致する全ての実行ファイルを表示できます。</p>
+<h4>Q4. なぜ<code>which</code>が何も返さないことがあるのですか？</h4>
+<p>A. <code>which</code>が何も返さない場合、そのコマンドはPATH内に存在しないか、シェルのビルトインやエイリアスである可能性があります。</p>
+<h2>macOSに関する注意点</h2>
+<p>macOSでは、<code>which</code>コマンドの動作がLinuxシステムとは異なる場合があります。macOSバージョンでは<code>--all</code>などのGNUオプションをすべてサポートしていません（ただし<code>-a</code>は機能します）。システム間でより一貫した動作を得るには、POSIX準拠の代替手段である<code>command -v</code>の使用を検討してください。</p>
 <h2>参考資料</h2>
-<p>https://pubs.opengroup.org/onlinepubs/9699919799/utilities/which.html</p>
+<p>https://man7.org/linux/man-pages/man1/which.1.html</p>
 <h2>改訂履歴</h2>
-<ul>
-<li>2025/04/30 初版作成</li>
-</ul>
+<p>2025/05/04 初版作成</p>
 
 
     </main>

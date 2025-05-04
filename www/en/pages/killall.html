@@ -47,23 +47,41 @@
     <main>
       
   <h1>killall command</h1>
-<p>Kill processes by name rather than by process ID (PID).</p>
+<p>Kill processes by name rather than by process ID.</p>
 <h2>Overview</h2>
-<p>The <code>killall</code> command terminates running processes based on their names rather than their process IDs. It's particularly useful when you need to stop multiple instances of the same program or when you don't know the specific PID of a process.</p>
+<p>The <code>killall</code> command terminates running processes based on their names rather than process IDs (PIDs). It's particularly useful when you need to stop multiple instances of the same program or when you don't know the specific PID of a process.</p>
 <h2>Options</h2>
-<h3><strong>-s, --signal SIGNAL</strong></h3>
-<p>Specify the signal to send to processes (default is TERM)</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>KILL<span style="color: #F8F8F8"> </span>firefox
+<h3><strong>-e, --exact</strong></h3>
+<p>Require an exact match for very long names</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>firefox
+</pre></div>
+<h3><strong>-I, --ignore-case</strong></h3>
+<p>Case insensitive process name match</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-I<span style="color: #F8F8F8"> </span>firefox
 </pre></div>
 <h3><strong>-i, --interactive</strong></h3>
-<p>Ask for confirmation before killing each process</p>
+<p>Ask for confirmation before killing</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>chrome
-<span style="color: #000; font-style: italic">Kill chrome(1234)? (y/N) y</span>
-<span style="color: #000; font-style: italic">Kill chrome(5678)? (y/N) n</span>
+<span style="color: #000; font-style: italic">Kill chrome(1234) ? (y/N) y</span>
+<span style="color: #000; font-style: italic">Kill chrome(5678) ? (y/N) n</span>
+</pre></div>
+<h3><strong>-l, --list</strong></h3>
+<p>List all known signal names</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-l
+<span style="color: #000; font-style: italic">HUP INT QUIT ILL TRAP ABRT BUS FPE KILL USR1 SEGV USR2 PIPE ALRM TERM STKFLT CHLD CONT STOP TSTP TTIN TTOU URG XCPU XFSZ VTALRM PROF WINCH POLL PWR SYS</span>
+</pre></div>
+<h3><strong>-q, --quiet</strong></h3>
+<p>Don't print complaints if no processes were killed</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>nonexistentprocess
+</pre></div>
+<h3><strong>-s, --signal SIGNAL, -SIGNAL</strong></h3>
+<p>Send a specific signal instead of SIGTERM</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>SIGKILL<span style="color: #F8F8F8"> </span>firefox
+<span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-KILL<span style="color: #F8F8F8"> </span>firefox<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># Equivalent</span>
 </pre></div>
 <h3><strong>-u, --user USER</strong></h3>
-<p>Kill only processes owned by the specified user</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>john<span style="color: #F8F8F8"> </span>firefox
+<p>Kill only processes owned by specified user</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>username<span style="color: #F8F8F8"> </span>firefox
 </pre></div>
 <h3><strong>-v, --verbose</strong></h3>
 <p>Report if the signal was successfully sent</p>
@@ -82,37 +100,37 @@
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-9<span style="color: #F8F8F8"> </span>chrome
 </pre></div>
 <h3>Killing processes owned by a specific user</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>john<span style="color: #F8F8F8"> </span>bash
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>john<span style="color: #F8F8F8"> </span>java
 </pre></div>
-<h3>Killing processes with confirmation</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>spotify
-<span style="color: #000; font-style: italic">Kill spotify(1234)? (y/N) y</span>
+<h3>Killing processes and waiting for confirmation</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>killall<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span>firefox
+<span style="color: #000; font-style: italic">Kill firefox(1234) ? (y/N) y</span>
 </pre></div>
-<h2>Tips</h2>
-<h3>Use the Correct Process Name</h3>
-<p>The process name must match exactly what appears in the process list. Use <code>ps aux</code> to see the exact process names.</p>
-<h3>Force Kill Stubborn Processes</h3>
-<p>If a process doesn't respond to the default TERM signal, use <code>-9</code> (SIGKILL) to force termination: <code>killall -9 processname</code>. Be cautious as this doesn't allow the process to clean up.</p>
-<h3>Verify Before Killing</h3>
-<p>When dealing with critical processes, use the <code>-i</code> option to confirm each kill action or <code>-v</code> to see which processes are being terminated.</p>
-<h3>Specify Signal by Name or Number</h3>
-<p>You can specify signals by name (TERM, KILL, HUP) or by number (15, 9, 1).</p>
+<h2>Tips:</h2>
+<h3>Use Confirmation for Important Processes</h3>
+<p>Always use the <code>-i</code> (interactive) option when killing critical processes to avoid accidentally terminating the wrong ones.</p>
+<h3>Verify Process Names First</h3>
+<p>Run <code>ps aux | grep process_name</code> before using killall to confirm the exact process name you want to terminate.</p>
+<h3>Wait for Completion</h3>
+<p>Use the <code>-w</code> option when you need to ensure processes are fully terminated before proceeding with other operations.</p>
+<h3>Be Careful with Common Names</h3>
+<p>Avoid using killall with very generic process names like &quot;http&quot; or &quot;java&quot; without specifying a user (-u) or using interactive mode (-i), as this could terminate important system processes.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between <code>kill</code> and <code>killall</code>?</h4>
-<p>A. <code>kill</code> terminates processes by their PID, while <code>killall</code> terminates processes by their name.</p>
-<h4>Q2. How do I kill all instances of a program?</h4>
-<p>A. Simply run <code>killall programname</code> to terminate all instances of that program.</p>
-<h4>Q3. What if <code>killall</code> doesn't work?</h4>
-<p>A. Try using the <code>-9</code> option (<code>killall -9 programname</code>) to send a SIGKILL signal, which forces termination. If that fails, the process might be in an uninterruptible state or you might need root privileges.</p>
-<h4>Q4. Is there a way to test without actually killing processes?</h4>
-<p>A. Yes, use <code>killall -l</code> to list all available signals or <code>killall -s 0 processname</code> to test if processes exist without sending a kill signal.</p>
-<h2>macOS Considerations</h2>
-<p>On macOS, the <code>killall</code> command behaves slightly differently than on Linux. It doesn't support all the same options, and the syntax may vary. For example, the <code>-u</code> option to specify a user isn't available on macOS. Also, macOS's <code>killall</code> is generally less flexible with pattern matching for process names.</p>
+<p>A. <code>kill</code> terminates processes by their PID (Process ID), while <code>killall</code> terminates processes by their name.</p>
+<h4>Q2. How do I force kill a stubborn process?</h4>
+<p>A. Use <code>killall -9 process_name</code> or <code>killall -KILL process_name</code> to send the SIGKILL signal, which cannot be caught or ignored by the process.</p>
+<h4>Q3. Can I kill multiple different processes at once?</h4>
+<p>A. Yes, just list all the process names: <code>killall firefox chrome gedit</code></p>
+<h4>Q4. How do I know if killall succeeded?</h4>
+<p>A. Use the <code>-v</code> (verbose) option to see confirmation messages for each process killed.</p>
+<h4>Q5. Is killall available on all Unix systems?</h4>
+<p>A. No, while common on Linux, some Unix variants like Solaris have a different <code>killall</code> command that kills ALL processes, which can be dangerous. Always check the man page on unfamiliar systems.</p>
 <h2>References</h2>
 <p>https://man7.org/linux/man-pages/man1/killall.1.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

@@ -49,91 +49,101 @@
   <h1>journalctl command</h1>
 <p>Query and display messages from the systemd journal.</p>
 <h2>Overview</h2>
-<p><code>journalctl</code> is a command-line utility that allows you to view and query the logs collected by the systemd journal system. It provides access to structured, indexed system logs with powerful filtering capabilities, making it easier to troubleshoot system issues and monitor system events.</p>
+<p><code>journalctl</code> is a command-line utility that allows you to view and query the systemd journal logs. The systemd journal is a centralized logging system that collects and stores logging data from various sources including the kernel, system services, and applications. It provides powerful filtering capabilities to help troubleshoot system issues.</p>
 <h2>Options</h2>
 <h3><strong>-f, --follow</strong></h3>
 <p>Follow the journal in real-time, similar to <code>tail -f</code></p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-f
-<span style="color: #000; font-style: italic">Apr 30 10:15:23 hostname systemd[1]: Starting Daily apt upgrade and clean activities...</span>
-<span style="color: #000; font-style: italic">Apr 30 10:15:24 hostname systemd[1]: apt-daily-upgrade.service: Deactivated successfully.</span>
-<span style="color: #000; font-style: italic">Apr 30 10:15:24 hostname systemd[1]: Finished Daily apt upgrade and clean activities.</span>
-<span style="color: #000; font-style: italic">-- Logs begin at Wed 2025-04-30 10:15:25 UTC. --</span>
+<span style="color: #000; font-style: italic">May 04 14:32:15 hostname systemd[1]: Started Daily apt download activities.</span>
+<span style="color: #000; font-style: italic">May 04 14:32:16 hostname CRON[12345]: (root) CMD (command being executed)</span>
+<span style="color: #000; font-style: italic">May 04 14:32:20 hostname sshd[12346]: Accepted publickey for user from 192.168.1.10</span>
 </pre></div>
 <h3><strong>-u, --unit=UNIT</strong></h3>
 <p>Show logs from a specific systemd unit (service)</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>ssh
-<span style="color: #000; font-style: italic">Apr 29 09:12:34 hostname sshd[1234]: Accepted publickey for user from 192.168.1.10 port 54321</span>
-<span style="color: #000; font-style: italic">Apr 29 09:12:34 hostname sshd[1234]: pam_unix(sshd:session): session opened for user by (uid=0)</span>
-<span style="color: #000; font-style: italic">Apr 29 15:45:12 hostname sshd[5678]: Disconnected from user 192.168.1.10 port 54321</span>
+<span style="color: #000; font-style: italic">May 03 09:15:22 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.</span>
+<span style="color: #000; font-style: italic">May 03 09:15:22 hostname sshd[1234]: Server listening on :: port 22.</span>
+<span style="color: #000; font-style: italic">May 04 10:23:45 hostname sshd[5678]: Accepted password for user from 192.168.1.5</span>
 </pre></div>
-<h3><strong>-b, --boot</strong></h3>
-<p>Show logs from the current boot</p>
+<h3><strong>-b, --boot[=ID]</strong></h3>
+<p>Show logs from the current boot or a specific boot</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-b
-<span style="color: #000; font-style: italic">Apr 30 08:00:12 hostname kernel: Linux version 5.15.0-25-generic (buildd@lcy02)</span>
-<span style="color: #000; font-style: italic">Apr 30 08:00:13 hostname systemd[1]: Detected virtualization kvm.</span>
-<span style="color: #000; font-style: italic">Apr 30 08:00:14 hostname systemd[1]: Detected architecture x86-64.</span>
+<span style="color: #000; font-style: italic">[Shows all logs since the most recent boot]</span>
+
+<span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-1
+<span style="color: #000; font-style: italic">[Shows logs from the previous boot]</span>
 </pre></div>
-<h3><strong>-p, --priority=</strong></h3>
-<p>Filter logs by priority level (emerg, alert, crit, err, warning, notice, info, debug)</p>
+<h3><strong>-n, --lines=N</strong></h3>
+<p>Show the last N log lines</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">May 04 14:45:10 hostname systemd[1]: Starting Daily apt upgrade and clean activities...</span>
+<span style="color: #000; font-style: italic">May 04 14:45:11 hostname systemd[1]: Started Daily apt upgrade and clean activities.</span>
+<span style="color: #000; font-style: italic">May 04 14:45:12 hostname CRON[12347]: (root) CMD (apt-get update)</span>
+<span style="color: #000; font-style: italic">May 04 14:45:15 hostname kernel: [12345.678901] USB disconnect, device number 5</span>
+<span style="color: #000; font-style: italic">May 04 14:45:20 hostname NetworkManager[789]: Connectivity established</span>
+</pre></div>
+<h3><strong>--since=DATE, --until=DATE</strong></h3>
+<p>Show entries newer or older than the specified date</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>--since<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;2025-05-03 10:00:00&quot;</span><span style="color: #F8F8F8"> </span>--until<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;2025-05-03 11:00:00&quot;</span>
+<span style="color: #000; font-style: italic">[Shows logs between 10 AM and 11 AM on May 3rd, 2025]</span>
+</pre></div>
+<h3><strong>-p, --priority=PRIORITY</strong></h3>
+<p>Filter output by message priority (0-7 or name like &quot;err&quot;)</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>err
-<span style="color: #000; font-style: italic">Apr 29 14:23:45 hostname kernel: CPU: 2 PID: 1234 Comm: process Tainted: G        W  OE    5.15.0-25-generic</span>
-<span style="color: #000; font-style: italic">Apr 29 14:23:45 hostname app[1234]: [ERROR] Failed to connect to database: Connection refused</span>
-<span style="color: #000; font-style: italic">Apr 30 02:15:33 hostname kernel: EXT4-fs error: unable to read inode block</span>
+<span style="color: #000; font-style: italic">May 02 15:30:45 hostname kernel: [12345.678901] CPU: 2 PID: 1234 Comm: process Tainted: G        W  5.15.0-91-generic</span>
+<span style="color: #000; font-style: italic">May 03 08:12:33 hostname application[5678]: Error: Failed to connect to database</span>
+<span style="color: #000; font-style: italic">May 04 02:45:12 hostname systemd[1]: Failed to start Apache Web Server.</span>
 </pre></div>
-<h3><strong>--since, --until</strong></h3>
-<p>Show logs within a specific time range</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>--since<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2025-04-29 10:00:00&quot;</span><span style="color: #F8F8F8"> </span>--until<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2025-04-29 11:00:00&quot;</span>
-<span style="color: #000; font-style: italic">Apr 29 10:00:12 hostname systemd[1]: Starting Daily apt download activities...</span>
-<span style="color: #000; font-style: italic">Apr 29 10:15:45 hostname CRON[1234]: (root) CMD (/usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown)</span>
-<span style="color: #000; font-style: italic">Apr 29 10:59:58 hostname systemd[1]: Starting Message of the Day...</span>
+<h3><strong>-o, --output=FORMAT</strong></h3>
+<p>Control the output format (short, verbose, json, etc.)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>json<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>
+<span style="color: #000; font-style: italic">{&quot;_BOOT_ID&quot;:&quot;abcdef123456789&quot;,&quot;_MACHINE_ID&quot;:&quot;fedcba987654321&quot;,&quot;MESSAGE&quot;:&quot;System startup complete&quot;,&quot;PRIORITY&quot;:&quot;6&quot;,&quot;SYSLOG_FACILITY&quot;:&quot;3&quot;,&quot;SYSLOG_IDENTIFIER&quot;:&quot;systemd&quot;,&quot;_UID&quot;:&quot;0&quot;,&quot;_GID&quot;:&quot;0&quot;,&quot;_COMM&quot;:&quot;systemd&quot;,&quot;_PID&quot;:&quot;1&quot;,&quot;_SOURCE_REALTIME_TIMESTAMP&quot;:&quot;1714896000000000&quot;}</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Viewing logs for a specific process</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span><span style="color: #000">_PID</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1234</span>
-<span style="color: #000; font-style: italic">Apr 30 09:12:34 hostname process[1234]: Starting application...</span>
-<span style="color: #000; font-style: italic">Apr 30 09:12:35 hostname process[1234]: Loaded configuration from /etc/app/config.json</span>
-<span style="color: #000; font-style: italic">Apr 30 09:12:36 hostname process[1234]: Listening on port 8080</span>
+<h3>Viewing logs for a specific time period</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>--since<span style="color: #F8F8F8"> </span>yesterday<span style="color: #F8F8F8"> </span>--until<span style="color: #F8F8F8"> </span>today
+<span style="color: #000; font-style: italic">[Shows all logs from yesterday up to the current time today]</span>
+</pre></div>
+<h3>Filtering logs by executable</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span><span style="color: #000">_COMM</span><span style="color: #CE5C00; font-weight: bold">=</span>sshd
+<span style="color: #000; font-style: italic">May 01 08:15:22 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.</span>
+<span style="color: #000; font-style: italic">May 01 08:15:22 hostname sshd[1234]: Server listening on :: port 22.</span>
+<span style="color: #000; font-style: italic">May 02 14:23:45 hostname sshd[5678]: Accepted publickey for user from 192.168.1.10</span>
+</pre></div>
+<h3>Combining multiple filters</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>nginx<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>err<span style="color: #F8F8F8"> </span>--since<span style="color: #F8F8F8"> </span>today
+<span style="color: #000; font-style: italic">May 04 03:15:22 hostname nginx[1234]: 2025/05/04 03:15:22 [error] 1234#0: *123 open() &quot;/var/www/html/favicon.ico&quot; failed (2: No such file or directory)</span>
 </pre></div>
 <h3>Viewing kernel messages</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-k
-<span style="color: #000; font-style: italic">Apr 30 08:00:12 hostname kernel: Linux version 5.15.0-25-generic (buildd@lcy02)</span>
-<span style="color: #000; font-style: italic">Apr 30 08:00:12 hostname kernel: Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-25-generic</span>
-<span style="color: #000; font-style: italic">Apr 30 08:00:12 hostname kernel: ACPI: RSDP 0x00000000000F0490 000024 (v02 VBOX  )</span>
-</pre></div>
-<h3>Viewing logs with JSON output</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>ssh<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>json
-<span style="color: #000; font-style: italic">{&quot;_HOSTNAME&quot;:&quot;hostname&quot;,&quot;_SYSTEMD_UNIT&quot;:&quot;ssh.service&quot;,&quot;MESSAGE&quot;:&quot;Server listening on 0.0.0.0 port 22.&quot;,&quot;_PID&quot;:&quot;1234&quot;,&quot;PRIORITY&quot;:&quot;6&quot;}</span>
-<span style="color: #000; font-style: italic">{&quot;_HOSTNAME&quot;:&quot;hostname&quot;,&quot;_SYSTEMD_UNIT&quot;:&quot;ssh.service&quot;,&quot;MESSAGE&quot;:&quot;Accepted publickey for user from 192.168.1.10 port 54321&quot;,&quot;_PID&quot;:&quot;1234&quot;,&quot;PRIORITY&quot;:&quot;6&quot;}</span>
+<span style="color: #000; font-style: italic">May 04 00:00:01 hostname kernel: Linux version 5.15.0-91-generic (buildd@ubuntu) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0)</span>
+<span style="color: #000; font-style: italic">May 04 00:00:01 hostname kernel: Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-91-generic root=UUID=abcdef-1234-5678 ro quiet splash</span>
 </pre></div>
 <h2>Tips:</h2>
+<h3>Use Pager Controls</h3>
+<p>When viewing large logs, journalctl uses a pager (like less). Use <code>/pattern</code> to search, <code>n</code> for next match, <code>g</code> to go to beginning, <code>G</code> to go to end, and <code>q</code> to quit.</p>
 <h3>Persistent Journal Storage</h3>
-<p>By default, journal logs may be stored only in memory. To make them persistent across reboots, create the directory <code>/var/log/journal</code> with proper permissions:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>mkdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>/var/log/journal
-<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>systemctl<span style="color: #F8F8F8"> </span>restart<span style="color: #F8F8F8"> </span>systemd-journald
-</pre></div>
-<h3>Clearing Journal Logs</h3>
-<p>To free up disk space, you can clear old journal entries:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>journalctl<span style="color: #F8F8F8"> </span>--vacuum-time<span style="color: #CE5C00; font-weight: bold">=</span>2d<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># Keep only last 2 days</span>
-<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>journalctl<span style="color: #F8F8F8"> </span>--vacuum-size<span style="color: #CE5C00; font-weight: bold">=</span>500M<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># Limit journal size to 500MB</span>
-</pre></div>
-<h3>Using Grep with journalctl</h3>
-<p>While journalctl has built-in filtering, you can combine it with grep for more complex pattern matching:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error\|failed&quot;</span>
-</pre></div>
+<p>By default, journal logs may be stored only in memory. To make them persistent across reboots, ensure <code>/etc/systemd/journald.conf</code> has <code>Storage=persistent</code> and the <code>/var/log/journal/</code> directory exists.</p>
+<h3>Disk Space Management</h3>
+<p>Journal logs can consume significant disk space. Use <code>journalctl --disk-usage</code> to check space usage and <code>journalctl --vacuum-size=1G</code> to limit the journal size to 1GB.</p>
+<h3>Export Logs for Analysis</h3>
+<p>Use <code>journalctl -o export</code> to export logs in a format that can be transferred to another machine and imported with <code>journalctl --file=exported.journal</code>.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How do I see logs from previous boots?</h4>
-<p>A. Use <code>journalctl --list-boots</code> to see available boot IDs, then use <code>journalctl -b -1</code> for the previous boot, <code>-2</code> for the one before that, etc.</p>
-<h4>Q2. How can I see logs for a specific time period?</h4>
-<p>A. Use <code>journalctl --since &quot;YYYY-MM-DD HH:MM:SS&quot; --until &quot;YYYY-MM-DD HH:MM:SS&quot;</code>. You can also use relative times like &quot;yesterday&quot; or &quot;2 hours ago&quot;.</p>
-<h4>Q3. How do I see logs for a specific user?</h4>
-<p>A. Use <code>journalctl _UID=1000</code> (replace 1000 with the user's UID).</p>
-<h4>Q4. How can I export journal logs to a file?</h4>
-<p>A. Use <code>journalctl &gt; logfile.txt</code> to save in text format, or <code>journalctl -o json &gt; logfile.json</code> for structured JSON output.</p>
+<h4>Q1. How do I see logs from the current boot only?</h4>
+<p>A. Use <code>journalctl -b</code> to see logs from the current boot only.</p>
+<h4>Q2. How can I see logs from a specific service?</h4>
+<p>A. Use <code>journalctl -u service-name</code>, for example <code>journalctl -u ssh</code> to see SSH service logs.</p>
+<h4>Q3. How do I filter logs by severity level?</h4>
+<p>A. Use <code>journalctl -p priority</code> where priority can be a number (0-7) or name (emerg, alert, crit, err, warning, notice, info, debug).</p>
+<h4>Q4. How can I clear old journal logs?</h4>
+<p>A. Use <code>journalctl --vacuum-time=2d</code> to remove entries older than 2 days, or <code>journalctl --vacuum-size=500M</code> to limit the total size to 500MB.</p>
+<h4>Q5. How do I follow logs in real-time?</h4>
+<p>A. Use <code>journalctl -f</code> to follow logs as they are written, similar to <code>tail -f</code>.</p>
 <h2>References</h2>
 <p>https://www.freedesktop.org/software/systemd/man/journalctl.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

@@ -49,112 +49,127 @@
   <h1>curl command</h1>
 <p>Transfer data from or to a server using various protocols including HTTP, HTTPS, FTP, and more.</p>
 <h2>Overview</h2>
-<p><code>curl</code> is a command-line tool for transferring data with URLs. It supports numerous protocols including HTTP, HTTPS, FTP, FTPS, SCP, SFTP, SMTP, and more. It's commonly used for downloading files, testing APIs, sending HTTP requests, and debugging network issues. <code>curl</code> is highly versatile and can be used with or without user interaction.</p>
+<p><code>curl</code> is a command-line tool for transferring data with URLs. It supports numerous protocols including HTTP, HTTPS, FTP, FTPS, SCP, SFTP, LDAP, and more. It's commonly used for downloading files, testing APIs, sending HTTP requests, and debugging network issues. <code>curl</code> is non-interactive and designed to work without user intervention, making it ideal for scripts and automation.</p>
 <h2>Options</h2>
 <h3><strong>-o, --output &lt;file&gt;</strong></h3>
 <p>Save the output to a file instead of displaying it on the screen</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>example.html<span style="color: #F8F8F8"> </span>https://example.com
 <span style="color: #8F5902">  % </span>Total<span style="color: #F8F8F8">    </span>%<span style="color: #F8F8F8"> </span>Received<span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span>Xferd<span style="color: #F8F8F8">  </span>Average<span style="color: #F8F8F8"> </span>Speed<span style="color: #F8F8F8">   </span>Time<span style="color: #F8F8F8">    </span>Time<span style="color: #F8F8F8">     </span>Time<span style="color: #F8F8F8">  </span>Current
 <span style="color: #000; font-style: italic">                                 Dload  Upload   Total   Spent    Left  Speed</span>
-<span style="color: #000; font-style: italic">100  1256  100  1256    0     0  12560      0 --:--:-- --:--:-- --:--:-- 12560</span>
+<span style="color: #000; font-style: italic">100  1256  100  1256    0     0   9664      0 --:--:-- --:--:-- --:--:--  9663</span>
 </pre></div>
 <h3><strong>-O, --remote-name</strong></h3>
-<p>Save the output using the remote file name</p>
+<p>Save the output using the remote file name from the URL</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>https://example.com/sample.zip
 <span style="color: #8F5902">  % </span>Total<span style="color: #F8F8F8">    </span>%<span style="color: #F8F8F8"> </span>Received<span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span>Xferd<span style="color: #F8F8F8">  </span>Average<span style="color: #F8F8F8"> </span>Speed<span style="color: #F8F8F8">   </span>Time<span style="color: #F8F8F8">    </span>Time<span style="color: #F8F8F8">     </span>Time<span style="color: #F8F8F8">  </span>Current
 <span style="color: #000; font-style: italic">                                 Dload  Upload   Total   Spent    Left  Speed</span>
-<span style="color: #000; font-style: italic">100 10.5M  100 10.5M    0     0  5.2M      0  0:00:02  0:00:02 --:--:-- 5.2M</span>
+<span style="color: #000; font-style: italic">100 10.2M  100 10.2M    0     0  5.1MB/s      0 --:--:-- 0:00:02 --:--:-- 5.1MB</span>
+</pre></div>
+<h3><strong>-L, --location</strong></h3>
+<p>Follow HTTP redirects (3XX responses)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>http://github.com
+<span style="color: #8F5902">  % </span>Total<span style="color: #F8F8F8">    </span>%<span style="color: #F8F8F8"> </span>Received<span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span>Xferd<span style="color: #F8F8F8">  </span>Average<span style="color: #F8F8F8"> </span>Speed<span style="color: #F8F8F8">   </span>Time<span style="color: #F8F8F8">    </span>Time<span style="color: #F8F8F8">     </span>Time<span style="color: #F8F8F8">  </span>Current
+<span style="color: #000; font-style: italic">                                 Dload  Upload   Total   Spent    Left  Speed</span>
+<span style="color: #000; font-style: italic">100   142  100   142    0     0    573      0 --:--:-- --:--:-- --:--:--   573</span>
+<span style="color: #000; font-style: italic">100  5891    0  5891    0     0  13090      0 --:--:-- --:--:-- --:--:-- 13090</span>
+</pre></div>
+<h3><strong>-s, --silent</strong></h3>
+<p>Silent mode; don't show progress meter or error messages</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>https://example.com<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>example.html
 </pre></div>
 <h3><strong>-I, --head</strong></h3>
 <p>Fetch HTTP headers only (HEAD request)</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-I<span style="color: #F8F8F8"> </span>https://example.com
 <span style="color: #000; font-style: italic">HTTP/2 200 </span>
 <span style="color: #000; font-style: italic">content-type: text/html; charset=UTF-8</span>
-<span style="color: #000; font-style: italic">date: Tue, 30 Apr 2025 12:00:00 GMT</span>
-<span style="color: #000; font-style: italic">expires: Tue, 07 May 2025 12:00:00 GMT</span>
+<span style="color: #000; font-style: italic">date: Tue, 04 May 2025 12:00:00 GMT</span>
+<span style="color: #000; font-style: italic">expires: Tue, 11 May 2025 12:00:00 GMT</span>
 <span style="color: #000; font-style: italic">cache-control: public, max-age=604800</span>
-<span style="color: #000; font-style: italic">server: ECS (dcb/7F83)</span>
+<span style="color: #000; font-style: italic">server: ECS (dcb/7F84)</span>
 <span style="color: #000; font-style: italic">content-length: 1256</span>
 </pre></div>
-<h3><strong>-X, --request &lt;method&gt;</strong></h3>
-<p>Specify the request method to use (GET, POST, PUT, DELETE, etc.)</p>
+<h3><strong>-X, --request &lt;command&gt;</strong></h3>
+<p>Specify the HTTP request method to use (GET, POST, PUT, DELETE, etc.)</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-X<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>https://api.example.com/data
-<span style="color: #000; font-style: italic">{&quot;status&quot;:&quot;success&quot;,&quot;message&quot;:&quot;Data received&quot;}</span>
 </pre></div>
 <h3><strong>-H, --header &lt;header&gt;</strong></h3>
-<p>Add custom headers to the request</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-H<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Content-Type: application/json&quot;</span><span style="color: #F8F8F8"> </span>-H<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Authorization: Bearer token123&quot;</span><span style="color: #F8F8F8"> </span>https://api.example.com
-<span style="color: #000; font-style: italic">{&quot;data&quot;:&quot;This is protected content&quot;}</span>
+<p>Add a custom header to the request</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-H<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Content-Type: application/json&quot;</span><span style="color: #F8F8F8"> </span>https://api.example.com
 </pre></div>
 <h3><strong>-d, --data &lt;data&gt;</strong></h3>
-<p>Send data in the request body (typically for POST requests)</p>
+<p>Send data in the request body (typically used with POST)</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-X<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;name=John&amp;age=30&quot;</span><span style="color: #F8F8F8"> </span>https://api.example.com/users
-<span style="color: #000; font-style: italic">{&quot;id&quot;:123,&quot;name&quot;:&quot;John&quot;,&quot;age&quot;:30}</span>
 </pre></div>
-<h3><strong>-s, --silent</strong></h3>
-<p>Silent mode (don't show progress meter or error messages)</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>https://example.com
-<span style="color: #000; font-style: italic">&lt;!doctype html&gt;</span>
-<span style="color: #000; font-style: italic">&lt;html&gt;</span>
-<span style="color: #000; font-style: italic">&lt;head&gt;</span>
-<span style="color: #000; font-style: italic">    &lt;title&gt;Example Domain&lt;/title&gt;</span>
-<span style="color: #000; font-style: italic">    ...</span>
-<span style="color: #000; font-style: italic">&lt;/html&gt;</span>
+<h3><strong>-A, --user-agent &lt;agent string&gt;</strong></h3>
+<p>Specify the User-Agent string to send to the server</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64)&quot;</span><span style="color: #F8F8F8"> </span>https://example.com
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Downloading a file and showing progress</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-#<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>firefox.dmg<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;https://download.mozilla.org/?product=firefox-latest&quot;</span>
-<span style="color: #8F5902">#</span><span style="color: #8F5902; font-style: italic">####################################################################### 100.0%</span>
+<h3>Downloading a file and saving it with a specific name</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>linux-distro.iso<span style="color: #F8F8F8"> </span>https://example.com/downloads/linux.iso
+<span style="color: #8F5902">  % </span>Total<span style="color: #F8F8F8">    </span>%<span style="color: #F8F8F8"> </span>Received<span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span>Xferd<span style="color: #F8F8F8">  </span>Average<span style="color: #F8F8F8"> </span>Speed<span style="color: #F8F8F8">   </span>Time<span style="color: #F8F8F8">    </span>Time<span style="color: #F8F8F8">     </span>Time<span style="color: #F8F8F8">  </span>Current
+<span style="color: #000; font-style: italic">                                 Dload  Upload   Total   Spent    Left  Speed</span>
+<span style="color: #000; font-style: italic">100 1500M  100 1500M    0     0  10.2M/s      0  0:02:27  0:02:27 --:--:-- 10.5M</span>
 </pre></div>
-<h3>Sending JSON data in a POST request</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-X<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>-H<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Content-Type: application/json&quot;</span><span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;name&quot;:&quot;Alice&quot;,&quot;email&quot;:&quot;alice@example.com&quot;}&#39;</span><span style="color: #F8F8F8"> </span>https://api.example.com/users
-<span style="color: #000; font-style: italic">{&quot;id&quot;:456,&quot;name&quot;:&quot;Alice&quot;,&quot;email&quot;:&quot;alice@example.com&quot;,&quot;status&quot;:&quot;created&quot;}</span>
+<h3>Making a POST request with JSON data</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-X<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>-H<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Content-Type: application/json&quot;</span><span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;name&quot;:&quot;John&quot;,&quot;age&quot;:30}&#39;</span><span style="color: #F8F8F8"> </span>https://api.example.com/users
+<span style="color: #000; font-style: italic">{&quot;id&quot;: 123, &quot;status&quot;: &quot;created&quot;}</span>
 </pre></div>
-<h3>Following redirects</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>http://github.com
-<span style="color: #000; font-style: italic">&lt;!DOCTYPE html&gt;</span>
-<span style="color: #000; font-style: italic">&lt;html lang=&quot;en&quot;&gt;</span>
-<span style="color: #000; font-style: italic">  &lt;head&gt;</span>
-<span style="color: #000; font-style: italic">    &lt;meta charset=&quot;utf-8&quot;&gt;</span>
-<span style="color: #000; font-style: italic">    &lt;title&gt;GitHub: Let&#39;s build from here · GitHub&lt;/title&gt;</span>
-<span style="color: #000; font-style: italic">    ...</span>
+<h3>Downloading multiple files with authentication</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>username:password<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>https://example.com/file1.txt<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>https://example.com/file2.txt
+<span style="color: #8F5902">  % </span>Total<span style="color: #F8F8F8">    </span>%<span style="color: #F8F8F8"> </span>Received<span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span>Xferd<span style="color: #F8F8F8">  </span>Average<span style="color: #F8F8F8"> </span>Speed<span style="color: #F8F8F8">   </span>Time<span style="color: #F8F8F8">    </span>Time<span style="color: #F8F8F8">     </span>Time<span style="color: #F8F8F8">  </span>Current
+<span style="color: #000; font-style: italic">                                 Dload  Upload   Total   Spent    Left  Speed</span>
+<span style="color: #000; font-style: italic">100  1256  100  1256    0     0  12560      0 --:--:-- --:--:-- --:--:-- 12560</span>
+<span style="color: #000; font-style: italic">100  2048  100  2048    0     0  20480      0 --:--:-- --:--:-- --:--:-- 20480</span>
 </pre></div>
 <h3>Uploading a file</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-F<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;file=@photo.jpg&quot;</span><span style="color: #F8F8F8"> </span>https://upload.example.com
-<span style="color: #000; font-style: italic">{&quot;success&quot;:true,&quot;url&quot;:&quot;https://cdn.example.com/uploads/photo123.jpg&quot;}</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-F<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;file=@localfile.jpg&quot;</span><span style="color: #F8F8F8"> </span>https://example.com/upload
+<span style="color: #000; font-style: italic">{&quot;status&quot;: &quot;success&quot;, &quot;url&quot;: &quot;https://example.com/uploads/image123.jpg&quot;}</span>
 </pre></div>
 <h2>Tips</h2>
-<h3>Use <code>-v</code> for Debugging</h3>
-<p>The verbose flag (<code>-v</code>) shows the complete request and response headers, which is invaluable for debugging API calls or network issues.</p>
+<h3>Use Verbose Mode for Debugging</h3>
+<p>When troubleshooting, use <code>-v</code> (verbose) or <code>-vv</code> (very verbose) to see detailed information about the request and response:</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>https://example.com
 </pre></div>
 <h3>Save Cookies and Use Them Later</h3>
-<p>Use <code>--cookie-jar</code> to save cookies and <code>--cookie</code> to use them in subsequent requests, which helps with authenticated sessions.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>--cookie-jar<span style="color: #F8F8F8"> </span>cookies.txt<span style="color: #F8F8F8"> </span>https://login.example.com
-<span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>--cookie<span style="color: #F8F8F8"> </span>cookies.txt<span style="color: #F8F8F8"> </span>https://protected.example.com
+<p>To handle sessions that require cookies:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>cookies.txt<span style="color: #F8F8F8"> </span>https://example.com/login<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;user=name&amp;password=secret&quot;</span>
+<span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>cookies.txt<span style="color: #F8F8F8"> </span>https://example.com/protected-area
 </pre></div>
-<h3>Set Timeouts for Unreliable Connections</h3>
-<p>Use <code>--connect-timeout</code> and <code>--max-time</code> to prevent curl from hanging indefinitely on slow or unresponsive servers.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>--connect-timeout<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>--max-time<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">30</span><span style="color: #F8F8F8"> </span>https://slow-server.example.com
+<h3>Limit Download Speed</h3>
+<p>To avoid consuming all available bandwidth:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>--limit-rate<span style="color: #F8F8F8"> </span>1M<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>https://example.com/large-file.zip
 </pre></div>
-<h3>Use <code>-k</code> with Caution</h3>
-<p>The <code>-k</code> (or <code>--insecure</code>) option allows connections to SSL sites without certificates, but should only be used for testing as it bypasses security checks.</p>
+<h3>Resume Interrupted Downloads</h3>
+<p>If a download gets interrupted, you can resume it:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span>-<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>https://example.com/large-file.zip
+</pre></div>
+<h3>Test API Endpoints Quickly</h3>
+<p>For quick API testing, combine with tools like <code>jq</code> to format JSON responses:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>https://api.example.com/users<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq
+</pre></div>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. How do I download a file with curl?</h4>
-<p>A. Use <code>curl -o filename URL</code> to save to a specific filename or <code>curl -O URL</code> to use the remote filename.</p>
-<h4>Q2. How can I send a POST request with curl?</h4>
-<p>A. Use <code>curl -X POST -d &quot;key=value&quot; URL</code> or <code>curl -X POST -H &quot;Content-Type: application/json&quot; -d '{&quot;key&quot;:&quot;value&quot;}' URL</code> for JSON data.</p>
+<p>A. Use <code>curl -O URL</code> to download and save with the original filename, or <code>curl -o filename URL</code> to specify a different filename.</p>
+<h4>Q2. How can I make a POST request with curl?</h4>
+<p>A. Use <code>curl -X POST -d &quot;key=value&quot; URL</code> for form data or <code>curl -X POST -H &quot;Content-Type: application/json&quot; -d '{&quot;key&quot;:&quot;value&quot;}' URL</code> for JSON data.</p>
 <h4>Q3. How do I follow redirects with curl?</h4>
-<p>A. Use the <code>-L</code> or <code>--location</code> option to make curl follow HTTP redirects.</p>
-<h4>Q4. How can I see detailed information about the request and response?</h4>
-<p>A. Use the <code>-v</code> or <code>--verbose</code> option to see the complete HTTP transaction.</p>
-<h4>Q5. How do I upload a file with curl?</h4>
-<p>A. Use <code>curl -F &quot;file=@path/to/file&quot; URL</code> for form-based uploads or <code>curl -T filename URL</code> for direct uploads.</p>
+<p>A. Use the <code>-L</code> or <code>--location</code> option to follow HTTP redirects.</p>
+<h4>Q4. How can I see the HTTP headers in the response?</h4>
+<p>A. Use <code>curl -I URL</code> to see only headers, or <code>curl -v URL</code> to see both headers and body.</p>
+<h4>Q5. How do I authenticate with curl?</h4>
+<p>A. For basic authentication, use <code>curl -u username:password URL</code>. For OAuth or token-based auth, use <code>curl -H &quot;Authorization: Bearer YOUR_TOKEN&quot; URL</code>.</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, the default <code>curl</code> is typically older than on Linux distributions. Some newer features might not be available. Additionally, macOS's <code>curl</code> is built with Secure Transport (Apple's SSL/TLS implementation) rather than OpenSSL, which can occasionally cause subtle differences in behavior, especially with SSL certificates.</p>
+<p>If you need the latest version with all features, consider installing <code>curl</code> via Homebrew:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>brew<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>curl
+</pre></div>
+<p>After installation, you may need to use <code>/usr/local/opt/curl/bin/curl</code> or add it to your PATH to use the Homebrew version instead of the system version.</p>
 <h2>References</h2>
 <p>https://curl.se/docs/manpage.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

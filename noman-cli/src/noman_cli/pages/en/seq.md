@@ -1,31 +1,31 @@
 # seq command
 
-Print a sequence of numbers from FIRST to LAST by INCREMENT.
+Print a sequence of numbers from FIRST to LAST by INCREMENT steps.
 
 ## Overview
 
-The `seq` command generates a sequence of numbers from a starting value to an ending value, with an optional step size. It's commonly used in shell scripts for creating loops, generating test data, or producing numbered output.
+The `seq` command generates a sequence of numbers from a starting value to an ending value, with an optional step increment. It's commonly used in shell scripts for creating loops, generating test data, or producing evenly spaced numerical sequences.
 
 ## Options
 
-### **-s, --separator=STRING**
-
-Specify a string to separate numbers (default is newline)
-
-```console
-$ seq -s " " 1 5
-1 2 3 4 5
-```
-
 ### **-f, --format=FORMAT**
 
-Use printf style floating-point FORMAT
+Use printf-style floating-point FORMAT to print each number
 
 ```console
-$ seq -f "Number %g" 1 3
-Number 1
-Number 2
-Number 3
+$ seq -f "Number: %.2f" 1 3
+Number: 1.00
+Number: 2.00
+Number: 3.00
+```
+
+### **-s, --separator=STRING**
+
+Use STRING to separate numbers (default is newline)
+
+```console
+$ seq -s ", " 1 5
+1, 2, 3, 4, 5
 ```
 
 ### **-w, --equal-width**
@@ -39,9 +39,18 @@ $ seq -w 8 10
 10
 ```
 
+### **-t, --terminator=CHAR**
+
+Use CHAR as output terminator instead of newline
+
+```console
+$ seq -t " " 1 3
+1 2 3 
+```
+
 ## Usage Examples
 
-### Basic sequence generation
+### Basic Usage
 
 ```console
 $ seq 5
@@ -52,22 +61,10 @@ $ seq 5
 5
 ```
 
-### Specifying start and end values
+### Specifying Start, Increment, and End
 
 ```console
-$ seq 3 7
-3
-4
-5
-6
-7
-```
-
-### Using a custom increment
-
-```console
-$ seq 0 2 10
-0
+$ seq 2 2 10
 2
 4
 6
@@ -75,7 +72,7 @@ $ seq 0 2 10
 10
 ```
 
-### Counting down
+### Using Negative Numbers
 
 ```console
 $ seq 5 -1 1
@@ -86,11 +83,7 @@ $ seq 5 -1 1
 1
 ```
 
-## Tips:
-
-### Use in Bash Loops
-
-Combine `seq` with a for loop to iterate through a range of numbers:
+### Creating a Range for Loops
 
 ```console
 $ for i in $(seq 1 3); do echo "Processing item $i"; done
@@ -99,36 +92,29 @@ Processing item 2
 Processing item 3
 ```
 
-### Create Numbered Files
+## Tips:
 
-Generate a series of numbered files quickly:
+### Use with xargs for Parallel Processing
 
-```console
-$ for i in $(seq -w 1 5); do touch file$i.txt; done
-$ ls file*.txt
-file01.txt file02.txt file03.txt file04.txt file05.txt
-```
-
-### Save Memory with Ranges
-
-For very large sequences, use `{start..end}` bash syntax instead of `seq` to avoid storing the entire sequence in memory:
+Combine `seq` with `xargs` to process multiple tasks in parallel:
 
 ```console
-$ for i in {1..5}; do echo $i; done
-1
-2
-3
-4
-5
+$ seq 1 10 | xargs -P 4 -I{} echo "Processing job {}"
 ```
 
-## Frequently Asked Questions
+### Generate File Names with Leading Zeros
 
-#### Q1. What's the difference between `seq` and bash's `{start..end}` syntax?
-A. While both generate sequences, `seq` offers more formatting options and can use floating-point numbers. Bash's built-in syntax is faster but more limited in features.
+Create sequentially numbered files with consistent width:
 
-#### Q2. Can `seq` generate decimal numbers?
-A. Yes, `seq` can handle decimal numbers for start, increment, and end values.
+```console
+$ for i in $(seq -w 1 5); do touch file_$i.txt; done
+$ ls
+file_01.txt file_02.txt file_03.txt file_04.txt file_05.txt
+```
+
+### Use Floating Point Numbers
+
+`seq` supports decimal numbers for more precise sequences:
 
 ```console
 $ seq 0.5 0.5 2.5
@@ -139,8 +125,19 @@ $ seq 0.5 0.5 2.5
 2.5
 ```
 
-#### Q3. How can I use `seq` output in a command?
-A. Use command substitution with `$(seq ...)` or backticks `` `seq ...` `` to use the output in another command.
+## Frequently Asked Questions
+
+#### Q1. How do I create a sequence with a specific increment?
+A. Use the format `seq START INCREMENT END`. For example, `seq 0 0.5 2` creates a sequence from 0 to 2 with 0.5 increments.
+
+#### Q2. Can seq handle negative numbers?
+A. Yes, `seq` can work with negative numbers for start, increment, and end values. For example, `seq 5 -1 1` counts down from 5 to 1.
+
+#### Q3. How do I prevent seq from printing each number on a new line?
+A. Use the `-s` option to specify a separator: `seq -s ", " 1 5` outputs "1, 2, 3, 4, 5".
+
+#### Q4. Can seq format numbers with leading zeros?
+A. Yes, use the `-w` option: `seq -w 8 12` outputs "08", "09", "10", "11", "12".
 
 ## References
 
@@ -148,4 +145,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/seq-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

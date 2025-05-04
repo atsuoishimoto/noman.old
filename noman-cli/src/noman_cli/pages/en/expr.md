@@ -4,13 +4,38 @@ Evaluate expressions and output the result.
 
 ## Overview
 
-`expr` is a command-line utility that evaluates expressions and outputs the result. It performs arithmetic operations, string manipulations, and logical comparisons. The command is particularly useful in shell scripts for calculations and string handling.
+`expr` is a command-line utility that evaluates expressions and outputs the result. It performs arithmetic operations, string manipulations, and logical comparisons. The command is primarily used in shell scripts to perform calculations and string operations that would be difficult to accomplish with shell built-ins alone.
 
 ## Options
 
-### **Basic Arithmetic**
+### **--help**
 
-Performs addition, subtraction, multiplication, division, and modulo operations.
+Display a help message and exit.
+
+```console
+$ expr --help
+Usage: expr EXPRESSION
+  or:  expr OPTION
+Print the value of EXPRESSION to standard output.
+...
+```
+
+### **--version**
+
+Output version information and exit.
+
+```console
+$ expr --version
+expr (GNU coreutils) 9.0
+Copyright (C) 2021 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+```
+
+## Usage Examples
+
+### Basic Arithmetic
 
 ```console
 $ expr 5 + 3
@@ -21,15 +46,22 @@ $ expr 3 \* 4
 12
 $ expr 20 / 5
 4
-$ expr 17 % 5
+$ expr 20 % 3
 2
 ```
 
-Note: The multiplication operator (`*`) must be escaped with a backslash to prevent shell interpretation.
+### String Operations
 
-### **Comparison Operators**
+```console
+$ expr length "Hello World"
+11
+$ expr substr "Hello World" 7 5
+World
+$ expr index "Hello World" "W"
+7
+```
 
-Compares values and returns 1 for true or 0 for false.
+### Logical Comparisons
 
 ```console
 $ expr 5 \> 3
@@ -38,102 +70,75 @@ $ expr 5 \< 3
 0
 $ expr 5 = 5
 1
-$ expr 5 != 4
-1
+$ expr 5 != 5
+0
 ```
 
-### **String Operations**
-
-Manipulates and extracts information from strings.
+### Use in Shell Scripts
 
 ```console
-$ expr length "Hello"
-5
-$ expr substr "Hello World" 7 5
-World
-$ expr index "Hello World" "W"
-7
-```
-
-### **Logical Operators**
-
-Performs logical AND and OR operations.
-
-```console
-$ expr 5 \> 3 \& 10 \> 5
-1
-$ expr 5 \> 3 \| 2 \> 5
-1
-```
-
-## Usage Examples
-
-### Incrementing a Variable in a Shell Script
-
-```console
-$ count=1
-$ count=$(expr $count + 1)
-$ echo $count
-2
-```
-
-### Extracting a Substring
-
-```console
-$ expr substr "Hello World" 1 5
-Hello
-```
-
-### Checking String Length
-
-```console
-$ filename="document.txt"
-$ length=$(expr length "$filename")
-$ echo "The filename is $length characters long"
-The filename is 12 characters long
+$ a=5
+$ b=3
+$ c=$(expr $a + $b)
+$ echo $c
+8
 ```
 
 ## Tips:
 
-### Use Proper Spacing
-
-Always put spaces between operators and operands. `expr 5+3` will not work, but `expr 5 + 3` will.
-
 ### Escape Special Characters
 
-Remember to escape characters that have special meaning to the shell, such as `*`, `(`, `)`, and `<`.
-
-### Alternative to expr
-
-Modern shell scripts often use bash's built-in arithmetic expansion `$(( ))` instead of `expr` for better performance and readability.
+Always escape multiplication (*), division (/), and other characters that have special meaning in the shell using a backslash (\).
 
 ```console
-$ echo $((5 + 3))
+$ expr 5 \* 3
+15
+```
+
+### Space Requirements
+
+`expr` requires spaces between operators and operands. Without spaces, the command will not work correctly.
+
+```console
+$ expr 5+3    # Wrong
+5+3
+$ expr 5 + 3  # Correct
 8
 ```
 
 ### Return Values
 
-`expr` returns 0 if the expression evaluates to a non-zero and non-empty value, 1 if the expression is 0 or empty, and 2 if the expression is invalid.
+`expr` returns 0 if the expression evaluates to a non-zero and non-empty value, 1 if the expression is zero or empty, and 2 if the expression is invalid.
+
+### Use for Incrementing Variables
+
+A common use of `expr` is to increment counters in shell scripts:
+
+```console
+$ i=1
+$ i=$(expr $i + 1)
+$ echo $i
+2
+```
 
 ## Frequently Asked Questions
 
-#### Q1. Why does my multiplication with `expr` fail?
-A. You need to escape the asterisk: `expr 5 \* 3`. Otherwise, the shell interprets it as a wildcard.
+#### Q1. What's the difference between `expr` and shell arithmetic?
+A. While modern shells support arithmetic with `$(( ))`, `expr` is more portable across different shells and provides additional string manipulation functions.
 
-#### Q2. How do I use `expr` in a shell script?
-A. Capture the output using command substitution: `result=$(expr 5 + 3)`.
+#### Q2. Why does my multiplication with `expr` fail?
+A. You need to escape the asterisk with a backslash: `expr 5 \* 3`. Otherwise, the shell interprets it as a wildcard.
 
-#### Q3. Is there a limit to the size of numbers `expr` can handle?
-A. Yes, `expr` typically handles integer arithmetic within the range of your system's integer limits.
+#### Q3. How can I use `expr` for string operations?
+A. `expr` provides functions like `length`, `substr`, and `index` for string manipulation. For example: `expr length "string"` or `expr substr "string" 1 3`.
 
-#### Q4. Why use `expr` when bash has built-in arithmetic?
-A. `expr` is primarily used for POSIX compatibility in scripts that need to run on various Unix-like systems.
+#### Q4. Is `expr` still relevant in modern shell scripting?
+A. While newer shells have built-in arithmetic capabilities, `expr` remains useful for its string manipulation functions and for scripts that need to be portable across different shell environments.
 
 ## References
 
-https://pubs.opengroup.org/onlinepubs/9699919799/utilities/expr.html
+https://www.gnu.org/software/coreutils/manual/html_node/expr-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

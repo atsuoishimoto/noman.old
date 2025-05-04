@@ -47,76 +47,84 @@
     <main>
       
   <h1>git commit command</h1>
-<p>Record changes to the repository by saving staged content as a new commit.</p>
+<p>Record changes to the repository by creating a new commit containing the current contents of the index.</p>
 <h2>Overview</h2>
-<p>The <code>git commit</code> command captures a snapshot of the project's currently staged changes. Committed snapshots are considered &quot;safe&quot; versions of a project and can be viewed, restored, or compared at any time. Commits are the core building blocks in a Git project's timeline.</p>
+<p>The <code>git commit</code> command captures a snapshot of the project's currently staged changes. Committed snapshots are &quot;safe&quot; versions of a project that Git will never change unless explicitly asked to do so. Before committing, changes must be staged using <code>git add</code>.</p>
 <h2>Options</h2>
-<h3><strong>-m, --message</strong></h3>
-<p>Add a commit message directly from the command line, avoiding the text editor prompt.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Add new login feature&quot;</span>
-<span style="color: #000; font-style: italic">[main 5d7e9f4] Add new login feature</span>
-<span style="color: #000; font-style: italic"> 1 file changed, 15 insertions(+), 2 deletions(-)</span>
+<h3><strong>-m, --message=&lt;msg&gt;</strong></h3>
+<p>Use the given message as the commit message instead of launching an editor.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Add new feature&quot;</span>
+<span style="color: #000; font-style: italic">[main 5d6e7f8] Add new feature</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 10 insertions(+), 2 deletions(-)</span>
 </pre></div>
 <h3><strong>-a, --all</strong></h3>
-<p>Automatically stage all modified and deleted files before committing (does not include new files).</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Update documentation&quot;</span>
-<span style="color: #000; font-style: italic">[main 8f3d12c] Update documentation</span>
-<span style="color: #000; font-style: italic"> 2 files changed, 24 insertions(+), 5 deletions(-)</span>
+<p>Automatically stage all modified and deleted files before committing (does not include untracked files).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Update existing files&quot;</span>
+<span style="color: #000; font-style: italic">[main 1a2b3c4] Update existing files</span>
+<span style="color: #000; font-style: italic"> 2 files changed, 5 insertions(+), 3 deletions(-)</span>
 </pre></div>
 <h3><strong>--amend</strong></h3>
-<p>Replace the most recent commit with a new one that includes current staged changes.</p>
+<p>Replace the tip of the current branch with a new commit, using the same log message as the previous commit or a new one.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>--amend<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Fix typo in previous commit&quot;</span>
-<span style="color: #000; font-style: italic">[main 7a2e9d1] Fix typo in previous commit</span>
-<span style="color: #000; font-style: italic"> Date: Wed Apr 30 10:15:32 2025 -0700</span>
-<span style="color: #000; font-style: italic"> 1 file changed, 2 insertions(+), 1 deletion(-)</span>
+<span style="color: #000; font-style: italic">[main 8f9g0h1] Fix typo in previous commit</span>
+<span style="color: #000; font-style: italic"> Date: Mon May 4 10:23:45 2025 -0700</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 1 insertion(+), 1 deletion(-)</span>
 </pre></div>
 <h3><strong>-v, --verbose</strong></h3>
 <p>Show the diff of changes to be committed in the commit message editor.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-v
 <span style="color: #8F5902"># </span>Opens<span style="color: #F8F8F8"> </span>editor<span style="color: #F8F8F8"> </span>with<span style="color: #F8F8F8"> </span>diff<span style="color: #F8F8F8"> </span>included<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>the<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>message<span style="color: #F8F8F8"> </span>template
 </pre></div>
+<h3><strong>--no-verify</strong></h3>
+<p>Bypass the pre-commit and commit-msg hooks.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>--no-verify<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Emergency fix&quot;</span>
+<span style="color: #000; font-style: italic">[main 2c3d4e5] Emergency fix</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 3 insertions(+)</span>
+</pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic commit with editor for message</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit
-<span style="color: #8F5902"># </span>Opens<span style="color: #F8F8F8"> </span>text<span style="color: #F8F8F8"> </span>editor<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>message
-<span style="color: #000; font-style: italic">[main 3a4b5c6] Add important file</span>
-<span style="color: #000; font-style: italic"> 1 file changed, 10 insertions(+)</span>
+<h3>Creating a standard commit</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Add new files&quot;</span>
+<span style="color: #000; font-style: italic">[main 1a2b3c4] Add new files</span>
+<span style="color: #000; font-style: italic"> 2 files changed, 15 insertions(+)</span>
 </pre></div>
-<h3>Commit with message and skip staging</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-am<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Fix bug in login form&quot;</span>
-<span style="color: #000; font-style: italic">[main 1b2c3d4] Fix bug in login form</span>
-<span style="color: #000; font-style: italic"> 2 files changed, 7 insertions(+), 3 deletions(-)</span>
+<h3>Committing all tracked changes</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-am<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Update documentation&quot;</span>
+<span style="color: #000; font-style: italic">[main 5e6f7g8] Update documentation</span>
+<span style="color: #000; font-style: italic"> 3 files changed, 25 insertions(+), 10 deletions(-)</span>
 </pre></div>
-<h3>Commit only specific files</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>src/login.js<span style="color: #F8F8F8"> </span>src/auth.js
-<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Improve authentication flow&quot;</span>
-<span style="color: #000; font-style: italic">[main 9e8d7f6] Improve authentication flow</span>
-<span style="color: #000; font-style: italic"> 2 files changed, 32 insertions(+), 15 deletions(-)</span>
+<h3>Amending the previous commit with new changes</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>forgotten_file.txt
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>--amend
+<span style="color: #000; font-style: italic">[main 1a2b3c4] Add new files</span>
+<span style="color: #000; font-style: italic"> Date: Mon May 4 09:15:32 2025 -0700</span>
+<span style="color: #000; font-style: italic"> 3 files changed, 18 insertions(+)</span>
 </pre></div>
 <h2>Tips</h2>
 <h3>Write Meaningful Commit Messages</h3>
-<p>Use the present tense (&quot;Add feature&quot; not &quot;Added feature&quot;) and keep the first line under 50 characters. Add more detailed explanations after a blank line if needed.</p>
+<p>Good commit messages should explain what changes were made and why. Use the present tense (&quot;Add feature&quot; not &quot;Added feature&quot;) and keep the first line under 50 characters.</p>
 <h3>Use Atomic Commits</h3>
-<p>Make each commit a logical unit of change. This makes it easier to understand, review, and revert changes if necessary.</p>
+<p>Make each commit a logical unit of work. This makes it easier to understand, review, and revert changes if needed.</p>
 <h3>Check What You're Committing</h3>
-<p>Use <code>git diff --staged</code> before committing to review exactly what changes will be included in your commit.</p>
+<p>Use <code>git diff --staged</code> before committing to review exactly what will be included in your commit.</p>
 <h3>Sign Your Commits</h3>
 <p>For security and verification, you can sign commits with your GPG key using <code>git commit -S</code>.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. How do I undo my last commit?</h4>
 <p>A. Use <code>git reset HEAD~1</code> to undo the commit but keep the changes staged, or <code>git reset --hard HEAD~1</code> to discard the changes completely.</p>
 <h4>Q2. How can I change my commit message after committing?</h4>
-<p>A. Use <code>git commit --amend</code> to modify the most recent commit message.</p>
-<h4>Q3. What's the difference between <code>git commit</code> and <code>git push</code>?</h4>
-<p>A. <code>git commit</code> records changes to your local repository, while <code>git push</code> uploads your local commits to a remote repository.</p>
-<h4>Q4. Can I commit directly without staging files first?</h4>
-<p>A. Yes, using <code>git commit -a</code> will automatically stage all modified and deleted files (but not new files) before committing.</p>
+<p>A. If you haven't pushed yet, use <code>git commit --amend</code> to modify the most recent commit message.</p>
+<h4>Q3. What's the difference between <code>git commit</code> and <code>git commit -a</code>?</h4>
+<p>A. <code>git commit</code> only commits changes that have been staged with <code>git add</code>, while <code>git commit -a</code> automatically stages and commits all modified tracked files.</p>
+<h4>Q4. Can I commit directly without staging first?</h4>
+<p>A. Yes, using <code>git commit -a</code>, but this only works for files that are already tracked (previously added to the repository).</p>
+<h4>Q5. How do I commit only part of a file?</h4>
+<p>A. Use <code>git add -p</code> to interactively select which changes to stage, then commit normally.</p>
 <h2>References</h2>
 <p>https://git-scm.com/docs/git-commit</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

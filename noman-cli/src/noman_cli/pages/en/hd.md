@@ -4,116 +4,123 @@ Display file contents in hexadecimal, decimal, octal, or ASCII format.
 
 ## Overview
 
-The `hd` command (hexdump) displays the contents of files in various formats, primarily hexadecimal. It's useful for examining binary files, debugging data formats, or viewing non-printable characters in text files. The command reads from files or standard input and outputs a formatted representation of the data.
+The `hd` command (hexdump) is a utility that displays the contents of files in various formats, primarily hexadecimal. It's useful for examining binary files, debugging data formats, or viewing non-printable characters in text files. The command reads from files or standard input and outputs a formatted representation of the data.
 
 ## Options
 
-### **-n LENGTH**
+### **-a, --ascii-dump**
 
-Limit the output to the first LENGTH bytes of input
+Display ASCII characters alongside the hex dump.
 
 ```console
-$ echo "Hello" | hd -n 3
-00000000  48 65 6c                                          |Hel|
+$ echo "Hello" | hd -a
+00000000  48 65 6c 6c 6f 0a                                 |Hello.|
+00000006
 ```
 
-### **-s OFFSET**
+### **-c, --canonical**
 
-Skip OFFSET bytes from the beginning of input
+Display output in canonical hex+ASCII format, showing both hexadecimal values and their ASCII representation.
+
+```console
+$ echo "Hello" | hd -c
+00000000  48 65 6c 6c 6f 0a                                 |Hello.|
+00000006
+```
+
+### **-n, --length=N**
+
+Process only the first N bytes of input.
+
+```console
+$ echo "Hello World" | hd -n 5
+00000000  48 65 6c 6c 6f                                    |Hello|
+00000005
+```
+
+### **-s, --skip=N**
+
+Skip the first N bytes of input.
 
 ```console
 $ echo "Hello World" | hd -s 6
 00000006  57 6f 72 6c 64 0a                                 |World.|
+0000000c
 ```
 
-### **-v**
+### **-v, --no-squeezing**
 
-Display all input data (suppress the * line that indicates duplicate content)
-
-```console
-$ echo "AAAAAAAA" | hd -v
-00000000  41 41 41 41 41 41 41 41  0a                       |AAAAAAAA.|
-```
-
-### **-c BYTES**
-
-Format output with BYTES number of octets per line
+Display all input data lines, even if they are identical to the previous line.
 
 ```console
-$ echo "Hello World" | hd -c 4
-00000000  48 65 6c 6c                                       |Hell|
-00000004  6f 20 57 6f                                       |o Wo|
-00000008  72 6c 64 0a                                       |rld.|
+$ echo -e "AAAA\nAAAA" | hd -v
+00000000  41 41 41 41 0a 41 41 41  41 0a                    |AAAA.AAAA.|
+0000000a
 ```
 
 ## Usage Examples
 
-### Basic hexdump of a file
+### Basic Hexadecimal Dump
 
 ```console
-$ hd sample.txt
-00000000  48 65 6c 6c 6f 20 57 6f  72 6c 64 0a 54 68 69 73  |Hello World.This|
-00000010  20 69 73 20 61 20 74 65  73 74 2e 0a              | is a test..|
-0000001c
+$ echo "Hello, World!" | hd
+00000000  48 65 6c 6c 6f 2c 20 57  6f 72 6c 64 21 0a        |Hello, World!.|
+0000000e
 ```
 
-### Examining binary data
+### Examining a Binary File
 
 ```console
-$ hd /bin/ls | head -3
+$ hd -n 32 /bin/ls
 00000000  cf fa ed fe 07 00 00 01  03 00 00 80 02 00 00 00  |................|
 00000010  10 00 00 00 18 07 00 00  85 00 20 00 00 00 00 00  |.......... .....|
-00000020  19 00 00 00 48 00 00 00  5f 5f 50 41 47 45 5a 45  |....H...__PAGEZE|
+00000020
 ```
 
-### Piping data to hd
+### Displaying Different Number Formats
 
 ```console
-$ echo -n "Binary data" | hd
-00000000  42 69 6e 61 72 79 20 64  61 74 61                 |Binary data|
-0000000b
+$ echo "ABC" | hd -e '16/1 "%02x " "\n"'
+00000000  41 42 43 0a                                       
+00000004
 ```
 
 ## Tips
 
-### Comparing Binary Files
-
-Use `hd` with `diff` to compare binary files: `diff <(hd file1) <(hd file2)` to see exactly where and how files differ.
-
 ### Examining File Headers
 
-Use `hd -n 32 filename` to examine just the first 32 bytes of a file, which often contains header information that identifies the file type.
+Use `hd -n 16 filename` to quickly examine the first 16 bytes of a file, which often contains format identification information or magic numbers.
+
+### Comparing Binary Files
+
+You can use `hd` with `diff` to compare binary files: `diff <(hd file1) <(hd file2)`.
 
 ### Customizing Output Format
 
-Combine options like `-c` and `-v` to create a more readable format when examining complex binary structures.
+The `-e` option allows you to specify custom output formats for more specialized viewing needs.
 
 ### Alternative Commands
 
-On some systems, `hexdump` or `xxd` commands may be available as alternatives with similar functionality.
+On some systems, `hexdump` or `xxd` may be available instead of `hd` with similar functionality.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `hd` and `hexdump`?
-A. On many systems, `hd` is actually a symbolic link to `hexdump` or provides similar functionality with a shorter name. The specific behavior may vary slightly between systems.
+A. On many systems, `hd` is actually a symbolic link to `hexdump`. They are essentially the same command, with `hd` being a shorter alias.
 
-#### Q2. How can I convert hexadecimal output back to binary?
-A. `hd` is primarily for displaying data, not converting it back. For the reverse operation, consider using tools like `xxd -r` or dedicated hex editors.
+#### Q2. How can I view only the ASCII representation?
+A. Use `hd -c` to see both hex and ASCII, or for ASCII-only, you might need to use a custom format with the `-e` option.
 
-#### Q3. Can I use `hd` to edit binary files?
-A. No, `hd` is only for viewing file contents. To edit binary files, use a hex editor like `hexedit` or `bvi`.
+#### Q3. Can `hd` modify files?
+A. No, `hd` is only for viewing file contents. It cannot modify files directly.
 
-#### Q4. How do I interpret the output format?
-A. The left column shows byte offsets in hexadecimal, the middle columns show the hexadecimal values of each byte, and the right column shows the ASCII representation (with dots for non-printable characters).
-
-## macOS Considerations
-
-On macOS, `hd` is typically available as part of the base system. However, its behavior and available options may differ slightly from other Unix-like systems. If you need more advanced hexdump functionality, consider installing GNU hexdump via Homebrew with `brew install hexdump`.
+#### Q4. How do I interpret the output?
+A. The leftmost column shows the byte offset in hexadecimal. The middle columns show the hex values of each byte. The rightmost section (after the `|` characters) shows the ASCII representation of those bytes.
 
 ## References
 
-https://www.freebsd.org/cgi/man.cgi?query=hexdump
+https://man7.org/linux/man-pages/man1/hexdump.1.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

@@ -1,50 +1,50 @@
 # docker コマンド
 
-コンテナの作成、管理、実行を行うためのコマンドラインツール。
+Dockerコンテナ、イメージ、ネットワーク、その他のDockerオブジェクトを管理します。
 
 ## 概要
 
-Docker は、アプリケーションをコンテナとして実行するためのプラットフォームです。コンテナは軽量な仮想環境で、アプリケーションとその依存関係をパッケージ化し、どこでも同じように実行できます。`docker` コマンドを使用して、イメージの作成・管理、コンテナの起動・停止、ネットワークやボリュームの管理などを行うことができます。
+Dockerはアプリケーションをコンテナで開発、配布、実行できるプラットフォームです。`docker`コマンドはDockerとやり取りするための主要なインターフェースであり、コンテナ、イメージ、ネットワーク、ボリュームなどのDockerリソースを構築、実行、管理することができます。ホストシステムに関係なく、アプリケーションが一貫した環境で実行できるようにします。
 
 ## オプション
 
 ### **docker run**
 
-コンテナを作成して起動します。
+イメージから新しいコンテナを作成して起動します
 
 ```console
-$ docker run -d -p 80:80 --name webserver nginx
-b1a0dc2f37e9e48c5dfcbed288a3d38f42ce70cd75bce1005b3a4972e0d3a5a5
+$ docker run -d --name web nginx
+e7cc5d2c8cdc5b05a4f37ce6cf15e9f0e0a5bd2bec30cc5415917d669de12857
 ```
 
 ### **docker ps**
 
-実行中のコンテナを一覧表示します。
+実行中のコンテナを一覧表示します（`-a`を追加すると停止したものも含めすべてのコンテナを表示）
 
 ```console
 $ docker ps
-CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS                               NAMES
-b1a0dc2f37e9   nginx     "/docker-entrypoint.…"   10 seconds ago   Up 9 seconds    0.0.0.0:80->80/tcp, :::80->80/tcp   webserver
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS     NAMES
+e7cc5d2c8cdc   nginx     "/docker-entrypoint.…"   10 seconds ago   Up 9 seconds    80/tcp    web
 ```
 
 ### **docker images**
 
-ローカルに保存されているイメージを一覧表示します。
+ローカルシステム上の利用可能なイメージを一覧表示します
 
 ```console
 $ docker images
 REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
-nginx        latest    605c77e624dd   3 weeks ago    141MB
-ubuntu       latest    ba6acccedd29   4 weeks ago    72.8MB
+nginx        latest    a6bd71f48f68   2 weeks ago    187MB
+ubuntu       latest    3b418d7b466a   4 weeks ago    77.8MB
 ```
 
 ### **docker build**
 
-Dockerfileからイメージを構築します。
+Dockerfileからイメージをビルドします
 
 ```console
 $ docker build -t myapp:1.0 .
-[+] Building 25.3s (10/10) FINISHED
+[+] Building 25.6s (10/10) FINISHED
  => [internal] load build definition from Dockerfile                       0.1s
  => => transferring dockerfile: 215B                                       0.0s
  => [internal] load .dockerignore                                          0.0s
@@ -52,34 +52,49 @@ $ docker build -t myapp:1.0 .
  => [internal] load metadata for docker.io/library/node:14                 1.2s
  => [1/5] FROM docker.io/library/node:14@sha256:fcb6...                    0.0s
  => [internal] load build context                                          0.1s
- => => transferring context: 3.25kB                                        0.0s
- => [2/5] WORKDIR /app                                                     0.1s
+ => => transferring context: 1.25kB                                        0.0s
+ => [2/5] WORKDIR /app                                                     0.5s
  => [3/5] COPY package*.json ./                                            0.1s
  => [4/5] RUN npm install                                                 20.5s
  => [5/5] COPY . .                                                         0.1s
- => exporting to image                                                     3.2s
+ => exporting to image                                                     3.1s
  => => exporting layers                                                    3.1s
- => => writing image sha256:d8f...                                         0.0s
+ => => writing image sha256:a1b2c3d4e5f6...                                0.0s
  => => naming to docker.io/library/myapp:1.0                               0.0s
+```
+
+### **docker stop/start**
+
+既存のコンテナを停止または起動します
+
+```console
+$ docker stop web
+web
+
+$ docker start web
+web
+```
+
+### **docker exec**
+
+実行中のコンテナでコマンドを実行します
+
+```console
+$ docker exec -it web bash
+root@e7cc5d2c8cdc:/# ls
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@e7cc5d2c8cdc:/# exit
 ```
 
 ## 使用例
 
-### コンテナの対話的実行
-
-```console
-$ docker run -it ubuntu bash
-root@7b8b7c5c8e6a:/# ls
-bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
-```
-
-### バックグラウンドでのコンテナ実行とポート転送
+### ポートマッピングを使用したコンテナの実行
 
 ```console
 $ docker run -d -p 8080:80 --name webserver nginx
-a72df3b3b5b7e48c5dfcbed288a3d38f42ce70cd75bce1005b3a4972e0d3a5a5
+f499cc406d7e9d92537dec4182f2d0f9f9dbf74e2d9651c3c4c94a7b8a023c15
 
-$ curl localhost:8080
+$ curl http://localhost:8080
 <!DOCTYPE html>
 <html>
 <head>
@@ -87,87 +102,86 @@ $ curl localhost:8080
 ...
 ```
 
-### コンテナの停止と削除
+### カスタムアプリケーションのビルドと実行
 
 ```console
-$ docker stop webserver
-webserver
+$ docker build -t myapp:latest .
+[+] Building 15.3s (10/10) FINISHED
+...
 
-$ docker rm webserver
-webserver
+$ docker run -d -p 3000:3000 --name myapplication myapp:latest
+a72f4623b8bfb647e8b108f770e5758eed96a37638e929278169a105ea86c912
 ```
 
-### ボリュームマウント
+### ボリュームを使用したコンテナデータの管理
 
 ```console
-$ docker run -d -p 8080:80 -v $(pwd)/html:/usr/share/nginx/html --name webserver nginx
-c1b0dc2f37e9e48c5dfcbed288a3d38f42ce70cd75bce1005b3a4972e0d3a5a5
+$ docker volume create mydata
+mydata
+
+$ docker run -d --name database -v mydata:/var/lib/mysql mysql:8.0
+b8a1c375e3c2a9c0293bb9d4f9a6b1e7f2d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9
 ```
 
 ## ヒント:
 
-### コンテナのシェルに接続する
+### Docker Composeを使用して複数コンテナアプリケーションを管理する
 
-実行中のコンテナに接続するには `docker exec -it コンテナ名 bash` を使用します。これはデバッグやトラブルシューティングに役立ちます。
-
-```console
-$ docker exec -it webserver bash
-root@b1a0dc2f37e9:/# ls
-bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
-```
-
-### 不要なリソースのクリーンアップ
-
-使用していないコンテナ、イメージ、ネットワーク、ボリュームを削除するには `docker system prune` を使用します。
+複雑な`docker run`コマンドで複数のコンテナを管理する代わりに、Docker Composeと`docker-compose.yml`ファイルを使用して、複数コンテナアプリケーションを定義・実行しましょう。
 
 ```console
-$ docker system prune
-WARNING! This will remove:
-  - all stopped containers
-  - all networks not used by at least one container
-  - all dangling images
-  - all dangling build cache
-
-Are you sure you want to continue? [y/N] y
-Deleted Containers:
-f9a3...
-
-Total reclaimed space: 1.2GB
+$ docker-compose up -d
 ```
 
-### Dockerfileのベストプラクティス
+### 未使用リソースをクリーンアップする
 
-- マルチステージビルドを使用して最終イメージのサイズを小さくする
-- キャッシュを効率的に利用するため、変更頻度の低いレイヤーを先に配置する
-- 必要最小限のファイルだけをコピーする（.dockerignoreファイルを活用）
+Dockerは時間とともに未使用のコンテナ、イメージ、ボリュームが蓄積されます。以下のコマンドでクリーンアップできます：
+
+```console
+$ docker system prune  # 停止したコンテナ、未使用ネットワーク、ダングリングイメージを削除
+$ docker system prune -a  # ダングリングイメージだけでなく未使用イメージも削除
+$ docker volume prune  # 未使用ボリュームを削除
+```
+
+### マルチステージビルドで小さなイメージを作成する
+
+Dockerfileでマルチステージビルドを使用すると、ビルド時の依存関係と実行時の依存関係を分離して、より小さな本番イメージを作成できます。
+
+```dockerfile
+FROM node:14 AS build
+WORKDIR /app
+COPY . .
+RUN npm ci && npm run build
+
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+```
+
+### .dockerignoreを使用する
+
+`.gitignore`と同様に`.dockerignore`ファイルを作成して、不要なファイルがDockerビルドコンテキストに含まれないようにしましょう。これによりビルドが高速化され、イメージサイズも削減できます。
 
 ## よくある質問
 
-#### Q1. Dockerとは何ですか？
-A. Dockerはコンテナ化技術を使用して、アプリケーションとその依存関係を一緒にパッケージ化し、どの環境でも同じように実行できるようにするプラットフォームです。
+#### Q1. `docker run`と`docker start`の違いは何ですか？
+A. `docker run`はイメージから新しいコンテナを作成して起動しますが、`docker start`は既に存在する停止中のコンテナを再起動します。
 
-#### Q2. DockerとVMの違いは何ですか？
-A. VMは完全なOSを仮想化しますが、DockerコンテナはホストOSのカーネルを共有し、アプリケーションの実行に必要な部分だけを含むため、より軽量で起動が速いです。
+#### Q2. コンテナからログにアクセスするにはどうすればよいですか？
+A. `docker logs [コンテナ名]`を使用してログを表示できます。リアルタイムでログを追跡するには`-f`を追加します。
 
-#### Q3. Docker Hubとは何ですか？
-A. Docker Hubは、Dockerの公式イメージリポジトリで、様々なアプリケーションやOSのイメージを公開・共有できるプラットフォームです。`docker pull` コマンドでイメージをダウンロードできます。
+#### Q3. ホストとコンテナ間でファイルをコピーするにはどうすればよいですか？
+A. `docker cp [ソース] [宛先]`を使用します。例：`docker cp ./file.txt mycontainer:/app/`または`docker cp mycontainer:/app/file.txt ./`
 
-#### Q4. コンテナ内のデータを永続化するにはどうすればよいですか？
-A. ボリュームを使用します。`docker run -v ホストパス:コンテナパス` または `docker volume create` と `docker run --mount` を使用してデータを永続化できます。
+#### Q4. コンテナとイメージを削除するにはどうすればよいですか？
+A. コンテナを削除するには`docker rm [コンテナID]`を、イメージを削除するには`docker rmi [イメージID]`を使用します。強制削除するには`-f`を追加します。
 
-## macOSでの注意点
+#### Q5. コンテナのリソース使用状況を確認するにはどうすればよいですか？
+A. `docker stats`を使用すると、実行中のコンテナのCPU、メモリ、ネットワーク、ディスク使用量を確認できます。
 
-macOSでDockerを実行する場合、以下の点に注意してください：
-
-1. macOSではDocker Desktopをインストールする必要があります
-2. リソース制限：CPUやメモリなどのリソース割り当てはDocker Desktopの設定から調整できます
-3. ファイル共有：デフォルトでは `/Users` ディレクトリのみがDockerコンテナからアクセス可能です。他のディレクトリを使用する場合は、Docker Desktopの設定で「File sharing」を設定する必要があります
-4. パフォーマンス：macOSでのDockerはLinuxと比較して若干パフォーマンスが低下する場合があります
-
-## 参考
+## 参考資料
 
 https://docs.docker.com/engine/reference/commandline/cli/
 
-## 改訂
+## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初回作成

@@ -1,16 +1,16 @@
 # patch コマンド
 
-ファイルに差分（パッチ）を適用するユーティリティ。
+差分ファイルを元のファイルに適用します。
 
 ## 概要
 
-`patch`コマンドは、差分ファイル（パッチファイル）を使用して元のファイルを更新するためのツールです。ソフトウェア開発やシステム管理において、コードの変更を配布したり適用したりする際によく使用されます。`diff`コマンドで生成された差分を適用するのに最適です。
+`patch`コマンドは、ファイルに変更（パッチ）を適用するためのコマンドです。パッチファイル（通常は`diff`コマンドで作成されたもの）を読み込み、その指示に従って元のファイルを修正します。これは、バグ修正、アップデート、ソースコードやテキストファイルの変更を適用する際によく使用されます。
 
 ## オプション
 
-### **-p[数字]**
+### **-p 数値, --strip=数値**
 
-パッチファイル内のパス名から取り除く階層の数を指定します。
+パッチファイル内のファイル名から、指定した数値分の先頭のスラッシュを含む最小のプレフィックスを削除します。
 
 ```console
 $ patch -p1 < changes.patch
@@ -19,31 +19,47 @@ patching file src/main.c
 
 ### **-b, --backup**
 
-パッチを適用する前にオリジナルファイルのバックアップを作成します。
+パッチを適用する前に元のファイルのバックアップを作成します。
 
 ```console
-$ patch -b file.txt < file.patch
+$ patch -b file.txt < changes.patch
 patching file file.txt
-$ ls
-file.txt file.txt.orig file.patch
 ```
 
 ### **-R, --reverse**
 
-パッチを逆方向に適用します（変更を元に戻す）。
+パッチが古いファイルと新しいファイルを入れ替えて作成されたと仮定し、実質的にパッチを逆適用します。
 
 ```console
-$ patch -R file.txt < file.patch
+$ patch -R file.txt < changes.patch
 patching file file.txt
 ```
 
-### **-d DIR, --directory=DIR**
+### **-i パッチファイル, --input=パッチファイル**
 
-指定したディレクトリに移動してからパッチを適用します。
+標準入力ではなく、指定したファイルからパッチを読み込みます。
 
 ```console
-$ patch -d src/ < changes.patch
+$ patch -i changes.patch
+patching file file.txt
+```
+
+### **-d ディレクトリ, --directory=ディレクトリ**
+
+パッチを適用する前に指定したディレクトリに移動します。
+
+```console
+$ patch -d src/ -i ../changes.patch
 patching file main.c
+```
+
+### **-u, --unified**
+
+パッチファイルを統合差分（現在最も一般的な形式）として解釈します。
+
+```console
+$ patch -u file.txt < changes.patch
+patching file file.txt
 ```
 
 ## 使用例
@@ -52,18 +68,11 @@ patching file main.c
 
 ```console
 $ diff -u original.txt modified.txt > changes.patch
-$ patch < changes.patch
+$ patch original.txt < changes.patch
 patching file original.txt
 ```
 
-### 特定のファイルにパッチを適用
-
-```console
-$ patch file.txt < changes.patch
-patching file file.txt
-```
-
-### 複数のファイルを含むパッチの適用
+### 複数ファイルへのパッチ適用
 
 ```console
 $ patch -p0 < project.patch
@@ -71,47 +80,62 @@ patching file src/main.c
 patching file include/header.h
 ```
 
+### バックアップを作成してパッチを適用
+
+```console
+$ patch -b file.txt < changes.patch
+patching file file.txt
+$ ls
+file.txt  file.txt.orig  changes.patch
+```
+
+### ドライラン（適用せずに確認）
+
+```console
+$ patch --dry-run -p1 < changes.patch
+checking file src/main.c
+```
+
 ## ヒント:
 
-### パッチの確認
+### パッチレベルの理解
 
-パッチを適用する前に、`--dry-run`オプションを使用して実際に変更を加えずにパッチの適用をシミュレーションできます。
+`-p`オプション（ストリップレベル）は、プロジェクトにパッチを適用する際に重要です。パッチに`a/src/file.c`のようなパスが含まれている場合、`-p1`を使用すると`a/`プレフィックスが削除され、`src/file.c`を探すようになります。
 
-```console
-$ patch --dry-run < changes.patch
-patching file src/main.c
-```
+### 失敗したパッチの処理
 
-### 拒否されたパッチの処理
+パッチがきれいに適用できない場合、patchは拒否されたハンク（変更部分）を含む`.rej`ファイルを作成します。自動的に適用できなかった変更を手動で適用するために、これらのファイルを確認してください。
 
-パッチの適用に失敗した場合、`.rej`拡張子を持つ拒否ファイルが作成されます。これらのファイルを確認して手動で変更を適用することができます。
+### パッチを適用する前のテスト
 
-### パッチの作成
+特に重要なファイルに対しては、実際に適用する前に`--dry-run`を使用してパッチがきれいに適用されるかどうかを常にテストしてください。
 
-パッチファイルは通常、`diff -u`コマンドを使用して作成します。これにより、コンテキスト情報を含む統一形式の差分が生成されます。
+### パッチの方向
 
-```console
-$ diff -u original.txt modified.txt > changes.patch
-```
+`-R`（逆適用）を使用するかどうか不明な場合は、まず通常通りパッチを適用してみてください。「reversed patch detected」（逆パッチが検出された）というエラーが出た場合は、`-R`を試してみてください。
 
 ## よくある質問
 
-#### Q1. パッチファイルとは何ですか？
-A. パッチファイルは、ファイルの元のバージョンと変更後のバージョンの間の差分を含むテキストファイルです。通常、`diff`コマンドで生成されます。
+#### Q1. 統合差分（unified diff）とコンテキスト差分（context diff）の違いは何ですか？
+A. 統合差分（diffの`-u`オプション）は、変更された行をコンテキスト付きで`+`と`-`の接頭辞を付けて1つのブロックで表示します。一方、コンテキスト差分は変更前と変更後のブロックを別々に表示します。統合差分はよりコンパクトで、現在一般的に使用されています。
 
-#### Q2. パッチの適用に失敗した場合はどうすればよいですか？
-A. パッチの適用に失敗すると、`.rej`ファイルが作成されます。このファイルを確認して、変更を手動で適用することができます。また、`-f`オプションを使用して強制的に適用することもできますが、注意が必要です。
+#### Q2. 適用したパッチを元に戻すにはどうすればよいですか？
+A. 同じパッチファイルを使用して`patch -R`を実行すると、変更を元に戻すことができます。`-b`でバックアップを作成した場合は、それらから復元することもできます。
 
-#### Q3. パッチを元に戻すにはどうすればよいですか？
-A. `-R`または`--reverse`オプションを使用して、同じパッチファイルで変更を元に戻すことができます。
+#### Q3. 「Hunk #1 FAILED」とはどういう意味ですか？
+A. パッチの一部（ハンク）が適用できなかったことを意味します。通常、パッチが作成された後にターゲットファイルが変更されたために発生します。失敗した変更については`.rej`ファイルを確認してください。
 
-#### Q4. パッチファイルの形式にはどのようなものがありますか？
-A. 一般的なパッチ形式には、コンテキスト形式（`diff -c`）、統一形式（`diff -u`）、通常形式（`diff`）があります。統一形式が最も一般的で推奨されています。
+#### Q4. 複数のファイルにパッチを適用するにはどうすればよいですか？
+A. パッチファイルに複数のファイルの変更が含まれている場合、patchを実行すると自動的にすべての影響を受けるファイルに変更が適用されます。
 
-## 参考
+## 参考資料
 
-https://www.gnu.org/software/diffutils/manual/html_node/Unified-Format.html
+https://www.gnu.org/software/diffutils/manual/html_node/Invoking-patch.html
 
-## Revisions
+## macOSでの注意点
 
-- 2025/04/30 初版作成
+macOSに付属のpatchコマンドはGNU patchとは若干動作が異なる場合があります。特に、パスの扱いやオプションの一部が異なることがあるため、複雑なパッチを適用する場合は注意が必要です。HomebrewなどでインストールしたGNU patchを使用することで、Linux環境と同じ動作を期待できます。
+
+## 改訂履歴
+
+- 2025/05/04 初版作成

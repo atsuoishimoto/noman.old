@@ -49,62 +49,70 @@
   <h1>mv command</h1>
 <p>Move or rename files and directories.</p>
 <h2>Overview</h2>
-<p>The <code>mv</code> command moves files or directories from one location to another, or renames them when the destination is in the same directory. It's one of the core file manipulation commands in Unix-like systems, allowing you to organize your filesystem by relocating files or changing their names.</p>
+<p>The <code>mv</code> command moves files or directories from one location to another or renames them. When moving between filesystems, it copies the source file and deletes the original. It's commonly used for organizing files, backing up data, or simply changing filenames.</p>
 <h2>Options</h2>
-<h3><strong>-i (interactive)</strong></h3>
-<p>Prompts for confirmation before overwriting existing files, helping prevent accidental data loss.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>existing-file.txt
-<span style="color: #000; font-style: italic">mv: overwrite &#39;existing-file.txt&#39;? y</span>
+<h3><strong>-f, --force</strong></h3>
+<p>Overwrite destination files without prompting for confirmation.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>important.txt<span style="color: #F8F8F8"> </span>backup/
 </pre></div>
-<h3><strong>-f (force)</strong></h3>
-<p>Overrides the interactive mode and removes existing destination files without prompting.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>source.txt<span style="color: #F8F8F8"> </span>destination.txt
+<h3><strong>-i, --interactive</strong></h3>
+<p>Prompt before overwriting existing files. This is safer than the default behavior.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>document.txt<span style="color: #F8F8F8"> </span>~/Documents/
+<span style="color: #000; font-style: italic">mv: overwrite &#39;/home/user/Documents/document.txt&#39;? y</span>
 </pre></div>
-<h3><strong>-v (verbose)</strong></h3>
-<p>Displays what is being done, showing the name of each file as it's moved.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>document.txt<span style="color: #F8F8F8"> </span>reports/
-<span style="color: #000; font-style: italic">&#39;document.txt&#39; -&gt; &#39;reports/document.txt&#39;</span>
+<h3><strong>-n, --no-clobber</strong></h3>
+<p>Do not overwrite existing files.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>*.txt<span style="color: #F8F8F8"> </span>backup/
 </pre></div>
-<h3><strong>-n (no-clobber)</strong></h3>
-<p>Prevents overwriting existing files, useful when you want to ensure you don't accidentally replace files.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>important.txt<span style="color: #F8F8F8"> </span>existing-file.txt
+<h3><strong>-u, --update</strong></h3>
+<p>Move only when the source file is newer than the destination file or when the destination file is missing.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>new_version.txt<span style="color: #F8F8F8"> </span>~/Documents/
+</pre></div>
+<h3><strong>-v, --verbose</strong></h3>
+<p>Explain what is being done.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>newname.txt
+<span style="color: #000; font-style: italic">&#39;file.txt&#39; -&gt; &#39;newname.txt&#39;</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Renaming a file</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>oldname.txt<span style="color: #F8F8F8"> </span>newname.txt
 </pre></div>
-<h3>Moving a file to another directory</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>document.txt<span style="color: #F8F8F8"> </span>~/Documents/
-</pre></div>
 <h3>Moving multiple files to a directory</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt<span style="color: #F8F8F8"> </span>target_directory/
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt<span style="color: #F8F8F8"> </span>destination_directory/
 </pre></div>
 <h3>Moving and renaming at the same time</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>~/Downloads/report.pdf<span style="color: #F8F8F8"> </span>~/Documents/quarterly-report.pdf
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>~/Downloads/report.pdf<span style="color: #F8F8F8"> </span>~/Documents/quarterly_report_2025.pdf
+</pre></div>
+<h3>Moving all files of a specific type</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>*.jpg<span style="color: #F8F8F8"> </span>~/Pictures/
 </pre></div>
 <h2>Tips</h2>
-<h3>Use Tab Completion</h3>
-<p>Press Tab while typing file paths to auto-complete names, reducing typing errors and saving time.</p>
-<h3>Check Before Moving</h3>
-<p>When moving important files, use <code>mv -i</code> to get confirmation prompts or first use <code>ls</code> to verify the source and destination.</p>
+<h3>Use Wildcards Carefully</h3>
+<p>When using wildcards with <code>mv</code>, first test with <code>ls</code> using the same pattern to see which files will be affected.</p>
+<h3>Create Target Directories First</h3>
+<p>Ensure the destination directory exists before moving files. If it doesn't, <code>mv</code> will rename your file instead of moving it.</p>
+<h3>Preserve Attributes</h3>
+<p>Use <code>mv -p</code> on some systems to preserve file attributes when moving files.</p>
+<h3>Backup Before Moving</h3>
+<p>For important files, consider using <code>cp</code> to create a backup before moving, especially when moving between filesystems.</p>
 <h3>Moving Hidden Files</h3>
-<p>Remember that wildcards like <code>*</code> don't match hidden files (those starting with a dot). Use <code>mv .*</code> specifically for hidden files or <code>mv -a *</code> for all files including hidden ones.</p>
-<h3>Create Destination Directories First</h3>
-<p>The destination directory must exist before using <code>mv</code>. If it doesn't, <code>mv</code> will treat the destination as a filename instead of a directory.</p>
+<p>Don't forget that <code>mv .*</code> will try to move <code>.</code> and <code>..</code> (current and parent directories), which will fail. Use <code>mv .[a-zA-Z0-9]*</code> instead to move only hidden files.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How do I undo a move operation?</h4>
-<p>A. There's no direct &quot;undo&quot; command. You need to use <code>mv</code> again to move the file back to its original location.</p>
-<h4>Q2. Can I move files between different drives or partitions?</h4>
-<p>A. Yes, but technically <code>mv</code> will copy the file to the new location and then delete the original when moving across filesystems.</p>
-<h4>Q3. How do I rename multiple files at once?</h4>
-<p>A. Basic <code>mv</code> can't rename multiple files with a pattern. For batch renaming, use tools like <code>rename</code> or write a simple loop in your shell.</p>
-<h4>Q4. What happens if I move a file to a location where a file with the same name exists?</h4>
-<p>A. By default, <code>mv</code> overwrites the destination file without warning. Use <code>-i</code> for confirmation prompts or <code>-n</code> to prevent overwriting.</p>
+<h4>Q1. What's the difference between <code>mv</code> and <code>cp</code>?</h4>
+<p>A. <code>mv</code> moves or renames files, removing them from the source location, while <code>cp</code> copies files, leaving the original intact.</p>
+<h4>Q2. How do I move a file without overwriting an existing file?</h4>
+<p>A. Use <code>mv -n source destination</code> to prevent overwriting existing files.</p>
+<h4>Q3. Can I move directories with <code>mv</code>?</h4>
+<p>A. Yes, <code>mv</code> can move entire directories along with their contents.</p>
+<h4>Q4. How do I safely move files without losing data?</h4>
+<p>A. Use <code>mv -i</code> to be prompted before overwriting any existing files.</p>
+<h4>Q5. Why does <code>mv</code> sometimes take longer between different filesystems?</h4>
+<p>A. When moving between different filesystems, <code>mv</code> must copy the data and then delete the original, which takes longer than simply updating directory entries.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/mv-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

@@ -4,7 +4,7 @@ Read from standard input and write to both standard output and files.
 
 ## Overview
 
-The `tee` command reads from standard input and writes to both standard output and one or more files simultaneously. It's commonly used in command pipelines to capture output while still allowing it to continue through the pipeline. Think of it like a T-shaped pipe fitting in plumbing, where the flow splits in two directions.
+The `tee` command reads from standard input and writes to both standard output and one or more files simultaneously. This allows you to view command output in the terminal while also saving it to a file. It's commonly used in pipelines to capture intermediate results.
 
 ## Options
 
@@ -19,11 +19,57 @@ Additional line
 
 ### **-i, --ignore-interrupts**
 
-Ignore interrupt signals (useful for ensuring data is written even if the process is interrupted)
+Ignore interrupt signals (SIGINT)
 
 ```console
-$ long_running_command | tee -i log.txt
-[output continues while being saved to log.txt]
+$ long_running_command | tee -i output.log
+```
+
+### **--help**
+
+Display help information and exit
+
+```console
+$ tee --help
+Usage: tee [OPTION]... [FILE]...
+Copy standard input to each FILE, and also to standard output.
+
+  -a, --append              append to the given FILEs, do not overwrite
+  -i, --ignore-interrupts   ignore interrupt signals
+  -p                        diagnose errors writing to non pipes
+      --output-error[=MODE]   set behavior on write error.  See MODE below
+      --help     display this help and exit
+      --version  output version information and exit
+
+MODE determines behavior with write errors on the outputs:
+  'warn'         diagnose errors writing to any output
+  'warn-nopipe'  diagnose errors writing to any output not a pipe
+  'exit'         exit on error writing to any output
+  'exit-nopipe'  exit on error writing to any output not a pipe
+The default MODE for the -p option is 'warn-nopipe'.
+The default operation when --output-error is not specified, is to
+exit immediately on error writing to a pipe, and diagnose errors
+writing to non pipe outputs.
+
+GNU coreutils online help: <https://www.gnu.org/software/coreutils/>
+Report any translation bugs to <https://translationproject.org/team/>
+Full documentation <https://www.gnu.org/software/coreutils/tee>
+or available locally via: info '(coreutils) tee invocation'
+```
+
+### **--version**
+
+Output version information and exit
+
+```console
+$ tee --version
+tee (GNU coreutils) 9.0
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Mike Parker, Richard M. Stallman, and David MacKenzie.
 ```
 
 ## Usage Examples
@@ -31,71 +77,71 @@ $ long_running_command | tee -i log.txt
 ### Basic Usage
 
 ```console
-$ echo "Hello, world!" | tee output.txt
-Hello, world!
+$ ls -l | tee file_list.txt
+total 16
+-rw-r--r-- 1 user group 1024 May 4 10:30 document.txt
+drwxr-xr-x 2 user group 4096 May 3 15:45 projects
 ```
-This writes "Hello, world!" to both the terminal and the file output.txt.
 
 ### Writing to Multiple Files
 
 ```console
-$ echo "Same content in multiple files" | tee file1.txt file2.txt file3.txt
-Same content in multiple files
+$ echo "Hello, World!" | tee file1.txt file2.txt file3.txt
+Hello, World!
 ```
-This writes the same content to three different files while also displaying it on the terminal.
 
-### Capturing Command Output While Using It
+### Combining with sudo
 
 ```console
-$ ls -la | tee file_listing.txt | grep ".txt"
--rw-r--r--  1 user  staff   15 Apr 30 10:23 file1.txt
--rw-r--r--  1 user  staff   15 Apr 30 10:23 file2.txt
--rw-r--r--  1 user  staff   15 Apr 30 10:23 file3.txt
--rw-r--r--  1 user  staff   28 Apr 30 10:23 file_listing.txt
-```
-This lists all files, saves the complete listing to file_listing.txt, and then filters to show only .txt files on the screen.
-
-## Tips:
-
-### Use with sudo
-
-When you need to view and save output that requires elevated privileges, `tee` can help:
-
-```console
-$ sudo command | tee output.txt
+$ cat config.txt | sudo tee /etc/app/config.txt > /dev/null
 ```
 
-This runs the command with sudo but writes the output to a file owned by your user (not root).
-
-### Combining with Other Commands
-
-`tee` works well in complex pipelines. For example, to process data, save an intermediate result, and continue processing:
-
-```console
-$ cat data.txt | sort | tee sorted.txt | uniq > unique.txt
-```
-
-### Logging and Debugging
-
-Use `tee` to log command output while still seeing it in real-time, which is helpful for debugging:
+### Capturing Command Output While Viewing It
 
 ```console
 $ make | tee build.log
+[compilation output appears here and is also saved to build.log]
+```
+
+## Tips:
+
+### Use with sudo to Edit Protected Files
+
+When you need to edit a file that requires elevated privileges, you can use `tee` with `sudo` to write to the file:
+
+```console
+$ echo "new content" | sudo tee /etc/protected_file.txt
+```
+
+### Discard Standard Output
+
+If you only want to write to files without seeing the output in the terminal, redirect standard output to `/dev/null`:
+
+```console
+$ command | tee output.txt > /dev/null
+```
+
+### Capture Both stdout and stderr
+
+To capture both standard output and standard error:
+
+```console
+$ command 2>&1 | tee output.log
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. What does the name "tee" mean?
-A. The name comes from the T-shaped pipe fitting in plumbing, which splits flow in two directions, similar to how the command splits output to both the screen and files.
+#### Q1. What's the difference between `tee` and simple redirection (`>`)?
+A. While redirection (`>`) only writes output to a file, `tee` writes to both the file and standard output, allowing you to see the output in the terminal while saving it.
 
-#### Q2. How is `tee` different from redirection with `>`?
-A. While `command > file` redirects output only to a file (not showing it on screen), `command | tee file` shows the output on screen while also saving it to a file.
+#### Q2. How do I append to a file instead of overwriting it?
+A. Use the `-a` option: `command | tee -a file.txt`
 
-#### Q3. Can I use `tee` with sudo to write to protected files?
-A. Yes. `command | sudo tee /protected/file` allows you to write to files that require elevated privileges.
+#### Q3. Can I write to multiple files at once?
+A. Yes, simply list all the files: `command | tee file1.txt file2.txt file3.txt`
 
-#### Q4. Does `tee` overwrite existing files?
-A. By default, yes. Use `tee -a` to append to files instead of overwriting them.
+#### Q4. How do I use `tee` to write to a file that requires root permissions?
+A. Combine with sudo: `command | sudo tee /path/to/file > /dev/null`
 
 ## References
 
@@ -103,4 +149,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/tee-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

@@ -1,40 +1,49 @@
 # awk command
 
-Process text files line by line, applying pattern-matching and transformations.
+Pattern scanning and processing language for text files.
 
 ## Overview
 
-`awk` is a powerful text processing tool that treats each line of input as a record and each word as a field. It allows you to search for specific patterns in files and perform actions on matching lines. `awk` is particularly useful for extracting and manipulating structured data, generating reports, and transforming text files.
+`awk` is a powerful text processing tool that scans files line by line, splits each line into fields, and performs operations on those fields based on patterns and actions. It's particularly useful for extracting specific columns from structured text, generating reports, and transforming data. `awk` treats each line as a record and each word as a field, making it ideal for working with CSV files, logs, and other structured text data.
 
 ## Options
 
-### **-F** (Field Separator)
+### **-F fs, --field-separator fs**
 
-Specifies the character or regular expression used to separate fields
+Specify the field separator (default is whitespace)
 
 ```console
 $ echo "apple,orange,banana" | awk -F, '{print $2}'
 orange
 ```
 
-### **-v** (Variable Assignment)
+### **-f file, --file file**
 
-Assigns a value to an `awk` variable before processing begins
+Read the AWK program from a file instead of the command line
+
+```console
+$ cat script.awk
+{print $1}
+$ awk -f script.awk data.txt
+[first field of each line in data.txt]
+```
+
+### **-v var=val, --assign var=val**
+
+Assign a value to a variable before program execution begins
 
 ```console
 $ awk -v name="John" '{print "Hello, " name "!"}'
 Hello, John!
 ```
 
-### **-f** (File)
+### **-W version, --version**
 
-Reads the `awk` program from a file instead of from the command line
+Display version information and exit
 
 ```console
-$ cat script.awk
-{print $1}
-$ echo "hello world" | awk -f script.awk
-hello
+$ awk --version
+GNU Awk 5.1.0, API: 3.0 (GNU MPFR 4.1.0, GNU MP 6.2.1)
 ```
 
 ## Usage Examples
@@ -46,76 +55,70 @@ $ echo "John Smith 42" | awk '{print $1, $2}'
 John Smith
 ```
 
-### Pattern Matching
+### Filtering Lines with Pattern Matching
 
 ```console
 $ cat /etc/passwd | awk -F: '/root/ {print $1, $6}'
 root /root
 ```
 
-### Calculations with Fields
+### Calculating Sums
 
 ```console
-$ cat data.txt
-Item1 10 5
-Item2 15 3
-Item3 20 8
-$ awk '{print $1, $2 * $3}' data.txt
-Item1 50
-Item2 45
-Item3 160
+$ cat numbers.txt
+10
+20
+30
+$ awk '{sum += $1} END {print "Sum:", sum}' numbers.txt
+Sum: 60
 ```
 
-### Built-in Variables
+### Processing CSV Data
 
 ```console
-$ cat names.txt
-Alice
-Bob
-Charlie
-$ awk '{print NR ": " $1}' names.txt
-1: Alice
-2: Bob
-3: Charlie
+$ cat data.csv
+Name,Age,City
+John,25,New York
+Mary,30,Boston
+$ awk -F, 'NR>1 {print "Name: " $1 ", Age: " $2}' data.csv
+Name: John, Age: 25
+Name: Mary, Age: 30
 ```
 
 ## Tips
 
-### Understanding Field Variables
+### Built-in Variables
 
-In `awk`, `$1` refers to the first field, `$2` to the second, and so on. `$0` represents the entire line. This makes extracting specific columns of data very straightforward.
-
-### Using BEGIN and END Blocks
-
-The `BEGIN` block executes before processing any input, and the `END` block executes after all input is processed. These are useful for initialization and summary operations:
-
-```console
-$ awk 'BEGIN {sum=0} {sum+=$1} END {print "Sum:", sum}' numbers.txt
-Sum: 156
-```
+`awk` has several built-in variables: `NR` (current record number), `NF` (number of fields in current record), `FS` (field separator), and `OFS` (output field separator). Use them to simplify your scripts.
 
 ### Multiple Commands
 
-Separate multiple commands with semicolons within the action block:
+Separate multiple commands with semicolons: `awk '{count++; sum+=$1} END {print "Average:", sum/count}'`
 
-```console
-$ awk '{count++; sum+=$1} END {print "Count:", count, "Average:", sum/count}' data.txt
-Count: 10 Average: 15.6
-```
+### Regular Expressions
+
+`awk` supports powerful regular expressions for pattern matching: `awk '/^[0-9]+$/ {print "Number:", $0}'` matches lines containing only numbers.
+
+### BEGIN and END Blocks
+
+Use `BEGIN` for initialization and `END` for final processing: `awk 'BEGIN {print "Start"} {print $1} END {print "Done"}'`
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `awk`, `sed`, and `grep`?
-A. While `grep` searches for patterns, and `sed` performs text substitutions, `awk` is designed for structured data processing with fields and records, making it more powerful for complex text manipulation.
+#### Q1. How do I print specific columns from a file?
+A. Use `awk '{print $n}'` where n is the column number. For example, `awk '{print $1, $3}'` prints the first and third columns.
 
-#### Q2. How do I use regular expressions in `awk`?
-A. Regular expressions are placed between slashes: `awk '/pattern/ {action}'`. For example, `awk '/^[0-9]+/ {print $0}'` prints lines starting with numbers.
+#### Q2. How can I change the field separator?
+A. Use the `-F` option: `awk -F, '{print $1}'` uses a comma as the field separator.
 
-#### Q3. Can `awk` read from multiple files?
-A. Yes, simply list the files after the `awk` command: `awk '{print $1}' file1.txt file2.txt`.
+#### Q3. How do I perform calculations on numeric fields?
+A. Use arithmetic operators: `awk '{sum+=$1} END {print sum}'` calculates the sum of the first column.
 
-#### Q4. How do I format output in `awk`?
-A. Use `printf` for formatted output: `awk '{printf "%-10s %5d\n", $1, $2}'` creates columns with specific widths.
+#### Q4. Can I use if-else statements in awk?
+A. Yes, `awk` supports conditional statements: `awk '{if ($1 > 10) print "Large"; else print "Small"}'`
+
+#### Q5. How do I process only certain lines?
+A. Use patterns: `awk 'NR > 1 {print}'` skips the first line, or `awk '/pattern/ {print}'` processes only lines matching a pattern.
 
 ## References
 
@@ -123,4 +126,4 @@ https://www.gnu.org/software/gawk/manual/gawk.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

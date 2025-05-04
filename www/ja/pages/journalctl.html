@@ -47,91 +47,103 @@
     <main>
       
   <h1>journalctl コマンド</h1>
-<p>システムログを表示・管理するためのコマンドです。</p>
+<p>systemdジャーナルからメッセージを検索して表示します。</p>
 <h2>概要</h2>
-<p><code>journalctl</code> は systemd のジャーナルログを閲覧するためのコマンドです。システムの起動メッセージ、サービスのログ、カーネルメッセージなど、システム全体のログを時系列で表示します。デフォルトでは、すべてのログエントリを表示しますが、様々なオプションを使用して特定のサービス、時間範囲、優先度などでフィルタリングすることができます。</p>
+<p><code>journalctl</code>は、systemdジャーナルログを表示・検索するためのコマンドラインユーティリティです。systemdジャーナルは、カーネル、システムサービス、アプリケーションなど様々なソースからログデータを収集・保存する集中型ログシステムです。システムの問題をトラブルシューティングするための強力なフィルタリング機能を提供しています。</p>
 <h2>オプション</h2>
 <h3><strong>-f, --follow</strong></h3>
-<p>リアルタイムでログを追跡表示します（tail -f のような動作）</p>
+<p>リアルタイムでジャーナルを追跡します（<code>tail -f</code>と同様）</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-f
-<span style="color: #000; font-style: italic">4月 30 10:15:23 hostname systemd[1]: Started User Manager for UID 1000.</span>
-<span style="color: #000; font-style: italic">4月 30 10:15:24 hostname sshd[1234]: Accepted publickey for user from 192.168.1.10 port 54321</span>
-<span style="color: #000; font-style: italic">4月 30 10:15:25 hostname sudo[1235]: user : TTY=pts/0 ; PWD=/home/user ; USER=root ; COMMAND=/bin/systemctl restart nginx</span>
-<span style="color: #000; font-style: italic">-- ログが追加されるたびに表示が更新される --</span>
+<span style="color: #000; font-style: italic">May 04 14:32:15 hostname systemd[1]: Started Daily apt download activities.</span>
+<span style="color: #000; font-style: italic">May 04 14:32:16 hostname CRON[12345]: (root) CMD (command being executed)</span>
+<span style="color: #000; font-style: italic">May 04 14:32:20 hostname sshd[12346]: Accepted publickey for user from 192.168.1.10</span>
 </pre></div>
-<h3><strong>-u, --unit=</strong></h3>
-<p>特定のサービスユニットのログのみを表示します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>nginx.service
-<span style="color: #000; font-style: italic">4月 29 08:30:12 hostname systemd[1]: Starting A high performance web server and a reverse proxy server...</span>
-<span style="color: #000; font-style: italic">4月 29 08:30:12 hostname systemd[1]: Started A high performance web server and a reverse proxy server.</span>
-<span style="color: #000; font-style: italic">4月 30 10:15:26 hostname systemd[1]: Restarting A high performance web server and a reverse proxy server...</span>
-<span style="color: #000; font-style: italic">4月 30 10:15:26 hostname systemd[1]: Started A high performance web server and a reverse proxy server.</span>
+<h3><strong>-u, --unit=UNIT</strong></h3>
+<p>特定のsystemdユニット（サービス）のログを表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>ssh
+<span style="color: #000; font-style: italic">May 03 09:15:22 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.</span>
+<span style="color: #000; font-style: italic">May 03 09:15:22 hostname sshd[1234]: Server listening on :: port 22.</span>
+<span style="color: #000; font-style: italic">May 04 10:23:45 hostname sshd[5678]: Accepted password for user from 192.168.1.5</span>
 </pre></div>
-<h3><strong>-b, --boot</strong></h3>
-<p>現在の起動セッションのログのみを表示します</p>
+<h3><strong>-b, --boot[=ID]</strong></h3>
+<p>現在の起動時または特定の起動時のログを表示します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-b
-<span style="color: #000; font-style: italic">4月 30 08:00:01 hostname kernel: Linux version 5.15.0-25-generic (gcc version 11.2.0)</span>
-<span style="color: #000; font-style: italic">4月 30 08:00:02 hostname systemd[1]: Detected virtualization kvm.</span>
-<span style="color: #000; font-style: italic">4月 30 08:00:03 hostname systemd[1]: Detected architecture x86-64.</span>
-<span style="color: #000; font-style: italic">-- 現在の起動セッションのログが表示される --</span>
+<span style="color: #000; font-style: italic">[最新の起動以降のすべてのログを表示]</span>
+
+<span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-1
+<span style="color: #000; font-style: italic">[前回の起動時のログを表示]</span>
 </pre></div>
-<h3><strong>--since=, --until=</strong></h3>
-<p>指定した時間範囲のログを表示します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>--since<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;2025-04-30 09:00:00&quot;</span><span style="color: #F8F8F8"> </span>--until<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;2025-04-30 10:00:00&quot;</span>
-<span style="color: #000; font-style: italic">4月 30 09:00:05 hostname systemd[1]: Started Daily apt download activities.</span>
-<span style="color: #000; font-style: italic">4月 30 09:15:01 hostname CRON[1234]: (root) CMD (command -v debian-sa1 &gt; /dev/null &amp;&amp; debian-sa1 1 1)</span>
-<span style="color: #000; font-style: italic">4月 30 09:45:23 hostname sshd[1235]: Accepted publickey for user from 192.168.1.10 port 54321</span>
-<span style="color: #000; font-style: italic">-- 指定した時間範囲のログが表示される --</span>
+<h3><strong>-n, --lines=N</strong></h3>
+<p>最新のN行のログを表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">May 04 14:45:10 hostname systemd[1]: Starting Daily apt upgrade and clean activities...</span>
+<span style="color: #000; font-style: italic">May 04 14:45:11 hostname systemd[1]: Started Daily apt upgrade and clean activities.</span>
+<span style="color: #000; font-style: italic">May 04 14:45:12 hostname CRON[12347]: (root) CMD (apt-get update)</span>
+<span style="color: #000; font-style: italic">May 04 14:45:15 hostname kernel: [12345.678901] USB disconnect, device number 5</span>
+<span style="color: #000; font-style: italic">May 04 14:45:20 hostname NetworkManager[789]: Connectivity established</span>
 </pre></div>
-<h3><strong>-p, --priority=</strong></h3>
-<p>指定した優先度以上のログを表示します（0=emerg, 1=alert, 2=crit, 3=err, 4=warning, 5=notice, 6=info, 7=debug）</p>
+<h3><strong>--since=DATE, --until=DATE</strong></h3>
+<p>指定した日時より新しいまたは古いエントリを表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>--since<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;2025-05-03 10:00:00&quot;</span><span style="color: #F8F8F8"> </span>--until<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;2025-05-03 11:00:00&quot;</span>
+<span style="color: #000; font-style: italic">[2025年5月3日の午前10時から11時までのログを表示]</span>
+</pre></div>
+<h3><strong>-p, --priority=PRIORITY</strong></h3>
+<p>メッセージの優先度でフィルタリングします（0-7または「err」などの名前）</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>err
-<span style="color: #000; font-style: italic">4月 29 15:45:12 hostname kernel: CPU: 0 PID: 1234 Comm: process Tainted: G        W  5.15.0-25-generic</span>
-<span style="color: #000; font-style: italic">4月 30 02:30:45 hostname nginx[5678]: [error] 5678#5678: *1 open() &quot;/var/www/html/favicon.ico&quot; failed (2: No such file or directory)</span>
-<span style="color: #000; font-style: italic">-- エラー以上の重要度のログのみ表示される --</span>
+<span style="color: #000; font-style: italic">May 02 15:30:45 hostname kernel: [12345.678901] CPU: 2 PID: 1234 Comm: process Tainted: G        W  5.15.0-91-generic</span>
+<span style="color: #000; font-style: italic">May 03 08:12:33 hostname application[5678]: Error: Failed to connect to database</span>
+<span style="color: #000; font-style: italic">May 04 02:45:12 hostname systemd[1]: Failed to start Apache Web Server.</span>
+</pre></div>
+<h3><strong>-o, --output=FORMAT</strong></h3>
+<p>出力形式を制御します（short、verbose、jsonなど）</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>json<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>
+<span style="color: #000; font-style: italic">{&quot;_BOOT_ID&quot;:&quot;abcdef123456789&quot;,&quot;_MACHINE_ID&quot;:&quot;fedcba987654321&quot;,&quot;MESSAGE&quot;:&quot;System startup complete&quot;,&quot;PRIORITY&quot;:&quot;6&quot;,&quot;SYSLOG_FACILITY&quot;:&quot;3&quot;,&quot;SYSLOG_IDENTIFIER&quot;:&quot;systemd&quot;,&quot;_UID&quot;:&quot;0&quot;,&quot;_GID&quot;:&quot;0&quot;,&quot;_COMM&quot;:&quot;systemd&quot;,&quot;_PID&quot;:&quot;1&quot;,&quot;_SOURCE_REALTIME_TIMESTAMP&quot;:&quot;1714896000000000&quot;}</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>特定のプロセスIDのログを表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span><span style="color: #000">_PID</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1234</span>
-<span style="color: #000; font-style: italic">4月 30 10:15:24 hostname sshd[1234]: Accepted publickey for user from 192.168.1.10 port 54321</span>
-<span style="color: #000; font-style: italic">4月 30 10:20:15 hostname sshd[1234]: Received disconnect from 192.168.1.10 port 54321:11: disconnected by user</span>
-<span style="color: #000; font-style: italic">4月 30 10:20:15 hostname sshd[1234]: Disconnected from user 192.168.1.10 port 54321</span>
+<h3>特定の期間のログを表示する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>--since<span style="color: #F8F8F8"> </span>yesterday<span style="color: #F8F8F8"> </span>--until<span style="color: #F8F8F8"> </span>today
+<span style="color: #000; font-style: italic">[昨日から今日の現在時刻までのすべてのログを表示]</span>
 </pre></div>
-<h3>最新の起動から特定のサービスのログを表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>ssh.service
-<span style="color: #000; font-style: italic">4月 30 08:00:45 hostname systemd[1]: Starting OpenBSD Secure Shell server...</span>
-<span style="color: #000; font-style: italic">4月 30 08:00:46 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.</span>
-<span style="color: #000; font-style: italic">4月 30 08:00:46 hostname sshd[1234]: Server listening on :: port 22.</span>
-<span style="color: #000; font-style: italic">4月 30 08:00:46 hostname systemd[1]: Started OpenBSD Secure Shell server.</span>
+<h3>実行ファイルでログをフィルタリングする</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span><span style="color: #000">_COMM</span><span style="color: #CE5C00; font-weight: bold">=</span>sshd
+<span style="color: #000; font-style: italic">May 01 08:15:22 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.</span>
+<span style="color: #000; font-style: italic">May 01 08:15:22 hostname sshd[1234]: Server listening on :: port 22.</span>
+<span style="color: #000; font-style: italic">May 02 14:23:45 hostname sshd[5678]: Accepted publickey for user from 192.168.1.10</span>
 </pre></div>
-<h3>ログの出力形式を変更（JSON形式）</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>ssh.service<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>json
-<span style="color: #000; font-style: italic">{&quot;_HOSTNAME&quot;:&quot;hostname&quot;,&quot;_SYSTEMD_UNIT&quot;:&quot;ssh.service&quot;,&quot;MESSAGE&quot;:&quot;Starting OpenBSD Secure Shell server...&quot;,&quot;__REALTIME_TIMESTAMP&quot;:&quot;1714521645000000&quot;}</span>
-<span style="color: #000; font-style: italic">{&quot;_HOSTNAME&quot;:&quot;hostname&quot;,&quot;_SYSTEMD_UNIT&quot;:&quot;ssh.service&quot;,&quot;MESSAGE&quot;:&quot;Server listening on 0.0.0.0 port 22.&quot;,&quot;__REALTIME_TIMESTAMP&quot;:&quot;1714521646000000&quot;}</span>
+<h3>複数のフィルターを組み合わせる</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>nginx<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>err<span style="color: #F8F8F8"> </span>--since<span style="color: #F8F8F8"> </span>today
+<span style="color: #000; font-style: italic">May 04 03:15:22 hostname nginx[1234]: 2025/05/04 03:15:22 [error] 1234#0: *123 open() &quot;/var/www/html/favicon.ico&quot; failed (2: No such file or directory)</span>
+</pre></div>
+<h3>カーネルメッセージを表示する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-k
+<span style="color: #000; font-style: italic">May 04 00:00:01 hostname kernel: Linux version 5.15.0-91-generic (buildd@ubuntu) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0)</span>
+<span style="color: #000; font-style: italic">May 04 00:00:01 hostname kernel: Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-91-generic root=UUID=abcdef-1234-5678 ro quiet splash</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>ディスク使用量の確認と管理</h3>
-<p><code>journalctl --disk-usage</code> でジャーナルが使用しているディスク容量を確認できます。容量を節約するには <code>sudo journalctl --vacuum-size=500M</code> のようにして古いログを削除できます。</p>
-<h3>カーネルメッセージの確認</h3>
-<p><code>journalctl -k</code> または <code>journalctl --dmesg</code> でカーネルメッセージのみを表示できます。これはシステムの問題を診断する際に役立ちます。</p>
-<h3>出力のページャーを無効化</h3>
-<p><code>journalctl --no-pager</code> を使用すると、lessなどのページャーを使わずに出力を直接表示します。これはログをファイルにリダイレクトする場合に便利です。</p>
-<h3>出力形式のカスタマイズ</h3>
-<p><code>-o</code> オプションで出力形式を変更できます。例えば <code>journalctl -o json</code> でJSON形式、<code>-o short-precise</code> で精密なタイムスタンプ付きの短い形式で表示できます。</p>
+<h3>ページャーコントロールを使用する</h3>
+<p>大量のログを表示する際、journalctlはページャー（lessのような）を使用します。<code>/パターン</code>で検索、<code>n</code>で次の一致、<code>g</code>で先頭へ移動、<code>G</code>で末尾へ移動、<code>q</code>で終了できます。</p>
+<h3>永続的なジャーナルストレージ</h3>
+<p>デフォルトでは、ジャーナルログはメモリにのみ保存される場合があります。再起動後もログを保持するには、<code>/etc/systemd/journald.conf</code>に<code>Storage=persistent</code>が設定されていることと、<code>/var/log/journal/</code>ディレクトリが存在することを確認してください。</p>
+<h3>ディスク容量の管理</h3>
+<p>ジャーナルログは大量のディスク容量を消費する可能性があります。<code>journalctl --disk-usage</code>で使用容量を確認し、<code>journalctl --vacuum-size=1G</code>でジャーナルサイズを1GBに制限できます。</p>
+<h3>分析用にログをエクスポートする</h3>
+<p><code>journalctl -o export</code>を使用してログをエクスポートし、別のマシンに転送して<code>journalctl --file=exported.journal</code>でインポートすることができます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. journalctlとsyslogの違いは何ですか？</h4>
-<p>A. journalctlはsystemdのジャーナルシステムを使用し、バイナリ形式で構造化されたログを保存します。従来のsyslogはテキストファイルベースです。journalctlはより多くのメタデータを保持し、検索やフィルタリングが容易です。</p>
-<h4>Q2. ログはどこに保存されていますか？</h4>
-<p>A. ジャーナルログは通常 <code>/var/log/journal/</code> ディレクトリに保存されています。ただし、設定によっては <code>/run/log/journal/</code>（揮発性）に保存される場合もあります。</p>
-<h4>Q3. 古いログを削除するにはどうすればよいですか？</h4>
-<p>A. <code>sudo journalctl --vacuum-time=1month</code>（1ヶ月より古いログを削除）や <code>sudo journalctl --vacuum-size=1G</code>（ログサイズを1GBに制限）などのコマンドを使用できます。</p>
-<h4>Q4. 特定のユーザーのログだけを見るにはどうすればよいですか？</h4>
-<p>A. <code>journalctl _UID=1000</code> のように、ユーザーIDを指定してフィルタリングできます。</p>
-<h2>参考</h2>
+<h4>Q1. 現在の起動時のログだけを見るにはどうすればよいですか？</h4>
+<p>A. <code>journalctl -b</code>を使用すると、現在の起動時のログのみを表示できます。</p>
+<h4>Q2. 特定のサービスのログを見るにはどうすればよいですか？</h4>
+<p>A. <code>journalctl -u サービス名</code>を使用します。例えば、SSHサービスのログを見るには<code>journalctl -u ssh</code>を使用します。</p>
+<h4>Q3. 重要度レベルでログをフィルタリングするにはどうすればよいですか？</h4>
+<p>A. <code>journalctl -p 優先度</code>を使用します。優先度は数字（0-7）または名前（emerg、alert、crit、err、warning、notice、info、debug）で指定できます。</p>
+<h4>Q4. 古いジャーナルログをクリアするにはどうすればよいですか？</h4>
+<p>A. <code>journalctl --vacuum-time=2d</code>で2日より古いエントリを削除するか、<code>journalctl --vacuum-size=500M</code>で合計サイズを500MBに制限できます。</p>
+<h4>Q5. リアルタイムでログを追跡するにはどうすればよいですか？</h4>
+<p>A. <code>journalctl -f</code>を使用すると、<code>tail -f</code>と同様に、書き込まれるログをリアルタイムで追跡できます。</p>
+<h2>参考資料</h2>
 <p>https://www.freedesktop.org/software/systemd/man/journalctl.html</p>
-<h2>改訂</h2>
+<h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

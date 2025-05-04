@@ -1,108 +1,142 @@
 # dirname コマンド
 
-パス名からディレクトリ部分を抽出します。
+パス名からディレクトリ部分を出力します。
 
 ## 概要
 
-`dirname` コマンドは、ファイルパスからディレクトリ部分のみを取り出すためのユーティリティです。ファイルパスの最後のスラッシュ（/）より前の部分を出力します。スクリプト内でファイルのディレクトリパスを取得する際によく使用されます。
+`dirname` コマンドはパス名から最後のコンポーネント（ファイル名部分）を削除し、ディレクトリパスのみを残します。シェルスクリプトでファイルパスからディレクトリ部分を抽出するために一般的に使用され、ファイルの場所に移動したり、同じディレクトリ内のファイルを処理したりする際に役立ちます。
 
 ## オプション
 
 ### **-z, --zero**
 
-出力の区切り文字として改行ではなくNULL文字を使用します。
+各パス名の後に改行ではなくゼロバイト（ASCII NUL）を出力します。
 
 ```console
-$ dirname -z /usr/bin/file1 /usr/bin/file2
-/usr/bin/usr/bin
+$ dirname -z /usr/bin/zip
+/usr/bin$
 ```
 
-これは実際には2つのパスが連続して出力されています（NULLバイトで区切られているため表示されません）。
+注意: 出力は `$` プロンプトで終わるように見えますが、実際には改行の代わりにヌル文字が含まれています。
+
+### **--help**
+
+ヘルプメッセージを表示して終了します。
+
+```console
+$ dirname --help
+Usage: dirname [OPTION] NAME...
+Output each NAME with its last non-slash component and trailing slashes
+removed; if NAME contains no /'s, output '.' (meaning the current directory).
+
+  -z, --zero     end each output line with NUL, not newline
+      --help     display this help and exit
+      --version  output version information and exit
+
+Examples:
+  dirname /usr/bin/          -> "/usr"
+  dirname dir1/str dir2/str  -> "dir1" followed by "dir2"
+  dirname stdio.h            -> "."
+```
+
+### **--version**
+
+バージョン情報を出力して終了します。
+
+```console
+$ dirname --version
+dirname (GNU coreutils) 8.32
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by David MacKenzie.
+```
 
 ## 使用例
 
-### 基本的な使用方法
+### 基本的な使い方
 
 ```console
-$ dirname /usr/bin/bash
+$ dirname /usr/bin/zip
 /usr/bin
 ```
 
-### 複数のパスを処理する
+### 複数の引数
 
 ```console
-$ dirname /usr/bin/bash /etc/passwd /home/user/file.txt
+$ dirname /usr/bin/zip /etc/passwd /home/user/file.txt
 /usr/bin
 /etc
 /home/user
 ```
 
-### 相対パスでの使用
-
-```console
-$ dirname dir1/dir2/file.txt
-dir1/dir2
-```
-
-### カレントディレクトリのファイル
+### カレントディレクトリ
 
 ```console
 $ dirname file.txt
 .
 ```
 
-### スクリプト内での使用例
+### シェルスクリプトでの使用
 
 ```console
 $ script_dir=$(dirname "$0")
-$ echo "このスクリプトは $script_dir ディレクトリにあります"
-このスクリプトは . ディレクトリにあります
+$ echo "このスクリプトの場所: $script_dir"
+このスクリプトの場所: .
 ```
 
 ## ヒント:
 
-### スクリプトの場所を特定する
+### basename と組み合わせる
 
-シェルスクリプト内で `dirname "$0"` を使用すると、スクリプト自体が存在するディレクトリを取得できます。これはスクリプトと同じディレクトリにある設定ファイルやリソースにアクセスする際に便利です。
-
-### 絶対パスへの変換
-
-`dirname` と `cd` を組み合わせることで、相対パスを絶対パスに変換できます：
+`dirname` と `basename` を一緒に使用して、パスをディレクトリとファイル名のコンポーネントに分割できます：
 
 ```console
-$ cd $(dirname "/relative/path/file") && pwd
-```
-
-### パス操作の組み合わせ
-
-`dirname` と `basename` を組み合わせると、パスを効果的に操作できます：
-
-```console
-$ path="/usr/local/bin/script.sh"
+$ path="/home/user/documents/report.pdf"
 $ dir=$(dirname "$path")
 $ file=$(basename "$path")
 $ echo "ディレクトリ: $dir, ファイル: $file"
-ディレクトリ: /usr/local/bin, ファイル: script.sh
+ディレクトリ: /home/user/documents, ファイル: report.pdf
+```
+
+### 変数は常に引用符で囲む
+
+スクリプトで変数と共に `dirname` を使用する場合、スペースを含むパスを正しく処理するために、常に変数を引用符で囲みましょう：
+
+```console
+$ path="/home/user/my documents/report.pdf"
+$ dirname "$path"  # 正しい方法
+/home/user/my documents
+```
+
+### コマンド置換での使用
+
+`dirname` の出力をコマンド置換で取得して、ファイルのディレクトリに移動できます：
+
+```console
+$ cd "$(dirname "/path/to/file.txt")"
 ```
 
 ## よくある質問
 
-#### Q1. `dirname` と `basename` の違いは何ですか？
-A. `dirname` はパスからディレクトリ部分を抽出し、`basename` はファイル名部分を抽出します。例えば、`/path/to/file.txt` に対して、`dirname` は `/path/to` を返し、`basename` は `file.txt` を返します。
+#### Q1. パスなしのファイル名を渡すと `dirname` は何を返しますか？
+A. `.`（カレントディレクトリ）を返します。
 
-#### Q2. `dirname` はファイルの存在を確認しますか？
-A. いいえ、`dirname` は単に文字列操作を行うだけで、実際のファイルシステムにアクセスしません。存在しないパスでも処理できます。
+#### Q2. `dirname` は一度に複数のパスを処理できますか？
+A. はい、複数の引数を渡すことができ、それぞれを個別に処理します。
 
-#### Q3. スラッシュだけのパスを処理するとどうなりますか？
-A. ルートディレクトリ（`/`）を処理すると、`dirname` は `/` を返します。
+#### Q3. `dirname` は末尾のスラッシュをどのように処理しますか？
+A. 処理前に末尾のスラッシュを削除するので、`/usr/bin/` は `/usr` になります。
 
-#### Q4. 末尾にスラッシュがあるパスはどう処理されますか？
-A. 末尾のスラッシュは無視されます。例えば、`/usr/bin/` と `/usr/bin` は同じ結果（`/usr`）になります。
+#### Q4. `dirname` と `basedir` の違いは何ですか？
+A. 標準的なUnixコマンドとして `basedir` は存在しません。おそらく `basename` のことを指していると思われます。`basename` はパスからファイル名部分を抽出し、`dirname` はディレクトリ部分を抽出します。
 
-## 参照
+## 参考資料
 
 https://www.gnu.org/software/coreutils/manual/html_node/dirname-invocation.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

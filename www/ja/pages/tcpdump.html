@@ -47,99 +47,114 @@
     <main>
       
   <h1>tcpdump コマンド</h1>
-<p>ネットワークパケットをキャプチャして分析するためのコマンドラインツール。</p>
+<p>ネットワークトラフィックをキャプチャして分析するツール。</p>
 <h2>概要</h2>
-<p><code>tcpdump</code>は、ネットワークインターフェイスを通過するパケットをキャプチャし、表示するためのパワフルなコマンドラインツールです。ネットワークのトラブルシューティングやセキュリティ分析、ネットワークトラフィックの監視に非常に役立ちます。特定のホスト、ポート、プロトコルに基づいてパケットをフィルタリングする機能も備えています。</p>
+<p><code>tcpdump</code> は強力なコマンドラインパケットアナライザで、ネットワークインターフェースを通じて送受信されるネットワークパケットをキャプチャして表示することができます。ネットワークのトラブルシューティング、セキュリティ分析、ネットワークアクティビティの監視によく使用されます。このツールは様々な条件でパケットをフィルタリングし、パケットの内容を異なる形式で表示することができます。</p>
 <h2>オプション</h2>
-<h3><strong>-i インターフェイス</strong></h3>
-<p>特定のネットワークインターフェイスからパケットをキャプチャします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>tcpdump<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>eth0
+<h3><strong>-i インターフェース</strong></h3>
+<p>パケットをキャプチャするネットワークインターフェースを指定します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>eth0
 <span style="color: #000; font-style: italic">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span>
 <span style="color: #000; font-style: italic">listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
-<span style="color: #000; font-style: italic">13:45:22.123456 IP 192.168.1.100.56789 &gt; 8.8.8.8.53: 12345+ A? example.com. (32)</span>
+<span style="color: #000; font-style: italic">13:45:22.357928 IP host1.ssh &gt; host2.52986: Flags [P.], seq 196:392, ack 1, win 501, options [nop,nop,TS val 1089067 ecr 1089067], length 196</span>
 </pre></div>
 <h3><strong>-n</strong></h3>
-<p>ホスト名、ポート名、サービス名の名前解決を行わず、IPアドレスとポート番号をそのまま表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>tcpdump<span style="color: #F8F8F8"> </span>-n
+<p>アドレス（ホストアドレス、ポート番号など）を名前に変換しません</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-n
 <span style="color: #000; font-style: italic">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span>
 <span style="color: #000; font-style: italic">listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
-<span style="color: #000; font-style: italic">13:45:22.123456 IP 192.168.1.100.56789 &gt; 8.8.8.8.53: 12345+ A? example.com. (32)</span>
+<span style="color: #000; font-style: italic">13:46:15.123456 IP 192.168.1.100.22 &gt; 192.168.1.101.52986: Flags [P.], seq 196:392, ack 1, win 501, length 196</span>
 </pre></div>
-<h3><strong>-w ファイル名</strong></h3>
-<p>キャプチャしたパケットをファイルに保存します。後で<code>tcpdump -r</code>や<code>Wireshark</code>で分析できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>tcpdump<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span>capture.pcap
+<h3><strong>-c カウント</strong></h3>
+<p>指定した数のパケットをキャプチャした後に終了します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span>
+<span style="color: #000; font-style: italic">listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
+<span style="color: #000; font-style: italic">13:47:01.123456 IP host1.ssh &gt; host2.52986: Flags [P.], seq 196:392, ack 1, win 501, length 196</span>
+<span style="color: #000; font-style: italic">13:47:01.234567 IP host2.52986 &gt; host1.ssh: Flags [.], ack 392, win 501, length 0</span>
+<span style="color: #000; font-style: italic">13:47:01.345678 IP host1.ssh &gt; host2.52986: Flags [P.], seq 392:588, ack 1, win 501, length 196</span>
+<span style="color: #000; font-style: italic">13:47:01.456789 IP host2.52986 &gt; host1.ssh: Flags [.], ack 588, win 501, length 0</span>
+<span style="color: #000; font-style: italic">13:47:01.567890 IP host1.ssh &gt; host2.52986: Flags [P.], seq 588:784, ack 1, win 501, length 196</span>
+<span style="color: #000; font-style: italic">5 packets captured</span>
+<span style="color: #000; font-style: italic">10 packets received by filter</span>
+<span style="color: #000; font-style: italic">0 packets dropped by kernel</span>
+</pre></div>
+<h3><strong>-w ファイル</strong></h3>
+<p>パケットを解析・表示する代わりに、生のパケットをファイルに書き込みます</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span>capture.pcap
 <span style="color: #000; font-style: italic">tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
 <span style="color: #000; font-style: italic">^C</span>
 <span style="color: #000; font-style: italic">45 packets captured</span>
 <span style="color: #000; font-style: italic">50 packets received by filter</span>
 <span style="color: #000; font-style: italic">0 packets dropped by kernel</span>
 </pre></div>
-<h3><strong>-r ファイル名</strong></h3>
-<p>保存されたパケットキャプチャファイルを読み込んで表示します。</p>
+<h3><strong>-r ファイル</strong></h3>
+<p>ファイル（以前に -w で作成したもの）からパケットを読み込みます</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>capture.pcap
 <span style="color: #000; font-style: italic">reading from file capture.pcap, link-type EN10MB (Ethernet)</span>
-<span style="color: #000; font-style: italic">13:45:22.123456 IP host1.56789 &gt; host2.80: Flags [S], seq 1234567890, win 65535, length 0</span>
+<span style="color: #000; font-style: italic">13:50:01.123456 IP host1.ssh &gt; host2.52986: Flags [P.], seq 196:392, ack 1, win 501, length 196</span>
+<span style="color: #000; font-style: italic">13:50:01.234567 IP host2.52986 &gt; host1.ssh: Flags [.], ack 392, win 501, length 0</span>
 </pre></div>
-<h3><strong>-c 数</strong></h3>
-<p>指定した数のパケットをキャプチャした後に停止します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>tcpdump<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #000; font-style: italic">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span>
-<span style="color: #000; font-style: italic">listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
-<span style="color: #000; font-style: italic">5 packets captured</span>
-<span style="color: #000; font-style: italic">8 packets received by filter</span>
-<span style="color: #000; font-style: italic">0 packets dropped by kernel</span>
+<h3><strong>-v, -vv, -vvv</strong></h3>
+<p>詳細レベルを上げます（より多くのパケット情報を表示）</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-vv
+<span style="color: #000; font-style: italic">tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
+<span style="color: #000; font-style: italic">13:51:22.357928 IP (tos 0x10, ttl 64, id 12345, offset 0, flags [DF], proto TCP (6), length 240) host1.ssh &gt; host2.52986: Flags [P.], cksum 0x1234 (correct), seq 196:392, ack 1, win 501, options [nop,nop,TS val 1089067 ecr 1089067], length 196</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>特定のホストとのトラフィックをキャプチャ</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>tcpdump<span style="color: #F8F8F8"> </span>host<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.100
+<h3>ポート80（HTTP）のTCPトラフィックをキャプチャする</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>eth0<span style="color: #F8F8F8"> </span>tcp<span style="color: #F8F8F8"> </span>port<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">80</span>
 <span style="color: #000; font-style: italic">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span>
 <span style="color: #000; font-style: italic">listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
-<span style="color: #000; font-style: italic">13:45:22.123456 IP 192.168.1.100.56789 &gt; 8.8.8.8.53: 12345+ A? example.com. (32)</span>
-<span style="color: #000; font-style: italic">13:45:22.234567 IP 8.8.8.8.53 &gt; 192.168.1.100.56789: 12345 1/0/0 A 93.184.216.34 (48)</span>
+<span style="color: #000; font-style: italic">13:55:01.123456 IP host1.52986 &gt; webserver.http: Flags [S], seq 123456789, win 64240, options [mss 1460,sackOK,TS val 1089067 ecr 0,nop,wscale 7], length 0</span>
+<span style="color: #000; font-style: italic">13:55:01.234567 IP webserver.http &gt; host1.52986: Flags [S.], seq 987654321, ack 123456790, win 65535, options [mss 1460,sackOK,TS val 1089067 ecr 1089067,nop,wscale 7], length 0</span>
 </pre></div>
-<h3>特定のポートのトラフィックをキャプチャ</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>tcpdump<span style="color: #F8F8F8"> </span>port<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">80</span>
+<h3>特定のホストからのトラフィックをキャプチャする</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>eth0<span style="color: #F8F8F8"> </span>host<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">192</span>.168.1.100
 <span style="color: #000; font-style: italic">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span>
 <span style="color: #000; font-style: italic">listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
-<span style="color: #000; font-style: italic">13:45:22.123456 IP host1.56789 &gt; host2.80: Flags [S], seq 1234567890, win 65535, length 0</span>
-<span style="color: #000; font-style: italic">13:45:22.234567 IP host2.80 &gt; host1.56789: Flags [S.], seq 9876543210, ack 1234567891, win 65535, length 0</span>
+<span style="color: #000; font-style: italic">13:56:01.123456 IP 192.168.1.100.22 &gt; 192.168.1.101.52986: Flags [P.], seq 196:392, ack 1, win 501, length 196</span>
+<span style="color: #000; font-style: italic">13:56:01.234567 IP 192.168.1.101.52986 &gt; 192.168.1.100.22: Flags [.], ack 392, win 501, length 0</span>
 </pre></div>
-<h3>HTTPトラフィックの内容を表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>tcpdump<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;tcp port 80&#39;</span>
-<span style="color: #000; font-style: italic">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span>
-<span style="color: #000; font-style: italic">listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
-<span style="color: #000; font-style: italic">13:45:22.123456 IP host1.56789 &gt; host2.80: Flags [P.], seq 1:165, ack 1, win 65535, length 164</span>
-<span style="color: #000; font-style: italic">GET / HTTP/1.1</span>
-<span style="color: #000; font-style: italic">Host: example.com</span>
-<span style="color: #000; font-style: italic">User-Agent: Mozilla/5.0</span>
-<span style="color: #000; font-style: italic">Accept: text/html,application/xhtml+xml</span>
-<span style="color: #000; font-style: italic">Connection: keep-alive</span>
+<h3>タイムスタンプ付きでパケットをキャプチャして保存する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>eth0<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span>capture_<span style="color: #204A87; font-weight: bold">$(</span>date<span style="color: #F8F8F8"> </span>+%Y%m%d_%H%M%S<span style="color: #204A87; font-weight: bold">)</span>.pcap
+<span style="color: #000; font-style: italic">tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes</span>
+<span style="color: #000; font-style: italic">^C</span>
+<span style="color: #000; font-style: italic">120 packets captured</span>
+<span style="color: #000; font-style: italic">125 packets received by filter</span>
+<span style="color: #000; font-style: italic">0 packets dropped by kernel</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>管理者権限が必要</h3>
-<p>ほとんどの場合、<code>tcpdump</code>を実行するには<code>sudo</code>または管理者権限が必要です。これはネットワークインターフェイスに直接アクセスするためです。</p>
-<h3>複雑なフィルタ式</h3>
-<p><code>tcpdump</code>は強力なフィルタ式をサポートしています。例えば、<code>tcpdump 'tcp port 80 and (src host 192.168.1.100 or dst host 192.168.1.200)'</code>のように複数の条件を組み合わせることができます。</p>
-<h3>パケットサイズの制限を解除</h3>
-<p>デフォルトでは、<code>tcpdump</code>は各パケットの先頭部分のみをキャプチャします。完全なパケット内容を取得するには、<code>-s 0</code>オプションを使用します。</p>
-<h3>Wiresharkとの連携</h3>
-<p><code>tcpdump -w file.pcap</code>でキャプチャしたファイルは、より詳細な分析のためにWiresharkで開くことができます。</p>
+<h3>管理者権限で実行する</h3>
+<p>ほとんどのシステムではパケットをキャプチャするために管理者権限が必要です。必要な権限を確保するために <code>sudo tcpdump</code> を使用しましょう。</p>
+<h3>式を使用してトラフィックをフィルタリングする</h3>
+<p><code>and</code>、<code>or</code>、<code>not</code> を組み合わせて複雑なフィルタを作成できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>eth0<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;tcp port 80 and not host 192.168.1.5&#39;</span>
+</pre></div>
+<h3>パケットキャプチャサイズを制限する</h3>
+<p><code>-s snaplen</code> を使用して、パケットごとにキャプチャするバイト数を制限できます。ヘッダーのみの場合は <code>-s 96</code> を使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>eth0<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">96</span><span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span>
+</pre></div>
+<h3>名前解決を無効にして出力を高速化する</h3>
+<p><code>-n</code> を使用してホスト名の解決を無効にし、<code>-nn</code> を使用してホスト名とポート名の両方の解決を無効にすると、tcpdumpの実行が速くなります：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tcpdump<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>eth0<span style="color: #F8F8F8"> </span>-nn
+</pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. tcpdumpとWiresharkの違いは何ですか？</h4>
-<p>A. <code>tcpdump</code>はコマンドラインツールで、リモートサーバーでも使いやすく、軽量です。Wiresharkはグラフィカルなインターフェイスを持ち、より詳細な分析機能を提供しますが、GUIが必要です。</p>
-<h4>Q2. 特定のIPアドレスとポートのトラフィックだけをキャプチャするにはどうすればよいですか？</h4>
-<p>A. <code>sudo tcpdump host 192.168.1.100 and port 80</code>のようにフィルタを組み合わせて使用します。</p>
-<h4>Q3. キャプチャしたパケットをファイルに保存するにはどうすればよいですか？</h4>
-<p>A. <code>sudo tcpdump -w filename.pcap</code>を使用します。このファイルは後で<code>tcpdump -r filename.pcap</code>やWiresharkで分析できます。</p>
-<h4>Q4. パケットの内容を読みやすい形式で表示するにはどうすればよいですか？</h4>
-<p>A. ASCII形式で表示するには<code>-A</code>オプション、16進数とASCII形式で表示するには<code>-X</code>オプションを使用します。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは、ネットワークインターフェイス名が異なる場合があります。利用可能なインターフェイスを確認するには、<code>ifconfig</code>または<code>networksetup -listallhardwareports</code>コマンドを使用してください。また、macOSのセキュリティ機能により、初回実行時に権限の承認が求められることがあります。</p>
-<h2>参考資料</h2>
+<h4>Q1. すべてのインターフェースでパケットをキャプチャするにはどうすればよいですか？</h4>
+<p>A. <code>tcpdump -i any</code> を使用して、すべてのインターフェースでキャプチャできます。</p>
+<h4>Q2. パケットの内容をASCIIで見るにはどうすればよいですか？</h4>
+<p>A. <code>-A</code> フラグを使用して各パケットをASCIIで表示するか、<code>-X</code> を使用して16進数とASCII両方の出力を表示できます。</p>
+<h4>Q3. キャプチャしたパケットを後で分析するために保存するにはどうすればよいですか？</h4>
+<p>A. <code>tcpdump -w ファイル名.pcap</code> を使用して生のパケットを保存し、後で <code>tcpdump -r ファイル名.pcap</code> またはWiresharkなどのツールで分析できます。</p>
+<h4>Q4. IPアドレスでパケットをフィルタリングするにはどうすればよいですか？</h4>
+<p>A. <code>tcpdump host 192.168.1.100</code> を使用して、そのIPとの間のトラフィックをキャプチャするか、<code>src host</code> または <code>dst host</code> を使用して方向を指定できます。</p>
+<h4>Q5. TCP SYNパケットのみをキャプチャするにはどうすればよいですか？</h4>
+<p>A. <code>tcpdump 'tcp[tcpflags] &amp; (tcp-syn) != 0'</code> を使用してTCP SYNパケットをキャプチャできます。</p>
+<h2>参考文献</h2>
 <p>https://www.tcpdump.org/manpages/tcpdump.1.html</p>
-<h2>改訂履歴</h2>
+<h2>Revisions</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回リビジョン</li>
 </ul>
 
 

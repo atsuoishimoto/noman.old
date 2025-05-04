@@ -1,25 +1,27 @@
 # dirname command
 
-Extract the directory portion from a pathname.
+Output the directory portion of a pathname.
 
 ## Overview
 
-The `dirname` command removes the last component from a pathname, leaving only the directory path. It's useful in scripts when you need to determine the parent directory of a file or path.
+The `dirname` command removes the last component from a pathname, leaving only the directory path. It's commonly used in shell scripts to extract the directory part of a file path, which is useful for navigating to a file's location or processing files in the same directory.
 
 ## Options
 
-### **--zero, -z**
+### **-z, --zero**
 
-Output is terminated with a null character (NUL) instead of a newline.
+Output a zero byte (ASCII NUL) instead of a newline after each pathname.
 
 ```console
-$ dirname -z /usr/bin/file
+$ dirname -z /usr/bin/zip
 /usr/bin$
 ```
 
+Note: The output appears to end with a `$` prompt, but actually contains a null character instead of a newline.
+
 ### **--help**
 
-Display help information and exit.
+Display a help message and exit.
 
 ```console
 $ dirname --help
@@ -39,12 +41,12 @@ Examples:
 
 ### **--version**
 
-Display version information and exit.
+Output version information and exit.
 
 ```console
 $ dirname --version
-dirname (GNU coreutils) 9.0
-Copyright (C) 2021 Free Software Foundation, Inc.
+dirname (GNU coreutils) 8.32
+Copyright (C) 2020 Free Software Foundation, Inc.
 License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -57,14 +59,14 @@ Written by David MacKenzie.
 ### Basic Usage
 
 ```console
-$ dirname /usr/bin/bash
+$ dirname /usr/bin/zip
 /usr/bin
 ```
 
 ### Multiple Arguments
 
 ```console
-$ dirname /usr/bin/bash /etc/passwd /home/user/file.txt
+$ dirname /usr/bin/zip /etc/passwd /home/user/file.txt
 /usr/bin
 /etc
 /home/user
@@ -85,33 +87,51 @@ $ echo "This script is located in: $script_dir"
 This script is located in: .
 ```
 
-## Tips
+## Tips:
 
-### Use with Absolute Paths
+### Combine with basename
 
-Always use absolute paths with `dirname` when possible to avoid confusion, especially in scripts that might run from different working directories.
+Use `dirname` together with `basename` to split a path into its directory and filename components:
 
-### Combine with `basename`
+```console
+$ path="/home/user/documents/report.pdf"
+$ dir=$(dirname "$path")
+$ file=$(basename "$path")
+$ echo "Directory: $dir, File: $file"
+Directory: /home/user/documents, File: report.pdf
+```
 
-`dirname` pairs well with the `basename` command. While `dirname` extracts the directory portion, `basename` extracts the filename portion.
+### Always Quote Variables
 
-### Path Normalization
+When using `dirname` with variables in scripts, always quote the variables to handle paths with spaces correctly:
 
-`dirname` doesn't normalize paths. For example, `dirname a/b/..` returns `a/b` rather than `a`.
+```console
+$ path="/home/user/my documents/report.pdf"
+$ dirname "$path"  # Correct
+/home/user/my documents
+```
+
+### Use with Command Substitution
+
+Capture the output of `dirname` using command substitution to navigate to a file's directory:
+
+```console
+$ cd "$(dirname "/path/to/file.txt")"
+```
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `dirname` and `pwd`?
-A. `dirname` extracts the directory portion from a given path, while `pwd` prints the current working directory.
+#### Q1. What does `dirname` return if I pass a filename without a path?
+A. It returns `.` (the current directory).
 
-#### Q2. How do I get the directory of a script that's running?
-A. Use `script_dir=$(dirname "$0")` where `$0` is the path to the script being executed.
+#### Q2. Can `dirname` process multiple paths at once?
+A. Yes, you can pass multiple arguments and it will process each one separately.
 
-#### Q3. Does `dirname` follow symbolic links?
-A. No, `dirname` simply manipulates the string path and doesn't interact with the filesystem.
+#### Q3. How does `dirname` handle trailing slashes?
+A. It removes trailing slashes before processing, so `/usr/bin/` becomes `/usr`.
 
-#### Q4. What does `dirname` return for a path without directories?
-A. It returns `.` (the current directory) for paths without any directory components.
+#### Q4. What's the difference between `dirname` and `basedir`?
+A. There is no standard Unix command called `basedir`. You might be thinking of `basename`, which extracts the filename portion of a path, while `dirname` extracts the directory portion.
 
 ## References
 
@@ -119,4 +139,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/dirname-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

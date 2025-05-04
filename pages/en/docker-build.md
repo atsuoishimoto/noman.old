@@ -1,10 +1,10 @@
 # docker build command
 
-Build Docker images from a Dockerfile and a context.
+Build an image from a Dockerfile.
 
 ## Overview
 
-The `docker build` command creates Docker images from a Dockerfile and a build context. It executes the instructions in the Dockerfile to assemble a new image layer by layer. The build context is the set of files located in the specified PATH or URL.
+The `docker build` command builds Docker images from a Dockerfile and a "context". The context is the set of files located in the specified PATH or URL. The build process can refer to any of the files in the context. The Dockerfile contains instructions that Docker uses to create a new image.
 
 ## Options
 
@@ -26,10 +26,10 @@ $ docker build -t myapp:1.0 .
  => [2/5] WORKDIR /app                                                     0.3s
  => [3/5] COPY package*.json ./                                            0.1s
  => [4/5] RUN npm install                                                  7.5s
- => [5/5] COPY . .                                                         0.2s
- => exporting to image                                                     1.0s
- => => exporting layers                                                    0.9s
- => => writing image sha256:def456...                                      0.1s
+ => [5/5] COPY . .                                                         0.1s
+ => exporting to image                                                     1.1s
+ => => exporting layers                                                    1.1s
+ => => writing image sha256:def456...                                      0.0s
  => => naming to docker.io/library/myapp:1.0                               0.0s
 ```
 
@@ -41,7 +41,7 @@ Specify the name of the Dockerfile (default is 'PATH/Dockerfile').
 $ docker build -f Dockerfile.prod -t myapp:prod .
 [+] Building 12.3s (10/10) FINISHED
  => [internal] load build definition from Dockerfile.prod                  0.1s
- => => transferring dockerfile: 245B                                       0.0s
+ => => transferring dockerfile: 256B                                       0.0s
 ...
 ```
 
@@ -58,7 +58,7 @@ $ docker build --no-cache -t myapp .
 
 ### **--build-arg**
 
-Set build-time variables defined in the Dockerfile with ARG.
+Set build-time variables defined in the Dockerfile using ARG instructions.
 
 ```console
 $ docker build --build-arg NODE_ENV=production -t myapp .
@@ -69,12 +69,15 @@ $ docker build --build-arg NODE_ENV=production -t myapp .
 
 ### **--target**
 
-Set the target build stage to build in a multi-stage build.
+Set the target build stage to build when using multi-stage builds.
 
 ```console
 $ docker build --target development -t myapp:dev .
-[+] Building 8.5s (8/8) FINISHED
+[+] Building 8.3s (8/8) FINISHED
  => [internal] load build definition from Dockerfile                       0.1s
+ => [internal] load .dockerignore                                          0.0s
+ => [internal] load metadata for docker.io/library/node:14                 1.2s
+ => [development 1/4] FROM docker.io/library/node:14@sha256:123abc...      0.0s
 ...
 ```
 
@@ -91,24 +94,24 @@ $ docker build -t myapp:latest .
 ### Building with multiple tags
 
 ```console
-$ docker build -t myapp:latest -t myapp:1.0 -t registry.example.com/myapp:1.0 .
-[+] Building 15.5s (10/10) FINISHED
+$ docker build -t myapp:latest -t myapp:1.0 -t registry.example.com/myapp:latest .
+[+] Building 14.8s (10/10) FINISHED
 ...
 ```
 
-### Building from a Git repository
+### Building from a specific context
 
 ```console
 $ docker build -t myapp https://github.com/user/repo.git#main
-[+] Building 20.3s (10/10) FINISHED
+[+] Building 22.5s (10/10) FINISHED
 ...
 ```
 
-### Building with a specific build context
+### Building with a specific Dockerfile and target stage
 
 ```console
-$ docker build -t myapp -f ./docker/Dockerfile ./app
-[+] Building 14.8s (10/10) FINISHED
+$ docker build -f Dockerfile.multistage --target production -t myapp:prod .
+[+] Building 18.7s (12/12) FINISHED
 ...
 ```
 
@@ -116,36 +119,36 @@ $ docker build -t myapp -f ./docker/Dockerfile ./app
 
 ### Use .dockerignore Files
 
-Create a `.dockerignore` file to exclude files and directories from the build context, similar to `.gitignore`. This reduces build time and image size by preventing unnecessary files from being sent to the Docker daemon.
+Create a `.dockerignore` file to exclude files and directories from the build context. This reduces build time and size by preventing unnecessary files from being sent to the Docker daemon.
 
 ### Leverage Build Cache
 
-Docker caches intermediate layers. Order your Dockerfile instructions so that the ones least likely to change (like installing dependencies) come before those that change frequently (like copying source code).
+Docker caches intermediate layers. Order your Dockerfile commands from least to most frequently changing to maximize cache usage. For example, install dependencies before copying application code.
 
 ### Use Multi-stage Builds
 
-Multi-stage builds allow you to use multiple FROM statements in your Dockerfile. This is useful for creating smaller production images by copying only the necessary artifacts from a build stage.
+Multi-stage builds allow you to use multiple FROM statements in your Dockerfile. This is useful for creating smaller production images by copying only necessary artifacts from a build stage.
 
 ### Minimize Layer Count
 
-Combine related commands with `&&` and clean up in the same RUN instruction to reduce the number of layers and image size.
+Combine related commands with `&&` in a single RUN instruction to reduce the number of layers, which helps create smaller images.
 
 ## Frequently Asked Questions
 
-#### Q1. What is the build context?
-A. The build context is the set of files at a specified location (PATH or URL) that are sent to the Docker daemon during the build. The Dockerfile is usually located at the root of the build context.
+#### Q1. What's the difference between `docker build` and `docker image build`?
+A. They are the same command. `docker image build` is the more explicit form that was introduced with Docker's command restructuring, but `docker build` is still supported and more commonly used.
 
-#### Q2. How can I reduce Docker image size?
-A. Use multi-stage builds, minimize the number of layers, clean up after package installations, and use a smaller base image like Alpine.
+#### Q2. How do I build an image without using cache?
+A. Use the `--no-cache` option: `docker build --no-cache -t myapp .`
 
-#### Q3. Why is my build slow?
-A. Large build contexts, not using build cache, or complex build operations can slow down builds. Use `.dockerignore` to exclude unnecessary files and optimize your Dockerfile.
+#### Q3. How can I pass environment variables to the build process?
+A. Use the `--build-arg` option: `docker build --build-arg VAR_NAME=value -t myapp .`
 
-#### Q4. How do I pass environment variables to the build process?
-A. Use the `--build-arg` flag to pass variables that can be used with ARG instructions in your Dockerfile.
+#### Q4. How do I specify which stage to build in a multi-stage Dockerfile?
+A. Use the `--target` option: `docker build --target stage_name -t myapp .`
 
-#### Q5. How do I build only a specific stage in a multi-stage Dockerfile?
-A. Use the `--target` flag followed by the name of the build stage you want to build up to.
+#### Q5. Can I build from a Git repository?
+A. Yes, you can specify a Git repository URL as the build context: `docker build -t myapp https://github.com/user/repo.git`
 
 ## References
 
@@ -153,4 +156,4 @@ https://docs.docker.com/engine/reference/commandline/build/
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

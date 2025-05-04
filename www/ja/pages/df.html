@@ -47,75 +47,80 @@
     <main>
       
   <h1>df コマンド</h1>
-<p>ファイルシステムのディスク容量使用状況を表示します。</p>
+<p>マウントされたファイルシステムのディスク容量使用状況を表示します。</p>
 <h2>概要</h2>
-<p><code>df</code>コマンドは、システム上のファイルシステムの空き容量と使用済み容量を表示します。マウントされているすべてのファイルシステムについて、合計サイズ、使用済み容量、空き容量、使用率などの情報を提供します。ディスク容量の管理や監視に役立ちます。</p>
+<p><code>df</code>コマンドは、ファイルシステム上の使用済みおよび利用可能なディスク容量を報告します。デフォルトでは1Kブロック単位で表示しますが、人間が読みやすい形式で表示するように設定することもできます。ディスク使用量を監視し、容量が不足しているファイルシステムを特定するために一般的に使用されます。</p>
 <h2>オプション</h2>
-<h3><strong>-h (human-readable)</strong></h3>
-<p>サイズを人間が読みやすい形式（KB、MB、GBなど）で表示します。</p>
+<h3><strong>-h, --human-readable</strong></h3>
+<p>サイズを人間が読みやすい形式で表示します（例：1K、234M、2G）</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>df<span style="color: #F8F8F8"> </span>-h
-<span style="color: #000; font-style: italic">Filesystem      Size   Used  Avail Capacity   iused    ifree %iused  Mounted on</span>
-<span style="color: #000; font-style: italic">/dev/disk1s1s1  466Gi   15Gi  301Gi     5%   488120 4881963880    0%   /</span>
-<span style="color: #000; font-style: italic">/dev/disk1s2    466Gi  3.0Gi  301Gi     1%        3 4882452000    0%   /System/Volumes/Preboot</span>
-<span style="color: #000; font-style: italic">/dev/disk1s4    466Gi   20Ki  301Gi     1%       25 4882451978    0%   /System/Volumes/VM</span>
-<span style="color: #000; font-style: italic">/dev/disk1s5    466Gi  146Gi  301Gi    33%  1835127 4880616873    0%   /System/Volumes/Data</span>
+<span style="color: #000; font-style: italic">Filesystem      Size  Used Avail Use% Mounted on</span>
+<span style="color: #000; font-style: italic">/dev/sda1        20G  7.8G   11G  42% /</span>
+<span style="color: #000; font-style: italic">tmpfs           3.9G     0  3.9G   0% /dev/shm</span>
+<span style="color: #000; font-style: italic">/dev/sda3       450G  254G  174G  60% /home</span>
 </pre></div>
-<h3><strong>-T (file-system-type)</strong></h3>
-<p>各ファイルシステムのタイプも表示します。</p>
+<h3><strong>-T, --print-type</strong></h3>
+<p>ファイルシステムの種類を表示します（例：ext4、xfs）</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>df<span style="color: #F8F8F8"> </span>-T
-<span style="color: #000; font-style: italic">Filesystem     Type     1K-blocks      Used Available Use% Mounted on</span>
-<span style="color: #000; font-style: italic">/dev/sda1      ext4      41251136  12503812  26530604  33% /</span>
-<span style="color: #000; font-style: italic">tmpfs          tmpfs      1021880         0   1021880   0% /dev/shm</span>
-<span style="color: #000; font-style: italic">/dev/sdb1      ext4     103081248  67128932  30520632  69% /home</span>
+<span style="color: #000; font-style: italic">Filesystem     Type     1K-blocks     Used Available Use% Mounted on</span>
+<span style="color: #000; font-style: italic">/dev/sda1      ext4      20971520  8126464  11714048  42% /</span>
+<span style="color: #000; font-style: italic">tmpfs          tmpfs      4048380        0   4048380   0% /dev/shm</span>
+<span style="color: #000; font-style: italic">/dev/sda3      ext4     471859200 266338304 181889024  60% /home</span>
 </pre></div>
-<h3><strong>-i (inodes)</strong></h3>
-<p>ファイルシステムのiノード情報（使用済み、空き、使用率）を表示します。</p>
+<h3><strong>-i, --inodes</strong></h3>
+<p>ブロック使用量の代わりにiノード情報を表示します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>df<span style="color: #F8F8F8"> </span>-i
 <span style="color: #000; font-style: italic">Filesystem      Inodes  IUsed    IFree IUse% Mounted on</span>
-<span style="color: #000; font-style: italic">/dev/sda1      2621440 254871  2366569   10% /</span>
-<span style="color: #000; font-style: italic">tmpfs           255470      1   255469    1% /dev/shm</span>
-<span style="color: #000; font-style: italic">/dev/sdb1      6553600 421892  6131708    7% /home</span>
+<span style="color: #000; font-style: italic">/dev/sda1      1310720 248932  1061788   19% /</span>
+<span style="color: #000; font-style: italic">tmpfs          1012095      1  1012094    1% /dev/shm</span>
+<span style="color: #000; font-style: italic">/dev/sda3      29491200 845621 28645579    3% /home</span>
+</pre></div>
+<h3><strong>-a, --all</strong></h3>
+<p>0ブロックのファイルシステムやデフォルトで無視されるファイルシステムも含めて表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>df<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">Filesystem     1K-blocks     Used Available Use% Mounted on</span>
+<span style="color: #000; font-style: italic">/dev/sda1       20971520  8126464  11714048  42% /</span>
+<span style="color: #000; font-style: italic">proc                   0        0         0    - /proc</span>
+<span style="color: #000; font-style: italic">sysfs                  0        0         0    - /sys</span>
+<span style="color: #000; font-style: italic">tmpfs            4048380        0   4048380   0% /dev/shm</span>
+<span style="color: #000; font-style: italic">/dev/sda3      471859200 266338304 181889024  60% /home</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>特定のディレクトリのファイルシステム情報を表示</h3>
+<h3>特定のファイルシステムの容量確認</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>df<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>/home
 <span style="color: #000; font-style: italic">Filesystem      Size  Used Avail Use% Mounted on</span>
-<span style="color: #000; font-style: italic">/dev/sdb1        99G   64G   30G  69% /home</span>
+<span style="color: #000; font-style: italic">/dev/sda3       450G  254G  174G  60% /home</span>
 </pre></div>
-<h3>人間が読みやすい形式でファイルシステムタイプも表示</h3>
+<h3>オプションを組み合わせた詳細出力</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>df<span style="color: #F8F8F8"> </span>-hT
-<span style="color: #000; font-style: italic">Filesystem     Type      Size  Used Avail Use% Mounted on</span>
-<span style="color: #000; font-style: italic">/dev/sda1      ext4       40G   12G   26G  33% /</span>
-<span style="color: #000; font-style: italic">tmpfs          tmpfs     999M     0  999M   0% /dev/shm</span>
-<span style="color: #000; font-style: italic">/dev/sdb1      ext4       99G   64G   30G  69% /home</span>
-</pre></div>
-<h3>特定のファイルシステムタイプのみ表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>df<span style="color: #F8F8F8"> </span>-ht<span style="color: #F8F8F8"> </span>ext4
-<span style="color: #000; font-style: italic">Filesystem      Size  Used Avail Use% Mounted on</span>
-<span style="color: #000; font-style: italic">/dev/sda1        40G   12G   26G  33% /</span>
-<span style="color: #000; font-style: italic">/dev/sdb1        99G   64G   30G  69% /home</span>
+<span style="color: #000; font-style: italic">Filesystem     Type   Size  Used Avail Use% Mounted on</span>
+<span style="color: #000; font-style: italic">/dev/sda1      ext4    20G  7.8G   11G  42% /</span>
+<span style="color: #000; font-style: italic">tmpfs          tmpfs  3.9G     0  3.9G   0% /dev/shm</span>
+<span style="color: #000; font-style: italic">/dev/sda3      ext4   450G  254G  174G  60% /home</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>容量の単位を理解する</h3>
-<p><code>df</code>コマンドのデフォルト出力は1KBブロック単位です。<code>-h</code>オプションを使用すると、KB、MB、GBなどの単位で表示されるため、容量を直感的に把握できます。</p>
-<h3>使用率の監視</h3>
-<p>ファイルシステムの使用率が90%を超えると、パフォーマンスの低下や問題が発生する可能性があります。定期的に<code>df -h</code>を実行して、使用率を監視することをお勧めします。</p>
-<h3>ローカルファイルシステムのみ表示</h3>
-<p><code>-l</code>オプションを使用すると、ローカルファイルシステムのみを表示できます。これは、NFS などのリモートファイルシステムを除外したい場合に便利です。</p>
+<h3>重要なファイルシステムに焦点を当てる</h3>
+<p>物理ディスクのみを表示したい場合は、<code>df -h | grep -v tmpfs</code>を使用して一時的なファイルシステムを除外できます。</p>
+<h3>重要なファイルシステムを監視する</h3>
+<p>ファイルシステムが特定の割合を超えたときにアラートを設定します。例えば、ルートが90%以上使用されているかを確認するには：<code>df -h / | awk 'NR==2 {print $5}' | sed 's/%//'</code>を使用します。</p>
+<h3>iノード使用量を確認する</h3>
+<p>特に小さなファイルが多数ある場合、ファイルシステムは容量が不足する前にiノードが不足することがあります。<code>df -i</code>を使用してiノード使用量を監視しましょう。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>df</code>と<code>du</code>の違いは何ですか？</h4>
-<p>A. <code>df</code>はファイルシステムレベルでディスク使用量を表示しますが、<code>du</code>は特定のディレクトリやファイルのディスク使用量を表示します。</p>
-<h4>Q2. なぜ<code>df</code>の結果と実際のファイルサイズの合計が一致しないことがありますか？</h4>
-<p>A. 削除されたがまだプロセスが開いているファイル、ファイルシステムの予約ブロック、ジャーナリングなどが原因で差異が生じることがあります。</p>
-<h4>Q3. macOSで<code>df</code>の出力が異なるのはなぜですか？</h4>
-<p>A. macOSはBSDベースのシステムであり、GNU/Linuxとは若干異なる<code>df</code>の実装を使用しています。オプションや出力形式に違いがあります。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは、APFS（Apple File System）を使用しており、ボリュームとコンテナの概念があります。<code>df</code>の出力には、システムボリュームやデータボリュームなど複数のボリュームが表示されることがあります。また、macOSでは一部のオプション（例：<code>-T</code>）が利用できないか、異なる動作をする場合があります。</p>
-<h2>参考文献</h2>
+<h4>Q1. df出力の「Use%」とは何ですか？</h4>
+<p>A. 現在使用中のファイルシステムの割合を示しています。値が100%に近づくと、ファイルシステムがほぼ満杯であることを示します。</p>
+<h4>Q2. なぜdfは予想よりも少ない空き容量を表示するのですか？</h4>
+<p>A. デフォルトでは、ほとんどのファイルシステムはroot用とシステムプロセス用に5%の容量を予約しています。この予約容量は一般ユーザーが利用可能な容量としてカウントされません。</p>
+<h4>Q3. キロバイトではなくギガバイト単位でディスク使用量を確認するにはどうすればよいですか？</h4>
+<p>A. <code>df -h</code>を使用すると、適切な単位（KB、MB、GBなど）に自動的に調整される人間が読みやすい出力が表示されます。</p>
+<h4>Q4. 一部のファイルシステムが0ブロックまたは100%使用と表示されるのはなぜですか？</h4>
+<p>A. /procや/sysのような仮想ファイルシステムは実際のディスク容量を使用しないため、0ブロックと表示されます。これらはメモリ上にのみ存在します。</p>
+<h2>macOSに関する注意点</h2>
+<p>macOSでは、<code>df</code>コマンドのオプションが若干異なります。<code>-T</code>オプションは利用できず、出力形式も異なります。人間が読みやすい出力には<code>df -h</code>を使用してください。これはプラットフォーム間で一貫して動作します。</p>
+<h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/df-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

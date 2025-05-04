@@ -47,94 +47,112 @@
     <main>
       
   <h1>git merge コマンド</h1>
-<p>複数のコミット履歴を統合します。</p>
+<p>複数の開発履歴を統合します。</p>
 <h2>概要</h2>
-<p><code>git merge</code> は、異なるブランチの変更内容を現在のブランチに統合するためのコマンドです。複数の開発ラインを一つにまとめる際に使用され、Git の基本的な機能の一つです。マージには「fast-forward」と「non-fast-forward（3-way）」の2種類があります。</p>
+<p><code>git merge</code>は複数のコミット履歴を一つの統一された履歴に結合します。主に、あるブランチの変更を別のブランチに統合するために使用され、一般的には開発が完了した後にフィーチャーブランチをメインブランチにマージするときに使われます。このコマンドは指定されたブランチの変更を現在のブランチに取り込みます。</p>
 <h2>オプション</h2>
-<h3><strong>--ff</strong>（デフォルト）</h3>
-<p>可能であれば「fast-forward」マージを行います。これは履歴が直線的な場合に使用され、マージコミットは作成されません。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>checkout<span style="color: #F8F8F8"> </span>main
-<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>feature
-<span style="color: #000; font-style: italic">Updating 5ab1c2d..8ef9a01</span>
-<span style="color: #000; font-style: italic">Fast-forward</span>
-<span style="color: #000; font-style: italic"> file.txt | 2 ++</span>
-<span style="color: #000; font-style: italic"> 1 file changed, 2 insertions(+)</span>
+<h3><strong>-m, --message=&lt;message&gt;</strong></h3>
+<p>マージコミットに使用するコミットメッセージを設定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>feature-branch<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ログイン機能の新しいフィーチャーブランチをマージ&quot;</span>
 </pre></div>
 <h3><strong>--no-ff</strong></h3>
-<p>常に新しいマージコミットを作成します。ブランチの履歴を明示的に残したい場合に便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>checkout<span style="color: #F8F8F8"> </span>main
-<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>--no-ff<span style="color: #F8F8F8"> </span>feature
+<p>マージがfast-forwardで解決できる場合でも、マージコミットを作成します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>--no-ff<span style="color: #F8F8F8"> </span>feature-branch
 <span style="color: #000; font-style: italic">Merge made by the &#39;recursive&#39; strategy.</span>
-<span style="color: #000; font-style: italic"> file.txt | 2 ++</span>
-<span style="color: #000; font-style: italic"> 1 file changed, 2 insertions(+)</span>
+<span style="color: #000; font-style: italic"> login.js | 75 ++++++++++++++++++++++++++++++++++++++++</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 75 insertions(+)</span>
+<span style="color: #000; font-style: italic"> create mode 100644 login.js</span>
 </pre></div>
-<h3><strong>--squash</strong></h3>
-<p>マージ対象ブランチの全変更を現在のブランチに統合しますが、コミット履歴はマージせず、変更のみをステージングエリアに追加します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>checkout<span style="color: #F8F8F8"> </span>main
-<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>--squash<span style="color: #F8F8F8"> </span>feature
-<span style="color: #000; font-style: italic">Squash commit -- not updating HEAD</span>
-<span style="color: #000; font-style: italic">Automatic merge went well; stopped before committing as requested</span>
-<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;機能Aの実装&quot;</span>
-<span style="color: #000; font-style: italic">[main ab12c3d] 機能Aの実装</span>
-<span style="color: #000; font-style: italic"> 1 file changed, 10 insertions(+)</span>
+<h3><strong>--ff-only</strong></h3>
+<p>現在のHEADが既に最新であるか、マージがfast-forwardとして解決できる場合を除いて、マージを拒否し、非ゼロのステータスで終了します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>--ff-only<span style="color: #F8F8F8"> </span>upstream/main
+<span style="color: #000; font-style: italic">Updating 1234abc..5678def</span>
+<span style="color: #000; font-style: italic">Fast-forward</span>
+<span style="color: #000; font-style: italic"> README.md | 10 +++++-----</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 5 insertions(+), 5 deletions(-)</span>
 </pre></div>
 <h3><strong>--abort</strong></h3>
-<p>コンフリクト発生時にマージを中止し、マージ前の状態に戻します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>feature
-<span style="color: #000; font-style: italic">Auto-merging file.txt</span>
-<span style="color: #000; font-style: italic">CONFLICT (content): Merge conflict in file.txt</span>
+<p>現在の競合解決プロセスを中止し、マージ前の状態に戻そうとします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>feature-branch
+<span style="color: #000; font-style: italic">Auto-merging index.html</span>
+<span style="color: #000; font-style: italic">CONFLICT (content): Merge conflict in index.html</span>
 <span style="color: #000; font-style: italic">Automatic merge failed; fix conflicts and then commit the result.</span>
+
 <span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>--abort
 </pre></div>
+<h3><strong>--squash</strong></h3>
+<p>マージが行われたかのように作業ツリーとインデックス状態を生成しますが、実際にはコミットを作成せず、HEADも移動しません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>--squash<span style="color: #F8F8F8"> </span>feature-branch
+<span style="color: #000; font-style: italic">Updating 1234abc..5678def</span>
+<span style="color: #000; font-style: italic">Fast-forward</span>
+<span style="color: #000; font-style: italic">Squash commit -- not updating HEAD</span>
+<span style="color: #000; font-style: italic"> login.js | 75 ++++++++++++++++++++++++++++++++++++++++</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 75 insertions(+)</span>
+<span style="color: #000; font-style: italic"> create mode 100644 login.js</span>
+</pre></div>
+<h3><strong>-s, --strategy=&lt;strategy&gt;</strong></h3>
+<p>指定されたマージ戦略を使用します。一般的な値はrecursive、resolve、octopus、ours、subtreeなどです。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>recursive<span style="color: #F8F8F8"> </span>feature-branch
+</pre></div>
 <h2>使用例</h2>
-<h3>基本的なマージ</h3>
+<h3>基本的なブランチのマージ</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>checkout<span style="color: #F8F8F8"> </span>main
 <span style="color: #000; font-style: italic">Switched to branch &#39;main&#39;</span>
-<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>feature
-<span style="color: #000; font-style: italic">Merge made by the &#39;recursive&#39; strategy.</span>
-<span style="color: #000; font-style: italic"> feature.txt | 5 +++++</span>
-<span style="color: #000; font-style: italic"> 1 file changed, 5 insertions(+)</span>
+
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>feature-branch
+<span style="color: #000; font-style: italic">Updating 1234abc..5678def</span>
+<span style="color: #000; font-style: italic">Fast-forward</span>
+<span style="color: #000; font-style: italic"> login.js | 75 ++++++++++++++++++++++++++++++++++++++++</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 75 insertions(+)</span>
+<span style="color: #000; font-style: italic"> create mode 100644 login.js</span>
 </pre></div>
-<h3>コンフリクトの解決</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>feature
-<span style="color: #000; font-style: italic">Auto-merging README.md</span>
-<span style="color: #000; font-style: italic">CONFLICT (content): Merge conflict in README.md</span>
+<h3>複数のブランチをマージする</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>checkout<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">Switched to branch &#39;main&#39;</span>
+
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>feature1<span style="color: #F8F8F8"> </span>feature2<span style="color: #F8F8F8"> </span>feature3
+<span style="color: #000; font-style: italic">Merge made by the &#39;octopus&#39; strategy.</span>
+<span style="color: #000; font-style: italic"> feature1.js | 20 ++++++++++++++++++++</span>
+<span style="color: #000; font-style: italic"> feature2.js | 15 +++++++++++++++</span>
+<span style="color: #000; font-style: italic"> feature3.js | 30 ++++++++++++++++++++++++++++++</span>
+<span style="color: #000; font-style: italic"> 3 files changed, 65 insertions(+)</span>
+</pre></div>
+<h3>マージ競合の解決</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>merge<span style="color: #F8F8F8"> </span>feature-branch
+<span style="color: #000; font-style: italic">Auto-merging index.html</span>
+<span style="color: #000; font-style: italic">CONFLICT (content): Merge conflict in index.html</span>
 <span style="color: #000; font-style: italic">Automatic merge failed; fix conflicts and then commit the result.</span>
 
-<span style="color: #8F5902">$ </span>vim<span style="color: #F8F8F8"> </span>README.md<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># コンフリクトを編集して解決</span>
-
-<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>README.md
+<span style="color: #8F5902"># </span>index.htmlの競合を手動で解決した後
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>index.html
 <span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>commit
-<span style="color: #000; font-style: italic">[main 3e4f5a6] Merge branch &#39;feature&#39;</span>
-</pre></div>
-<h3>特定のコミットをマージ</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>cherry-pick<span style="color: #F8F8F8"> </span>abc1234
-<span style="color: #000; font-style: italic">[main 5e6f7a8] 特定の機能を追加</span>
-<span style="color: #000; font-style: italic"> 1 file changed, 3 insertions(+)</span>
+<span style="color: #000; font-style: italic">[main 1234abc] Merge branch &#39;feature-branch&#39;</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>マージ前の確認</h3>
-<p>マージを実行する前に <code>git diff &lt;ブランチ名&gt;</code> を使用して、どのような変更が取り込まれるか確認しましょう。</p>
-<h3>ブランチの整理</h3>
-<p>マージ完了後、不要になったブランチは <code>git branch -d &lt;ブランチ名&gt;</code> で削除できます。</p>
-<h3>マージ戦略の選択</h3>
-<p>大きな機能開発では <code>--no-ff</code> オプションを使うと、どの変更がどの機能に関連しているか履歴から把握しやすくなります。小さな修正では <code>--ff</code>（デフォルト）が適しています。</p>
-<h3>リベースとの使い分け</h3>
-<p>公開ブランチでは <code>merge</code> を、ローカルの作業ブランチでは <code>rebase</code> を使うというワークフローが一般的です。</p>
+<h3>フィーチャーブランチには<code>--no-ff</code>を使用する</h3>
+<p>フィーチャーブランチをマージする際は、<code>--no-ff</code>を使用してブランチの履歴を保持し、コミット履歴にフィーチャーブランチがマージされたことを明確にすることを検討してください。</p>
+<h3>マージ結果のプレビュー</h3>
+<p>実際のマージを実行する前に、以下のコマンドを使用してマージされる変更をプレビューできます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>diff<span style="color: #F8F8F8"> </span>...branch-name
+</pre></div>
+<h3>Fast-Forwardマージを理解する</h3>
+<p>Fast-forwardマージは、ターゲットブランチのコミットが現在のブランチの直接の子孫である場合に発生します。Gitはマージコミットを作成せずにポインタを前方に移動するだけです。マージコミットを強制したい場合は<code>--no-ff</code>を使用してください。</p>
+<h3>履歴をクリーンにするためのSquashマージ</h3>
+<p>フィーチャーブランチからの全ての変更を対象ブランチの単一のコミットにまとめたい場合は<code>--squash</code>を使用します。これによりコミット履歴がより整理され、読みやすくなります。</p>
 <h2>よくある質問</h2>
 <h4>Q1. マージとリベースの違いは何ですか？</h4>
-<p>A. マージは2つのブランチの履歴を結合するのに対し、リベースはあるブランチのコミットを別のブランチの先端に移動させます。マージは履歴をそのまま保持しますが、リベースは履歴を書き換えます。</p>
-<h4>Q2. マージコンフリクトが発生したらどうすればいいですか？</h4>
-<p>A. コンフリクトが発生したファイルを開き、コンフリクトマーカー（<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>)を編集して解決します。その後、<code>git add</code> でファイルをステージングし、<code>git commit</code> でマージを完了させます。</p>
-<h4>Q3. マージを取り消すにはどうすればいいですか？</h4>
-<p>A. マージ直後であれば <code>git reset --hard ORIG_HEAD</code> で取り消せます。すでに他の操作を行っている場合は <code>git reflog</code> で以前の状態を確認し、<code>git reset --hard &lt;コミットハッシュ&gt;</code> で戻ります。</p>
-<h4>Q4. fast-forwardマージとnon-fast-forwardマージの違いは何ですか？</h4>
-<p>A. fast-forwardは履歴が直線的な場合に使用され、単にHEADポインタを進めるだけです。non-fast-forwardは分岐した履歴を持つ場合に使用され、新しいマージコミットを作成します。</p>
+<p>A. マージは両方のブランチからの変更を組み合わせた新しいコミットを作成し、ブランチの履歴を保持します。リベースはブランチのコミットをターゲットブランチの上に再生し、線形の履歴を作成しますが、コミット履歴を書き換えます。</p>
+<h4>Q2. マージを元に戻すにはどうすればよいですか？</h4>
+<p>A. マージをプッシュしていない場合は、<code>git reset --hard HEAD~1</code>を使用して最後のコミットを元に戻せます。既にプッシュしている場合は、<code>git revert -m 1 &lt;マージコミットのハッシュ&gt;</code>を使用してマージを元に戻す新しいコミットを作成することを検討してください。</p>
+<h4>Q3. Gitマージでの「fast-forward」とは何ですか？</h4>
+<p>A. Fast-forwardマージは、フィーチャーブランチが作成されてから基本ブランチに新しいコミットがない場合に発生します。Gitはマージコミットを作成せずに、基本ブランチのポインタをフィーチャーブランチのポインタまで前進させるだけです。</p>
+<h4>Q4. マージ競合を解決するにはどうすればよいですか？</h4>
+<p>A. Gitが競合を報告した場合、競合したファイルを編集して差異を解決し、<code>git add</code>を使用して解決済みとマークし、最後に<code>git commit</code>を実行してマージを完了します。</p>
 <h2>参考資料</h2>
 <p>https://git-scm.com/docs/git-merge</p>
-<h2>Revisions</h2>
+<h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

@@ -1,55 +1,91 @@
 # getopt command
 
-Parse command-line options in shell scripts.
+Parse command-line options in a standardized way.
 
 ## Overview
 
-`getopt` is a command-line utility that helps parse command-line arguments in shell scripts. It standardizes option handling by allowing scripts to easily process both short options (like `-a`) and long options (like `--all`), with or without arguments.
+`getopt` is a command-line utility that parses command-line arguments according to a specified format, making it easier to handle options in shell scripts. It helps standardize option processing by rearranging the arguments into a canonical form that is easier for scripts to process.
 
 ## Options
 
-### **-o, --options**
+### **-a, --alternative**
 
-Specifies the short options to be recognized. Each character in the string represents a valid option. A colon after an option means it requires an argument, and two colons mean the argument is optional.
+Enable alternative parsing mode (allows long options to start with a single dash)
 
 ```console
-$ getopt -o a:bc -- -a value -b -c
- -a 'value' -b -c --
+$ getopt -a -o a:b -l alpha:,beta -- -alpha foo -b
+ -a 'foo' -b --
 ```
 
 ### **-l, --longoptions**
 
-Specifies the long options to be recognized. Options are comma-separated, and a colon after an option means it requires an argument.
+Define the long options to be recognized
 
 ```console
-$ getopt -o a:bc -l alpha:,beta,gamma -- --alpha=value --beta
- --alpha 'value' --beta --
+$ getopt -l help,version,output: -- --help --output=file.txt
+ --help --output 'file.txt' --
 ```
 
 ### **-n, --name**
 
-Sets the name used in error messages. Useful for making error messages more user-friendly.
+Set the name used for error messages
 
 ```console
-$ getopt -n "myscript" -o a:bc -- -d
-myscript: invalid option -- 'd'
+$ getopt -n myscript -o a:b -- -x
+myscript: invalid option -- 'x'
+```
+
+### **-o, --options**
+
+Define the short options to be recognized
+
+```console
+$ getopt -o a:bc -- -a value -bc
+ -a 'value' -b -c --
 ```
 
 ### **-q, --quiet**
 
-Suppresses error messages. The script must check the exit status to detect errors.
+Suppress error messages
 
 ```console
-$ getopt -q -o a:bc -- -d
+$ getopt -q -o a:b -- -x
+ --
+```
+
+### **-Q, --quiet-output**
+
+Suppress normal output (useful when checking for valid options)
+
+```console
+$ getopt -Q -o a:b -- -a value
+```
+
+### **-s, --shell**
+
+Set quoting conventions according to the specified shell (bash, sh, csh)
+
+```console
+$ getopt -s bash -o a: -- -a "file with spaces"
+ -a 'file with spaces' --
+```
+
+### **-T, --test**
+
+Test mode - output the parsed options but don't execute
+
+```console
+$ getopt -T -o a:b -- -a value -b
+ -a 'value' -b --
 ```
 
 ### **-u, --unquoted**
 
-Disables quoting of output, which can be useful in some contexts but may cause problems with arguments containing spaces.
+Don't quote the output
 
 ```console
-$ getopt -u -o a: -- -a "hello world"
- -a hello world --
+$ getopt -u -o a:b -- -a value
+ -a value --
 ```
 
 ## Usage Examples
@@ -59,104 +95,79 @@ $ getopt -u -o a: -- -a "hello world"
 ```console
 $ cat myscript.sh
 #!/bin/bash
-OPTS=$(getopt -o ab:c:: -l alpha,beta:,gamma:: -n 'myscript' -- "$@")
+OPTS=$(getopt -o a:bc -l alpha:,beta,charlie -- "$@")
 eval set -- "$OPTS"
-
 while true; do
   case "$1" in
-    -a | --alpha) echo "Option alpha"; shift ;;
-    -b | --beta) echo "Option beta with value $2"; shift 2 ;;
-    -c | --gamma) 
-      case "$2" in
-        "") echo "Option gamma with no value"; shift 2 ;;
-        *) echo "Option gamma with value $2"; shift 2 ;;
-      esac ;;
+    -a|--alpha) echo "Alpha option with value: $2"; shift 2 ;;
+    -b|--beta) echo "Beta option enabled"; shift ;;
+    -c|--charlie) echo "Charlie option enabled"; shift ;;
     --) shift; break ;;
     *) echo "Internal error!"; exit 1 ;;
   esac
 done
-
 echo "Remaining arguments: $@"
+
+$ ./myscript.sh -a foo --beta arg1 arg2
+Alpha option with value: foo
+Beta option enabled
+Remaining arguments: arg1 arg2
 ```
 
-### Handling Required Arguments
+### Handling Options with Spaces in Values
 
 ```console
-$ cat required-args.sh
-#!/bin/bash
-OPTS=$(getopt -o f:o: -l file:,output: -n 'required-args' -- "$@")
-if [ $? -ne 0 ]; then exit 1; fi
-eval set -- "$OPTS"
-
-FILE=""
-OUTPUT=""
-
-while true; do
-  case "$1" in
-    -f | --file) FILE="$2"; shift 2 ;;
-    -o | --output) OUTPUT="$2"; shift 2 ;;
-    --) shift; break ;;
-    *) echo "Internal error!"; exit 1 ;;
-  esac
-done
-
-if [ -z "$FILE" ]; then
-  echo "Error: --file option is required"
-  exit 1
-fi
-
-echo "Processing file: $FILE"
-echo "Output: ${OUTPUT:-standard output}"
+$ getopt -o d: -- -d "my directory"
+ -d 'my directory' --
 ```
 
-## Tips
+### Using Alternative Mode for Single-Dash Long Options
 
-### Use Enhanced getopt
-
-The enhanced version of getopt (found on most Linux systems) supports long options and better error handling. The traditional version (found on some Unix systems) is more limited.
-
-### Always Check Return Status
-
-Always check the return status of getopt to handle invalid options gracefully:
-
-```bash
-OPTS=$(getopt -o ab:c -n 'myscript' -- "$@")
-if [ $? -ne 0 ]; then
-  echo "Failed to parse options"
-  exit 1
-fi
+```console
+$ getopt -a -o "" -l help,version -- -help -version
+ --help --version --
 ```
 
-### Properly Quote Variables
+## Tips:
 
-When using eval with getopt output, always quote the variables to handle spaces and special characters correctly:
+### Always Check for Errors
 
-```bash
-eval set -- "$OPTS"
+Always check the return code of getopt to ensure options were valid before proceeding with your script.
+
+```console
+$ if ! OPTS=$(getopt -o a:b -n "$0" -- "$@"); then exit 1; fi
 ```
 
-### Use -- to Separate Options from Arguments
+### Use eval set -- to Process the Output
 
-Always include `--` in your getopt command to properly separate options from non-option arguments.
+The canonical way to use getopt in scripts is to capture its output and use `eval set --` to replace the script's arguments with the processed ones.
+
+### Prefer Enhanced getopt Over Basic getopt
+
+The enhanced getopt (from util-linux) supports long options and better error handling than the basic version found in some systems. Check which version you have with `getopt -V`.
+
+### Handling Whitespace in Arguments
+
+Always quote variables when passing them to getopt to handle whitespace correctly: `getopt ... -- "$@"` not `getopt ... -- $@`.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between getopt and getopts?
-A. `getopt` is an external command that supports both short and long options, while `getopts` is a shell builtin that only supports short options but is more portable.
+A. `getopt` is an external command that supports both short and long options, while `getopts` is a shell builtin that only handles short options but is more portable across different Unix-like systems.
 
-#### Q2. How do I handle options with optional arguments?
-A. Use double colons for short options (`a::`) and double colons for long options (`alpha::`). The argument must be attached to the option with an equals sign for long options.
+#### Q2. How do I specify an option that requires a value?
+A. For short options, add a colon after the option letter in the option string (e.g., `a:` for `-a value`). For long options, add a colon after the option name (e.g., `alpha:` for `--alpha=value`).
 
-#### Q3. Why does my getopt not support long options?
-A. You might be using the traditional version of getopt. Check if your system has an enhanced version or consider using the getopts builtin instead.
+#### Q3. How do I handle options with optional arguments?
+A. The enhanced getopt supports optional arguments for long options by using two colons (e.g., `alpha::` for `--alpha[=value]`).
 
-#### Q4. How do I handle non-option arguments?
-A. After processing all options with getopt, the remaining arguments will be available as positional parameters after the `--` separator.
+#### Q4. Why does my script fail with "getopt: unrecognized option"?
+A. You might be using the basic version of getopt which doesn't support long options. Try using only short options or upgrade to the enhanced version.
 
 ## References
 
-https://www.gnu.org/software/libc/manual/html_node/Getopt.html
+https://man7.org/linux/man-pages/man1/getopt.1.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

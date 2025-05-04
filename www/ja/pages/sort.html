@@ -47,12 +47,12 @@
     <main>
       
   <h1>sort コマンド</h1>
-<p>テキストファイルの行を並べ替えます。</p>
+<p>テキストファイルの行をアルファベット順または数値順に並べ替えます。</p>
 <h2>概要</h2>
-<p><code>sort</code> コマンドはテキストファイルの行をソートするために使用されます。デフォルトでは、アルファベット順（辞書順）にソートしますが、数値順、月名順、ランダム順など、さまざまな方法でソートすることができます。また、特定のフィールドやキーに基づいてソートすることも可能です。</p>
+<p><code>sort</code> コマンドは、テキストファイルや標準入力からの行をアルファベット順、数値順、またはカスタム定義された順序で並べ替えます。複数のソート済みファイルを結合したり、重複行を削除したり、その他の様々な並べ替え操作を実行できます。このユーティリティは、データ処理パイプラインやテキストベースの情報を整理するために一般的に使用されます。</p>
 <h2>オプション</h2>
-<h3><strong>-n（数値順ソート）</strong></h3>
-<p>文字列を数値として解釈し、数値の大きさでソートします。</p>
+<h3><strong>-n, --numeric-sort</strong></h3>
+<p>アルファベット順ではなく数値順に並べ替えます。フィールドの先頭にある数字を認識します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>numbers.txt
 <span style="color: #000; font-style: italic">10</span>
 <span style="color: #000; font-style: italic">2</span>
@@ -62,95 +62,125 @@
 <span style="color: #000; font-style: italic">2</span>
 <span style="color: #000; font-style: italic">10</span>
 </pre></div>
-<h3><strong>-r（逆順ソート）</strong></h3>
-<p>ソート結果を逆順（降順）に表示します。</p>
+<h3><strong>-r, --reverse</strong></h3>
+<p>比較結果を反転させ、降順に並べ替えます。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>fruits.txt
-<span style="color: #000; font-style: italic">りんご</span>
-<span style="color: #000; font-style: italic">みかん</span>
-<span style="color: #000; font-style: italic">いちご</span>
+<span style="color: #000; font-style: italic">watermelon</span>
+<span style="color: #000; font-style: italic">orange</span>
+<span style="color: #000; font-style: italic">banana</span>
+<span style="color: #000; font-style: italic">apple</span>
 </pre></div>
-<h3><strong>-k（キーフィールド指定）</strong></h3>
-<p>特定のフィールド（列）を基準にしてソートします。フィールドは空白で区切られます。</p>
+<h3><strong>-k, --key=POS1[,POS2]</strong></h3>
+<p>入力の特定のフィールド（列）に基づいて並べ替えます。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>employees.txt
-<span style="color: #000; font-style: italic">山田 営業 35</span>
-<span style="color: #000; font-style: italic">佐藤 技術 28</span>
-<span style="color: #000; font-style: italic">鈴木 営業 42</span>
-<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-k2,2<span style="color: #F8F8F8"> </span>employees.txt
-<span style="color: #000; font-style: italic">鈴木 営業 42</span>
-<span style="color: #000; font-style: italic">山田 営業 35</span>
-<span style="color: #000; font-style: italic">佐藤 技術 28</span>
+<span style="color: #000; font-style: italic">John 35 Developer</span>
+<span style="color: #000; font-style: italic">Alice 28 Designer</span>
+<span style="color: #000; font-style: italic">Bob 42 Manager</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-k2<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>employees.txt
+<span style="color: #000; font-style: italic">Alice 28 Designer</span>
+<span style="color: #000; font-style: italic">John 35 Developer</span>
+<span style="color: #000; font-style: italic">Bob 42 Manager</span>
 </pre></div>
-<h3><strong>-t（区切り文字指定）</strong></h3>
-<p>フィールドの区切り文字を指定します。</p>
+<h3><strong>-t, --field-separator=SEP</strong></h3>
+<p>フィールド区切り文字を指定します（デフォルトは空白）。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.csv
-<span style="color: #000; font-style: italic">山田,35,営業</span>
-<span style="color: #000; font-style: italic">佐藤,28,技術</span>
-<span style="color: #000; font-style: italic">鈴木,42,営業</span>
-<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-t,<span style="color: #F8F8F8"> </span>-k2,2n<span style="color: #F8F8F8"> </span>data.csv
-<span style="color: #000; font-style: italic">佐藤,28,技術</span>
-<span style="color: #000; font-style: italic">山田,35,営業</span>
-<span style="color: #000; font-style: italic">鈴木,42,営業</span>
+<span style="color: #000; font-style: italic">name,age,role</span>
+<span style="color: #000; font-style: italic">John,35,Developer</span>
+<span style="color: #000; font-style: italic">Alice,28,Designer</span>
+<span style="color: #000; font-style: italic">Bob,42,Manager</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-t,<span style="color: #F8F8F8"> </span>-k2<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>data.csv
+<span style="color: #000; font-style: italic">name,age,role</span>
+<span style="color: #000; font-style: italic">Alice,28,Designer</span>
+<span style="color: #000; font-style: italic">John,35,Developer</span>
+<span style="color: #000; font-style: italic">Bob,42,Manager</span>
 </pre></div>
-<h3><strong>-u（重複行の削除）</strong></h3>
-<p>ソート結果から重複する行を削除します。</p>
+<h3><strong>-u, --unique</strong></h3>
+<p>等しい行の最初のもののみを出力します（重複を削除）。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>duplicates.txt
-<span style="color: #000; font-style: italic">りんご</span>
-<span style="color: #000; font-style: italic">みかん</span>
-<span style="color: #000; font-style: italic">りんご</span>
-<span style="color: #000; font-style: italic">いちご</span>
+<span style="color: #000; font-style: italic">apple</span>
+<span style="color: #000; font-style: italic">banana</span>
+<span style="color: #000; font-style: italic">apple</span>
+<span style="color: #000; font-style: italic">orange</span>
+<span style="color: #000; font-style: italic">banana</span>
 <span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>duplicates.txt
-<span style="color: #000; font-style: italic">いちご</span>
-<span style="color: #000; font-style: italic">みかん</span>
-<span style="color: #000; font-style: italic">りんご</span>
+<span style="color: #000; font-style: italic">apple</span>
+<span style="color: #000; font-style: italic">banana</span>
+<span style="color: #000; font-style: italic">orange</span>
+</pre></div>
+<h3><strong>-f, --ignore-case</strong></h3>
+<p>アルファベット順に並べ替える際に大文字と小文字を区別しません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>mixed-case.txt
+<span style="color: #000; font-style: italic">Apple</span>
+<span style="color: #000; font-style: italic">banana</span>
+<span style="color: #000; font-style: italic">Carrot</span>
+<span style="color: #000; font-style: italic">apple</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>mixed-case.txt
+<span style="color: #000; font-style: italic">Apple</span>
+<span style="color: #000; font-style: italic">apple</span>
+<span style="color: #000; font-style: italic">banana</span>
+<span style="color: #000; font-style: italic">Carrot</span>
+</pre></div>
+<h3><strong>-h, --human-numeric-sort</strong></h3>
+<p>人間が読みやすい数値（例：2K、1M）を比較します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>sizes.txt
+<span style="color: #000; font-style: italic">1K</span>
+<span style="color: #000; font-style: italic">5M</span>
+<span style="color: #000; font-style: italic">10G</span>
+<span style="color: #000; font-style: italic">2K</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>sizes.txt
+<span style="color: #000; font-style: italic">1K</span>
+<span style="color: #000; font-style: italic">2K</span>
+<span style="color: #000; font-style: italic">5M</span>
+<span style="color: #000; font-style: italic">10G</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的なソート</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>fruits.txt
-<span style="color: #000; font-style: italic">いちご</span>
-<span style="color: #000; font-style: italic">みかん</span>
-<span style="color: #000; font-style: italic">りんご</span>
+<h3>ファイルを並べ替えて出力を保存する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>names.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>sorted_names.txt
 </pre></div>
-<h3>数値の降順ソート</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-nr<span style="color: #F8F8F8"> </span>numbers.txt
-<span style="color: #000; font-style: italic">10</span>
-<span style="color: #000; font-style: italic">2</span>
-<span style="color: #000; font-style: italic">1</span>
+<h3>複数のソート済みファイルを結合する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>sorted1.txt<span style="color: #F8F8F8"> </span>sorted2.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>merged.txt
 </pre></div>
-<h3>CSVファイルの3列目でソート</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-t,<span style="color: #F8F8F8"> </span>-k3,3<span style="color: #F8F8F8"> </span>data.csv
-<span style="color: #000; font-style: italic">山田,35,営業</span>
-<span style="color: #000; font-style: italic">鈴木,42,営業</span>
-<span style="color: #000; font-style: italic">佐藤,28,技術</span>
+<h3>複数のフィールドで並べ替える</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.txt
+<span style="color: #000; font-style: italic">John Smith 35 Developer</span>
+<span style="color: #000; font-style: italic">Alice Johnson 28 Designer</span>
+<span style="color: #000; font-style: italic">Bob Williams 42 Manager</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-k4,4<span style="color: #F8F8F8"> </span>-k1,1<span style="color: #F8F8F8"> </span>data.txt
+<span style="color: #000; font-style: italic">Alice Johnson 28 Designer</span>
+<span style="color: #000; font-style: italic">John Smith 35 Developer</span>
+<span style="color: #000; font-style: italic">Bob Williams 42 Manager</span>
 </pre></div>
-<h3>複数のキーでソート（部署で昇順、年齢で降順）</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>-t,<span style="color: #F8F8F8"> </span>-k3,3<span style="color: #F8F8F8"> </span>-k2,2nr<span style="color: #F8F8F8"> </span>data.csv
-<span style="color: #000; font-style: italic">鈴木,42,営業</span>
-<span style="color: #000; font-style: italic">山田,35,営業</span>
-<span style="color: #000; font-style: italic">佐藤,28,技術</span>
+<h3>列内の一意の値を見つける</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>logs.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d<span style="color: #4E9A06">&#39; &#39;</span><span style="color: #F8F8F8"> </span>-f3<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span>-u
+<span style="color: #000; font-style: italic">ERROR</span>
+<span style="color: #000; font-style: italic">INFO</span>
+<span style="color: #000; font-style: italic">WARNING</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>大文字小文字を区別しないソート</h3>
-<p><code>-f</code> オプションを使用すると、大文字と小文字を区別せずにソートできます。これは英語のテキストを扱う際に便利です。</p>
 <h3>安定ソート</h3>
-<p><code>-s</code> オプションを使うと安定ソートが行われます。これは、同じキー値を持つ項目の相対的な順序が保持されるということです。</p>
-<h3>メモリ使用量の制限</h3>
-<p>大きなファイルをソートする場合、<code>-S</code> オプションでメモリ使用量を制限できます。例：<code>sort -S 100M bigfile.txt</code></p>
-<h3>一時ファイルの場所指定</h3>
-<p><code>-T</code> オプションで一時ファイルの保存場所を指定できます。大きなファイルをソートする際に役立ちます。例：<code>sort -T /tmp bigfile.txt</code></p>
+<p><code>sort -s</code> を使用すると安定ソートが行われ、等しいソートキーを持つ行の元の順序が保持されます。これは、複数の基準で順番にソートする場合に便利である。</p>
+<h3>メモリ使用量</h3>
+<p>非常に大きなファイルの場合、<code>sort -S</code> でメモリバッファサイズを指定するか、<code>sort -T</code> でより多くの空き容量がある一時ディレクトリを指定します。例：<code>sort -S 1G -T /tmp bigfile.txt</code></p>
+<h3>すでにソートされているかチェック</h3>
+<p><code>sort -c</code> を使用すると、出力を生成せずにファイルがすでにソートされているかどうかをチェックできます。終了ステータスは、ファイルがソートされている場合（0）またはそうでない場合（1）を示します。</p>
+<h3>ランダムソート</h3>
+<p><code>sort -R</code> を使用すると行の順序をランダム化できます。これはデータからランダムサンプルを選択する際に便利です。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>sort</code> コマンドはどのような時に使いますか？</h4>
-<p>A. テキストファイルの内容を特定の順序で並べ替えたい時に使います。データ分析、ログファイルの整理、重複エントリの検出などに役立ちます。</p>
-<h4>Q2. 数値と文字列が混在するファイルをどうソートしますか？</h4>
-<p>A. <code>-g</code> オプションを使うと、一般的な数値（浮動小数点数を含む）として認識してソートします。</p>
-<h4>Q3. 特定の列だけを無視してソートするには？</h4>
-<p>A. <code>-k</code> オプションで開始フィールドと終了フィールドを指定します。例えば、2列目から3列目までをソートキーにするには <code>sort -k2,3</code> とします。</p>
-<h4>Q4. ソート結果をファイルに保存するには？</h4>
-<p>A. リダイレクト演算子 <code>&gt;</code> を使います。例：<code>sort file.txt &gt; sorted_file.txt</code></p>
-<h2>参考</h2>
+<h4>Q1. ファイルを数値順にソートするにはどうすればよいですか？</h4>
+<p>A. <code>sort -n ファイル名</code> を使用して、アルファベット順ではなく数値順にソートします。</p>
+<h4>Q2. 特定の列でソートするにはどうすればよいですか？</h4>
+<p>A. <code>sort -k 列番号 ファイル名</code> を使用します。例えば、<code>sort -k 2 ファイル名</code> は2列目でソートします。</p>
+<h4>Q3. ソート中に重複行を削除するにはどうすればよいですか？</h4>
+<p>A. <code>sort -u ファイル名</code> を使用して、一意の行のみを出力します。</p>
+<h4>Q4. 逆順にソートするにはどうすればよいですか？</h4>
+<p>A. <code>sort -r ファイル名</code> を使用して、降順にソートします。</p>
+<h4>Q5. CSVファイルを特定の列でソートするにはどうすればよいですか？</h4>
+<p>A. <code>sort -t, -k 列番号 ファイル名.csv</code> を使用します。ここで <code>-t,</code> はカンマをフィールド区切り文字として指定します。</p>
+<h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

@@ -4,11 +4,11 @@ Transfer data from or to a server using various protocols including HTTP, HTTPS,
 
 ## Overview
 
-`curl` is a command-line tool for transferring data with URLs. It supports numerous protocols including HTTP, HTTPS, FTP, FTPS, SCP, SFTP, SMTP, and more. It's commonly used for downloading files, testing APIs, sending HTTP requests, and debugging network issues. `curl` is highly versatile and can be used with or without user interaction.
+`curl` is a command-line tool for transferring data with URLs. It supports numerous protocols including HTTP, HTTPS, FTP, FTPS, SCP, SFTP, LDAP, and more. It's commonly used for downloading files, testing APIs, sending HTTP requests, and debugging network issues. `curl` is non-interactive and designed to work without user intervention, making it ideal for scripts and automation.
 
 ## Options
 
-### **-o, --output \<file\>**
+### **-o, --output \<file>**
 
 Save the output to a file instead of displaying it on the screen
 
@@ -16,18 +16,38 @@ Save the output to a file instead of displaying it on the screen
 $ curl -o example.html https://example.com
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100  1256  100  1256    0     0  12560      0 --:--:-- --:--:-- --:--:-- 12560
+100  1256  100  1256    0     0   9664      0 --:--:-- --:--:-- --:--:--  9663
 ```
 
 ### **-O, --remote-name**
 
-Save the output using the remote file name
+Save the output using the remote file name from the URL
 
 ```console
 $ curl -O https://example.com/sample.zip
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100 10.5M  100 10.5M    0     0  5.2M      0  0:00:02  0:00:02 --:--:-- 5.2M
+100 10.2M  100 10.2M    0     0  5.1MB/s      0 --:--:-- 0:00:02 --:--:-- 5.1MB
+```
+
+### **-L, --location**
+
+Follow HTTP redirects (3XX responses)
+
+```console
+$ curl -L http://github.com
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   142  100   142    0     0    573      0 --:--:-- --:--:-- --:--:--   573
+100  5891    0  5891    0     0  13090      0 --:--:-- --:--:-- --:--:-- 13090
+```
+
+### **-s, --silent**
+
+Silent mode; don't show progress meter or error messages
+
+```console
+$ curl -s https://example.com > example.html
 ```
 
 ### **-I, --head**
@@ -38,94 +58,85 @@ Fetch HTTP headers only (HEAD request)
 $ curl -I https://example.com
 HTTP/2 200 
 content-type: text/html; charset=UTF-8
-date: Tue, 30 Apr 2025 12:00:00 GMT
-expires: Tue, 07 May 2025 12:00:00 GMT
+date: Tue, 04 May 2025 12:00:00 GMT
+expires: Tue, 11 May 2025 12:00:00 GMT
 cache-control: public, max-age=604800
-server: ECS (dcb/7F83)
+server: ECS (dcb/7F84)
 content-length: 1256
 ```
 
-### **-X, --request \<method\>**
+### **-X, --request \<command>**
 
-Specify the request method to use (GET, POST, PUT, DELETE, etc.)
+Specify the HTTP request method to use (GET, POST, PUT, DELETE, etc.)
 
 ```console
 $ curl -X POST https://api.example.com/data
-{"status":"success","message":"Data received"}
 ```
 
-### **-H, --header \<header\>**
+### **-H, --header \<header>**
 
-Add custom headers to the request
+Add a custom header to the request
 
 ```console
-$ curl -H "Content-Type: application/json" -H "Authorization: Bearer token123" https://api.example.com
-{"data":"This is protected content"}
+$ curl -H "Content-Type: application/json" https://api.example.com
 ```
 
-### **-d, --data \<data\>**
+### **-d, --data \<data>**
 
-Send data in the request body (typically for POST requests)
+Send data in the request body (typically used with POST)
 
 ```console
 $ curl -X POST -d "name=John&age=30" https://api.example.com/users
-{"id":123,"name":"John","age":30}
 ```
 
-### **-s, --silent**
+### **-A, --user-agent \<agent string>**
 
-Silent mode (don't show progress meter or error messages)
+Specify the User-Agent string to send to the server
 
 ```console
-$ curl -s https://example.com
-<!doctype html>
-<html>
-<head>
-    <title>Example Domain</title>
-    ...
-</html>
+$ curl -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" https://example.com
 ```
 
 ## Usage Examples
 
-### Downloading a file and showing progress
+### Downloading a file and saving it with a specific name
 
 ```console
-$ curl -# -o firefox.dmg "https://download.mozilla.org/?product=firefox-latest"
-######################################################################## 100.0%
+$ curl -o linux-distro.iso https://example.com/downloads/linux.iso
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 1500M  100 1500M    0     0  10.2M/s      0  0:02:27  0:02:27 --:--:-- 10.5M
 ```
 
-### Sending JSON data in a POST request
+### Making a POST request with JSON data
 
 ```console
-$ curl -X POST -H "Content-Type: application/json" -d '{"name":"Alice","email":"alice@example.com"}' https://api.example.com/users
-{"id":456,"name":"Alice","email":"alice@example.com","status":"created"}
+$ curl -X POST -H "Content-Type: application/json" -d '{"name":"John","age":30}' https://api.example.com/users
+{"id": 123, "status": "created"}
 ```
 
-### Following redirects
+### Downloading multiple files with authentication
 
 ```console
-$ curl -L http://github.com
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>GitHub: Let's build from here · GitHub</title>
-    ...
+$ curl -u username:password -O https://example.com/file1.txt -O https://example.com/file2.txt
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1256  100  1256    0     0  12560      0 --:--:-- --:--:-- --:--:-- 12560
+100  2048  100  2048    0     0  20480      0 --:--:-- --:--:-- --:--:-- 20480
 ```
 
 ### Uploading a file
 
 ```console
-$ curl -F "file=@photo.jpg" https://upload.example.com
-{"success":true,"url":"https://cdn.example.com/uploads/photo123.jpg"}
+$ curl -F "file=@localfile.jpg" https://example.com/upload
+{"status": "success", "url": "https://example.com/uploads/image123.jpg"}
 ```
 
 ## Tips
 
-### Use `-v` for Debugging
+### Use Verbose Mode for Debugging
 
-The verbose flag (`-v`) shows the complete request and response headers, which is invaluable for debugging API calls or network issues.
+When troubleshooting, use `-v` (verbose) or `-vv` (very verbose) to see detailed information about the request and response:
 
 ```console
 $ curl -v https://example.com
@@ -133,41 +144,65 @@ $ curl -v https://example.com
 
 ### Save Cookies and Use Them Later
 
-Use `--cookie-jar` to save cookies and `--cookie` to use them in subsequent requests, which helps with authenticated sessions.
+To handle sessions that require cookies:
 
 ```console
-$ curl --cookie-jar cookies.txt https://login.example.com
-$ curl --cookie cookies.txt https://protected.example.com
+$ curl -c cookies.txt https://example.com/login -d "user=name&password=secret"
+$ curl -b cookies.txt https://example.com/protected-area
 ```
 
-### Set Timeouts for Unreliable Connections
+### Limit Download Speed
 
-Use `--connect-timeout` and `--max-time` to prevent curl from hanging indefinitely on slow or unresponsive servers.
+To avoid consuming all available bandwidth:
 
 ```console
-$ curl --connect-timeout 10 --max-time 30 https://slow-server.example.com
+$ curl --limit-rate 1M -O https://example.com/large-file.zip
 ```
 
-### Use `-k` with Caution
+### Resume Interrupted Downloads
 
-The `-k` (or `--insecure`) option allows connections to SSL sites without certificates, but should only be used for testing as it bypasses security checks.
+If a download gets interrupted, you can resume it:
+
+```console
+$ curl -C - -O https://example.com/large-file.zip
+```
+
+### Test API Endpoints Quickly
+
+For quick API testing, combine with tools like `jq` to format JSON responses:
+
+```console
+$ curl -s https://api.example.com/users | jq
+```
 
 ## Frequently Asked Questions
 
 #### Q1. How do I download a file with curl?
-A. Use `curl -o filename URL` to save to a specific filename or `curl -O URL` to use the remote filename.
+A. Use `curl -O URL` to download and save with the original filename, or `curl -o filename URL` to specify a different filename.
 
-#### Q2. How can I send a POST request with curl?
-A. Use `curl -X POST -d "key=value" URL` or `curl -X POST -H "Content-Type: application/json" -d '{"key":"value"}' URL` for JSON data.
+#### Q2. How can I make a POST request with curl?
+A. Use `curl -X POST -d "key=value" URL` for form data or `curl -X POST -H "Content-Type: application/json" -d '{"key":"value"}' URL` for JSON data.
 
 #### Q3. How do I follow redirects with curl?
-A. Use the `-L` or `--location` option to make curl follow HTTP redirects.
+A. Use the `-L` or `--location` option to follow HTTP redirects.
 
-#### Q4. How can I see detailed information about the request and response?
-A. Use the `-v` or `--verbose` option to see the complete HTTP transaction.
+#### Q4. How can I see the HTTP headers in the response?
+A. Use `curl -I URL` to see only headers, or `curl -v URL` to see both headers and body.
 
-#### Q5. How do I upload a file with curl?
-A. Use `curl -F "file=@path/to/file" URL` for form-based uploads or `curl -T filename URL` for direct uploads.
+#### Q5. How do I authenticate with curl?
+A. For basic authentication, use `curl -u username:password URL`. For OAuth or token-based auth, use `curl -H "Authorization: Bearer YOUR_TOKEN" URL`.
+
+## macOS Considerations
+
+On macOS, the default `curl` is typically older than on Linux distributions. Some newer features might not be available. Additionally, macOS's `curl` is built with Secure Transport (Apple's SSL/TLS implementation) rather than OpenSSL, which can occasionally cause subtle differences in behavior, especially with SSL certificates.
+
+If you need the latest version with all features, consider installing `curl` via Homebrew:
+
+```console
+$ brew install curl
+```
+
+After installation, you may need to use `/usr/local/opt/curl/bin/curl` or add it to your PATH to use the Homebrew version instead of the system version.
 
 ## References
 
@@ -175,4 +210,4 @@ https://curl.se/docs/manpage.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

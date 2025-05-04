@@ -47,85 +47,97 @@
     <main>
       
   <h1>ssh-agent コマンド</h1>
-<p>SSH認証鍵を安全に管理し、パスフレーズの再入力なしで認証を行うためのエージェントを起動します。</p>
+<p>SSH秘密鍵を管理する認証エージェントで、接続時にパスフレーズの再入力が不要になります。</p>
 <h2>概要</h2>
-<p>ssh-agentは、SSH秘密鍵を安全にメモリ内に保持するプログラムです。一度パスフレーズを入力してキーを登録すると、その後のSSH接続ではパスフレーズの再入力が不要になります。これにより、複数のSSH接続を効率的に行うことができます。通常はシェルの起動時に実行され、環境変数を設定して子プロセスがエージェントと通信できるようにします。</p>
+<p><code>ssh-agent</code> はSSH公開鍵認証に使用される秘密鍵を保持するプログラムです。バックグラウンドで動作し、リモートサーバーにSSH接続するたびにパスフレーズを入力する必要がなくなります。エージェントに鍵を追加すると、パスフレーズを一度入力するだけで、エージェントは復号化された鍵をメモリに保持し、以降の接続で使用します。</p>
 <h2>オプション</h2>
-<h3><strong>-c</strong></h3>
-<p>C-shellスタイルのコマンドを出力します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-c
-<span style="color: #000; font-style: italic">setenv SSH_AUTH_SOCK /tmp/ssh-XXXXXXXX/agent.12345;</span>
-<span style="color: #000; font-style: italic">setenv SSH_AGENT_PID 12345;</span>
-<span style="color: #000; font-style: italic">echo Agent pid 12345;</span>
+<h3><strong>-a socket</strong></h3>
+<p>エージェントを特定のUnixドメインソケットにバインドします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>/tmp/ssh-agent.socket
+<span style="color: #000; font-style: italic">SSH_AUTH_SOCK=/tmp/ssh-agent.socket; export SSH_AUTH_SOCK;</span>
+<span style="color: #000; font-style: italic">SSH_AGENT_PID=1234; export SSH_AGENT_PID;</span>
+<span style="color: #000; font-style: italic">echo Agent pid 1234;</span>
 </pre></div>
-<h3><strong>-s</strong></h3>
-<p>Bourne shellスタイルのコマンドを出力します（デフォルト）。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-s
-<span style="color: #000; font-style: italic">SSH_AUTH_SOCK=/tmp/ssh-XXXXXXXX/agent.12345; export SSH_AUTH_SOCK;</span>
-<span style="color: #000; font-style: italic">SSH_AGENT_PID=12345; export SSH_AGENT_PID;</span>
-<span style="color: #000; font-style: italic">echo Agent pid 12345;</span>
+<h3><strong>-c</strong></h3>
+<p>標準出力にC-shellコマンドを生成します。SHELLがcshスタイルのシェルのように見える場合、これがデフォルトになります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-c
+<span style="color: #000; font-style: italic">setenv SSH_AUTH_SOCK /tmp/ssh-XXXXXXXXXX/agent.1234;</span>
+<span style="color: #000; font-style: italic">setenv SSH_AGENT_PID 1234;</span>
+<span style="color: #000; font-style: italic">echo Agent pid 1234;</span>
 </pre></div>
 <h3><strong>-d</strong></h3>
-<p>デバッグモードで実行します。</p>
+<p>デバッグモード。エージェントはフォークせず、デバッグ情報を標準エラーに書き込みます。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-d
 <span style="color: #000; font-style: italic">debug: ssh-agent: starting</span>
-<span style="color: #000; font-style: italic">debug: ssh-agent: listening on socket: /tmp/ssh-XXXXXXXX/agent.12345</span>
+<span style="color: #000; font-style: italic">debug: ssh-agent: listening on socket: /tmp/ssh-XXXXXXXXXX/agent.1234</span>
 </pre></div>
 <h3><strong>-k</strong></h3>
-<p>実行中のssh-agentを終了します。</p>
+<p>現在のエージェント（SSH_AGENT_PID環境変数で指定）を終了します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-k
-<span style="color: #000; font-style: italic">unset SSH_AUTH_SOCK;</span>
-<span style="color: #000; font-style: italic">unset SSH_AGENT_PID;</span>
-<span style="color: #000; font-style: italic">echo Agent pid 12345 killed;</span>
+<span style="color: #000; font-style: italic">Agent pid 1234 killed</span>
+</pre></div>
+<h3><strong>-s</strong></h3>
+<p>標準出力にBourne shellコマンドを生成します。SHELLがcshスタイルのシェルのように見えない場合、これがデフォルトになります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-s
+<span style="color: #000; font-style: italic">SSH_AUTH_SOCK=/tmp/ssh-XXXXXXXXXX/agent.1234; export SSH_AUTH_SOCK;</span>
+<span style="color: #000; font-style: italic">SSH_AGENT_PID=1234; export SSH_AGENT_PID;</span>
+<span style="color: #000; font-style: italic">echo Agent pid 1234;</span>
+</pre></div>
+<h3><strong>-t life</strong></h3>
+<p>エージェントに追加されるIDのデフォルトの最大有効期間を設定します。有効期間は秒単位または sshd_config(5) で指定された時間形式で指定できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>1h
+<span style="color: #000; font-style: italic">SSH_AUTH_SOCK=/tmp/ssh-XXXXXXXXXX/agent.1234; export SSH_AUTH_SOCK;</span>
+<span style="color: #000; font-style: italic">SSH_AGENT_PID=1234; export SSH_AGENT_PID;</span>
+<span style="color: #000; font-style: italic">echo Agent pid 1234;</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>ssh-agentの起動とシェル環境への統合</h3>
+<h3>ssh-agentを起動して鍵を追加する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>ssh-agent<span style="color: #204A87; font-weight: bold">)</span>
-<span style="color: #000; font-style: italic">Agent pid 12345</span>
-</pre></div>
-<h3>鍵の追加</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa
+<span style="color: #000; font-style: italic">Agent pid 1234</span>
+<span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa
 <span style="color: #000; font-style: italic">Enter passphrase for /home/user/.ssh/id_rsa: </span>
 <span style="color: #000; font-style: italic">Identity added: /home/user/.ssh/id_rsa</span>
 </pre></div>
-<h3>登録されている鍵の一覧表示</h3>
+<h3>特定の有効期間でssh-agentを起動する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>ssh-agent<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>4h<span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #000; font-style: italic">Agent pid 1235</span>
+<span style="color: #8F5902">$ </span>ssh-add
+<span style="color: #000; font-style: italic">Enter passphrase for /home/user/.ssh/id_rsa: </span>
+<span style="color: #000; font-style: italic">Identity added: /home/user/.ssh/id_rsa</span>
+</pre></div>
+<h3>エージェント内の鍵を一覧表示する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-l
 <span style="color: #000; font-style: italic">2048 SHA256:abcdefghijklmnopqrstuvwxyz1234567890ABCD /home/user/.ssh/id_rsa (RSA)</span>
 </pre></div>
-<h3>特定の鍵だけを追加</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>~/.ssh/github_rsa
-<span style="color: #000; font-style: italic">Enter passphrase for /home/user/.ssh/github_rsa: </span>
-<span style="color: #000; font-style: italic">Identity added: /home/user/.ssh/github_rsa</span>
+<h3>ssh-agentを終了する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>ssh-agent<span style="color: #F8F8F8"> </span>-k<span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #000; font-style: italic">Agent pid 1234 killed</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>シェルの起動時に自動的に起動する</h3>
-<p><code>.bashrc</code>や<code>.zshrc</code>などのシェル設定ファイルに以下を追加すると、ログイン時に自動的にssh-agentが起動します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$SSH_AUTH_SOCK</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
-<span style="color: #F8F8F8">   </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>ssh-agent<span style="color: #F8F8F8"> </span>-s<span style="color: #204A87; font-weight: bold">)</span>
-<span style="color: #204A87; font-weight: bold">fi</span>
-</pre></div>
-<h3>鍵の有効期限を設定する</h3>
-<p><code>ssh-add -t</code>オプションを使用して、鍵の有効期限を設定できます。例えば、1時間だけ有効にする場合:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>ssh-add<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>1h<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa
-</pre></div>
-<h3>ssh-agentの共有</h3>
-<p>tmuxやscreenなどのターミナルマルチプレクサを使用している場合、SSH_AUTH_SOCK環境変数を固定パスにシンボリックリンクすることで、複数のセッション間でssh-agentを共有できます。</p>
+<h3>ssh-agentを自動的に起動する</h3>
+<p>シェルの起動ファイル（<code>.bashrc</code>や<code>.zshrc</code>など）に<code>eval $(ssh-agent)</code>を追加すると、ログイン時に自動的にエージェントが起動します。</p>
+<h3>ssh-agentとSSH設定ファイルを組み合わせる</h3>
+<p>ssh-agentとSSH設定ファイル（~/.ssh/config）を組み合わせることで、異なるホストに対して異なる鍵を自動的に管理できます。</p>
+<h3>SSHエージェント転送を使用する</h3>
+<p>他のサーバーにアクセスする必要があるリモートサーバーに接続する場合、<code>ssh -A user@host</code>を使用してローカルのエージェントをリモートサーバーに転送できます。信頼できないサーバーではセキュリティリスクがあるため、この機能の使用には注意が必要です。</p>
+<h3>実行中のエージェントを確認する</h3>
+<p>新しいエージェントを起動する前に、<code>echo $SSH_AGENT_PID</code>で既に実行中のエージェントがあるかどうかを確認し、複数のエージェントが実行されるのを避けましょう。</p>
 <h2>よくある質問</h2>
-<h4>Q1. ssh-agentとは何ですか？</h4>
-<p>A. ssh-agentはSSH認証鍵を安全に保管し、パスフレーズの再入力なしで認証を行うためのプログラムです。</p>
-<h4>Q2. ssh-agentを終了するにはどうすればよいですか？</h4>
-<p>A. <code>ssh-agent -k</code>コマンドを実行するか、プロセスを直接終了（<code>kill $SSH_AGENT_PID</code>）することで終了できます。</p>
-<h4>Q3. ssh-agentに登録した鍵を削除するにはどうすればよいですか？</h4>
-<p>A. <code>ssh-add -d ~/.ssh/keyfile</code>で特定の鍵を削除するか、<code>ssh-add -D</code>ですべての鍵を削除できます。</p>
-<h4>Q4. ssh-agentが起動しているか確認するにはどうすればよいですか？</h4>
-<p>A. <code>echo $SSH_AGENT_PID</code>を実行して値が表示されるか、<code>ssh-add -l</code>を実行して登録されている鍵の一覧が表示されるか確認します。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSではKeychain機能と統合されており、システムのキーチェーンにSSH鍵のパスフレーズを保存することができます。<code>ssh-add -K</code>オプションを使用すると、鍵のパスフレーズをキーチェーンに保存できます（macOS 10.12以前）。macOS 10.13以降では、<code>~/.ssh/config</code>ファイルに<code>UseKeychain yes</code>を追加することで同様の機能を利用できます。</p>
-<h2>参考</h2>
+<h4>Q1. ssh-agentとssh-addの違いは何ですか？</h4>
+<p>A. <code>ssh-agent</code>は復号化された鍵を保持するバックグラウンドプログラムであり、<code>ssh-add</code>は実行中のエージェントに鍵を追加するために使用されます。</p>
+<h4>Q2. 再起動後もssh-agentに鍵を記憶させるにはどうすればよいですか？</h4>
+<p>A. ssh-agentは再起動後も持続しません。再起動後にエージェントを再起動し、鍵を再度追加する必要があります。keychainなどのツールや起動スクリプトの使用を検討してください。</p>
+<h4>Q3. ssh-agentが実行中かどうかを確認するにはどうすればよいですか？</h4>
+<p>A. SSH_AGENT_PID環境変数が設定されているかどうかを確認します：<code>echo $SSH_AGENT_PID</code>。数値が返される場合、エージェントが実行中です。</p>
+<h4>Q4. ssh-agentから鍵を削除するにはどうすればよいですか？</h4>
+<p>A. 特定の鍵を削除するには<code>ssh-add -d ~/.ssh/keyfile</code>を使用し、すべての鍵を削除するには<code>ssh-add -D</code>を使用します。</p>
+<h2>macOSに関する考慮事項</h2>
+<p>macOSでは、システムキーチェーン統合により鍵の自動ロードが可能です。組み込みのssh-agentはlaunchdによって管理され、自動的に起動します。macOSキーチェーンに鍵を追加するには、<code>ssh-add -K ~/.ssh/id_rsa</code>（古いバージョン）または<code>ssh-add --apple-use-keychain ~/.ssh/id_rsa</code>（新しいバージョン）を使用します。これにより、再起動後も鍵が保持されます。</p>
+<h2>参考資料</h2>
 <p>https://man.openbsd.org/ssh-agent</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

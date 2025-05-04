@@ -1,6 +1,6 @@
 # false command
 
-Returns a failure status regardless of its arguments.
+Returns a failure status regardless of any arguments.
 
 ## Overview
 
@@ -8,11 +8,7 @@ The `false` command is a simple Unix utility that does nothing except return an 
 
 ## Options
 
-The `false` command doesn't have any functional options as its sole purpose is to return a failure status.
-
-## Usage Examples
-
-### Basic usage
+The `false` command typically doesn't accept any options. It simply returns a non-zero exit status (failure) regardless of any arguments passed to it.
 
 ```console
 $ false
@@ -20,7 +16,7 @@ $ echo $?
 1
 ```
 
-The command silently exits with a status code of 1, which we can verify by checking the special `$?` variable that holds the exit status of the last command.
+## Usage Examples
 
 ### Using in conditional statements
 
@@ -29,43 +25,47 @@ $ if false; then echo "This won't print"; else echo "This will print"; fi
 This will print
 ```
 
-Since `false` always returns a failure status, the `else` branch is executed.
-
-### Using in a loop
+### Creating an infinite loop with false
 
 ```console
-$ while ! false; do echo "This won't execute"; done
+$ while false; do echo "This won't execute"; done
+$
 ```
 
-This loop won't execute at all because `false` always returns failure, so `! false` is always false.
+### Using as a placeholder in scripts
 
-## Tips
+```console
+$ false || echo "The false command failed"
+The false command failed
+```
+
+## Tips:
 
 ### Opposite of true
 
-The `false` command is the logical opposite of the `true` command, which always returns a success status (0).
+The `false` command is the logical opposite of the `true` command, which returns a success status (0).
 
-### Creating infinite loops
+### Testing error handling
 
-Be careful when using `false` in loop conditions. For example, `while false; do something; done` will never execute because the condition is always false.
+Use `false` to test error handling in scripts by forcing a command to fail.
 
-### Exit codes in scripts
+### Exit status
 
-In shell scripting, an exit code of 0 indicates success, while any non-zero value (like 1 from `false`) indicates failure. This is important to remember when checking command results.
+The exit status of `false` is always 1, which can be checked using `echo $?` immediately after running the command.
 
 ## Frequently Asked Questions
 
 #### Q1. What is the purpose of the `false` command?
-A. Its sole purpose is to return a failure exit status (1), typically used in shell scripts to force a failure condition.
+A. The `false` command exists to provide a guaranteed failure exit status (1), which is useful in shell scripting for testing conditions or forcing failure paths.
 
-#### Q2. What is the exit status of the `false` command?
-A. It always returns 1, indicating failure.
+#### Q2. Does `false` accept any arguments?
+A. While `false` may accept arguments on some systems, it ignores them and always returns a failure status.
 
-#### Q3. How does `false` differ from `true`?
-A. `true` returns a success status (0), while `false` returns a failure status (1).
+#### Q3. What is the difference between `false` and `true`?
+A. `false` returns an exit status of 1 (failure), while `true` returns an exit status of 0 (success).
 
-#### Q4. Can I use `false` to create an empty file?
-A. No, unlike some commands, `false` doesn't create any files. Use `touch` instead to create empty files.
+#### Q4. Can I use `false` in a pipeline?
+A. Yes, but be aware that in a pipeline, the exit status of the last command determines the pipeline's overall status, not the `false` command if it's not last.
 
 ## References
 
@@ -73,4 +73,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/false-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

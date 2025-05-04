@@ -1,24 +1,24 @@
 # script command
 
-Make a typescript of a terminal session, capturing all input and output.
+Makes a typescript of a terminal session, recording all terminal activity.
 
 ## Overview
 
-The `script` command creates a record of everything that happens in your terminal session, saving both your commands and their outputs to a file. This is useful for documenting procedures, creating tutorials, or keeping logs of terminal activities.
+The `script` command creates a record of everything displayed in your terminal during a session. It captures all input and output, saving it to a file (by default named "typescript"). This is useful for documenting procedures, creating tutorials, or keeping logs of terminal sessions.
 
 ## Options
 
 ### **-a, --append**
 
-Append the output to the file instead of overwriting it.
+Append the output to the specified file or to typescript, rather than overwriting it.
 
 ```console
 $ script -a session_log.txt
-Script started, file is session_log.txt
-$ echo "This will be appended to existing content"
-This will be appended to existing content
+Script started, output file is session_log.txt
+$ ls
+Documents Downloads Pictures
 $ exit
-Script done, file is session_log.txt
+Script done, output file is session_log.txt
 ```
 
 ### **-f, --flush**
@@ -27,105 +27,131 @@ Flush output after each write to ensure real-time recording, useful when monitor
 
 ```console
 $ script -f realtime_log.txt
-Script started, file is realtime_log.txt
-$ echo "This output is flushed immediately"
-This output is flushed immediately
+Script started, output file is realtime_log.txt
+$ echo "This will be flushed immediately"
+This will be flushed immediately
 $ exit
-Script done, file is realtime_log.txt
+Script done, output file is realtime_log.txt
 ```
 
 ### **-q, --quiet**
 
-Run in quiet mode, suppressing the start and end messages.
+Runs in quiet mode, suppressing the start and done messages.
 
 ```console
 $ script -q quiet_log.txt
-$ echo "Recording silently"
-Recording silently
+$ echo "No start message was displayed"
+No start message was displayed
 $ exit
 ```
 
-### **-t, --timing=FILE**
+### **-t, --timing[=FILE]**
 
-Record timing data to FILE, allowing for playback with the `scriptreplay` command.
+Output timing data to FILE or to standard error if FILE is not specified. This can be used with scriptreplay to replay the session.
 
 ```console
-$ script -t timing.log typescript.txt
-Script started, file is typescript.txt
-$ echo "This session can be replayed later"
-This session can be replayed later
+$ script -t timing.log session.log
+Script started, output file is session.log
+$ echo "This session is being timed"
+This session is being timed
 $ exit
-Script done, file is typescript.txt
+Script done, output file is session.log
+```
+
+### **-c, --command COMMAND**
+
+Run the specified command instead of an interactive shell.
+
+```console
+$ script -c "ls -la" command_output.txt
+Script started, output file is command_output.txt
+total 32
+drwxr-xr-x  5 user  staff   160 May  4 10:15 .
+drwxr-xr-x  3 user  staff    96 May  4 10:10 ..
+-rw-r--r--  1 user  staff  1024 May  4 10:12 file1.txt
+-rw-r--r--  1 user  staff  2048 May  4 10:14 file2.txt
+Script done, output file is command_output.txt
 ```
 
 ## Usage Examples
 
-### Basic Usage
+### Basic Session Recording
 
 ```console
 $ script my_session.txt
-Script started, file is my_session.txt
+Script started, output file is my_session.txt
 $ ls
-Documents  Downloads  Pictures
-$ echo "Hello, world!"
-Hello, world!
+Documents Downloads Pictures
+$ pwd
+/home/user
 $ exit
-Script done, file is my_session.txt
+Script done, output file is my_session.txt
 ```
 
-### Replaying a Recorded Session
-
-When used with timing data, you can replay the session:
+### Viewing the Recorded Session
 
 ```console
-$ script -t timing.log typescript.txt
-Script started, file is typescript.txt
-$ echo "Commands for demonstration"
-Commands for demonstration
-$ ls -la
-[output of ls -la command]
+$ cat my_session.txt
+Script started on Sun May  4 10:20:00 2025
+$ ls
+Documents Downloads Pictures
+$ pwd
+/home/user
 $ exit
-Script done, file is typescript.txt
 
-$ scriptreplay timing.log typescript.txt
-[The session replays with original timing]
+Script done on Sun May  4 10:21:30 2025
+```
+
+### Recording and Replaying a Session
+
+```console
+$ script --timing=timing.log session.log
+Script started, output file is session.log
+$ echo "Hello, this is a demo"
+Hello, this is a demo
+$ ls
+Documents Downloads Pictures
+$ exit
+Script done, output file is session.log
+
+$ scriptreplay timing.log session.log
+# The session will be replayed with the original timing
 ```
 
 ## Tips
 
-### Automatic Session Documentation
+### Use with scriptreplay
 
-Use `script` at the beginning of important system administration tasks to automatically document what you did, which can be invaluable for troubleshooting or creating documentation later.
-
-### Sharing Terminal Sessions
-
-When teaching others command line operations, record your session with `script` and share the typescript file so they can see exactly what commands you ran and their outputs.
+When using the `-t` option to record timing information, you can later replay the session with the `scriptreplay` command, which will show the output at the same pace as it was originally typed.
 
 ### Cleaning Up Control Characters
 
-The output file may contain terminal control characters. Use `cat -A` to view them or tools like `col -b` to remove them:
+The typescript file may contain control characters that make it difficult to read. You can use tools like `col -b` to clean it up:
 
 ```console
-$ col -b < typescript.txt > clean_typescript.txt
+$ col -b < my_session.txt > clean_session.txt
 ```
+
+### Documenting Complex Procedures
+
+Use `script` when documenting complex system administration tasks or software installations to create a complete record that can be referenced later or shared with colleagues.
 
 ## Frequently Asked Questions
 
 #### Q1. How do I stop recording a script session?
-A. Type `exit` or press Ctrl+D to end the recording session.
+A. Type `exit` or press Ctrl+D to end the session and stop recording.
 
-#### Q2. Can I record a session without saving commands I type?
-A. No, `script` records everything in the terminal, including both input and output.
+#### Q2. Can I record a session without showing the start and end messages?
+A. Yes, use the `-q` or `--quiet` option to suppress these messages.
 
 #### Q3. How can I replay a recorded session?
-A. If you recorded with the `-t` option, use the `scriptreplay` command with the timing and typescript files.
+A. If you recorded with timing information using `-t`, you can replay the session using the `scriptreplay` command.
 
 #### Q4. Does script record passwords I type?
-A. Yes, `script` records everything visible in the terminal. However, most password prompts don't display the characters you type, so passwords typically won't appear in the typescript file.
+A. No, properly designed password prompts don't echo characters to the terminal, so passwords typically won't appear in the typescript file.
 
-## macOS Considerations
-
-On macOS, the `script` command has slightly different options than the Linux version. The `-t` timing option works differently, and some options like `--flush` may not be available. Use `man script` on macOS to see the specific options available.
+#### Q5. Can I append to an existing typescript file?
+A. Yes, use the `-a` or `--append` option to add to an existing file rather than overwriting it.
 
 ## References
 
@@ -133,4 +159,4 @@ https://man7.org/linux/man-pages/man1/script.1.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

@@ -47,85 +47,87 @@
     <main>
       
   <h1>lsof コマンド</h1>
-<p>システム上で開いているファイルを一覧表示します。</p>
+<p>システム上で開いているファイルとそれを開いているプロセスを一覧表示します。</p>
 <h2>概要</h2>
-<p><code>lsof</code>（List Open Files）は、プロセスによって開かれているファイル、ソケット、パイプなどのリソースを表示するコマンドです。システム管理やトラブルシューティングに非常に役立ち、どのプロセスがどのファイルやポートを使用しているかを確認できます。</p>
+<p><code>lsof</code>（List Open Files）は、システム上で実行中のプロセスによって現在開かれているファイルに関する情報を表示します。特定のファイルを開いているプロセスや、特定のプロセスが開いているファイル、その他のファイル使用状況の詳細を表示できます。このコマンドは、システム管理者や開発者がトラブルシューティングやシステムリソースの監視を行う際に特に役立ちます。</p>
 <h2>オプション</h2>
-<h3><strong>-p [PID]</strong></h3>
-<p>指定したプロセスID（PID）が開いているファイルのみを表示します。</p>
+<h3><strong>-p PID</strong></h3>
+<p>指定したプロセスIDが開いているファイルを一覧表示します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>lsof<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
-<span style="color: #000; font-style: italic">COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME</span>
-<span style="color: #000; font-style: italic">chrome  1234 user    cwd    DIR    8,1     4096 123456 /home/user</span>
-<span style="color: #000; font-style: italic">chrome  1234 user    txt    REG    8,1  3284744 789012 /usr/bin/chrome</span>
+<span style="color: #000; font-style: italic">COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME</span>
+<span style="color: #000; font-style: italic">bash     1234   user  cwd    DIR    8,1     4096 131073 /home/user</span>
+<span style="color: #000; font-style: italic">bash     1234   user  rtd    DIR    8,1     4096      2 /</span>
+<span style="color: #000; font-style: italic">bash     1234   user  txt    REG    8,1  1113504 917562 /bin/bash</span>
 </pre></div>
-<h3><strong>-i</strong></h3>
-<p>ネットワーク接続（TCP/UDPソケット）を表示します。特定のポートを指定することも可能です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>lsof<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>:80
-<span style="color: #000; font-style: italic">COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME</span>
-<span style="color: #000; font-style: italic">nginx   1000   root    6u  IPv4  12345      0t0  TCP *:http (LISTEN)</span>
+<h3><strong>-i [プロトコル][@ホスト名|ホストアドレス][:サービス|ポート]</strong></h3>
+<p>インターネット接続用に開かれたファイルを一覧表示します（プロトコル、ホスト、ポートの指定は任意）</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>lsof<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>TCP:22
+<span style="color: #000; font-style: italic">COMMAND  PID    USER   FD   TYPE DEVICE SIZE/OFF NODE NAME</span>
+<span style="color: #000; font-style: italic">sshd    1234    root    3u  IPv4  12345      0t0  TCP *:ssh (LISTEN)</span>
+<span style="color: #000; font-style: italic">sshd    5678    root    4u  IPv6  23456      0t0  TCP *:ssh (LISTEN)</span>
 </pre></div>
-<h3><strong>-u [ユーザー名]</strong></h3>
-<p>特定のユーザーが開いているファイルを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>lsof<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>username
-<span style="color: #000; font-style: italic">COMMAND   PID    USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME</span>
-<span style="color: #000; font-style: italic">bash     2345 username  cwd    DIR    8,1     4096 234567 /home/username</span>
-<span style="color: #000; font-style: italic">vim      2346 username  cwd    DIR    8,1     4096 234567 /home/username</span>
+<h3><strong>-u ユーザー名</strong></h3>
+<p>特定のユーザーが開いているファイルを一覧表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>lsof<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>john
+<span style="color: #000; font-style: italic">COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME</span>
+<span style="color: #000; font-style: italic">bash     1234   john  cwd    DIR    8,1     4096 131073 /home/john</span>
+<span style="color: #000; font-style: italic">chrome   2345   john   10u   REG    8,1    12345 262144 /tmp/file.tmp</span>
 </pre></div>
-<h3><strong>-c [コマンド名]</strong></h3>
-<p>特定のコマンド/プログラムが開いているファイルを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>lsof<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #000; font-style: italic">COMMAND   PID    USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME</span>
-<span style="color: #000; font-style: italic">firefox  3456    user  cwd    DIR    8,1     4096 345678 /home/user</span>
-<span style="color: #000; font-style: italic">firefox  3456    user  txt    REG    8,1  5678901 456789 /usr/lib/firefox</span>
+<h3><strong>-c コマンド</strong></h3>
+<p>指定したコマンド名を持つプロセスが開いているファイルを一覧表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>lsof<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>nginx
+<span style="color: #000; font-style: italic">COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME</span>
+<span style="color: #000; font-style: italic">nginx   1234 root  cwd    DIR    8,1     4096      2 /</span>
+<span style="color: #000; font-style: italic">nginx   1234 root  txt    REG    8,1  1234567 917562 /usr/sbin/nginx</span>
+<span style="color: #000; font-style: italic">nginx   1235 www   cwd    DIR    8,1     4096      2 /</span>
+</pre></div>
+<h3><strong>-t</strong></h3>
+<p>プロセスIDのみを表示します（スクリプト作成に便利）</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>lsof<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>TCP:80
+<span style="color: #000; font-style: italic">1234</span>
+<span style="color: #000; font-style: italic">5678</span>
 </pre></div>
 <h2>使用例</h2>
 <h3>特定のファイルを開いているプロセスを見つける</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>lsof<span style="color: #F8F8F8"> </span>/var/log/syslog
 <span style="color: #000; font-style: italic">COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME</span>
-<span style="color: #000; font-style: italic">rsyslogd 854   root    7w   REG    8,1   256789 567890 /var/log/syslog</span>
+<span style="color: #000; font-style: italic">rsyslogd 854 syslog    7w   REG    8,1   256789 131074 /var/log/syslog</span>
 </pre></div>
-<h3>特定のポートを使用しているプロセスを見つける</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>lsof<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>:3306
-<span style="color: #000; font-style: italic">COMMAND  PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME</span>
-<span style="color: #000; font-style: italic">mysqld  1234 mysql   10u  IPv4  12346      0t0  TCP *:mysql (LISTEN)</span>
+<h3>ネットワークポートをリッスンしているプロセスを確認する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>lsof<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>LISTEN
+<span style="color: #000; font-style: italic">sshd      1234    root    3u  IPv4  12345      0t0  TCP *:22 (LISTEN)</span>
+<span style="color: #000; font-style: italic">nginx     2345    root    6u  IPv4  23456      0t0  TCP *:80 (LISTEN)</span>
+<span style="color: #000; font-style: italic">mysqld    3456   mysql   10u  IPv4  34567      0t0  TCP 127.0.0.1:3306 (LISTEN)</span>
 </pre></div>
-<h3>削除されたが、まだプロセスが開いているファイルを見つける</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>lsof<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>deleted
-<span style="color: #000; font-style: italic">chrome    3456 user  123r   REG    8,1    12345 678901 /tmp/file (deleted)</span>
+<h3>特定のユーザーがディレクトリ内で開いているすべてのファイルを見つける</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>lsof<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>john<span style="color: #F8F8F8"> </span>/home/john
+<span style="color: #000; font-style: italic">COMMAND  PID  USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME</span>
+<span style="color: #000; font-style: italic">bash    1234  john  cwd    DIR    8,1     4096 131073 /home/john</span>
+<span style="color: #000; font-style: italic">vim     2345  john    4u   REG    8,1    12345 262144 /home/john/document.txt</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>複数のオプションを組み合わせる</h3>
-<p><code>lsof -i -u username</code> のように複数のオプションを組み合わせることで、特定のユーザーのネットワーク接続のみを表示するなど、より絞り込んだ検索が可能です。</p>
-<h3>出力を整理する</h3>
-<p><code>lsof</code> の出力は非常に多くなることがあります。<code>grep</code>、<code>sort</code>、<code>awk</code> などと組み合わせて必要な情報だけを抽出すると便利です。</p>
-<h3>定期的な監視</h3>
-<p><code>watch lsof -i</code> のように <code>watch</code> コマンドと組み合わせることで、ネットワーク接続の変化をリアルタイムで監視できます。</p>
+<h3>複数のフィルターを組み合わせる</h3>
+<p>複数のオプションを組み合わせて結果を絞り込むことができます。例えば、<code>lsof -u ユーザー名 -i TCP</code>は特定のユーザーのTCP接続を表示します。</p>
+<h3>使用中の削除されたファイルを見つける</h3>
+<p><code>lsof +L1</code>を使用して、プロセスによってまだ開かれている削除済みファイルを見つけることができます。これはディスク容量の解放を妨げているプロセスを特定するのに役立ちます。</p>
+<h3>ネットワーク接続の監視</h3>
+<p><code>lsof -i</code>を定期的に使用して、ネットワーク接続を監視し、セキュリティ問題を示す可能性がある予期しないネットワークアクティビティを特定します。</p>
+<h3>grepと組み合わせて対象を絞った結果を得る</h3>
+<p><code>lsof</code>の出力を<code>grep</code>にパイプして特定の情報をフィルタリングできます。例えば、<code>lsof | grep &quot;/var/log&quot;</code>でログファイルにアクセスしているプロセスを見つけることができます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>lsof</code> の出力の各列は何を意味していますか？</h4>
-<p>A. 主な列は以下の通りです：</p>
+<h4>Q1. 特定のポートを使用しているプロセスを見つけるにはどうすればよいですか？</h4>
+<p>A. <code>lsof -i:ポート番号</code>を使用します（例：HTTPポートの場合は<code>lsof -i:80</code>）。</p>
+<h4>Q2. すべてのネットワーク接続を確認するにはどうすればよいですか？</h4>
+<p>A. <code>lsof -i</code>を使用してすべてのネットワーク接続を表示します。<code>-P</code>を追加するとサービス名ではなくポート番号が表示されます。</p>
+<h4>Q3. 特定のファイルにアクセスしているプロセスを見つけるにはどうすればよいですか？</h4>
+<p>A. 単に<code>lsof /path/to/file</code>を実行すると、そのファイルを開いているすべてのプロセスが表示されます。</p>
+<h4>Q4. 特定のプロセスが開いているすべてのファイルを見つけるにはどうすればよいですか？</h4>
+<p>A. <code>lsof -p PID</code>を使用します。PIDは対象のプロセスIDです。</p>
+<h2>References</h2>
+<p>https://man7.org/linux/man-pages/man8/lsof.8.html</p>
+<h2>Revisions</h2>
 <ul>
-<li>COMMAND: プロセス名</li>
-<li>PID: プロセスID</li>
-<li>USER: ユーザー名</li>
-<li>FD: ファイル記述子（r=読み取り、w=書き込み、u=読み書き両方）</li>
-<li>TYPE: ファイルタイプ（REG=通常ファイル、DIR=ディレクトリ、IPv4/IPv6=ネットワークソケット）</li>
-<li>DEVICE: デバイス番号</li>
-<li>SIZE/OFF: ファイルサイズまたはオフセット</li>
-<li>NODE: iノード番号</li>
-<li>NAME: ファイル名やソケット情報</li>
-</ul>
-<h4>Q2. 特定のポート範囲を監視するにはどうすればよいですか？</h4>
-<p>A. <code>lsof -i :1-1024</code> のように範囲を指定できます。これは1〜1024番のポートを使用しているプロセスを表示します。</p>
-<h4>Q3. macOSで <code>lsof</code> を実行すると「permission denied」エラーが出る場合はどうすればよいですか？</h4>
-<p>A. 多くの場合、<code>sudo lsof</code> のように管理者権限で実行する必要があります。特にシステムプロセスが開いているファイルを表示する場合に必要です。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは、一部のシステムファイルやプロセスの情報を取得するために管理者権限が必要な場合があります。また、macOSのセキュリティ機能（System Integrity Protection）により、一部のシステムプロセスの情報が制限されることがあります。</p>
-<p>また、macOSでは <code>-X</code> オプションを使用することで、デバイスファイルの詳細情報を表示できます。これはmacOS固有の機能です。</p>
-<h2>参考資料</h2>
-<p>https://www.freebsd.org/cgi/man.cgi?query=lsof</p>
-<h2>改訂履歴</h2>
-<ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回リビジョン</li>
 </ul>
 
 

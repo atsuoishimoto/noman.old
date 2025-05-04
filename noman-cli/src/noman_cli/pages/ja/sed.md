@@ -1,109 +1,66 @@
 # sed コマンド
 
-テキストストリームを変換・編集するためのストリームエディタです。
+テキストのフィルタリングと変換のためのストリームエディタ。
 
 ## 概要
 
-`sed`（Stream EDitor）は、テキストファイルやパイプからのテキスト入力を処理するためのコマンドラインユーティリティです。正規表現を使用したパターンマッチングによる置換、削除、挿入などの編集操作を行うことができます。`sed`は非対話的に動作し、スクリプトやコマンドラインから指定された編集コマンドに基づいてテキストを処理します。
+`sed`（ストリームエディタ）は、テキストを行ごとに解析して変換する強力なユーティリティです。ファイルや標準入力からテキストを読み取り、指定された編集コマンドを適用し、結果を標準出力に出力します。検索と置換操作、テキスト抽出、その他のテキスト操作をシェルスクリプトやコマンドライン操作で行うために広く使用されています。
 
 ## オプション
 
-### **-e スクリプト**
+### **-e スクリプト, --expression=スクリプト**
 
-複数の編集コマンドを指定できます。
+実行するコマンドセットにスクリプト内のコマンドを追加します。
 
 ```console
-$ echo "Hello World" | sed -e 's/Hello/Hi/' -e 's/World/Everyone/'
-Hi Everyone
+$ echo "hello world" | sed -e 's/hello/goodbye/' -e 's/world/universe/'
+goodbye universe
+# 複数の置換コマンドを順番に適用している
 ```
 
-### **-i[拡張子]**
+### **-f スクリプトファイル, --file=スクリプトファイル**
 
-ファイルを直接編集します。拡張子を指定すると、元のファイルのバックアップが作成されます。
+スクリプトファイルからコマンドを読み込み、実行するコマンドセットに追加します。
 
 ```console
-$ sed -i.bak 's/old/new/g' file.txt
-# file.txtが直接編集され、file.txt.bakというバックアップファイルが作成される
+$ cat script.sed
+s/hello/goodbye/
+s/world/universe/
+$ echo "hello world" | sed -f script.sed
+goodbye universe
+# ファイルに保存された複数のsedコマンドを実行している
 ```
 
-### **-n**
+### **-i[接尾辞], --in-place[=接尾辞]**
 
-自動出力を抑制し、明示的に出力を指定する場合に使用します。
+ファイルを直接編集します（接尾辞を指定するとバックアップを作成します）。
 
 ```console
-$ echo -e "line1\nline2\nline3" | sed -n '2p'
-line2
+$ echo "hello world" > file.txt
+$ sed -i 's/hello/goodbye/' file.txt
+$ cat file.txt
+goodbye world
+# ファイルを直接編集して内容を変更している
 ```
 
-### **-f スクリプトファイル**
+### **-n, --quiet, --silent**
 
-編集コマンドをファイルから読み込みます。
+パターンスペースの自動出力を抑制します。
 
 ```console
-$ echo "commands.sed の内容: s/Hello/Hi/g"
-$ echo "Hello World" | sed -f commands.sed
-Hi World
+$ echo -e "line 1\nline 2\nline 3" | sed -n '2p'
+line 2
+# -nオプションと組み合わせて2行目だけを表示している
 ```
 
-## 編集コマンド
+### **-r, --regexp-extended**
 
-### **s/パターン/置換/[フラグ]**
-
-パターンに一致するテキストを置換します。
+スクリプトで拡張正規表現を使用します。
 
 ```console
-$ echo "Hello World" | sed 's/Hello/Hi/'
-Hi World
-```
-
-### **g フラグ（全置換）**
-
-行内のすべての一致を置換します。
-
-```console
-$ echo "Hello Hello World" | sed 's/Hello/Hi/g'
-Hi Hi World
-```
-
-### **d（削除）**
-
-パターンに一致する行を削除します。
-
-```console
-$ echo -e "line1\nline2\nline3" | sed '2d'
-line1
-line3
-```
-
-### **p（表示）**
-
-パターンに一致する行を表示します（通常は -n と共に使用）。
-
-```console
-$ echo -e "line1\nline2\nline3" | sed -n '2p'
-line2
-```
-
-### **i\（前に挿入）**
-
-指定した行の前に新しいテキストを挿入します。
-
-```console
-$ echo -e "line1\nline2" | sed '1i\新しい行'
-新しい行
-line1
-line2
-```
-
-### **a\（後に追加）**
-
-指定した行の後に新しいテキストを追加します。
-
-```console
-$ echo -e "line1\nline2" | sed '1a\新しい行'
-line1
-新しい行
-line2
+$ echo "hello 123 world" | sed -r 's/[0-9]+/NUMBER/'
+hello NUMBER world
+# 拡張正規表現を使って数字を置換している
 ```
 
 ## 使用例
@@ -113,106 +70,113 @@ line2
 ```console
 $ echo "The quick brown fox" | sed 's/brown/red/'
 The quick red fox
+# 「brown」を「red」に置換している
 ```
 
-### ファイル内のすべての一致を置換
+### グローバル置換
 
 ```console
-$ cat sample.txt
-Hello World
-Hello Everyone
-$ sed 's/Hello/Hi/g' sample.txt
-Hi World
-Hi Everyone
+$ echo "one two one three one" | sed 's/one/ONE/g'
+ONE two ONE three ONE
+# gフラグを使って「one」のすべての出現を「ONE」に置換している
 ```
 
-### 特定の行を抽出
+### 特定の行を表示
 
 ```console
-$ cat numbers.txt
-1: First line
-2: Second line
-3: Third line
-$ sed -n '2p' numbers.txt
-2: Second line
+$ cat file.txt
+Line 1
+Line 2
+Line 3
+Line 4
+$ sed -n '2,3p' file.txt
+Line 2
+Line 3
+# 2行目から3行目までを表示している
 ```
 
-### 複数の編集コマンドを連結
+### 行の削除
 
 ```console
-$ echo "Hello World 123" | sed 's/Hello/Hi/g; s/123/456/g'
-Hi World 456
+$ cat file.txt
+Line 1
+Line 2
+Line 3
+Line 4
+$ sed '2,3d' file.txt
+Line 1
+Line 4
+# 2行目から3行目までを削除している
+```
+
+### 複数の編集コマンド
+
+```console
+$ echo "hello world" | sed 's/hello/hi/; s/world/there/'
+hi there
+# セミコロンで区切って複数のコマンドを実行している
 ```
 
 ## ヒント:
 
-### バックアップを作成してから編集
+### '/' 以外の区切り文字を使用する
 
-ファイルを直接編集する際は、`-i.bak`オプションを使用してバックアップを作成することをお勧めします。
+パターンや置換文字列にスラッシュが含まれる場合は、別の区切り文字を使用してエスケープを避けることができます：
 
 ```console
-$ sed -i.bak 's/old/new/g' important_file.txt
-# important_file.txtが編集され、important_file.txt.bakというバックアップが作成される
+$ echo "/usr/local/bin" | sed 's:/usr:~:'
+~/local/bin
+# パスを扱う際にコロンを区切り文字として使用している
 ```
 
-### 正規表現の活用
+### インプレース編集時のバックアップ作成
 
-`sed`は強力な正規表現をサポートしています。例えば、`.*`は任意の文字列に一致します。
+`-i`オプションを使用してファイルを直接編集する場合は、常にバックアップを作成することをお勧めします：
 
 ```console
-$ echo "prefix_12345_suffix" | sed 's/prefix_.*_suffix/REPLACED/'
-REPLACED
+$ sed -i.bak 's/old/new/g' file.txt
+# .bakという拡張子でバックアップファイルが作成される
 ```
 
-### アドレス範囲の指定
+### アドレス範囲
 
-特定の行範囲に対して操作を適用できます。
+行番号、パターン、または範囲を使用して特定の行をターゲットにできます：
+- `1,5` - 1行目から5行目まで
+- `/start/,/end/` - パターン「start」からパターン「end」までの行
+- `5,+2` - 5行目とその後の2行
+
+### 行の追加、挿入、変更
 
 ```console
-$ cat numbers.txt
-1: First line
-2: Second line
-3: Third line
-4: Fourth line
-$ sed '2,3d' numbers.txt
-1: First line
-4: Fourth line
+$ echo -e "line 1\nline 2\nline 3" | sed '2a\new line after 2'
+line 1
+line 2
+new line after 2
+line 3
+# 2行目の後に新しい行を追加している
 ```
 
 ## よくある質問
 
-#### Q1. `sed`と`awk`の違いは何ですか？
-A. `sed`は主にテキスト置換に特化したストリームエディタであるのに対し、`awk`はより複雑なテキスト処理やデータ抽出のためのプログラミング言語的な機能を持っています。
+#### Q1. ファイル内のテキストを永続的に置換するにはどうすればよいですか？
+A. `-i`オプションを使用します：`sed -i 's/old/new/g' filename`。バックアップを作成するには `-i.bak` のように接尾辞を追加します。
 
-#### Q2. MacOSの`sed`とGNU `sed`の違いは何ですか？
-A. MacOSのデフォルトの`sed`はBSD版で、GNU版とは一部の動作や構文が異なります。特に`-i`オプションでは、MacOSでは必ずバックアップ拡張子を指定する必要があります。
+#### Q2. パターンに一致する行だけを表示するにはどうすればよいですか？
+A. `-n`オプションと`p`コマンドを使用します：`sed -n '/pattern/p' filename`。
 
-#### Q3. 複数のファイルを一度に編集するにはどうすればよいですか？
-A. ワイルドカードを使用するか、ファイル名を複数指定することで可能です：`sed 's/old/new/g' file1.txt file2.txt`
+#### Q3. 's/pattern/replacement/' と 's/pattern/replacement/g' の違いは何ですか？
+A. `g`フラグがない場合、各行の最初の出現のみが置換されます。`g`フラグがあると、すべての出現が置換されます。
 
-#### Q4. 特定の行だけを編集するにはどうすればよいですか？
-A. アドレス指定を使用します：`sed '3s/old/new/' file.txt`は3行目のみを編集します。
+#### Q4. パターンに一致する行を削除するにはどうすればよいですか？
+A. `d`コマンドを使用します：`sed '/pattern/d' filename`。
 
-## macOSでの注意点
+#### Q5. sedコマンドで変数を使用するにはどうすればよいですか？
+A. 二重引用符を使用し、特殊文字をエスケープします：`sed "s/$var/replacement/g" filename`。
 
-macOSのデフォルトの`sed`はBSD版であり、GNU版とは異なる動作をします。特に以下の点に注意してください：
-
-1. `-i`オプションを使用する場合、必ずバックアップ拡張子を指定する必要があります：
-   ```console
-   $ sed -i '' 's/old/new/g' file.txt  # バックアップなし
-   $ sed -i '.bak' 's/old/new/g' file.txt  # .bakという拡張子でバックアップ
-   ```
-
-2. 一部の正規表現構文が異なる場合があります。GNU版の高度な機能を使いたい場合は、Homebrewなどでインストールできます：
-   ```console
-   $ brew install gnu-sed
-   $ gsed -i 's/old/new/g' file.txt  # gsedとして使用
-   ```
-
-## 参考資料
+## 参照
 
 https://www.gnu.org/software/sed/manual/sed.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

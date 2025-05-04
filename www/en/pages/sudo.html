@@ -47,85 +47,86 @@
     <main>
       
   <h1>sudo command</h1>
-<p>Execute a command as another user, typically with elevated privileges.</p>
+<p>Execute a command as another user, typically with administrative privileges.</p>
 <h2>Overview</h2>
-<p><code>sudo</code> (superuser do) allows users to run programs with the security privileges of another user, most commonly the superuser (root). It provides a way to grant limited root access to specific users without giving them the root password, enhancing system security while allowing necessary administrative tasks.</p>
+<p><code>sudo</code> (superuser do) allows authorized users to execute commands with the security privileges of another user, by default the superuser (root). This provides a way to perform administrative tasks without logging in as the root user, enhancing system security by limiting privileged access.</p>
 <h2>Options</h2>
-<h3><strong>-u [username]</strong></h3>
-<p>Execute the command as a user other than root</p>
+<h3><strong>-u, --user=USER</strong></h3>
+<p>Execute the command as a user other than the default target user (root)</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>postgres<span style="color: #F8F8F8"> </span>psql
-<span style="color: #000; font-style: italic">psql (14.9)</span>
+<span style="color: #000; font-style: italic">psql (14.5)</span>
 <span style="color: #000; font-style: italic">Type &quot;help&quot; for help.</span>
 
 <span style="color: #000; font-style: italic">postgres=#</span>
 </pre></div>
-<h3><strong>-s</strong></h3>
-<p>Start a shell with elevated privileges instead of running a single command</p>
+<h3><strong>-i, --login</strong></h3>
+<p>Run a login shell as the target user; simulates a full login</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-i
+<span style="color: #8F5902">[root@hostname ~]#</span>
+</pre></div>
+<h3><strong>-s, --shell</strong></h3>
+<p>Run the shell specified in the password database entry of the target user</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-s
 <span style="color: #8F5902">root@hostname:/home/user#</span>
 </pre></div>
-<h3><strong>-i</strong></h3>
-<p>Simulate a full login as the target user (loads the user's environment)</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-i
-<span style="color: #8F5902">root@hostname:~#</span>
-</pre></div>
-<h3><strong>-l</strong></h3>
-<p>List the allowed (and forbidden) commands for the current user</p>
+<h3><strong>-l, --list</strong></h3>
+<p>List the allowed (and forbidden) commands for the invoking user</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-l
 <span style="color: #000; font-style: italic">User user may run the following commands on hostname:</span>
 <span style="color: #000; font-style: italic">    (ALL : ALL) ALL</span>
 </pre></div>
-<h3><strong>-v</strong></h3>
-<p>Validate and extend the user's sudo timestamp without running a command</p>
+<h3><strong>-v, --validate</strong></h3>
+<p>Update the user's cached credentials, extending the sudo timeout</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-v
-<span style="color: #000; font-style: italic">[No output means validation succeeded]</span>
+<span style="color: #000; font-style: italic">[sudo] password for user:</span>
+</pre></div>
+<h3><strong>-k, --reset-timestamp</strong></h3>
+<p>Invalidate the user's cached credentials</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-k
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Installing software with elevated privileges</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>update<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>nginx
+<h3>Running a command with root privileges</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>update
 <span style="color: #000; font-style: italic">[sudo] password for user: </span>
-<span style="color: #000; font-style: italic">[Package installation output]</span>
+<span style="color: #000; font-style: italic">Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease</span>
+<span style="color: #000; font-style: italic">Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]</span>
+<span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3>Editing system configuration files</h3>
+<h3>Editing a system configuration file</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>nano<span style="color: #F8F8F8"> </span>/etc/hosts
 <span style="color: #000; font-style: italic">[sudo] password for user:</span>
-<span style="color: #000; font-style: italic">[Opens the hosts file in nano editor with write permissions]</span>
 </pre></div>
 <h3>Running commands as a different user</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>www-data<span style="color: #F8F8F8"> </span>php<span style="color: #F8F8F8"> </span>/var/www/html/maintenance.php
-<span style="color: #000; font-style: italic">[Output from the PHP script running as www-data user]</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>www-data<span style="color: #F8F8F8"> </span>ls<span style="color: #F8F8F8"> </span>-la<span style="color: #F8F8F8"> </span>/var/www/html
+<span style="color: #000; font-style: italic">total 16</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x 2 www-data www-data 4096 May  4 10:15 .</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x 3 root     root     4096 May  4 10:14 ..</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 www-data www-data  612 May  4 10:15 index.html</span>
 </pre></div>
 <h2>Tips</h2>
 <h3>Use <code>sudo !!</code> to Repeat the Previous Command with sudo</h3>
 <p>If you forget to use sudo for a command that requires it, type <code>sudo !!</code> to repeat the previous command with sudo privileges.</p>
 <h3>Configure sudo Without Password for Specific Commands</h3>
-<p>Edit the sudoers file with <code>sudo visudo</code> to allow certain commands to run without a password prompt, improving efficiency for trusted users.</p>
-<h3>Be Careful with sudo and Redirection</h3>
-<p>When using sudo with output redirection (e.g., <code>sudo echo &quot;text&quot; &gt; /protected/file</code>), the redirection happens as your user, not as root. Use <code>sudo sh -c 'echo &quot;text&quot; &gt; /protected/file'</code> instead.</p>
-<h3>Use sudoedit for Safely Editing Protected Files</h3>
-<p><code>sudoedit</code> (or <code>sudo -e</code>) is safer than directly using an editor with sudo as it edits a temporary copy of the file and preserves file permissions.</p>
+<p>Edit the sudoers file with <code>sudo visudo</code> to allow certain commands to run without a password prompt. For example:</p>
+<pre><code>username ALL=(ALL) NOPASSWD: /usr/bin/apt update
+</code></pre><h3>Use <code>sudo -E</code> to Preserve Environment Variables</h3>
+<p>When you need to run a command with sudo but keep your current environment variables, use the <code>-E</code> option.</p>
+<h3>Always Use <code>visudo</code> to Edit the sudoers File</h3>
+<p>Never edit <code>/etc/sudoers</code> directly. Always use <code>sudo visudo</code> which checks for syntax errors before saving, preventing you from locking yourself out of sudo access.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between sudo and su?</h4>
-<p>A. <code>sudo</code> executes a single command with elevated privileges and requires the user's password, while <code>su</code> switches to another user account (typically root) and requires that account's password.</p>
+<h4>Q1. What's the difference between <code>sudo -i</code> and <code>sudo -s</code>?</h4>
+<p>A. <code>sudo -i</code> simulates a full login and changes to the target user's home directory with their environment. <code>sudo -s</code> just starts a shell as the target user but keeps your current environment and working directory.</p>
 <h4>Q2. How long does sudo authentication last?</h4>
-<p>A. By default, sudo remembers your password for 15 minutes, after which you'll need to enter it again.</p>
+<p>A. By default, sudo caches your credentials for 15 minutes. You can extend this with <code>sudo -v</code> or reset it with <code>sudo -k</code>.</p>
 <h4>Q3. How can I run multiple commands with sudo?</h4>
-<p>A. Use <code>sudo sh -c &quot;command1 &amp;&amp; command2&quot;</code> or start a root shell with <code>sudo -s</code> or <code>sudo -i</code>.</p>
-<h4>Q4. Can I use sudo in scripts?</h4>
-<p>A. Yes, but it's better to run the entire script with sudo rather than using sudo for individual commands within the script. For automated scripts, consider using passwordless sudo for specific commands.</p>
-<h2>macOS Considerations</h2>
-<p>On macOS, sudo works similarly to Linux but with some differences:</p>
-<ul>
-<li>The first time you use sudo, you'll see a message about responsibility</li>
-<li>macOS uses a separate sudoers file at <code>/etc/sudoers</code></li>
-<li>TouchID can be configured to authenticate sudo on supported Mac models</li>
-<li>The sudo timeout may behave differently depending on your macOS version</li>
-</ul>
+<p>A. Use <code>sudo sh -c &quot;command1 &amp;&amp; command2&quot;</code> or start a root shell with <code>sudo -i</code> and then run your commands.</p>
+<h4>Q4. How do I add a user to sudoers?</h4>
+<p>A. Add the user to the sudo group with <code>usermod -aG sudo username</code> on Debian/Ubuntu or to the wheel group on RHEL/CentOS systems.</p>
 <h2>References</h2>
 <p>https://www.sudo.ws/docs/man/sudo.man/</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

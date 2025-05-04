@@ -47,17 +47,18 @@
     <main>
       
   <h1>dirname command</h1>
-<p>Extract the directory portion from a pathname.</p>
+<p>Output the directory portion of a pathname.</p>
 <h2>Overview</h2>
-<p>The <code>dirname</code> command removes the last component from a pathname, leaving only the directory path. It's useful in scripts when you need to determine the parent directory of a file or path.</p>
+<p>The <code>dirname</code> command removes the last component from a pathname, leaving only the directory path. It's commonly used in shell scripts to extract the directory part of a file path, which is useful for navigating to a file's location or processing files in the same directory.</p>
 <h2>Options</h2>
-<h3><strong>--zero, -z</strong></h3>
-<p>Output is terminated with a null character (NUL) instead of a newline.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>/usr/bin/file
+<h3><strong>-z, --zero</strong></h3>
+<p>Output a zero byte (ASCII NUL) instead of a newline after each pathname.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>/usr/bin/zip
 <span style="color: #000; font-style: italic">/usr/bin$</span>
 </pre></div>
+<p>Note: The output appears to end with a <code>$</code> prompt, but actually contains a null character instead of a newline.</p>
 <h3><strong>--help</strong></h3>
-<p>Display help information and exit.</p>
+<p>Display a help message and exit.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>--help
 <span style="color: #000; font-style: italic">Usage: dirname [OPTION] NAME...</span>
 <span style="color: #000; font-style: italic">Output each NAME with its last non-slash component and trailing slashes</span>
@@ -73,10 +74,10 @@
 <span style="color: #000; font-style: italic">  dirname stdio.h            -&gt; &quot;.&quot;</span>
 </pre></div>
 <h3><strong>--version</strong></h3>
-<p>Display version information and exit.</p>
+<p>Output version information and exit.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>--version
-<span style="color: #000; font-style: italic">dirname (GNU coreutils) 9.0</span>
-<span style="color: #000; font-style: italic">Copyright (C) 2021 Free Software Foundation, Inc.</span>
+<span style="color: #000; font-style: italic">dirname (GNU coreutils) 8.32</span>
+<span style="color: #000; font-style: italic">Copyright (C) 2020 Free Software Foundation, Inc.</span>
 <span style="color: #000; font-style: italic">License GPLv3+: GNU GPL version 3 or later &lt;https://gnu.org/licenses/gpl.html&gt;.</span>
 <span style="color: #000; font-style: italic">This is free software: you are free to change and redistribute it.</span>
 <span style="color: #000; font-style: italic">There is NO WARRANTY, to the extent permitted by law.</span>
@@ -85,11 +86,11 @@
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Basic Usage</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>/usr/bin/bash
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>/usr/bin/zip
 <span style="color: #000; font-style: italic">/usr/bin</span>
 </pre></div>
 <h3>Multiple Arguments</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>/usr/bin/bash<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span>/home/user/file.txt
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span>/usr/bin/zip<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span>/home/user/file.txt
 <span style="color: #000; font-style: italic">/usr/bin</span>
 <span style="color: #000; font-style: italic">/etc</span>
 <span style="color: #000; font-style: italic">/home/user</span>
@@ -103,27 +104,39 @@
 <span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;This script is located in: </span><span style="color: #000">$script_dir</span><span style="color: #4E9A06">&quot;</span>
 <span style="color: #000; font-style: italic">This script is located in: .</span>
 </pre></div>
-<h2>Tips</h2>
-<h3>Use with Absolute Paths</h3>
-<p>Always use absolute paths with <code>dirname</code> when possible to avoid confusion, especially in scripts that might run from different working directories.</p>
-<h3>Combine with <code>basename</code></h3>
-<p><code>dirname</code> pairs well with the <code>basename</code> command. While <code>dirname</code> extracts the directory portion, <code>basename</code> extracts the filename portion.</p>
-<h3>Path Normalization</h3>
-<p><code>dirname</code> doesn't normalize paths. For example, <code>dirname a/b/..</code> returns <code>a/b</code> rather than <code>a</code>.</p>
+<h2>Tips:</h2>
+<h3>Combine with basename</h3>
+<p>Use <code>dirname</code> together with <code>basename</code> to split a path into its directory and filename components:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">path</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;/home/user/documents/report.pdf&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">dir</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>dirname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$path</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">file</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$path</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Directory: </span><span style="color: #000">$dir</span><span style="color: #4E9A06">, File: </span><span style="color: #000">$file</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">Directory: /home/user/documents, File: report.pdf</span>
+</pre></div>
+<h3>Always Quote Variables</h3>
+<p>When using <code>dirname</code> with variables in scripts, always quote the variables to handle paths with spaces correctly:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">path</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;/home/user/my documents/report.pdf&quot;</span>
+<span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$path</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># Correct</span>
+<span style="color: #000; font-style: italic">/home/user/my documents</span>
+</pre></div>
+<h3>Use with Command Substitution</h3>
+<p>Capture the output of <code>dirname</code> using command substitution to navigate to a file's directory:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">cd</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">$(</span>dirname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;/path/to/file.txt&quot;</span><span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span>
+</pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between <code>dirname</code> and <code>pwd</code>?</h4>
-<p>A. <code>dirname</code> extracts the directory portion from a given path, while <code>pwd</code> prints the current working directory.</p>
-<h4>Q2. How do I get the directory of a script that's running?</h4>
-<p>A. Use <code>script_dir=$(dirname &quot;$0&quot;)</code> where <code>$0</code> is the path to the script being executed.</p>
-<h4>Q3. Does <code>dirname</code> follow symbolic links?</h4>
-<p>A. No, <code>dirname</code> simply manipulates the string path and doesn't interact with the filesystem.</p>
-<h4>Q4. What does <code>dirname</code> return for a path without directories?</h4>
-<p>A. It returns <code>.</code> (the current directory) for paths without any directory components.</p>
+<h4>Q1. What does <code>dirname</code> return if I pass a filename without a path?</h4>
+<p>A. It returns <code>.</code> (the current directory).</p>
+<h4>Q2. Can <code>dirname</code> process multiple paths at once?</h4>
+<p>A. Yes, you can pass multiple arguments and it will process each one separately.</p>
+<h4>Q3. How does <code>dirname</code> handle trailing slashes?</h4>
+<p>A. It removes trailing slashes before processing, so <code>/usr/bin/</code> becomes <code>/usr</code>.</p>
+<h4>Q4. What's the difference between <code>dirname</code> and <code>basedir</code>?</h4>
+<p>A. There is no standard Unix command called <code>basedir</code>. You might be thinking of <code>basename</code>, which extracts the filename portion of a path, while <code>dirname</code> extracts the directory portion.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/dirname-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

@@ -1,164 +1,168 @@
 # git push コマンド
 
-リモートリポジトリに変更を送信するコマンドです。
+リモートリポジトリに対してローカルの参照と関連オブジェクトを更新します。
 
 ## 概要
 
-`git push` は、ローカルリポジトリで行った変更（コミット）をリモートリポジトリに送信します。これにより、他の開発者とコードを共有したり、バックアップを作成したりすることができます。デフォルトでは、現在のブランチの変更を、設定されたリモートリポジトリの対応するブランチにプッシュします。
+`git push`はローカルブランチのコミットを対応するリモートリポジトリに送信します。リモート参照（ブランチやタグなど）を更新し、リポジトリを同期させるために必要なオブジェクトを転送します。このコマンドは、あなたの作業を他の人と共有したり、ローカルの変更をリモートリポジトリにバックアップしたりする際に不可欠です。
 
 ## オプション
 
 ### **-u, --set-upstream**
 
-指定したリモートブランチを、現在のブランチの上流（デフォルトの送信先）として設定します。
+現在のブランチに対してアップストリームを設定し、今後のプッシュで同じリモートブランチを指定せずに使用できるようにします。
 
 ```console
 $ git push -u origin main
-Branch 'main' set up to track remote branch 'main' from 'origin'.
-Everything up-to-date
-```
-
-### **--force, -f**
-
-リモートブランチを強制的に上書きします。通常の `push` が拒否される場合に使用しますが、他の人の変更を上書きする可能性があるため注意が必要です。
-
-```console
-$ git push --force origin feature
-Counting objects: 5, done.
-Delta compression using up to 8 threads.
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 8 threads
 Compressing objects: 100% (3/3), done.
-Writing objects: 100% (5/5), 456 bytes | 456.00 KiB/s, done.
-Total 5 (delta 1), reused 0 (delta 0)
-remote: Resolving deltas: 100% (1/1), completed with 1 local object.
- + 7f9d407...2c5e7f0 feature -> feature (forced update)
+Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:username/repository.git
+   a1b2c3d..e4f5g6h  main -> main
+Branch 'main' set up to track remote branch 'main' from 'origin'.
 ```
 
-### **--all**
+### **-f, --force**
 
-すべてのローカルブランチをリモートにプッシュします。
+非fast-forwardの更新になる場合でも、ローカルブランチでリモートブランチを強制的に更新します。リモート上の変更を上書きする可能性があるため、注意して使用してください。
 
 ```console
-$ git push --all origin
-Counting objects: 10, done.
-Delta compression using up to 8 threads.
-Compressing objects: 100% (8/8), done.
-Writing objects: 100% (10/10), 1.22 KiB | 1.22 MiB/s, done.
-Total 10 (delta 3), reused 0 (delta 0)
-remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
- * [new branch]      feature -> feature
- * [new branch]      main -> main
+$ git push -f origin main
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+ + a1b2c3d...e4f5g6h main -> main (forced update)
 ```
 
 ### **--tags**
 
-すべてのローカルタグをリモートにプッシュします。
+すべてのローカルタグをリモートリポジトリにプッシュします。
 
 ```console
-$ git push --tags origin
-Counting objects: 1, done.
+$ git push --tags
+Enumerating objects: 1, done.
+Counting objects: 100% (1/1), done.
 Writing objects: 100% (1/1), 160 bytes | 160.00 KiB/s, done.
-Total 1 (delta 0), reused 0 (delta 0)
-To github.com:user/repo.git
- * [new tag]         v1.0 -> v1.0
+Total 1 (delta 0), reused 0 (delta 0), pack-reused 0
+To github.com:username/repository.git
+ * [new tag]         v1.0.0 -> v1.0.0
+ * [new tag]         v1.1.0 -> v1.1.0
 ```
 
 ### **--delete**
 
-リモートブランチを削除します。
+指定したブランチをリモートリポジトリから削除します。
 
 ```console
-$ git push origin --delete old-feature
-To github.com:user/repo.git
- - [deleted]         old-feature
+$ git push origin --delete feature-branch
+To github.com:username/repository.git
+ - [deleted]         feature-branch
+```
+
+### **--dry-run**
+
+実際にプッシュせずに、何が行われるかを表示します。
+
+```console
+$ git push --dry-run origin main
+To github.com:username/repository.git
+   a1b2c3d..e4f5g6h  main -> main
 ```
 
 ## 使用例
 
-### 基本的な使い方
+### デフォルトのリモートブランチへのプッシュ
 
 ```console
 $ git push
-Counting objects: 3, done.
-Delta compression using up to 8 threads.
-Compressing objects: 100% (2/2), done.
-Writing objects: 100% (3/3), 267 bytes | 267.00 KiB/s, done.
-Total 3 (delta 0), reused 0 (delta 0)
-To github.com:user/repo.git
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:username/repository.git
    a1b2c3d..e4f5g6h  main -> main
 ```
 
-### 特定のブランチをプッシュ
+### 特定のブランチを特定のリモートにプッシュ
 
 ```console
-$ git push origin feature
-Counting objects: 5, done.
-Delta compression using up to 8 threads.
+$ git push origin feature-branch
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 8 threads
 Compressing objects: 100% (3/3), done.
-Writing objects: 100% (5/5), 456 bytes | 456.00 KiB/s, done.
-Total 5 (delta 1), reused 0 (delta 0)
-remote: Resolving deltas: 100% (1/1), completed with 1 local object.
-To github.com:user/repo.git
-   7f9d407..2c5e7f0  feature -> feature
+Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:username/repository.git
+   a1b2c3d..e4f5g6h  feature-branch -> feature-branch
 ```
 
-### 新しいブランチをリモートに作成
+### ローカルブランチを異なる名前のリモートブランチにプッシュ
 
 ```console
-$ git push -u origin new-feature
-Counting objects: 3, done.
-Delta compression using up to 8 threads.
-Compressing objects: 100% (2/2), done.
-Writing objects: 100% (3/3), 267 bytes | 267.00 KiB/s, done.
-Total 3 (delta 0), reused 0 (delta 0)
-remote: 
-remote: Create a pull request for 'new-feature' on GitHub by visiting:
-remote:      https://github.com/user/repo/pull/new/new-feature
-remote: 
-To github.com:user/repo.git
- * [new branch]      new-feature -> new-feature
-Branch 'new-feature' set up to track remote branch 'new-feature' from 'origin'.
+$ git push origin local-branch:remote-branch
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:username/repository.git
+   a1b2c3d..e4f5g6h  local-branch -> remote-branch
 ```
 
 ## ヒント:
 
-### 初回のプッシュには `-u` オプションを使う
+### トラッキングブランチの設定
 
-新しいブランチを作成した後の初回プッシュでは、`-u` オプションを使うことで、以降の `git push` や `git pull` で明示的にリモートとブランチを指定する必要がなくなります。
+新しいブランチを作成する際は、`git push -u origin ブランチ名`を使用してトラッキングを設定しましょう。これにより、毎回リモートとブランチを指定せずに`git pull`や`git push`を使用できるようになります。
 
-### プッシュする前に最新の変更を取得する
+### すべてのブランチをプッシュ
 
-`git pull` を実行してから `git push` することで、競合を避けることができます。
+`git push --all origin`を使用すると、すべてのローカルブランチをリモートリポジトリにプッシュできます。すべての作業をバックアップしたい場合に便利です。
 
-### `--force` は慎重に使う
+### プッシュが拒否された場合の対処
 
-`--force` オプションは他の開発者の変更を上書きする可能性があるため、共有リポジトリでは特に注意が必要です。代わりに `--force-with-lease` を使うと、他の人の変更がある場合はプッシュが拒否されるため安全です。
+リモートにあなたが持っていない作業が含まれているためにプッシュが拒否された場合は、`git pull`を使用してリモートの変更を統合してから再度プッシュしてください。あるいは、あなたの変更が優先されるべきと確信している場合は、`git push --force`を（注意して）使用してください。
 
-```console
-$ git push --force-with-lease origin feature
-```
+### 特定のコミットのみをプッシュ
 
-### プッシュ拒否時の対処法
-
-リモートに存在する変更と競合する場合、プッシュが拒否されることがあります。その場合は、まず `git pull` で変更を取り込み、必要に応じて競合を解決してから再度プッシュします。
+特定の時点までのコミットのみをプッシュするには、`git push origin <コミットハッシュ>:ブランチ名`を使用します。作業の一部だけを共有したい場合に便利です。
 
 ## よくある質問
 
-#### Q1. プッシュが拒否される理由は何ですか？
-A. リモートリポジトリに、ローカルにない新しい変更がある場合に拒否されます。まず `git pull` を実行して最新の変更を取得してから再度プッシュしてみてください。
+#### Q1. `git push`と`git push origin main`の違いは何ですか？
+A. `git push`は、設定されている場合、現在のブランチをそのアップストリームブランチにプッシュします。`git push origin main`は、現在どのブランチにいるかに関係なく、ローカルのmainブランチをoriginリモートのmainブランチに明示的にプッシュします。
 
-#### Q2. 特定のコミットだけをプッシュするには？
-A. Gitでは特定のコミットだけをプッシュすることはできません。ブランチ単位でプッシュします。特定のコミットだけを共有したい場合は、新しいブランチを作成してそこにコミットを含めてプッシュするか、`git cherry-pick` を使用して別のブランチに特定のコミットを適用します。
+#### Q2. 新しいローカルブランチをリモートリポジトリにプッシュするにはどうすればよいですか？
+A. `git push -u origin ブランチ名`を使用して、新しいブランチをプッシュしトラッキングを設定します。
 
-#### Q3. プッシュした変更を取り消すには？
-A. 完全に取り消すことはできませんが、`git revert` で元に戻すコミットを作成し、それをプッシュすることで実質的に変更を取り消すことができます。または、履歴を書き換えて `--force` オプションでプッシュする方法もありますが、共有リポジトリでは避けるべきです。
+#### Q3. プッシュを取り消すにはどうすればよいですか？
+A. プッシュを直接「取り消す」ことはできません。代わりに、ローカルで変更を元に戻し（`git revert`や`git reset`を使用）、その後`git push --force`で新しい状態をプッシュする必要があります。force pushは他の人の作業を上書きする可能性があるため注意してください。
 
-#### Q4. タグをプッシュするには？
-A. `git push origin <タグ名>` で特定のタグを、`git push --tags` ですべてのタグをプッシュできます。
+#### Q4. なぜプッシュが拒否されるのですか？
+A. プッシュが拒否される一般的な理由は、リモートブランチにあなたのローカルブランチにないコミットがある場合です。これは他の誰かが同じブランチに変更をプッシュした場合に発生します。`git pull`を使用して彼らの変更を統合してからプッシュしてください。
 
-## 参考
+#### Q5. 複数のリモートに一度にプッシュするにはどうすればよいですか？
+A. Gitには複数のリモートに同時にプッシュする組み込みの方法はありません。各リモートに個別にプッシュするか、複数のURLを指すリモートを設定する必要があります。
+
+## 参考資料
 
 https://git-scm.com/docs/git-push
 
-## 改訂
+## 改訂履歴
 
-- 2025/04/30 初版作成
+2025/05/04 初版作成

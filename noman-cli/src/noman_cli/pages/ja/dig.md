@@ -1,131 +1,150 @@
 # dig コマンド
 
-DNSサーバーに対してクエリを実行し、ドメイン名の情報を取得します。
+DNSネームサーバーにドメイン情報を問い合わせます。
 
 ## 概要
 
-`dig`（Domain Information Groper）は、DNSサーバーに対してクエリを送信し、ドメイン名の解決情報を取得するためのコマンドラインツールです。ネットワーク管理者やシステム管理者がDNSの問題をトラブルシューティングする際に非常に役立ちます。IPアドレス、メールサーバー、ネームサーバーなどの情報を確認できます。
+`dig`（Domain Information Groper）は柔軟なDNS検索ユーティリティで、ドメイン名、IPアドレス、メール交換、その他のDNSレコードに関する情報をDNSサーバーに問い合わせることができます。DNS問題のトラブルシューティング、DNS設定の確認、DNS変更のテストによく使用されます。
 
 ## オプション
 
-### **+short**
+### **-t, --type=TYPE**
 
-結果を簡潔に表示します。IPアドレスのみなど、最小限の情報を取得したい場合に便利です。
-
-```console
-$ dig google.com +short
-142.250.207.110
-```
-
-### **-t**
-
-特定のレコードタイプを指定します。一般的なタイプには、A（IPv4アドレス）、AAAA（IPv6アドレス）、MX（メールサーバー）、NS（ネームサーバー）、TXT（テキスト情報）などがあります。
+問い合わせるDNSレコードの種類を指定します（例：A, MX, NS, ANY）
 
 ```console
-$ dig -t MX gmail.com
+$ dig -t MX google.com
 ;; ANSWER SECTION:
-gmail.com.		3599	IN	MX	10 alt1.gmail-smtp-in.l.google.com.
-gmail.com.		3599	IN	MX	20 alt2.gmail-smtp-in.l.google.com.
-gmail.com.		3599	IN	MX	30 alt3.gmail-smtp-in.l.google.com.
-gmail.com.		3599	IN	MX	40 alt4.gmail-smtp-in.l.google.com.
-gmail.com.		3599	IN	MX	5 gmail-smtp-in.l.google.com.
+google.com.		300	IN	MX	10 smtp.google.com.
+# MXレコード（メールサーバー情報）を表示している
 ```
 
-### **@**
+### **-x, --reverse**
 
-特定のDNSサーバーを指定してクエリを実行します。デフォルトでは、システムの設定に従ってDNSサーバーが選択されます。
-
-```console
-$ dig @8.8.8.8 example.com
-;; ANSWER SECTION:
-example.com.		86400	IN	A	93.184.216.34
-```
-
-### **+trace**
-
-DNSの委任チェーン全体をたどり、ルートサーバーから始まる解決プロセスを表示します。
-
-```console
-$ dig +trace example.com
-;; Received 525 bytes from 192.168.1.1#53(192.168.1.1) in 30 ms
-
-example.com.		172800	IN	NS	a.iana-servers.net.
-example.com.		172800	IN	NS	b.iana-servers.net.
-;; Received 170 bytes from 192.36.148.17#53(i.root-servers.net) in 40 ms
-...
-```
-
-## 使用例
-
-### 基本的なDNS検索
-
-```console
-$ dig example.com
-;; ANSWER SECTION:
-example.com.		86400	IN	A	93.184.216.34
-```
-
-### 複数のドメインを一度に検索
-
-```console
-$ dig google.com amazon.com
-;; ANSWER SECTION:
-google.com.		300	IN	A	142.250.207.110
-
-;; ANSWER SECTION:
-amazon.com.		60	IN	A	52.94.236.248
-amazon.com.		60	IN	A	54.239.28.85
-```
-
-### 逆引きDNS検索
+逆引きDNS検索を実行します（IPアドレスからホスト名への変換）
 
 ```console
 $ dig -x 8.8.8.8
 ;; ANSWER SECTION:
-8.8.8.8.in-addr.arpa.	21599	IN	PTR	dns.google.
+8.8.8.8.in-addr.arpa.	7200	IN	PTR	dns.google.
+# 8.8.8.8のIPアドレスに対応するホスト名を表示している
+```
+
+### **@server**
+
+デフォルトの代わりに特定のDNSサーバーに問い合わせます
+
+```console
+$ dig @1.1.1.1 example.com
+;; ANSWER SECTION:
+example.com.		86400	IN	A	93.184.216.34
+# Cloudflareの1.1.1.1 DNSサーバーを使用して問い合わせている
+```
+
+### **+short**
+
+簡潔な回答を表示します（ヘッダーや追加情報なしで結果のみ）
+
+```console
+$ dig +short google.com
+142.250.190.78
+# 結果のIPアドレスのみを表示している
+```
+
+### **+noall, +answer**
+
+応答のどのセクションを表示するかを制御します
+
+```console
+$ dig +noall +answer google.com
+google.com.		300	IN	A	142.250.190.78
+# 回答セクションのみを表示している
+```
+
+## 使用例
+
+### 基本的なドメイン検索
+
+```console
+$ dig example.com
+;; QUESTION SECTION:
+;example.com.			IN	A
+
+;; ANSWER SECTION:
+example.com.		86400	IN	A	93.184.216.34
+# example.comのAレコード（IPアドレス）を問い合わせている
+```
+
+### 複数のレコードタイプの検索
+
+```console
+$ dig example.com ANY
+;; ANSWER SECTION:
+example.com.		86400	IN	A	93.184.216.34
+example.com.		86400	IN	NS	a.iana-servers.net.
+example.com.		86400	IN	NS	b.iana-servers.net.
+example.com.		86400	IN	SOA	ns.icann.org. noc.dns.icann.org. 2023080794 7200 3600 1209600 3600
+# example.comの全タイプのレコードを表示している
+```
+
+### DNS解決パスのトレース
+
+```console
+$ dig +trace example.com
+;; Received 13 bytes from 192.168.1.1#53 in 10 ms
+
+. 			518400	IN	NS	a.root-servers.net.
+...
+;; Received 811 bytes from 192.5.6.30#53 in 40 ms
+
+com. 			172800	IN	NS	a.gtld-servers.net.
+...
+;; Received 1173 bytes from 192.41.162.30#53 in 160 ms
+
+example.com.		86400	IN	NS	a.iana-servers.net.
+...
+;; Received 97 bytes from 199.43.135.53#53 in 100 ms
+
+example.com.		86400	IN	A	93.184.216.34
+# ルートサーバーからの完全な解決パスを表示している
 ```
 
 ## ヒント:
 
-### 応答時間の確認
+### +nocommentsでより見やすい出力を得る
 
-`dig`の出力の最後に表示される「Query time」を確認することで、DNSクエリの応答時間を確認できます。これはネットワークやDNSサーバーのパフォーマンスを評価するのに役立ちます。
+`+nocomments`オプションを使用すると、出力からコメント行が削除され、必要な情報だけを見たい場合に読みやすくなります。
 
-### 統計情報の非表示
+### DNS伝播の確認
 
-`+nostats`オプションを使用すると、統計情報を非表示にできます。これにより、出力が簡潔になります。
+DNS変更を行った場合、`dig @server domain.com`を異なるDNSサーバーで使用して、変更が伝播しているかを確認できます。
 
-```console
-$ dig google.com +nostats
-```
+### 1つのコマンドで複数のクエリを指定
 
-### 特定のセクションのみ表示
+複数のドメインやレコードタイプを1つのコマンドで問い合わせることができます：`dig example.com mx google.com a`
 
-`+noall +answer`オプションを使用すると、回答セクションのみを表示できます。これは、必要な情報だけを素早く確認したい場合に便利です。
+### +statsでパフォーマンス分析
 
-```console
-$ dig google.com +noall +answer
-google.com.		300	IN	A	142.250.207.110
-```
+`+stats`オプションを使用すると、クエリにかかった時間などのクエリ統計が表示され、DNS解決の遅延を診断するのに役立ちます。
 
 ## よくある質問
 
-#### Q1. digとnslookupの違いは何ですか？
-A. `dig`はより詳細な情報を提供し、スクリプトでの使用に適しています。一方、`nslookup`はよりシンプルで対話的な使用に向いています。`dig`は一般的に、より多くのDNS関連の情報を表示します。
+#### Q1. `dig`と`nslookup`の違いは何ですか？
+A. `dig`はより詳細な情報を提供し、DNS問い合わせのためのオプションが多くあります。その包括的な出力と柔軟性から、一般的にネットワーク管理者に好まれています。
 
-#### Q2. 特定のDNSサーバーを使用するにはどうすればよいですか？
-A. `@`記号の後にDNSサーバーのIPアドレスを指定します。例：`dig @8.8.8.8 example.com`
+#### Q2. DNS変更が伝播したかどうかを確認するにはどうすればよいですか？
+A. `dig @different-dns-servers your-domain.com`を使用して複数のDNSサーバーに問い合わせ、結果を比較します。
 
-#### Q3. TTL（Time To Live）とは何ですか？
-A. TTLは、DNSレコードがキャッシュに保存される秒数を示します。この値が小さいほど、DNSの変更が反映されるのが早くなりますが、DNSサーバーへのクエリ数が増加します。
+#### Q3. ドメインの権威ネームサーバーを見つけるにはどうすればよいですか？
+A. `dig NS domain.com`を使用して、ドメインを担当するネームサーバーを見つけることができます。
 
-#### Q4. SOAレコードとは何ですか？
-A. SOA（Start of Authority）レコードは、ゾーンの管理情報を含むDNSレコードです。ゾーンの権威あるネームサーバー、管理者のメールアドレス、シリアル番号、更新間隔などの情報が含まれています。
+#### Q4. DNSレコードのTTL（Time To Live）を確認するにはどうすればよいですか？
+A. TTLは`dig`の標準出力に表示されます。回答セクションの最初のINの前にある数字（秒単位）です。
 
 ## 参考資料
 
 https://linux.die.net/man/1/dig
 
-## Revisions
+## 改訂履歴
 
-- 2025/04/30 First revision
+- 2025/05/04 初版作成

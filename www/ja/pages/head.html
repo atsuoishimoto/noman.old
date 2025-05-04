@@ -49,86 +49,92 @@
   <h1>head コマンド</h1>
 <p>ファイルの先頭部分を表示します。</p>
 <h2>概要</h2>
-<p><code>head</code> コマンドはファイルの先頭から指定した行数（デフォルトでは10行）を表示するためのコマンドです。大きなファイルの内容を確認する際や、ファイルの構造を素早く把握したい場合に便利です。複数のファイルを指定すると、それぞれのファイルの先頭部分を順番に表示します。</p>
+<p><code>head</code> コマンドはファイルの先頭部分を標準出力に出力します。デフォルトでは、指定された各ファイルの最初の10行を表示します。複数のファイルが指定された場合、各ファイルの内容の前にファイル名を示すヘッダーが表示されます。</p>
 <h2>オプション</h2>
-<h3><strong>-n, --lines=N</strong></h3>
-<p>表示する行数を指定します。Nは表示したい行数です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>/etc/passwd
-<span style="color: #000; font-style: italic">root:x:0:0:root:/root:/bin/bash</span>
-<span style="color: #000; font-style: italic">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span>
-<span style="color: #000; font-style: italic">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span>
+<h3><strong>-n, --lines=[-]NUM</strong></h3>
+<p>デフォルトの10行ではなく、最初のNUM行を表示します。先頭に「-」をつけると、各ファイルの最後のNUM行を除くすべての行を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">Line 1</span>
+<span style="color: #000; font-style: italic">Line 2</span>
+<span style="color: #000; font-style: italic">Line 3</span>
+<span style="color: #000; font-style: italic">Line 4</span>
+<span style="color: #000; font-style: italic">Line 5</span>
 </pre></div>
-<h3><strong>-c, --bytes=N</strong></h3>
-<p>表示するバイト数を指定します。Nは表示したいバイト数です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>/etc/passwd
-<span style="color: #000; font-style: italic">root:x:0:0:root:/ro</span>
+<h3><strong>-c, --bytes=[-]NUM</strong></h3>
+<p>行数ではなく、最初のNUMバイトを表示します。先頭に「-」をつけると、各ファイルの最後のNUMバイトを除くすべてのバイトを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">This is the first 20</span>
 </pre></div>
 <h3><strong>-q, --quiet, --silent</strong></h3>
-<p>複数ファイルを処理する際にファイル名のヘッダーを表示しません。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">これはfile1.txtの1行目です</span>
-<span style="color: #000; font-style: italic">これはfile2.txtの1行目です</span>
+<p>ファイル名を示すヘッダーを表示しません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #8F5902">(file1.txtの内容)</span>
+<span style="color: #8F5902">(file2.txtの内容)</span>
+</pre></div>
+<h3><strong>-v, --verbose</strong></h3>
+<p>常にファイル名を示すヘッダーを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">==&gt; file.txt &lt;==</span>
+<span style="color: #000; font-style: italic">Line 1</span>
+<span style="color: #000; font-style: italic">Line 2</span>
+<span style="color: #000; font-style: italic">...</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な使用方法</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>/etc/passwd
-<span style="color: #000; font-style: italic">root:x:0:0:root:/root:/bin/bash</span>
-<span style="color: #000; font-style: italic">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span>
-<span style="color: #000; font-style: italic">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span>
-<span style="color: #000; font-style: italic">sys:x:3:3:sys:/dev:/usr/sbin/nologin</span>
-<span style="color: #000; font-style: italic">sync:x:4:65534:sync:/bin:/bin/sync</span>
-<span style="color: #000; font-style: italic">games:x:5:60:games:/usr/games:/usr/sbin/nologin</span>
-<span style="color: #000; font-style: italic">man:x:6:12:man:/var/cache/man:/usr/sbin/nologin</span>
-<span style="color: #000; font-style: italic">lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin</span>
-<span style="color: #000; font-style: italic">mail:x:8:8:mail:/var/mail:/usr/sbin/nologin</span>
-<span style="color: #000; font-style: italic">news:x:9:9:news:/var/spool/news:/usr/sbin/nologin</span>
+<h3>ログファイルの先頭部分を確認する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>/var/log/syslog
+<span style="color: #000; font-style: italic">May  3 14:22:01 hostname systemd[1]: Starting Daily apt download activities...</span>
+<span style="color: #000; font-style: italic">May  3 14:22:01 hostname systemd[1]: apt-daily.service: Succeeded.</span>
+<span style="color: #000; font-style: italic">May  3 14:22:01 hostname systemd[1]: Finished Daily apt download activities.</span>
+<span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3>複数ファイルの先頭を表示</h3>
+<h3>複数のファイルを一度に表示する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
 <span style="color: #000; font-style: italic">==&gt; file1.txt &lt;==</span>
-<span style="color: #000; font-style: italic">これはfile1.txtの1行目です</span>
-<span style="color: #000; font-style: italic">これはfile1.txtの2行目です</span>
+<span style="color: #000; font-style: italic">First line of file1</span>
+<span style="color: #000; font-style: italic">Second line of file1</span>
 
 <span style="color: #000; font-style: italic">==&gt; file2.txt &lt;==</span>
-<span style="color: #000; font-style: italic">これはfile2.txtの1行目です</span>
-<span style="color: #000; font-style: italic">これはfile2.txtの2行目です</span>
+<span style="color: #000; font-style: italic">First line of file2</span>
+<span style="color: #000; font-style: italic">Second line of file2</span>
 </pre></div>
-<h3>パイプラインでの使用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #000; font-style: italic">total 120</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  2 user user 4096 Apr 30 10:00 Desktop</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  2 user user 4096 Apr 30 10:00 Documents</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  2 user user 4096 Apr 30 10:00 Downloads</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  2 user user 4096 Apr 30 10:00 Music</span>
+<h3>最後のN行を除くすべての行を表示する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>-2<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">Line 1</span>
+<span style="color: #000; font-style: italic">Line 2</span>
+<span style="color: #000; font-style: italic">Line 3</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #8F5902">(最後の2行を除くすべての行)</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>負の行数を指定する</h3>
-<p><code>head -n -N</code> を使用すると、ファイルの最後のN行を除いた全ての行を表示できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>-2<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902"># </span>file.txtの最後の2行を除いた全ての行が表示される
+<h3>他のコマンドと組み合わせる</h3>
+<p><code>head</code>をパイプと組み合わせて、他のコマンドの出力を制限できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
 </pre></div>
-<h3>大きなログファイルの確認</h3>
-<p>ログファイルの最新の状態を確認するには、<code>tail</code> コマンドの方が適していますが、ログの初期部分を確認するには <code>head</code> が便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>/var/log/syslog
-<span style="color: #8F5902"># </span>システムログの先頭10行が表示される
+<p>これにより、ディレクトリリストの最初の5エントリのみが表示される。</p>
+<h3>大きなファイルの先頭部分を確認する</h3>
+<p>非常に大きなファイルの場合、ファイル全体をロードせずに内容をプレビューするために<code>head</code>を使用できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>huge_log.txt
 </pre></div>
-<h3>複数ファイルの処理</h3>
-<p>複数のファイルを処理する際、各ファイルの先頭にファイル名が表示されます。これを抑制するには <code>-q</code> オプションを使用します。</p>
+<h3>tailと組み合わせて中間部分を抽出する</h3>
+<p><code>head</code>と<code>tail</code>を組み合わせて、ファイルの中間部分を抽出できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>
+</pre></div>
+<p>これにより、ファイルの11〜20行目が表示される。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>head</code> と <code>tail</code> の違いは何ですか？</h4>
-<p>A. <code>head</code> はファイルの先頭部分を表示し、<code>tail</code> はファイルの末尾部分を表示します。</p>
-<h4>Q2. デフォルトで表示される行数を変更できますか？</h4>
-<p>A. はい、<code>-n</code> オプションで行数を指定できます。例えば <code>head -n 20</code> は先頭20行を表示します。</p>
-<h4>Q3. 標準入力からデータを読み取ることはできますか？</h4>
-<p>A. はい、パイプラインを使用して標準入力からデータを読み取ることができます。例：<code>cat file.txt | head -n 5</code></p>
-<h4>Q4. macOSとLinuxで <code>head</code> コマンドに違いはありますか？</h4>
-<p>A. 基本的な機能は同じですが、一部のオプションや動作が異なる場合があります。特に <code>-c</code> オプションの解釈が異なることがあります。</p>
-<h2>参考</h2>
+<h4>Q1. ファイルから特定の行数を表示するにはどうすればよいですか？</h4>
+<p>A. <code>head -n 数字 ファイル名</code>を使用して、最初の指定した行数を表示できます。</p>
+<h4>Q2. headで複数のファイルを一度に表示できますか？</h4>
+<p>A. はい、すべてのファイル名をリストするだけです：<code>head file1.txt file2.txt file3.txt</code></p>
+<h4>Q3. 行ではなく最初の数バイトを表示するにはどうすればよいですか？</h4>
+<p>A. <code>head -c 数字 ファイル名</code>を使用して、最初の指定したバイト数を表示できます。</p>
+<h4>Q4. 最後の数行を除くすべての行を表示するにはどうすればよいですか？</h4>
+<p>A. <code>head -n -数字 ファイル名</code>を使用して、最後の指定した行数を除くすべての行を表示できます。</p>
+<h4>Q5. 複数のファイルを表示する際にファイル名のヘッダーを非表示にするにはどうすればよいですか？</h4>
+<p>A. <code>-q</code>オプションを使用します：<code>head -q file1.txt file2.txt</code></p>
+<h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/head-invocation.html</p>
 <h2>改訂履歴</h2>
-<ul>
-<li>2025/04/30 初版作成</li>
-</ul>
+<p>2025/05/04 初版作成</p>
 
 
     </main>

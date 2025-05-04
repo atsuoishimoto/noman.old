@@ -1,16 +1,16 @@
 # ssh-copy-id コマンド
 
-リモートホストに SSH 公開鍵を安全にコピーするためのユーティリティです。
+リモートマシンの authorized keys ファイルに公開鍵をインストールします。
 
 ## 概要
 
-`ssh-copy-id` は、ローカルマシンの SSH 公開鍵をリモートホストの認証済み鍵ファイル（通常は `~/.ssh/authorized_keys`）に追加するコマンドです。これにより、パスワード入力なしでリモートホストに SSH 接続できるようになります。公開鍵認証の設定を簡単に行うことができます。
+`ssh-copy-id` は、SSH 公開鍵をリモートサーバーの `~/.ssh/authorized_keys` ファイルにコピーするユーティリティで、パスワードなしの SSH ログインを可能にします。このツールは、パスワード認証よりも安全な鍵ベースの認証の設定プロセスを簡素化し、ログインごとにパスワードを入力する必要をなくします。
 
 ## オプション
 
-### **-i [identity_file]**
+### **-i identity_file**
 
-使用する公開鍵ファイルを指定します。指定しない場合は、デフォルトの鍵（通常は `~/.ssh/id_rsa.pub`）が使用されます。
+使用するアイデンティティファイル（秘密鍵）を指定します。対応する公開鍵がサーバーにコピーされます。
 
 ```console
 $ ssh-copy-id -i ~/.ssh/custom_key.pub user@remote-host
@@ -26,7 +26,7 @@ and check to make sure that only the key(s) you wanted were added.
 
 ### **-f**
 
-鍵がすでに存在する場合でも強制的に追加します。
+鍵がリモートサーバーに既に存在する場合でも、強制的にインストールします。
 
 ```console
 $ ssh-copy-id -f user@remote-host
@@ -40,9 +40,22 @@ Now try logging into the machine, with:   "ssh 'user@remote-host'"
 and check to make sure that only the key(s) you wanted were added.
 ```
 
-### **-p [port]**
+### **-n**
 
-リモートホストの SSH ポートを指定します（デフォルトは 22）。
+実際にインストールせずに、どの鍵がインストールされるかを示すドライランを実行します。
+
+```console
+$ ssh-copy-id -n user@remote-host
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/user/.ssh/id_rsa.pub"
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+Would have added the following key(s):
+ssh-rsa AAAAB3NzaC1yc2EAAA...truncated...user@local-host
+```
+
+### **-p port**
+
+リモートホストに接続するポートを指定します。
 
 ```console
 $ ssh-copy-id -p 2222 user@remote-host
@@ -58,7 +71,7 @@ and check to make sure that only the key(s) you wanted were added.
 
 ## 使用例
 
-### 基本的な使用方法
+### 基本的な使用法
 
 ```console
 $ ssh-copy-id user@remote-host
@@ -72,7 +85,7 @@ Now try logging into the machine, with:   "ssh 'user@remote-host'"
 and check to make sure that only the key(s) you wanted were added.
 ```
 
-### 特定の鍵を使用する場合
+### 特定のアイデンティティファイルを使用する
 
 ```console
 $ ssh-copy-id -i ~/.ssh/id_ed25519.pub user@remote-host
@@ -86,7 +99,7 @@ Now try logging into the machine, with:   "ssh 'user@remote-host'"
 and check to make sure that only the key(s) you wanted were added.
 ```
 
-### 非標準ポートを使用する場合
+### 非標準のSSHポートを使用する
 
 ```console
 $ ssh-copy-id -p 2222 user@remote-host
@@ -102,56 +115,55 @@ and check to make sure that only the key(s) you wanted were added.
 
 ## ヒント:
 
-### 事前に SSH 鍵を生成する
+### 先にSSH鍵を生成する
 
-`ssh-copy-id` を使用する前に、SSH 鍵ペアが必要です。鍵がない場合は、`ssh-keygen` コマンドで生成できます。
+`ssh-copy-id` を使用する前に、SSH鍵が生成されていることを確認してください。生成されていない場合は、以下のコマンドで作成できます：
 
 ```console
 $ ssh-keygen -t rsa -b 4096
-Generating public/private rsa key pair.
-Enter file in which to save the key (/home/user/.ssh/id_rsa): 
-Enter passphrase (empty for no passphrase): 
-Enter same passphrase again: 
-Your identification has been saved in /home/user/.ssh/id_rsa
-Your public key has been saved in /home/user/.ssh/id_rsa.pub
 ```
 
-### 複数のサーバーに鍵をコピーする
+### 鍵のインストールを確認する
 
-複数のサーバーに同じ鍵をコピーする場合は、コマンドを繰り返し実行するだけです。スクリプトを使用して自動化することも可能です。
+`ssh-copy-id` を実行した後、リモートサーバーにSSH接続を試みて設定を確認してください。パスワードの入力を求められずに接続できるはずです。
 
-### リモートホストのディレクトリ権限を確認する
+### 複数の鍵
 
-接続に問題がある場合は、リモートホストの `~/.ssh` ディレクトリの権限が適切か確認してください。通常、`~/.ssh` は `700`、`~/.ssh/authorized_keys` は `600` の権限が必要です。
+複数のSSH鍵がある場合は、`-i` オプションを使用してインストールする公開鍵を指定してください。指定しない場合、`ssh-copy-id` は `~/.ssh` ディレクトリのデフォルトの鍵を使用します。
+
+### リモートサーバーの要件
+
+リモートサーバーにはSSHサーバーが実行されており、最初はパスワード認証を許可している必要があります（鍵ベースの認証を設定するため）。
 
 ## よくある質問
 
-#### Q1. `ssh-copy-id` とは何ですか？
-A. SSH 公開鍵をリモートホストの認証済み鍵ファイルに追加するためのユーティリティです。これにより、パスワードなしでリモートホストに SSH 接続できるようになります。
+#### Q1. ssh-copy-id は実際に何をしますか？
+A. リモートサーバーの `~/.ssh/authorized_keys` ファイルに公開SSH鍵をコピーし、鍵ベースの認証を使用したパスワードなしのSSHログインを可能にします。
 
-#### Q2. 公開鍵がすでにリモートホストに存在する場合はどうなりますか？
-A. `ssh-copy-id` は既存の鍵をスキップし、新しい鍵のみを追加します。強制的に追加するには `-f` オプションを使用します。
+#### Q2. ssh-copy-id を複数回実行する必要がありますか？
+A. サーバーごとに鍵ごとに1回だけ実行する必要があります。新しい鍵を生成したり、新しいサーバーにアクセスしたりする場合は、再度実行する必要があります。
 
-#### Q3. リモートホストに `.ssh` ディレクトリが存在しない場合はどうなりますか？
-A. `ssh-copy-id` は必要なディレクトリと `authorized_keys` ファイルを自動的に作成し、適切な権限を設定します。
+#### Q3. ssh-copy-id が失敗した場合はどうすればよいですか？
+A. 一般的な問題には、リモートサーバーに `~/.ssh` ディレクトリがない（作成されます）、リモートの `~/.ssh` ディレクトリの権限が正しくない、またはサーバーでSSHパスワード認証が無効になっているなどがあります。
 
-#### Q4. Windows で `ssh-copy-id` を使用できますか？
-A. Windows 10 以降の OpenSSH クライアントには `ssh-copy-id` が含まれていない場合があります。代わりに、PowerShell スクリプトや Git Bash などの代替手段を使用できます。
+#### Q4. カスタムSSH設定でssh-copy-idを使用できますか？
+A. はい、`ssh-copy-id` はSSH設定を使用します。`~/.ssh/config` にカスタム設定がある場合、それらが適用されます。
 
-## macOS での注意点
+#### Q5. ssh-copy-idで追加した鍵を削除するにはどうすればよいですか？
+A. リモートサーバーの `~/.ssh/authorized_keys` ファイルを手動で編集し、削除したい鍵を含む行を削除する必要があります。
 
-macOSでは、`ssh-copy-id` コマンドはデフォルトでインストールされていますが、古いバージョンの場合は Homebrew を使用してインストールできます：
+## macOSでの注意事項
+
+macOSでは、`ssh-copy-id` がデフォルトでインストールされていない場合があります。Homebrewを使用して `brew install ssh-copy-id` でインストールできます。または、公開鍵を手動でリモートサーバーにコピーすることもできます：
 
 ```console
-$ brew install ssh-copy-id
+$ cat ~/.ssh/id_rsa.pub | ssh user@remote-host "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
 ```
-
-macOS の場合、SSH 鍵は通常 `/Users/ユーザー名/.ssh/` ディレクトリに保存されます。
 
 ## 参考資料
 
-https://www.ssh.com/ssh/copy-id
+https://man.openbsd.org/ssh-copy-id
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

@@ -1,23 +1,20 @@
 # [ command
 
-Evaluates conditional expressions and returns a status based on the evaluation.
+Evaluates conditional expressions and returns a status based on the evaluation result.
 
 ## Overview
 
-The `[` command (also known as `test`) is used to check file types, compare strings, and evaluate arithmetic expressions. It's commonly used in shell scripts for conditional operations like `if` statements. The command returns a status of 0 (true) or 1 (false) based on the evaluation of the expression.
+The `[` command (also known as `test`) is a shell builtin that evaluates conditional expressions and returns a status of 0 (true) or 1 (false). It's commonly used in shell scripts for conditional testing of file attributes, string comparisons, and arithmetic operations. The command requires a closing `]` to complete its syntax.
 
 ## Options
 
 ### **File Tests**
 
-Tests for file properties and characteristics
+Tests for file properties and attributes
 
 ```console
-$ [ -f file.txt ] && echo "Regular file exists"
+$ [ -f /etc/passwd ] && echo "Regular file exists"
 Regular file exists
-
-$ [ -d /tmp ] && echo "Directory exists"
-Directory exists
 ```
 
 ### **String Tests**
@@ -25,81 +22,116 @@ Directory exists
 Compares strings or checks string properties
 
 ```console
-$ [ "hello" = "hello" ] && echo "Strings are equal"
-Strings are equal
-
-$ [ -z "" ] && echo "String is empty"
-String is empty
+$ name="John"
+$ [ "$name" = "John" ] && echo "Names match"
+Names match
 ```
 
-### **Integer Comparison**
+### **Integer Tests**
 
 Compares integer values
 
 ```console
-$ [ 5 -eq 5 ] && echo "Numbers are equal"
-Numbers are equal
-
-$ [ 10 -gt 5 ] && echo "10 is greater than 5"
-10 is greater than 5
+$ age=25
+$ [ $age -gt 18 ] && echo "Adult"
+Adult
 ```
 
 ## Usage Examples
 
-### In if statements
+### Testing if a file exists
 
 ```console
-$ if [ -f /etc/passwd ]; then
->   echo "The passwd file exists"
+$ [ -e /etc/hosts ] && echo "File exists" || echo "File does not exist"
+File exists
+```
+
+### Checking if a directory is writable
+
+```console
+$ [ -w /tmp ] && echo "Directory is writable" || echo "Directory is not writable"
+Directory is writable
+```
+
+### Comparing string values in an if statement
+
+```console
+$ fruit="apple"
+$ if [ "$fruit" = "apple" ]; then
+>   echo "It's an apple"
+> else
+>   echo "It's not an apple"
 > fi
-The passwd file exists
+It's an apple
 ```
 
-### With logical operators
+## Common File Test Operators
 
+| Operator | Description |
+|----------|-------------|
+| `-e file` | True if file exists |
+| `-f file` | True if file is a regular file |
+| `-d file` | True if file is a directory |
+| `-r file` | True if file is readable |
+| `-w file` | True if file is writable |
+| `-x file` | True if file is executable |
+| `-s file` | True if file exists and has size greater than zero |
+
+## Common String Test Operators
+
+| Operator | Description |
+|----------|-------------|
+| `-z string` | True if string length is zero |
+| `-n string` | True if string length is non-zero |
+| `string1 = string2` | True if strings are equal |
+| `string1 != string2` | True if strings are not equal |
+
+## Common Integer Comparison Operators
+
+| Operator | Description |
+|----------|-------------|
+| `int1 -eq int2` | True if integers are equal |
+| `int1 -ne int2` | True if integers are not equal |
+| `int1 -lt int2` | True if int1 is less than int2 |
+| `int1 -le int2` | True if int1 is less than or equal to int2 |
+| `int1 -gt int2` | True if int1 is greater than int2 |
+| `int1 -ge int2` | True if int1 is greater than or equal to int2 |
+
+## Tips
+
+### Always Quote Variables
+Always quote variables in test expressions to prevent word splitting and globbing issues:
 ```console
-$ [ -d /tmp ] && [ -w /tmp ] && echo "tmp directory exists and is writable"
-tmp directory exists and is writable
+$ [ "$variable" = "value" ]  # Correct
 ```
 
-### Checking command-line arguments
-
+### Use Double Brackets When Possible
+In Bash, consider using `[[` instead of `[` for more advanced features and fewer surprises:
 ```console
-$ [ $# -eq 0 ] && echo "No arguments provided"
-No arguments provided
+$ [[ $string =~ ^[0-9]+$ ]] && echo "Numeric"
 ```
 
-## Tips:
-
-### Always Use Spaces
-
-Always put spaces around the brackets and operators. `[ -f file.txt ]` works, but `[-f file.txt]` will fail.
-
-### Remember the Closing Bracket
-
-The `[` command requires a closing `]` at the end of the expression. Forgetting it will cause syntax errors.
-
-### Use Double Brackets in Bash
-
-In Bash scripts, consider using `[[` instead of `[` for more features and fewer quirks with string comparisons and pattern matching.
-
-### Quote Variables
-
-Always quote variables to prevent word splitting: `[ -f "$filename" ]` instead of `[ -f $filename ]`.
+### Remember the Spaces
+The `[` command requires spaces after the opening bracket and before the closing bracket:
+```console
+$ [ -f file.txt ]  # Correct
+$ [-f file.txt]    # Incorrect - will fail
+```
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `[` and `test`?
-A. They are functionally equivalent. `[` is just another name for the `test` command, but requires a closing `]` at the end.
+#### Q1. What's the difference between `[` and `[[`?
+A. `[` is a command (also known as `test`) available in all POSIX shells, while `[[` is a shell keyword in Bash and other modern shells that offers extended functionality like pattern matching and logical operators.
 
-#### Q2. Can I use `[` for mathematical operations?
-A. It's limited to basic integer comparisons. For complex math, use `(( ))` in Bash or the `expr` command.
+#### Q2. Why do I need spaces around the brackets?
+A. The `[` is actually a command (like `ls` or `grep`), so it needs spaces to separate it from its arguments. The closing `]` is its final argument.
 
-#### Q3. How do I check if a file doesn't exist?
-A. Use the negation operator: `[ ! -f filename ]`
-
-#### Q4. What's the difference between `[` and `[[`?
-A. `[[` is a Bash-specific extension with more features like pattern matching and better handling of empty variables, while `[` is POSIX-compliant and works in all shells.
+#### Q3. How do I test multiple conditions?
+A. Use `-a` (AND) or `-o` (OR) operators:
+```console
+$ [ -f file.txt -a -r file.txt ] && echo "File exists and is readable"
+```
+With `[[`, you can use `&&` and `||` instead.
 
 ## References
 
@@ -107,4 +139,4 @@ https://pubs.opengroup.org/onlinepubs/9699919799/utilities/test.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

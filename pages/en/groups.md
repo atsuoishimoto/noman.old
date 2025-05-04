@@ -4,28 +4,19 @@ Display the groups a user belongs to.
 
 ## Overview
 
-The `groups` command shows all the groups that a specified user is a member of. If no user is specified, it displays the groups for the current user. Groups are used in Unix/Linux systems to manage permissions and access control.
+The `groups` command shows all the groups that a specified user is a member of. If no user is specified, it displays the groups for the current user. This command is useful for checking user permissions and access rights in Unix/Linux systems.
 
 ## Options
 
-The `groups` command has very few options as it's a simple utility.
+The `groups` command has very few options as it's a simple utility:
 
-### **Default usage (current user)**
+### **username**
 
-Shows groups for the currently logged-in user
-
-```console
-$ groups
-staff admin wheel
-```
-
-### **Specific user**
-
-Shows groups for a specified username
+Displays the groups for the specified username
 
 ```console
-$ groups username
-username : staff admin
+$ groups john
+john : users wheel developers
 ```
 
 ## Usage Examples
@@ -34,51 +25,45 @@ username : staff admin
 
 ```console
 $ groups
-user wheel admin staff
+user wheel audio video
 ```
 
-### Checking multiple users' groups
+### Checking groups for multiple users
 
 ```console
-$ groups root admin
-root : wheel admin
-admin : admin staff wheel
+$ groups root alice bob
+root : root bin daemon sys adm
+alice : users wheel developers
+bob : users guests
 ```
 
-### Using with other commands
-
-```console
-$ echo "My groups are: $(groups)"
-My groups are: user wheel admin staff
-```
-
-## Tips
+## Tips:
 
 ### Understanding Group Membership
 
-Group membership determines what files you can access and what system operations you can perform. The first group listed is typically your primary group.
+Group membership determines what files and resources a user can access. The first group listed is typically the user's primary group, while others are supplementary groups.
 
-### Checking Effective Groups
+### Related Commands
 
-The `id` command provides more detailed information about user and group IDs, including the effective group ID: `id -g` shows your effective group ID.
+Use `id -Gn` as an alternative to see your groups. For more detailed information including numeric group IDs, use `id` without options.
 
-### Group Files Location
+### Checking System Group Files
 
-Group definitions are stored in `/etc/group`. You can view this file with `cat /etc/group` to see all groups defined on the system.
+If you need to see all groups defined on the system, check the `/etc/group` file with `cat /etc/group` or `getent group`.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I add a user to a group?
-A. Use `sudo usermod -aG groupname username` to add a user to a group.
+#### Q1. What's the difference between primary and supplementary groups?
+A. The primary group (usually the first one listed) is the default group assigned to files created by the user. Supplementary groups provide additional access permissions.
 
-#### Q2. What's the difference between `groups` and `id -Gn`?
-A. They provide similar information, but `id -Gn` is part of the `id` command which can show more detailed user and group information.
+#### Q2. How do I add a user to a group?
+A. Use `usermod -aG groupname username` to add a user to a supplementary group.
 
-#### Q3. How can I see all groups on the system?
-A. Use `getent group` or `cat /etc/group` to see all groups defined on the system.
+#### Q3. Why do I need to know my groups?
+A. Group membership determines what files and resources you can access on the system. Troubleshooting permission issues often involves checking group membership.
 
-#### Q4. Why do I need to know my groups?
-A. Understanding your group membership helps troubleshoot permission issues and determine what resources you can access on the system.
+#### Q4. Can I see the numeric group IDs instead of names?
+A. Yes, use `id -G` instead of `groups` to see numeric group IDs.
 
 ## References
 
@@ -86,4 +71,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/groups-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

@@ -47,105 +47,111 @@
     <main>
       
   <h1>perf command</h1>
-<p>Performance analysis tool for Linux systems that collects and analyzes performance data.</p>
+<p>Performance analysis tool for Linux, providing hardware counter statistics and tracing capabilities.</p>
 <h2>Overview</h2>
-<p><code>perf</code> is a powerful Linux profiling tool that accesses the performance monitoring hardware counters of the CPU to gather information about the behavior of user code, kernel, and hardware events. It helps identify performance bottlenecks, analyze CPU usage, track memory access patterns, and debug system performance issues.</p>
+<p><code>perf</code> is a powerful Linux profiling and performance analysis tool that accesses the performance monitoring hardware counters of the CPU to gather statistics about program execution. It can monitor CPU performance events, trace system calls, and analyze application performance with minimal overhead. Part of the Linux kernel tools, <code>perf</code> helps developers identify bottlenecks and optimize code.</p>
 <h2>Options</h2>
-<h3><strong>stat</strong></h3>
-<p>Runs a command and gathers performance counter statistics</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>stat<span style="color: #F8F8F8"> </span>ls
-<span style="color: #000; font-style: italic">Documents  Downloads  Pictures  Videos</span>
+<h3><strong>-e, --event</strong></h3>
+<p>Specify the performance event to count or sample</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>stat<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>cycles,instructions<span style="color: #F8F8F8"> </span>./myprogram
+<span style="color: #000; font-style: italic"> Performance counter stats for &#39;./myprogram&#39;:</span>
 
-<span style="color: #000; font-style: italic"> Performance counter stats for &#39;ls&#39;:</span>
-
-<span style="color: #000; font-style: italic">              0.93 msec task-clock                #    0.076 CPUs utilized</span>
-<span style="color: #000; font-style: italic">                 0      context-switches          #    0.000 K/sec</span>
-<span style="color: #000; font-style: italic">                 0      cpu-migrations            #    0.000 K/sec</span>
-<span style="color: #000; font-style: italic">                89      page-faults               #    0.096 M/sec</span>
-<span style="color: #000; font-style: italic">           1,597,086      cycles                  #    1.723 GHz</span>
-<span style="color: #000; font-style: italic">           1,221,363      instructions            #    0.76  insn per cycle</span>
-<span style="color: #000; font-style: italic">             245,931      branches                #  265.249 M/sec</span>
-<span style="color: #000; font-style: italic">              10,764      branch-misses           #    4.38% of all branches</span>
-
-<span style="color: #000; font-style: italic">       0.012249350 seconds time elapsed</span>
-
-<span style="color: #000; font-style: italic">       0.001349000 seconds user</span>
-<span style="color: #000; font-style: italic">       0.000000000 seconds sys</span>
+<span style="color: #000; font-style: italic">       1,234,567      cycles</span>
+<span style="color: #000; font-style: italic">       2,345,678      instructions             #    1.90  insn per cycle</span>
+<span style="color: #000; font-style: italic">       </span>
+<span style="color: #000; font-style: italic">       0.123456789 seconds time elapsed</span>
 </pre></div>
-<h3><strong>record</strong></h3>
-<p>Records performance data for later analysis</p>
+<h3><strong>-p, --pid</strong></h3>
+<p>Profile events on existing process by process ID</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>record<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #F8F8F8"> </span>-g
+<span style="color: #000; font-style: italic">[ perf record: Woken up 1 times to write data ]</span>
+<span style="color: #000; font-style: italic">[ perf record: Captured and wrote 0.452 MB perf.data (5093 samples) ]</span>
+</pre></div>
+<h3><strong>-a, --all-cpus</strong></h3>
+<p>System-wide monitoring of all CPUs</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>stat<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic"> Performance counter stats for &#39;system wide&#39;:</span>
+
+<span style="color: #000; font-style: italic">       12,345,678      cpu-cycles           </span>
+<span style="color: #000; font-style: italic">        5,678,901      instructions              #    0.46  insn per cycle</span>
+<span style="color: #000; font-style: italic">          123,456      cache-misses</span>
+
+<span style="color: #000; font-style: italic">       5.000621884 seconds time elapsed</span>
+</pre></div>
+<h3><strong>-g, --call-graph</strong></h3>
+<p>Enable call-graph (stack chain/backtrace) recording</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>record<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span>./myprogram
 <span style="color: #000; font-style: italic">[ perf record: Woken up 1 times to write data ]</span>
-<span style="color: #000; font-style: italic">[ perf record: Captured and wrote 0.086 MB perf.data (1093 samples) ]</span>
+<span style="color: #000; font-style: italic">[ perf record: Captured and wrote 0.452 MB perf.data (5093 samples) ]</span>
 </pre></div>
-<h3><strong>report</strong></h3>
-<p>Analyzes and displays the data collected by perf record</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>report
-<span style="color: #8F5902"># </span>Samples:<span style="color: #F8F8F8"> </span>1K<span style="color: #F8F8F8"> </span>of<span style="color: #F8F8F8"> </span>event<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;cycles:ppp&#39;</span>
-<span style="color: #8F5902"># </span>Event<span style="color: #F8F8F8"> </span>count<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>approx.<span style="color: #CE5C00; font-weight: bold">)</span>:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1597086</span>
+<h2>Usage Examples</h2>
+<h3>Basic CPU statistics</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>stat<span style="color: #F8F8F8"> </span>./myprogram
+<span style="color: #000; font-style: italic"> Performance counter stats for &#39;./myprogram&#39;:</span>
+
+<span style="color: #000; font-style: italic">          0.086283      task-clock (msec)         #    0.733 CPUs utilized</span>
+<span style="color: #000; font-style: italic">                 2      context-switches          #    0.023 M/sec</span>
+<span style="color: #000; font-style: italic">                 0      cpu-migrations            #    0.000 K/sec</span>
+<span style="color: #000; font-style: italic">               108      page-faults               #    0.001 M/sec</span>
+<span style="color: #000; font-style: italic">           235,538      cycles                    #    2.731 GHz</span>
+<span style="color: #000; font-style: italic">           580,716      instructions              #    2.47  insn per cycle</span>
+<span style="color: #000; font-style: italic">           116,931      branches                  #    1.356 M/sec</span>
+<span style="color: #000; font-style: italic">             3,468      branch-misses             #    2.97% of all branches</span>
+
+<span style="color: #000; font-style: italic">       0.117743392 seconds time elapsed</span>
+</pre></div>
+<h3>Recording and analyzing performance data</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>record<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span>./myprogram
+<span style="color: #000; font-style: italic">[ perf record: Woken up 1 times to write data ]</span>
+<span style="color: #000; font-style: italic">[ perf record: Captured and wrote 0.452 MB perf.data (5093 samples) ]</span>
+
+<span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>report
+<span style="color: #8F5902"># </span>Samples:<span style="color: #F8F8F8"> </span>5K<span style="color: #F8F8F8"> </span>of<span style="color: #F8F8F8"> </span>event<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;cycles&#39;</span>
+<span style="color: #8F5902"># </span>Event<span style="color: #F8F8F8"> </span>count<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">(</span>approx.<span style="color: #CE5C00; font-weight: bold">)</span>:<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2345678901</span>
 <span style="color: #8F5902">#</span>
 <span style="color: #8F5902"># </span>Overhead<span style="color: #F8F8F8">  </span>Command<span style="color: #F8F8F8">      </span>Shared<span style="color: #F8F8F8"> </span>Object<span style="color: #F8F8F8">        </span>Symbol
 <span style="color: #8F5902"># </span>........<span style="color: #F8F8F8">  </span>.......<span style="color: #F8F8F8">  </span>.................<span style="color: #F8F8F8">  </span>..............
 <span style="color: #8F5902">#</span>
-<span style="color: #000; font-style: italic">    14.29%  myprogram  myprogram           [.] process_data</span>
-<span style="color: #000; font-style: italic">    10.53%  myprogram  libc-2.31.so        [.] malloc</span>
-<span style="color: #000; font-style: italic">     8.76%  myprogram  myprogram           [.] calculate_result</span>
+<span style="color: #000; font-style: italic">    14.59%  myprogram  myprogram           [.] process_data</span>
+<span style="color: #000; font-style: italic">    10.21%  myprogram  myprogram           [.] calculate_result</span>
+<span style="color: #000; font-style: italic">     8.45%  myprogram  libc-2.31.so        [.] malloc</span>
 </pre></div>
-<h3><strong>top</strong></h3>
-<p>System profiling tool similar to top, but showing performance counter information</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>top
-<span style="color: #000; font-style: italic">Samples: 42K of event &#39;cycles&#39;, 4000 Hz, Event count (approx.): 9857399138</span>
-<span style="color: #000; font-style: italic">Overhead  Shared Object                       Symbol</span>
-<span style="color: #000; font-style: italic">  10.95%  [kernel]                            [k] _raw_spin_unlock_irqrestore</span>
-<span style="color: #000; font-style: italic">   3.62%  [kernel]                            [k] finish_task_switch</span>
-<span style="color: #000; font-style: italic">   2.40%  [kernel]                            [k] __schedule</span>
-<span style="color: #000; font-style: italic">   2.11%  libcrypto.so.1.1                    [.] 0x000000000012b8d6</span>
+<h3>Tracing system calls</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>trace<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+<span style="color: #000; font-style: italic">     0.000 ( 0.000 ms): myprogram/1234 write(fd: 1, buf: 0x7f9876543210, count: 16) = 16</span>
+<span style="color: #000; font-style: italic">     0.223 ( 0.019 ms): myprogram/1234 read(fd: 0, buf: 0x7f9876543210, count: 1024) = 64</span>
+<span style="color: #000; font-style: italic">     0.415 ( 0.021 ms): myprogram/1234 open(filename: 0x7f9876543210, flags: RDONLY) = 3</span>
 </pre></div>
-<h2>Usage Examples</h2>
-<h3>Profiling CPU usage of a specific command</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>stat<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>cycles,instructions,cache-references,cache-misses<span style="color: #F8F8F8"> </span>./myprogram
-<span style="color: #000; font-style: italic">[output shows CPU performance metrics for myprogram]</span>
+<h2>Tips</h2>
+<h3>Use Flame Graphs for Visualization</h3>
+<p>Convert perf data to flame graphs using tools like FlameGraph to visualize call stacks and quickly identify hot spots in your code.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>record<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span>-F<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">99</span><span style="color: #F8F8F8"> </span>./myprogram
+<span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>script<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>./FlameGraph/stackcollapse-perf.pl<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>./FlameGraph/flamegraph.pl<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>profile.svg
 </pre></div>
-<h3>Recording call graph information</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>record<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span>./myprogram
-<span style="color: #000; font-style: italic">[perf data recorded to perf.data]</span>
-<span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>report<span style="color: #F8F8F8"> </span>--sort<span style="color: #F8F8F8"> </span>comm,dso,symbol
-<span style="color: #000; font-style: italic">[displays hierarchical call graph with hotspots]</span>
+<h3>Focus on Specific Events</h3>
+<p>Instead of collecting all events, focus on specific ones like cache-misses or branch-misses to diagnose particular performance issues.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>stat<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>cache-misses,branch-misses<span style="color: #F8F8F8"> </span>./myprogram
 </pre></div>
-<h3>Analyzing specific events</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>list
-<span style="color: #000; font-style: italic">[lists available events]</span>
-<span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>stat<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>cache-misses,branch-misses<span style="color: #F8F8F8"> </span>./myprogram
-<span style="color: #000; font-style: italic">[shows cache and branch miss statistics]</span>
-</pre></div>
-<h2>Tips:</h2>
-<h3>Run with Elevated Privileges</h3>
-<p>Many perf features require root access. Use <code>sudo perf</code> to access hardware counters and kernel events.</p>
-<h3>Focus on Hotspots</h3>
-<p>When analyzing performance reports, focus on functions with the highest overhead percentages first. These &quot;hotspots&quot; offer the greatest potential for optimization.</p>
-<h3>Use Flame Graphs</h3>
-<p>Convert perf data to flame graphs for better visualization:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>record<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span>./myprogram
-<span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>script<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>FlameGraph/stackcollapse-perf.pl<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>FlameGraph/flamegraph.pl<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>flamegraph.svg
-</pre></div>
-<h3>Limit Data Collection</h3>
-<p>For long-running programs, use <code>-F</code> to reduce sampling frequency and <code>-g</code> to collect call graphs:</p>
+<h3>Reduce Overhead with Sampling</h3>
+<p>For production environments, use sampling to reduce overhead by specifying a frequency:</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>perf<span style="color: #F8F8F8"> </span>record<span style="color: #F8F8F8"> </span>-F<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">99</span><span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span>./myprogram
 </pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between perf stat and perf record?</h4>
-<p>A. <code>perf stat</code> provides a summary of performance metrics after a command completes, while <code>perf record</code> captures detailed performance data that can be analyzed later with <code>perf report</code>.</p>
-<h4>Q2. How do I profile a running process?</h4>
-<p>A. Use <code>perf record -p PID</code> to attach to an already running process with the specified PID.</p>
-<h4>Q3. Why do I get &quot;Permission denied&quot; errors?</h4>
-<p>A. Many perf features require root privileges. Try running with <code>sudo</code> or adjust the <code>/proc/sys/kernel/perf_event_paranoid</code> setting.</p>
-<h4>Q4. How can I reduce the size of perf.data files?</h4>
-<p>A. Use <code>-F</code> to lower the sampling frequency (e.g., <code>perf record -F 99</code>) or limit the events you're recording with the <code>-e</code> option.</p>
+<h4>Q1. What's the difference between <code>perf stat</code> and <code>perf record</code>?</h4>
+<p>A. <code>perf stat</code> provides a summary of performance counters, while <code>perf record</code> captures detailed samples for later analysis with <code>perf report</code>.</p>
+<h4>Q2. How do I profile a running application?</h4>
+<p>A. Use <code>perf record -p PID</code> where PID is the process ID of your running application.</p>
+<h4>Q3. Can I use perf on a virtual machine?</h4>
+<p>A. Yes, but with limitations. Some hardware counters may not be available or accurate in virtualized environments.</p>
+<h4>Q4. How do I see which functions are using the most CPU?</h4>
+<p>A. Use <code>perf top</code> for real-time function monitoring or <code>perf record</code> followed by <code>perf report</code> for detailed analysis.</p>
+<h4>Q5. Does perf work on all Linux distributions?</h4>
+<p>A. Most modern distributions support perf, but functionality may vary based on kernel version and configuration.</p>
 <h2>References</h2>
 <p>https://perf.wiki.kernel.org/index.php/Main_Page</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

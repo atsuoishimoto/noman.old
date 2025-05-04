@@ -47,89 +47,109 @@
     <main>
       
   <h1>more コマンド</h1>
-<p>テキストファイルを画面単位で表示するページャー。</p>
+<p>ファイルの内容を1画面ずつ表示します。</p>
 <h2>概要</h2>
-<p><code>more</code> コマンドは、テキストファイルを一度に1画面ずつ表示するシンプルなページャーです。長いファイルを閲覧する際に便利で、スペースキーで次の画面に進んだり、Enterキーで1行ずつ進んだりすることができます。<code>less</code> コマンドの前身であり、基本的な機能を提供しています。</p>
+<p><code>more</code>コマンドはページャーの一種で、テキストファイルを1画面ずつ表示することができます。特に大きなファイルを閲覧する際に便利で、コンテンツをページごとに表示し、簡単なキーボードコマンドでファイル内を移動できます。より高機能な<code>less</code>コマンドとは異なり、<code>more</code>はファイル内の前方向への移動のみをサポートしています。</p>
 <h2>オプション</h2>
-<h3><strong>-d</strong></h3>
-<p>ヘルププロンプトを表示し、無効なコマンドに対してビープ音を鳴らします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>long_file.txt
-<span style="color: #000; font-style: italic">--More--(Next: Space, Continue: c, Quit: q)</span>
+<h3><strong>-d, --silent</strong></h3>
+<p>役立つプロンプトを表示し、よりユーザーフレンドリーなエラーメッセージを提供します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>large_file.txt
+<span style="color: #000; font-style: italic">--More--(50%) [スペースキーで続行、&#39;q&#39;で終了]</span>
 </pre></div>
-<h3><strong>-p</strong></h3>
-<p>画面をクリアしてから表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>document.txt
-<span style="color: #000; font-style: italic">[画面がクリアされてからdocument.txtの内容が表示される]</span>
-</pre></div>
-<h3><strong>-s</strong></h3>
-<p>連続する空行を1行にまとめて表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>file_with_many_blank_lines.txt
-<span style="color: #000; font-style: italic">[連続する空行が1行に圧縮されて表示される]</span>
-</pre></div>
-<h3><strong>-f</strong></h3>
-<p>論理行ではなく、表示行を数えます。長い行が折り返される場合に便利です。</p>
+<h3><strong>-f, --logical</strong></h3>
+<p>画面行ではなく論理行をカウントします（長い行を折り返しません）。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>wide_content.txt
-<span style="color: #000; font-style: italic">[折り返し行を含めて表示される]</span>
 </pre></div>
-<h3><strong>+n</strong></h3>
-<p>指定した行番号(n)から表示を開始します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>+10<span style="color: #F8F8F8"> </span>document.txt
-<span style="color: #000; font-style: italic">[document.txtの10行目から表示が始まる]</span>
+<h3><strong>-p, --plain</strong></h3>
+<p>画面のクリアや一部の端末で干渉する可能性のある制御シーケンスを無効にします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>script.sh
+</pre></div>
+<h3><strong>-c, --clean-print</strong></h3>
+<p>スクロールの代わりに画面を再描画し、よりクリーンな表示を提供します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>document.txt
+</pre></div>
+<h3><strong>-s, --squeeze</strong></h3>
+<p>複数の空白行を1行に圧縮します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>log_file.txt
+</pre></div>
+<h3><strong>-u, --plain</strong></h3>
+<p>下線やその他の書式設定を抑制します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>formatted_text.txt
+</pre></div>
+<h3><strong>-number</strong></h3>
+<p>各画面に表示する行数を指定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-10<span style="color: #F8F8F8"> </span>short_file.txt
+</pre></div>
+<h3><strong>+number</strong></h3>
+<p>指定した行番号からファイルの表示を開始します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>+100<span style="color: #F8F8F8"> </span>large_file.txt
+</pre></div>
+<h3><strong>+/pattern</strong></h3>
+<p>指定したパターンを含む最初の行から表示を開始します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>+/ERROR<span style="color: #F8F8F8"> </span>log_file.txt
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な使用方法</h3>
+<h3>基本的な使用法</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>/etc/passwd
 <span style="color: #000; font-style: italic">root:x:0:0:root:/root:/bin/bash</span>
 <span style="color: #000; font-style: italic">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span>
 <span style="color: #000; font-style: italic">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span>
-<span style="color: #000; font-style: italic">--More--(63%)</span>
+<span style="color: #000; font-style: italic">--More--(28%)</span>
 </pre></div>
-<h3>複数ファイルの閲覧</h3>
+<h3>複数ファイルの表示</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">[file1.txtの内容]</span>
-<span style="color: #000; font-style: italic">--More--(63%)</span>
-<span style="color: #000; font-style: italic">[スペースキーを押すとfile1.txtの続きが表示される]</span>
-<span style="color: #000; font-style: italic">[file1.txtの最後に達するとfile2.txtが表示される]</span>
+<span style="color: #000; font-style: italic">::::::::::::::</span>
+<span style="color: #000; font-style: italic">file1.txt</span>
+<span style="color: #000; font-style: italic">::::::::::::::</span>
+<span style="color: #000; font-style: italic">This is file 1 content</span>
+<span style="color: #000; font-style: italic">--More--(50%)</span>
 </pre></div>
-<h3>パイプラインでの使用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-la<span style="color: #F8F8F8"> </span>/usr/bin<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>more
-<span style="color: #000; font-style: italic">[/usr/binディレクトリの詳細リストが画面単位で表示される]</span>
+<h3>特定のパターンから開始</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>+/important<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">Here is the important information you were looking for...</span>
+<span style="color: #000; font-style: italic">--More--(75%)</span>
+</pre></div>
+<h3>オプションの組み合わせ</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>-cs<span style="color: #F8F8F8"> </span>+10<span style="color: #F8F8F8"> </span>large_log.txt
+<span style="color: #000; font-style: italic">[10行目からクリーンな画面再描画と空白行圧縮で表示]</span>
+<span style="color: #000; font-style: italic">--More--(15%)</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>対話的なコマンド</h3>
-<p><code>more</code> 実行中に使える主なキー操作:</p>
+<h3>ナビゲーションコマンド</h3>
+<p><code>more</code>でファイルを表示中に、以下のキーボードコマンドが使用できます：</p>
 <ul>
-<li>スペースキー: 次の画面へ</li>
-<li>Enterキー: 次の1行へ</li>
-<li>b: 前の画面へ（一部の環境では動作しない）</li>
-<li>q: 終了</li>
-<li>/pattern: パターン検索</li>
-<li>h: ヘルプ表示</li>
+<li><code>Space</code> - 1画面進む</li>
+<li><code>Enter</code> - 1行進む</li>
+<li><code>b</code> - 1画面戻る（すべての実装で動作するとは限りません）</li>
+<li><code>q</code> - 終了する</li>
+<li><code>/pattern</code> - パターンを検索</li>
+<li><code>n</code> - 前回の検索を繰り返す</li>
 </ul>
-<h3>lessコマンドとの違い</h3>
-<p><code>more</code> は基本的な機能のみを提供し、<code>less</code> はより多くの機能（前方スクロール、検索機能の強化など）を持っています。大きなファイルを扱う場合は <code>less</code> の方が便利であることが多いです。</p>
-<h3>環境変数の活用</h3>
-<p><code>MORE</code> 環境変数を設定することで、デフォルトのオプションを指定できます。</p>
+<h3>コマンド出力のパイプ</h3>
+<p>大きな出力を画面ごとに表示するために、コマンドの出力を<code>more</code>にパイプできます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-la<span style="color: #F8F8F8"> </span>/usr/bin<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>more
+</pre></div>
+<h3>環境変数</h3>
+<p><code>MORE</code>環境変数を設定してデフォルトオプションを指定できます：</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">export</span><span style="color: #F8F8F8"> </span><span style="color: #000">MORE</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;-d&quot;</span>
-<span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">[ヘルププロンプトが表示されるようになる]</span>
+<span style="color: #8F5902">$ </span>more<span style="color: #F8F8F8"> </span>large_file.txt
 </pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. <code>more</code> と <code>less</code> の違いは何ですか？</h4>
-<p>A. <code>more</code> は基本的なページャーで、主に前方向のみのスクロールをサポートします。<code>less</code> はより高機能で、前後のスクロール、検索機能の強化、複数ファイルのナビゲーションなどができます。</p>
-<h4>Q2. <code>more</code> コマンドを終了するにはどうすればいいですか？</h4>
-<p>A. <code>q</code> キーを押すと終了します。</p>
-<h4>Q3. 特定の行から表示を開始するにはどうすればいいですか？</h4>
-<p>A. <code>more +n filename</code> のように、<code>+</code> の後に行番号を指定します。例えば <code>more +100 file.txt</code> は100行目から表示を開始します。</p>
-<h4>Q4. 検索機能はありますか？</h4>
-<p>A. はい、<code>/</code> に続けて検索したい文字列を入力すると、その文字列を検索できます。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSの <code>more</code> コマンドはBSD版であり、GNU/Linuxの <code>more</code> とは一部の機能やオプションが異なる場合があります。特に <code>-f</code> オプションの動作が異なることがあるため注意が必要です。</p>
+<h4>Q1. <code>more</code>と<code>less</code>の違いは何ですか？</h4>
+<p>A. <code>more</code>はファイル内の前方向への移動のみをサポートしますが、<code>less</code>は前後両方向の移動が可能で、より多くの機能を持っています。<code>less</code>は一般的に<code>more</code>の改良版と考えられています（そのため名前が「less」となっています）。</p>
+<h4>Q2. <code>more</code>を終了するにはどうすればよいですか？</h4>
+<p>A. <code>q</code>キーを押すと終了してコマンドプロンプトに戻ります。</p>
+<h4>Q3. <code>more</code>でテキストを検索できますか？</h4>
+<p>A. はい、<code>/</code>に続けて検索パターンを入力してEnterを押します。次の一致を見つけるには<code>n</code>を使用します。</p>
+<h4>Q4. <code>more</code>で行番号を表示するにはどうすればよいですか？</h4>
+<p>A. <code>less</code>と異なり、<code>more</code>には行番号を表示するための組み込みオプションがありません。行番号が必要な場合は、代わりに<code>less -N</code>の使用を検討してください。</p>
+<h2>macOSに関する注意点</h2>
+<p>macOSでは、<code>more</code>コマンドはGNU/Linuxバージョンとは若干異なります。<code>-d</code>などの一部のオプションは動作が異なるか、利用できない場合があります。プラットフォーム間でより一貫した動作を得るには、より機能が豊富で一貫性のある<code>less</code>コマンドの使用を検討してください。</p>
 <h2>参考資料</h2>
 <p>https://man7.org/linux/man-pages/man1/more.1.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

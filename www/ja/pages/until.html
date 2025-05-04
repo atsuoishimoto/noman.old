@@ -47,109 +47,99 @@
     <main>
       
   <h1>until コマンド</h1>
-<p>指定した条件が真になるまでコマンドを繰り返し実行するシェルの制御構造です。</p>
+<p>条件が満たされるまでコマンドを繰り返し実行します。</p>
 <h2>概要</h2>
-<p><code>until</code> は、条件が偽（終了ステータスが0以外）である間、コマンドブロックを繰り返し実行します。条件が真（終了ステータス0）になると、ループを終了します。これは <code>while</code> の逆の動作をするもので、条件が満たされるまで処理を続けたい場合に便利です。</p>
-<h2>構文</h2>
-<h3><strong>基本構文</strong></h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">until</span><span style="color: #F8F8F8"> </span>条件コマンド
+<p><code>until</code>コマンドはシェルの構文で、指定された条件が真になるまで一連のコマンドをループ実行します。<code>while</code>ループが条件が真である間継続するのに対し、<code>until</code>は条件が偽である間継続します。特定のイベントを待機したり、特定の状態に達するまでタスクを繰り返したりする場合に便利です。</p>
+<h2>オプション</h2>
+<p><code>until</code>コマンドは独立したプログラムではなくシェル組み込みの構文であるため、従来のコマンドラインオプションはありません。代わりに、特定の構文に従います：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">until</span><span style="color: #F8F8F8"> </span>テスト・コマンド
 <span style="color: #204A87; font-weight: bold">do</span>
-<span style="color: #F8F8F8">  </span>実行コマンド
+<span style="color: #F8F8F8">  </span>コマンド群
 <span style="color: #204A87; font-weight: bold">done</span>
 </pre></div>
-<p>条件コマンドが偽（終了ステータスが0以外）である限り、実行コマンドが繰り返し実行されます。</p>
+<p>ここで：</p>
+<ul>
+<li><code>テスト・コマンド</code>は各繰り返しの前に評価されます</li>
+<li><code>コマンド群</code>は<code>テスト・コマンド</code>が非ゼロの終了ステータス（偽）を返す限り実行されます</li>
+<li><code>テスト・コマンド</code>がゼロの終了ステータス（真）を返すとループは終了します</li>
+</ul>
 <h2>使用例</h2>
 <h3>基本的な使い方</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>
 <span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">until</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$count</span><span style="color: #F8F8F8"> </span>-gt<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span>
 <span style="color: #000; font-style: italic">&gt; do</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;カウント: $count&quot;</span>
-<span style="color: #000; font-style: italic">&gt;   count=$((count + 1))</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;カウントは $count です&quot;</span>
+<span style="color: #000; font-style: italic">&gt;   ((count++))</span>
 <span style="color: #000; font-style: italic">&gt; done</span>
-<span style="color: #000; font-style: italic">カウント: 1</span>
-<span style="color: #000; font-style: italic">カウント: 2</span>
-<span style="color: #000; font-style: italic">カウント: 3</span>
-<span style="color: #000; font-style: italic">カウント: 4</span>
-<span style="color: #000; font-style: italic">カウント: 5</span>
+<span style="color: #000; font-style: italic">カウントは 1 です</span>
+<span style="color: #000; font-style: italic">カウントは 2 です</span>
+<span style="color: #000; font-style: italic">カウントは 3 です</span>
+<span style="color: #000; font-style: italic">カウントは 4 です</span>
+<span style="color: #000; font-style: italic">カウントは 5 です</span>
 </pre></div>
-<p>この例では、変数 <code>count</code> が5より大きくなるまでループが続きます。</p>
-<h3>ファイルが存在するまで待機する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">until</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/tmp/signal_file<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span>
+<h3>ファイルが存在するまで待機</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">until</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/tmp/ready.txt<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span>
 <span style="color: #000; font-style: italic">&gt; do</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;ファイルを待っています...&quot;</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;ファイルが現れるのを待っています...&quot;</span>
 <span style="color: #000; font-style: italic">&gt;   sleep 5</span>
 <span style="color: #000; font-style: italic">&gt; done</span>
-<span style="color: #000; font-style: italic">&gt; echo &quot;ファイルが見つかりました！&quot;</span>
-<span style="color: #000; font-style: italic">ファイルを待っています...</span>
-<span style="color: #000; font-style: italic">ファイルを待っています...</span>
-<span style="color: #000; font-style: italic">ファイルが見つかりました！</span>
+<span style="color: #000; font-style: italic">&gt; echo &quot;ファイルが存在します、続行します！&quot;</span>
+<span style="color: #000; font-style: italic">ファイルが現れるのを待っています...</span>
+<span style="color: #000; font-style: italic">ファイルが現れるのを待っています...</span>
+<span style="color: #000; font-style: italic">ファイルが存在します、続行します！</span>
 </pre></div>
-<p>この例では、<code>/tmp/signal_file</code> が作成されるまで5秒ごとにメッセージを表示します。</p>
-<h3>プロセスが終了するまで待機する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">process_id</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1234</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">until</span><span style="color: #F8F8F8"> </span>!<span style="color: #F8F8F8"> </span>ps<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #000">$process_id</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>/dev/null
+<h3>コマンドが成功するまで再試行</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">until</span><span style="color: #F8F8F8"> </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>/dev/null
 <span style="color: #000; font-style: italic">&gt; do</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;プロセス $process_id はまだ実行中です&quot;</span>
-<span style="color: #000; font-style: italic">&gt;   sleep 10</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;サーバーが応答していません、5秒後に再試行します...&quot;</span>
+<span style="color: #000; font-style: italic">&gt;   sleep 5</span>
 <span style="color: #000; font-style: italic">&gt; done</span>
-<span style="color: #000; font-style: italic">&gt; echo &quot;プロセスが終了しました&quot;</span>
-<span style="color: #000; font-style: italic">プロセス 1234 はまだ実行中です</span>
-<span style="color: #000; font-style: italic">プロセス 1234 はまだ実行中です</span>
-<span style="color: #000; font-style: italic">プロセスが終了しました</span>
+<span style="color: #000; font-style: italic">&gt; echo &quot;サーバーが起動しました！&quot;</span>
+<span style="color: #000; font-style: italic">サーバーが応答していません、5秒後に再試行します...</span>
+<span style="color: #000; font-style: italic">サーバーが起動しました！</span>
 </pre></div>
-<p>この例では、指定したプロセスIDのプロセスが終了するまで待機します。</p>
 <h2>ヒント:</h2>
-<h3>while との違いを理解する</h3>
-<p><code>until</code> は <code>while</code> の逆の動作をします。<code>while</code> は条件が真の間ループし、<code>until</code> は条件が偽の間ループします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902"># </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>の例
-<span style="color: #8F5902">$ </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$count</span><span style="color: #F8F8F8"> </span>-le<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span>
-<span style="color: #000; font-style: italic">&gt; do</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;while: $count&quot;</span>
-<span style="color: #000; font-style: italic">&gt;   count=$((count + 1))</span>
-<span style="color: #000; font-style: italic">&gt; done</span>
-<span style="color: #000; font-style: italic">while: 1</span>
-<span style="color: #000; font-style: italic">while: 2</span>
-<span style="color: #000; font-style: italic">while: 3</span>
-
-<span style="color: #8F5902"># </span>同等の<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">until</span><span style="color: #F8F8F8"> </span>の例
-<span style="color: #8F5902">$ </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">until</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$count</span><span style="color: #F8F8F8"> </span>-gt<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span>
-<span style="color: #000; font-style: italic">&gt; do</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;until: $count&quot;</span>
-<span style="color: #000; font-style: italic">&gt;   count=$((count + 1))</span>
-<span style="color: #000; font-style: italic">&gt; done</span>
-<span style="color: #000; font-style: italic">until: 1</span>
-<span style="color: #000; font-style: italic">until: 2</span>
-<span style="color: #000; font-style: italic">until: 3</span>
+<h3>早期終了にはbreakを使用</h3>
+<p>特定の条件が満たされた場合に<code>until</code>ループを早期に終了するには、<code>break</code>文を使用できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">until</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>条件1<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span>
+<span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #F8F8F8">  </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>条件2<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87; font-weight: bold">break</span>
+<span style="color: #F8F8F8">  </span><span style="color: #204A87; font-weight: bold">fi</span>
+<span style="color: #F8F8F8">  </span>コマンド群
+<span style="color: #204A87; font-weight: bold">done</span>
 </pre></div>
-<h3>無限ループに注意</h3>
-<p>条件が決して真にならない場合、無限ループになる可能性があります。必ず終了条件を確認してください。</p>
-<h3>複数の条件を組み合わせる</h3>
-<p>複数の条件を組み合わせるには、論理演算子（<code>&amp;&amp;</code> や <code>||</code>）を使用します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">until</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$count</span><span style="color: #F8F8F8"> </span>-gt<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">||</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/tmp/stop_file<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span>
-<span style="color: #000; font-style: italic">&gt; do</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;カウント: $count&quot;</span>
-<span style="color: #000; font-style: italic">&gt;   count=$((count + 1))</span>
-<span style="color: #000; font-style: italic">&gt;   sleep 1</span>
-<span style="color: #000; font-style: italic">&gt; done</span>
+<h3>ポーリングにはsleepと組み合わせる</h3>
+<p>条件が真になるのを待つ場合は、過剰なCPU使用を避けるために<code>until</code>と<code>sleep</code>を組み合わせましょう：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">until</span><span style="color: #F8F8F8"> </span>確認用コマンド
+<span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #F8F8F8">  </span>sleep<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># チェック間に5秒待機</span>
+<span style="color: #204A87; font-weight: bold">done</span>
 </pre></div>
-<p>この例では、カウントが5を超えるか、<code>/tmp/stop_file</code> が存在するとループが終了します。</p>
+<h3>無限ループには注意</h3>
+<p>終了しない可能性のあるループを作成する際は注意が必要です。タイムアウトや最大繰り返し回数を追加することを検討してください：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #000">count</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">0</span>
+<span style="color: #000">max_tries</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">100</span>
+<span style="color: #204A87; font-weight: bold">until</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>条件<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">||</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$count</span><span style="color: #F8F8F8"> </span>-ge<span style="color: #F8F8F8"> </span><span style="color: #000">$max_tries</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span>
+<span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #F8F8F8">  </span>コマンド群
+<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">((</span>count++<span style="color: #CE5C00; font-weight: bold">))</span>
+<span style="color: #204A87; font-weight: bold">done</span>
+</pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. <code>until</code> と <code>while</code> の違いは何ですか？</h4>
-<p>A. <code>until</code> は条件が偽の間ループを続け、条件が真になると終了します。一方、<code>while</code> は条件が真の間ループを続け、条件が偽になると終了します。</p>
-<h4>Q2. <code>until</code> ループを途中で抜けるにはどうすればいいですか？</h4>
-<p>A. <code>break</code> コマンドを使用すると、条件に関係なくループを抜けることができます。</p>
-<h4>Q3. <code>until</code> ループの現在の繰り返しをスキップするにはどうすればいいですか？</h4>
-<p>A. <code>continue</code> コマンドを使用すると、現在の繰り返しの残りの部分をスキップして次の繰り返しに進みます。</p>
-<h4>Q4. <code>until</code> はすべてのシェルで使用できますか？</h4>
-<p>A. <code>until</code> は POSIX 準拠のシェル（bash, zsh, sh など）で使用できますが、すべてのシェルで利用可能とは限りません。</p>
+<h4>Q1. <code>until</code>と<code>while</code>の違いは何ですか？</h4>
+<p>A. <code>until</code>はテスト条件が偽である限りコマンドの実行を継続しますが、<code>while</code>は条件が真である限り継続します。つまり、<code>until [ 条件 ]</code>は<code>while ! [ 条件 ]</code>と同等です。</p>
+<h4>Q2. <code>until</code>で複数の条件を使用できますか？</h4>
+<p>A. はい、テストコマンド内で<code>&amp;&amp;</code>（AND）や<code>||</code>（OR）などの論理演算子を使用して複数の条件を組み合わせることができます。</p>
+<h4>Q3. 期待通りに動作しない<code>until</code>ループをデバッグするにはどうすればよいですか？</h4>
+<p>A. ループの前に<code>set -x</code>を追加してシェルデバッグを有効にすると、実行される各コマンドが表示されます。ループの後に<code>set +x</code>を使用してデバッグをオフにできます。</p>
+<h4>Q4. すべてのシェルで<code>until</code>を使用できますか？</h4>
+<p>A. <code>until</code>はbash、zsh、kshなどの多くの現代的なシェルで利用可能ですが、dashやashなどのより最小限のシェルでは利用できない場合があります。</p>
 <h2>参考資料</h2>
 <p>https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

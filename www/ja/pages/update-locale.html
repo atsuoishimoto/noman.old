@@ -47,79 +47,59 @@
     <main>
       
   <h1>update-locale コマンド</h1>
-<p>システムのロケール設定を表示または変更するコマンド。</p>
+<p>システム全体のロケール設定を <code>/etc/default/locale</code> ファイルを更新することで設定します。</p>
 <h2>概要</h2>
-<p><code>update-locale</code>は、Linuxシステム（特にDebian系ディストリビューション）でシステム全体のロケール設定を管理するためのコマンドです。ロケールとは、言語、日付形式、数値形式などの地域固有の設定のことで、このコマンドを使用することで、これらの設定を簡単に変更できます。</p>
+<p><code>update-locale</code> コマンドは、Debian系Linuxディストリビューションでシステム全体のロケール設定を変更するために使用されます。このコマンドは <code>/etc/default/locale</code> ファイルを更新し、システムやアプリケーションで使用される言語、文字エンコーディング、地域フォーマットの設定を定義する環境変数を設定します。</p>
 <h2>オプション</h2>
-<h3><strong>--help</strong></h3>
-<p>ヘルプメッセージを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>update-locale<span style="color: #F8F8F8"> </span>--help
-<span style="color: #000; font-style: italic">Usage: update-locale [OPTIONS] [VARIABLE=VALUE ...]</span>
-<span style="color: #000; font-style: italic">Options:</span>
-<span style="color: #000; font-style: italic">  --help                   このヘルプを表示する</span>
-<span style="color: #000; font-style: italic">  --reset                  すべてのロケール変数をリセットする</span>
-<span style="color: #000; font-style: italic">  --no-checks              変数の値をチェックしない</span>
-</pre></div>
 <h3><strong>--reset</strong></h3>
-<p>すべてのロケール設定をリセットします。</p>
+<p><code>/etc/default/locale</code> ファイルを削除することですべてのロケール変数をリセットします</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-locale<span style="color: #F8F8F8"> </span>--reset
 </pre></div>
-<h3><strong>VARIABLE=VALUE</strong></h3>
-<p>特定のロケール変数を設定します。</p>
+<h3><strong>VARIABLE=value</strong></h3>
+<p>特定のロケール変数を指定した値に設定します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-locale<span style="color: #F8F8F8"> </span><span style="color: #000">LANG</span><span style="color: #CE5C00; font-weight: bold">=</span>ja_JP.UTF-8
+</pre></div>
+<h3><strong>--locale-file=FILE</strong></h3>
+<p>デフォルトの <code>/etc/default/locale</code> の代わりに別のロケールファイルを指定します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-locale<span style="color: #F8F8F8"> </span>--locale-file<span style="color: #CE5C00; font-weight: bold">=</span>/path/to/custom/locale
 </pre></div>
 <h2>使用例</h2>
-<h3>現在のロケール設定を表示する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>update-locale
-<span style="color: #000; font-style: italic">LANG=en_US.UTF-8</span>
-<span style="color: #000; font-style: italic">LANGUAGE=en_US:en</span>
-<span style="color: #000; font-style: italic">LC_CTYPE=&quot;en_US.UTF-8&quot;</span>
-<span style="color: #000; font-style: italic">LC_NUMERIC=&quot;en_US.UTF-8&quot;</span>
-<span style="color: #000; font-style: italic">LC_TIME=&quot;en_US.UTF-8&quot;</span>
-<span style="color: #000; font-style: italic">LC_COLLATE=&quot;en_US.UTF-8&quot;</span>
-<span style="color: #000; font-style: italic">LC_MONETARY=&quot;en_US.UTF-8&quot;</span>
-<span style="color: #000; font-style: italic">LC_MESSAGES=&quot;en_US.UTF-8&quot;</span>
-<span style="color: #000; font-style: italic">LC_PAPER=&quot;en_US.UTF-8&quot;</span>
-<span style="color: #000; font-style: italic">LC_NAME=&quot;en_US.UTF-8&quot;</span>
-<span style="color: #000; font-style: italic">LC_ADDRESS=&quot;en_US.UTF-8&quot;</span>
-<span style="color: #000; font-style: italic">LC_TELEPHONE=&quot;en_US.UTF-8&quot;</span>
-<span style="color: #000; font-style: italic">LC_MEASUREMENT=&quot;en_US.UTF-8&quot;</span>
-<span style="color: #000; font-style: italic">LC_IDENTIFICATION=&quot;en_US.UTF-8&quot;</span>
-</pre></div>
-<h3>システム全体の言語を日本語に変更する</h3>
+<h3>システム言語を日本語に設定する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-locale<span style="color: #F8F8F8"> </span><span style="color: #000">LANG</span><span style="color: #CE5C00; font-weight: bold">=</span>ja_JP.UTF-8
 </pre></div>
-<h3>複数のロケール設定を一度に変更する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-locale<span style="color: #F8F8F8"> </span><span style="color: #000">LANG</span><span style="color: #CE5C00; font-weight: bold">=</span>ja_JP.UTF-8<span style="color: #F8F8F8"> </span><span style="color: #000">LC_TIME</span><span style="color: #CE5C00; font-weight: bold">=</span>ja_JP.UTF-8<span style="color: #F8F8F8"> </span><span style="color: #000">LC_MESSAGES</span><span style="color: #CE5C00; font-weight: bold">=</span>en_US.UTF-8
+<h3>複数のロケール変数を一度に設定する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-locale<span style="color: #F8F8F8"> </span><span style="color: #000">LANG</span><span style="color: #CE5C00; font-weight: bold">=</span>ja_JP.UTF-8<span style="color: #F8F8F8"> </span><span style="color: #000">LC_TIME</span><span style="color: #CE5C00; font-weight: bold">=</span>ja_JP.UTF-8<span style="color: #F8F8F8"> </span><span style="color: #000">LC_PAPER</span><span style="color: #CE5C00; font-weight: bold">=</span>ja_JP.UTF-8
+</pre></div>
+<h3>特定のロケール変数を削除する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>update-locale<span style="color: #F8F8F8"> </span><span style="color: #000">LC_PAPER</span><span style="color: #CE5C00; font-weight: bold">=</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>変更の反映</h3>
-<p>ロケール設定を変更した後は、変更を反映させるためにログアウトして再ログインするか、システムを再起動する必要があります。</p>
-<h3>利用可能なロケールの確認</h3>
-<p>設定する前に、システムで利用可能なロケールを確認するには以下のコマンドを使用します：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>locale<span style="color: #F8F8F8"> </span>-a
-<span style="color: #000; font-style: italic">C</span>
-<span style="color: #000; font-style: italic">C.UTF-8</span>
-<span style="color: #000; font-style: italic">en_US.utf8</span>
-<span style="color: #000; font-style: italic">ja_JP.utf8</span>
+<h3>現在のロケール設定を確認する</h3>
+<p>変更を行う前に、<code>locale</code> コマンドで現在のロケール設定を確認し、何を変更するのかを理解しておくとよいでしょう。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>locale
+<span style="color: #000; font-style: italic">LANG=ja_JP.UTF-8</span>
+<span style="color: #000; font-style: italic">LC_CTYPE=&quot;ja_JP.UTF-8&quot;</span>
+<span style="color: #000; font-style: italic">LC_NUMERIC=&quot;ja_JP.UTF-8&quot;</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3>部分的なロケール設定</h3>
-<p>すべてのロケール設定を同じ値にする必要はありません。例えば、インターフェースは英語（<code>LANG=en_US.UTF-8</code>）で、日付形式は日本式（<code>LC_TIME=ja_JP.UTF-8</code>）というように設定できます。</p>
+<h3>必要なロケールを先に生成する</h3>
+<p>使用したいロケールがシステムで生成されていることを確認してください。<code>locale -a</code> で利用可能なロケールを一覧表示し、不足しているロケールは <code>sudo locale-gen &lt;locale&gt;</code> で生成できます。</p>
+<h3>システム再起動が必要な場合がある</h3>
+<p>ロケール設定の変更は、すべてのアプリケーションに完全に反映されるためにシステムの再起動、または少なくともログアウト/ログインが必要な場合があります。</p>
 <h2>よくある質問</h2>
-<h4>Q1. update-localeとlocaleコマンドの違いは何ですか？</h4>
-<p>A. <code>locale</code>コマンドは現在のロケール設定を表示するだけですが、<code>update-locale</code>はシステム全体のロケール設定を変更できます。</p>
-<h4>Q2. 変更したロケール設定はどこに保存されますか？</h4>
-<p>A. 通常は<code>/etc/default/locale</code>ファイルに保存されます。</p>
-<h4>Q3. 特定のユーザーだけのロケールを変更するにはどうすればいいですか？</h4>
-<p>A. <code>update-locale</code>はシステム全体の設定を変更します。特定のユーザーだけのロケールを変更するには、そのユーザーの<code>.bashrc</code>や<code>.profile</code>などの設定ファイルに<code>export LANG=ja_JP.UTF-8</code>のような行を追加します。</p>
-<h4>Q4. 設定したロケールが反映されない場合はどうすればいいですか？</h4>
-<p>A. 該当するロケールがシステムにインストールされているか確認してください。必要に応じて<code>sudo apt-get install language-pack-ja</code>などでロケールパッケージをインストールします。</p>
+<h4>Q1. LANGとLC_ALLの違いは何ですか？</h4>
+<p>A. <code>LANG</code> は特定の <code>LC_*</code> 変数が設定されていない場合のすべてのカテゴリのデフォルトロケールです。<code>LC_ALL</code> は <code>LANG</code> を含む他のすべてのロケール変数よりも優先されます。</p>
+<h4>Q2. システムを英語インターフェースで使用しながら、ローカルフォーマットを使うにはどうすればよいですか？</h4>
+<p>A. <code>LANG</code> を希望する英語ロケール（例：<code>en_US.UTF-8</code>）に設定し、<code>LC_TIME</code> や <code>LC_MONETARY</code> などの特定の <code>LC_*</code> 変数をローカルフォーマットに設定します。</p>
+<h4>Q3. 一部のアプリケーションが私のロケール設定を無視するのはなぜですか？</h4>
+<p>A. 一部のアプリケーションはシステムロケールを上書きする独自の言語設定を持っているか、設定したロケールをサポートしていない可能性があります。</p>
+<h4>Q4. すべてのロケール設定を完全にリセットするにはどうすればよいですか？</h4>
+<p>A. <code>sudo update-locale --reset</code> を使用して、システム設定ファイルからすべてのロケール設定を削除できます。</p>
 <h2>参考資料</h2>
-<p>https://manpages.debian.org/buster/locales/update-locale.8.en.html</p>
+<p>https://manpages.debian.org/bullseye/locales/update-locale.8.en.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

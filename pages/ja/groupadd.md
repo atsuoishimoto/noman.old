@@ -1,73 +1,92 @@
 # groupadd コマンド
 
-新しいグループをシステムに追加します。
+システムに新しいグループを作成します。
 
 ## 概要
 
-`groupadd` コマンドは、システムに新しいグループを作成するために使用されます。システム管理者がユーザーアクセス権を管理するために、ユーザーをグループ化する際に役立ちます。このコマンドはルート権限（sudo）が必要です。
+`groupadd` コマンドはシステムに新しいグループアカウントを作成します。指定されたグループ名でシステムのグループファイル（通常は `/etc/group`）にエントリを追加し、一意のグループID（GID）を割り当てます。
 
 ## オプション
 
-### **-g GID**
+### **-f, --force**
 
-グループIDを指定します。指定しない場合は、利用可能な次のGIDが自動的に割り当てられます。
+グループがすでに存在する場合でも正常終了し、GIDがすでに使用されている場合は -g オプションをキャンセルします。
 
 ```console
-$ sudo groupadd -g 1001 developers
+$ sudo groupadd -f developers
 ```
 
-### **-r**
+### **-g, --gid GID**
 
-システムグループを作成します。システムグループは通常、デーモンやシステムサービス用に使用されます。
+グループのID（GID）の数値を指定します。この値は -o オプションを使用しない限り、一意である必要があります。
 
 ```console
-$ sudo groupadd -r webservice
+$ sudo groupadd -g 1500 project-team
 ```
 
-### **-f**
+### **-K, --key KEY=VALUE**
 
-グループがすでに存在する場合でもエラーを表示せず、正常終了します（強制モード）。
+/etc/login.defs のデフォルト値（GID_MIN、GID_MAX など）を上書きします。
 
 ```console
-$ sudo groupadd -f marketing
+$ sudo groupadd -K GID_MIN=5000 new-group
 ```
 
-### **-K KEY=VALUE**
+### **-o, --non-unique**
 
-デフォルトの設定を上書きします。例えば、`GID_MIN`や`GID_MAX`などを指定できます。
+一意でないGIDを持つグループの作成を許可します。
 
 ```console
-$ sudo groupadd -K GID_MIN=5000 newgroup
+$ sudo groupadd -o -g 1500 another-group
+```
+
+### **-p, --password PASSWORD**
+
+新しいグループの暗号化されたパスワードを設定します。
+
+```console
+$ sudo groupadd -p encrypted_password finance
+```
+
+### **-r, --system**
+
+システムGID範囲内のGIDを持つシステムグループを作成します。
+
+```console
+$ sudo groupadd -r sysgroup
 ```
 
 ## 使用例
 
-### 基本的なグループ作成
+### 基本的なグループの作成
 
 ```console
 $ sudo groupadd developers
-# 新しいグループ「developers」が作成される
-```
-
-### 特定のGIDでグループを作成
-
-```console
-$ sudo groupadd -g 2000 designers
-# GID 2000で「designers」グループが作成される
 ```
 
 ### システムグループの作成
 
 ```console
-$ sudo groupadd -r nginx
-# システムグループ「nginx」が作成される
+$ sudo groupadd -r docker
+```
+
+### 特定のGIDを持つグループの作成
+
+```console
+$ sudo groupadd -g 2000 project-team
+```
+
+### すでに存在する可能性のあるグループの作成
+
+```console
+$ sudo groupadd -f webadmins
 ```
 
 ## ヒント:
 
-### グループ情報の確認
+### グループ作成の確認
 
-グループが正しく作成されたかを確認するには、`getent group グループ名`または`cat /etc/group | grep グループ名`コマンドを使用します。
+グループを作成した後、`getent group` コマンドを使用して正しく追加されたことを確認できます：
 
 ```console
 $ getent group developers
@@ -76,34 +95,37 @@ developers:x:1001:
 
 ### グループIDの範囲
 
-一般的に、システムグループは低いGID（通常1000未満）を使用し、通常のユーザーグループは1000以上のGIDを使用します。システムによって異なる場合があります。
+システムグループは通常、低いGID（多くの場合1000未満）を使用し、ユーザーグループはより高いGIDを使用します。特定の範囲については、システムの `/etc/login.defs` ファイルを確認してください。
 
-### グループ削除
+### グループ管理
 
-不要になったグループを削除するには、`groupdel`コマンドを使用します。
+`groupadd` はグループの作成のみを行うことを覚えておいてください。既存のグループを変更するには `groupmod` を、削除するには `groupdel` を使用します。
 
-```console
-$ sudo groupdel developers
-```
+### グループメンバーシップ
+
+グループを作成した後、`usermod -aG グループ名 ユーザー名` を使用してユーザーをグループに追加できます。
 
 ## よくある質問
 
-#### Q1. `groupadd`と`useradd -G`の違いは何ですか？
-A. `groupadd`は新しいグループを作成するだけです。一方、`useradd -G`は新しいユーザーを作成し、そのユーザーを指定したグループに追加します。既存のユーザーをグループに追加するには`usermod -aG`を使用します。
+#### Q1. 新しいグループを作成するにはどうすればよいですか？
+A. `sudo groupadd グループ名` を使用して、指定した名前の新しいグループを作成します。
 
-#### Q2. 作成したグループにユーザーを追加するにはどうすればよいですか？
-A. `usermod -aG グループ名 ユーザー名`コマンドを使用します。例：`sudo usermod -aG developers john`
+#### Q2. グループを作成する際にカスタムGIDを指定するにはどうすればよいですか？
+A. `sudo groupadd -g GID グループ名` を使用します。GIDは割り当てたい数値のグループIDです。
 
-#### Q3. グループのGIDを後から変更できますか？
-A. はい、`groupmod -g 新しいGID グループ名`コマンドで変更できます。ただし、すでにそのグループに関連付けられたファイルがある場合は注意が必要です。
+#### Q3. システムグループと通常のグループの違いは何ですか？
+A. システムグループ（`-r` で作成）は通常、システムサービスやデーモン用に使用され、通常のグループは人間のユーザー用です。システムグループは通常、より低いGIDを持ちます。
 
-#### Q4. グループ作成時にエラーが発生する場合はどうすればよいですか？
-A. 多くの場合、権限の問題（sudoを使用していない）か、すでに存在するグループ名やGIDを指定している可能性があります。`-f`オプションを使用するか、別の名前やGIDを選択してください。
+#### Q4. グループがすでに存在するかどうかを確認するにはどうすればよいですか？
+A. `getent group グループ名` を使用してグループが存在するかどうかを確認します。
 
-## 参考
+#### Q5. 既存のグループと同じGIDを持つグループを作成できますか？
+A. はい、ただし `-o`（非一意）オプションを使用する必要があります：`sudo groupadd -o -g 既存のgid 新しいグループ`
 
-https://www.man7.org/linux/man-pages/man8/groupadd.8.html
+## 参考資料
 
-## 改訂
+https://man7.org/linux/man-pages/man8/groupadd.8.html
 
-- 2025/04/30 初版作成
+## 改訂履歴
+
+- 2025/05/04 初版作成

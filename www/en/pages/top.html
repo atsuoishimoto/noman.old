@@ -49,97 +49,107 @@
   <h1>top command</h1>
 <p>Display and update sorted information about processes.</p>
 <h2>Overview</h2>
-<p><code>top</code> is a real-time system monitoring program that displays a continuously updated list of processes. It shows CPU usage, memory consumption, running time, and other process-related information. The display refreshes periodically, allowing users to monitor system performance and identify resource-intensive processes.</p>
+<p><code>top</code> is a real-time system monitoring program that displays a continuously updated list of processes. It shows system summary information and a list of processes or threads currently managed by the Linux kernel. The display is sorted by CPU usage by default, allowing users to monitor system resource usage and identify processes consuming the most resources.</p>
 <h2>Options</h2>
-<h3><strong>-o field</strong></h3>
-<p>Sort the process list according to the specified field.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>top<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>cpu
-<span style="color: #000; font-style: italic">Processes: 383 total, 2 running, 381 sleeping, 1763 threads            23:15:30</span>
-<span style="color: #000; font-style: italic">Load Avg: 1.83, 1.91, 1.87  CPU usage: 9.25% user, 5.37% sys, 85.37% idle</span>
-<span style="color: #000; font-style: italic">SharedLibs: 269M resident, 46M data, 16M linkedit.</span>
-<span style="color: #000; font-style: italic">MemRegions: 95609 total, 1966M resident, 70M private, 1004M shared.</span>
-<span style="color: #000; font-style: italic">PhysMem: 8192M used (1995M wired), 24M unused.</span>
-<span style="color: #000; font-style: italic">VM: 2229G vsize, 1798M framework vsize, 0(0) swapins, 0(0) swapouts.</span>
-<span style="color: #000; font-style: italic">Networks: packets: 2778/430K in, 2778/430K out.</span>
-<span style="color: #000; font-style: italic">Disks: 0/0B read, 0/0B written.</span>
-
-<span style="color: #000; font-style: italic">PID    COMMAND      %CPU TIME     #TH   #WQ  #PORT MEM    PURG   CMPRS  PGRP</span>
-<span style="color: #000; font-style: italic">86753  Google Chrome 25.0 00:42.31 15    1    165   264M   0B     0B     86753</span>
+<h3><strong>-d, --delay</strong></h3>
+<p>Specifies the delay between screen updates in seconds (can include decimal points)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>top<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">top - 14:22:10 up 3 days,  5:10,  2 users,  load average: 0.15, 0.21, 0.28</span>
+<span style="color: #000; font-style: italic">Tasks: 213 total,   1 running, 212 sleeping,   0 stopped,   0 zombie</span>
+<span style="color: #8F5902">%</span>Cpu<span style="color: #CE5C00; font-weight: bold">(</span>s<span style="color: #CE5C00; font-weight: bold">)</span>:<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">2</span>.3<span style="color: #F8F8F8"> </span>us,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">1</span>.2<span style="color: #F8F8F8"> </span>sy,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.0<span style="color: #F8F8F8"> </span>ni,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">96</span>.4<span style="color: #F8F8F8"> </span>id,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.0<span style="color: #F8F8F8"> </span>wa,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.0<span style="color: #F8F8F8"> </span>hi,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.1<span style="color: #F8F8F8"> </span>si,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.0<span style="color: #F8F8F8"> </span>st
+<span style="color: #000; font-style: italic">MiB Mem :  15895.1 total,   7403.2 free,   3265.4 used,   5226.5 buff/cache</span>
+<span style="color: #000; font-style: italic">MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.  12039.3 avail Mem</span>
+<span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3><strong>-u username</strong></h3>
-<p>Display only processes owned by the specified user.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>top<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>john
-<span style="color: #000; font-style: italic">Processes: 27 total, 2 running, 25 sleeping, 162 threads               23:16:45</span>
-<span style="color: #000; font-style: italic">Load Avg: 1.75, 1.88, 1.86  CPU usage: 8.12% user, 4.25% sys, 87.62% idle</span>
-<span style="color: #000; font-style: italic">SharedLibs: 269M resident, 46M data, 16M linkedit.</span>
-<span style="color: #000; font-style: italic">MemRegions: 8562 total, 412M resident, 22M private, 104M shared.</span>
-<span style="color: #000; font-style: italic">PhysMem: 7892M used (1895M wired), 324M unused.</span>
-<span style="color: #000; font-style: italic">VM: 1229G vsize, 798M framework vsize, 0(0) swapins, 0(0) swapouts.</span>
-<span style="color: #000; font-style: italic">Networks: packets: 278/43K in, 278/43K out.</span>
-<span style="color: #000; font-style: italic">Disks: 0/0B read, 0/0B written.</span>
-
-<span style="color: #000; font-style: italic">PID    COMMAND      %CPU TIME     #TH   #WQ  #PORT MEM    PURG   CMPRS  PGRP</span>
-<span style="color: #000; font-style: italic">12345  firefox      12.0 01:23.45 8     2    78    156M   0B     0B     12345</span>
+<h3><strong>-n, --iterations</strong></h3>
+<p>Specifies the number of iterations before exiting</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>top<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #000; font-style: italic">[top will display 3 updates then exit]</span>
 </pre></div>
-<h3><strong>-n number</strong></h3>
-<p>Set the maximum number of processes to display.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>top<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #000; font-style: italic">Processes: 383 total, 2 running, 381 sleeping, 1763 threads            23:18:10</span>
-<span style="color: #000; font-style: italic">Load Avg: 1.80, 1.85, 1.85  CPU usage: 8.75% user, 5.12% sys, 86.13% idle</span>
-<span style="color: #000; font-style: italic">SharedLibs: 269M resident, 46M data, 16M linkedit.</span>
-<span style="color: #000; font-style: italic">MemRegions: 95609 total, 1966M resident, 70M private, 1004M shared.</span>
-<span style="color: #000; font-style: italic">PhysMem: 8192M used (1995M wired), 24M unused.</span>
-<span style="color: #000; font-style: italic">VM: 2229G vsize, 1798M framework vsize, 0(0) swapins, 0(0) swapouts.</span>
-<span style="color: #000; font-style: italic">Networks: packets: 2778/430K in, 2778/430K out.</span>
-<span style="color: #000; font-style: italic">Disks: 0/0B read, 0/0B written.</span>
-
-<span style="color: #000; font-style: italic">PID    COMMAND      %CPU TIME     #TH   #WQ  #PORT MEM    PURG   CMPRS  PGRP</span>
-<span style="color: #000; font-style: italic">86753  Google Chrome 25.0 00:42.31 15    1    165   264M   0B     0B     86753</span>
-<span style="color: #000; font-style: italic">1234   WindowServer  15.2 12:45.67 12    3    342   312M   0B     0B     1234</span>
-<span style="color: #000; font-style: italic">5678   kernel_task   10.5 35:12.89 120   0    0     128M   0B     0B     0</span>
-<span style="color: #000; font-style: italic">9012   Finder        8.3  02:34.56 8     2    256   186M   0B     0B     9012</span>
-<span style="color: #000; font-style: italic">3456   Safari        7.1  01:23.45 25    4    198   275M   0B     0B     3456</span>
+<h3><strong>-p, --pid</strong></h3>
+<p>Monitor only the processes with specified process IDs</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>top<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>,5678
+<span style="color: #000; font-style: italic">[displays only processes with PIDs 1234 and 5678]</span>
+</pre></div>
+<h3><strong>-u, --user</strong></h3>
+<p>Show only processes owned by the specified user</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>top<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">[displays only processes owned by &#39;username&#39;]</span>
+</pre></div>
+<h3><strong>-b, --batch</strong></h3>
+<p>Run in batch mode (useful for sending output to other programs or files)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>top<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>top_output.txt
+<span style="color: #000; font-style: italic">[saves one iteration of top output to top_output.txt]</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Interactive Mode Commands</h3>
-<p>While top is running, you can use these keyboard commands:</p>
+<h3>Basic Usage</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>top
-<span style="color: #8F5902"># </span>Press<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;q&#39;</span><span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>quit
-<span style="color: #8F5902"># </span>Press<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;o&#39;</span><span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span><span style="color: #204A87">type</span><span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span>field<span style="color: #F8F8F8"> </span>name<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>change<span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span>order
-<span style="color: #8F5902"># </span>Press<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;k&#39;</span><span style="color: #F8F8F8"> </span>followed<span style="color: #F8F8F8"> </span>by<span style="color: #F8F8F8"> </span>PID<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span><span style="color: #204A87">kill</span><span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span>process
-<span style="color: #8F5902"># </span>Press<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;h&#39;</span><span style="color: #F8F8F8"> </span>or<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;?&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">help</span>
+<span style="color: #000; font-style: italic">top - 14:22:10 up 3 days,  5:10,  2 users,  load average: 0.15, 0.21, 0.28</span>
+<span style="color: #000; font-style: italic">Tasks: 213 total,   1 running, 212 sleeping,   0 stopped,   0 zombie</span>
+<span style="color: #8F5902">%</span>Cpu<span style="color: #CE5C00; font-weight: bold">(</span>s<span style="color: #CE5C00; font-weight: bold">)</span>:<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">2</span>.3<span style="color: #F8F8F8"> </span>us,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">1</span>.2<span style="color: #F8F8F8"> </span>sy,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.0<span style="color: #F8F8F8"> </span>ni,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">96</span>.4<span style="color: #F8F8F8"> </span>id,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.0<span style="color: #F8F8F8"> </span>wa,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.0<span style="color: #F8F8F8"> </span>hi,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.1<span style="color: #F8F8F8"> </span>si,<span style="color: #F8F8F8">  </span><span style="color: #0000CF; font-weight: bold">0</span>.0<span style="color: #F8F8F8"> </span>st
+<span style="color: #000; font-style: italic">MiB Mem :  15895.1 total,   7403.2 free,   3265.4 used,   5226.5 buff/cache</span>
+<span style="color: #000; font-style: italic">MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.  12039.3 avail Mem</span>
+
+<span style="color: #000; font-style: italic">  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND</span>
+<span style="color: #000; font-style: italic"> 1234 user      20   0 3256892 125232  42348 S   2.0   0.8   5:23.02 firefox</span>
+<span style="color: #000; font-style: italic"> 5678 user      20   0  723964  56892  38212 S   1.3   0.4   2:42.15 terminal</span>
 </pre></div>
-<h3>Displaying Processes with Specific Sorting and Refresh Rate</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>top<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>mem<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #8F5902"># </span>Sorts<span style="color: #F8F8F8"> </span>processes<span style="color: #F8F8F8"> </span>by<span style="color: #F8F8F8"> </span>memory<span style="color: #F8F8F8"> </span>usage<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span>refreshes<span style="color: #F8F8F8"> </span>every<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>seconds
+<h3>Monitoring Specific Processes with Higher Refresh Rate</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>top<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.5<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>,5678
+<span style="color: #000; font-style: italic">[displays only processes 1234 and 5678, updating every 0.5 seconds]</span>
 </pre></div>
-<h3>Running Top in Batch Mode</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>top<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>system_snapshot.txt
-<span style="color: #8F5902"># </span>Captures<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>iterations<span style="color: #F8F8F8"> </span>of<span style="color: #F8F8F8"> </span>the<span style="color: #F8F8F8"> </span>top<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>processes<span style="color: #F8F8F8"> </span>and<span style="color: #F8F8F8"> </span>saves<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span>file
-</pre></div>
+<h2>Interactive Commands</h2>
+<p>While <code>top</code> is running, you can use these keyboard commands:</p>
+<ul>
+<li><strong>h or ?</strong>: Display help</li>
+<li><strong>q</strong>: Quit the program</li>
+<li><strong>k</strong>: Kill a process (prompts for PID)</li>
+<li><strong>r</strong>: Renice a process (change priority)</li>
+<li><strong>f</strong>: Select fields to display</li>
+<li><strong>o</strong>: Change sort field</li>
+<li><strong>1</strong>: Toggle display of individual CPU cores</li>
+<li><strong>m</strong>: Toggle memory display mode</li>
+<li><strong>t</strong>: Toggle task/CPU display mode</li>
+<li><strong>c</strong>: Toggle command line/program name display</li>
+<li><strong>M</strong>: Sort by memory usage</li>
+<li><strong>P</strong>: Sort by CPU usage (default)</li>
+<li><strong>T</strong>: Sort by time/cumulative time</li>
+</ul>
 <h2>Tips</h2>
-<h3>Changing Sort Order on the Fly</h3>
-<p>Press 'o' while top is running, then type the field name (like 'cpu', 'mem', 'time') to instantly change the sort order without restarting the command.</p>
-<h3>Monitoring Specific Processes</h3>
-<p>Use <code>top -pid PID1,PID2,PID3</code> to monitor only specific processes of interest, which helps focus on particular applications.</p>
-<h3>Understanding Memory Columns</h3>
-<p>In top's output, 'MEM' shows physical memory usage, while 'VIRT' (or similar column depending on OS) shows virtual memory allocation. Focus on physical memory (MEM) for actual resource usage.</p>
-<h3>macOS Specific Information</h3>
-<p>On macOS, top shows additional columns like PURG (purgeable memory) and CMPRS (compressed memory) that aren't present in other Unix variants. The memory reporting also differs slightly from Linux versions.</p>
+<h3>Identify Resource-Intensive Processes</h3>
+<p>Press <code>P</code> to sort by CPU usage or <code>M</code> to sort by memory usage to quickly identify which processes are consuming the most resources.</p>
+<h3>Save Output to a File</h3>
+<p>Use batch mode with the <code>-b</code> option to save the output to a file for later analysis:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>top<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>system_snapshot.txt
+</pre></div>
+<h3>Customize the Display</h3>
+<p>Press <code>f</code> while top is running to select which columns to display, allowing you to focus on the metrics that matter most to you.</p>
+<h3>Monitor Multiple CPUs</h3>
+<p>Press <code>1</code> to show individual CPU core usage instead of the combined average, which is useful for identifying if a process is maxing out a single core.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How do I exit the top command?</h4>
-<p>A. Press the 'q' key to quit top.</p>
-<h4>Q2. How can I change how frequently top updates?</h4>
-<p>A. Use the -s option followed by the number of seconds (e.g., <code>top -s 10</code> for 10-second updates) or press 's' while top is running.</p>
-<h4>Q3. How do I kill a process from within top?</h4>
-<p>A. Press 'k', then enter the PID of the process you want to terminate.</p>
-<h4>Q4. Why does top show different information on macOS compared to Linux?</h4>
-<p>A. macOS and Linux versions of top have different implementations with varying columns and metrics. macOS top focuses on additional memory statistics like compressed memory that aren't present in Linux.</p>
+<h4>Q1. How do I exit top?</h4>
+<p>A. Press the <code>q</code> key to quit the program.</p>
+<h4>Q2. How can I kill a process from within top?</h4>
+<p>A. Press <code>k</code>, then enter the PID of the process you want to terminate, followed by the signal number (9 for SIGKILL).</p>
+<h4>Q3. How do I change the refresh rate?</h4>
+<p>A. Use the <code>-d</code> option followed by the number of seconds (e.g., <code>top -d 3</code> for 3-second updates), or press <code>d</code> while top is running and enter a new delay.</p>
+<h4>Q4. How can I see only processes for a specific user?</h4>
+<p>A. Use <code>top -u username</code> or press <code>u</code> while top is running and enter the username.</p>
+<h4>Q5. What do the load average numbers mean?</h4>
+<p>A. The three numbers represent the system load average over the last 1, 5, and 15 minutes. Values below your CPU core count generally indicate the system isn't overloaded.</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, the <code>top</code> command has different options and output format compared to Linux. Some key differences:</p>
+<ul>
+<li>The <code>-o</code> option is used to specify the sort field (e.g., <code>top -o cpu</code>)</li>
+<li>Memory is displayed in different units</li>
+<li>Some interactive commands differ</li>
+<li>Use <code>man top</code> on macOS to see the specific options available</li>
+</ul>
 <h2>References</h2>
-<p>https://ss64.com/osx/top.html</p>
+<p>https://man7.org/linux/man-pages/man1/top.1.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

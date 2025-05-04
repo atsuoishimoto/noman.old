@@ -47,73 +47,77 @@
     <main>
       
   <h1>mkfifo コマンド</h1>
-<p>名前付きパイプ（FIFO特殊ファイル）を作成します。</p>
+<p>指定した名前の名前付きパイプ（FIFO）を作成します。</p>
 <h2>概要</h2>
-<p><code>mkfifo</code>コマンドは、プロセス間通信に使用される名前付きパイプ（FIFO: First-In-First-Out）を作成します。通常のファイルとは異なり、FIFOは一時的なデータストリームを提供し、あるプロセスが書き込んだデータを別のプロセスが読み取ることができます。これにより、関連のないプロセス間でデータを安全に転送できます。</p>
+<p><code>mkfifo</code>コマンドは、名前付きパイプまたはFIFO（First-In-First-Out）と呼ばれる特殊なファイルを作成します。これらのパイプは、一時ファイルを使用せずにプロセス間で通信することを可能にします。<code>|</code>記号で作成される通常のパイプとは異なり、名前付きパイプは削除されるまでファイルシステム上に存在し続け、関連のないプロセス間での通信を可能にします。</p>
 <h2>オプション</h2>
 <h3><strong>-m, --mode=MODE</strong></h3>
-<p>作成するFIFOのパーミッションを設定します（デフォルトは0666）。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0644</span><span style="color: #F8F8F8"> </span>myfifo
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>myfifo
-<span style="color: #000; font-style: italic">prw-r--r--  1 user  staff  0 Apr 30 10:00 myfifo</span>
-</pre></div>
-<h3><strong>-p, --parents</strong></h3>
-<p>必要に応じて親ディレクトリを作成します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>path/to/new/myfifo
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>path/to/new/myfifo
-<span style="color: #000; font-style: italic">prw-r--r--  1 user  staff  0 Apr 30 10:01 path/to/new/myfifo</span>
+<p>作成するFIFOのパーミッションモードを設定します（デフォルトは0666からumaskを引いた値）</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0600</span><span style="color: #F8F8F8"> </span>private_pipe
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>private_pipe
+<span style="color: #000; font-style: italic">prw-------  1 user  staff  0 5月  4 10:15 private_pipe</span>
 </pre></div>
 <h3><strong>-Z, --context=CTX</strong></h3>
-<p>SELinuxセキュリティコンテキストを設定します（SELinux対応システムのみ）。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>-Z<span style="color: #F8F8F8"> </span>user_u:object_r:user_tmp_t:s0<span style="color: #F8F8F8"> </span>myfifo
+<p>作成されるFIFOのSELinuxセキュリティコンテキストをCTXに設定します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>-Z<span style="color: #F8F8F8"> </span>user_u:object_r:user_fifo_t:s0<span style="color: #F8F8F8"> </span>selinux_pipe
+</pre></div>
+<h3><strong>--help</strong></h3>
+<p>ヘルプ情報を表示して終了します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>--help
+<span style="color: #000; font-style: italic">使用法: mkfifo [オプション]... 名前...</span>
+<span style="color: #000; font-style: italic">指定した名前で名前付きパイプ (FIFO) を作成します。</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>--version</strong></h3>
+<p>バージョン情報を出力して終了します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>--version
+<span style="color: #000; font-style: italic">mkfifo (GNU coreutils) 8.32</span>
+<span style="color: #000; font-style: italic">...</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な名前付きパイプの作成</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>myfifo
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>myfifo
-<span style="color: #000; font-style: italic">prw-r--r--  1 user  staff  0 Apr 30 10:02 myfifo</span>
+<h3>基本的なFIFO作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>my_pipe
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>my_pipe
+<span style="color: #000; font-style: italic">prw-r--r--  1 user  staff  0 5月  4 10:20 my_pipe</span>
 </pre></div>
-<h3>名前付きパイプを使ったプロセス間通信</h3>
-<p>ターミナル1で：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>myfifo
-<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>myfifo
-<span style="color: #000; font-style: italic">Hello, this is a test message.</span>
+<h3>名前付きパイプを使用したプロセス間通信</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902"># </span>ターミナル1:<span style="color: #F8F8F8"> </span>パイプを作成して書き込む
+<span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>message_pipe
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;プロセス1からこんにちは&quot;</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>message_pipe
+
+<span style="color: #8F5902"># </span>ターミナル2:<span style="color: #F8F8F8"> </span>パイプから読み取る
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>message_pipe
+<span style="color: #000; font-style: italic">プロセス1からこんにちは</span>
 </pre></div>
-<p>ターミナル2で（同時に実行）：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>myfifo
-<span style="color: #000; font-style: italic">Hello, this is a test message.</span>
-</pre></div>
-<h3>コマンド出力のリダイレクト</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>myfifo
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>myfifo<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">&amp;</span>
-<span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;txt&quot;</span><span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>myfifo
-<span style="color: #000; font-style: italic">document.txt</span>
-<span style="color: #000; font-style: italic">notes.txt</span>
+<h3>複数のFIFOを一度に作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkfifo<span style="color: #F8F8F8"> </span>pipe1<span style="color: #F8F8F8"> </span>pipe2<span style="color: #F8F8F8"> </span>pipe3
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>pipe*
+<span style="color: #000; font-style: italic">prw-r--r--  1 user  staff  0 5月  4 10:25 pipe1</span>
+<span style="color: #000; font-style: italic">prw-r--r--  1 user  staff  0 5月  4 10:25 pipe2</span>
+<span style="color: #000; font-style: italic">prw-r--r--  1 user  staff  0 5月  4 10:25 pipe3</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>FIFOは一度だけ使用可能</h3>
-<p>名前付きパイプからデータが読み取られると、そのデータは消費されます。複数のプロセスで同じデータを読み取りたい場合は、<code>tee</code>コマンドを使用するか、データを再送信する必要があります。</p>
-<h3>ブロッキング動作に注意</h3>
-<p>読み取り側がない状態で書き込みを行うと、書き込み側のプロセスはブロックされます（逆も同様）。これはデッドロックの原因になる可能性があるため、使用時には注意が必要です。</p>
-<h3>永続的なストレージではない</h3>
-<p>FIFOはデータの一時的な転送のみを目的としており、ファイルシステム上に存在しますが、データを永続的に保存するものではありません。</p>
+<h3>ブロッキング動作を理解する</h3>
+<p>プロセスが空のFIFOから読み取ろうとすると、データが利用可能になるまでブロックされます。同様に、FIFOへの書き込みは、別のプロセスがデータを読み取るまでブロックされます。この動作は、プロセス間通信を設計する際に理解しておくことが重要です。</p>
+<h3>リダイレクションとの併用</h3>
+<p>名前付きパイプは標準入出力のリダイレクションとうまく連携します。あるコマンドの出力を名前付きパイプにリダイレクトし、その名前付きパイプからの入力を別のコマンドにリダイレクトすることができます。</p>
+<h3>クリーンアップ</h3>
+<p>名前付きパイプは、<code>rm</code>で明示的に削除されるまでファイルシステム上に残ります。混乱を避けるため、不要になったパイプは忘れずに削除しましょう。</p>
+<h3>パーミッションの重要性</h3>
+<p>特にマルチユーザー環境では、どのプロセスがパイプから読み取りや書き込みができるかを制御するために、名前付きパイプに適切なパーミッションを設定してください。</p>
 <h2>よくある質問</h2>
-<h4>Q1. 名前付きパイプと通常のパイプ（|）の違いは何ですか？</h4>
-<p>A. 通常のパイプ（|）は一時的で、コマンドライン上でのみ使用できますが、名前付きパイプはファイルシステム上に存在し、関連のないプロセス間でも通信できます。</p>
-<h4>Q2. 名前付きパイプはいつ削除されますか？</h4>
-<p>A. 名前付きパイプはファイルシステム上の通常のファイルと同様に扱われるため、明示的に削除（<code>rm</code>コマンドなど）するまで存在し続けます。ただし、システムの再起動後もデータは保持されません。</p>
-<h4>Q3. 名前付きパイプの最大サイズはどれくらいですか？</h4>
-<p>A. 名前付きパイプのバッファサイズはOSによって異なりますが、通常は数KBです（Linuxでは通常64KBまで）。バッファが一杯になると、書き込み側はブロックされます。</p>
-<h4>Q4. 複数のプロセスが同時に名前付きパイプに書き込むことはできますか？</h4>
-<p>A. はい、可能です。ただし、小さなデータチャンクが交互に書き込まれる可能性があるため、アプリケーションによっては問題が生じる場合があります。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは基本的にLinuxと同様に<code>mkfifo</code>が動作しますが、SELinux関連のオプション（-Z）はサポートされていません。また、macOSのパイプバッファサイズはLinuxとは異なる場合があります。</p>
+<h4>Q1. 名前付きパイプと通常のパイプの違いは何ですか？</h4>
+<p>A. 通常のパイプ（<code>|</code>を使用）は、接続されたプロセスが実行されている間のみ存在します。名前付きパイプは削除されるまでファイルシステム上にファイルとして存在し、関連のないプロセス間での通信を可能にします。</p>
+<h4>Q2. 名前付きパイプを双方向通信に使用できますか？</h4>
+<p>A. いいえ、名前付きパイプは一方向です。双方向通信には、2つの名前付きパイプを作成する必要があります。</p>
+<h4>Q3. 名前付きパイプに書き込むとプロセスがハングするのはなぜですか？</h4>
+<p>A. 名前付きパイプへの書き込みは、別のプロセスがそこから読み取るまでブロックされます。読み取りプロセスがあることを確認するか、パイプをノンブロッキングモードで開いてください。</p>
+<h4>Q4. 名前付きパイプを削除するにはどうすればよいですか？</h4>
+<p>A. 通常のファイルと同様に、<code>rm</code>コマンドを使用します：<code>rm my_pipe</code></p>
 <h2>参考文献</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/mkfifo-invocation.html</p>
 <h2>改訂履歴</h2>
-<ul>
-<li>2025/04/30 初版作成</li>
-</ul>
+<p>2025/05/04 初版作成</p>
 
 
     </main>

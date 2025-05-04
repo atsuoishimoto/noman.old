@@ -1,16 +1,53 @@
-# http command
+# http コマンド
 
-HTTP リクエストを送信し、レスポンスを表示するコマンドラインツールです。
+コマンドラインからHTTPリクエストを送信し、レスポンスを表示します。
 
 ## 概要
 
-`http` コマンドは HTTPie というツールの一部で、コマンドラインから HTTP リクエストを簡単に作成、送信し、レスポンスを見やすく表示します。cURL よりも使いやすく設計されており、JSONデータの送信、ヘッダーの設定、認証など、Web APIとの対話に便利な機能を提供します。
+`http`コマンドはHTTPieの一部で、Webサービスとのコマンドライン操作をより人間に優しくするように設計された使いやすいHTTPクライアントです。様々なメソッド（GET、POST、PUTなど）でHTTPリクエストを送信するためのシンプルなインターフェースを提供し、読みやすさを向上させるためにカラー表示された出力を表示します。
 
 ## オプション
 
+### **-j, --json**
+
+リクエストボディにJSONデータを送信します。
+
+```console
+$ http -j POST example.com name=John age:=30
+```
+
+### **-f, --form**
+
+リクエストボディにフォームエンコードされたデータを送信します。
+
+```console
+$ http -f POST example.com name=John age=30
+```
+
+### **-a, --auth**
+
+認証情報を指定します。
+
+```console
+$ http -a username:password example.com
+```
+
+### **-h, --headers**
+
+レスポンスヘッダーのみを表示します。
+
+```console
+$ http -h example.com
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Date: Sat, 04 May 2025 12:00:00 GMT
+Server: nginx
+Content-Length: 1256
+```
+
 ### **-v, --verbose**
 
-リクエストとレスポンスの詳細情報を表示します。
+HTTPの通信全体（リクエストとレスポンス）を表示します。
 
 ```console
 $ http -v example.com
@@ -22,68 +59,31 @@ Accept: */*
 Connection: keep-alive
 
 HTTP/1.1 200 OK
-Age: 595469
-Cache-Control: max-age=604800
 Content-Type: text/html; charset=UTF-8
-Date: Tue, 30 Apr 2025 10:00:00 GMT
+Date: Sat, 04 May 2025 12:00:00 GMT
+Server: nginx
+Content-Length: 1256
+
+<!doctype html>
+<html>
 ...
 ```
 
-### **-j, --json**
+### **--verify**
 
-JSONデータを送信するためのショートカットです。Content-Type ヘッダーを application/json に設定します。
+SSL検証を制御します。`no`に設定すると検証を無効にできます。
 
 ```console
-$ http -j POST api.example.com/users name=John age:=30
-POST /users HTTP/1.1
-Host: api.example.com
-Content-Type: application/json
-...
-
-{
-    "name": "John",
-    "age": 30
-}
+$ http --verify=no https://example.com
 ```
 
-### **-f, --form**
+### **--session**
 
-フォームデータを送信するためのショートカットです。Content-Type ヘッダーを application/x-www-form-urlencoded に設定します。
-
-```console
-$ http -f POST api.example.com/submit name=John age=30
-POST /submit HTTP/1.1
-Host: api.example.com
-Content-Type: application/x-www-form-urlencoded
-...
-
-name=John&age=30
-```
-
-### **-a, --auth**
-
-Basic認証のための認証情報を指定します。
+複数のリクエストでセッションを作成または再利用します。
 
 ```console
-$ http -a username:password api.example.com/secure
-GET /secure HTTP/1.1
-Host: api.example.com
-Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=
-...
-```
-
-### **-h, --headers**
-
-レスポンスヘッダーのみを表示します。
-
-```console
-$ http -h example.com
-HTTP/1.1 200 OK
-Age: 595469
-Cache-Control: max-age=604800
-Content-Type: text/html; charset=UTF-8
-Date: Tue, 30 Apr 2025 10:00:00 GMT
-...
+$ http --session=mysession -a username:password example.com
+$ http --session=mysession example.com/api/resource
 ```
 
 ## 使用例
@@ -94,21 +94,23 @@ Date: Tue, 30 Apr 2025 10:00:00 GMT
 $ http example.com
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=UTF-8
-...
+Date: Sat, 04 May 2025 12:00:00 GMT
+Server: nginx
+Content-Length: 1256
 
 <!doctype html>
 <html>
 ...
-</html>
 ```
 
-### JSONデータを送信するPOSTリクエスト
+### JSONデータを使用したPOST
 
 ```console
 $ http POST api.example.com/users name=John age:=30 is_active:=true
 HTTP/1.1 201 Created
 Content-Type: application/json
-...
+Location: /users/123
+Content-Length: 42
 
 {
     "id": 123,
@@ -118,77 +120,68 @@ Content-Type: application/json
 }
 ```
 
-### カスタムヘッダーの追加
+### ファイルのダウンロード
 
 ```console
-$ http example.com X-API-Key:abc123 User-Agent:MyApp/1.0
-HTTP/1.1 200 OK
-...
-
-[レスポンス本文]
+$ http --download https://example.com/file.zip
+Downloading to "file.zip"
+Done. 15.43 MB in 2.32s (6.65 MB/s)
 ```
 
-### ファイルのアップロード
+### カスタムヘッダー
 
 ```console
-$ http POST api.example.com/upload file@/path/to/file.jpg
-HTTP/1.1 200 OK
-...
-
-{
-    "success": true,
-    "file_id": "f123"
-}
+$ http example.com X-API-Token:abc123 User-Agent:MyApp/1.0
 ```
 
 ## ヒント:
 
-### JSONデータの書き方
+### 一般的なHTTPメソッドのショートカットを使用する
 
-- `name=value` は文字列として扱われます
-- `name:=value` は JSON として解釈されます（数値、ブール値、null など）
-- `name:=@file.json` はファイルから JSON を読み込みます
+HTTPieは一般的なHTTPメソッドのショートカットを提供しているため、`http GET example.com`の代わりに`http example.com`を使用できます。
 
-### 出力のカラー表示
+### JSONデータの構文
 
-HTTPie はデフォルトでカラー表示を行いますが、パイプやリダイレクトを使用する場合は `--pretty=all` オプションを使用すると強制的にカラー表示されます。
+JSONデータを送信する場合、数値とブール値には`:=`を、文字列には`=`を使用します：
+- `name=John`は`{"name": "John"}`になる
+- `age:=30`は`{"age": 30}`になる
+- `active:=true`は`{"active": true}`になる
 
-### セッションの保存と再利用
+### 出力を他のツールにパイプする
 
-`--session=NAME` オプションを使用すると、クッキーやその他のセッション情報を保存して再利用できます。ログインが必要なAPIをテストする際に便利です。
+出力を`jq`などのツールにパイプしてJSON処理を行うことができます：
+```console
+$ http api.example.com/users | jq '.[] | select(.active==true)'
+```
 
-### リダイレクトの追跡
+### 出力リダイレクションを使用する
 
-`--follow` オプションを使用すると、HTTPリダイレクト（301、302など）を自動的に追跡します。
+標準出力リダイレクションを使用してレスポンスボディをファイルに保存できます：
+```console
+$ http example.com/image.jpg > image.jpg
+```
 
 ## よくある質問
 
-#### Q1. HTTPieとcURLの違いは何ですか？
-A. HTTPieはcURLよりも使いやすく設計されており、JSONの扱いが簡単で、カラフルな出力、直感的な構文などの特徴があります。cURLはより多機能ですが、HTTPieは日常的なAPI操作により適しています。
+#### Q1. フォームデータを使ってPOSTリクエストを送信するにはどうすればよいですか？
+A. `http -f POST example.com name=value`を使用して、フォームエンコードされたデータを送信します。
 
-#### Q2. HTTPieをインストールするにはどうすればよいですか？
-A. `pip install httpie`（Python）、`brew install httpie`（macOS）、`apt install httpie`（Ubuntu/Debian）などでインストールできます。
+#### Q2. リクエストに認証情報を含めるにはどうすればよいですか？
+A. `-a`または`--auth`オプションを使用します：`http -a username:password example.com`
 
-#### Q3. HTTPSリクエストで証明書検証をスキップするにはどうすればよいですか？
-A. `--verify=no` オプションを使用します。ただし、セキュリティ上の理由から本番環境では推奨されません。
+#### Q3. HTTP通信の全体を確認するにはどうすればよいですか？
+A. `-v`または`--verbose`オプションを使用して、リクエストとレスポンスの両方の詳細を確認できます。
 
-#### Q4. リクエストのタイムアウトを設定するにはどうすればよいですか？
-A. `--timeout=SECONDS` オプションを使用します。例：`http --timeout=5 example.com`
+#### Q4. リクエストにファイルを送信するにはどうすればよいですか？
+A. `@filename`を使用してファイルの内容を含めます：`http POST example.com file@/path/to/file.txt`
 
-## macOSでの注意点
+#### Q5. リクエストにクッキーを設定するにはどうすればよいですか？
+A. `--session`オプションを使用してリクエスト間でクッキーを維持するか、手動でCookieヘッダーを設定します。
 
-macOSでは、Homebrewを使用して簡単にインストールできます：
+## 参考資料
 
-```console
-$ brew install httpie
-```
-
-macOSのセキュリティ設定によっては、一部の証明書検証に関する問題が発生する場合があります。その場合は `--verify=no` オプションを使用するか、Python の証明書ストアを更新することで解決できることがあります。
-
-## 参考
-
-https://httpie.io/docs
+https://httpie.io/docs/cli
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

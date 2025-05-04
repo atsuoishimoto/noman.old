@@ -49,67 +49,84 @@
   <h1>chgrp command</h1>
 <p>Change the group ownership of files or directories.</p>
 <h2>Overview</h2>
-<p>The <code>chgrp</code> command changes the group ownership of files and directories. It allows system administrators and users to reassign which group has access to specific files, which is useful for managing file permissions and access control in multi-user environments.</p>
+<p>The <code>chgrp</code> command changes the group ownership of files and directories. It allows users with appropriate permissions to modify which group has access to specific files or directories, which is an important aspect of Unix file permission management.</p>
 <h2>Options</h2>
-<h3><strong>-R, --recursive</strong></h3>
-<p>Change group ownership recursively, affecting all files and directories within the specified directory</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span>developers<span style="color: #F8F8F8"> </span>project/
-</pre></div>
-<h3><strong>-v, --verbose</strong></h3>
-<p>Display a diagnostic message for every file processed</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>staff<span style="color: #F8F8F8"> </span>report.txt
-<span style="color: #000; font-style: italic">changed group of &#39;report.txt&#39; from &#39;users&#39; to &#39;staff&#39;</span>
-</pre></div>
 <h3><strong>-c, --changes</strong></h3>
-<p>Like verbose, but only report when a change is made</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>staff<span style="color: #F8F8F8"> </span>*.txt
+<p>Report when a change is made to the group ownership.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>staff<span style="color: #F8F8F8"> </span>document.txt
 <span style="color: #000; font-style: italic">changed group of &#39;document.txt&#39; from &#39;users&#39; to &#39;staff&#39;</span>
 </pre></div>
+<h3><strong>-f, --silent, --quiet</strong></h3>
+<p>Suppress most error messages.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>nonexistent_group<span style="color: #F8F8F8"> </span>document.txt
+</pre></div>
+<h3><strong>-v, --verbose</strong></h3>
+<p>Output a diagnostic for every file processed.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>staff<span style="color: #F8F8F8"> </span>*.txt
+<span style="color: #000; font-style: italic">group of &#39;document.txt&#39; retained as &#39;staff&#39;</span>
+<span style="color: #000; font-style: italic">group of &#39;notes.txt&#39; changed from &#39;users&#39; to &#39;staff&#39;</span>
+</pre></div>
+<h3><strong>-R, --recursive</strong></h3>
+<p>Operate on files and directories recursively.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span>developers<span style="color: #F8F8F8"> </span>project_folder/
+</pre></div>
 <h3><strong>-h, --no-dereference</strong></h3>
-<p>Affect symbolic links instead of referenced files</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>developers<span style="color: #F8F8F8"> </span>symlink
+<p>Affect symbolic links instead of referenced files.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>staff<span style="color: #F8F8F8"> </span>symlink_file
+</pre></div>
+<h3><strong>--reference=RFILE</strong></h3>
+<p>Use RFILE's group rather than specifying a GROUP value.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>--reference<span style="color: #CE5C00; font-weight: bold">=</span>template.txt<span style="color: #F8F8F8"> </span>document.txt
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic usage</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>accounting<span style="color: #F8F8F8"> </span>financial.xlsx
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>financial.xlsx
-<span style="color: #000; font-style: italic">-rw-r--r--  1 john  accounting  2048 Apr 28 10:15 financial.xlsx</span>
+<h3>Changing group ownership of a single file</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user users 1024 May 4 10:30 document.txt</span>
+<span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>staff<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user staff 1024 May 4 10:30 document.txt</span>
 </pre></div>
-<h3>Changing group for multiple files</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>developers<span style="color: #F8F8F8"> </span>*.py
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l
-<span style="color: #000; font-style: italic">-rw-r--r--  1 alice  developers  1024 Apr 29 14:30 app.py</span>
-<span style="color: #000; font-style: italic">-rw-r--r--  1 alice  developers   512 Apr 29 14:32 utils.py</span>
+<h3>Changing group ownership recursively</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span>developers<span style="color: #F8F8F8"> </span>project/
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>project/
+<span style="color: #000; font-style: italic">total 8</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x 2 user developers 4096 May 4 10:35 src/</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user developers 2048 May 4 10:32 README.md</span>
 </pre></div>
-<h3>Recursive and verbose change</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>-Rv<span style="color: #F8F8F8"> </span>webteam<span style="color: #F8F8F8"> </span>website/
-<span style="color: #000; font-style: italic">changed group of &#39;website/index.html&#39; from &#39;alice&#39; to &#39;webteam&#39;</span>
-<span style="color: #000; font-style: italic">changed group of &#39;website/css/style.css&#39; from &#39;alice&#39; to &#39;webteam&#39;</span>
-<span style="color: #000; font-style: italic">changed group of &#39;website/js/script.js&#39; from &#39;alice&#39; to &#39;webteam&#39;</span>
+<h3>Using a reference file for group ownership</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>template.txt<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user developers 1024 May 4 10:30 template.txt</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user users 2048 May 4 10:32 document.txt</span>
+<span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>--reference<span style="color: #CE5C00; font-weight: bold">=</span>template.txt<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user developers 2048 May 4 10:32 document.txt</span>
 </pre></div>
-<h2>Tips</h2>
-<h3>Check Available Groups</h3>
-<p>Before changing group ownership, use the <code>groups</code> command to see which groups you belong to, or check <code>/etc/group</code> to see all system groups.</p>
-<h3>Permissions Required</h3>
-<p>You must be the owner of the file or have superuser (root) privileges to change a file's group. Additionally, you can only assign a file to a group that you are a member of (unless you're root).</p>
-<h3>Use with chmod</h3>
-<p>Often used together with <code>chmod</code> to set both group ownership and permissions. For example: <code>chgrp developers project/ &amp;&amp; chmod g+w project/</code> changes the group and gives that group write permissions.</p>
-<h3>Reference File's Group</h3>
-<p>Use the <code>--reference=RFILE</code> option to set the same group as another file: <code>chgrp --reference=template.txt newfile.txt</code></p>
+<h2>Tips:</h2>
+<h3>Check Group Membership First</h3>
+<p>Before changing a file's group, ensure you are a member of the target group using the <code>groups</code> command. You can only change a file's group to one you belong to (unless you're root).</p>
+<h3>Use Numeric Group IDs</h3>
+<p>If you know the group ID number, you can use it instead of the group name:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1000</span><span style="color: #F8F8F8"> </span>document.txt
+</pre></div>
+<h3>Combine with chmod</h3>
+<p>After changing group ownership, you might need to adjust group permissions with <code>chmod</code>:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chgrp<span style="color: #F8F8F8"> </span>developers<span style="color: #F8F8F8"> </span>project/
+<span style="color: #8F5902">$ </span>chmod<span style="color: #F8F8F8"> </span>g+w<span style="color: #F8F8F8"> </span>project/
+</pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between chgrp and chown?</h4>
-<p>A. <code>chgrp</code> only changes the group ownership of a file, while <code>chown</code> can change both the user and group ownership. <code>chown user:group file</code> is equivalent to running both <code>chown user file</code> and <code>chgrp group file</code>.</p>
-<h4>Q2. How do I see which group a file currently belongs to?</h4>
-<p>A. Use <code>ls -l filename</code> to see detailed file information including group ownership.</p>
-<h4>Q3. Can I use group ID numbers instead of group names?</h4>
-<p>A. Yes, you can use either the group name or its numeric GID: <code>chgrp 1001 file.txt</code></p>
-<h4>Q4. How do I change group ownership of a symbolic link?</h4>
-<p>A. Use the <code>-h</code> option: <code>chgrp -h newgroup symlink</code></p>
+<h4>Q1. Who can change a file's group?</h4>
+<p>A. The file owner can change a file's group, but only to a group they are a member of. The root user can change any file's group to any group.</p>
+<h4>Q2. How do I see what groups I belong to?</h4>
+<p>A. Use the <code>groups</code> command to see all groups you belong to.</p>
+<h4>Q3. Can I change both owner and group at once?</h4>
+<p>A. No, <code>chgrp</code> only changes the group. Use <code>chown</code> with the syntax <code>chown user:group file</code> to change both simultaneously.</p>
+<h4>Q4. Why do I get &quot;Operation not permitted&quot; errors?</h4>
+<p>A. This usually happens when you're not the file owner, not a member of the target group, or the file has special permissions like the immutable flag set.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/chgrp-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

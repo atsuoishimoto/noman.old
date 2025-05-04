@@ -1,105 +1,140 @@
 # grep command
 
-Search for patterns in files or text streams.
+Search for patterns in files.
 
 ## Overview
 
-`grep` is a powerful text search tool that finds lines matching a specified pattern in files or input streams. It's commonly used to filter output, search through code, or find specific content in text files. The name comes from "global regular expression print."
+`grep` is a powerful text search utility that searches for lines matching a specified pattern in files or standard input. It's commonly used to find specific text within files, filter command output, or search through large datasets. The name comes from "global regular expression print."
 
 ## Options
 
-### **-i** (Ignore case)
+### **-i, --ignore-case**
 
-Performs a case-insensitive search, matching both uppercase and lowercase letters.
-
-```console
-$ grep -i "error" log.txt
-Error: Connection failed
-error: file not found
-WARNING: Some errors were detected
-```
-
-### **-r** or **-R** (Recursive)
-
-Searches through all files in the specified directory and its subdirectories.
+Perform case-insensitive matching.
 
 ```console
-$ grep -r "function" /path/to/project
-/path/to/project/main.js:function initialize() {
-/path/to/project/utils/helpers.js:const function calculateTotal() {
+$ grep -i "hello" file.txt
+Hello World
+HELLO everyone
+hello there
 ```
 
-### **-v** (Invert match)
+### **-v, --invert-match**
 
-Shows lines that do NOT match the pattern.
+Invert the match, showing lines that don't match the pattern.
 
 ```console
-$ grep -v "success" log.txt
-Error: Connection failed
-Warning: Low disk space
-Info: Process started
+$ grep -v "error" log.txt
+Starting application
+Loading configuration
+Application running
+Shutting down
 ```
 
-### **-n** (Line numbers)
+### **-r, --recursive**
 
-Displays the line number before each matching line.
+Search recursively through directories.
 
 ```console
-$ grep -n "TODO" *.js
-main.js:15:// TODO: Implement error handling
-utils.js:42:// TODO: Optimize this algorithm
+$ grep -r "TODO" ./src/
+./src/main.c:// TODO: Implement error handling
+./src/utils.h:/* TODO: Add documentation */
+./src/config.c:// TODO: Fix configuration parsing
 ```
 
-### **-c** (Count)
+### **-l, --files-with-matches**
 
-Shows only the count of matching lines for each file.
+Only print filenames of files containing matches.
+
+```console
+$ grep -l "function" *.js
+utils.js
+main.js
+helpers.js
+```
+
+### **-n, --line-number**
+
+Show line numbers for matching lines.
+
+```console
+$ grep -n "import" app.py
+3:import os
+5:import sys
+12:import datetime
+```
+
+### **-c, --count**
+
+Print only the count of matching lines per file.
 
 ```console
 $ grep -c "error" *.log
-app.log:5
-system.log:2
+app.log:15
+system.log:3
 access.log:0
 ```
 
-### **-A**, **-B**, and **-C** (Context)
+### **-A NUM, --after-context=NUM**
 
-Shows lines before (-B), after (-A), or both (-C) around each match.
+Show NUM lines after each match.
 
 ```console
-$ grep -A 2 "error" log.txt
-error: file not found
-  at line 42
-  in module loader.js
+$ grep -A 2 "function main" main.c
+function main() {
+  int x = 5;
+  printf("Starting program\n");
+```
+
+### **-B NUM, --before-context=NUM**
+
+Show NUM lines before each match.
+
+```console
+$ grep -B 1 "Exception" error.log
+2023-05-04 15:30:22 Processing request
+2023-05-04 15:30:23 Exception: Invalid input
+```
+
+### **-E, --extended-regexp**
+
+Use extended regular expressions.
+
+```console
+$ grep -E "(error|warning)" log.txt
+System error: disk full
+Warning: connection timeout
 ```
 
 ## Usage Examples
 
-### Basic pattern matching
+### Basic Pattern Search
 
 ```console
 $ grep "password" config.txt
-default_password=admin123
-# password settings below
+password=mysecretpassword
+# default password is 'admin'
 ```
 
-### Using regular expressions
+### Combining Multiple Options
+
+```console
+$ grep -in "todo" --color *.py
+utils.py:45:# TODO: Refactor this function
+helpers.py:23:# todo: Add error handling
+main.py:102:# TODO: Implement caching
+```
+
+### Using Regular Expressions
 
 ```console
 $ grep "^[0-9]" data.txt
-123 Main Street
-456 Oak Avenue
-789 Pine Road
+123 Main St
+456 Oak Ave
+789 Pine Rd
 ```
 
-### Combining multiple options
-
-```console
-$ grep -in "warning" --color=auto *.log
-app.log:15:Warning: Connection unstable
-system.log:42:warning: low memory detected
-```
-
-### Piping output from another command
+### Piping Command Output to grep
 
 ```console
 $ ps aux | grep "firefox"
@@ -108,31 +143,42 @@ user     12345  2.5  1.8 3458196 298796 ?      Sl   09:15   0:45 /usr/lib/firefo
 
 ## Tips
 
-### Use Color Highlighting
-Enable color highlighting with `--color=auto` to make matches stand out. Add this to your shell profile as an alias: `alias grep='grep --color=auto'`.
+### Use Context for Better Understanding
 
-### Understand Basic Regular Expressions
-Learn basic regex patterns to make searches more powerful. For example, `^` matches the start of a line, `$` matches the end, and `[0-9]` matches any digit.
+Combine `-A`, `-B`, or `-C` (for both before and after context) to see the surrounding lines of a match, which helps understand the context of the match.
+
+### Colorize Matches for Visibility
+
+Use `--color=auto` to highlight matching text in color, making it easier to spot in large outputs. Many systems alias grep to include this by default.
 
 ### Exclude Directories
-When searching recursively, exclude directories with `--exclude-dir=PATTERN`: `grep -r "TODO" --exclude-dir=node_modules .`
 
-### Search for Multiple Patterns
-Use the `-e` option multiple times or the `-f` option with a file containing patterns: `grep -e "error" -e "warning" log.txt`
+When searching recursively, use `--exclude-dir=PATTERN` to skip directories matching PATTERN, which can significantly speed up searches in large codebases.
+
+### Search for Exact Words
+
+Use `-w` or `--word-regexp` to match only whole words, preventing partial matches within larger words.
+
+### Quiet Mode for Scripts
+
+Use `-q` or `--quiet` in scripts to suppress output and just use the exit status to determine if a match was found.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `grep`, `egrep`, and `fgrep`?
-A. `egrep` is equivalent to `grep -E` (extended regex), and `fgrep` is equivalent to `grep -F` (fixed strings, no regex). Modern systems typically implement these as links to `grep` with the appropriate option.
+#### Q1. How do I search for a pattern in multiple files?
+A. Simply list the files after the pattern: `grep "pattern" file1.txt file2.txt file3.txt` or use wildcards: `grep "pattern" *.txt`.
 
-#### Q2. How do I search for a pattern that contains spaces?
-A. Enclose the pattern in quotes: `grep "search term with spaces" file.txt`
+#### Q2. How can I search for a pattern that contains spaces?
+A. Enclose the pattern in quotes: `grep "hello world" file.txt`.
 
-#### Q3. How can I make grep show only the matching part of a line?
-A. Use the `-o` option: `grep -o "pattern" file.txt`
+#### Q3. How do I search for a pattern that includes special characters?
+A. Escape special characters with a backslash or use single quotes: `grep 'pattern\*' file.txt` or `grep "pattern\*" file.txt`.
 
-#### Q4. How do I search for a pattern in all files of a specific type?
-A. Combine with find or use globbing: `grep "pattern" *.txt` or `find . -name "*.txt" -exec grep "pattern" {} \;`
+#### Q4. Can grep search for multiple patterns at once?
+A. Yes, use the `-e` option multiple times or use extended regex with `-E`: `grep -e "pattern1" -e "pattern2" file.txt` or `grep -E "pattern1|pattern2" file.txt`.
+
+#### Q5. How do I make grep show only the matching part of a line?
+A. Use the `-o` or `--only-matching` option: `grep -o "pattern" file.txt`.
 
 ## References
 
@@ -140,4 +186,4 @@ https://www.gnu.org/software/grep/manual/grep.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

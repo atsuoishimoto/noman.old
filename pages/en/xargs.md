@@ -1,119 +1,130 @@
 # xargs command
 
-Execute commands using arguments from standard input.
+Executes commands using arguments from standard input.
 
 ## Overview
 
-`xargs` reads items from standard input and executes a command with those items as arguments. It's particularly useful for handling command line argument lists that are too long for a single command, or for processing output from other commands as input to another command.
+`xargs` is a command-line utility that builds and executes commands from standard input. It reads items from standard input, delimited by blanks or newlines, and executes a command (by default `/bin/echo`) using those items as arguments. This is particularly useful for processing output from other commands and applying operations to multiple files or data streams.
 
 ## Options
 
-### **-n [number]**
+### **-0, --null**
 
-Limits the number of arguments passed to each command execution
+Input items are terminated by a null character instead of whitespace, useful when input might contain spaces or newlines.
 
 ```console
-$ echo "file1 file2 file3 file4" | xargs -n 2 echo
-file1 file2
-file3 file4
+$ find . -name "*.txt" -print0 | xargs -0 grep "example"
+./file1.txt:example text here
+./path with spaces/file2.txt:another example
 ```
 
-### **-I [placeholder]**
+### **-I, --replace[=REPLACE]**
 
-Replaces occurrences of the placeholder with input items
+Replace occurrences of REPLACE (default is {}) in the initial arguments with names read from standard input.
 
 ```console
-$ echo "img1.jpg img2.jpg" | xargs -I {} convert {} {}.png
+$ echo "file1.txt file2.txt" | xargs -I {} cp {} backup/
 ```
 
-### **-p**
+### **-n, --max-args=MAX-ARGS**
 
-Prompts the user before executing each command
+Use at most MAX-ARGS arguments per command line.
 
 ```console
-$ echo "file1 file2" | xargs -p rm
-rm file1 file2 ?...
+$ echo "1 2 3 4" | xargs -n 2 echo
+1 2
+3 4
 ```
 
-### **-t**
+### **-P, --max-procs=MAX-PROCS**
 
-Prints each command before executing it
+Run up to MAX-PROCS processes simultaneously.
 
 ```console
-$ echo "file1 file2" | xargs -t echo
-echo file1 file2
-file1 file2
+$ find . -name "*.jpg" | xargs -P 4 -I {} convert {} {}.png
 ```
 
-### **-0**
+### **-t, --verbose**
 
-Expects input items to be separated by null characters instead of whitespace
+Print the command to be executed before running it.
 
 ```console
-$ find . -name "*.txt" -print0 | xargs -0 grep "pattern"
+$ echo "file1.txt file2.txt" | xargs -t rm
+rm file1.txt file2.txt
+```
+
+### **-p, --interactive**
+
+Prompt the user before executing each command.
+
+```console
+$ echo "file1.txt file2.txt" | xargs -p rm
+rm file1.txt file2.txt ?...
 ```
 
 ## Usage Examples
 
-### Processing a list of files
+### Processing files with spaces in names
 
 ```console
-$ find . -name "*.log" | xargs grep "error"
-./app.log:error: connection refused
-./system.log:error: disk space low
+$ find . -name "*.txt" -print0 | xargs -0 grep "pattern"
+./document.txt:pattern found here
+./notes with spaces.txt:another pattern example
 ```
 
-### Batch file operations
+### Batch processing files
 
 ```console
-$ ls *.jpg | xargs -I {} convert {} {}.png
+$ find . -name "*.jpg" | xargs -P 4 -I {} convert {} {}.png
 ```
 
-### Parallel execution with -P
+### Deleting files listed in a file
 
 ```console
-$ cat urls.txt | xargs -P 4 -I {} curl -s {} > /dev/null
+$ cat files_to_delete.txt | xargs rm
+```
+
+### Running multiple commands on each input
+
+```console
+$ echo "file1 file2" | xargs -I {} sh -c 'echo {}; wc -l {}'
+file1
+      42 file1
+file2
+      18 file2
 ```
 
 ## Tips
 
-### Handling Filenames with Spaces
+### Use -0 with find -print0
 
-When processing filenames that might contain spaces, use `find` with `-print0` and `xargs` with `-0`:
+When dealing with filenames that contain spaces, newlines, or other special characters, always pair `find -print0` with `xargs -0` to ensure proper handling.
 
-```console
-$ find . -name "*.txt" -print0 | xargs -0 grep "pattern"
-```
+### Prevent Command Injection
 
-### Previewing Commands
+Be careful when using user-supplied input with xargs. Use the `-I` option with a placeholder to avoid command injection vulnerabilities.
 
-Use `-t` to see what commands will be executed without the `-p` prompt:
+### Preview Commands with -t
 
-```console
-$ echo "file1 file2" | xargs -t echo
-```
+Use the `-t` option to see what commands will be executed before they run, especially when working with destructive operations like `rm`.
 
-### Limiting Batch Size
+### Control Parallelism
 
-For operations on many files, use `-n` to process in smaller batches:
-
-```console
-$ find . -name "*.jpg" | xargs -n 10 tar -cvf archive.tar
-```
+For CPU-intensive tasks, use `-P` with the number of CPU cores to optimize performance without overloading your system.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between piping directly and using xargs?
-A. Piping (`|`) sends the output of one command as input to another command, while `xargs` converts standard input into command line arguments. Many commands don't accept input from pipes but do accept arguments, which is where `xargs` becomes necessary.
+#### Q1. What's the difference between piping to a command and using xargs?
+A. Piping (`|`) sends the output of one command as input to another command, while `xargs` converts input into arguments for a command. Many commands don't accept input from stdin for filenames, which is where xargs becomes necessary.
 
-#### Q2. How do I use xargs with commands that need the filename in the middle?
-A. Use the `-I` option with a placeholder: `find . -name "*.txt" | xargs -I {} mv {} {}.bak`
+#### Q2. How do I use xargs to handle filenames with spaces?
+A. Use `find -print0` with `xargs -0` to properly handle filenames with spaces, newlines, or other special characters.
 
-#### Q3. How can I make xargs run commands in parallel?
-A. Use the `-P` option followed by the number of processes: `xargs -P 4` runs up to 4 processes simultaneously.
+#### Q3. Can xargs run multiple commands for each input?
+A. Yes, use the `-I` option with `sh -c` to run multiple commands: `xargs -I {} sh -c 'command1 {}; command2 {}'`
 
-#### Q4. How do I safely handle filenames with spaces or special characters?
-A. Use the `-0` option with `xargs` and `-print0` with `find`: `find . -type f -print0 | xargs -0 command`
+#### Q4. How can I limit the number of arguments per command?
+A. Use the `-n` option followed by the maximum number of arguments: `xargs -n 5 command`
 
 ## References
 
@@ -121,4 +132,4 @@ https://www.gnu.org/software/findutils/manual/html_node/find_html/xargs-options.
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

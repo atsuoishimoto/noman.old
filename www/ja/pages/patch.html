@@ -47,73 +47,86 @@
     <main>
       
   <h1>patch コマンド</h1>
-<p>ファイルに差分（パッチ）を適用するユーティリティ。</p>
+<p>差分ファイルを元のファイルに適用します。</p>
 <h2>概要</h2>
-<p><code>patch</code>コマンドは、差分ファイル（パッチファイル）を使用して元のファイルを更新するためのツールです。ソフトウェア開発やシステム管理において、コードの変更を配布したり適用したりする際によく使用されます。<code>diff</code>コマンドで生成された差分を適用するのに最適です。</p>
+<p><code>patch</code>コマンドは、ファイルに変更（パッチ）を適用するためのコマンドです。パッチファイル（通常は<code>diff</code>コマンドで作成されたもの）を読み込み、その指示に従って元のファイルを修正します。これは、バグ修正、アップデート、ソースコードやテキストファイルの変更を適用する際によく使用されます。</p>
 <h2>オプション</h2>
-<h3><strong>-p[数字]</strong></h3>
-<p>パッチファイル内のパス名から取り除く階層の数を指定します。</p>
+<h3><strong>-p 数値, --strip=数値</strong></h3>
+<p>パッチファイル内のファイル名から、指定した数値分の先頭のスラッシュを含む最小のプレフィックスを削除します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-p1<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
 <span style="color: #000; font-style: italic">patching file src/main.c</span>
 </pre></div>
 <h3><strong>-b, --backup</strong></h3>
-<p>パッチを適用する前にオリジナルファイルのバックアップを作成します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>file.patch
+<p>パッチを適用する前に元のファイルのバックアップを作成します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
 <span style="color: #000; font-style: italic">patching file file.txt</span>
-<span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">file.txt file.txt.orig file.patch</span>
 </pre></div>
 <h3><strong>-R, --reverse</strong></h3>
-<p>パッチを逆方向に適用します（変更を元に戻す）。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>file.patch
+<p>パッチが古いファイルと新しいファイルを入れ替えて作成されたと仮定し、実質的にパッチを逆適用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
 <span style="color: #000; font-style: italic">patching file file.txt</span>
 </pre></div>
-<h3><strong>-d DIR, --directory=DIR</strong></h3>
-<p>指定したディレクトリに移動してからパッチを適用します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>src/<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<h3><strong>-i パッチファイル, --input=パッチファイル</strong></h3>
+<p>標準入力ではなく、指定したファイルからパッチを読み込みます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">patching file file.txt</span>
+</pre></div>
+<h3><strong>-d ディレクトリ, --directory=ディレクトリ</strong></h3>
+<p>パッチを適用する前に指定したディレクトリに移動します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>src/<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>../changes.patch
 <span style="color: #000; font-style: italic">patching file main.c</span>
+</pre></div>
+<h3><strong>-u, --unified</strong></h3>
+<p>パッチファイルを統合差分（現在最も一般的な形式）として解釈します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">patching file file.txt</span>
 </pre></div>
 <h2>使用例</h2>
 <h3>基本的なパッチの適用</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>modified.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>changes.patch
-<span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
 <span style="color: #000; font-style: italic">patching file original.txt</span>
 </pre></div>
-<h3>特定のファイルにパッチを適用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
-<span style="color: #000; font-style: italic">patching file file.txt</span>
-</pre></div>
-<h3>複数のファイルを含むパッチの適用</h3>
+<h3>複数ファイルへのパッチ適用</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-p0<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>project.patch
 <span style="color: #000; font-style: italic">patching file src/main.c</span>
 <span style="color: #000; font-style: italic">patching file include/header.h</span>
 </pre></div>
+<h3>バックアップを作成してパッチを適用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">patching file file.txt</span>
+<span style="color: #8F5902">$ </span>ls
+<span style="color: #000; font-style: italic">file.txt  file.txt.orig  changes.patch</span>
+</pre></div>
+<h3>ドライラン（適用せずに確認）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>--dry-run<span style="color: #F8F8F8"> </span>-p1<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">checking file src/main.c</span>
+</pre></div>
 <h2>ヒント:</h2>
-<h3>パッチの確認</h3>
-<p>パッチを適用する前に、<code>--dry-run</code>オプションを使用して実際に変更を加えずにパッチの適用をシミュレーションできます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>--dry-run<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
-<span style="color: #000; font-style: italic">patching file src/main.c</span>
-</pre></div>
-<h3>拒否されたパッチの処理</h3>
-<p>パッチの適用に失敗した場合、<code>.rej</code>拡張子を持つ拒否ファイルが作成されます。これらのファイルを確認して手動で変更を適用することができます。</p>
-<h3>パッチの作成</h3>
-<p>パッチファイルは通常、<code>diff -u</code>コマンドを使用して作成します。これにより、コンテキスト情報を含む統一形式の差分が生成されます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>modified.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>changes.patch
-</pre></div>
+<h3>パッチレベルの理解</h3>
+<p><code>-p</code>オプション（ストリップレベル）は、プロジェクトにパッチを適用する際に重要です。パッチに<code>a/src/file.c</code>のようなパスが含まれている場合、<code>-p1</code>を使用すると<code>a/</code>プレフィックスが削除され、<code>src/file.c</code>を探すようになります。</p>
+<h3>失敗したパッチの処理</h3>
+<p>パッチがきれいに適用できない場合、patchは拒否されたハンク（変更部分）を含む<code>.rej</code>ファイルを作成します。自動的に適用できなかった変更を手動で適用するために、これらのファイルを確認してください。</p>
+<h3>パッチを適用する前のテスト</h3>
+<p>特に重要なファイルに対しては、実際に適用する前に<code>--dry-run</code>を使用してパッチがきれいに適用されるかどうかを常にテストしてください。</p>
+<h3>パッチの方向</h3>
+<p><code>-R</code>（逆適用）を使用するかどうか不明な場合は、まず通常通りパッチを適用してみてください。「reversed patch detected」（逆パッチが検出された）というエラーが出た場合は、<code>-R</code>を試してみてください。</p>
 <h2>よくある質問</h2>
-<h4>Q1. パッチファイルとは何ですか？</h4>
-<p>A. パッチファイルは、ファイルの元のバージョンと変更後のバージョンの間の差分を含むテキストファイルです。通常、<code>diff</code>コマンドで生成されます。</p>
-<h4>Q2. パッチの適用に失敗した場合はどうすればよいですか？</h4>
-<p>A. パッチの適用に失敗すると、<code>.rej</code>ファイルが作成されます。このファイルを確認して、変更を手動で適用することができます。また、<code>-f</code>オプションを使用して強制的に適用することもできますが、注意が必要です。</p>
-<h4>Q3. パッチを元に戻すにはどうすればよいですか？</h4>
-<p>A. <code>-R</code>または<code>--reverse</code>オプションを使用して、同じパッチファイルで変更を元に戻すことができます。</p>
-<h4>Q4. パッチファイルの形式にはどのようなものがありますか？</h4>
-<p>A. 一般的なパッチ形式には、コンテキスト形式（<code>diff -c</code>）、統一形式（<code>diff -u</code>）、通常形式（<code>diff</code>）があります。統一形式が最も一般的で推奨されています。</p>
-<h2>参考</h2>
-<p>https://www.gnu.org/software/diffutils/manual/html_node/Unified-Format.html</p>
-<h2>Revisions</h2>
+<h4>Q1. 統合差分（unified diff）とコンテキスト差分（context diff）の違いは何ですか？</h4>
+<p>A. 統合差分（diffの<code>-u</code>オプション）は、変更された行をコンテキスト付きで<code>+</code>と<code>-</code>の接頭辞を付けて1つのブロックで表示します。一方、コンテキスト差分は変更前と変更後のブロックを別々に表示します。統合差分はよりコンパクトで、現在一般的に使用されています。</p>
+<h4>Q2. 適用したパッチを元に戻すにはどうすればよいですか？</h4>
+<p>A. 同じパッチファイルを使用して<code>patch -R</code>を実行すると、変更を元に戻すことができます。<code>-b</code>でバックアップを作成した場合は、それらから復元することもできます。</p>
+<h4>Q3. 「Hunk #1 FAILED」とはどういう意味ですか？</h4>
+<p>A. パッチの一部（ハンク）が適用できなかったことを意味します。通常、パッチが作成された後にターゲットファイルが変更されたために発生します。失敗した変更については<code>.rej</code>ファイルを確認してください。</p>
+<h4>Q4. 複数のファイルにパッチを適用するにはどうすればよいですか？</h4>
+<p>A. パッチファイルに複数のファイルの変更が含まれている場合、patchを実行すると自動的にすべての影響を受けるファイルに変更が適用されます。</p>
+<h2>参考資料</h2>
+<p>https://www.gnu.org/software/diffutils/manual/html_node/Invoking-patch.html</p>
+<h2>macOSでの注意点</h2>
+<p>macOSに付属のpatchコマンドはGNU patchとは若干動作が異なる場合があります。特に、パスの扱いやオプションの一部が異なることがあるため、複雑なパッチを適用する場合は注意が必要です。HomebrewなどでインストールしたGNU patchを使用することで、Linux環境と同じ動作を期待できます。</p>
+<h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

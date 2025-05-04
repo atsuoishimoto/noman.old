@@ -47,12 +47,16 @@
     <main>
       
   <h1>kill コマンド</h1>
-<p>プロセスを終了させるためのシグナルを送信します。</p>
+<p>プロセスにシグナルを送信し、通常はプロセスを終了させます。</p>
 <h2>概要</h2>
-<p><code>kill</code> コマンドは、指定したプロセスにシグナルを送信するために使用されます。主にプロセスを終了させる目的で使われますが、実際には様々な種類のシグナルを送信できます。プロセスIDを指定して特定のプロセスを対象にします。</p>
+<p><code>kill</code> コマンドはプロセスにシグナルを送信するもので、主に実行中のプロセスを終了させるために使用されます。名前は「殺す」を意味しますが、実際には様々な種類のシグナルをプロセスに送信でき、単に停止させる以外の制御も可能です。各シグナルには特定の目的があり、デフォルトのシグナルである SIGTERM (15) は、プロセスに対して正常な終了を要求します。</p>
 <h2>オプション</h2>
-<h3><strong>-l (--list)</strong></h3>
-<p>利用可能なシグナルの一覧を表示します。</p>
+<h3><strong>-s, --signal [シグナル]</strong></h3>
+<p>送信するシグナルを指定します（名前または番号で指定可能）</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">kill</span><span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>TERM<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+</pre></div>
+<h3><strong>-l, --list [シグナル]</strong></h3>
+<p>利用可能なシグナル名の一覧を表示、またはシグナル名と番号の相互変換を行います</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">kill</span><span style="color: #F8F8F8"> </span>-l
 <span style="color: #000; font-style: italic"> 1) SIGHUP       2) SIGINT       3) SIGQUIT      4) SIGILL       5) SIGTRAP</span>
 <span style="color: #000; font-style: italic"> 6) SIGABRT      7) SIGBUS       8) SIGFPE       9) SIGKILL     10) SIGUSR1</span>
@@ -68,62 +72,59 @@
 <span style="color: #000; font-style: italic">58) SIGRTMAX-6  59) SIGRTMAX-5  60) SIGRTMAX-4  61) SIGRTMAX-3  62) SIGRTMAX-2</span>
 <span style="color: #000; font-style: italic">63) SIGRTMAX-1  64) SIGRTMAX</span>
 </pre></div>
-<h3><strong>-s (--signal)</strong></h3>
-<p>送信するシグナルを指定します。シグナル名または番号で指定できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">kill</span><span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>TERM<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
-<span style="color: #8F5902"># </span>プロセスID<span style="color: #F8F8F8"> </span>1234に<span style="color: #F8F8F8"> </span>SIGTERM<span style="color: #F8F8F8"> </span>シグナルを送信する
-</pre></div>
-<h3><strong>-9 (SIGKILL)</strong></h3>
-<p>プロセスを強制的に終了させます。これは特殊なシグナルで、プロセスが無視できません。</p>
+<h3><strong>-9, -KILL, -SIGKILL</strong></h3>
+<p>SIGKILL シグナルを送信します。即時強制終了を行うシグナルで、プロセスが捕捉したり無視したりすることはできません</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">kill</span><span style="color: #F8F8F8"> </span>-9<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
-<span style="color: #8F5902"># </span>プロセスID<span style="color: #F8F8F8"> </span>1234を強制終了する
+</pre></div>
+<h3><strong>-15, -TERM, -SIGTERM</strong></h3>
+<p>SIGTERM シグナル（デフォルト）を送信します。正常な終了を要求するシグナルです</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">kill</span><span style="color: #F8F8F8"> </span>-15<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な使い方</h3>
+<h3>PID を指定してプロセスを終了する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">kill</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
-<span style="color: #8F5902"># </span>プロセスID<span style="color: #F8F8F8"> </span>1234に<span style="color: #F8F8F8"> </span>SIGTERM（デフォルトのシグナル）を送信する
 </pre></div>
-<h3>複数のプロセスを終了</h3>
+<h3>応答しないプロセスを強制的に終了する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">kill</span><span style="color: #F8F8F8"> </span>-9<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+</pre></div>
+<h3>プロセスにカスタムシグナルを送信する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">kill</span><span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>USR1<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+</pre></div>
+<h3>複数のプロセスを一度に終了する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">kill</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5678</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">9012</span>
-<span style="color: #8F5902"># </span>複数のプロセスに同時にシグナルを送信する
-</pre></div>
-<h3>プロセスグループを終了</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">kill</span><span style="color: #F8F8F8"> </span>-TERM<span style="color: #F8F8F8"> </span>-1234
-<span style="color: #8F5902"># </span>プロセスグループID<span style="color: #F8F8F8"> </span>1234のすべてのプロセスに<span style="color: #F8F8F8"> </span>SIGTERM<span style="color: #F8F8F8"> </span>を送信する
 </pre></div>
 <h2>ヒント:</h2>
-<h3>プロセスIDの確認方法</h3>
-<p><code>ps</code> コマンドを使用して、終了させたいプロセスのIDを確認できます。</p>
+<h3>先にプロセスIDを見つける</h3>
+<p><code>kill</code> を使用する前に <code>ps</code> や <code>pgrep</code> を使ってプロセスIDを見つけましょう：</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>aux<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #000; font-style: italic">user     1234  2.0  1.5 2345678 123456 ?     Sl   10:00   0:30 /usr/lib/firefox/firefox</span>
+<span style="color: #000; font-style: italic">user     1234  2.0  1.5 3245676 124548 ?      Sl   09:15   0:45 /usr/lib/firefox/firefox</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">kill</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
 </pre></div>
-<h3>シグナルの種類と用途</h3>
+<h3>明確さのためにシグナル名を使用する</h3>
+<p>シグナル名は番号よりも分かりやすいことが多いです：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">kill</span><span style="color: #F8F8F8"> </span>-TERM<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># kill -15 1234 と同じ</span>
+</pre></div>
+<h3>一般的なシグナルとその用途</h3>
 <ul>
-<li><strong>SIGTERM (15)</strong>: デフォルトのシグナルで、プロセスに正常終了を要求します。プロセスは終了前に後片付けができます。</li>
-<li><strong>SIGKILL (9)</strong>: プロセスを強制終了します。プロセスは後片付けができないため、最終手段として使用します。</li>
-<li><strong>SIGHUP (1)</strong>: 多くのデーモンプロセスでは設定ファイルの再読み込みを意味します。</li>
+<li>SIGTERM (15): 標準の終了シグナル、クリーンアップを許可</li>
+<li>SIGKILL (9): 強制終了、プロセスが応答しない場合に使用</li>
+<li>SIGHUP (1): 設定ファイルの再読み込みによく使用される</li>
+<li>SIGINT (2): 割り込みシグナル（Ctrl+C を押すのと同じ）</li>
 </ul>
-<h3>pkill と killall の活用</h3>
-<p>プロセス名で終了させたい場合は、<code>pkill</code> や <code>killall</code> コマンドが便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pkill<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #8F5902"># </span>firefoxという名前のプロセスをすべて終了する
-</pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. <code>kill</code> と <code>kill -9</code> の違いは何ですか？</h4>
-<p>A. 通常の <code>kill</code>（SIGTERM）はプロセスに終了を要求しますが、プロセスはこれを無視できます。<code>kill -9</code>（SIGKILL）は強制終了であり、プロセスは無視できません。</p>
-<h4>Q2. プロセスが終了しない場合はどうすればいいですか？</h4>
-<p>A. まず <code>kill</code>（SIGTERM）を試し、それでも終了しない場合は <code>kill -9</code>（SIGKILL）を使用します。ただし、SIGKILL は最終手段として使用してください。</p>
-<h4>Q3. 特定の名前のプロセスをすべて終了するにはどうすればいいですか？</h4>
-<p>A. <code>pkill</code> または <code>killall</code> コマンドを使用します。例: <code>pkill firefox</code> または <code>killall firefox</code></p>
-<h4>Q4. シグナルの番号とシグナル名はどちらを使うべきですか？</h4>
-<p>A. シグナル名（例: SIGTERM）を使用する方が可読性が高く推奨されますが、番号（例: 15）も同様に機能します。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは基本的な機能は同じですが、利用可能なシグナルの一覧がLinuxとは若干異なる場合があります。また、macOSの <code>kill</code> コマンドはGNU版と比べてオプションが少ない場合があります。</p>
+<h4>Q1. <code>kill -9</code> と通常の <code>kill</code> の違いは何ですか？</h4>
+<p>A. 通常の <code>kill</code>（<code>kill -15</code> と同等）は SIGTERM を送信し、正常な終了を要求してプロセスにクリーンアップの機会を与えます。<code>kill -9</code> は SIGKILL を送信し、クリーンアップなしで即時終了を強制し、プロセスがこのシグナルを捕捉したり無視したりすることはできません。</p>
+<h4>Q2. PID ではなく名前でプロセスを終了するにはどうすればよいですか？</h4>
+<p>A. <code>kill</code> 自体は PID を必要としますが、<code>pkill</code> や <code>killall</code> を使用して名前でプロセスを終了できます：<code>pkill firefox</code> または <code>killall firefox</code>。</p>
+<h4>Q3. なぜ一部のプロセスに対して <code>kill -9</code> が効かないのですか？</h4>
+<p>A. 中断不可能なスリープ状態（通常は I/O 待ち）のプロセスやゾンビプロセスは、どのシグナルでも終了できません。また、PID 1（init/systemd）のプロセスはシグナルの扱いが異なります。</p>
+<h4>Q4. 特定のユーザーのすべてのプロセスを終了するにはどうすればよいですか？</h4>
+<p>A. <code>pkill -u ユーザー名</code> を使用して、特定のユーザーが所有するすべてのプロセスを終了できます。</p>
 <h2>参考資料</h2>
 <p>https://man7.org/linux/man-pages/man1/kill.1.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

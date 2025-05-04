@@ -47,21 +47,12 @@
     <main>
       
   <h1>host command</h1>
-<p>Look up DNS information for domain names and IP addresses.</p>
+<p>DNS lookup utility for querying domain name servers.</p>
 <h2>Overview</h2>
-<p>The <code>host</code> command is a DNS lookup utility that converts domain names to IP addresses and vice versa. It's simpler than <code>dig</code> or <code>nslookup</code> and is useful for quick DNS queries, checking domain information, and basic network troubleshooting.</p>
+<p>The <code>host</code> command is a simple utility for performing DNS lookups. It's used to convert domain names to IP addresses and vice versa, as well as for querying DNS records. It's simpler than <code>dig</code> or <code>nslookup</code> and is useful for quick DNS queries.</p>
 <h2>Options</h2>
-<h3><strong>-t type</strong></h3>
-<p>Specify the DNS record type to look up (A, MX, NS, etc.)</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>MX<span style="color: #F8F8F8"> </span>gmail.com
-<span style="color: #000; font-style: italic">gmail.com mail is handled by 10 alt1.gmail-smtp-in.l.google.com.</span>
-<span style="color: #000; font-style: italic">gmail.com mail is handled by 20 alt2.gmail-smtp-in.l.google.com.</span>
-<span style="color: #000; font-style: italic">gmail.com mail is handled by 30 alt3.gmail-smtp-in.l.google.com.</span>
-<span style="color: #000; font-style: italic">gmail.com mail is handled by 40 alt4.gmail-smtp-in.l.google.com.</span>
-<span style="color: #000; font-style: italic">gmail.com mail is handled by 5 gmail-smtp-in.l.google.com.</span>
-</pre></div>
-<h3><strong>-a</strong></h3>
-<p>Display all available information about a domain (equivalent to -t ANY)</p>
+<h3><strong>-a, --all</strong></h3>
+<p>Display all available information (equivalent to -v -t ANY)</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>example.com
 <span style="color: #000; font-style: italic">Trying &quot;example.com&quot;</span>
 <span style="color: #000; font-style: italic">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 12345</span>
@@ -72,29 +63,47 @@
 
 <span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
 <span style="color: #000; font-style: italic">example.com.            86400   IN      A       93.184.216.34</span>
+<span style="color: #000; font-style: italic">example.com.            86400   IN      AAAA    2606:2800:220:1:248:1893:25c8:1946</span>
+<span style="color: #000; font-style: italic">example.com.            86400   IN      NS      a.iana-servers.net.</span>
+<span style="color: #000; font-style: italic">example.com.            86400   IN      NS      b.iana-servers.net.</span>
+<span style="color: #000; font-style: italic">example.com.            86400   IN      SOA     ns.icann.org. noc.dns.icann.org. 2023050101 7200 3600 1209600 3600</span>
 </pre></div>
-<h3><strong>-v</strong></h3>
-<p>Enable verbose output, showing more detailed information</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>google.com
-<span style="color: #000; font-style: italic">Trying &quot;google.com&quot;</span>
-<span style="color: #000; font-style: italic">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 39508</span>
+<h3><strong>-t, --type=TYPE</strong></h3>
+<p>Specify the query type (e.g., A, MX, NS, etc.)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>MX<span style="color: #F8F8F8"> </span>gmail.com
+<span style="color: #000; font-style: italic">gmail.com mail is handled by 10 alt1.gmail-smtp-in.l.google.com.</span>
+<span style="color: #000; font-style: italic">gmail.com mail is handled by 20 alt2.gmail-smtp-in.l.google.com.</span>
+<span style="color: #000; font-style: italic">gmail.com mail is handled by 30 alt3.gmail-smtp-in.l.google.com.</span>
+<span style="color: #000; font-style: italic">gmail.com mail is handled by 40 alt4.gmail-smtp-in.l.google.com.</span>
+<span style="color: #000; font-style: italic">gmail.com mail is handled by 5 gmail-smtp-in.l.google.com.</span>
+</pre></div>
+<h3><strong>-v, --verbose</strong></h3>
+<p>Enable verbose output with more detailed information</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">Trying &quot;example.com&quot;</span>
+<span style="color: #000; font-style: italic">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 12345</span>
 <span style="color: #000; font-style: italic">;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0</span>
 
 <span style="color: #000; font-style: italic">;; QUESTION SECTION:</span>
-<span style="color: #000; font-style: italic">;google.com.                    IN      A</span>
+<span style="color: #000; font-style: italic">;example.com.                   IN      A</span>
 
 <span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
-<span style="color: #000; font-style: italic">google.com.             299     IN      A       142.250.190.78</span>
+<span style="color: #000; font-style: italic">example.com.            86400   IN      A       93.184.216.34</span>
+
+<span style="color: #000; font-style: italic">Received 56 bytes from 8.8.8.8#53 in 28 ms</span>
 </pre></div>
-<h3><strong>-4</strong></h3>
-<p>Use IPv4 queries only</p>
+<h3><strong>-4, -6</strong></h3>
+<p>Use IPv4 (-4) or IPv6 (-6) transport only</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-4<span style="color: #F8F8F8"> </span>example.com
 <span style="color: #000; font-style: italic">example.com has address 93.184.216.34</span>
+
+<span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-6<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">example.com has IPv6 address 2606:2800:220:1:248:1893:25c8:1946</span>
 </pre></div>
-<h3><strong>-6</strong></h3>
-<p>Use IPv6 queries only</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-6<span style="color: #F8F8F8"> </span>google.com
-<span style="color: #000; font-style: italic">google.com has IPv6 address 2a00:1450:4001:830::200e</span>
+<h3><strong>-C, --checking</strong></h3>
+<p>Check consistency of the DNS server's responses</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">Host example.com is consistent</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Basic Domain Lookup</h3>
@@ -104,17 +113,10 @@
 <span style="color: #000; font-style: italic">example.com mail is handled by 0 .</span>
 </pre></div>
 <h3>Reverse DNS Lookup</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>.8.8.8
-<span style="color: #000; font-style: italic">8.8.8.8.in-addr.arpa domain name pointer dns.google.</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">93</span>.184.216.34
+<span style="color: #000; font-style: italic">34.216.184.93.in-addr.arpa domain name pointer example.com.</span>
 </pre></div>
-<h3>Looking up Name Server Records</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>NS<span style="color: #F8F8F8"> </span>github.com
-<span style="color: #000; font-style: italic">github.com name server ns-1707.awsdns-21.co.uk.</span>
-<span style="color: #000; font-style: italic">github.com name server ns-421.awsdns-52.com.</span>
-<span style="color: #000; font-style: italic">github.com name server ns-520.awsdns-01.net.</span>
-<span style="color: #000; font-style: italic">github.com name server ns-1283.awsdns-32.org.</span>
-</pre></div>
-<h3>Querying a Specific DNS Server</h3>
+<h3>Querying Specific DNS Server</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>.8.8.8
 <span style="color: #000; font-style: italic">Using domain server:</span>
 <span style="color: #000; font-style: italic">Name: 8.8.8.8</span>
@@ -124,29 +126,36 @@
 <span style="color: #000; font-style: italic">example.com has address 93.184.216.34</span>
 <span style="color: #000; font-style: italic">example.com has IPv6 address 2606:2800:220:1:248:1893:25c8:1946</span>
 </pre></div>
+<h3>Looking Up Name Servers</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>host<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>NS<span style="color: #F8F8F8"> </span>google.com
+<span style="color: #000; font-style: italic">google.com name server ns1.google.com.</span>
+<span style="color: #000; font-style: italic">google.com name server ns2.google.com.</span>
+<span style="color: #000; font-style: italic">google.com name server ns3.google.com.</span>
+<span style="color: #000; font-style: italic">google.com name server ns4.google.com.</span>
+</pre></div>
 <h2>Tips</h2>
-<h3>Use Short Form for Common Queries</h3>
-<p>For quick lookups, you can omit the <code>-t</code> option and just specify the record type: <code>host -t MX example.com</code> can be shortened to <code>host MX example.com</code>.</p>
-<h3>Troubleshoot Email Delivery</h3>
-<p>Check MX records when troubleshooting email delivery issues: <code>host -t MX domain.com</code> shows mail servers for a domain.</p>
-<h3>Verify DNS Propagation</h3>
-<p>When you've updated DNS records, use <code>host</code> with different DNS servers to check if changes have propagated: <code>host example.com 8.8.8.8</code> and <code>host example.com 1.1.1.1</code>.</p>
-<h3>Combine with Other Tools</h3>
-<p>Pipe <code>host</code> output to other commands for further processing: <code>host -t A example.com | grep &quot;has address&quot; | cut -d' ' -f4</code>.</p>
+<h3>Use Short Format for Quick Lookups</h3>
+<p>For quick lookups, just use <code>host domain.com</code> without any options. This gives you the most essential information in a concise format.</p>
+<h3>Specify DNS Server for Troubleshooting</h3>
+<p>When troubleshooting DNS issues, specify a different DNS server (like Google's 8.8.8.8) to check if the problem is with your default DNS server.</p>
+<h3>Combine with grep for Filtering</h3>
+<p>Use <code>host</code> with <code>grep</code> to filter specific information, like <code>host -t ANY example.com | grep MX</code> to see only mail exchange records.</p>
+<h3>Use -t ANY for Complete Records</h3>
+<p>When you need to see all DNS records for a domain, use <code>host -t ANY domain.com</code> instead of running multiple queries for different record types.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between <code>host</code>, <code>dig</code>, and <code>nslookup</code>?</h4>
-<p>A. <code>host</code> is simpler and more concise, <code>dig</code> provides comprehensive DNS information in a structured format, and <code>nslookup</code> is an interactive tool. <code>host</code> is best for quick lookups, while <code>dig</code> is better for detailed DNS troubleshooting.</p>
-<h4>Q2. How do I check if a domain exists?</h4>
-<p>A. Run <code>host domain.com</code>. If it returns &quot;not found&quot;, the domain either doesn't exist or doesn't have DNS records configured.</p>
-<h4>Q3. Can I use <code>host</code> to check if a website is down?</h4>
-<p>A. Not directly. <code>host</code> only checks DNS records, not if a website is operational. It can tell you if DNS is resolving correctly, which is one potential cause of website unavailability.</p>
-<h4>Q4. How do I find all subdomains of a domain?</h4>
-<p>A. <code>host</code> doesn't have a built-in feature for this. You'd need to use a zone transfer (<code>host -l domain.com nameserver</code>) if allowed, or use specialized tools like <code>dnsrecon</code>.</p>
+<p>A. <code>host</code> is simpler and more user-friendly than <code>dig</code>, which provides more detailed output. <code>nslookup</code> is an older interactive tool. For quick lookups, <code>host</code> is often preferred, while <code>dig</code> is better for detailed DNS troubleshooting.</p>
+<h4>Q2. How do I check if a domain has proper mail server configuration?</h4>
+<p>A. Use <code>host -t MX domain.com</code> to check mail exchange records.</p>
+<h4>Q3. Can I use <code>host</code> to check DNS propagation?</h4>
+<p>A. Yes, use <code>host domain.com dns-server-ip</code> with different DNS servers to check if DNS changes have propagated.</p>
+<h4>Q4. How do I look up all DNS records for a domain?</h4>
+<p>A. Use <code>host -a domain.com</code> or <code>host -t ANY domain.com</code> to see all available DNS records.</p>
 <h2>References</h2>
 <p>https://linux.die.net/man/1/host</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

@@ -46,62 +46,103 @@
   <div class="content">
     <main>
       
-  <h1>git stash command</h1>
-<p>Temporarily stores modified, tracked files to save changes without committing.</p>
+  <h1>git-stash command</h1>
+<p>Stash changes in a dirty working directory for later use.</p>
 <h2>Overview</h2>
-<p><code>git stash</code> allows you to save your current work in progress without committing it, so you can switch to another task (like changing branches) and come back to it later. It's like putting your changes on a shelf temporarily. The stashed changes are stored in a stack, so you can have multiple stashes and retrieve them in any order.</p>
+<p><code>git stash</code> temporarily shelves (or stashes) changes you've made to your working copy so you can work on something else, and then come back and re-apply them later. Stashing is handy when you need to quickly switch contexts and work on something else, but you're not ready to commit your current work.</p>
 <h2>Options</h2>
-<h3><strong>git stash push</strong> (or just <strong>git stash</strong>)</h3>
-<p>Saves your local modifications and reverts the working directory to match the HEAD commit</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash
-<span style="color: #000; font-style: italic">Saved working directory and index state WIP on main: abc1234 Previous commit message</span>
+<h3><strong>-u, --include-untracked</strong></h3>
+<p>Include untracked files in the stash.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>-u
+<span style="color: #000; font-style: italic">Saved working directory and index state WIP on main: 2d4e15a Add feature X</span>
 </pre></div>
-<h3><strong>git stash list</strong></h3>
-<p>Shows all stashes you've created and their descriptions</p>
+<h3><strong>-a, --all</strong></h3>
+<p>Include both untracked and ignored files in the stash.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">Saved working directory and index state WIP on main: 2d4e15a Add feature X</span>
+</pre></div>
+<h3><strong>-p, --patch</strong></h3>
+<p>Interactively select hunks from the diff between HEAD and the working tree to be stashed.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>-p
+<span style="color: #000; font-style: italic">diff --git a/file.txt b/file.txt</span>
+<span style="color: #000; font-style: italic">index 1234567..abcdefg 100644</span>
+<span style="color: #000; font-style: italic">--- a/file.txt</span>
+<span style="color: #000; font-style: italic">+++ b/file.txt</span>
+<span style="color: #000; font-style: italic">@@ -1,4 +1,4 @@</span>
+<span style="color: #000; font-style: italic">-Old content</span>
+<span style="color: #000; font-style: italic">+New content</span>
+<span style="color: #000; font-style: italic">Stash this hunk [y,n,q,a,d,e,?]? y</span>
+<span style="color: #000; font-style: italic">Saved working directory and index state WIP on main: 2d4e15a Add feature X</span>
+</pre></div>
+<h3><strong>push [&lt;message&gt;]</strong></h3>
+<p>Save your local modifications to a new stash entry and roll them back to HEAD.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;WIP: implementing feature Y&quot;</span>
+<span style="color: #000; font-style: italic">Saved working directory and index state On main: WIP: implementing feature Y</span>
+</pre></div>
+<h3><strong>list</strong></h3>
+<p>List all stashes in the stack.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>list
-<span style="color: #000; font-style: italic">stash@{0}: WIP on main: abc1234 Previous commit message</span>
-<span style="color: #000; font-style: italic">stash@{1}: WIP on feature: def5678 Another commit message</span>
+<span style="color: #000; font-style: italic">stash@{0}: WIP on main: 2d4e15a Add feature X</span>
+<span style="color: #000; font-style: italic">stash@{1}: On main: WIP: implementing feature Y</span>
 </pre></div>
-<h3><strong>git stash apply</strong></h3>
-<p>Applies the most recent stash to your working directory without removing it from the stash list</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>apply
-<span style="color: #000; font-style: italic">On branch main</span>
-<span style="color: #000; font-style: italic">Changes not staged for commit:</span>
-<span style="color: #000; font-style: italic">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span>
-<span style="color: #000; font-style: italic">  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)</span>
-<span style="color: #000; font-style: italic">        modified:   file.txt</span>
+<h3><strong>show [&lt;stash&gt;]</strong></h3>
+<p>Show the changes recorded in the stash as a diff.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>show<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>
+<span style="color: #000; font-style: italic"> file.txt | 2 +-</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 1 insertion(+), 1 deletion(-)</span>
 </pre></div>
-<h3><strong>git stash pop</strong></h3>
-<p>Applies the most recent stash and removes it from the stash list</p>
+<h3><strong>pop [&lt;stash&gt;]</strong></h3>
+<p>Apply a stash and remove it from the stack.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>pop
 <span style="color: #000; font-style: italic">On branch main</span>
 <span style="color: #000; font-style: italic">Changes not staged for commit:</span>
 <span style="color: #000; font-style: italic">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span>
 <span style="color: #000; font-style: italic">  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)</span>
 <span style="color: #000; font-style: italic">        modified:   file.txt</span>
-<span style="color: #000; font-style: italic">Dropped refs/stash@{0} (abcd1234)</span>
+<span style="color: #000; font-style: italic">Dropped refs/stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)</span>
 </pre></div>
-<h3><strong>git stash drop</strong></h3>
-<p>Removes a specific stash from the list</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>drop<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">}</span>
-<span style="color: #000; font-style: italic">Dropped stash@{1} (def5678)</span>
-</pre></div>
-<h2>Usage Examples</h2>
-<h3>Stashing with a custom message</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Work in progress for feature X&quot;</span>
-<span style="color: #000; font-style: italic">Saved working directory and index state On main: Work in progress for feature X</span>
-</pre></div>
-<h3>Applying a specific stash</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>apply<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #CE5C00; font-weight: bold">}</span>
+<h3><strong>apply [&lt;stash&gt;]</strong></h3>
+<p>Apply a stash without removing it from the stack.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>apply<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #CE5C00; font-weight: bold">}</span>
 <span style="color: #000; font-style: italic">On branch main</span>
 <span style="color: #000; font-style: italic">Changes not staged for commit:</span>
 <span style="color: #000; font-style: italic">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span>
 <span style="color: #000; font-style: italic">  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)</span>
 <span style="color: #000; font-style: italic">        modified:   file.txt</span>
 </pre></div>
-<h3>Stashing untracked files</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>-u
-<span style="color: #000; font-style: italic">Saved working directory and index state WIP on main: abc1234 Previous commit message</span>
+<h3><strong>drop [&lt;stash&gt;]</strong></h3>
+<p>Remove a stash from the stack.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>drop<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>
+<span style="color: #000; font-style: italic">Dropped stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)</span>
+</pre></div>
+<h3><strong>clear</strong></h3>
+<p>Remove all stashes from the stack.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>clear
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic stash workflow</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>status
+<span style="color: #000; font-style: italic">On branch main</span>
+<span style="color: #000; font-style: italic">Changes not staged for commit:</span>
+<span style="color: #000; font-style: italic">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span>
+<span style="color: #000; font-style: italic">  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)</span>
+<span style="color: #000; font-style: italic">        modified:   file.txt</span>
+
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash
+<span style="color: #000; font-style: italic">Saved working directory and index state WIP on main: 2d4e15a Add feature X</span>
+
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>status
+<span style="color: #000; font-style: italic">On branch main</span>
+<span style="color: #000; font-style: italic">nothing to commit, working tree clean</span>
+
+<span style="color: #8F5902"># </span>Do<span style="color: #F8F8F8"> </span>some<span style="color: #F8F8F8"> </span>other<span style="color: #F8F8F8"> </span>work,<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span><span style="color: #F8F8F8"> </span>come<span style="color: #F8F8F8"> </span>back<span style="color: #F8F8F8"> </span>to<span style="color: #F8F8F8"> </span>your<span style="color: #F8F8F8"> </span>stashed<span style="color: #F8F8F8"> </span>changes
+<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>pop
+<span style="color: #000; font-style: italic">On branch main</span>
+<span style="color: #000; font-style: italic">Changes not staged for commit:</span>
+<span style="color: #000; font-style: italic">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span>
+<span style="color: #000; font-style: italic">  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)</span>
+<span style="color: #000; font-style: italic">        modified:   file.txt</span>
+<span style="color: #000; font-style: italic">Dropped refs/stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)</span>
 </pre></div>
 <h3>Creating a branch from a stash</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>new-feature<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>
@@ -111,33 +152,41 @@
 <span style="color: #000; font-style: italic">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span>
 <span style="color: #000; font-style: italic">  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)</span>
 <span style="color: #000; font-style: italic">        modified:   file.txt</span>
-<span style="color: #000; font-style: italic">Dropped refs/stash@{0} (abcd1234)</span>
+<span style="color: #000; font-style: italic">Dropped refs/stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)</span>
 </pre></div>
-<h2>Tips</h2>
-<h3>Include a Descriptive Message</h3>
-<p>Always use <code>-m</code> with a descriptive message when stashing to easily identify your stashes later, especially if you have multiple stashes.</p>
-<h3>Check for Conflicts</h3>
-<p>When applying a stash, be aware that conflicts might occur if the current state of your files differs significantly from when you created the stash.</p>
-<h3>Clean Up Old Stashes</h3>
-<p>Regularly use <code>git stash list</code> and <code>git stash drop</code> to manage and remove old stashes you no longer need, as they can accumulate over time.</p>
-<h3>Stash Partial Changes</h3>
-<p>Use <code>git stash push -p</code> for interactive stashing, allowing you to select specific changes to stash while keeping others in your working directory.</p>
+<h2>Tips:</h2>
+<h3>Name Your Stashes</h3>
+<p>Use descriptive messages with your stashes to make them easier to identify later:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;halfway through refactoring authentication&quot;</span>
+</pre></div>
+<h3>Stash Only Specific Files</h3>
+<p>You can stash only specific files by listing them after the command:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>push<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+</pre></div>
+<h3>View Stash Contents in Detail</h3>
+<p>For a more detailed view of a stash's contents:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>show<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>
+</pre></div>
+<h3>Create a Branch from a Stash</h3>
+<p>If you realize your stashed changes should be in their own branch:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>branch<span style="color: #F8F8F8"> </span>new-feature-branch<span style="color: #F8F8F8"> </span>stash@<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #CE5C00; font-weight: bold">}</span>
+</pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between <code>git stash apply</code> and <code>git stash pop</code>?</h4>
-<p>A. <code>git stash apply</code> applies the stash but keeps it in your stash list, while <code>git stash pop</code> applies the stash and removes it from the list.</p>
-<h4>Q2. Can I stash untracked files?</h4>
-<p>A. Yes, use <code>git stash -u</code> or <code>git stash --include-untracked</code> to include untracked files in your stash.</p>
-<h4>Q3. How do I recover a dropped stash?</h4>
-<p>A. You can use <code>git fsck --unreachable</code> to find the hash of the dropped stash, then <code>git stash apply &lt;hash&gt;</code> to recover it, but only if garbage collection hasn't run.</p>
-<h4>Q4. How long do stashes last?</h4>
-<p>A. Stashes remain until you explicitly remove them with <code>git stash drop</code> or <code>git stash clear</code>, or until they're removed by Git's garbage collection.</p>
-<h4>Q5. Can I stash changes on one branch and apply them to another?</h4>
-<p>A. Yes, you can stash changes on one branch, switch to another branch, and then apply the stash there.</p>
+<h4>Q1. What happens to my stashed changes if I switch branches?</h4>
+<p>A. Stashed changes remain available across all branches. You can stash changes on one branch and apply them on another.</p>
+<h4>Q2. Can I recover a stash after I've dropped it?</h4>
+<p>A. Yes, if you know the commit hash of the stash (shown when dropping). Use <code>git stash apply &lt;commit-hash&gt;</code> to recover it, but only if the garbage collector hasn't run.</p>
+<h4>Q3. How long do stashes persist?</h4>
+<p>A. Stashes persist indefinitely until you explicitly remove them with <code>git stash drop</code> or <code>git stash clear</code>, or until they're garbage collected (which typically doesn't happen for a long time).</p>
+<h4>Q4. What's the difference between <code>git stash pop</code> and <code>git stash apply</code>?</h4>
+<p>A. <code>git stash pop</code> applies the stash and then removes it from the stash list, while <code>git stash apply</code> only applies the stash but keeps it in the list for potential future use.</p>
+<h4>Q5. Can I stash untracked files?</h4>
+<p>A. By default, <code>git stash</code> only stashes tracked files with changes. Use <code>git stash -u</code> to include untracked files or <code>git stash -a</code> to include both untracked and ignored files.</p>
 <h2>References</h2>
 <p>https://git-scm.com/docs/git-stash</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

@@ -1,122 +1,142 @@
 # pstree command
 
-Display running processes as a tree structure.
+Display a tree of processes showing parent-child relationships.
 
 ## Overview
 
-The `pstree` command shows the relationships between processes in a tree format, making it easy to visualize process hierarchies. It displays the parent-child relationships between processes, helping users understand how processes are spawned and related to each other in the system.
+The `pstree` command displays the running processes as a tree, which makes it easy to see the parent-child relationships between processes. It provides a visual representation of how processes are connected, showing which process spawned which other processes.
 
 ## Options
 
-### **-a**
+### **-a, --arguments**
 
-Show command line arguments for each process
+Show command line arguments for each process.
 
 ```console
 $ pstree -a
 systemd
+  ├─ModemManager
   ├─NetworkManager --no-daemon
-  ├─sshd -D
-  │   └─sshd
-  │       └─sshd
-  │           └─bash
-  │               └─pstree -a
-  └─systemd-journald
+  ├─accounts-daemon
+  ├─avahi-daemon --syslog
+  │   └─avahi-daemon --syslog
+  └─sshd -D
+      └─sshd
+          └─sshd
+              └─bash
 ```
 
-### **-p**
+### **-p, --show-pids**
 
-Show PIDs (Process IDs) for each process
+Show PIDs (Process IDs) alongside process names.
 
 ```console
 $ pstree -p
-systemd(1)
-  ├─NetworkManager(687)
-  ├─sshd(1025)─┬─sshd(2156)───sshd(2189)───bash(2190)───pstree(3421)
-  └─systemd-journald(346)
+systemd(1)─┬─ModemManager(823)
+           ├─NetworkManager(824)
+           ├─accounts-daemon(825)
+           ├─avahi-daemon(826)───avahi-daemon(845)
+           └─sshd(1025)───sshd(1789)───sshd(1823)───bash(1824)
 ```
 
-### **-u**
+### **-h, --highlight-all**
 
-Show the user name for each process
-
-```console
-$ pstree -u
-systemd
-  ├─NetworkManager(root)
-  ├─sshd(root)─┬─sshd(root)───sshd(user)───bash(user)───pstree(user)
-  └─systemd-journald(root)
-```
-
-### **-h**
-
-Highlight the current process and its ancestors
+Highlight the current process and its ancestors.
 
 ```console
 $ pstree -h
-systemd
-  ├─NetworkManager
-  ├─sshd───sshd───sshd───bash───pstree
-  └─systemd-journald
+systemd─┬─ModemManager
+        ├─NetworkManager
+        ├─accounts-daemon
+        ├─avahi-daemon───avahi-daemon
+        └─sshd───sshd───sshd───bash
+```
+
+### **-u, --uid-changes**
+
+Show uid transitions (changes in user ID).
+
+```console
+$ pstree -u
+systemd─┬─ModemManager
+        ├─NetworkManager
+        ├─accounts-daemon
+        ├─avahi-daemon───avahi-daemon
+        └─sshd───sshd───sshd───bash(user)
+```
+
+### **-n, --numeric-sort**
+
+Sort processes with the same parent by PID instead of by name.
+
+```console
+$ pstree -n
+systemd─┬─ModemManager
+        ├─NetworkManager
+        ├─accounts-daemon
+        ├─avahi-daemon───avahi-daemon
+        └─sshd───sshd───sshd───bash
 ```
 
 ## Usage Examples
 
-### Combining options for detailed view
+### Display the process tree for a specific user
+
+```console
+$ pstree username
+bash───vim
+```
+
+### Display the process tree for a specific PID
+
+```console
+$ pstree 1234
+bash───firefox───Web Content
+```
+
+### Combine multiple options for detailed output
 
 ```console
 $ pstree -apu
-systemd(1,root)
-  ├─NetworkManager(687,root) --no-daemon
-  ├─sshd(1025,root) -D
-  │   └─sshd(2156,root)
-  │       └─sshd(2189,user)
-  │           └─bash(2190,user)
-  │               └─pstree(3421,user) -apu
-  └─systemd-journald(346,root)
+systemd(1)
+  ├─ModemManager(823)
+  ├─NetworkManager(824) --no-daemon
+  ├─accounts-daemon(825)
+  ├─avahi-daemon(826) --syslog
+  │   └─avahi-daemon(845) --syslog
+  └─sshd(1025) -D
+      └─sshd(1789)
+          └─sshd(1823)
+              └─bash(1824)(user)
 ```
 
-### Showing only a specific user's processes
+## Tips:
 
-```console
-$ pstree -u user
-sshd───sshd───bash───pstree
-```
+### Find Parent-Child Process Relationships
 
-### Showing processes for a specific PID
+When troubleshooting, use `pstree -p` to quickly identify which parent process spawned a particular child process. This helps in understanding process hierarchies.
 
-```console
-$ pstree -p 2190
-bash(2190)───pstree(3422)
-```
+### Identify Resource-Intensive Process Groups
 
-## Tips
+Combine with `ps` to identify not just a resource-intensive process but its entire process family: `pstree -p $(ps -eo pid,pcpu --sort=-pcpu | head -2 | tail -1 | awk '{print $1}')`
 
-### Find Parent-Child Relationships Quickly
+### Compact View for Large Systems
 
-Use `pstree -p` to quickly identify which process spawned another process, helpful for troubleshooting runaway processes or understanding application behavior.
-
-### Compact View for Large Process Trees
-
-By default, `pstree` compacts identical subtrees, showing them only once with a count. Use `-c` to disable this if you need to see every individual process.
-
-### Identify Resource-Intensive Process Hierarchies
-
-Combine with `ps` or `top` to first identify high-resource processes, then use `pstree` to see their relationship to other processes in the system.
+For systems with many processes, use `pstree -c` to get a more compact view that doesn't compress identical subtrees.
 
 ## Frequently Asked Questions
 
 #### Q1. How is `pstree` different from `ps`?
-A. While `ps` shows a flat list of processes, `pstree` displays processes in a hierarchical tree structure that shows parent-child relationships.
+A. While `ps` lists processes in a flat format, `pstree` displays them in a hierarchical tree structure showing parent-child relationships.
 
-#### Q2. Can I see process arguments with `pstree`?
-A. Yes, use the `-a` option to display command line arguments for each process.
+#### Q2. Can I see process IDs with `pstree`?
+A. Yes, use `pstree -p` to display PIDs alongside process names.
 
-#### Q3. How do I find which process started a specific process?
-A. Use `pstree -p PID` to see the process and its parent hierarchy.
+#### Q3. How do I see the process tree for a specific user?
+A. Run `pstree username` to see only processes owned by that user.
 
-#### Q4. Does `pstree` show all system processes?
-A. By default, it shows all processes. To see only processes for a specific user, use `pstree username`.
+#### Q4. Can I see command line arguments in the process tree?
+A. Yes, use `pstree -a` to display command line arguments for each process.
 
 ## References
 
@@ -124,4 +144,4 @@ https://man7.org/linux/man-pages/man1/pstree.1.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

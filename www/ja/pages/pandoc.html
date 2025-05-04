@@ -47,99 +47,92 @@
     <main>
       
   <h1>pandoc コマンド</h1>
-<p>ドキュメント形式を変換するための汎用的なコンバーター。</p>
+<p>様々な形式の文書を相互に変換します。</p>
 <h2>概要</h2>
-<p>pandoc は、あるマークアップ形式から別の形式へドキュメントを変換するためのコマンドラインツールです。Markdown、HTML、LaTeX、Word、PDF など、多数のフォーマット間での変換をサポートしています。学術論文、ブログ記事、技術文書など、さまざまな種類のドキュメントの変換に広く利用されています。</p>
+<p>Pandocは汎用的な文書変換ツールで、マークアップ形式間でファイルを変換できます。特にMarkdown、HTML、LaTeX、Word文書など多くの形式間の変換に役立ちます。Pandocは文書構造を保持し、表、脚注、参考文献などの複雑な要素も処理できます。</p>
 <h2>オプション</h2>
 <h3><strong>-f, --from=FORMAT</strong></h3>
-<p>入力ファイルのフォーマットを指定します。</p>
+<p>入力形式を指定します。指定しない場合、pandocは形式を推測しようとします。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>markdown<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>html<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.html
+<span style="color: #8F5902"># </span>MarkdownからHTMLへ変換している
 </pre></div>
 <h3><strong>-t, --to=FORMAT</strong></h3>
-<p>出力ファイルのフォーマットを指定します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>docx<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>markdown<span style="color: #F8F8F8"> </span>document.docx<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.md
+<p>出力形式を指定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>latex<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.tex
+<span style="color: #8F5902"># </span>出力形式をLaTeXに指定している
 </pre></div>
 <h3><strong>-o, --output=FILE</strong></h3>
-<p>出力ファイルを指定します。指定しない場合は標準出力に出力されます。</p>
+<p>標準出力ではなく、指定したファイルに出力します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.pdf
+<span style="color: #8F5902"># </span>出力をdocument.pdfファイルに書き込んでいる
 </pre></div>
 <h3><strong>--pdf-engine=PROGRAM</strong></h3>
-<p>PDF出力時に使用するエンジンを指定します（pdflatex, xelatex, lualatex など）。</p>
+<p>PDF出力時に使用するエンジンを指定します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>--pdf-engine<span style="color: #CE5C00; font-weight: bold">=</span>xelatex<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.pdf
-</pre></div>
-<h3><strong>-s, --standalone</strong></h3>
-<p>完全なドキュメント（ヘッダーやフッターを含む）を出力します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.html
+<span style="color: #8F5902"># </span>PDF生成にxelatexエンジンを使用している
 </pre></div>
 <h3><strong>--toc, --table-of-contents</strong></h3>
-<p>目次を生成します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>--toc<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.pdf
+<p>出力文書に自動生成された目次を含めます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>--toc<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.html
+<span style="color: #8F5902"># </span>目次を含むHTMLを生成している
 </pre></div>
-<h2>主なフォーマットの一覧</h2>
-<ul>
-<li>markdown: Markdown（標準）</li>
-<li>gfm: GitHub Flavored Markdown</li>
-<li>html: HTML</li>
-<li>latex: LaTeX</li>
-<li>docx: Microsoft Word</li>
-<li>odt: OpenDocument</li>
-<li>epub: EPUB電子書籍</li>
-<li>pdf: PDF（LaTeXエンジンを使用）</li>
-<li>rst: reStructuredText</li>
-<li>asciidoc: AsciiDoc</li>
-</ul>
+<h3><strong>-s, --standalone</strong></h3>
+<p>適切なヘッダーとフッターを含む独立した文書を生成します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.html
+<span style="color: #8F5902"># </span>完全なHTMLドキュメントを生成している
+</pre></div>
+<h3><strong>-c, --css=URL</strong></h3>
+<p>HTML出力時にCSSスタイルシートをリンクします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>style.css<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.html
+<span style="color: #8F5902"># </span>style.cssをリンクしたHTML文書を生成している
+</pre></div>
 <h2>使用例</h2>
-<h3>Markdown から HTML への変換</h3>
+<h3>MarkdownからHTMLへの変換</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.html
-<span style="color: #8F5902"># </span>Markdown<span style="color: #F8F8F8"> </span>ファイルを<span style="color: #F8F8F8"> </span>HTML<span style="color: #F8F8F8"> </span>に変換している
 </pre></div>
-<h3>Markdown から PDF への変換</h3>
+<h3>MarkdownからPDFへの変換</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.pdf
-<span style="color: #8F5902"># </span>Markdown<span style="color: #F8F8F8"> </span>ファイルを<span style="color: #F8F8F8"> </span>PDF<span style="color: #F8F8F8"> </span>に変換している
 </pre></div>
-<h3>Word から Markdown への変換</h3>
+<h3>HTMLからMarkdownへの変換</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>html<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>markdown<span style="color: #F8F8F8"> </span>https://example.com<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>example.md
+</pre></div>
+<h3>Markdownからプレゼンテーションの作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>revealjs<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>presentation.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>presentation.html
+</pre></div>
+<h3>WordからMarkdownへの変換</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>docx<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>markdown<span style="color: #F8F8F8"> </span>document.docx<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.md
-<span style="color: #8F5902"># </span>Word<span style="color: #F8F8F8"> </span>ファイルを<span style="color: #F8F8F8"> </span>Markdown<span style="color: #F8F8F8"> </span>に変換している
-</pre></div>
-<h3>目次付きの PDF 生成</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>--toc<span style="color: #F8F8F8"> </span>--toc-depth<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.pdf
-<span style="color: #8F5902"># </span>2階層までの目次を含む<span style="color: #F8F8F8"> </span>PDF<span style="color: #F8F8F8"> </span>を生成している
-</pre></div>
-<h3>スタイルシートを適用した HTML 生成</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>--css<span style="color: #CE5C00; font-weight: bold">=</span>style.css<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.html
-<span style="color: #8F5902"># </span>カスタム<span style="color: #F8F8F8"> </span>CSS<span style="color: #F8F8F8"> </span>を適用した<span style="color: #F8F8F8"> </span>HTML<span style="color: #F8F8F8"> </span>を生成している
 </pre></div>
 <h2>ヒント:</h2>
-<h3>テンプレートの活用</h3>
-<p><code>--template</code> オプションを使用して、出力形式に合わせたカスタムテンプレートを適用できます。これにより、一貫したスタイルのドキュメントを生成できます。</p>
-<h3>メタデータの追加</h3>
-<p>YAML形式のメタデータブロックをMarkdownファイルの先頭に追加することで、タイトル、著者、日付などの情報を設定できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>---
-title: ドキュメントタイトル
-author: 著者名
-<span style="color: #800080; font-weight: bold">date: 2025年4月30日</span>
-<span style="color: #800080; font-weight: bold">---</span>
+<h3>テンプレートを使用して一貫した出力を得る</h3>
+<p>Pandocは<code>--template</code>オプションでカスタムテンプレートをサポートしています。複数の変換で一貫した文書スタイルを得るために独自のテンプレートを作成できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>--template<span style="color: #CE5C00; font-weight: bold">=</span>mytemplate.tex<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.pdf
 </pre></div>
-<h3>フィルターの活用</h3>
-<p>pandocフィルターを使用すると、変換プロセスをカスタマイズできます。例えば、数式の処理や図表の番号付けなどが可能です。</p>
-<h3>PDF生成時の注意点</h3>
-<p>PDF生成には LaTeX が必要です。macOS では MacTeX、Windows では MiKTeX などをインストールしておく必要があります。</p>
+<h3>引用と参考文献の処理</h3>
+<p><code>--citeproc</code>と参考文献ファイルを使用して、引用を自動的に整形できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>--citeproc<span style="color: #F8F8F8"> </span>--bibliography<span style="color: #CE5C00; font-weight: bold">=</span>refs.bib<span style="color: #F8F8F8"> </span>paper.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>paper.pdf
+</pre></div>
+<h3>複数ファイルの一括変換</h3>
+<p>シェルのループを使用して複数のファイルを一度に変換できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>f<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>*.md<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span>pandoc<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$f</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;${</span><span style="color: #000">f</span><span style="color: #000; font-weight: bold">%.md</span><span style="color: #4E9A06">}.html&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+</pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. pandoc で PDF を生成できない場合はどうすればよいですか？</h4>
-<p>A. LaTeX エンジン（TeX Live や MacTeX など）がインストールされていることを確認してください。また、<code>--pdf-engine</code> オプションで別のエンジン（xelatex など）を試してみることも有効です。</p>
-<h4>Q2. 日本語を含むドキュメントを PDF に変換する際の注意点は？</h4>
-<p>A. <code>--pdf-engine=xelatex</code> または <code>--pdf-engine=lualatex</code> オプションを使用し、適切なフォントを指定することをお勧めします。また、YAML メタデータで <code>documentclass: bxjsarticle</code> などを指定すると良いでしょう。</p>
-<h4>Q3. 複数のファイルを一つのドキュメントに結合するには？</h4>
-<p>A. 複数のファイルを順番に指定するだけで結合できます：<code>pandoc file1.md file2.md -o combined.pdf</code></p>
-<h4>Q4. スタイルをカスタマイズするには？</h4>
-<p>A. HTML 出力には <code>--css</code> オプション、PDF/LaTeX 出力には <code>--variable</code> オプションでスタイル設定が可能です。例：<code>pandoc --variable=geometry:margin=1in document.md -o document.pdf</code></p>
-<h2>macOS での注意点</h2>
-<p>macOS で PDF 出力を行う場合は、MacTeX（https://www.tug.org/mactex/）をインストールしておく必要があります。Homebrew を使用している場合は <code>brew install --cask mactex</code> でインストールできます。また、日本語フォントの問題が発生することがあるため、<code>--pdf-engine=xelatex</code> オプションの使用をお勧めします。</p>
+<h4>Q1. pandocはどのような形式をサポートしていますか？</h4>
+<p>A. pandocはMarkdown、HTML、LaTeX、DOCX、ODT、EPUB、PDFなど多数の形式をサポートしています。<code>pandoc --list-input-formats</code>または<code>pandoc --list-output-formats</code>を実行すると、サポートされているすべての形式を確認できます。</p>
+<h4>Q2. MarkdownファイルをPDFに変換するにはどうすればよいですか？</h4>
+<p>A. <code>pandoc document.md -o document.pdf</code>を使用します。これにはLaTeXなどのPDFエンジンがシステムにインストールされている必要があります。</p>
+<h4>Q3. pandocでウェブサイトをMarkdownに変換できますか？</h4>
+<p>A. はい、URLを指定することでウェブページを変換できます：<code>pandoc -f html -t markdown https://example.com -o example.md</code></p>
+<h4>Q4. 文書に画像を含めるにはどうすればよいですか？</h4>
+<p>A. Markdownでは標準的な画像構文を使用します：<code>![キャプション](path/to/image.jpg)</code>。pandocは出力文書にこれらの画像を含めます。</p>
+<h4>Q5. 出力文書の外観をカスタマイズするにはどうすればよいですか？</h4>
+<p>A. HTML出力にはCSS（<code>-c style.css</code>）、PDF出力にはLaTeX変数（<code>-V variable=value</code>）、またはカスタムテンプレート（<code>--template=template.tex</code>）を使用できます。</p>
+<h2>macOSに関する注意点</h2>
+<p>macOSでは、pandocはHomebrewを使って<code>brew install pandoc</code>でインストールできます。PDF出力には、LaTeX配布物（MacTeX）も必要です：<code>brew install --cask mactex</code>。MacTeXは大きい（4GB以上）ので、容量が気になる場合はBasicTeXを検討してください：<code>brew install --cask basictex</code>。</p>
 <h2>参考資料</h2>
 <p>https://pandoc.org/MANUAL.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

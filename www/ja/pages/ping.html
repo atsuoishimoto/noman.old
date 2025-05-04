@@ -47,117 +47,110 @@
     <main>
       
   <h1>ping コマンド</h1>
-<p>ネットワーク上のホストに対して接続性をテストし、応答時間を測定します。</p>
+<p>ネットワークホストに ICMP ECHO_REQUEST パケットを送信して接続性を確認します。</p>
 <h2>概要</h2>
-<p><code>ping</code>コマンドは、指定したホストやIPアドレスに対してICMP（Internet Control Message Protocol）エコーリクエストパケットを送信し、応答を確認するためのツールです。ネットワーク接続の確認、応答時間（レイテンシー）の測定、ホストの到達可能性の診断に使用されます。デフォルトでは、中断されるまで継続的にパケットを送信します。</p>
+<p><code>ping</code> コマンドは、IPネットワーク上のホストへの到達性をテストするネットワーク診断ツールです。送信元ホストから宛先コンピュータへのメッセージの往復時間を測定します。pingは、ターゲットホストにインターネット制御メッセージプロトコル（ICMP）エコーリクエストパケットを送信し、ICMPエコー応答を待つことで動作します。</p>
 <h2>オプション</h2>
-<h3><strong>-c (count)</strong></h3>
-<p>送信するパケット数を指定します。指定した数のパケットを送信した後、自動的に終了します。</p>
+<h3><strong>-c 回数</strong> / <strong>--count=回数</strong></h3>
+<p>指定した回数のECHO_REQUESTパケットを送信（および受信）した後に停止します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8"> </span>google.com
-<span style="color: #000; font-style: italic">PING google.com (142.250.196.110): 56 data bytes</span>
-<span style="color: #000; font-style: italic">64 bytes from 142.250.196.110: icmp_seq=0 ttl=116 time=5.127 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 142.250.196.110: icmp_seq=1 ttl=116 time=5.834 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 142.250.196.110: icmp_seq=2 ttl=116 time=5.418 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 142.250.196.110: icmp_seq=3 ttl=116 time=5.283 ms</span>
+<span style="color: #000; font-style: italic">PING google.com (142.250.190.78) 56(84) bytes of data.</span>
+<span style="color: #000; font-style: italic">64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=1 ttl=116 time=15.2 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=2 ttl=116 time=14.8 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=3 ttl=116 time=15.0 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=4 ttl=116 time=14.9 ms</span>
 
 <span style="color: #000; font-style: italic">--- google.com ping statistics ---</span>
-<span style="color: #000; font-style: italic">4 packets transmitted, 4 packets received, 0.0% packet loss</span>
-<span style="color: #000; font-style: italic">round-trip min/avg/max/stddev = 5.127/5.416/5.834/0.255 ms</span>
+<span style="color: #000; font-style: italic">4 packets transmitted, 4 received, 0% packet loss, time 3005ms</span>
+<span style="color: #000; font-style: italic">rtt min/avg/max/mdev = 14.816/14.979/15.201/0.158 ms</span>
 </pre></div>
-<h3><strong>-i (interval)</strong></h3>
-<p>パケットを送信する間隔を秒単位で指定します。デフォルトは1秒です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>example.com
-<span style="color: #000; font-style: italic">PING example.com (93.184.216.34): 56 data bytes</span>
-<span style="color: #000; font-style: italic">64 bytes from 93.184.216.34: icmp_seq=0 ttl=56 time=15.321 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 93.184.216.34: icmp_seq=1 ttl=56 time=15.189 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 93.184.216.34: icmp_seq=2 ttl=56 time=15.244 ms</span>
+<h3><strong>-i 間隔</strong> / <strong>--interval=間隔</strong></h3>
+<p>各パケットの送信間隔を秒単位で指定します。デフォルトでは各パケット間に1秒待機します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">PING example.com (93.184.216.34) 56(84) bytes of data.</span>
+<span style="color: #000; font-style: italic">64 bytes from 93.184.216.34: icmp_seq=1 ttl=56 time=11.8 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from 93.184.216.34: icmp_seq=2 ttl=56 time=12.1 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from 93.184.216.34: icmp_seq=3 ttl=56 time=11.9 ms</span>
 
 <span style="color: #000; font-style: italic">--- example.com ping statistics ---</span>
-<span style="color: #000; font-style: italic">3 packets transmitted, 3 packets received, 0.0% packet loss</span>
-<span style="color: #000; font-style: italic">round-trip min/avg/max/stddev = 15.189/15.251/15.321/0.055 ms</span>
+<span style="color: #000; font-style: italic">3 packets transmitted, 3 received, 0% packet loss, time 4005ms</span>
+<span style="color: #000; font-style: italic">rtt min/avg/max/mdev = 11.823/11.941/12.102/0.115 ms</span>
 </pre></div>
-<h3><strong>-t (ttl)</strong></h3>
-<p>送信パケットのTTL（Time To Live）値を設定します。これはパケットが通過できるルーターの最大数を制限します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">64</span><span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>github.com
-<span style="color: #000; font-style: italic">PING github.com (140.82.121.4): 56 data bytes</span>
-<span style="color: #000; font-style: italic">64 bytes from 140.82.121.4: icmp_seq=0 ttl=64 time=120.321 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 140.82.121.4: icmp_seq=1 ttl=64 time=119.189 ms</span>
+<h3><strong>-t ttl</strong> / <strong>--ttl=ttl</strong></h3>
+<p>送信パケットのIP Time to Live（TTL）値を設定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">64</span><span style="color: #F8F8F8"> </span>github.com
+<span style="color: #000; font-style: italic">PING github.com (140.82.114.3) 56(84) bytes of data.</span>
+<span style="color: #000; font-style: italic">64 bytes from 140.82.114.3: icmp_seq=1 ttl=64 time=29.7 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from 140.82.114.3: icmp_seq=2 ttl=64 time=29.5 ms</span>
 
 <span style="color: #000; font-style: italic">--- github.com ping statistics ---</span>
-<span style="color: #000; font-style: italic">2 packets transmitted, 2 packets received, 0.0% packet loss</span>
-<span style="color: #000; font-style: italic">round-trip min/avg/max/stddev = 119.189/119.755/120.321/0.566 ms</span>
+<span style="color: #000; font-style: italic">2 packets transmitted, 2 received, 0% packet loss, time 1002ms</span>
+<span style="color: #000; font-style: italic">rtt min/avg/max/mdev = 29.532/29.636/29.741/0.104 ms</span>
 </pre></div>
-<h3><strong>-s (size)</strong></h3>
-<p>送信するパケットのサイズをバイト単位で指定します。デフォルトは56バイトです。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>.8.8.8
-<span style="color: #000; font-style: italic">PING 8.8.8.8 (8.8.8.8): 100 data bytes</span>
-<span style="color: #000; font-style: italic">108 bytes from 8.8.8.8: icmp_seq=0 ttl=116 time=4.127 ms</span>
-<span style="color: #000; font-style: italic">108 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=4.834 ms</span>
+<h3><strong>-s パケットサイズ</strong> / <strong>--size=パケットサイズ</strong></h3>
+<p>送信するデータバイト数を指定します。デフォルトは56バイトで、8バイトのICMPヘッダーデータと組み合わせると64バイトのICMPデータになります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span>cloudflare.com
+<span style="color: #000; font-style: italic">PING cloudflare.com (104.16.132.229) 100(128) bytes of data.</span>
+<span style="color: #000; font-style: italic">108 bytes from 104.16.132.229: icmp_seq=1 ttl=57 time=10.3 ms</span>
+<span style="color: #000; font-style: italic">108 bytes from 104.16.132.229: icmp_seq=2 ttl=57 time=10.1 ms</span>
 
-<span style="color: #000; font-style: italic">--- 8.8.8.8 ping statistics ---</span>
-<span style="color: #000; font-style: italic">2 packets transmitted, 2 packets received, 0.0% packet loss</span>
-<span style="color: #000; font-style: italic">round-trip min/avg/max/stddev = 4.127/4.481/4.834/0.354 ms</span>
+<span style="color: #000; font-style: italic">--- cloudflare.com ping statistics ---</span>
+<span style="color: #000; font-style: italic">2 packets transmitted, 2 received, 0% packet loss, time 1001ms</span>
+<span style="color: #000; font-style: italic">rtt min/avg/max/mdev = 10.143/10.245/10.348/0.102 ms</span>
 </pre></div>
 <h2>使用例</h2>
 <h3>基本的な接続テスト</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>google.com
-<span style="color: #000; font-style: italic">PING google.com (142.250.196.110): 56 data bytes</span>
-<span style="color: #000; font-style: italic">64 bytes from 142.250.196.110: icmp_seq=0 ttl=116 time=5.127 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 142.250.196.110: icmp_seq=1 ttl=116 time=5.834 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 142.250.196.110: icmp_seq=2 ttl=116 time=5.418 ms</span>
+<span style="color: #000; font-style: italic">PING google.com (142.250.190.78) 56(84) bytes of data.</span>
+<span style="color: #000; font-style: italic">64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=1 ttl=116 time=15.2 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=2 ttl=116 time=14.8 ms</span>
 <span style="color: #000; font-style: italic">^C</span>
 <span style="color: #000; font-style: italic">--- google.com ping statistics ---</span>
-<span style="color: #000; font-style: italic">3 packets transmitted, 3 packets received, 0.0% packet loss</span>
-<span style="color: #000; font-style: italic">round-trip min/avg/max/stddev = 5.127/5.460/5.834/0.294 ms</span>
+<span style="color: #000; font-style: italic">2 packets transmitted, 2 received, 0% packet loss, time 1002ms</span>
+<span style="color: #000; font-style: italic">rtt min/avg/max/mdev = 14.816/15.008/15.201/0.192 ms</span>
 </pre></div>
-<h3>IPアドレスへのping</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>.8.8.8
-<span style="color: #000; font-style: italic">PING 8.8.8.8 (8.8.8.8): 56 data bytes</span>
-<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=0 ttl=116 time=4.127 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=4.834 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=4.418 ms</span>
+<h3>ネットワークの遅延確認</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>.8.8.8
+<span style="color: #000; font-style: italic">PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.</span>
+<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=9.82 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=9.75 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=3 ttl=116 time=9.79 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=4 ttl=116 time=9.86 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=5 ttl=116 time=9.80 ms</span>
 
 <span style="color: #000; font-style: italic">--- 8.8.8.8 ping statistics ---</span>
-<span style="color: #000; font-style: italic">3 packets transmitted, 3 packets received, 0.0% packet loss</span>
-<span style="color: #000; font-style: italic">round-trip min/avg/max/stddev = 4.127/4.460/4.834/0.294 ms</span>
-</pre></div>
-<h3>パケットロスの確認</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>unstable-server.example
-<span style="color: #000; font-style: italic">PING unstable-server.example (192.168.1.100): 56 data bytes</span>
-<span style="color: #000; font-style: italic">64 bytes from 192.168.1.100: icmp_seq=0 ttl=64 time=2.127 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 192.168.1.100: icmp_seq=1 ttl=64 time=2.834 ms</span>
-<span style="color: #000; font-style: italic">Request timeout for icmp_seq 2</span>
-<span style="color: #000; font-style: italic">64 bytes from 192.168.1.100: icmp_seq=3 ttl=64 time=2.418 ms</span>
-<span style="color: #000; font-style: italic">Request timeout for icmp_seq 4</span>
-
-<span style="color: #000; font-style: italic">--- unstable-server.example ping statistics ---</span>
-<span style="color: #000; font-style: italic">10 packets transmitted, 8 packets received, 20.0% packet loss</span>
-<span style="color: #000; font-style: italic">round-trip min/avg/max/stddev = 2.127/2.460/2.834/0.294 ms</span>
+<span style="color: #000; font-style: italic">5 packets transmitted, 5 received, 0% packet loss, time 4006ms</span>
+<span style="color: #000; font-style: italic">rtt min/avg/max/mdev = 9.752/9.804/9.861/0.039 ms</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>Ctrl+Cで終了</h3>
-<p>pingは指定した回数（-cオプション）がない場合、手動で停止するまで実行され続けます。Ctrl+Cを押すことで実行を中断できます。</p>
-<h3>パケットロスの確認</h3>
-<p>パケットロスの割合は、ネットワークの安定性を示す重要な指標です。0%が理想的で、高いパケットロスはネットワークの問題を示しています。</p>
-<h3>応答時間の解釈</h3>
-<p>一般的に、ローカルネットワークでは1ms未満、同じ地域内のサーバーでは10-20ms、国際的な接続では100ms以上の応答時間が一般的です。応答時間が長いほど、接続が遅いことを意味します。</p>
-<h3>macOSでの注意点</h3>
-<p>macOSでは、pingコマンドのオプションがLinuxとは若干異なる場合があります。例えば、永続的にpingを実行する<code>-t</code>オプション（Windowsで使用）はmacOSでは使用できず、代わりに<code>-c</code>オプションで回数を指定するか、オプションなしで実行して手動で停止する必要があります。</p>
+<h3>継続的なping</h3>
+<p>デフォルトでは、pingはCtrl+Cで中断されるまで継続します。<code>-c</code>オプションを使用して送信するパケット数を制限できます。</p>
+<h3>ネットワーク問題のトラブルシューティング</h3>
+<p>pingが失敗した場合、ネットワーク接続の問題を示している可能性があります。ネットワーク接続、DNS設定、またはファイアウォールがICMPパケットをブロックしていないか確認してください。</p>
+<h3>ネットワーク品質の測定</h3>
+<p>pingを使用してパケットロスと遅延を測定できます。高い遅延（100ms以上）やパケットロスは、潜在的なネットワーク問題を示しています。</p>
+<h3>フラッドping</h3>
+<p><code>-f</code>（フラッド）オプションを使用すると、可能な限り速くパケットを送信できますが、root権限が必要であり、ネットワークに負荷をかける可能性があるため注意して使用してください。</p>
 <h2>よくある質問</h2>
-<h4>Q1. pingが通らない場合は何を意味していますか？</h4>
-<p>A. ホストが応答していない、ファイアウォールがICMPパケットをブロックしている、ネットワーク接続に問題がある、またはホストが存在しない可能性があります。</p>
-<h4>Q2. pingの応答時間は何を示していますか？</h4>
-<p>A. 応答時間（ミリ秒単位）は、パケットが送信先に到達して戻ってくるまでの時間を示します。これはネットワークの遅延（レイテンシー）の指標となります。</p>
-<h4>Q3. pingコマンドを永続的に実行するにはどうすればよいですか？</h4>
-<p>A. macOSやLinuxでは、オプションなしで<code>ping</code>を実行すると、Ctrl+Cで停止するまで継続的に実行されます。特定の回数だけ実行するには<code>-c</code>オプションを使用します。</p>
-<h4>Q4. pingでIPv6アドレスをテストするにはどうすればよいですか？</h4>
-<p>A. macOSでは<code>ping6</code>コマンドまたは<code>ping -6</code>を使用してIPv6アドレスをテストできます。</p>
-<h2>参考</h2>
+<h4>Q1. 「Request timeout」や「Destination host unreachable」とはどういう意味ですか？</h4>
+<p>A. これらのメッセージは、ターゲットホストが応答していないことを示しています。ホストがオフラインである、ネットワークに問題がある、またはファイアウォールがICMPパケットをブロックしている可能性があります。</p>
+<h4>Q2. ping結果をどのように解釈すればよいですか？</h4>
+<p>A. 往復時間（RTT）とパケットロスの割合を確認してください。RTT値が低いほど接続状態が良いことを示します。パケットロスがある場合はネットワークに問題がある可能性があります。</p>
+<h4>Q3. pingで特定のポートが開いているかどうかを確認できますか？</h4>
+<p>A. いいえ、pingはICMPを使用した基本的な接続テストのみを行います。特定のポートが開いているかテストするには、<code>telnet</code>や<code>nc</code>（netcat）などのツールを使用してください。</p>
+<h4>Q4. なぜpingが予想とは異なるIPアドレスに解決されることがありますか？</h4>
+<p>A. これはDNSロードバランシング、CDN（コンテンツ配信ネットワーク）、またはドメイン名に関連付けられた複数のIPアドレスが原因で発生する可能性があります。</p>
+<h2>macOSでの注意点</h2>
+<p>macOSでは、一部のpingオプションがLinuxとは異なります：</p>
+<ul>
+<li><code>-i</code>オプションで1秒未満の間隔を指定するにはroot権限が必要です</li>
+<li><code>--count</code>の長いオプション形式はありません。代わりに<code>-c</code>を使用してください</li>
+<li>フラッドping（<code>-f</code>）オプションはroot権限が必要で、Linuxとは動作が異なります</li>
+</ul>
+<h2>参考資料</h2>
 <p>https://linux.die.net/man/8/ping</p>
 <h2>改訂履歴</h2>
-<ul>
-<li>2025/04/30 初版作成</li>
-</ul>
+<p>2025/05/04 初版作成</p>
 
 
     </main>

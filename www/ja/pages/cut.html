@@ -47,80 +47,103 @@
     <main>
       
   <h1>cut コマンド</h1>
-<p>テキストファイルから特定の列や文字を抽出するためのコマンド。</p>
+<p>各ファイルの行から選択した部分を抽出し、標準出力に出力します。</p>
 <h2>概要</h2>
-<p><code>cut</code> コマンドは、テキストファイルやパイプからの入力から特定の部分（列や文字）を切り出すために使用します。区切り文字で分けられたフィールド（列）や文字位置を指定して必要な部分だけを抽出できるため、ログファイルの解析やCSVファイルの処理などに便利です。</p>
+<p><code>cut</code> コマンドは、入力ファイルや標準入力の各行から特定のセクションを抽出するために使用されます。文字位置、バイト位置、または区切り文字で区切られたフィールドで切り取ることができます。これは、CSVやTSVなどの構造化されたテキストファイルの処理や、コマンド出力から特定の列を抽出する場合に特に便利です。</p>
 <h2>オプション</h2>
-<h3><strong>-f, --fields=LIST</strong></h3>
-<p>指定したフィールド（列）を抽出します。デフォルトの区切り文字はタブです。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;user1:password1:1000:John Doe&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>,4<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;:&quot;</span>
-<span style="color: #000; font-style: italic">user1:John Doe</span>
-</pre></div>
-<h3><strong>-d, --delimiter=DELIM</strong></h3>
-<p>フィールドの区切り文字を指定します。デフォルトはタブです。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;apple,orange,banana&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;,&quot;</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
-<span style="color: #000; font-style: italic">orange</span>
+<h3><strong>-b, --bytes=LIST</strong></h3>
+<p>各行から特定のバイトを抽出します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-3
+<span style="color: #000; font-style: italic">Hel</span>
 </pre></div>
 <h3><strong>-c, --characters=LIST</strong></h3>
-<p>指定した文字位置の文字を抽出します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, World!&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-5
+<p>各行から特定の文字を抽出します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-5
 <span style="color: #000; font-style: italic">Hello</span>
 </pre></div>
+<h3><strong>-d, --delimiter=DELIM</strong></h3>
+<p>デフォルトのタブの代わりにDELIMをフィールド区切り文字として使用します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;name,age,city&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d,<span style="color: #F8F8F8"> </span>-f2
+<span style="color: #000; font-style: italic">age</span>
+</pre></div>
+<h3><strong>-f, --fields=LIST</strong></h3>
+<p>各行で指定されたフィールドのみを選択します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;name:age:city&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d:<span style="color: #F8F8F8"> </span>-f1,3
+<span style="color: #000; font-style: italic">name:city</span>
+</pre></div>
+<h3><strong>-s, --only-delimited</strong></h3>
+<p>区切り文字を含まない行を出力しません</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;field1,field2,field3\nno delimiter line\nother,fields,here\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d,<span style="color: #F8F8F8"> </span>-f1<span style="color: #F8F8F8"> </span>-s
+<span style="color: #000; font-style: italic">field1</span>
+<span style="color: #000; font-style: italic">other</span>
+</pre></div>
 <h3><strong>--complement</strong></h3>
-<p>指定したフィールドや文字以外の部分を抽出します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;user1:password1:1000:John Doe&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;:&quot;</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>--complement
-<span style="color: #000; font-style: italic">user1:1000:John Doe</span>
+<p>選択されたバイト、文字、またはフィールドのセットを補完します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;field1,field2,field3&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d,<span style="color: #F8F8F8"> </span>-f1<span style="color: #F8F8F8"> </span>--complement
+<span style="color: #000; font-style: italic">field2,field3</span>
+</pre></div>
+<h3><strong>--output-delimiter=STRING</strong></h3>
+<p>入力区切り文字の代わりにSTRINGを出力区切り文字として使用します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;field1,field2,field3&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d,<span style="color: #F8F8F8"> </span>-f1,3<span style="color: #F8F8F8"> </span>--output-delimiter<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot; | &quot;</span>
+<span style="color: #000; font-style: italic">field1 | field3</span>
 </pre></div>
 <h2>使用例</h2>
 <h3>CSVファイルから特定の列を抽出する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.csv
-<span style="color: #000; font-style: italic">名前,年齢,職業</span>
-<span style="color: #000; font-style: italic">田中,25,エンジニア</span>
-<span style="color: #000; font-style: italic">佐藤,30,デザイナー</span>
-<span style="color: #000; font-style: italic">鈴木,28,マーケター</span>
-
-<span style="color: #8F5902">$ </span>cut<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;,&quot;</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>,3<span style="color: #F8F8F8"> </span>data.csv
-<span style="color: #000; font-style: italic">名前,職業</span>
-<span style="color: #000; font-style: italic">田中,エンジニア</span>
-<span style="color: #000; font-style: italic">佐藤,デザイナー</span>
-<span style="color: #000; font-style: italic">鈴木,マーケター</span>
+<span style="color: #000; font-style: italic">name,age,city,country</span>
+<span style="color: #000; font-style: italic">John,25,New York,USA</span>
+<span style="color: #000; font-style: italic">Alice,30,London,UK</span>
+<span style="color: #8F5902">$ </span>cut<span style="color: #F8F8F8"> </span>-d,<span style="color: #F8F8F8"> </span>-f1,3<span style="color: #F8F8F8"> </span>data.csv
+<span style="color: #000; font-style: italic">name,city</span>
+<span style="color: #000; font-style: italic">John,New York</span>
+<span style="color: #000; font-style: italic">Alice,London</span>
 </pre></div>
-<h3>ログファイルから特定の情報を抽出する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>access.log
-<span style="color: #000; font-style: italic">192.168.1.1 - - [30/Apr/2025:10:00:15 +0900] &quot;GET /index.html HTTP/1.1&quot; 200 2326</span>
-<span style="color: #000; font-style: italic">192.168.1.2 - - [30/Apr/2025:10:01:20 +0900] &quot;POST /login HTTP/1.1&quot; 302 0</span>
-<span style="color: #000; font-style: italic">192.168.1.3 - - [30/Apr/2025:10:02:35 +0900] &quot;GET /dashboard HTTP/1.1&quot; 200 5432</span>
-
-<span style="color: #8F5902">$ </span>cut<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot; &quot;</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>,7<span style="color: #F8F8F8"> </span>access.log
-<span style="color: #000; font-style: italic">192.168.1.1 /index.html</span>
-<span style="color: #000; font-style: italic">192.168.1.2 /login</span>
-<span style="color: #000; font-style: italic">192.168.1.3 /dashboard</span>
+<h3>固定幅データから文字を抽出する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>fixed.txt
+<span style="color: #000; font-style: italic">ABCDEFGHIJKLMNOPQRSTUVWXYZ</span>
+<span style="color: #000; font-style: italic">abcdefghijklmnopqrstuvwxyz</span>
+<span style="color: #8F5902">$ </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>-10<span style="color: #F8F8F8"> </span>fixed.txt
+<span style="color: #000; font-style: italic">EFGHIJ</span>
+<span style="color: #000; font-style: italic">efghij</span>
 </pre></div>
-<h3>文字列の一部を抽出する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2025-04-30&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-4
-<span style="color: #000; font-style: italic">2025</span>
+<h3>コマンド出力を処理する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-5,27-
+<span style="color: #000; font-style: italic">  PID COMMAND</span>
+<span style="color: #000; font-style: italic">    1 /sbin/init</span>
+<span style="color: #000; font-style: italic">  123 bash</span>
+<span style="color: #000; font-style: italic">  456 ps</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>複数のフィールドを指定する方法</h3>
-<p>フィールドは単一の数字（例：<code>-f 1</code>）、範囲（例：<code>-f 1-3</code>）、またはカンマ区切りのリスト（例：<code>-f 1,3,5</code>）で指定できます。これらを組み合わせることも可能です（例：<code>-f 1-3,5,7-9</code>）。</p>
-<h3>区切り文字が連続する場合の注意点</h3>
-<p>デフォルトでは、連続する区切り文字は別々のフィールドとして扱われます。<code>-s</code>オプションを使用すると、連続する区切り文字を1つとして扱います。</p>
-<h3>パイプラインでの活用</h3>
-<p><code>cut</code>は他のコマンドと組み合わせて使うと非常に強力です。例えば、<code>grep</code>で特定の行を抽出した後に<code>cut</code>で必要な列だけを取り出すといった使い方ができます。</p>
+<h3>LISTでの範囲指定</h3>
+<p>文字やフィールドの位置を指定する際には、以下の形式が使えます：</p>
+<ul>
+<li>N: N番目の位置</li>
+<li>N-: N番目の位置から最後まで</li>
+<li>N-M: N番目からM番目の位置まで</li>
+<li>-M: 最初からM番目の位置まで</li>
+</ul>
+<h3>他のコマンドとの組み合わせ</h3>
+<p><code>cut</code>は<code>grep</code>、<code>sort</code>、<code>uniq</code>などの他のコマンドとパイプラインで組み合わせて、テキストデータを処理・フィルタリングするのに適しています。</p>
+<h3>区切り文字がない場合の処理</h3>
+<p>デフォルトでは、<code>cut</code>は区切り文字を含まない行全体を出力します。必要に応じて<code>-s</code>を使用してこれらの行を抑制できます。</p>
+<h3>マルチバイト文字の処理</h3>
+<p>マルチバイト文字（UTF-8など）で<code>-c</code>を使用する場合は注意が必要です。このような場合は、適切なバイト範囲で<code>-b</code>を使用することを検討してください。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>cut</code>と<code>awk</code>の違いは何ですか？</h4>
-<p>A. <code>cut</code>はシンプルな列や文字の抽出に特化していますが、<code>awk</code>はより複雑なテキスト処理（計算や条件分岐など）ができます。単純な列抽出なら<code>cut</code>の方が簡潔に書けます。</p>
-<h4>Q2. 区切り文字に複数の文字を指定できますか？</h4>
-<p>A. いいえ、<code>cut</code>では区切り文字は1文字のみ指定できます。複数文字の区切りが必要な場合は、<code>awk</code>や<code>sed</code>などの他のコマンドを使用してください。</p>
-<h4>Q3. 出力の区切り文字を変更することはできますか？</h4>
-<p>A. いいえ、<code>cut</code>では出力の区切り文字を変更することはできません。入力と同じ区切り文字が使用されます。出力形式を変更したい場合は、<code>awk</code>などの他のコマンドを使用してください。</p>
-<h4>Q4. 特定の列を除外する方法はありますか？</h4>
-<p>A. <code>--complement</code>オプションを使用すると、指定した列以外のすべての列を表示できます。</p>
+<h4>Q1. <code>-c</code>と<code>-b</code>の違いは何ですか？</h4>
+<p>A. <code>-c</code>は文字位置で選択し、<code>-b</code>はバイト位置で選択します。マルチバイト文字（UTF-8エンコーディングなど）では動作が異なります。</p>
+<h4>Q2. 複数のフィールドを抽出するにはどうすればよいですか？</h4>
+<p>A. <code>-f</code>オプションでカンマ区切りの値を使用します。例：<code>cut -f1,3,5</code></p>
+<h4>Q3. 出力区切り文字を変更できますか？</h4>
+<p>A. はい、<code>--output-delimiter=STRING</code>を使用して異なる出力区切り文字を指定できます。</p>
+<h4>Q4. 特定のフィールド以外のすべてを抽出するにはどうすればよいですか？</h4>
+<p>A. <code>--complement</code>オプションを<code>-f</code>と一緒に使用して、指定されたフィールド以外のすべてのフィールドを選択します。</p>
+<h4>Q5. なぜcutは可変幅フィールドでうまく動作しないのですか？</h4>
+<p>A. <code>cut</code>は固定幅フィールドまたは区切り文字で区切られたフィールド用に設計されています。可変幅の処理には、代わりに<code>awk</code>の使用を検討してください。</p>
 <h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/cut-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

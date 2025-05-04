@@ -1,123 +1,171 @@
 # docker run コマンド
 
-新しいコンテナを作成し、指定されたイメージから起動するコマンドです。
+指定したイメージから新しいコンテナを作成して起動します。
 
 ## 概要
 
-`docker run` コマンドは、新しいコンテナを作成し、指定されたイメージから起動します。このコマンドは、イメージのダウンロード（必要な場合）、コンテナの作成、起動、そして指定されたコマンドの実行までを一度に行います。開発環境の構築、アプリケーションのテスト、本番環境へのデプロイなど、Dockerを使用する際の基本的なコマンドです。
+`docker run` コマンドは、Dockerイメージからコンテナを作成して起動します。このコマンドは `docker create` と `docker start` の機能を1つのコマンドに統合したものです。コンテナを起動する際に、ランタイムパラメータ、環境変数、ネットワーク設定、ボリュームマウントなどの設定オプションを指定することができます。
 
 ## オプション
 
-### **-i, --interactive**
+### **-d, --detach**
 
-コンテナの標準入力を開いたままにします。通常は `-t` オプションと組み合わせて使用します。
+コンテナをバックグラウンド（デタッチモード）で実行し、コンテナIDを表示します
 
 ```console
-$ docker run -i ubuntu
-# 標準入力が開いたままになる
+$ docker run -d nginx
+3a41f9da42324b98a5f34d8c5c09c319f7e8e99cf24c573fc603ed52b11c42e7
+```
+
+### **-i, --interactive**
+
+アタッチされていなくても標準入力（STDIN）を開いたままにし、対話型セッションを可能にします
+
+```console
+$ docker run -i ubuntu /bin/bash
+root@7c3bfd21a2a4:/#
 ```
 
 ### **-t, --tty**
 
-疑似TTY（ターミナル）を割り当てます。対話型シェルを使用する場合に便利です。
+疑似TTYを割り当てます。通常は対話型ターミナルセッション用に `-i` と一緒に使用します
 
 ```console
-$ docker run -it ubuntu bash
-root@f8d9c7b6a5:/# ls
+$ docker run -it ubuntu
+root@7c3bfd21a2a4:/# ls
 bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+```
+
+### **-p, --publish [ホストポート]:[コンテナポート]**
+
+コンテナのポートをホストに公開します
+
+```console
+$ docker run -p 8080:80 nginx
+```
+
+### **-v, --volume [ホストパス]:[コンテナパス]**
+
+ホストからコンテナにボリュームをバインドマウントします
+
+```console
+$ docker run -v /host/path:/container/path nginx
+```
+
+### **-e, --env [キー]=[値]**
+
+コンテナ内に環境変数を設定します
+
+```console
+$ docker run -e DB_HOST=localhost -e DB_PORT=5432 postgres
+```
+
+### **--name [名前]**
+
+コンテナに名前を割り当てます
+
+```console
+$ docker run --name my-web-server nginx
 ```
 
 ### **--rm**
 
-コンテナ終了時に自動的に削除します。一時的な作業やテストに便利です。
+コンテナ終了時に自動的に削除します
 
 ```console
 $ docker run --rm alpine echo "Hello, World!"
 Hello, World!
-# コンテナは実行後に自動的に削除される
+```
+
+### **--network [ネットワーク]**
+
+コンテナをネットワークに接続します
+
+```console
+$ docker run --network my-network nginx
 ```
 
 ## 使用例
 
-### 対話型シェルの起動
+### ポートマッピングを行いデタッチモードでコンテナを実行
 
 ```console
-$ docker run -it ubuntu bash
-root@f8d9c7b6a5:/# ls
-bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+$ docker run -d -p 8080:80 --name web-server nginx
+3a41f9da42324b98a5f34d8c5c09c319f7e8e99cf24c573fc603ed52b11c42e7
 ```
 
-このコマンドはUbuntuコンテナを対話モードで起動し、bashシェルを実行している。
-
-### バックグラウンドでのWebサーバー起動
+### コンテナ内で対話型シェルを実行
 
 ```console
-$ docker run -d -p 8080:80 --name my-web-server nginx
-b8a5f8d9c9e8f7d6e5c4b3a2
+$ docker run -it --rm ubuntu bash
+root@7c3bfd21a2a4:/# echo "I'm in a container"
+I'm in a container
+root@7c3bfd21a2a4:/# exit
 ```
 
-このコマンドはnginxコンテナをバックグラウンドで起動し、ホストの8080ポートをコンテナの80ポートにマッピングしている。
-
-### 一時的なコンテナでのコマンド実行
+### ボリュームマウントと環境変数を使用してコンテナを実行
 
 ```console
-$ docker run --rm alpine ls -la
-total 64
-drwxr-xr-x    1 root     root          4096 Apr 30 12:34 .
-drwxr-xr-x    1 root     root          4096 Apr 30 12:34 ..
--rwxr-xr-x    1 root     root             0 Apr 30 12:34 .dockerenv
-drwxr-xr-x    2 root     root          4096 Mar 23 00:00 bin
-drwxr-xr-x    5 root     root           340 Apr 30 12:34 dev
-...
+$ docker run -d \
+  --name postgres-db \
+  -e POSTGRES_PASSWORD=mysecretpassword \
+  -e POSTGRES_USER=myuser \
+  -v pgdata:/var/lib/postgresql/data \
+  -p 5432:5432 \
+  postgres:13
 ```
-
-このコマンドはAlpineコンテナを起動してls -laコマンドを実行し、終了後にコンテナを削除している。
 
 ## ヒント:
 
-### コンテナの名前付け
+### 永続データには名前付きボリュームを使用する
 
-`--name` オプションを使用して、コンテナに分かりやすい名前を付けると、後で参照しやすくなります。
-
-```console
-$ docker run --name my-app-container nginx
-```
-
-### 環境変数の設定
-
-`-e` または `--env` オプションを使用して、コンテナ内で使用する環境変数を設定できます。
+特定のホストパスにバインドする代わりに、名前付きボリュームを使用すると移植性が向上します：
 
 ```console
-$ docker run -e DB_HOST=localhost -e DB_PORT=5432 my-app
+$ docker run -v mydata:/app/data nginx
 ```
 
-### ボリュームマウントの活用
+### コンテナのリソースを制限する
 
-開発中は `-v` オプションを使ってソースコードをマウントすると、コンテナを再ビルドせずに変更を反映できます。
+`--memory` と `--cpus` を使用してコンテナのリソース使用量を制限できます：
 
 ```console
-$ docker run -v $(pwd):/app my-dev-image
+$ docker run --memory=512m --cpus=0.5 nginx
 ```
+
+### 複数の環境変数にはファイルを使用する
+
+多くの環境変数が必要なコンテナには、環境変数ファイルを使用します：
+
+```console
+$ docker run --env-file ./env.list nginx
+```
+
+### コンテナを自動的にクリーンアップする
+
+短時間だけ実行するコンテナには常に `--rm` を使用して、停止したコンテナが蓄積するのを防ぎましょう。
 
 ## よくある質問
 
-#### Q1. `-i` と `-t` オプションの違いは何ですか？
-A. `-i`（interactive）はコンテナの標準入力を開いたままにし、`-t`（tty）は疑似ターミナルを割り当てます。通常は `-it` として一緒に使用し、対話型シェルを実現します。
+#### Q1. `docker run` と `docker start` の違いは何ですか？
+A. `docker run` はイメージから新しいコンテナを作成して起動しますが、`docker start` は既に存在する停止中のコンテナを再起動します。
 
-#### Q2. コンテナを一時的に使用するにはどうすればよいですか？
-A. `--rm` オプションを使用すると、コンテナが停止した後に自動的に削除されます。一時的な作業やテストに便利です。
+#### Q2. コンテナをバックグラウンドで実行するにはどうすればよいですか？
+A. `-d` または `--detach` フラグを使用します：`docker run -d nginx`
 
-#### Q3. コンテナ内で実行されるデフォルトのコマンドを上書きするにはどうすればよいですか？
-A. `docker run` コマンドの最後にコマンドを指定することで、イメージのデフォルトコマンドを上書きできます。例：`docker run ubuntu echo "Hello"`
+#### Q3. 実行中のコンテナのシェルにアクセスするにはどうすればよいですか？
+A. 新しいコンテナをシェル付きで起動するには `docker run -it [イメージ] bash` を、既に実行中のコンテナのシェルにアクセスするには `docker exec -it [コンテナID] bash` を使用します。
 
-#### Q4. macOSでボリュームマウントが遅い場合はどうすればよいですか？
-A. macOSでは、特に大量のファイルを扱う場合、ボリュームマウントのパフォーマンスが低下することがあります。Docker Desktop for Macの設定で、ファイル共有の最適化オプションを確認するか、Docker Volumeを使用することを検討してください。
+#### Q4. 複数のポートを公開するにはどうすればよいですか？
+A. 複数の `-p` フラグを使用します：`docker run -p 80:80 -p 443:443 nginx`
 
-## 参考文献
+#### Q5. 特定のユーザーでコンテナを実行するにはどうすればよいですか？
+A. `--user` フラグを使用します：`docker run --user 1000:1000 nginx`
+
+## 参考資料
 
 https://docs.docker.com/engine/reference/commandline/run/
 
 ## 改訂履歴
 
-- 2025/04/30 -i, -t, --rmオプションの詳細説明を追加し、使用例を更新
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

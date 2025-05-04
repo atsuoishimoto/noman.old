@@ -4,116 +4,121 @@
 
 ## 概要
 
-`hostname` コマンドは、現在のシステムのホスト名（コンピュータ名）を表示したり、管理者権限で実行した場合はホスト名を変更したりするために使用します。ホスト名はネットワーク上でコンピュータを識別するために使用される名前です。
+`hostname` コマンドは、システムの現在のホスト名を表示または設定します。ホスト名とは、ネットワーク上でデバイスが認識される名前のことです。このコマンドは、スクリプト内で現在のマシンを識別する場合や、複数のシステムで作業する際に役立ちます。
 
 ## オプション
 
-### **-s (--short)**
+### **-s, --short**
 
-短いホスト名のみを表示します（ドメイン名を含まない）。
+ドメイン情報を除いた短いホスト名を表示します。
 
 ```console
 $ hostname -s
-macbook
+mycomputer
 ```
 
-### **-f (--fqdn, --long)**
+### **-f, --fqdn, --long**
 
 完全修飾ドメイン名（FQDN）を表示します。
 
 ```console
 $ hostname -f
-macbook.local
+mycomputer.example.com
 ```
 
-### **-i (--ip-address)**
+### **-d, --domain**
 
-ホスト名に関連付けられたIPアドレスを表示します。
-
-```console
-$ hostname -i
-192.168.1.5
-```
-
-### **-d (--domain)**
-
-DNSドメイン名のみを表示します。
+DNSドメイン名を表示します。
 
 ```console
 $ hostname -d
-local
+example.com
+```
+
+### **-i, --ip-address**
+
+ホストのIPアドレスを表示します。
+
+```console
+$ hostname -i
+192.168.1.100
+```
+
+### **-I, --all-ip-addresses**
+
+ホストのすべてのネットワークアドレスを表示します。
+
+```console
+$ hostname -I
+192.168.1.100 10.0.0.1 172.16.0.1
 ```
 
 ## 使用例
 
-### 現在のホスト名を表示する
+### 現在のホスト名の表示
 
 ```console
 $ hostname
-macbook.local
+mycomputer.example.com
 ```
 
-### ホスト名を変更する（管理者権限が必要）
+### 新しいホスト名の設定（root権限が必要）
 
 ```console
-$ sudo hostname new-hostname
-[sudo] password for user: 
+$ sudo hostname newname
 $ hostname
-new-hostname
+newname
 ```
 
-### すべてのネットワーク情報を表示する
+### スクリプト内で現在のマシンを識別するためにホスト名を使用
 
 ```console
-$ hostname -a
-macbook.local
+$ echo "バックアップスクリプトを $(hostname) で実行中"
+バックアップスクリプトを mycomputer.example.com で実行中
 ```
 
 ## ヒント:
 
-### ホスト名の永続的な変更
+### 永続的なホスト名の変更
 
-`hostname` コマンドでの変更は一時的なものです。システムの再起動後も変更を維持するには、システム固有の設定ファイルを編集する必要があります。
+`hostname` コマンドは次の再起動までホスト名を一時的に変更するだけです。永続的な変更には：
+- systemdベースのシステム：`hostnamectl set-hostname newname` を使用
+- Debian/Ubuntu：`/etc/hostname` を編集
+- RHEL/CentOS：`/etc/sysconfig/network` を編集
 
-- Linux: `/etc/hostname` ファイルを編集
-- macOS: システム環境設定 > 共有 > コンピュータ名
+### ネットワーク設定
 
-### ホスト名とDNS
+ホスト名を変更する場合、適切な名前解決を確保するために `/etc/hosts` などの他のファイルも更新する必要があるかもしれません。
 
-ホスト名はローカルマシンの識別子であり、必ずしもDNSに登録されているわけではありません。完全なネットワーク接続性のためには、DNSの設定も確認してください。
+### ホスト名の制限
 
-### ホスト名の命名規則
-
-ホスト名には英数字とハイフン（-）のみを使用し、スペースや特殊文字は避けるのがベストプラクティスです。
+ホスト名はRFC 1178のガイドラインに従うべきです：文字、数字、ハイフンのみを使用し、63文字を超えないようにしましょう。
 
 ## よくある質問
 
-#### Q1. ホスト名とは何ですか？
-A. ホスト名はネットワーク上でコンピュータを識別するための名前です。これによりIPアドレスを覚える代わりに名前でマシンを参照できます。
+#### Q1. ホスト名とFQDNの違いは何ですか？
+A. ホスト名はマシンの名前だけ（例：「mycomputer」）であるのに対し、FQDNはドメインを含みます（例：「mycomputer.example.com」）。
 
-#### Q2. ホスト名を永続的に変更するにはどうすればよいですか？
-A. システムによって異なります。Linuxでは通常 `/etc/hostname` ファイルを編集し、macOSではシステム環境設定から変更します。
+#### Q2. 再起動後にホスト名がリセットされるのはなぜですか？
+A. `hostname` コマンドは一時的な変更のみを行います。永続的な変更を行うには、システム設定ファイルを変更するか、`hostnamectl` などのツールを使用する必要があります。
 
-#### Q3. FQDNとは何ですか？
-A. 完全修飾ドメイン名（Fully Qualified Domain Name）は、ホスト名とドメイン名を含む完全なコンピュータ名です（例：server.example.com）。
+#### Q3. ホスト名に特殊文字を使用できますか？
+A. すべてのネットワークサービスとの互換性を確保するために、ホスト名には文字、数字、ハイフンのみを使用することが推奨されています。
 
-#### Q4. ホスト名を変更した後、他のサービスを再起動する必要がありますか？
-A. はい、多くの場合、ネットワークサービスやアプリケーションは起動時にホスト名を読み込むため、変更後は再起動が必要な場合があります。
+#### Q4. スクリプト内でホスト名を取得するにはどうすればよいですか？
+A. スクリプト内で `$(hostname)` を使用するだけで、現在のホスト名を取得できます。
 
-## macOSでの注意点
+## macOSに関する注意点
 
-macOSでは、`hostname` コマンドでホスト名を変更しても、「システム環境設定 > 共有」に表示されるコンピュータ名は変更されません。永続的な変更のためには、システム環境設定から変更するか、以下のコマンドを使用します：
+macOSでは、hostname コマンドは同様に機能しますが、永続的な変更は以下を使用して行うべきです：
+- ホスト名の場合は `sudo scutil --set HostName newname`
+- Bonjourホスト名の場合は `sudo scutil --set LocalHostName newname`
+- ユーザーフレンドリーなコンピュータ名の場合は `sudo scutil --set ComputerName "新しい名前"`
 
-```console
-$ sudo scutil --set HostName new-hostname
-$ sudo scutil --set LocalHostName new-hostname
-$ sudo scutil --set ComputerName new-hostname
-```
+## 参考資料
 
-## 参考情報
-
-https://linux.die.net/man/1/hostname
+https://man7.org/linux/man-pages/man1/hostname.1.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+2025/05/04 初版作成

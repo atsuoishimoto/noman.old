@@ -1,62 +1,72 @@
 # zip command
 
-Compress files and directories into a ZIP archive.
+Package files into a compressed archive.
 
 ## Overview
 
-The `zip` command creates compressed archives in the ZIP format, which is widely used across different operating systems. It can compress multiple files and directories into a single file, making it easier to transfer or store data while reducing file size.
+The `zip` command creates compressed archives in ZIP format, which can contain one or more files or directories. It's commonly used for file compression, backup, and sharing files across different operating systems. ZIP is a widely supported format that maintains file attributes and directory structures.
 
 ## Options
 
-### **-r (Recursive)**
+### **-r, --recurse-paths**
 
-Recursively include files in directories and their subdirectories
+Recursively include files in subdirectories
 
 ```console
-$ zip -r backup.zip documents/
+$ zip -r archive.zip documents/
   adding: documents/ (stored 0%)
-  adding: documents/report.docx (deflated 65%)
+  adding: documents/report.txt (deflated 35%)
   adding: documents/images/ (stored 0%)
   adding: documents/images/photo.jpg (deflated 2%)
 ```
 
-### **-e (Encrypt)**
+### **-e, --encrypt**
 
-Password-protect the ZIP archive
+Encrypt the contents of the ZIP archive with a password
 
 ```console
-$ zip -e secure.zip confidential.pdf
+$ zip -e secure.zip confidential.txt
 Enter password: 
 Verify password: 
-  adding: confidential.pdf (deflated 72%)
+  adding: confidential.txt (deflated 42%)
 ```
 
-### **-u (Update)**
+### **-u, --update**
 
-Update an existing ZIP file by adding new files or replacing changed files
+Update existing entries in the ZIP archive and add new files
 
 ```console
-$ zip -u backup.zip documents/report.docx
-updating: documents/report.docx (deflated 65%)
+$ zip -u archive.zip newfile.txt updated.txt
+  adding: newfile.txt (deflated 30%)
+  updating: updated.txt (deflated 25%)
 ```
 
-### **-j (Junk paths)**
+### **-d, --delete**
+
+Delete entries from a ZIP archive
+
+```console
+$ zip -d archive.zip unwanted.txt
+deleting: unwanted.txt
+```
+
+### **-j, --junk-paths**
 
 Store just the file names without directory paths
 
 ```console
-$ zip -j files.zip documents/report.docx documents/images/photo.jpg
-  adding: report.docx (deflated 65%)
+$ zip -j flat.zip documents/report.txt documents/images/photo.jpg
+  adding: report.txt (deflated 35%)
   adding: photo.jpg (deflated 2%)
 ```
 
-### **-9 (Compression level)**
+### **-9, --compress-level**
 
-Set maximum compression level (1-9, where 9 is highest)
+Set the compression level (0-9, where 9 is maximum compression)
 
 ```console
-$ zip -9 archive.zip largefile.dat
-  adding: largefile.dat (deflated 78%)
+$ zip -9 compressed.zip largefile.dat
+  adding: largefile.dat (deflated 68%)
 ```
 
 ## Usage Examples
@@ -64,65 +74,70 @@ $ zip -9 archive.zip largefile.dat
 ### Creating a basic ZIP archive
 
 ```console
-$ zip photos.zip *.jpg
-  adding: vacation1.jpg (deflated 3%)
-  adding: vacation2.jpg (deflated 2%)
-  adding: vacation3.jpg (deflated 4%)
+$ zip backup.zip file1.txt file2.txt
+  adding: file1.txt (deflated 32%)
+  adding: file2.txt (deflated 28%)
 ```
 
-### Backing up a project with exclusions
+### Zipping an entire directory with subdirectories
 
 ```console
-$ zip -r project.zip myproject/ -x "*.git*" "*node_modules*"
-  adding: myproject/ (stored 0%)
-  adding: myproject/index.html (deflated 68%)
-  adding: myproject/styles.css (deflated 70%)
-  adding: myproject/script.js (deflated 65%)
+$ zip -r project.zip project/
+  adding: project/ (stored 0%)
+  adding: project/src/ (stored 0%)
+  adding: project/src/main.c (deflated 45%)
+  adding: project/docs/ (stored 0%)
+  adding: project/docs/readme.md (deflated 38%)
 ```
 
-### Creating a split ZIP archive for large files
+### Creating a password-protected ZIP with maximum compression
 
 ```console
-$ zip -s 100m -r backup.zip large_directory/
-  adding: large_directory/ (stored 0%)
-  adding: large_directory/video.mp4 (deflated 1%)
-  adding: large_directory/dataset.csv (deflated 85%)
+$ zip -e -9 secure-archive.zip important/*.pdf
+Enter password: 
+Verify password: 
+  adding: important/document1.pdf (deflated 15%)
+  adding: important/document2.pdf (deflated 12%)
 ```
 
 ## Tips:
 
-### Monitor Compression Progress
+### View ZIP Contents Without Extracting
 
-For large archives, use the `-v` (verbose) option to see detailed progress information during compression.
+Use the companion command `unzip -l archive.zip` to list the contents of a ZIP file without extracting it.
 
-### Exclude Unwanted Files
+### Create Self-Extracting Archives
 
-Use the `-x` option followed by patterns to exclude certain files or directories from being added to the archive.
+On some systems, you can create self-extracting archives with `zip -A archive.zip`, though this is primarily useful on Windows systems.
 
-### Test Archive Integrity
+### Exclude Specific Files
 
-After creating an important archive, use `unzip -t archive.zip` to verify its integrity without extracting files.
+Use patterns with the `-x` option to exclude certain files: `zip -r archive.zip directory/ -x "*.tmp" "*.log"`.
 
-### Preserve Symbolic Links
+### Split Large ZIP Files
 
-By default, `zip` follows symbolic links. Use `-y` to store the links themselves rather than the files they point to.
+For very large archives, use the `-s` option to split the ZIP into smaller parts: `zip -s 100m -r large.zip bigdirectory/`.
 
 ## Frequently Asked Questions
 
 #### Q1. How do I extract a ZIP file?
-A. Use the `unzip` command: `unzip archive.zip`. To extract to a specific directory, use `unzip archive.zip -d /path/to/directory`.
+A. Use the companion command `unzip archive.zip` to extract files from a ZIP archive.
 
-#### Q2. How can I see the contents of a ZIP file without extracting it?
-A. Use `unzip -l archive.zip` to list the contents without extraction.
+#### Q2. Can I add files to an existing ZIP archive?
+A. Yes, use `zip -u archive.zip newfiles` to add or update files in an existing archive.
 
-#### Q3. How do I create a ZIP file that works on Windows?
-A. Standard ZIP files created with the `zip` command are compatible with Windows. For best compatibility with special characters, consider using the `-UN=UTF8` option.
+#### Q3. How do I create a ZIP file without compressing the files?
+A. Use `zip -0 archive.zip files` to store files without compression (useful for already compressed files like JPEGs).
 
-#### Q4. How do I add files to an existing ZIP archive?
-A. Use `zip -u archive.zip newfile.txt` to add or update files in an existing archive.
+#### Q4. How can I password-protect a ZIP file?
+A. Use `zip -e archive.zip files` to create an encrypted ZIP file. You'll be prompted to enter a password.
 
-#### Q5. How much compression can I expect?
-A. Compression rates vary by file type. Text files typically compress 60-80%, while already-compressed files like JPEGs or MP3s may only reduce by 1-5%.
+#### Q5. How do I preserve file permissions when creating a ZIP archive?
+A. On Unix-like systems, use `zip -X archive.zip files` to preserve file permissions and UID/GID information.
+
+## macOS Considerations
+
+On macOS, the built-in Archive Utility creates ZIP files that may not preserve certain Unix file attributes. For more control, use the command-line `zip` utility. Also, be aware that macOS creates hidden `.DS_Store` files in directories, which will be included in your ZIP archives unless explicitly excluded with `-x "*.DS_Store"`.
 
 ## References
 
@@ -130,4 +145,4 @@ https://linux.die.net/man/1/zip
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

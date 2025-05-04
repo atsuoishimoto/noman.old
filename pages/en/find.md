@@ -1,156 +1,146 @@
 # find command
 
-Search for files in a directory hierarchy based on various criteria.
+Search for files in a directory hierarchy.
 
 ## Overview
 
-The `find` command searches for files and directories in a specified location based on criteria like name, size, type, or modification time. It's a powerful tool for locating files across your filesystem and can execute commands on the files it finds.
+The `find` command searches for files in a directory hierarchy based on various criteria such as name, type, size, or modification time. It's a powerful tool for locating files and performing operations on the matching results.
 
 ## Options
 
+### **-iname pattern**
+
+Searches for files whose name matches the pattern, ignoring case distinctions. This is similar to `-name` but performs a case-insensitive search.
+
+```console
+$ find . -iname "*.txt"
+./notes.txt
+./Documents/README.txt
+./Documents/report.TXT
+```
+
 ### **-name pattern**
 
-Search for files by name using a pattern (case-sensitive)
+Searches for files whose name matches the pattern, with case sensitivity.
 
 ```console
 $ find . -name "*.txt"
-./documents/notes.txt
-./readme.txt
-./archive/old.txt
+./notes.txt
+./Documents/README.txt
 ```
 
-### **-iname pattern**
+### **-type type**
 
-Search for files by name using a pattern (case-insensitive)
-
-```console
-$ find . -iname "README*"
-./README.md
-./projects/readme.txt
-./docs/ReadMe.rst
-```
-
-The `-iname` option works exactly like `-name` but performs a case-insensitive search, making it useful when you're unsure about the exact capitalization of filenames.
-
-### **-type**
-
-Search for files by type (f=regular file, d=directory, l=symbolic link)
+Searches for files of a specific type. Common types include:
+- `f` for regular files
+- `d` for directories
+- `l` for symbolic links
 
 ```console
 $ find . -type d
 .
-./documents
-./projects
-./archive
-```
-
-### **-mtime n**
-
-Find files modified n days ago (use -n for less than n days, +n for more than n days)
-
-```console
-$ find . -mtime -7
-./documents/recent.txt
-./projects/new-feature.py
+./Documents
+./Downloads
+./Pictures
 ```
 
 ### **-size n[cwbkMG]**
 
-Find files by size (c=bytes, k=kilobytes, M=megabytes, G=gigabytes)
+Searches for files based on their size:
+- `c` for bytes
+- `k` for kilobytes
+- `M` for megabytes
+- `G` for gigabytes
+- `+` prefix means "greater than"
+- `-` prefix means "less than"
 
 ```console
 $ find . -size +10M
-./videos/tutorial.mp4
-./backups/database.sql
+./Videos/movie.mp4
+./Downloads/installer.iso
 ```
 
-### **-exec command {} \;**
+### **-mtime n**
 
-Execute a command on each found file (replace {} with the filename)
+Searches for files modified n days ago. Use `+n` for "more than n days ago" and `-n` for "less than n days ago".
+
+```console
+$ find . -mtime -7
+./Documents/recent-report.txt
+./Downloads/recent-file.zip
+```
+
+## Usage Examples
+
+### Finding files with specific permissions
+
+```console
+$ find /home -type f -perm 644
+/home/user/file1.txt
+/home/user/file2.txt
+```
+
+### Finding and executing commands on matching files
 
 ```console
 $ find . -name "*.log" -exec rm {} \;
 ```
 
-## Usage Examples
-
-### Finding and deleting files
-
-```console
-$ find /tmp -name "temp*" -mtime +7 -exec rm {} \;
-```
-
 ### Finding empty files
 
 ```console
-$ find ~/documents -type f -empty
-/home/user/documents/empty.txt
-/home/user/documents/drafts/blank.md
+$ find /var/log -type f -empty
+/var/log/empty.log
 ```
 
-### Finding files with specific permissions
+### Finding files modified in the last 24 hours
 
 ```console
-$ find /home -type f -perm 0777
-/home/user/scripts/backup.sh
-/home/user/bin/helper.sh
-```
-
-### Finding and counting files by type
-
-```console
-$ find . -name "*.jpg" | wc -l
-42
+$ find /home/user -type f -mtime -1
+/home/user/recent-document.txt
+/home/user/today-notes.md
 ```
 
 ## Tips
 
-### Use -maxdepth to Limit Search Depth
+### Use `-iname` for Case-Insensitive Searches
 
+When you're not sure about the exact capitalization of filenames, use `-iname` instead of `-name` to match files regardless of case.
+
+### Combine Multiple Criteria with Logical Operators
+
+Use `-and`, `-or`, and `-not` (or `!`) to create complex search conditions:
 ```console
-$ find . -maxdepth 2 -name "*.txt"
-```
-This limits the search to the current directory and its immediate subdirectories, making searches faster.
-
-### Combine Multiple Conditions
-
-Use `-and`, `-or`, and `-not` (or `!`) to create complex search criteria:
-```console
-$ find . -name "*.log" -and -size +1M -and -mtime +30
+$ find . -type f -name "*.txt" -and -size +1M
 ```
 
-### Avoid Permission Denied Errors
+### Limit Directory Depth with `-maxdepth`
 
-Redirect error messages to /dev/null when searching system directories:
+Control how deep `find` searches with `-maxdepth`:
 ```console
-$ find /etc -name "*.conf" 2>/dev/null
+$ find . -maxdepth 2 -name "*.jpg"
 ```
 
-### Use -print0 with xargs for Filenames with Spaces
+### Redirect Error Messages
 
+Use `2>/dev/null` to hide "Permission denied" errors:
 ```console
-$ find . -name "*.mp3" -print0 | xargs -0 cp -t ~/music/
+$ find / -name "config.xml" 2>/dev/null
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. How do I find files modified in the last 24 hours?
-A. Use `find . -mtime -1` to find files modified less than 1 day ago.
+#### Q1. How do I find files by name?
+A. Use `find /path/to/search -name "filename"` for case-sensitive searches or `find /path/to/search -iname "filename"` for case-insensitive searches.
 
-#### Q2. How can I find all empty directories?
-A. Use `find /path -type d -empty` to find all empty directories.
+#### Q2. How can I find files modified recently?
+A. Use `find /path/to/search -mtime -n` where n is the number of days. For example, `-mtime -7` finds files modified in the last 7 days.
 
-#### Q3. How do I search for files containing specific text?
-A. Combine `find` with `grep`: `find . -type f -name "*.txt" -exec grep "search text" {} \;`
+#### Q3. How do I find and delete files?
+A. Use `find /path/to/search -name "pattern" -delete` or `find /path/to/search -name "pattern" -exec rm {} \;`
 
-#### Q4. How do I exclude directories from my search?
-A. Use `-not -path`: `find . -type f -not -path "./node_modules/*"`
-
-#### Q5. Why is my find command so slow?
-A. Large directory trees, network filesystems, or complex criteria can slow down searches. Use `-maxdepth` to limit the search depth.
-
-#### Q6. What's the difference between -name and -iname?
-A. `-name` performs a case-sensitive search, while `-iname` performs a case-insensitive search. Use `-iname` when you're unsure about capitalization.
+#### Q4. How can I exclude directories from my search?
+A. Use `! -path "*/directory_to_exclude/*"` or `-not -path "*/directory_to_exclude/*"`
 
 ## References
 
@@ -158,5 +148,4 @@ https://www.gnu.org/software/findutils/manual/html_node/find_html/index.html
 
 ## Revisions
 
-- 2025/04/30 Added more detailed explanation of -iname option and related FAQ
-- 2025/04/30 First revision
+- 2025/05/04 First revision

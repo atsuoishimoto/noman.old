@@ -1,16 +1,24 @@
 # kill command
 
-Terminate or send signals to processes.
+Send a signal to a process, usually to terminate it.
 
 ## Overview
 
-The `kill` command sends signals to processes, most commonly used to terminate unwanted or unresponsive programs. While its name suggests termination, `kill` can actually send various signals to control process behavior, including pausing, resuming, or requesting graceful shutdown.
+The `kill` command sends signals to processes, most commonly used to terminate running processes. While its name suggests termination, `kill` can actually send various signals to processes, allowing for different types of control beyond just stopping them. Each signal has a specific purpose, with SIGTERM (15) being the default signal that requests graceful termination.
 
 ## Options
 
-### **-l (List signals)**
+### **-s, --signal [signal]**
 
-Displays all available signals that can be sent to processes.
+Specify the signal to send (either as a name or number)
+
+```console
+$ kill -s TERM 1234
+```
+
+### **-l, --list [signal]**
+
+List available signal names or convert signal names to/from numbers
 
 ```console
 $ kill -l
@@ -29,25 +37,17 @@ $ kill -l
 63) SIGRTMAX-1  64) SIGRTMAX
 ```
 
-### **-s (Specify signal)**
+### **-9, -KILL, -SIGKILL**
 
-Sends a specific signal to a process by name instead of number.
-
-```console
-$ kill -s TERM 1234
-```
-
-### **-9 (SIGKILL)**
-
-Forcefully terminates a process without allowing it to clean up.
+Send SIGKILL signal, which forces immediate termination (cannot be caught or ignored)
 
 ```console
 $ kill -9 1234
 ```
 
-### **-15 (SIGTERM)**
+### **-15, -TERM, -SIGTERM**
 
-Gracefully terminates a process (this is the default signal).
+Send SIGTERM signal (default), which requests graceful termination
 
 ```console
 $ kill -15 1234
@@ -61,16 +61,16 @@ $ kill -15 1234
 $ kill 1234
 ```
 
-### Forcefully terminating a stubborn process
+### Forcefully terminating a process that won't respond
 
 ```console
 $ kill -9 1234
 ```
 
-### Sending a custom signal
+### Sending a custom signal to a process
 
 ```console
-$ kill -s HUP 1234
+$ kill -s USR1 1234
 ```
 
 ### Terminating multiple processes at once
@@ -79,57 +79,51 @@ $ kill -s HUP 1234
 $ kill 1234 5678 9012
 ```
 
-## Tips
+## Tips:
 
 ### Find Process IDs First
 
-Use `ps` or `pgrep` to find the PID before using kill:
+Use `ps` or `pgrep` to find the process ID before using kill:
 
 ```console
 $ ps aux | grep firefox
-user     1234  2.0  1.5 3521404 124540 ?      Sl   09:30   0:45 /usr/lib/firefox/firefox
+user     1234  2.0  1.5 3245676 124548 ?      Sl   09:15   0:45 /usr/lib/firefox/firefox
 $ kill 1234
 ```
 
-### Use SIGTERM Before SIGKILL
+### Use Signal Names for Clarity
 
-Try using the default signal (SIGTERM, -15) before resorting to SIGKILL (-9). SIGTERM allows the process to clean up resources and exit gracefully.
-
-### Process Groups
-
-You can kill entire process groups by prefixing the PID with a minus sign:
+Signal names are often clearer than numbers:
 
 ```console
-$ kill -15 -1234  # Kills process group 1234
+$ kill -TERM 1234  # Same as kill -15 1234
 ```
 
-### Signals Have Different Effects
+### Common Signals and Their Uses
 
-Different signals do different things:
-- SIGTERM (15): Request graceful termination
-- SIGKILL (9): Force immediate termination
-- SIGHUP (1): Often used to reload configuration
-- SIGSTOP (19): Pause a process
-- SIGCONT (18): Resume a paused process
+- SIGTERM (15): Standard termination signal, allows cleanup
+- SIGKILL (9): Force termination, use when process is unresponsive
+- SIGHUP (1): Often used to reload configuration files
+- SIGINT (2): Interrupt signal (same as pressing Ctrl+C)
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between kill, pkill, and killall?
-A. `kill` terminates processes by PID, `pkill` by name or other attributes, and `killall` terminates all processes with a given name.
+#### Q1. What's the difference between `kill -9` and regular `kill`?
+A. Regular `kill` (equivalent to `kill -15`) sends SIGTERM, requesting graceful termination and allowing the process to clean up. `kill -9` sends SIGKILL, which forces immediate termination without cleanup and cannot be caught or ignored by the process.
 
-#### Q2. Why doesn't kill -9 work sometimes?
-A. Processes in uninterruptible sleep (D state) or zombie processes can't be killed even with SIGKILL. Zombie processes will remain until the parent process handles them.
+#### Q2. How do I kill a process by name instead of PID?
+A. `kill` itself requires PIDs, but you can use `pkill` or `killall` to kill processes by name: `pkill firefox` or `killall firefox`.
 
-#### Q3. How do I kill a process by name instead of PID?
-A. Use `pkill` or `killall` instead: `pkill firefox` or `killall firefox`.
+#### Q3. Why doesn't `kill -9` work on some processes?
+A. Processes in uninterruptible sleep states (usually waiting for I/O) or zombie processes cannot be killed with any signal. Also, processes with PID 1 (init/systemd) handle signals differently.
 
-#### Q4. What signal does kill send by default?
-A. SIGTERM (signal 15), which requests graceful termination.
+#### Q4. How can I kill all processes of a specific user?
+A. Use `pkill -u username` to kill all processes owned by a specific user.
 
 ## References
 
-https://www.gnu.org/software/coreutils/manual/html_node/kill-invocation.html
+https://man7.org/linux/man-pages/man1/kill.1.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

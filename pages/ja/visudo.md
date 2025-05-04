@@ -1,113 +1,117 @@
 # visudo コマンド
 
-sudoers ファイルを安全に編集するためのコマンド。
+sudoers ファイルを構文チェック付きで安全に編集します。
 
 ## 概要
 
-`visudo` は、システム管理者が sudo の設定ファイル（/etc/sudoers）を安全に編集するためのコマンドです。このコマンドは、編集中に他のユーザーが同時に変更できないようにファイルをロックし、保存前に構文チェックを行うことで、設定ミスによるシステムアクセス不能を防ぎます。
+`visudo` は `/etc/sudoers` ファイルを安全に編集するためのコマンドラインユーティリティです。sudoers ファイルは sudo アクセス権限を制御します。visudo は同時編集を防ぐためにファイルをロックし、変更を保存する前に構文チェックを行い、ユーザーがシステムからロックアウトされる可能性のある設定エラーを防止します。
 
 ## オプション
 
-### **-c**
+### **-c, --check**
 
-sudoers ファイルの構文チェックのみを行います。
+sudoers ファイルの構文エラーのみをチェックし、変更は行いません。
 
 ```console
 $ sudo visudo -c
-/etc/sudoers: OK
+/etc/sudoers: parsed OK
+/etc/sudoers.d/custom: parsed OK
 ```
 
-### **-f ファイル**
+### **-f, --file=file**
 
-デフォルトの /etc/sudoers ではなく、指定したファイルを編集します。
+デフォルトの `/etc/sudoers` の代わりに、別の sudoers ファイルの場所を指定します。
 
 ```console
 $ sudo visudo -f /etc/sudoers.d/custom
 ```
 
-### **-s**
+### **-q, --quiet**
 
-厳格なパーサーモードを有効にします。警告も全てエラーとして扱われます。
+静かモードを有効にし、ほとんどの警告メッセージを抑制します。
 
 ```console
-$ sudo visudo -s
+$ sudo visudo -q -c
 ```
 
-### **-q**
+### **-s, --strict**
 
-静かモード。構文エラーのみを表示します。
+sudoers ファイルの厳格なチェックを有効にします。構文解析エラーがある場合、visudo はエラーで終了します。
 
 ```console
-$ sudo visudo -q
+$ sudo visudo -s -f /etc/sudoers.d/test
+>>> /etc/sudoers.d/test: syntax error near line 2 <<<
+parse error in /etc/sudoers.d/test near line 2
+visudo: fatal error, exiting.
 ```
 
 ## 使用例
 
-### 基本的な使用方法
+### 基本的な使用法
 
 ```console
 $ sudo visudo
-# 標準のエディタで /etc/sudoers ファイルが開かれる
 ```
 
-### 別のエディタを使用する
+これにより、EDITOR 環境変数で指定されたエディタでデフォルトの `/etc/sudoers` ファイルが開きます。
+
+### カスタム Sudoers ファイルの編集
 
 ```console
-$ sudo EDITOR=nano visudo
-# nanoエディタで /etc/sudoers ファイルが開かれる
+$ sudo visudo -f /etc/sudoers.d/local
 ```
 
-### カスタム設定ファイルの作成
+これにより、`/etc/sudoers.d` ディレクトリにあるカスタム sudoers ファイルが開きます。
+
+### 編集せずに構文をチェック
 
 ```console
-$ sudo visudo -f /etc/sudoers.d/developers
-# /etc/sudoers.d/developers ファイルを編集する
+$ sudo visudo -c
+/etc/sudoers: parsed OK
+/etc/sudoers.d/custom: parsed OK
 ```
 
 ## ヒント:
 
-### エディタの変更
+### 好みのエディタを設定する
 
-デフォルトでは `visudo` は vi エディタを使用しますが、`EDITOR` または `VISUAL` 環境変数を設定することで別のエディタを使用できます。
-
-```console
-$ sudo EDITOR=nano visudo
-```
-
-### sudoers.d ディレクトリの活用
-
-個別の設定ファイルを `/etc/sudoers.d/` ディレクトリに作成することで、メインの sudoers ファイルを変更せずに設定を追加できます。
+visudo を実行する前に、EDITOR または VISUAL 環境変数を設定して好みのエディタを指定できます：
 
 ```console
-$ sudo visudo -f /etc/sudoers.d/myconfig
+$ export EDITOR=nano
+$ sudo visudo
 ```
 
-### 構文エラーの防止
+### 直接編集ではなくインクルードを使用する
 
-`visudo` は保存時に構文チェックを行い、エラーがある場合は警告を表示します。これにより、誤った設定でシステムがロックされることを防ぎます。
+メインの sudoers ファイルを編集する代わりに、カスタム設定用に `/etc/sudoers.d/` に別ファイルを作成しましょう。これにより管理が容易かつ安全になります。
+
+```console
+$ sudo visudo -f /etc/sudoers.d/myusers
+```
+
+### 終了前に必ず構文チェックを行う
+
+sudoers ファイルを編集する際は、保存前に必ず visudo の組み込み構文チェックを使用してください。構文エラーがある場合、visudo は警告を表示し、保存前に修正する機会を与えてくれます。
 
 ## よくある質問
 
-#### Q1. なぜ直接 /etc/sudoers ファイルを編集せず、visudo を使うべきですか？
-A. `visudo` は構文チェックを行い、複数のユーザーによる同時編集を防ぐため、システムがロックされるリスクを減らします。
+#### Q1. visudo を使わずに直接 sudoers ファイルを編集するとどうなりますか？
+A. `/etc/sudoers` を通常のテキストエディタで直接編集することは危険です。構文エラーを導入すると、sudo アクセスが完全に失われ、管理機能からロックアウトされる可能性があります。
 
-#### Q2. visudo で使用するエディタを変更するにはどうすればよいですか？
-A. `EDITOR` または `VISUAL` 環境変数を設定します。例: `sudo EDITOR=nano visudo`
+#### Q2. 新しいユーザーを sudoers に追加するにはどうすればよいですか？
+A. `sudo visudo` を実行し、`username ALL=(ALL:ALL) ALL` のような行を追加することで、ユーザーに完全な sudo 権限を付与できます。
 
-#### Q3. sudoers ファイルを編集中に構文エラーがあった場合はどうなりますか？
-A. `visudo` は保存時にエラーを検出し、修正するか無視するかの選択肢を提供します。無視を選んでも、ファイルは保存されません。
+#### Q3. /etc/sudoers と /etc/sudoers.d/ 内のファイルの違いは何ですか？
+A. メインの `/etc/sudoers` ファイルは主要な設定ファイルであり、`/etc/sudoers.d/` はメイン設定に含まれる追加設定ファイル用のディレクトリです。このディレクトリに別ファイルを使用する方が、より整理された安全な方法です。
 
-#### Q4. sudoers.d ディレクトリとは何ですか？
-A. `/etc/sudoers.d/` は追加の sudo 設定ファイルを格納するディレクトリです。メインの sudoers ファイルを変更せずに設定を追加できます。
+#### Q4. visudo が使用するデフォルトエディタを変更するにはどうすればよいですか？
+A. visudo を実行する前に EDITOR または VISUAL 環境変数を設定します：`export EDITOR=nano`
 
-## macOS での注意点
+## 参考資料
 
-macOSでは、sudoers ファイルは `/private/etc/sudoers` にあります。また、macOS のアップデート後に変更が上書きされる可能性があるため、`/private/etc/sudoers.d/` ディレクトリに独自の設定ファイルを作成することをお勧めします。
-
-## 参考文献
-
-https://www.sudo.ws/docs/man/visudo.man/
+https://www.sudo.ws/docs/man/1.9.13/visudo.man/
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初回改訂

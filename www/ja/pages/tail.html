@@ -49,76 +49,86 @@
   <h1>tail コマンド</h1>
 <p>ファイルの末尾部分を表示します。</p>
 <h2>概要</h2>
-<p><code>tail</code> コマンドはファイルの末尾（最後の部分）を表示するためのコマンドです。デフォルトでは、ファイルの最後の10行を表示します。ログファイルの最新エントリの確認や、ファイルの更新をリアルタイムで監視する場合に特に便利です。</p>
+<p><code>tail</code> コマンドはファイルの末尾（tail）部分を出力します。デフォルトでは、指定された各ファイルの最後の10行を標準出力に表示します。ログファイルの最新エントリの確認、ファイルの変更をリアルタイムで監視、またはテキストファイルの末尾を確認するのによく使用されます。</p>
 <h2>オプション</h2>
-<h3><strong>-n, --lines=N</strong></h3>
-<p>表示する行数を指定します。</p>
+<h3><strong>-n, --lines=NUM</strong></h3>
+<p>デフォルトの10行ではなく、最後のNUM行を出力します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>/var/log/syslog
-<span style="color: #000; font-style: italic">Apr 30 10:15:22 hostname service[1234]: 処理を完了しました</span>
-<span style="color: #000; font-style: italic">Apr 30 10:15:30 hostname service[1234]: 新しいリクエストを受信しました</span>
-<span style="color: #000; font-style: italic">Apr 30 10:15:35 hostname service[1234]: 処理を開始します</span>
-<span style="color: #000; font-style: italic">Apr 30 10:15:40 hostname service[1234]: データを処理中です</span>
-<span style="color: #000; font-style: italic">Apr 30 10:15:45 hostname service[1234]: 処理が完了しました</span>
+<span style="color: #000; font-style: italic">May  3 21:45:12 hostname systemd[1]: Started Daily apt download activities.</span>
+<span style="color: #000; font-style: italic">May  3 21:45:12 hostname systemd[1]: apt-daily.service: Succeeded.</span>
+<span style="color: #000; font-style: italic">May  3 22:17:01 hostname CRON[12345]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)</span>
+<span style="color: #000; font-style: italic">May  3 23:17:01 hostname CRON[12346]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)</span>
+<span style="color: #000; font-style: italic">May  4 00:17:01 hostname CRON[12347]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)</span>
 </pre></div>
 <h3><strong>-f, --follow</strong></h3>
-<p>ファイルの末尾を継続的に監視し、新しく追加された行をリアルタイムで表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/apache2/access.log
-<span style="color: #000; font-style: italic">192.168.1.100 - - [30/Apr/2025:10:20:15 +0900] &quot;GET /index.html HTTP/1.1&quot; 200 2326</span>
-<span style="color: #000; font-style: italic">192.168.1.101 - - [30/Apr/2025:10:20:18 +0900] &quot;GET /images/logo.png HTTP/1.1&quot; 200 4532</span>
-<span style="color: #000; font-style: italic">192.168.1.102 - - [30/Apr/2025:10:20:20 +0900] &quot;POST /login HTTP/1.1&quot; 302 0</span>
+<p>ファイルが成長するにつれて追加されたデータを出力します。ファイルの末尾を追跡します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/syslog
+<span style="color: #000; font-style: italic">May  4 00:17:01 hostname CRON[12347]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)</span>
+<span style="color: #000; font-style: italic">May  4 01:17:01 hostname CRON[12348]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)</span>
+<span style="color: #000; font-style: italic">May  4 02:17:01 hostname CRON[12349]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)</span>
+<span style="color: #000; font-style: italic">[ファイルに追加されると、新しいエントリがリアルタイムで表示される]</span>
 </pre></div>
-<h3><strong>-c, --bytes=N</strong></h3>
-<p>最後のN バイトを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>example.txt
-<span style="color: #000; font-style: italic">の最後の20バイトです</span>
+<h3><strong>-c, --bytes=NUM</strong></h3>
+<p>最後の10行ではなく、最後のNUMバイトを出力します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">50</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">ファイルの最後の50バイトがここに表示されます。</span>
+</pre></div>
+<h3><strong>-q, --quiet, --silent</strong></h3>
+<p>ファイル名を示すヘッダーを出力しません</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">[ヘッダーなしで各ファイルの最後の10行を表示する]</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>複数ファイルの末尾を表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<h3>ログファイルをリアルタイムで監視する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/apache2/access.log
+<span style="color: #000; font-style: italic">192.168.1.1 - - [04/May/2025:10:15:32 +0000] &quot;GET /index.html HTTP/1.1&quot; 200 1234</span>
+<span style="color: #000; font-style: italic">192.168.1.2 - - [04/May/2025:10:15:45 +0000] &quot;GET /images/logo.png HTTP/1.1&quot; 200 5678</span>
+<span style="color: #000; font-style: italic">[新しいエントリが表示され続ける]</span>
+</pre></div>
+<h3>複数ファイルの最後の20行を表示する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
 <span style="color: #000; font-style: italic">==&gt; file1.txt &lt;==</span>
-<span style="color: #000; font-style: italic">file1の最後から2行目</span>
-<span style="color: #000; font-style: italic">file1の最後の行</span>
+<span style="color: #000; font-style: italic">[file1.txtの最後の20行]</span>
 
 <span style="color: #000; font-style: italic">==&gt; file2.txt &lt;==</span>
-<span style="color: #000; font-style: italic">file2の最後から2行目</span>
-<span style="color: #000; font-style: italic">file2の最後の行</span>
+<span style="color: #000; font-style: italic">[file2.txtの最後の20行]</span>
 </pre></div>
-<h3>バイト数指定で表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">50</span><span style="color: #F8F8F8"> </span>large_file.txt
-<span style="color: #000; font-style: italic">...ファイルの最後の50バイト分のテキストが表示される...</span>
-</pre></div>
-<h3>ファイルの更新を監視</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span>/var/log/syslog
-<span style="color: #8F5902"># </span>新しく追加される行だけをリアルタイムで表示する
+<h3>複数のファイルを同時に追跡する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/syslog<span style="color: #F8F8F8"> </span>/var/log/auth.log
+<span style="color: #000; font-style: italic">==&gt; /var/log/syslog &lt;==</span>
+<span style="color: #000; font-style: italic">[syslogの最後の10行]</span>
+
+<span style="color: #000; font-style: italic">==&gt; /var/log/auth.log &lt;==</span>
+<span style="color: #000; font-style: italic">[auth.logの最後の10行]</span>
+<span style="color: #000; font-style: italic">[両方のファイルからの新しいエントリが表示され続ける]</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>ログ監視の効率化</h3>
-<p><code>tail -f</code> と <code>grep</code> を組み合わせることで、特定のパターンを含む新しいログエントリだけを監視できます。</p>
+<h3>grepと組み合わせてフィルタリングする</h3>
+<p><code>tail</code>と<code>grep</code>を組み合わせて、ログファイルから特定のエントリをフィルタリングできます：</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/syslog<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>ERROR
 </pre></div>
-<h3>複数ファイルの監視</h3>
-<p><code>tail -f</code> で複数のファイルを同時に監視できます。各ファイルからの出力には、そのファイル名のヘッダーが付きます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/syslog<span style="color: #F8F8F8"> </span>/var/log/auth.log
+<h3>ファイルがローテーションされても追跡を続ける</h3>
+<p><code>-f</code>の代わりに<code>tail -F</code>（大文字のF）を使用すると、ファイルがローテーションされたり再作成されたりしても追跡を続けることができます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-F<span style="color: #F8F8F8"> </span>/var/log/application.log
 </pre></div>
-<h3>行数の代わりにプラス記号を使用</h3>
-<p><code>tail +N</code> を使うと、N行目から最後までを表示できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>+100<span style="color: #F8F8F8"> </span>large_file.txt
-<span style="color: #8F5902"># </span>100行目から最後までを表示する
+<h3>行数を省略形で指定する</h3>
+<p><code>-n</code>とスペースなしで数字を使用できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-n50<span style="color: #F8F8F8"> </span>file.txt
 </pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. <code>tail</code> と <code>head</code> の違いは何ですか？</h4>
-<p>A. <code>tail</code> はファイルの末尾（最後の部分）を表示するのに対し、<code>head</code> はファイルの先頭（最初の部分）を表示します。</p>
-<h4>Q2. <code>tail -f</code> を終了するにはどうすればいいですか？</h4>
-<p>A. <code>Ctrl+C</code> キーを押すことで、<code>tail -f</code> の実行を終了できます。</p>
-<h4>Q3. 特定の行から最後までを表示するにはどうすればいいですか？</h4>
-<p>A. <code>tail -n +N</code> を使用します。例えば、<code>tail -n +100</code> は100行目から最後までを表示します。</p>
-<h4>Q4. <code>tail -f</code> でファイルが削除されたり名前が変更されたりした場合はどうなりますか？</h4>
-<p>A. デフォルトでは監視を続けますが、<code>--follow=name</code> オプションを使うと、ファイル名に基づいて追跡するため、ログローテーションなどで名前が変わった場合に新しいファイルを追跡できます。</p>
-<h2>参考情報</h2>
+<h4>Q1. <code>tail -f</code>と<code>tail -F</code>の違いは何ですか？</h4>
+<p>A. <code>tail -f</code>はファイル記述子を追跡するため、ファイルの名前が変更されると停止する場合があります。<code>tail -F</code>はファイル名を追跡し、ファイルがローテーションされたり再作成されたりしても内容の表示を継続します。</p>
+<h4>Q2. <code>tail -f</code>を終了するにはどうすればよいですか？</h4>
+<p>A. Ctrl+Cを押すとコマンドが終了し、プロンプトに戻ります。</p>
+<h4>Q3. ファイルの先頭と末尾の両方を見ることはできますか？</h4>
+<p>A. いいえ、<code>tail</code>は末尾のみを表示します。先頭を見るには<code>head</code>を使用するか、パイプで組み合わせます：<code>head -n 5 file.txt &amp;&amp; tail -n 5 file.txt</code>。</p>
+<h4>Q4. 複数のログファイルを一度に監視するにはどうすればよいですか？</h4>
+<p>A. <code>tail -f</code>コマンドの後にすべてのファイルをリストするだけです：<code>tail -f file1.log file2.log file3.log</code>。</p>
+<h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/tail-invocation.html</p>
-<h2>Revisions</h2>
+<h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

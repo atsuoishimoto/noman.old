@@ -4,43 +4,55 @@ Remove files or directories from the filesystem.
 
 ## Overview
 
-The `rm` command permanently deletes files and directories from your system. Once files are removed with this command, they cannot be easily recovered (unlike moving files to a trash/recycle bin in graphical interfaces). The command can delete individual files, multiple files, or entire directories with their contents.
+The `rm` command deletes files and directories from your filesystem. By default, it removes files but not directories. Once files are deleted with `rm`, they cannot be easily recovered, so use this command with caution.
 
 ## Options
 
 ### **-f, --force**
 
-Force removal without prompting for confirmation, even for write-protected files.
+Ignore nonexistent files and arguments, never prompt for confirmation
 
 ```console
-$ rm -f important.txt
+$ rm -f nonexistent_file.txt
+$
 ```
 
 ### **-i, --interactive**
 
-Prompt before every removal, requiring confirmation.
+Prompt before every removal
 
 ```console
-$ rm -i document.txt
-rm: remove regular file 'document.txt'? y
+$ rm -i important.txt
+rm: remove regular file 'important.txt'? y
+$
 ```
 
 ### **-r, -R, --recursive**
 
-Remove directories and their contents recursively.
+Remove directories and their contents recursively
 
 ```console
-$ rm -r projects/
+$ rm -r project_folder/
+$
+```
+
+### **-d, --dir**
+
+Remove empty directories
+
+```console
+$ rm -d empty_directory/
+$
 ```
 
 ### **-v, --verbose**
 
-Explain what is being done, showing each file as it's removed.
+Explain what is being done
 
 ```console
-$ rm -v *.log
-removed 'error.log'
-removed 'access.log'
+$ rm -v file.txt
+removed 'file.txt'
+$
 ```
 
 ## Usage Examples
@@ -49,63 +61,70 @@ removed 'access.log'
 
 ```console
 $ rm file1.txt file2.txt file3.txt
+$
 ```
 
-### Removing directories with confirmation
+### Removing files with confirmation
 
 ```console
-$ rm -ri old_project/
-rm: descend into directory 'old_project/'? y
-rm: remove regular file 'old_project/readme.txt'? y
-rm: remove directory 'old_project/'? y
+$ rm -i *.txt
+rm: remove regular file 'document.txt'? y
+rm: remove regular file 'notes.txt'? n
+$
 ```
 
-### Forcefully removing a directory and all its contents
+### Removing directories and their contents
 
 ```console
-$ rm -rf temp_folder/
+$ rm -rf old_project/
+$
+```
+
+### Removing files with verbose output
+
+```console
+$ rm -v *.log
+removed 'app.log'
+removed 'error.log'
+removed 'system.log'
+$
 ```
 
 ## Tips:
 
-### Use with Caution
+### Use the -i Flag for Safety
 
-The `rm` command permanently deletes files without moving them to a trash folder. Always double-check what you're deleting, especially when using wildcards or the `-r` option.
+When deleting important files, use `rm -i` to get a confirmation prompt before each deletion. This helps prevent accidental file removal.
 
-### Prevent Accidental Deletions
+### Be Extremely Careful with rm -rf
 
-Consider creating an alias in your shell configuration: `alias rm='rm -i'` to always prompt for confirmation before deleting files.
+The combination of `-r` (recursive) and `-f` (force) is powerful and dangerous. Never use `rm -rf /` or `rm -rf /*` as these can destroy your entire system.
 
-### Safe Deletion Practice
+### Use Wildcards with Caution
 
-When deleting multiple files with wildcards, first use `ls` with the same pattern to preview which files will be deleted:
+Before using wildcards like `*.txt`, consider running `ls *.txt` first to see which files will be affected.
 
-```console
-$ ls *.tmp
-$ rm *.tmp
-```
+### Create Aliases for Safety
 
-### Avoid Dangerous Commands
-
-Never run `rm -rf /` or `rm -rf /*` as these can destroy your entire system.
+Consider creating an alias in your shell configuration: `alias rm='rm -i'` to always prompt for confirmation.
 
 ## Frequently Asked Questions
 
-#### Q1. Can I recover files deleted with `rm`?
-A. Generally no. Unlike graphical interfaces, `rm` doesn't move files to a trash folder. Recovery requires specialized tools and isn't guaranteed.
+#### Q1. Can I recover files deleted with rm?
+A. Generally no. Unlike moving files to a "trash" or "recycle bin", `rm` permanently deletes files. Recovery might be possible with specialized tools, but it's not guaranteed.
 
-#### Q2. How do I safely delete a directory with all its contents?
-A. Use `rm -r directory/`. For added safety, use `rm -ri directory/` to confirm each deletion.
+#### Q2. How do I remove a directory?
+A. Use `rm -r directory/` to remove a directory and all its contents. For empty directories, you can also use `rmdir directory/`.
 
-#### Q3. What's the difference between `rm -f` and regular `rm`?
-A. `rm -f` forces deletion without prompting, even for write-protected files, while regular `rm` will ask for confirmation in some cases.
+#### Q3. How can I safely delete files?
+A. Use `rm -i` for interactive prompts or consider using `trash-cli` utilities that move files to a recoverable trash location instead of deleting them permanently.
 
-#### Q4. How can I see what files I'm about to delete?
-A. Use `ls` with the same pattern first, or add the `-v` option to `rm` to see each file as it's deleted.
+#### Q4. What does "Operation not permitted" mean?
+A. This usually indicates you don't have sufficient permissions to delete the file. Try using `sudo rm` if you have administrator privileges.
 
-## macOS Considerations
+## macOS Precautions
 
-On macOS, you can use `rm -P` to overwrite files before deletion for more secure removal. However, on SSDs with TRIM enabled (most modern Macs), this may not provide additional security.
+On macOS, the default `rm` command doesn't move files to the Trash. Once deleted, files are permanently removed. Consider using `mv file ~/.Trash/` to move files to the Trash instead, or install tools like `trash` that provide this functionality.
 
 ## References
 
@@ -113,4 +132,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/rm-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+2025/05/04 First revision

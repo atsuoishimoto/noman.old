@@ -47,23 +47,23 @@
     <main>
       
   <h1>echo command</h1>
-<p>Display a line of text or variables to the standard output.</p>
+<p>Display a line of text or variables to standard output.</p>
 <h2>Overview</h2>
-<p>The <code>echo</code> command prints text or variable values to the terminal. It's commonly used in shell scripts to display messages, show variable contents, or generate output that can be piped to other commands.</p>
+<p>The <code>echo</code> command prints text or variable values to the terminal. It's commonly used in shell scripts to display messages, show variable contents, or generate output that can be piped to other commands. Echo is one of the most fundamental Unix commands for text output.</p>
 <h2>Options</h2>
 <h3><strong>-n</strong></h3>
-<p>Suppresses the trailing newline that <code>echo</code> normally adds to output.</p>
+<p>Suppresses the trailing newline that echo normally adds to output.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span>
 <span style="color: #000; font-style: italic">Hello$</span>
 </pre></div>
 <h3><strong>-e</strong></h3>
-<p>Enables interpretation of backslash escape sequences like <code>\n</code> for newline and <code>\t</code> for tab.</p>
+<p>Enables interpretation of backslash escape sequences.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello\nWorld&quot;</span>
 <span style="color: #000; font-style: italic">Hello</span>
 <span style="color: #000; font-style: italic">World</span>
 </pre></div>
 <h3><strong>--help</strong></h3>
-<p>Displays help information about the echo command.</p>
+<p>Display help information and exit.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>--help
 <span style="color: #000; font-style: italic">Usage: echo [SHORT-OPTION]... [STRING]...</span>
 <span style="color: #000; font-style: italic">  or:  echo LONG-OPTION</span>
@@ -80,15 +80,19 @@
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>Hello<span style="color: #F8F8F8"> </span>World
 <span style="color: #000; font-style: italic">Hello World</span>
 </pre></div>
-<h3>Displaying variable contents</h3>
+<h3>Displaying variable values</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;John&quot;</span>
 <span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;My name is </span><span style="color: #000">$name</span><span style="color: #4E9A06">&quot;</span>
 <span style="color: #000; font-style: italic">My name is John</span>
 </pre></div>
-<h3>Using escape sequences</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Tab:\t1\t2\t3\nNewline&quot;</span>
-<span style="color: #000; font-style: italic">Tab:	1	2	3</span>
-<span style="color: #000; font-style: italic">Newline</span>
+<h3>Using escape sequences with -e</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Tab:\t| Newline:\n| Backslash:\\&quot;</span>
+<span style="color: #000; font-style: italic">Tab:	| Newline:</span>
+<span style="color: #000; font-style: italic">| Backslash:\</span>
+</pre></div>
+<h3>Suppressing newline with -n</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Enter your name: &quot;</span>
+<span style="color: #000; font-style: italic">Enter your name: $</span>
 </pre></div>
 <h3>Redirecting output to a file</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;This is a test&quot;</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>test.txt
@@ -96,8 +100,8 @@
 <span style="color: #000; font-style: italic">This is a test</span>
 </pre></div>
 <h2>Tips</h2>
-<h3>Quoting Differences</h3>
-<p>Single quotes (<code>'</code>) prevent variable expansion and escape sequence interpretation, while double quotes (<code>&quot;</code>) allow them.</p>
+<h3>Quoting Matters</h3>
+<p>Single quotes (<code>'</code>) prevent variable expansion and escape sequence interpretation, while double quotes (<code>&quot;</code>) allow them:</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;John&quot;</span>
 <span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello </span><span style="color: #000">$name</span><span style="color: #4E9A06">&quot;</span>
 <span style="color: #000; font-style: italic">Hello John</span>
@@ -105,31 +109,33 @@
 <span style="color: #000; font-style: italic">Hello $name</span>
 </pre></div>
 <h3>Combining with Command Substitution</h3>
-<p>Use <code>echo</code> with command substitution to display command results:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Today&#39;s date is </span><span style="color: #204A87; font-weight: bold">$(</span>date<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span>
-<span style="color: #000; font-style: italic">Today&#39;s date is Wed Apr 30 10:15:23 PDT 2025</span>
+<p>Use echo with command substitution to format command output:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Current date: </span><span style="color: #204A87; font-weight: bold">$(</span>date<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">Current date: Tue May 4 10:15:30 EDT 2025</span>
 </pre></div>
-<h3>Multiline Output</h3>
-<p>Create multiline output with escape sequences:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Line 1\nLine 2\nLine 3&quot;</span>
-<span style="color: #000; font-style: italic">Line 1</span>
-<span style="color: #000; font-style: italic">Line 2</span>
-<span style="color: #000; font-style: italic">Line 3</span>
-</pre></div>
+<h3>Escape Sequences with -e</h3>
+<p>Common escape sequences include:</p>
+<ul>
+<li><code>\n</code> - newline</li>
+<li><code>\t</code> - tab</li>
+<li><code>\b</code> - backspace</li>
+<li><code>\\</code> - backslash</li>
+<li><code>\a</code> - alert (bell)</li>
+</ul>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between echo and printf?</h4>
-<p>A. <code>echo</code> is simpler but less powerful than <code>printf</code>. <code>printf</code> offers more formatting options and better control over output formatting.</p>
+<p>A. <code>echo</code> is simpler but less powerful than <code>printf</code>. While <code>echo</code> is good for basic output, <code>printf</code> offers more formatting control similar to C's printf function.</p>
 <h4>Q2. How do I echo without a newline?</h4>
 <p>A. Use the <code>-n</code> option: <code>echo -n &quot;text&quot;</code>.</p>
 <h4>Q3. How can I display special characters like tabs or newlines?</h4>
-<p>A. Use the <code>-e</code> option with escape sequences: <code>echo -e &quot;Tab:\t Newline:\n&quot;</code>.</p>
+<p>A. Use the <code>-e</code> option with escape sequences: <code>echo -e &quot;Line1\nLine2\tTabbed&quot;</code>.</p>
 <h4>Q4. Why doesn't echo -e work in some shells?</h4>
-<p>A. Some shell implementations (like some versions of <code>sh</code>) don't support the <code>-e</code> option. In those cases, use <code>printf</code> instead.</p>
+<p>A. Some shell implementations (like some versions of dash) don't support the <code>-e</code> option by default. In those cases, use <code>printf</code> instead.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/echo-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

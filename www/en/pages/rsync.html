@@ -47,19 +47,18 @@
     <main>
       
   <h1>rsync command</h1>
-<p>Synchronize files and directories between locations efficiently.</p>
+<p>Synchronize files and directories between locations, locally or remotely.</p>
 <h2>Overview</h2>
-<p><code>rsync</code> is a fast, versatile file copying and synchronization tool that can work locally or over remote connections. It's designed to efficiently transfer and synchronize files between directories or systems by copying only the differences between source and destination, making it much faster than regular copy tools for subsequent transfers.</p>
+<p><code>rsync</code> is a fast, versatile file copying and synchronization tool that can work locally or over remote connections. It's designed to efficiently transfer and synchronize files between directories or hosts, copying only the differences between source and destination. This makes it faster than regular copy commands, especially for large files or when synchronizing frequently.</p>
 <h2>Options</h2>
 <h3><strong>-a, --archive</strong></h3>
-<p>Archive mode, which preserves permissions, ownership, timestamps, and recursively copies directories.</p>
+<p>Archive mode, which preserves almost everything (equivalent to -rlptgoD). This is the most commonly used option for backup operations.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rsync<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>/source/directory/<span style="color: #F8F8F8"> </span>/destination/directory/
 </pre></div>
 <h3><strong>-v, --verbose</strong></h3>
-<p>Displays detailed information about the transfer process.</p>
+<p>Increase verbosity, showing which files are being transferred.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rsync<span style="color: #F8F8F8"> </span>-av<span style="color: #F8F8F8"> </span>/source/directory/<span style="color: #F8F8F8"> </span>/destination/directory/
 <span style="color: #000; font-style: italic">sending incremental file list</span>
-<span style="color: #000; font-style: italic">./</span>
 <span style="color: #000; font-style: italic">file1.txt</span>
 <span style="color: #000; font-style: italic">file2.txt</span>
 <span style="color: #000; font-style: italic">directory/</span>
@@ -69,16 +68,30 @@
 <span style="color: #000; font-style: italic">total size is 10,240  speedup is 8.04</span>
 </pre></div>
 <h3><strong>-z, --compress</strong></h3>
-<p>Compresses file data during the transfer, useful for slow connections.</p>
+<p>Compress file data during the transfer to reduce bandwidth usage.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rsync<span style="color: #F8F8F8"> </span>-avz<span style="color: #F8F8F8"> </span>/source/directory/<span style="color: #F8F8F8"> </span>user@remote-host:/destination/directory/
 </pre></div>
+<h3><strong>-P, --partial --progress</strong></h3>
+<p>Shows progress during transfer and keeps partially transferred files.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rsync<span style="color: #F8F8F8"> </span>-avP<span style="color: #F8F8F8"> </span>large_file.iso<span style="color: #F8F8F8"> </span>/backup/
+<span style="color: #000; font-style: italic">sending incremental file list</span>
+<span style="color: #000; font-style: italic">large_file.iso</span>
+<span style="color: #000; font-style: italic">    852,492,288 100%   85.23MB/s    0:00:09 (xfr#1, to-chk=0/1)</span>
+</pre></div>
 <h3><strong>--delete</strong></h3>
-<p>Deletes files in the destination that don't exist in the source, making the destination an exact mirror.</p>
+<p>Delete files in the destination that don't exist in the source, making the destination an exact mirror.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rsync<span style="color: #F8F8F8"> </span>-av<span style="color: #F8F8F8"> </span>--delete<span style="color: #F8F8F8"> </span>/source/directory/<span style="color: #F8F8F8"> </span>/destination/directory/
 </pre></div>
 <h3><strong>-n, --dry-run</strong></h3>
-<p>Performs a trial run without making any changes, showing what would happen.</p>
+<p>Perform a trial run without making any changes.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rsync<span style="color: #F8F8F8"> </span>-avn<span style="color: #F8F8F8"> </span>--delete<span style="color: #F8F8F8"> </span>/source/directory/<span style="color: #F8F8F8"> </span>/destination/directory/
+<span style="color: #000; font-style: italic">sending incremental file list</span>
+<span style="color: #000; font-style: italic">./</span>
+<span style="color: #000; font-style: italic">file1.txt</span>
+<span style="color: #000; font-style: italic">file2.txt</span>
+
+<span style="color: #000; font-style: italic">sent 123 bytes  received 42 bytes  330.00 bytes/sec</span>
+<span style="color: #000; font-style: italic">total size is 10,240  speedup is 62.07 (DRY RUN)</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Synchronizing to a Remote Server</h3>
@@ -89,40 +102,47 @@
 <span style="color: #000; font-style: italic">presentation.pptx</span>
 <span style="color: #000; font-style: italic">data.xlsx</span>
 
-<span style="color: #000; font-style: italic">sent 15,234 bytes  received 52 bytes  10,190.67 bytes/sec</span>
-<span style="color: #000; font-style: italic">total size is 45,678  speedup is 2.99</span>
+<span style="color: #000; font-style: italic">sent 2,345,678 bytes  received 1,234 bytes  469,382.40 bytes/sec</span>
+<span style="color: #000; font-style: italic">total size is 2,340,000  speedup is 0.99</span>
 </pre></div>
-<h3>Backing Up with Exclusions</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rsync<span style="color: #F8F8F8"> </span>-av<span style="color: #F8F8F8"> </span>--exclude<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&#39;*.tmp&#39;</span><span style="color: #F8F8F8"> </span>--exclude<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&#39;cache/&#39;</span><span style="color: #F8F8F8"> </span>/home/user/<span style="color: #F8F8F8"> </span>/media/backup/
+<h3>Creating a Backup with Exclusions</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rsync<span style="color: #F8F8F8"> </span>-av<span style="color: #F8F8F8"> </span>--exclude<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&#39;*.tmp&#39;</span><span style="color: #F8F8F8"> </span>--exclude<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&#39;cache/&#39;</span><span style="color: #F8F8F8"> </span>/home/user/<span style="color: #F8F8F8"> </span>/mnt/backup/home/
 </pre></div>
 <h3>Mirroring a Website</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rsync<span style="color: #F8F8F8"> </span>-avz<span style="color: #F8F8F8"> </span>--delete<span style="color: #F8F8F8"> </span>user@website.com:/var/www/html/<span style="color: #F8F8F8"> </span>/local/mirror/
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rsync<span style="color: #F8F8F8"> </span>-avz<span style="color: #F8F8F8"> </span>--delete<span style="color: #F8F8F8"> </span>user@remote-server:/var/www/html/<span style="color: #F8F8F8"> </span>/local/mirror/
 </pre></div>
-<h2>Tips</h2>
+<h3>Resuming a Large Transfer</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rsync<span style="color: #F8F8F8"> </span>-avP<span style="color: #F8F8F8"> </span>--partial<span style="color: #F8F8F8"> </span>user@remote-server:large_file.iso<span style="color: #F8F8F8"> </span>/downloads/
+</pre></div>
+<h2>Tips:</h2>
 <h3>Use Trailing Slashes Carefully</h3>
-<p>A trailing slash on the source means &quot;copy the contents of this directory,&quot; while no trailing slash means &quot;copy this directory and its contents.&quot; This subtle difference can significantly affect the result.</p>
-<h3>Protect Against Accidental Overwrites</h3>
-<p>Use <code>--dry-run</code> first to see what changes would be made before running the actual command, especially when using <code>--delete</code>.</p>
-<h3>Limit Bandwidth Usage</h3>
-<p>Use <code>--bwlimit=RATE</code> to limit bandwidth usage (in KB/s), which is helpful when syncing over a network without consuming all available bandwidth.</p>
-<h3>Resume Interrupted Transfers</h3>
-<p>If a transfer is interrupted, simply run the same command again, and rsync will continue where it left off, transferring only the remaining data.</p>
+<p>When copying directories, a trailing slash on the source (<code>/source/</code>) means &quot;copy the contents of this directory&quot; while no trailing slash (<code>/source</code>) means &quot;copy this directory and its contents.&quot;</p>
+<h3>Set Up SSH Keys for Passwordless Transfers</h3>
+<p>For frequent remote transfers, set up SSH key authentication to avoid entering passwords repeatedly.</p>
+<h3>Use Bandwidth Limiting for Background Transfers</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rsync<span style="color: #F8F8F8"> </span>--bwlimit<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1000</span><span style="color: #F8F8F8"> </span>-av<span style="color: #F8F8F8"> </span>/source/<span style="color: #F8F8F8"> </span>/destination/
+</pre></div>
+<p>This limits transfer speed to 1000 KB/s, useful for background transfers that shouldn't consume all bandwidth.</p>
+<h3>Create Snapshots with Hard Links</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rsync<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>--link-dest<span style="color: #CE5C00; font-weight: bold">=</span>/backup/previous<span style="color: #F8F8F8"> </span>/source/<span style="color: #F8F8F8"> </span>/backup/current/
+</pre></div>
+<p>This creates space-efficient backups by hard-linking unchanged files to previous backups.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How does rsync differ from regular copy commands?</h4>
-<p>A. rsync only transfers the differences between files, making subsequent transfers much faster, and it offers many options for preserving file attributes and handling remote transfers.</p>
-<h4>Q2. Can rsync work over SSH?</h4>
-<p>A. Yes, rsync uses SSH by default for remote transfers, providing security and authentication.</p>
-<h4>Q3. How do I exclude multiple file types?</h4>
-<p>A. Use multiple <code>--exclude</code> options or create an exclude file with patterns and use <code>--exclude-from=FILE</code>.</p>
-<h4>Q4. Can rsync delete files?</h4>
-<p>A. Yes, with the <code>--delete</code> option, rsync will remove files in the destination that don't exist in the source.</p>
-<h4>Q5. How do I sync files while preserving hard links?</h4>
-<p>A. Use the <code>-H</code> or <code>--hard-links</code> option to preserve hard links between files in the transfer.</p>
+<h4>Q1. How does rsync differ from scp or cp?</h4>
+<p>A. Unlike <code>cp</code> or <code>scp</code>, rsync only transfers the differences between files, making it much faster for subsequent transfers of the same data. It also offers more options for preserving file attributes and handling synchronization.</p>
+<h4>Q2. Can rsync resume interrupted transfers?</h4>
+<p>A. Yes, with the <code>--partial</code> option (or <code>-P</code>), rsync can resume partially transferred files instead of starting over.</p>
+<h4>Q3. How do I ensure rsync doesn't delete any files in the destination?</h4>
+<p>A. By default, rsync doesn't delete files. It only adds or updates files from the source. The <code>--delete</code> option must be explicitly specified to remove files in the destination that don't exist in the source.</p>
+<h4>Q4. How can I test what rsync will do before actually doing it?</h4>
+<p>A. Use the <code>--dry-run</code> or <code>-n</code> option to see what would be transferred without making any actual changes.</p>
+<h4>Q5. Can rsync synchronize files between two remote servers?</h4>
+<p>A. Yes, but you need to run rsync on one of the servers or use the <code>--rsync-path</code> option to specify the path to rsync on the remote machine.</p>
 <h2>References</h2>
-<p>https://rsync.samba.org/documentation.html</p>
+<p>https://download.samba.org/pub/rsync/rsync.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

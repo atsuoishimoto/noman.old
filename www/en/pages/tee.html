@@ -49,7 +49,7 @@
   <h1>tee command</h1>
 <p>Read from standard input and write to both standard output and files.</p>
 <h2>Overview</h2>
-<p>The <code>tee</code> command reads from standard input and writes to both standard output and one or more files simultaneously. It's commonly used in command pipelines to capture output while still allowing it to continue through the pipeline. Think of it like a T-shaped pipe fitting in plumbing, where the flow splits in two directions.</p>
+<p>The <code>tee</code> command reads from standard input and writes to both standard output and one or more files simultaneously. This allows you to view command output in the terminal while also saving it to a file. It's commonly used in pipelines to capture intermediate results.</p>
 <h2>Options</h2>
 <h3><strong>-a, --append</strong></h3>
 <p>Append to the given files, don't overwrite them</p>
@@ -57,57 +57,93 @@
 <span style="color: #000; font-style: italic">Additional line</span>
 </pre></div>
 <h3><strong>-i, --ignore-interrupts</strong></h3>
-<p>Ignore interrupt signals (useful for ensuring data is written even if the process is interrupted)</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>long_running_command<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>log.txt
-<span style="color: #000; font-style: italic">[output continues while being saved to log.txt]</span>
+<p>Ignore interrupt signals (SIGINT)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>long_running_command<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>output.log
+</pre></div>
+<h3><strong>--help</strong></h3>
+<p>Display help information and exit</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tee<span style="color: #F8F8F8"> </span>--help
+<span style="color: #000; font-style: italic">Usage: tee [OPTION]... [FILE]...</span>
+<span style="color: #000; font-style: italic">Copy standard input to each FILE, and also to standard output.</span>
+
+<span style="color: #000; font-style: italic">  -a, --append              append to the given FILEs, do not overwrite</span>
+<span style="color: #000; font-style: italic">  -i, --ignore-interrupts   ignore interrupt signals</span>
+<span style="color: #000; font-style: italic">  -p                        diagnose errors writing to non pipes</span>
+<span style="color: #000; font-style: italic">      --output-error[=MODE]   set behavior on write error.  See MODE below</span>
+<span style="color: #000; font-style: italic">      --help     display this help and exit</span>
+<span style="color: #000; font-style: italic">      --version  output version information and exit</span>
+
+<span style="color: #000; font-style: italic">MODE determines behavior with write errors on the outputs:</span>
+<span style="color: #000; font-style: italic">  &#39;warn&#39;         diagnose errors writing to any output</span>
+<span style="color: #000; font-style: italic">  &#39;warn-nopipe&#39;  diagnose errors writing to any output not a pipe</span>
+<span style="color: #000; font-style: italic">  &#39;exit&#39;         exit on error writing to any output</span>
+<span style="color: #000; font-style: italic">  &#39;exit-nopipe&#39;  exit on error writing to any output not a pipe</span>
+<span style="color: #000; font-style: italic">The default MODE for the -p option is &#39;warn-nopipe&#39;.</span>
+<span style="color: #000; font-style: italic">The default operation when --output-error is not specified, is to</span>
+<span style="color: #000; font-style: italic">exit immediately on error writing to a pipe, and diagnose errors</span>
+<span style="color: #000; font-style: italic">writing to non pipe outputs.</span>
+
+<span style="color: #000; font-style: italic">GNU coreutils online help: &lt;https://www.gnu.org/software/coreutils/&gt;</span>
+<span style="color: #000; font-style: italic">Report any translation bugs to &lt;https://translationproject.org/team/&gt;</span>
+<span style="color: #000; font-style: italic">Full documentation &lt;https://www.gnu.org/software/coreutils/tee&gt;</span>
+<span style="color: #000; font-style: italic">or available locally via: info &#39;(coreutils) tee invocation&#39;</span>
+</pre></div>
+<h3><strong>--version</strong></h3>
+<p>Output version information and exit</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tee<span style="color: #F8F8F8"> </span>--version
+<span style="color: #000; font-style: italic">tee (GNU coreutils) 9.0</span>
+<span style="color: #000; font-style: italic">Copyright (C) 2022 Free Software Foundation, Inc.</span>
+<span style="color: #000; font-style: italic">License GPLv3+: GNU GPL version 3 or later &lt;https://gnu.org/licenses/gpl.html&gt;.</span>
+<span style="color: #000; font-style: italic">This is free software: you are free to change and redistribute it.</span>
+<span style="color: #000; font-style: italic">There is NO WARRANTY, to the extent permitted by law.</span>
+
+<span style="color: #000; font-style: italic">Written by Mike Parker, Richard M. Stallman, and David MacKenzie.</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Basic Usage</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, world!&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>output.txt
-<span style="color: #000; font-style: italic">Hello, world!</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>file_list.txt
+<span style="color: #000; font-style: italic">total 16</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 1024 May 4 10:30 document.txt</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x 2 user group 4096 May 3 15:45 projects</span>
 </pre></div>
-<p>This writes &quot;Hello, world!&quot; to both the terminal and the file output.txt.</p>
 <h3>Writing to Multiple Files</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Same content in multiple files&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt
-<span style="color: #000; font-style: italic">Same content in multiple files</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, World!&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt
+<span style="color: #000; font-style: italic">Hello, World!</span>
 </pre></div>
-<p>This writes the same content to three different files while also displaying it on the terminal.</p>
-<h3>Capturing Command Output While Using It</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-la<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>file_listing.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;.txt&quot;</span>
-<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff   15 Apr 30 10:23 file1.txt</span>
-<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff   15 Apr 30 10:23 file2.txt</span>
-<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff   15 Apr 30 10:23 file3.txt</span>
-<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff   28 Apr 30 10:23 file_listing.txt</span>
+<h3>Combining with sudo</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>config.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sudo<span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>/etc/app/config.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>/dev/null
 </pre></div>
-<p>This lists all files, saves the complete listing to file_listing.txt, and then filters to show only .txt files on the screen.</p>
-<h2>Tips:</h2>
-<h3>Use with sudo</h3>
-<p>When you need to view and save output that requires elevated privileges, <code>tee</code> can help:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span><span style="color: #204A87">command</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>output.txt
-</pre></div>
-<p>This runs the command with sudo but writes the output to a file owned by your user (not root).</p>
-<h3>Combining with Other Commands</h3>
-<p><code>tee</code> works well in complex pipelines. For example, to process data, save an intermediate result, and continue processing:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>sorted.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>unique.txt
-</pre></div>
-<h3>Logging and Debugging</h3>
-<p>Use <code>tee</code> to log command output while still seeing it in real-time, which is helpful for debugging:</p>
+<h3>Capturing Command Output While Viewing It</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>make<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>build.log
+<span style="color: #000; font-style: italic">[compilation output appears here and is also saved to build.log]</span>
+</pre></div>
+<h2>Tips:</h2>
+<h3>Use with sudo to Edit Protected Files</h3>
+<p>When you need to edit a file that requires elevated privileges, you can use <code>tee</code> with <code>sudo</code> to write to the file:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;new content&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sudo<span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>/etc/protected_file.txt
+</pre></div>
+<h3>Discard Standard Output</h3>
+<p>If you only want to write to files without seeing the output in the terminal, redirect standard output to <code>/dev/null</code>:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">command</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>output.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>/dev/null
+</pre></div>
+<h3>Capture Both stdout and stderr</h3>
+<p>To capture both standard output and standard error:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">command</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>&gt;<span style="color: #000; font-weight: bold">&amp;</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>tee<span style="color: #F8F8F8"> </span>output.log
 </pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What does the name &quot;tee&quot; mean?</h4>
-<p>A. The name comes from the T-shaped pipe fitting in plumbing, which splits flow in two directions, similar to how the command splits output to both the screen and files.</p>
-<h4>Q2. How is <code>tee</code> different from redirection with <code>&gt;</code>?</h4>
-<p>A. While <code>command &gt; file</code> redirects output only to a file (not showing it on screen), <code>command | tee file</code> shows the output on screen while also saving it to a file.</p>
-<h4>Q3. Can I use <code>tee</code> with sudo to write to protected files?</h4>
-<p>A. Yes. <code>command | sudo tee /protected/file</code> allows you to write to files that require elevated privileges.</p>
-<h4>Q4. Does <code>tee</code> overwrite existing files?</h4>
-<p>A. By default, yes. Use <code>tee -a</code> to append to files instead of overwriting them.</p>
+<h4>Q1. What's the difference between <code>tee</code> and simple redirection (<code>&gt;</code>)?</h4>
+<p>A. While redirection (<code>&gt;</code>) only writes output to a file, <code>tee</code> writes to both the file and standard output, allowing you to see the output in the terminal while saving it.</p>
+<h4>Q2. How do I append to a file instead of overwriting it?</h4>
+<p>A. Use the <code>-a</code> option: <code>command | tee -a file.txt</code></p>
+<h4>Q3. Can I write to multiple files at once?</h4>
+<p>A. Yes, simply list all the files: <code>command | tee file1.txt file2.txt file3.txt</code></p>
+<h4>Q4. How do I use <code>tee</code> to write to a file that requires root permissions?</h4>
+<p>A. Combine with sudo: <code>command | sudo tee /path/to/file &gt; /dev/null</code></p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/tee-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

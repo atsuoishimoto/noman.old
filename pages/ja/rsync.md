@@ -1,170 +1,158 @@
 # rsync コマンド
 
-ファイルやディレクトリを効率的に同期・コピーするためのツール。
+ファイルやディレクトリをローカルまたはリモート間で同期します。
 
 ## 概要
 
-rsync（remote synchronization）は、ローカルまたはリモートのファイルやディレクトリを同期するためのコマンドです。増分バックアップ機能を持ち、変更されたファイルのみを転送することで効率的なデータ転送を実現します。ネットワーク帯域幅を節約し、大量のデータを扱う場合に特に有用です。
+`rsync`は、高速で多機能なファイルコピーおよび同期ツールで、ローカルまたはリモート接続を介して動作します。ソースとデスティネーション間の差分のみを転送することで、ディレクトリやホスト間でファイルを効率的に転送・同期するように設計されています。これにより、特に大きなファイルや頻繁に同期する場合には、通常のコピーコマンドよりも高速に処理できます。
 
 ## オプション
 
-### **-a (アーカイブモード)**
+### **-a, --archive**
 
-ディレクトリの再帰的コピー、シンボリックリンクの保持、ファイル権限・タイムスタンプ・所有者などのメタデータを保持します。
+アーカイブモードで、ほぼすべての属性を保持します（-rlptgoDと同等）。バックアップ操作で最も一般的に使用されるオプションです。
 
 ```console
-$ rsync -a /home/user/documents/ /backup/documents/
+$ rsync -a /source/directory/ /destination/directory/
 ```
 
-### **-v (詳細表示)**
+### **-v, --verbose**
 
-転送されるファイルの一覧と進捗状況を表示します。
+詳細表示を増やし、転送されているファイルを表示します。
 
 ```console
-$ rsync -av /home/user/documents/ /backup/documents/
+$ rsync -av /source/directory/ /destination/directory/
 sending incremental file list
-./
 file1.txt
 file2.txt
 directory/
 directory/file3.txt
 
 sent 1,234 bytes  received 42 bytes  2,552.00 bytes/sec
-total size is 10,240  speedup is 8.02
+total size is 10,240  speedup is 8.04
 ```
 
-### **-z (圧縮)**
+### **-z, --compress**
 
-転送中にデータを圧縮します。ネットワーク経由の転送で特に有用です。
+転送中にファイルデータを圧縮して、帯域幅の使用量を削減します。
 
 ```console
-$ rsync -avz /home/user/documents/ user@remote-server:/backup/documents/
+$ rsync -avz /source/directory/ user@remote-host:/destination/directory/
+```
+
+### **-P, --partial --progress**
+
+転送中の進行状況を表示し、部分的に転送されたファイルを保持します。
+
+```console
+$ rsync -avP large_file.iso /backup/
+sending incremental file list
+large_file.iso
+    852,492,288 100%   85.23MB/s    0:00:09 (xfr#1, to-chk=0/1)
 ```
 
 ### **--delete**
 
-送信先にあって送信元にないファイルを削除し、完全な同期を行います。
+ソースに存在しないデスティネーション内のファイルを削除し、デスティネーションをソースの完全なミラーにします。
 
 ```console
-$ rsync -av --delete /home/user/documents/ /backup/documents/
+$ rsync -av --delete /source/directory/ /destination/directory/
 ```
 
-### **-P (進捗表示と部分転送の再開)**
+### **-n, --dry-run**
 
-進捗バーを表示し、中断された転送を再開できるようにします。
+実際に変更を加えずに試験実行を行います。
 
 ```console
-$ rsync -avP large_file.iso user@remote-server:/backup/
+$ rsync -avn --delete /source/directory/ /destination/directory/
 sending incremental file list
-large_file.iso
-    873,123,456 67% 25.4MB/s    0:01:23
+./
+file1.txt
+file2.txt
+
+sent 123 bytes  received 42 bytes  330.00 bytes/sec
+total size is 10,240  speedup is 62.07 (DRY RUN)
 ```
 
 ## 使用例
 
-### ローカルディレクトリの同期
+### リモートサーバーへの同期
 
 ```console
-$ rsync -av ~/documents/ /media/backup/documents/
+$ rsync -avz ~/Documents/ user@remote-server:/backup/documents/
 sending incremental file list
 ./
 report.docx
 presentation.pptx
-images/
-images/photo1.jpg
-images/photo2.jpg
+data.xlsx
 
-sent 15,234,567 bytes  received 1,234 bytes  10,156,534.00 bytes/sec
-total size is 15,200,000  speedup is 0.99
+sent 2,345,678 bytes  received 1,234 bytes  469,382.40 bytes/sec
+total size is 2,340,000  speedup is 0.99
 ```
 
-### リモートサーバーへのバックアップ
+### 除外ファイルを指定したバックアップの作成
 
 ```console
-$ rsync -avz --delete ~/projects/ user@server.example.com:/backup/projects/
-sending incremental file list
-./
-index.html
-css/style.css
-js/script.js
-
-sent 45,678 bytes  received 987 bytes  18,666.00 bytes/sec
-total size is 45,000  speedup is 0.97
+$ rsync -av --exclude='*.tmp' --exclude='cache/' /home/user/ /mnt/backup/home/
 ```
 
-### 特定のファイルタイプのみ同期
+### ウェブサイトのミラーリング
 
 ```console
-$ rsync -av --include="*.jpg" --include="*.png" --exclude="*" ~/pictures/ /media/backup/pictures/
-sending incremental file list
-./
-vacation.jpg
-family.png
-portrait.jpg
+$ rsync -avz --delete user@remote-server:/var/www/html/ /local/mirror/
+```
 
-sent 8,765,432 bytes  received 123 bytes  5,843,703.33 bytes/sec
-total size is 8,700,000  speedup is 0.99
+### 大きなファイル転送の再開
+
+```console
+$ rsync -avP --partial user@remote-server:large_file.iso /downloads/
 ```
 
 ## ヒント:
 
-### ドライランで確認
+### 末尾のスラッシュを注意して使用する
 
-`--dry-run`（または `-n`）オプションを使用すると、実際にファイルを転送せずに何が行われるかを確認できます。重要な同期やバックアップ前に試すと安全です。
+ディレクトリをコピーする際、ソースの末尾にスラッシュ（`/source/`）をつけると「このディレクトリの内容をコピー」を意味し、スラッシュなし（`/source`）は「このディレクトリとその内容をコピー」を意味します。
 
-```console
-$ rsync -avn --delete ~/documents/ /backup/documents/
-```
+### パスワードなし転送のためのSSH鍵の設定
 
-### SSHポートの指定
+頻繁にリモート転送を行う場合は、SSH鍵認証を設定して、パスワードの入力を省略できます。
 
-デフォルト以外のSSHポートを使用する場合は、`-e`オプションで指定できます。
+### バックグラウンド転送のための帯域制限
 
 ```console
-$ rsync -avz -e "ssh -p 2222" ~/documents/ user@server.example.com:/backup/
+$ rsync --bwlimit=1000 -av /source/ /destination/
 ```
+これにより転送速度が1000 KB/秒に制限され、すべての帯域幅を消費すべきでないバックグラウンド転送に役立ちます。
 
-### 帯域制限
-
-`--bwlimit`オプションを使用して転送速度を制限できます。値はKB/秒で指定します。
+### ハードリンクを使用したスナップショットの作成
 
 ```console
-$ rsync -av --bwlimit=1000 large_file.iso user@server.example.com:/backup/
+$ rsync -a --link-dest=/backup/previous /source/ /backup/current/
 ```
+これにより、変更されていないファイルを以前のバックアップにハードリンクすることで、容量効率の良いバックアップが作成できます。
 
 ## よくある質問
 
-#### Q1. rsyncとscpの違いは何ですか？
-A. rsyncは増分転送機能があり、変更されたファイルのみを転送するため効率的です。また、中断された転送の再開や同期機能があります。scpはシンプルなファイルコピーツールで、常に全ファイルを転送します。
+#### Q1. rsyncはscpやcpとどう違いますか？
+A. `cp`や`scp`と異なり、rsyncはファイル間の差分のみを転送するため、同じデータの後続の転送がはるかに高速になります。また、ファイル属性の保存や同期処理のためのより多くのオプションを提供しています。
 
-#### Q2. rsyncでディレクトリをコピーする際のスラッシュ（/）の意味は？
-A. 送信元パスの末尾にスラッシュを付けると、ディレクトリの内容のみがコピーされます。スラッシュがない場合は、ディレクトリ自体も含めてコピーされます。
+#### Q2. rsyncは中断された転送を再開できますか？
+A. はい、`--partial`オプション（または`-P`）を使用すると、rsyncは部分的に転送されたファイルを最初からやり直すのではなく、再開できます。
 
-#### Q3. バックグラウンドでrsyncを実行するには？
-A. `nohup rsync -av source/ destination/ &`のように実行すると、ターミナルを閉じても処理が継続します。
+#### Q3. rsyncがデスティネーションのファイルを削除しないようにするにはどうすればよいですか？
+A. デフォルトでは、rsyncはファイルを削除しません。ソースからファイルを追加または更新するだけです。ソースに存在しないデスティネーション内のファイルを削除するには、`--delete`オプションを明示的に指定する必要があります。
 
-#### Q4. 特定のファイルやディレクトリを除外するには？
-A. `--exclude="pattern"`オプションを使用します。例：`rsync -av --exclude="*.tmp" --exclude="cache/" source/ destination/`
+#### Q4. rsyncが実際に何をするかを事前にテストするにはどうすればよいですか？
+A. `--dry-run`または`-n`オプションを使用すると、実際に変更を加えることなく、何が転送されるかを確認できます。
 
-## macOSでの注意点
+#### Q5. rsyncは2つのリモートサーバー間でファイルを同期できますか？
+A. はい、ただしサーバーの1つでrsyncを実行するか、`--rsync-path`オプションを使用してリモートマシン上のrsyncへのパスを指定する必要があります。
 
-macOSでrsyncを使用する場合、デフォルトのバージョンは古い場合があります。Homebrewを使用して最新版をインストールすることをお勧めします：
+## References
 
-```console
-$ brew install rsync
-```
+https://download.samba.org/pub/rsync/rsync.html
 
-また、macOSのファイルシステムには特殊な属性（リソースフォーク、拡張属性など）があります。これらを保持するには`-E`オプションを追加してください：
+## Revisions
 
-```console
-$ rsync -avE source/ destination/
-```
-
-## 参考情報
-
-https://rsync.samba.org/documentation.html
-
-## 改訂履歴
-
-- 2025/04/30 macOSでの注意点を追加。
-- 2025/04/30 初版作成。
+- 2025/05/04 First revision

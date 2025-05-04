@@ -1,26 +1,26 @@
 # ssh-copy-id command
 
-Copies your SSH public key to a remote server to enable password-less authentication.
+Installs your public key in a remote machine's authorized keys file.
 
 ## Overview
 
-`ssh-copy-id` is a utility that installs your public key in a remote machine's authorized keys file. This allows you to connect to the remote server using SSH without entering a password each time, making remote access more convenient and secure.
+`ssh-copy-id` is a utility that copies your SSH public key to a remote server's `~/.ssh/authorized_keys` file, enabling password-less SSH logins. This tool simplifies the process of setting up key-based authentication, which is more secure than password authentication and eliminates the need to type passwords for each login.
 
 ## Options
 
-### **-i [identity_file]**
+### **-i identity_file** 
 
-Specifies the identity file (private key) to use. By default, it uses ~/.ssh/id_rsa.pub.
+Specifies the identity file (private key) to use. The corresponding public key will be copied to the server.
 
 ```console
-$ ssh-copy-id -i ~/.ssh/custom_key.pub user@remote-server
+$ ssh-copy-id -i ~/.ssh/custom_key.pub user@remote-host
 /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
 /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
-user@remote-server's password: 
+user@remote-host's password: 
 
 Number of key(s) added: 1
 
-Now try logging into the machine, with:   "ssh 'user@remote-server'"
+Now try logging into the machine, with:   "ssh 'user@remote-host'"
 and check to make sure that only the key(s) you wanted were added.
 ```
 
@@ -29,30 +29,43 @@ and check to make sure that only the key(s) you wanted were added.
 Forces the installation, even if the key already exists on the remote server.
 
 ```console
-$ ssh-copy-id -f user@remote-server
+$ ssh-copy-id -f user@remote-host
 /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
 /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
-user@remote-server's password: 
+user@remote-host's password: 
 
 Number of key(s) added: 1
 
-Now try logging into the machine, with:   "ssh 'user@remote-server'"
+Now try logging into the machine, with:   "ssh 'user@remote-host'"
 and check to make sure that only the key(s) you wanted were added.
 ```
 
-### **-p [port]**
+### **-n**
 
-Specifies a different port to connect to on the remote server.
+Performs a dry run, showing what keys would be installed without actually installing them.
 
 ```console
-$ ssh-copy-id -p 2222 user@remote-server
+$ ssh-copy-id -n user@remote-host
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/user/.ssh/id_rsa.pub"
 /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
 /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
-user@remote-server's password: 
+Would have added the following key(s):
+ssh-rsa AAAAB3NzaC1yc2EAAA...truncated...user@local-host
+```
+
+### **-p port**
+
+Specifies the port to connect to on the remote host.
+
+```console
+$ ssh-copy-id -p 2222 user@remote-host
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+user@remote-host's password: 
 
 Number of key(s) added: 1
 
-Now try logging into the machine, with:   "ssh -p 2222 'user@remote-server'"
+Now try logging into the machine, with:   "ssh -p 2222 'user@remote-host'"
 and check to make sure that only the key(s) you wanted were added.
 ```
 
@@ -61,28 +74,42 @@ and check to make sure that only the key(s) you wanted were added.
 ### Basic Usage
 
 ```console
-$ ssh-copy-id user@remote-server
+$ ssh-copy-id user@remote-host
 /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
 /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
-user@remote-server's password: 
+user@remote-host's password: 
 
 Number of key(s) added: 1
 
-Now try logging into the machine, with:   "ssh 'user@remote-server'"
+Now try logging into the machine, with:   "ssh 'user@remote-host'"
 and check to make sure that only the key(s) you wanted were added.
 ```
 
 ### Using a Specific Identity File
 
 ```console
-$ ssh-copy-id -i ~/.ssh/id_ed25519.pub user@remote-server
+$ ssh-copy-id -i ~/.ssh/id_ed25519.pub user@remote-host
 /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
 /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
-user@remote-server's password: 
+user@remote-host's password: 
 
 Number of key(s) added: 1
 
-Now try logging into the machine, with:   "ssh 'user@remote-server'"
+Now try logging into the machine, with:   "ssh 'user@remote-host'"
+and check to make sure that only the key(s) you wanted were added.
+```
+
+### Using a Non-Standard SSH Port
+
+```console
+$ ssh-copy-id -p 2222 user@remote-host
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+user@remote-host's password: 
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh -p 2222 'user@remote-host'"
 and check to make sure that only the key(s) you wanted were added.
 ```
 
@@ -90,45 +117,53 @@ and check to make sure that only the key(s) you wanted were added.
 
 ### Generate SSH Keys First
 
-Before using `ssh-copy-id`, make sure you have SSH keys generated. If not, create them with `ssh-keygen`.
+Before using `ssh-copy-id`, ensure you have SSH keys generated. If not, create them with:
 
-### Verify After Installation
+```console
+$ ssh-keygen -t rsa -b 4096
+```
 
-After running `ssh-copy-id`, verify that password-less login works by running `ssh user@remote-server`.
+### Verify Key Installation
+
+After running `ssh-copy-id`, verify the setup by attempting to SSH into the remote server. You should connect without being prompted for a password.
 
 ### Multiple Keys
 
-You can install multiple keys by specifying them with multiple `-i` options or by using wildcards like `-i ~/.ssh/*.pub`.
+If you have multiple SSH keys, specify which public key to install using the `-i` option. Otherwise, `ssh-copy-id` will use the default keys in your `~/.ssh` directory.
 
 ### Remote Server Requirements
 
-The remote server must have SSH access enabled and the `~/.ssh` directory must exist (it will be created if it doesn't).
+The remote server must have SSH server running and allow password authentication initially (to set up key-based authentication).
 
 ## Frequently Asked Questions
 
 #### Q1. What does ssh-copy-id actually do?
-A. It copies your public SSH key to the remote server's `~/.ssh/authorized_keys` file, enabling password-less authentication.
+A. It copies your public SSH key to the remote server's `~/.ssh/authorized_keys` file, enabling password-less SSH logins using key-based authentication.
 
-#### Q2. What if I get a "Permission denied" error?
-A. Ensure you have the correct username and password for the remote server. Also, check that the remote user has permission to write to their home directory.
+#### Q2. Do I need to run ssh-copy-id more than once?
+A. You only need to run it once per key per server. If you generate a new key or want to access a new server, you'll need to run it again.
 
-#### Q3. Can I use ssh-copy-id with a custom SSH port?
-A. Yes, use the `-p` option followed by the port number: `ssh-copy-id -p 2222 user@remote-server`.
+#### Q3. What if ssh-copy-id fails?
+A. Common issues include: the remote server doesn't have the `~/.ssh` directory (it will be created), incorrect permissions on the remote `~/.ssh` directory, or SSH password authentication is disabled on the server.
 
-#### Q4. How do I know if it worked?
-A. Try logging in with `ssh user@remote-server`. If you're not prompted for a password, it worked successfully.
+#### Q4. Can I use ssh-copy-id with a custom SSH configuration?
+A. Yes, `ssh-copy-id` uses your SSH configuration. If you have custom settings in `~/.ssh/config`, they will be applied.
 
-#### Q5. Can I use ssh-copy-id to a server that doesn't allow password authentication?
-A. No, ssh-copy-id requires password authentication for the initial connection. You'll need to manually copy your public key to the server.
+#### Q5. How do I remove a key I've added with ssh-copy-id?
+A. You need to manually edit the `~/.ssh/authorized_keys` file on the remote server and remove the line containing the key you want to remove.
 
-## macOS Considerations
+## macOS Precautions
 
-On macOS, `ssh-copy-id` might not be installed by default. If you get a "command not found" error, install it using Homebrew with `brew install ssh-copy-id`. The functionality is otherwise identical to Linux systems.
+On macOS, `ssh-copy-id` may not be installed by default. You can install it via Homebrew with `brew install ssh-copy-id`. Alternatively, you can manually copy your public key to the remote server:
+
+```console
+$ cat ~/.ssh/id_rsa.pub | ssh user@remote-host "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+```
 
 ## References
 
-https://www.ssh.com/academy/ssh/copy-id
+https://man.openbsd.org/ssh-copy-id
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

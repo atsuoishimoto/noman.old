@@ -1,40 +1,101 @@
 # git command
 
-Manage source code and track changes in files with a distributed version control system.
+Distributed version control system for tracking changes in source code during software development.
 
 ## Overview
 
-Git is a distributed version control system that tracks changes in files, allowing multiple people to collaborate on projects. It maintains a history of file changes, enables branching and merging of code, and facilitates both local and remote repository management. Git helps developers track, compare, and revert changes while working independently or collaboratively.
+Git is a distributed version control system that allows multiple developers to work on a project simultaneously. It tracks changes to files, maintains a history of modifications, and facilitates collaboration by enabling users to merge changes from different sources. Git operates primarily through a local repository, with the ability to synchronize with remote repositories.
 
 ## Options
 
-### **init**
+### **-v, --version**
 
-Creates a new Git repository in the current directory
+Display the version of Git installed
+
+```console
+$ git --version
+git version 2.39.2
+```
+
+### **-h, --help**
+
+Display help information for Git or a specific Git command
+
+```console
+$ git --help
+usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]
+           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
+           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]
+           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
+           [--super-prefix=<path>] [--config-env=<name>=<envvar>]
+           <command> [<args>]
+```
+
+### **-C, --work-tree=<path>**
+
+Run a command as if git was started in the specified path
+
+```console
+$ git -C /path/to/repository status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+```
+
+### **-c, --config-env=<name>=<value>**
+
+Set a configuration variable for a single command
+
+```console
+$ git -c user.name="Temporary User" commit -m "One-time commit with different user"
+[main 1a2b3c4] One-time commit with different user
+ 1 file changed, 5 insertions(+)
+```
+
+## Usage Examples
+
+### Initializing a new repository
 
 ```console
 $ git init
 Initialized empty Git repository in /path/to/project/.git/
 ```
 
-### **clone**
-
-Creates a copy of a remote repository on your local machine
+### Cloning an existing repository
 
 ```console
 $ git clone https://github.com/username/repository.git
 Cloning into 'repository'...
-remote: Enumerating objects: 125, done.
-remote: Counting objects: 100% (125/125), done.
-remote: Compressing objects: 100% (80/80), done.
-remote: Total 125 (delta 58), reused 95 (delta 37)
-Receiving objects: 100% (125/125), 2.31 MiB | 3.15 MiB/s, done.
-Resolving deltas: 100% (58/58), done.
+remote: Enumerating objects: 1463, done.
+remote: Counting objects: 100% (1463/1463), done.
+remote: Compressing objects: 100% (750/750), done.
+remote: Total 1463 (delta 713), reused 1463 (delta 713), pack-reused 0
+Receiving objects: 100% (1463/1463), 2.56 MiB | 5.12 MiB/s, done.
+Resolving deltas: 100% (713/713), done.
 ```
 
-### **status**
+### Basic workflow example
 
-Shows the current state of your working directory and staging area
+```console
+$ git add file.txt
+$ git commit -m "Add new file"
+[main 1a2b3c4] Add new file
+ 1 file changed, 10 insertions(+)
+ create mode 100644 file.txt
+$ git push origin main
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
+Total 3 (delta 1), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To https://github.com/username/repository.git
+   a1b2c3d..1a2b3c4  main -> main
+```
+
+### Checking repository status
 
 ```console
 $ git status
@@ -46,149 +107,59 @@ Changes not staged for commit:
   (use "git restore <file>..." to discard changes in working directory)
         modified:   README.md
 
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-        new-file.txt
-```
-
-### **add**
-
-Adds file changes to the staging area for the next commit
-
-```console
-$ git add README.md
-$ git status
-On branch main
-Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
-        modified:   README.md
-```
-
-### **commit**
-
-Records staged changes to the repository with a descriptive message
-
-```console
-$ git commit -m "Update README with installation instructions"
-[main 5d7e9f4] Update README with installation instructions
- 1 file changed, 15 insertions(+), 2 deletions(-)
-```
-
-### **log**
-
-Shows the commit history
-
-```console
-$ git log
-commit 5d7e9f4a9e7d4a7e9f4a9e7d4a7e9f4a9e7d4a7e (HEAD -> main)
-Author: Your Name <your.email@example.com>
-Date:   Wed Apr 30 10:15:32 2025 -0700
-
-    Update README with installation instructions
-
-commit a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2
-Author: Your Name <your.email@example.com>
-Date:   Tue Apr 29 15:42:10 2025 -0700
-
-    Initial commit
-```
-
-## Usage Examples
-
-### Creating and committing to a new repository
-
-```console
-$ mkdir my-project
-$ cd my-project
-$ git init
-Initialized empty Git repository in /path/to/my-project/.git/
-$ echo "# My Project" > README.md
-$ git add README.md
-$ git commit -m "Initial commit"
-[main (root-commit) a1b2c3d] Initial commit
- 1 file changed, 1 insertion(+)
- create mode 100644 README.md
-```
-
-### Working with branches
-
-```console
-$ git branch feature-login
-$ git switch feature-login
-Switched to branch 'feature-login'
-$ echo "function login() {}" > login.js
-$ git add login.js
-$ git commit -m "Add login functionality"
-[feature-login 3e4f5g6] Add login functionality
- 1 file changed, 1 insertion(+)
- create mode 100644 login.js
-$ git switch main
-Switched to branch 'main'
-$ git merge feature-login
-Updating a1b2c3d..3e4f5g6
-Fast-forward
- login.js | 1 +
- 1 file changed, 1 insertion(+)
- create mode 100644 login.js
-```
-
-### Working with remote repositories
-
-```console
-$ git remote add origin https://github.com/username/my-project.git
-$ git push -u origin main
-Enumerating objects: 3, done.
-Counting objects: 100% (3/3), done.
-Writing objects: 100% (3/3), 253 bytes | 253.00 KiB/s, done.
-Total 3 (delta 0), reused 0 (delta 0)
-To https://github.com/username/my-project.git
- * [new branch]      main -> main
-Branch 'main' set up to track remote branch 'main' from 'origin'.
+no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
 ## Tips
 
-### Use Meaningful Commit Messages
+### Configure Your Identity
 
-Write clear, concise commit messages that explain what changes were made and why. This helps team members understand the history of the project.
+Set your name and email before making commits:
 
-### Commit Often
+```console
+$ git config --global user.name "Your Name"
+$ git config --global user.email "your.email@example.com"
+```
 
-Make small, focused commits rather than large, sweeping changes. This makes it easier to track down issues and understand the evolution of your code.
+### Create Aliases for Common Commands
 
-### Use Branches for Features and Fixes
+Save time by creating shortcuts for frequently used commands:
 
-Create separate branches for new features or bug fixes. This keeps your main branch stable while you work on experimental changes.
+```console
+$ git config --global alias.co checkout
+$ git config --global alias.br branch
+$ git config --global alias.st status
+```
 
-### Stash Uncommitted Changes
+### Use .gitignore Files
 
-Use `git stash` to temporarily save changes you're not ready to commit when you need to switch branches or pull updates.
+Create a `.gitignore` file in your repository to specify files that Git should ignore, such as build artifacts, temporary files, or sensitive information.
 
-### Configure Global Settings
+### Commit Atomically
 
-Set up your identity with `git config --global user.name "Your Name"` and `git config --global user.email "your.email@example.com"` to ensure your commits are properly attributed.
+Make small, focused commits that address a single logical change rather than large commits that mix multiple unrelated changes.
 
 ## Frequently Asked Questions
 
 #### Q1. How do I undo my last commit?
-A. Use `git reset HEAD~1` to undo the commit but keep the changes in your working directory. Use `git reset --hard HEAD~1` to discard the commit and its changes completely.
+A. Use `git reset HEAD~1` to undo the commit but keep the changes, or `git reset --hard HEAD~1` to discard the changes completely.
 
-#### Q2. How do I resolve merge conflicts?
-A. When Git reports a conflict, open the affected files (marked with conflict markers), edit them to resolve the conflicts, then use `git add` to mark them as resolved, and finally `git commit` to complete the merge.
+#### Q2. How do I create a new branch?
+A. Use `git branch branch-name` to create a branch, then `git checkout branch-name` to switch to it. Alternatively, use `git checkout -b branch-name` to create and switch in one command.
 
-#### Q3. How do I update my local repository with changes from the remote?
-A. Use `git pull` to fetch and merge changes from the remote repository, or `git fetch` followed by `git merge` for more control over the process.
+#### Q3. How do I merge changes from one branch to another?
+A. First checkout the target branch with `git checkout target-branch`, then merge with `git merge source-branch`.
 
-#### Q4. How do I create a new branch and switch to it?
-A. Use `git switch -c new-branch-name` or the older command `git checkout -b new-branch-name`.
+#### Q4. How do I resolve merge conflicts?
+A. When conflicts occur, edit the conflicted files to resolve the differences, then use `git add` to mark them as resolved, and finally `git commit` to complete the merge.
 
-#### Q5. How do I discard local changes to a file?
-A. Use `git restore filename` to discard changes in your working directory, or `git restore --staged filename` to unstage changes.
+#### Q5. How do I update my local repository with changes from remote?
+A. Use `git pull` to fetch and merge changes, or `git fetch` followed by `git merge` for more control.
 
 ## References
 
-https://git-scm.com/doc
+https://git-scm.com/docs/git
 
 ## Revisions
 
-2025/04/30 First revision
+2025/05/04 First revision

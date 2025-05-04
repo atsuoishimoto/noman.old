@@ -1,128 +1,154 @@
 # apt-file コマンド
 
-Debian系ディストリビューションでパッケージに含まれるファイルを検索するツール。
+APTパッケージ管理システム内のパッケージ内のファイルを検索します。
 
 ## 概要
 
-`apt-file`は、Debian系Linuxディストリビューション（UbuntuやDebian）で、インストール済みまたはリポジトリ内のパッケージに含まれるファイルを検索するためのコマンドラインツールです。特定のファイルがどのパッケージに含まれているかを調べたり、インストールされていないパッケージ内のファイルを探したりする際に便利です。
+`apt-file`は、システムにインストールされていないものも含め、APTリポジトリで利用可能なパッケージ内のファイルを検索できるコマンドラインユーティリティです。特定のファイルを提供するパッケージを見つけたり、インストール前にパッケージの内容を調べたりするのに特に役立ちます。
 
 ## オプション
 
-### **search**
+### **-l, --list**
 
-指定したパターンに一致するファイルを含むパッケージを検索します。
+指定したパッケージの内容を一覧表示します。
 
 ```console
-$ apt-file search libssl.so
-libssl-dev: /usr/lib/x86_64-linux-gnu/libssl.so
-libssl1.1: /usr/lib/x86_64-linux-gnu/libssl.so.1.1
+$ apt-file list firefox
+firefox: /etc/firefox/syspref.js
+firefox: /etc/xul-ext/ubufox.js
+firefox: /usr/bin/firefox
+firefox: /usr/lib/firefox/browser/chrome.manifest
+firefox: /usr/lib/firefox/browser/chrome/icons/default/default128.png
+[...]
 ```
 
-### **list**
+### **-s, --search**
 
-指定したパッケージに含まれるすべてのファイルを表示します。
-
-```console
-$ apt-file list vim
-vim: /usr/bin/vim
-vim: /usr/share/applications/vim.desktop
-vim: /usr/share/doc/vim/changelog.Debian.gz
-vim: /usr/share/doc/vim/copyright
-vim: /usr/share/man/man1/vim.1.gz
-```
-
-### **update**
-
-apt-fileのデータベースを更新します。初回使用時や最新の情報を取得するために実行します。
+特定のファイルまたはパターンを含むパッケージを検索します。
 
 ```console
-$ sudo apt-file update
-Processing 1 index files...
-Processing index: 100%
+$ apt-file search bin/ls
+coreutils: /bin/ls
 ```
 
 ### **-x, --regexp**
 
-正規表現を使用してファイルを検索します。
+検索に正規表現を使用します。
 
 ```console
-$ apt-file -x search "bin/python[0-9]"
-python3.8: /usr/bin/python3.8
-python3.9: /usr/bin/python3.9
-python3.10: /usr/bin/python3.10
+$ apt-file -x search '.*bin/python3$'
+python3-minimal: /usr/bin/python3
 ```
 
-### **-i, --ignore-case**
+### **-a, --architecture**
 
-大文字と小文字を区別せずに検索します。
+検索するアーキテクチャを指定します。
 
 ```console
-$ apt-file -i search makefile
-build-essential: /usr/share/build-essential/essential-packages-list
-make: /usr/share/doc/make/Makefile.example
+$ apt-file -a arm64 search bin/ls
+coreutils: /bin/ls
+```
+
+### **-c, --cache**
+
+特定のキャッシュディレクトリを使用します。
+
+```console
+$ apt-file -c /tmp/apt-file-cache search bin/ls
+coreutils: /bin/ls
+```
+
+### **-u, --update**
+
+パッケージリストのキャッシュを更新します。
+
+```console
+$ sudo apt-file update
+Processing 'main' component lists
+Processing 'universe' component lists
+Processing 'restricted' component lists
+Processing 'multiverse' component lists
 ```
 
 ## 使用例
 
-### 特定のファイルを含むパッケージを検索
+### 特定のコマンドを提供するパッケージを見つける
 
 ```console
-$ apt-file search /usr/bin/python3
-python3: /usr/bin/python3
+$ apt-file search bin/grep
+grep: /bin/grep
 ```
 
-### 複数のファイルパターンを検索
+### パッケージ内のすべてのファイルを一覧表示する
 
 ```console
-$ apt-file search "bin/gcc" | grep -v "cpp"
-gcc: /usr/bin/gcc
-gcc-9: /usr/bin/gcc-9
-gcc-10: /usr/bin/gcc-10
+$ apt-file list coreutils | head -5
+coreutils: /bin/cat
+coreutils: /bin/chgrp
+coreutils: /bin/chmod
+coreutils: /bin/chown
+coreutils: /bin/cp
 ```
 
-### インストールされていないライブラリを探す
+### ライブラリファイルを検索する
 
 ```console
-$ apt-file search libncurses.so
-libncurses-dev: /usr/lib/x86_64-linux-gnu/libncurses.so
+$ apt-file search libssl.so.1.1
+libssl1.1: /usr/lib/x86_64-linux-gnu/libssl.so.1.1
 ```
 
 ## ヒント:
 
-### 初回使用時はデータベースの更新が必要
+### 最初にキャッシュを更新する
 
-初めて`apt-file`を使用する前に、`sudo apt-file update`を実行してデータベースを更新する必要があります。これにより、最新のパッケージ情報が取得されます。
+apt-fileを初めて使用する場合や、しばらく使用していない場合は、必ず`sudo apt-file update`を実行してください。これにより、最新のパッケージ情報が確保されます。
 
-### パッケージのインストール
+### Grepで結果を絞り込む
 
-`apt-file`自体はデフォルトではインストールされていないため、使用前に`sudo apt install apt-file`でインストールする必要があります。
+apt-fileが多くの結果を返す場合は、出力をgrepでフィルタリングします：
 
-### 検索結果の絞り込み
+```console
+$ apt-file search .so | grep ssl
+```
 
-検索結果が多すぎる場合は、`grep`と組み合わせて結果を絞り込むことができます。例：`apt-file search libssl | grep "\.so$"`
+### パッケージインストールと組み合わせて使用する
 
-### 依存関係の解決
+「コマンドが見つかりません」というエラーが発生した場合、apt-fileを使用してそのコマンドを提供するパッケージを見つけることができます：
 
-「コマンドが見つかりません」などのエラーが出た場合、`apt-file search`を使って必要なパッケージを特定できます。
+```console
+$ apt-file search bin/missing-command
+```
+
+### 他のAPTツールと組み合わせる
+
+apt-fileをapt-cacheやaptと一緒に使用して、包括的なパッケージ情報を取得します：
+
+```console
+$ apt-file search bin/python3
+$ apt-cache show python3-minimal
+```
 
 ## よくある質問
 
-#### Q1. apt-fileとdpkgの違いは何ですか？
-A. `dpkg -S`はインストール済みのパッケージのみを検索しますが、`apt-file`はリポジトリ内のすべてのパッケージ（インストールされていないものも含む）を検索できます。
+#### Q1. apt-fileをインストールするにはどうすればよいですか？
+A. `sudo apt install apt-file`を使用してインストールし、その後`sudo apt-file update`でキャッシュを更新します。
 
-#### Q2. apt-fileのデータベースはどのくらいの頻度で更新すべきですか？
-A. システムの更新（`apt update`）を行った後や、最新のパッケージ情報が必要な場合に`apt-file update`を実行するとよいでしょう。
+#### Q2. apt-file searchが結果を返さないのはなぜですか？
+A. `sudo apt-file update`でapt-fileのキャッシュを更新する必要があるかもしれません。また、正しいファイルパスを使用していることを確認してください。
 
-#### Q3. apt-fileの検索が遅い場合はどうすればよいですか？
-A. 検索パターンをより具体的にすることで結果が絞られ、検索速度が向上します。また、正規表現を使用する場合は、できるだけ効率的なパターンを使用してください。
+#### Q3. apt-fileはシステムにインストールされていないパッケージ内のファイルを検索できますか？
+A. はい、それがapt-fileの主な機能の一つです。設定されたリポジトリ内のすべてのパッケージを検索します。
 
-#### Q4. apt-fileはどのディストリビューションで使えますか？
-A. Debian、Ubuntu、Linux Mintなど、Debian系のディストリビューションで使用できます。
+#### Q4. apt-fileとdpkg -Sの違いは何ですか？
+A. `dpkg -S`はインストール済みのパッケージ内のファイルのみを検索しますが、`apt-file`はリポジトリで利用可能なすべてのパッケージを検索します。
 
-## 参考文献
+#### Q5. 特定の拡張子を持つファイルを検索するにはどうすればよいですか？
+A. 正規表現オプションを使用します：`apt-file -x search '\.so$'`ですべての.soファイルを検索できます。
 
-https://manpages.debian.org/buster/apt-file/apt-file.1.en.html
+## 参考資料
+
+https://manpages.debian.org/stable/apt-file/apt-file.1.en.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初回改訂

@@ -49,86 +49,86 @@
   <h1>stat command</h1>
 <p>Display file or file system status information.</p>
 <h2>Overview</h2>
-<p>The <code>stat</code> command shows detailed information about files, directories, or file systems. It provides metadata such as file size, permissions, access times, inode information, and more. This is useful for troubleshooting, scripting, or when you need detailed information beyond what <code>ls</code> provides.</p>
+<p>The <code>stat</code> command displays detailed information about files or file systems, including access permissions, ownership, size, timestamps, and inode details. It provides more comprehensive information than what you get from <code>ls -l</code>.</p>
 <h2>Options</h2>
-<h3><strong>-f</strong></h3>
-<p>Display information about the file system instead of individual files</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/
-<span style="color: #000; font-style: italic">  File: &quot;/&quot;</span>
-<span style="color: #000; font-style: italic">    ID: 0        Namelen: 255     Type: APFS</span>
-<span style="color: #000; font-style: italic">Block size: 4096       Fundamental block size: 4096</span>
-<span style="color: #000; font-style: italic">Blocks: Total: 244108262  Free: 146464768  Available: 146464768</span>
-<span style="color: #000; font-style: italic">Inodes: Total: 1000000000 Free: 999739317</span>
-</pre></div>
-<h3><strong>-t, --terse</strong></h3>
-<p>Print the information in a terse, more machine-readable format</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">file.txt 8 8 81a4 1000 1000 103 1714503412 1714503412 1714503412 1714503412 4096 8 0</span>
-</pre></div>
-<h3><strong>-c, --format=FORMAT</strong></h3>
-<p>Use a custom format for the output, allowing you to specify exactly what information you want</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%n %s %U&quot;</span><span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">file.txt 1024 user</span>
-</pre></div>
-<h3><strong>-L, --dereference</strong></h3>
-<p>Follow links and display information about the file they refer to, not the link itself</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>symlink.txt
-<span style="color: #000; font-style: italic">  File: symlink.txt</span>
-<span style="color: #000; font-style: italic">  Size: 1024      Blocks: 8          IO Block: 4096   regular file</span>
-<span style="color: #000; font-style: italic">Device: 801h/2049d Inode: 8193       Links: 1</span>
-<span style="color: #000; font-style: italic">Access: (0644/-rw-r--r--)  Uid: (1000/user)   Gid: (1000/user)</span>
-<span style="color: #000; font-style: italic">Access: 2025-04-30 10:30:12.000000000 +0000</span>
-<span style="color: #000; font-style: italic">Modify: 2025-04-30 10:30:12.000000000 +0000</span>
-<span style="color: #000; font-style: italic">Change: 2025-04-30 10:30:12.000000000 +0000</span>
-<span style="color: #000; font-style: italic"> Birth: 2025-04-30 10:30:12.000000000 +0000</span>
-</pre></div>
-<h2>Usage Examples</h2>
-<h3>Viewing detailed file information</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>document.txt
-<span style="color: #000; font-style: italic">  File: document.txt</span>
-<span style="color: #000; font-style: italic">  Size: 1024      Blocks: 8          IO Block: 4096   regular file</span>
-<span style="color: #000; font-style: italic">Device: 801h/2049d Inode: 8193       Links: 1</span>
-<span style="color: #000; font-style: italic">Access: (0644/-rw-r--r--)  Uid: (1000/user)   Gid: (1000/user)</span>
-<span style="color: #000; font-style: italic">Access: 2025-04-30 10:30:12.000000000 +0000</span>
-<span style="color: #000; font-style: italic">Modify: 2025-04-30 10:30:12.000000000 +0000</span>
-<span style="color: #000; font-style: italic">Change: 2025-04-30 10:30:12.000000000 +0000</span>
-<span style="color: #000; font-style: italic"> Birth: 2025-04-30 10:30:12.000000000 +0000</span>
-</pre></div>
-<h3>Checking file system information</h3>
+<h3><strong>-f, --file-system</strong></h3>
+<p>Display file system information instead of file information.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/home
 <span style="color: #000; font-style: italic">  File: &quot;/home&quot;</span>
-<span style="color: #000; font-style: italic">    ID: 0        Namelen: 255     Type: APFS</span>
+<span style="color: #000; font-style: italic">    ID: 2f400000000000000 Namelen: 255     Type: ext4</span>
 <span style="color: #000; font-style: italic">Block size: 4096       Fundamental block size: 4096</span>
-<span style="color: #000; font-style: italic">Blocks: Total: 244108262  Free: 146464768  Available: 146464768</span>
-<span style="color: #000; font-style: italic">Inodes: Total: 1000000000 Free: 999739317</span>
+<span style="color: #000; font-style: italic">Blocks: Total: 244033764   Free: 146937542   Available: 134209270</span>
+<span style="color: #000; font-style: italic">Inodes: Total: 62259200    Free: 60948748</span>
 </pre></div>
-<h3>Custom format to extract specific information</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;File: %n, Size: %s bytes, Owner: %U, Permissions: %A&quot;</span><span style="color: #F8F8F8"> </span>document.txt
-<span style="color: #000; font-style: italic">File: document.txt, Size: 1024 bytes, Owner: user, Permissions: -rw-r--r--</span>
+<h3><strong>-c, --format=FORMAT</strong></h3>
+<p>Use the specified FORMAT instead of the default output format.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%n %s %y&quot;</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">file.txt 1024 2025-05-01 14:30:45.123456789 +0000</span>
 </pre></div>
-<h2>Tips:</h2>
-<h3>Use Custom Formats for Scripts</h3>
-<p>The <code>-c</code> option with format specifiers is extremely useful in scripts when you need to extract specific information. For example, <code>stat -c &quot;%s&quot; file.txt</code> will output only the file size.</p>
-<h3>Check File Times</h3>
-<p><code>stat</code> shows all file timestamps (access, modify, change, and birth), which is useful for forensics or debugging file access issues.</p>
-<h3>Compare Files</h3>
-<p>Use <code>stat</code> to compare metadata between files, especially when troubleshooting permission or ownership problems.</p>
+<h3><strong>-t, --terse</strong></h3>
+<p>Print the information in terse form.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">file.txt 1024 8 81a4 1000 1000 fe01 1620000000 1620000000 1620000000 4096 8 0 0</span>
+</pre></div>
+<h3><strong>-L, --dereference</strong></h3>
+<p>Follow links when displaying information for a symbolic link.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>symlink.txt
+<span style="color: #000; font-style: italic">  File: &#39;symlink.txt&#39;</span>
+<span style="color: #000; font-style: italic">  Size: 1024      	Blocks: 8          IO Block: 4096   regular file</span>
+<span style="color: #000; font-style: italic">Device: fd00h/64768d	Inode: 12345      Links: 1</span>
+<span style="color: #000; font-style: italic">Access: (0644/-rw-r--r--)  Uid: (1000/username)   Gid: (1000/groupname)</span>
+<span style="color: #000; font-style: italic">Access: 2025-05-01 10:00:00.000000000 +0000</span>
+<span style="color: #000; font-style: italic">Modify: 2025-05-01 10:00:00.000000000 +0000</span>
+<span style="color: #000; font-style: italic">Change: 2025-05-01 10:00:00.000000000 +0000</span>
+<span style="color: #000; font-style: italic"> Birth: 2025-05-01 10:00:00.000000000 +0000</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic file information</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">  File: file.txt</span>
+<span style="color: #000; font-style: italic">  Size: 1024      	Blocks: 8          IO Block: 4096   regular file</span>
+<span style="color: #000; font-style: italic">Device: fd00h/64768d	Inode: 12345      Links: 1</span>
+<span style="color: #000; font-style: italic">Access: (0644/-rw-r--r--)  Uid: (1000/username)   Gid: (1000/groupname)</span>
+<span style="color: #000; font-style: italic">Access: 2025-05-01 10:00:00.000000000 +0000</span>
+<span style="color: #000; font-style: italic">Modify: 2025-05-01 10:00:00.000000000 +0000</span>
+<span style="color: #000; font-style: italic">Change: 2025-05-01 10:00:00.000000000 +0000</span>
+<span style="color: #000; font-style: italic"> Birth: 2025-05-01 10:00:00.000000000 +0000</span>
+</pre></div>
+<h3>Custom format to show specific information</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;File: %n, Size: %s bytes, Modified: %y&quot;</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">File: file.txt, Size: 1024 bytes, Modified: 2025-05-01 10:00:00.000000000 +0000</span>
+</pre></div>
+<h3>File system information</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/
+<span style="color: #000; font-style: italic">  File: &quot;/&quot;</span>
+<span style="color: #000; font-style: italic">    ID: 2f400000000000000 Namelen: 255     Type: ext4</span>
+<span style="color: #000; font-style: italic">Block size: 4096       Fundamental block size: 4096</span>
+<span style="color: #000; font-style: italic">Blocks: Total: 244033764   Free: 146937542   Available: 134209270</span>
+<span style="color: #000; font-style: italic">Inodes: Total: 62259200    Free: 60948748</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Get Only the Information You Need</h3>
+<p>Use the <code>-c</code> option with format specifiers to extract only the information you need. For example, <code>stat -c &quot;%s&quot; file.txt</code> will show only the file size.</p>
+<h3>Compare File Timestamps</h3>
+<p>Use <code>stat</code> to check when a file was last accessed, modified, or had its metadata changed. This is useful for troubleshooting or verifying file operations.</p>
+<h3>Check Inode Information</h3>
+<p>The inode number displayed by <code>stat</code> can help identify if two files are hard-linked to the same data (they'll have the same inode number).</p>
 <h3>macOS Differences</h3>
-<p>On macOS, the format options are different from Linux. Use <code>-f &quot;%z %N&quot;</code> instead of <code>-c &quot;%s %n&quot;</code> to get file size and name.</p>
+<p>On macOS, the format options are different. Use <code>-f</code> with format specifiers like <code>%z</code> for size, <code>%m</code> for modification time, etc. The GNU-style long options are not available.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between <code>stat</code> and <code>ls -l</code>?</h4>
-<p>A. <code>stat</code> provides more detailed metadata than <code>ls -l</code>, including all timestamps, inode information, and device IDs.</p>
-<h4>Q2. How can I get only the file size?</h4>
+<p>A. <code>stat</code> provides more detailed information than <code>ls -l</code>, including precise timestamps, inode numbers, and device IDs. It's more comprehensive for file metadata analysis.</p>
+<h4>Q2. How can I see only the file size?</h4>
 <p>A. Use <code>stat -c &quot;%s&quot; filename</code> on Linux or <code>stat -f &quot;%z&quot; filename</code> on macOS.</p>
-<h4>Q3. Can I use <code>stat</code> to check if a file exists?</h4>
-<p>A. Yes, <code>stat</code> returns an error if the file doesn't exist, making it useful in scripts to check file existence.</p>
-<h4>Q4. How do I check disk space with <code>stat</code>?</h4>
-<p>A. Use <code>stat -f filesystem_path</code> to see total, free, and available blocks on a file system.</p>
+<h4>Q3. How do I check when a file was last modified?</h4>
+<p>A. Use <code>stat -c &quot;%y&quot; filename</code> on Linux or <code>stat -f &quot;%m&quot; filename</code> on macOS (the latter shows seconds since epoch).</p>
+<h4>Q4. Can I use <code>stat</code> on directories?</h4>
+<p>A. Yes, <code>stat</code> works on directories just like it does on files, showing their metadata.</p>
 <h2>References</h2>
-<p>https://man7.org/linux/man-pages/man1/stat.1.html</p>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/stat-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

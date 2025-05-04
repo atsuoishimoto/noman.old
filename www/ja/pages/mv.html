@@ -47,74 +47,81 @@
     <main>
       
   <h1>mv コマンド</h1>
-<p>ファイルやディレクトリを移動（名前変更）するためのコマンド。</p>
+<p>ファイルやディレクトリを移動または名前変更します。</p>
 <h2>概要</h2>
-<p><code>mv</code>（move）コマンドは、ファイルやディレクトリを別の場所に移動したり、名前を変更したりするために使用します。基本的な構文は <code>mv 元ファイル 移動先</code> です。移動先が既存のディレクトリの場合、ファイルはそのディレクトリ内に移動されます。移動先が存在しないか、ファイル名の場合は、名前の変更として機能します。</p>
+<p><code>mv</code>コマンドはファイルやディレクトリをある場所から別の場所へ移動したり、名前を変更したりします。異なるファイルシステム間で移動する場合は、元のファイルをコピーして削除します。ファイルの整理、データのバックアップ、単純なファイル名の変更などによく使用されます。</p>
 <h2>オプション</h2>
-<h3><strong>-i（interactive）</strong></h3>
-<p>上書き前に確認を求めます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>existing-file.txt
-<span style="color: #000; font-style: italic">mv: overwrite &#39;existing-file.txt&#39;? y</span>
+<h3><strong>-f, --force</strong></h3>
+<p>確認プロンプトなしで宛先ファイルを上書きします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>important.txt<span style="color: #F8F8F8"> </span>backup/
+<span style="color: #8F5902"># </span>確認なしでファイルを上書き移動する
 </pre></div>
-<h3><strong>-f（force）</strong></h3>
-<p>確認なしで強制的に上書きします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>existing-file.txt
+<h3><strong>-i, --interactive</strong></h3>
+<p>既存のファイルを上書きする前に確認を求めます。デフォルトの動作よりも安全です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>document.txt<span style="color: #F8F8F8"> </span>~/Documents/
+<span style="color: #000; font-style: italic">mv: overwrite &#39;/home/user/Documents/document.txt&#39;? y</span>
+<span style="color: #8F5902"># </span>上書きする前に確認を求められる
 </pre></div>
-<h3><strong>-n（no-clobber）</strong></h3>
+<h3><strong>-n, --no-clobber</strong></h3>
 <p>既存のファイルを上書きしません。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>existing-file.txt
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>*.txt<span style="color: #F8F8F8"> </span>backup/
+<span style="color: #8F5902"># </span>既存のファイルは上書きせずに移動する
 </pre></div>
-<h3><strong>-v（verbose）</strong></h3>
-<p>実行内容を詳細に表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>documents/
-<span style="color: #000; font-style: italic">&#39;file.txt&#39; -&gt; &#39;documents/file.txt&#39;</span>
+<h3><strong>-u, --update</strong></h3>
+<p>ソースファイルが宛先ファイルより新しい場合、または宛先ファイルが存在しない場合にのみ移動します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>new_version.txt<span style="color: #F8F8F8"> </span>~/Documents/
+<span style="color: #8F5902"># </span>新しいバージョンのファイルのみ移動する
 </pre></div>
-<h3><strong>-b（backup）</strong></h3>
-<p>上書きする前にバックアップを作成します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>existing-file.txt
+<h3><strong>-v, --verbose</strong></h3>
+<p>実行中の操作を説明します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>newname.txt
+<span style="color: #000; font-style: italic">&#39;file.txt&#39; -&gt; &#39;newname.txt&#39;</span>
+<span style="color: #8F5902"># </span>何が行われているかを表示する
 </pre></div>
 <h2>使用例</h2>
-<h3>ファイルの移動</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>document.txt<span style="color: #F8F8F8"> </span>~/Documents/
+<h3>ファイルの名前変更</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>oldname.txt<span style="color: #F8F8F8"> </span>newname.txt
+<span style="color: #8F5902"># </span>ファイル名を変更する
 </pre></div>
-<p>ファイル <code>document.txt</code> をホームディレクトリの Documents フォルダに移動している。</p>
-<h3>ファイル名の変更</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>old-name.txt<span style="color: #F8F8F8"> </span>new-name.txt
+<h3>複数のファイルをディレクトリに移動</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt<span style="color: #F8F8F8"> </span>destination_directory/
+<span style="color: #8F5902"># </span>複数のファイルを一度に移動する
 </pre></div>
-<p>ファイル名を <code>old-name.txt</code> から <code>new-name.txt</code> に変更している。</p>
-<h3>複数ファイルの移動</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt<span style="color: #F8F8F8"> </span>destination/
+<h3>移動と名前変更を同時に行う</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>~/Downloads/report.pdf<span style="color: #F8F8F8"> </span>~/Documents/quarterly_report_2025.pdf
+<span style="color: #8F5902"># </span>ファイルを移動しながら名前も変更する
 </pre></div>
-<p>複数のファイルを一度に指定のディレクトリに移動している。</p>
-<h3>ディレクトリの移動</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>source_directory/<span style="color: #F8F8F8"> </span>destination_directory/
+<h3>特定のタイプのファイルをすべて移動</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>*.jpg<span style="color: #F8F8F8"> </span>~/Pictures/
+<span style="color: #8F5902"># </span>すべてのJPGファイルを移動する
 </pre></div>
-<p>ディレクトリ全体を別の場所に移動している。</p>
 <h2>ヒント:</h2>
-<h3>バックアップを作成しながら移動</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>important.txt<span style="color: #F8F8F8"> </span>new-location/
-</pre></div>
-<p>重要なファイルを移動する際は <code>-b</code> オプションを使用してバックアップを作成すると安全です。</p>
-<h3>ワイルドカードの活用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mv<span style="color: #F8F8F8"> </span>*.jpg<span style="color: #F8F8F8"> </span>Photos/
-</pre></div>
-<p>特定のパターンに一致するすべてのファイル（この例では JPG 画像）を一度に移動できます。</p>
-<h3>上書き確認の習慣化</h3>
-<p>重要なファイルを扱う際は <code>-i</code> オプションを使用して、誤って上書きしないよう確認する習慣をつけましょう。</p>
+<h3>ワイルドカードを慎重に使用する</h3>
+<p>ワイルドカードを<code>mv</code>で使用する前に、同じパターンで<code>ls</code>を実行して、どのファイルが対象になるかを確認しましょう。</p>
+<h3>先に宛先ディレクトリを作成する</h3>
+<p>ファイルを移動する前に、宛先ディレクトリが存在することを確認してください。存在しない場合、<code>mv</code>はファイルを移動せずに名前を変更します。</p>
+<h3>属性を保持する</h3>
+<p>一部のシステムでは、<code>mv -p</code>を使用してファイルを移動する際に属性を保持できます。</p>
+<h3>移動前にバックアップを作成する</h3>
+<p>重要なファイルの場合、特にファイルシステム間で移動する場合は、移動前に<code>cp</code>を使用してバックアップを作成することを検討してください。</p>
+<h3>隠しファイルの移動</h3>
+<p><code>mv .*</code>を使用すると、<code>.</code>と<code>..</code>（現在のディレクトリと親ディレクトリ）も移動しようとして失敗します。隠しファイルのみを移動するには、<code>mv .[a-zA-Z0-9]*</code>を使用してください。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>mv</code> コマンドでファイルを誤って上書きしてしまった場合、元に戻せますか？</h4>
-<p>A. 通常は戻せません。<code>-b</code> オプションを使用していない限り、上書きされたデータは失われます。重要なファイルを扱う際は <code>-i</code> オプションを使用するか、バックアップを作成することをお勧めします。</p>
-<h4>Q2. ディレクトリ内のすべてのファイルを移動するには？</h4>
-<p>A. <code>mv directory/* destination/</code> のようにワイルドカード（<code>*</code>）を使用できます。ただし、隠しファイル（ドットで始まるファイル）は含まれないため注意が必要です。</p>
-<h4>Q3. <code>mv</code> と <code>cp</code> の違いは何ですか？</h4>
-<p>A. <code>mv</code> はファイルを移動または名前変更し、元の場所からファイルが削除されます。一方、<code>cp</code> はファイルをコピーするため、元のファイルはそのまま残ります。</p>
-<h4>Q4. 移動先に同名のファイルが存在する場合どうなりますか？</h4>
-<p>A. デフォルトでは確認なしに上書きされます。<code>-i</code> オプションを使用すると確認メッセージが表示され、<code>-n</code> オプションを使用すると上書きを防止できます。</p>
-<h2>参考</h2>
+<h4>Q1. <code>mv</code>と<code>cp</code>の違いは何ですか？</h4>
+<p>A. <code>mv</code>はファイルを移動または名前変更し、元の場所からファイルを削除します。一方、<code>cp</code>はファイルをコピーし、元のファイルはそのまま残ります。</p>
+<h4>Q2. 既存のファイルを上書きせずにファイルを移動するにはどうすればよいですか？</h4>
+<p>A. <code>mv -n ソース 宛先</code>を使用して、既存のファイルの上書きを防ぎます。</p>
+<h4>Q3. <code>mv</code>でディレクトリを移動できますか？</h4>
+<p>A. はい、<code>mv</code>はディレクトリ全体をその内容と一緒に移動できます。</p>
+<h4>Q4. データを失わずに安全にファイルを移動するにはどうすればよいですか？</h4>
+<p>A. <code>mv -i</code>を使用して、既存のファイルを上書きする前に確認を求めるようにします。</p>
+<h4>Q5. 異なるファイルシステム間での<code>mv</code>が時々時間がかかるのはなぜですか？</h4>
+<p>A. 異なるファイルシステム間で移動する場合、<code>mv</code>はデータをコピーしてから元のファイルを削除する必要があり、単にディレクトリエントリを更新するよりも時間がかかります。</p>
+<h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/mv-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

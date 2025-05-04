@@ -47,49 +47,49 @@
     <main>
       
   <h1>false コマンド</h1>
-<p>常に失敗を返す条件式として使用されるコマンド。</p>
+<p>引数に関係なく失敗ステータスを返します。</p>
 <h2>概要</h2>
-<p><code>false</code> コマンドは単純に失敗（非ゼロの終了ステータス）を返すだけのコマンドです。主にシェルスクリプトやコマンドラインでの条件分岐、テスト、無限ループの作成などに使用されます。<code>false</code> は常に終了ステータス 1 を返します。</p>
+<p><code>false</code> コマンドは、単純なUnixユーティリティで、失敗を示す終了ステータス1を返すこと以外は何もしません。シェルスクリプトで失敗条件を強制したり、条件文のプレースホルダーとして使用されることが多いです。</p>
 <h2>オプション</h2>
-<p><code>false</code> コマンドにはオプションがありません。単純に実行すると失敗を示す終了ステータス 1 を返します。</p>
+<p><code>false</code> コマンドは通常、オプションを受け付けません。渡された引数に関係なく、単に非ゼロの終了ステータス（失敗）を返します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">false</span>
 <span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$?</span>
 <span style="color: #000; font-style: italic">1</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>条件分岐での使用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span>false<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;これは表示されません&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">else</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;falseは常に失敗するので、これが表示されます&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">fi</span>
-<span style="color: #000; font-style: italic">falseは常に失敗するので、これが表示されます</span>
+<h3>条件文での使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span>false<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;これは表示されない&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">else</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;これは表示される&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">fi</span>
+<span style="color: #000; font-style: italic">これは表示される</span>
 </pre></div>
-<h3>無限ループの作成</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>!<span style="color: #F8F8F8"> </span>false<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;これは実行されません&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+<h3>falseを使った無限ループの作成（実行されない例）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span>false<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;これは実行されない&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+<span style="color: #8F5902">$</span>
 </pre></div>
-<h3>論理演算での使用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">true</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">||</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;これは表示されません&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">false</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">||</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;falseが失敗したので、これが表示されます&quot;</span>
-<span style="color: #000; font-style: italic">falseが失敗したので、これが表示されます</span>
+<h3>スクリプトでのプレースホルダーとしての使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">false</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">||</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;falseコマンドが失敗しました&quot;</span>
+<span style="color: #000; font-style: italic">falseコマンドが失敗しました</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>trueコマンドとの対比</h3>
-<p><code>false</code> の反対は <code>true</code> コマンドで、<code>true</code> は常に成功（終了ステータス 0）を返します。両方とも条件式やテストに使用されます。</p>
-<h3>シェルスクリプトでのテスト</h3>
-<p>シェルスクリプトのデバッグ中に特定の条件を強制的に失敗させたい場合に <code>false</code> を使用できます。</p>
-<h3>終了ステータスの確認</h3>
-<p>コマンドの実行後に <code>echo $?</code> を使用すると、直前のコマンドの終了ステータスを確認できます。<code>false</code> の場合は常に 1 です。</p>
+<h3>trueの反対</h3>
+<p><code>false</code> コマンドは、成功ステータス（0）を返す <code>true</code> コマンドの論理的な反対です。</p>
+<h3>エラー処理のテスト</h3>
+<p>コマンドの失敗を強制することで、スクリプトのエラー処理をテストするために <code>false</code> を使用できます。</p>
+<h3>終了ステータス</h3>
+<p><code>false</code> の終了ステータスは常に1であり、コマンド実行直後に <code>echo $?</code> を使用して確認できます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>false</code> コマンドは何のために使われますか？</h4>
-<p>A. 主にシェルスクリプトで条件式として使用され、常に「偽」または「失敗」の結果を返します。</p>
-<h4>Q2. <code>false</code> と <code>true</code> の違いは何ですか？</h4>
-<p>A. <code>false</code> は常に失敗（終了ステータス 1）を返し、<code>true</code> は常に成功（終了ステータス 0）を返します。</p>
-<h4>Q3. <code>false</code> コマンドに引数を渡すとどうなりますか？</h4>
-<p>A. 引数は無視され、常に終了ステータス 1 を返します。</p>
-<h4>Q4. <code>false</code> コマンドはどのようなシェルスクリプトのシナリオで役立ちますか？</h4>
-<p>A. テスト、デバッグ、条件分岐、特定の条件下での処理の強制的なスキップなどに役立ちます。</p>
+<h4>Q1. <code>false</code> コマンドの目的は何ですか？</h4>
+<p>A. <code>false</code> コマンドは、保証された失敗終了ステータス（1）を提供するために存在し、条件のテストや失敗パスの強制のためのシェルスクリプトで役立ちます。</p>
+<h4>Q2. <code>false</code> は引数を受け付けますか？</h4>
+<p>A. 一部のシステムでは <code>false</code> が引数を受け付ける場合がありますが、それらは無視され、常に失敗ステータスを返します。</p>
+<h4>Q3. <code>false</code> と <code>true</code> の違いは何ですか？</h4>
+<p>A. <code>false</code> は終了ステータス1（失敗）を返し、<code>true</code> は終了ステータス0（成功）を返します。</p>
+<h4>Q4. パイプラインで <code>false</code> を使用できますか？</h4>
+<p>A. はい、使用できますが、パイプラインでは最後のコマンドの終了ステータスがパイプライン全体のステータスを決定することに注意してください。<code>false</code> が最後でない場合、その終了ステータスは影響しません。</p>
 <h2>参考文献</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/false-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

@@ -4,56 +4,68 @@ Fetch from and integrate with another repository or a local branch.
 
 ## Overview
 
-`git pull` is a command that updates your current local branch with changes from a remote repository. It combines two operations: `git fetch` (downloads remote changes) followed by `git merge` (integrates those changes into your local branch). This command is essential for keeping your local repository in sync with remote changes made by other collaborators.
+`git pull` is a Git command that updates your current local working branch with changes from a remote repository. It combines two operations: `git fetch` (which downloads content from a remote repository) followed by `git merge` (which integrates the fetched content into your local branch). This command is essential for keeping your local repository synchronized with changes made by others.
 
 ## Options
 
-### **--rebase**
+### **-r, --rebase[=false|true|merges|interactive]**
 
-Pull changes and rebase your local commits on top of the fetched changes instead of merging
+Instead of merging, rebase the current branch on top of the upstream branch after fetching.
 
 ```console
-$ git pull --rebase origin main
+$ git pull -r origin main
 From github.com:user/repo
  * branch            main       -> FETCH_HEAD
-Successfully rebased and updated refs/heads/main.
+Successfully rebased and updated refs/heads/feature.
 ```
 
-### **--ff-only**
+### **--ff, --no-ff, --ff-only**
 
-Only fast-forward the current branch to the fetched branch
+Control how a merge is handled:
+- `--ff`: Allow fast-forward merges (default)
+- `--no-ff`: Create a merge commit even when fast-forward is possible
+- `--ff-only`: Only allow fast-forward merges, abort if not possible
 
 ```console
 $ git pull --ff-only origin main
-Updating 1a2b3c4..5d6e7f8
+From github.com:user/repo
+ * branch            main       -> FETCH_HEAD
+Updating 5ab1c2d..8ef9a3b
 Fast-forward
- README.md | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ README.md | 5 +++++
+ 1 file changed, 5 insertions(+)
 ```
 
-### **--no-commit**
+### **-q, --quiet**
 
-Fetch and merge but don't automatically commit the merge result
+Operate quietly, suppressing progress reporting.
 
 ```console
-$ git pull --no-commit origin feature
-From github.com:user/repo
- * branch            feature    -> FETCH_HEAD
-Automatic merge went well; stopped before committing as requested
+$ git pull -q origin main
 ```
 
 ### **-v, --verbose**
 
-Show more detailed information about the pull operation
+Be more verbose and show detailed information about the fetch and merge operations.
 
 ```console
 $ git pull -v origin main
 From github.com:user/repo
  * branch            main       -> FETCH_HEAD
-Updating 1a2b3c4..5d6e7f8
+Updating 5ab1c2d..8ef9a3b
 Fast-forward
- README.md | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ README.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+```
+
+### **--autostash**
+
+Automatically stash and restore uncommitted changes before and after the pull operation.
+
+```console
+$ git pull --autostash origin main
+Created autostash: 73a4e9d
+Applied autostash.
 ```
 
 ## Usage Examples
@@ -61,65 +73,62 @@ Fast-forward
 ### Basic Pull from Remote
 
 ```console
-$ git pull
-remote: Enumerating objects: 5, done.
-remote: Counting objects: 100% (5/5), done.
-remote: Compressing objects: 100% (2/2), done.
-remote: Total 3 (delta 1), reused 3 (delta 1), pack-reused 0
-Unpacking objects: 100% (3/3), 285 bytes | 95.00 KiB/s, done.
+$ git pull origin main
 From github.com:user/repo
-   a1b2c3d..e4f5g6h  main     -> origin/main
-Updating a1b2c3d..e4f5g6h
+ * branch            main       -> FETCH_HEAD
+Updating 5ab1c2d..8ef9a3b
 Fast-forward
- README.md | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ README.md | 5 +++++
+ 1 file changed, 5 insertions(+)
 ```
 
-### Pull from Specific Remote and Branch
+### Pull with Rebase
 
 ```console
-$ git pull upstream develop
-From github.com:upstream/repo
- * branch            develop    -> FETCH_HEAD
-Merge made by the 'recursive' strategy.
- src/main.js | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+$ git pull --rebase origin feature
+From github.com:user/repo
+ * branch            feature    -> FETCH_HEAD
+Successfully rebased and updated refs/heads/feature.
+```
+
+### Pull from Upstream Branch
+
+```console
+$ git pull
+Already up to date.
 ```
 
 ## Tips
 
-### Avoid Merge Conflicts
+### Set Up Tracking Branches
 
-Always commit or stash your local changes before pulling to avoid merge conflicts. If you have uncommitted changes that conflict with incoming changes, Git will prevent the pull operation.
+Configure your local branches to track remote branches with `git branch --set-upstream-to=origin/branch-name`. After this, you can simply use `git pull` without specifying the remote and branch.
 
-### Use --rebase for Cleaner History
+### Use Pull with Caution in Public Branches
 
-Using `git pull --rebase` creates a cleaner, more linear commit history by placing your local commits on top of the remote commits instead of creating a merge commit.
+When working on shared branches, consider using `git fetch` followed by `git merge` or `git rebase` instead of `git pull` to have more control over the integration process.
 
-### Check Remote Changes Before Pulling
+### Resolve Conflicts Properly
 
-Run `git fetch` followed by `git log HEAD..origin/branch` to see what changes will be pulled before actually pulling them. This helps you understand what you're about to integrate.
+When `git pull` results in merge conflicts, take time to resolve them correctly. Use `git status` to see conflicted files and `git mergetool` to help resolve them.
 
-### Pull with Specific Strategy
+### Use `--autostash` for Work in Progress
 
-For complex merges, you can specify a merge strategy: `git pull --strategy=recursive -X patience` uses the patience algorithm which often produces cleaner merges for certain types of changes.
+If you have uncommitted changes but need to pull updates, `--autostash` can save and restore your changes automatically.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `git pull` and `git fetch`?
-A. `git fetch` only downloads remote changes without integrating them, while `git pull` both downloads and integrates changes into your local branch.
+A. `git fetch` only downloads new data from a remote repository but doesn't integrate changes into your working files. `git pull` does both: it fetches and then automatically merges the changes into your current branch.
 
-#### Q2. How do I undo a git pull?
-A. You can use `git reset --hard ORIG_HEAD` to return to the state before the pull if you haven't made additional changes.
+#### Q2. How do I undo a `git pull`?
+A. You can use `git reset --hard ORIG_HEAD` to go back to the state before the pull if you haven't made additional changes.
 
-#### Q3. Why does git pull sometimes create merge conflicts?
-A. Conflicts occur when the same part of a file has been modified differently in both the remote and local repositories. Git can't automatically determine which changes to keep.
+#### Q3. How can I pull without merging?
+A. Use `git fetch` instead of `git pull`. This will update your remote-tracking branches without changing your local branches.
 
-#### Q4. Can I pull from a specific commit?
-A. Yes, use `git pull origin branch-name:commit-hash` to pull up to a specific commit.
-
-#### Q5. How do I pull without merging?
-A. Use `git fetch` instead of `git pull` to download changes without merging them.
+#### Q4. What does "fast-forward" mean in the context of `git pull`?
+A. A fast-forward merge happens when the current branch's pointer simply moves forward to the latest commit of the branch being merged, without creating a new merge commit. This is possible when there are no divergent changes in the current branch.
 
 ## References
 
@@ -127,4 +136,4 @@ https://git-scm.com/docs/git-pull
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

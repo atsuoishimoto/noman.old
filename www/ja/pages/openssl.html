@@ -47,118 +47,128 @@
     <main>
       
   <h1>openssl コマンド</h1>
-<p>暗号化、証明書管理、ハッシュ計算などの暗号操作を実行するためのツールです。</p>
+<p>暗号化通信、証明書管理、および様々な暗号操作のための暗号機能を提供します。</p>
 <h2>概要</h2>
-<p>OpenSSLは、SSL/TLS暗号化プロトコルの実装を提供するオープンソースのツールキットです。このコマンドを使用して、証明書の生成・管理、暗号化・復号化、ハッシュ値の計算、SSL/TLS接続のテストなど、さまざまな暗号操作を実行できます。</p>
+<p>OpenSSLは、Secure Sockets Layer (SSL)およびTransport Layer Security (TLS)プロトコルを実装する強力なツールキットで、汎用の高強度暗号化ライブラリも備えています。コマンドラインから証明書の作成、鍵の管理、ファイルの暗号化/復号化、メッセージダイジェストの生成など、多くの暗号操作を実行できます。</p>
 <h2>オプション</h2>
-<p>OpenSSLは多くのサブコマンドを持つ複合コマンドです。主要なサブコマンドとその使い方を紹介します。</p>
-<h3><strong>s_client</strong></h3>
-<p>サーバーへのSSL/TLS接続をテストするためのクライアントです。</p>
+<p>OpenSSLはコマンドベースの構造を使用しており、メインコマンドの後にサブコマンドとそのオプションが続きます。</p>
+<h3><strong>s_client</strong> - SSL/TLSクライアント</h3>
+<p>SSL/TLSを使用してリモートホストに接続する汎用SSL/TLSクライアントを実装します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>s_client<span style="color: #F8F8F8"> </span>-connect<span style="color: #F8F8F8"> </span>example.com:443
 <span style="color: #000; font-style: italic">CONNECTED(00000003)</span>
-<span style="color: #000; font-style: italic">depth=2 C = US, O = DigiCert Inc, OU = www.digicert.com, CN = DigiCert Global Root CA</span>
-<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">depth=2 C = US, O = Internet Security Research Group, CN = ISRG Root X1</span>
+<span style="color: #000; font-style: italic">verify return:1</span>
+<span style="color: #000; font-style: italic">depth=1 C = US, O = Let&#39;s Encrypt, CN = R3</span>
+<span style="color: #000; font-style: italic">verify return:1</span>
+<span style="color: #000; font-style: italic">depth=0 CN = example.com</span>
+<span style="color: #000; font-style: italic">verify return:1</span>
 <span style="color: #000; font-style: italic">---</span>
 <span style="color: #000; font-style: italic">Certificate chain</span>
-<span style="color: #000; font-style: italic"> 0 s:CN = *.example.org</span>
+<span style="color: #000; font-style: italic"> 0 s:CN = example.com</span>
 <span style="color: #000; font-style: italic">   i:C = US, O = Let&#39;s Encrypt, CN = R3</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3><strong>x509</strong></h3>
-<p>X.509証明書の表示、変換、署名などを行います。</p>
+<h3><strong>x509</strong> - 証明書表示と署名ユーティリティ</h3>
+<p>証明書情報の表示、様々な形式への証明書の変換、証明書リクエストの署名を行います。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>x509<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>certificate.crt<span style="color: #F8F8F8"> </span>-text<span style="color: #F8F8F8"> </span>-noout
 <span style="color: #000; font-style: italic">Certificate:</span>
 <span style="color: #000; font-style: italic">    Data:</span>
 <span style="color: #000; font-style: italic">        Version: 3 (0x2)</span>
 <span style="color: #000; font-style: italic">        Serial Number:</span>
-<span style="color: #000; font-style: italic">            12:34:56:78:9a:bc:de:f0</span>
+<span style="color: #000; font-style: italic">            04:e5:7b:d2:1d:d5:e5:2c:...</span>
 <span style="color: #000; font-style: italic">        Signature Algorithm: sha256WithRSAEncryption</span>
 <span style="color: #000; font-style: italic">        Issuer: C=US, O=Let&#39;s Encrypt, CN=R3</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3><strong>genrsa</strong></h3>
+<h3><strong>genrsa</strong> - RSA秘密鍵の生成</h3>
 <p>RSA秘密鍵を生成します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>genrsa<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>private.key<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2048</span>
-<span style="color: #000; font-style: italic">Generating RSA private key, 2048 bit long modulus</span>
-<span style="color: #000; font-style: italic">.....+++</span>
-<span style="color: #000; font-style: italic">.....+++</span>
-<span style="color: #000; font-style: italic">e is 65537 (0x10001)</span>
+<span style="color: #000; font-style: italic">Generating RSA private key, 2048 bit long modulus (2 primes)</span>
+<span style="color: #000; font-style: italic">.....+++++</span>
+<span style="color: #000; font-style: italic">.....+++++</span>
+<span style="color: #000; font-style: italic">e is 65537 (0x010001)</span>
 </pre></div>
-<h3><strong>req</strong></h3>
-<p>証明書署名要求(CSR)の作成や自己署名証明書の生成を行います。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>req<span style="color: #F8F8F8"> </span>-new<span style="color: #F8F8F8"> </span>-key<span style="color: #F8F8F8"> </span>private.key<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>request.csr
+<h3><strong>req</strong> - PKCS#10証明書リクエストと証明書生成ユーティリティ</h3>
+<p>PKCS#10形式の証明書リクエストを作成および処理します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>req<span style="color: #F8F8F8"> </span>-new<span style="color: #F8F8F8"> </span>-key<span style="color: #F8F8F8"> </span>private.key<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>certificate.csr
+<span style="color: #000; font-style: italic">You are about to be asked to enter information that will be incorporated</span>
+<span style="color: #000; font-style: italic">into your certificate request.</span>
+<span style="color: #000; font-style: italic">What you are about to enter is what is called a Distinguished Name or a DN.</span>
+<span style="color: #000; font-style: italic">There are quite a few fields but you can leave some blank</span>
+<span style="color: #000; font-style: italic">For some fields there will be a default value,</span>
+<span style="color: #000; font-style: italic">If you enter &#39;.&#39;, the field will be left blank.</span>
+<span style="color: #000; font-style: italic">-----</span>
+<span style="color: #000; font-style: italic">Country Name (2 letter code) [AU]:US</span>
+<span style="color: #000; font-style: italic">State or Province Name (full name) [Some-State]:California</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>enc</strong> - 暗号を使用したエンコーディング</h3>
+<p>様々な暗号アルゴリズムを使用して暗号化または復号化します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>enc<span style="color: #F8F8F8"> </span>-aes-256-cbc<span style="color: #F8F8F8"> </span>-salt<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>plaintext.txt<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>encrypted.txt
+<span style="color: #000; font-style: italic">enter aes-256-cbc encryption password:</span>
+<span style="color: #000; font-style: italic">Verifying - enter aes-256-cbc encryption password:</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>リモートSSL/TLSサーバーの確認</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>s_client<span style="color: #F8F8F8"> </span>-connect<span style="color: #F8F8F8"> </span>example.com:443<span style="color: #F8F8F8"> </span>-servername<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">CONNECTED(00000003)</span>
+<span style="color: #000; font-style: italic">depth=2 C = US, O = Internet Security Research Group, CN = ISRG Root X1</span>
+<span style="color: #000; font-style: italic">verify return:1</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3>自己署名証明書の作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>req<span style="color: #F8F8F8"> </span>-x509<span style="color: #F8F8F8"> </span>-newkey<span style="color: #F8F8F8"> </span>rsa:4096<span style="color: #F8F8F8"> </span>-keyout<span style="color: #F8F8F8"> </span>key.pem<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>cert.pem<span style="color: #F8F8F8"> </span>-days<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">365</span><span style="color: #F8F8F8"> </span>-nodes
+<span style="color: #000; font-style: italic">Generating a RSA private key</span>
+<span style="color: #000; font-style: italic">.....++++</span>
+<span style="color: #000; font-style: italic">.....++++</span>
+<span style="color: #000; font-style: italic">writing new private key to &#39;key.pem&#39;</span>
+<span style="color: #000; font-style: italic">-----</span>
 <span style="color: #000; font-style: italic">You are about to be asked to enter information that will be incorporated</span>
 <span style="color: #000; font-style: italic">into your certificate request.</span>
 <span style="color: #000; font-style: italic">...</span>
-<span style="color: #000; font-style: italic">Country Name (2 letter code) []:JP</span>
-<span style="color: #000; font-style: italic">State or Province Name []:Tokyo</span>
-<span style="color: #000; font-style: italic">...</span>
-</pre></div>
-<h3><strong>dgst</strong></h3>
-<p>ファイルのハッシュ値（ダイジェスト）を計算します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>dgst<span style="color: #F8F8F8"> </span>-sha256<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">SHA256(file.txt)= 8c17424f2e26d971060a5a82c5a1d7851e0c4bc8e0e347f223f95bb4a0d766af</span>
-</pre></div>
-<h2>使用例</h2>
-<h3>SSL証明書の情報を表示する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>x509<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>certificate.crt<span style="color: #F8F8F8"> </span>-text<span style="color: #F8F8F8"> </span>-noout
-<span style="color: #000; font-style: italic">Certificate:</span>
-<span style="color: #000; font-style: italic">    Data:</span>
-<span style="color: #000; font-style: italic">        Version: 3 (0x2)</span>
-<span style="color: #000; font-style: italic">        Serial Number: 12345678 (0xbc614e)</span>
-<span style="color: #8F5902">    # </span>証明書の詳細情報が表示される
-</pre></div>
-<h3>自己署名証明書を生成する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>req<span style="color: #F8F8F8"> </span>-x509<span style="color: #F8F8F8"> </span>-newkey<span style="color: #F8F8F8"> </span>rsa:4096<span style="color: #F8F8F8"> </span>-keyout<span style="color: #F8F8F8"> </span>key.pem<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>cert.pem<span style="color: #F8F8F8"> </span>-days<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">365</span>
-<span style="color: #000; font-style: italic">Generating a 4096 bit RSA private key</span>
-<span style="color: #000; font-style: italic">...</span>
-<span style="color: #000; font-style: italic">writing new private key to &#39;key.pem&#39;</span>
-<span style="color: #000; font-style: italic">Enter PEM pass phrase: ******</span>
-<span style="color: #000; font-style: italic">Verifying - Enter PEM pass phrase: ******</span>
-<span style="color: #8F5902"># </span>対話形式で証明書情報を入力
-</pre></div>
-<h3>リモートサーバーのSSL/TLS設定を確認する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>s_client<span style="color: #F8F8F8"> </span>-connect<span style="color: #F8F8F8"> </span>example.com:443<span style="color: #F8F8F8"> </span>-servername<span style="color: #F8F8F8"> </span>example.com
-<span style="color: #000; font-style: italic">CONNECTED(00000003)</span>
-<span style="color: #000; font-style: italic">depth=2 C = US, O = DigiCert Inc, OU = www.digicert.com, CN = DigiCert Global Root CA</span>
-<span style="color: #8F5902"># </span>接続情報と証明書チェーンが表示される
-</pre></div>
-<h3>ファイルのSHA-256ハッシュを計算する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>dgst<span style="color: #F8F8F8"> </span>-sha256<span style="color: #F8F8F8"> </span>document.pdf
-<span style="color: #000; font-style: italic">SHA256(document.pdf)= a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6</span>
-</pre></div>
-<h2>ヒント:</h2>
-<h3>証明書情報の確認</h3>
-<p>証明書ファイルの内容を確認する際は、<code>-text -noout</code>オプションを使用すると読みやすい形式で表示されます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>x509<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>cert.pem<span style="color: #F8F8F8"> </span>-text<span style="color: #F8F8F8"> </span>-noout
-</pre></div>
-<h3>パスワード入力の自動化</h3>
-<p>スクリプト内でOpenSSLを使用する場合、<code>-passin</code>オプションでパスワードを指定できます。ただし、セキュリティ上の理由から本番環境では注意が必要です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>rsa<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>encrypted.key<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>decrypted.key<span style="color: #F8F8F8"> </span>-passin<span style="color: #F8F8F8"> </span>pass:mypassword
 </pre></div>
 <h3>証明書チェーンの検証</h3>
-<p>証明書チェーンを検証するには、<code>verify</code>コマンドを使用します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>verify<span style="color: #F8F8F8"> </span>-CAfile<span style="color: #F8F8F8"> </span>ca-bundle.crt<span style="color: #F8F8F8"> </span>certificate.crt
+<span style="color: #000; font-style: italic">certificate.crt: OK</span>
+</pre></div>
+<h3>ランダムパスワードの生成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>rand<span style="color: #F8F8F8"> </span>-base64<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">12</span>
+<span style="color: #000; font-style: italic">Ew6Y9RzYxAQeFA==</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>適切な鍵のパーミッションを設定する</h3>
+<p>秘密鍵には常に制限的なパーミッションを設定して、不正アクセスを防止しましょう：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chmod<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">600</span><span style="color: #F8F8F8"> </span>private.key
+</pre></div>
+<h3>証明書の有効期限を確認する</h3>
+<p>予期しないサービス中断を避けるため、証明書の有効期限を確認しましょう：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>x509<span style="color: #F8F8F8"> </span>-enddate<span style="color: #F8F8F8"> </span>-noout<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>certificate.crt
+<span style="color: #000; font-style: italic">notAfter=May 15 12:00:00 2026 GMT</span>
+</pre></div>
+<h3>証明書フォーマットの変換</h3>
+<p>OpenSSLは異なる証明書フォーマット（PEM、DER、PKCS#12）間の変換ができます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>x509<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>cert.pem<span style="color: #F8F8F8"> </span>-inform<span style="color: #F8F8F8"> </span>PEM<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>cert.der<span style="color: #F8F8F8"> </span>-outform<span style="color: #F8F8F8"> </span>DER
+</pre></div>
+<h3>自動化には -passin と -passout を使用する</h3>
+<p>スクリプト作成時には、これらのオプションを使用して非対話的にパスワードを提供できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>rsa<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>encrypted.key<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>decrypted.key<span style="color: #F8F8F8"> </span>-passin<span style="color: #F8F8F8"> </span>file:password.txt
 </pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. OpenSSLで自己署名証明書を作成するにはどうすればよいですか？</h4>
-<p>A. <code>openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365</code>コマンドを使用します。これにより、2048ビットのRSA鍵と365日間有効な自己署名証明書が生成されます。</p>
-<h4>Q2. リモートサーバーのSSL/TLS設定を確認するにはどうすればよいですか？</h4>
-<p>A. <code>openssl s_client -connect example.com:443</code>コマンドを使用します。これにより、サーバーの証明書情報やSSL/TLS設定が表示されます。</p>
-<h4>Q3. 証明書の有効期限を確認するにはどうすればよいですか？</h4>
-<p>A. <code>openssl x509 -in certificate.crt -noout -dates</code>コマンドを使用します。これにより、証明書の開始日と終了日が表示されます。</p>
-<h4>Q4. 暗号化されたRSA秘密鍵のパスワードを削除するにはどうすればよいですか？</h4>
-<p>A. <code>openssl rsa -in encrypted.key -out decrypted.key</code>コマンドを使用します。パスワードを入力すると、パスワードなしの秘密鍵が生成されます。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSに搭載されているOpenSSLは、LibreSSLという別の実装に置き換えられている場合があります。一部のコマンドやオプションが標準のOpenSSLと異なる可能性があるため、最新のOpenSSLが必要な場合はHomebrewなどでインストールすることをお勧めします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>brew<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>openssl
-</pre></div>
-<p>インストール後は、<code>/usr/local/opt/openssl/bin/openssl</code>または<code>/opt/homebrew/bin/openssl</code>にインストールされます。</p>
+<h4>Q1. CSR（証明書署名リクエスト）はどのように作成しますか？</h4>
+<p>A. <code>openssl req -new -key private.key -out request.csr</code> を使用します。証明書情報の入力を求められます。</p>
+<h4>Q2. 証明書の内容を確認するにはどうすればよいですか？</h4>
+<p>A. <code>openssl x509 -in certificate.crt -text -noout</code> を使用して証明書の詳細を表示します。</p>
+<h4>Q3. 証明書をPEM形式からPKCS#12形式に変換するにはどうすればよいですか？</h4>
+<p>A. <code>openssl pkcs12 -export -out certificate.pfx -inkey private.key -in certificate.crt -certfile ca-chain.crt</code> を使用します。</p>
+<h4>Q4. ウェブサイトへのセキュア接続をテストするにはどうすればよいですか？</h4>
+<p>A. <code>openssl s_client -connect example.com:443 -servername example.com</code> を使用して接続を確立し、証明書の詳細を表示します。</p>
+<h4>Q5. 強力なランダムパスワードを生成するにはどうすればよいですか？</h4>
+<p>A. <code>openssl rand -base64 16</code> を使用して、base64でエンコードされた16バイトのランダム文字列を生成します。</p>
 <h2>参考資料</h2>
-<p>https://www.openssl.org/docs/</p>
+<p>https://www.openssl.org/docs/man1.1.1/man1/</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

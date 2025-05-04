@@ -49,25 +49,35 @@
   <h1>shift command</h1>
 <p>Shifts positional parameters in a shell script, removing the first parameter and moving all others down by one position.</p>
 <h2>Overview</h2>
-<p>The <code>shift</code> command is used in shell scripts to manipulate positional parameters. It removes the first parameter (<code>$1</code>) and shifts all remaining parameters down by one position, so <code>$2</code> becomes <code>$1</code>, <code>$3</code> becomes <code>$2</code>, and so on. This is particularly useful when processing command-line arguments in a loop.</p>
+<p>The <code>shift</code> command is a shell built-in that adjusts the positional parameters ($1, $2, etc.) in shell scripts. By default, it removes the first parameter ($1) and shifts all remaining parameters down by one position (making $2 become $1, $3 become $2, and so on). It's commonly used in scripts to process command-line arguments sequentially.</p>
 <h2>Options</h2>
-<h3><strong>shift n</strong></h3>
-<p>Shifts parameters by 'n' positions instead of just one. If 'n' is not specified, it defaults to 1.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">shift</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># Shifts parameters by 2 positions</span>
+<h3><strong>-n N</strong> (Bash only)</h3>
+<p>Shifts the positional parameters N positions instead of just one.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span>b<span style="color: #F8F8F8"> </span>c<span style="color: #F8F8F8"> </span>d<span style="color: #F8F8F8"> </span>e
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$1</span><span style="color: #F8F8F8"> </span><span style="color: #000">$2</span><span style="color: #F8F8F8"> </span><span style="color: #000">$3</span>
+<span style="color: #000; font-style: italic">a b c</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">shift</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$1</span><span style="color: #F8F8F8"> </span><span style="color: #000">$2</span><span style="color: #F8F8F8"> </span><span style="color: #000">$3</span>
+<span style="color: #000; font-style: italic">c d e</span>
 </pre></div>
+<p>Note: The <code>shift</code> command has very few options, as its primary purpose is straightforward.</p>
 <h2>Usage Examples</h2>
 <h3>Basic Usage in a Script</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>shift_example.sh
 <span style="color: #8F5902">#</span>!/bin/bash
-<span style="color: #000; font-style: italic">echo &quot;Initial parameters: $1 $2 $3&quot;</span>
+<span style="color: #000; font-style: italic">echo &quot;Total arguments: $#&quot;</span>
+<span style="color: #000; font-style: italic">echo &quot;First argument: $1&quot;</span>
 <span style="color: #000; font-style: italic">shift</span>
-<span style="color: #000; font-style: italic">echo &quot;After shift: $1 $2 $3&quot;</span>
+<span style="color: #000; font-style: italic">echo &quot;After shift, first argument: $1&quot;</span>
+<span style="color: #000; font-style: italic">echo &quot;Total arguments after shift: $#&quot;</span>
 
 <span style="color: #8F5902">$ </span>./shift_example.sh<span style="color: #F8F8F8"> </span>apple<span style="color: #F8F8F8"> </span>banana<span style="color: #F8F8F8"> </span>cherry
-<span style="color: #000; font-style: italic">Initial parameters: apple banana cherry</span>
-<span style="color: #000; font-style: italic">After shift: banana cherry</span>
+<span style="color: #000; font-style: italic">Total arguments: 3</span>
+<span style="color: #000; font-style: italic">First argument: apple</span>
+<span style="color: #000; font-style: italic">After shift, first argument: banana</span>
+<span style="color: #000; font-style: italic">Total arguments after shift: 2</span>
 </pre></div>
-<h3>Processing Arguments in a Loop</h3>
+<h3>Processing All Arguments in a Loop</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>process_args.sh
 <span style="color: #8F5902">#</span>!/bin/bash
 <span style="color: #000; font-style: italic">while [ $# -gt 0 ]; do</span>
@@ -80,46 +90,51 @@
 <span style="color: #000; font-style: italic">Processing: two</span>
 <span style="color: #000; font-style: italic">Processing: three</span>
 </pre></div>
-<h3>Using shift with a Number</h3>
+<h3>Using shift with a Number (Bash)</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>shift_multiple.sh
 <span style="color: #8F5902">#</span>!/bin/bash
-<span style="color: #000; font-style: italic">echo &quot;Initial parameters: $1 $2 $3 $4&quot;</span>
+<span style="color: #000; font-style: italic">echo &quot;Original arguments: $@&quot;</span>
+<span style="color: #000; font-style: italic">echo &quot;Count: $#&quot;</span>
 <span style="color: #000; font-style: italic">shift 2</span>
-<span style="color: #000; font-style: italic">echo &quot;After shift 2: $1 $2 $3 $4&quot;</span>
+<span style="color: #000; font-style: italic">echo &quot;After shift 2: $@&quot;</span>
+<span style="color: #000; font-style: italic">echo &quot;Count: $#&quot;</span>
 
-<span style="color: #8F5902">$ </span>./shift_multiple.sh<span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span>b<span style="color: #F8F8F8"> </span>c<span style="color: #F8F8F8"> </span>d
-<span style="color: #000; font-style: italic">Initial parameters: a b c d</span>
-<span style="color: #000; font-style: italic">After shift 2: c d</span>
+<span style="color: #8F5902">$ </span>./shift_multiple.sh<span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span>b<span style="color: #F8F8F8"> </span>c<span style="color: #F8F8F8"> </span>d<span style="color: #F8F8F8"> </span>e
+<span style="color: #000; font-style: italic">Original arguments: a b c d e</span>
+<span style="color: #000; font-style: italic">Count: 5</span>
+<span style="color: #000; font-style: italic">After shift 2: c d e</span>
+<span style="color: #000; font-style: italic">Count: 3</span>
 </pre></div>
-<h2>Tips:</h2>
-<h3>Check Parameter Count Before Shifting</h3>
-<p>Always check that you have enough parameters before shifting, especially when using <code>shift n</code>. Use <code>$#</code> to get the current number of parameters.</p>
+<h2>Tips</h2>
+<h3>Check Remaining Arguments</h3>
+<p>Always check if there are enough arguments left before shifting, especially when using <code>shift n</code>. If you try to shift more positions than there are arguments, some shells will produce an error.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>safe_shift.sh
 <span style="color: #8F5902">#</span>!/bin/bash
 <span style="color: #000; font-style: italic">if [ $# -ge 2 ]; then</span>
 <span style="color: #000; font-style: italic">    shift 2</span>
 <span style="color: #000; font-style: italic">else</span>
-<span style="color: #000; font-style: italic">    echo &quot;Not enough parameters to shift by 2&quot;</span>
+<span style="color: #000; font-style: italic">    echo &quot;Not enough arguments to shift 2 positions&quot;</span>
 <span style="color: #000; font-style: italic">fi</span>
 </pre></div>
-<h3>Use with getopts</h3>
-<p><code>shift</code> is commonly used after processing options with <code>getopts</code> to handle the remaining non-option arguments.</p>
-<h3>Preserve Original Arguments</h3>
-<p>If you need to access the original arguments later, save them to variables or an array before shifting.</p>
+<h3>Combine with getopts</h3>
+<p>When processing both options and arguments, use <code>getopts</code> for the options first, then use <code>shift</code> to process the remaining arguments.</p>
+<h3>Remember $0 is Unchanged</h3>
+<p>The <code>shift</code> command only affects positional parameters ($1, $2, etc.). The script name ($0) remains unchanged.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What happens if I shift more positions than there are parameters?</h4>
-<p>A. In Bash, this is not an error, but all parameters will be removed. In some other shells, it might produce an error.</p>
-<h4>Q2. Does shift affect the $0 parameter (script name)?</h4>
-<p>A. No, <code>shift</code> only affects positional parameters starting from <code>$1</code>. The <code>$0</code> parameter (which contains the script name) remains unchanged.</p>
-<h4>Q3. How can I tell how many parameters are left after shifting?</h4>
-<p>A. Use the <code>$#</code> special variable, which contains the number of positional parameters.</p>
-<h4>Q4. Can I &quot;unshift&quot; parameters (add them back)?</h4>
-<p>A. No, once parameters are shifted, they cannot be directly &quot;unshifted&quot;. If you need to preserve them, save them to variables before shifting.</p>
+<h4>Q1. What happens if I use shift when there are no arguments left?</h4>
+<p>A. In most shells, using <code>shift</code> when no arguments remain will not cause an error, but using <code>shift n</code> when fewer than n arguments remain may cause an error depending on the shell.</p>
+<h4>Q2. Does shift affect the $@ and $* variables?</h4>
+<p>A. Yes, both $@ and $* are updated to reflect the new set of positional parameters after the shift.</p>
+<h4>Q3. Can I use shift in interactive shell sessions?</h4>
+<p>A. Yes, but it's primarily useful in scripts. In an interactive session, you can use <code>set -- arg1 arg2</code> to set positional parameters first.</p>
+<h4>Q4. How do I know how many arguments are left after shifting?</h4>
+<p>A. Use the $# variable, which always contains the current number of positional parameters.</p>
 <h2>References</h2>
-<p>https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-shift</p>
+<p>The <code>shift</code> command is a shell built-in, documented in the Bash manual:
+https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-shift</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

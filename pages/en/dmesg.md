@@ -1,134 +1,138 @@
 # dmesg command
 
-Display or control the kernel ring buffer, which contains kernel messages and logs.
+Display or control the kernel message buffer.
 
 ## Overview
 
-The `dmesg` command displays kernel-related messages from the system's boot process and ongoing operations. It's useful for troubleshooting hardware issues, checking system startup messages, and monitoring kernel events. These messages are stored in the kernel ring buffer, a circular buffer that overwrites old messages when full.
+The `dmesg` command displays kernel messages from the system ring buffer, which contains information about hardware, device drivers, and system initialization. It's particularly useful for troubleshooting hardware issues, checking boot messages, and monitoring kernel events.
 
 ## Options
 
+### **-c, --clear**
+
+Clear the ring buffer after printing its contents.
+
+```console
+$ sudo dmesg -c
+[    0.000000] Linux version 5.15.0-76-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #83-Ubuntu SMP
+[...]
+```
+
 ### **-H, --human**
 
-Display output in a human-readable format with colors and timestamps
+Enable human-readable output with colors, relative timestamps, and appropriate line breaks.
 
 ```console
 $ dmesg -H
-[Apr 30 10:15:23] Linux version 5.15.0-91-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #101-Ubuntu SMP Tue Apr 20 14:33:09 UTC 2023
-[Apr 30 10:15:23] Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-91-generic root=UUID=1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p ro quiet splash
-[Apr 30 10:15:24] Memory: 16302756K/16677440K available (14339K kernel code, 2394K rwdata, 4760K rodata, 2756K init, 5068K bss, 374684K reserved, 0K cma-reserved)
-```
-
-### **-c, --clear**
-
-Clear the kernel ring buffer after displaying its contents
-
-```console
-$ dmesg -c
-[    0.000000] microcode: microcode updated early to revision 0x2f, date = 2019-02-17
-[    0.000000] Linux version 5.15.0-91-generic (buildd@lcy02-amd64-017)
-[    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-91-generic root=UUID=1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p ro quiet splash
+[May 4 09:15] Linux version 5.15.0-76-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #83-Ubuntu SMP
+[...]
 ```
 
 ### **-l, --level**
 
-Filter messages by priority level (emerg, alert, crit, err, warn, notice, info, debug)
+Restrict output to the specified priority levels (comma-separated list).
 
 ```console
-$ dmesg --level=err
-[    4.302053] EXT4-fs (sda1): re-mounted. Opts: errors=remount-ro
-[   15.485922] usb 1-2: device descriptor read/64, error -71
+$ dmesg -l err,warn
+[    5.123456] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.GFX0.DD1F], AE_NOT_FOUND
+[    7.654321] WARNING: CPU: 2 PID: 123 at drivers/gpu/drm/i915/intel_runtime_pm.c:655
 ```
 
 ### **-f, --facility**
 
-Filter messages by facility (kern, user, mail, daemon, auth, syslog, etc.)
+Restrict output to the specified facilities (comma-separated list).
 
 ```console
-$ dmesg -f kern
-[    0.000000] Linux version 5.15.0-91-generic (buildd@lcy02-amd64-017)
-[    0.000000] KERNEL supported cpus:
-[    0.000000] Intel GenuineIntel
+$ dmesg -f kern,daemon
+[    0.123456] kernel: Memory: 16123456K/16777216K available
+[    1.234567] systemd[1]: Detected virtualization kvm.
 ```
 
 ### **-t, --notime**
 
-Don't print timestamps
+Don't print timestamps.
 
 ```console
 $ dmesg -t
-microcode: microcode updated early to revision 0x2f, date = 2019-02-17
-Linux version 5.15.0-91-generic (buildd@lcy02-amd64-017)
-Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-91-generic root=UUID=1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p ro quiet splash
+Linux version 5.15.0-76-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #83-Ubuntu SMP
+[...]
+```
+
+### **-w, --follow**
+
+Wait for new messages (similar to `tail -f`).
+
+```console
+$ dmesg -w
+[    0.000000] Linux version 5.15.0-76-generic
+[...]
+[  123.456789] usb 1-2: new high-speed USB device number 3 using xhci_hcd
 ```
 
 ## Usage Examples
 
-### Searching for specific hardware information
+### Filtering for USB-related messages
 
 ```console
 $ dmesg | grep -i usb
-[    2.332145] usb: USB bus registered
-[    2.332146] usbcore: registered new interface driver usbfs
-[    2.332147] usbcore: registered new interface driver hub
-[    2.332148] usbcore: registered new device driver usb
-[    3.452149] usb 1-1: new high-speed USB device number 2 using ehci-pci
+[    2.123456] usb 1-1: new high-speed USB device number 2 using xhci_hcd
+[    2.234567] usb 1-1: New USB device found, idVendor=8087, idProduct=0024, bcdDevice= 0.01
+[    2.345678] usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
 ```
 
-### Checking for disk or filesystem errors
+### Checking for hardware errors
 
 ```console
-$ dmesg | grep -i error
-[    5.123456] EXT4-fs (sda1): re-mounted. Opts: errors=remount-ro
-[   10.234567] ata3.00: error: { UNC }
-[   15.345678] sd 2:0:0:0: [sdb] Sense Key : Medium Error [current]
+$ dmesg --level=err
+[    5.123456] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.GFX0.DD1F], AE_NOT_FOUND
+[   10.234567] EXT4-fs error (device sda1): ext4_lookup:1809: inode #2: comm systemd-journal: deleted inode referenced: 12345
 ```
 
-### Monitoring recent kernel messages in real-time
+### Monitoring kernel messages in real-time
 
 ```console
-$ dmesg -w
-[Apr 30 14:23:45] usb 1-2: new high-speed USB device number 4 using xhci_hcd
-[Apr 30 14:23:46] usb 1-2: New USB device found, idVendor=0781, idProduct=5567, bcdDevice= 1.00
-[Apr 30 14:23:46] usb 1-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-[Apr 30 14:23:46] usb 1-2: Product: Cruzer Blade
+$ sudo dmesg --follow --human
+[May 4 09:20] Linux version 5.15.0-76-generic
+[...]
+[+0.005678] Booting paravirtualized kernel on bare hardware
+[+1.234567] usb 1-2: new high-speed USB device number 3 using xhci_hcd
 ```
 
-## Tips:
+## Tips
 
-### Use sudo for Full Access
+### Use Human-Readable Format for Better Readability
 
-On many systems, regular users may have limited access to kernel messages. Use `sudo dmesg` to see all messages, especially when troubleshooting hardware issues.
+The `-H` or `--human` option makes output much easier to read with relative timestamps, colors, and proper formatting.
 
 ### Combine with grep for Targeted Troubleshooting
 
-When troubleshooting specific hardware, pipe `dmesg` output to `grep` with relevant keywords like `dmesg | grep -i wifi` or `dmesg | grep -i error`.
+When troubleshooting specific hardware, pipe `dmesg` output to `grep` with relevant keywords like "usb", "wifi", or "error".
 
-### Watch for New Messages
+### Clear the Buffer After Reading
 
-Use `dmesg -w` to continuously watch for new kernel messages, similar to `tail -f`. This is useful when monitoring hardware that's being connected or troubleshooting intermittent issues.
+Use `sudo dmesg -c` to clear the buffer after reading it. This can help when you want to monitor only new messages that appear after a specific action.
 
-### Check Boot Time Issues
+### Save Boot Messages for Later Analysis
 
-After a system crash or unexpected reboot, use `dmesg` immediately to check for error messages that might explain what happened before the logs are cleared.
+After booting, save the kernel messages with `dmesg > boot_log.txt` for later analysis or comparison.
 
 ## Frequently Asked Questions
 
-#### Q1. What is the kernel ring buffer?
-A. The kernel ring buffer is a circular data structure that stores messages generated by the Linux kernel. It has a fixed size, and when it fills up, new messages overwrite the oldest ones.
+#### Q1. Why do I get "dmesg: read kernel buffer failed: Operation not permitted"?
+A. On many systems, you need root privileges to access the kernel buffer. Use `sudo dmesg` instead.
 
-#### Q2. How do I clear the kernel ring buffer?
-A. Use `sudo dmesg -c` to display and then clear the buffer. To clear without displaying, use `sudo dmesg -C`.
+#### Q2. How can I see only recent messages?
+A. Use `dmesg | tail` to see the most recent messages, or use `dmesg -T` to show human-readable timestamps and filter by time.
 
-#### Q3. Why do I see "permission denied" when running dmesg?
-A. On many modern Linux distributions, access to kernel logs is restricted for security reasons. Use `sudo dmesg` to view the complete logs.
+#### Q3. How do I interpret the timestamps in dmesg output?
+A. By default, timestamps show seconds since boot. Use `-T` or `--ctime` for human-readable timestamps, or `-H` for relative timestamps.
 
-#### Q4. How can I see timestamps in a readable format?
-A. Use `dmesg -T` for human-readable timestamps or `dmesg -H` for a fully human-readable output with colors and formatting.
+#### Q4. Can I monitor dmesg continuously like tail -f?
+A. Yes, use `dmesg -w` or `dmesg --follow` to continuously monitor new kernel messages.
 
 ## macOS Considerations
 
-On macOS, `dmesg` functionality is more limited compared to Linux. For comprehensive system logs on macOS, consider using `log show` or viewing logs through Console.app instead. The macOS version of `dmesg` doesn't support many of the options available in Linux.
+On macOS, the `dmesg` command has fewer options than on Linux. It doesn't support options like `--human` or `--follow`. For more detailed system logs on macOS, consider using the `log` command instead, e.g., `log show --predicate 'eventMessage contains "kernel"'`.
 
 ## References
 
@@ -136,4 +140,4 @@ https://man7.org/linux/man-pages/man1/dmesg.1.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+2025/05/04 First revision

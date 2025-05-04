@@ -47,93 +47,109 @@
     <main>
       
   <h1>getopt コマンド</h1>
-<p>コマンドラインオプションを解析し、シェルスクリプト内でのオプション処理を簡素化します。</p>
+<p>コマンドラインオプションを標準化された方法で解析します。</p>
 <h2>概要</h2>
-<p><code>getopt</code> はシェルスクリプト内でコマンドラインオプションを解析するためのユーティリティです。短いオプション（-a など）と長いオプション（--option など）の両方を処理でき、オプション引数の有無も管理できます。これにより、スクリプト内でのユーザー入力の処理が標準化され、堅牢なスクリプトを作成できます。</p>
+<p><code>getopt</code>はコマンドラインユーティリティで、指定された形式に従ってコマンドライン引数を解析し、シェルスクリプトでのオプション処理を容易にします。引数を標準的な形式に並べ替えることで、スクリプトが処理しやすい形に整えます。</p>
 <h2>オプション</h2>
-<h3><strong>-o, --options</strong></h3>
-<p>短いオプション（1文字）を指定します。コロン（:）を付けると、そのオプションは引数を必要とします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>value<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-c
-<span style="color: #000; font-style: italic"> -a &#39;value&#39; -b -c --</span>
+<h3><strong>-a, --alternative</strong></h3>
+<p>代替解析モードを有効にします（長いオプションが単一のダッシュで始まることを許可）</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:b<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>alpha:,beta<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-alpha<span style="color: #F8F8F8"> </span>foo<span style="color: #F8F8F8"> </span>-b
+<span style="color: #000; font-style: italic"> -a &#39;foo&#39; -b --</span>
 </pre></div>
 <h3><strong>-l, --longoptions</strong></h3>
-<p>長いオプション名を指定します。コンマで区切り、コロン（:）を付けると引数を必要とします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>alpha:,beta,gamma<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>--alpha<span style="color: #CE5C00; font-weight: bold">=</span>value<span style="color: #F8F8F8"> </span>--beta
-<span style="color: #000; font-style: italic"> -a &#39;value&#39; --beta --</span>
+<p>認識する長いオプションを定義します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>help,version,output:<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>--help<span style="color: #F8F8F8"> </span>--output<span style="color: #CE5C00; font-weight: bold">=</span>file.txt
+<span style="color: #000; font-style: italic"> --help --output &#39;file.txt&#39; --</span>
 </pre></div>
 <h3><strong>-n, --name</strong></h3>
-<p>エラーメッセージに表示するプログラム名を指定します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;myscript&quot;</span><span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-a
-<span style="color: #000; font-style: italic">getopt: option requires an argument -- &#39;a&#39;</span>
+<p>エラーメッセージで使用される名前を設定します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>myscript<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:b<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-x
+<span style="color: #000; font-style: italic">myscript: invalid option -- &#39;x&#39;</span>
+</pre></div>
+<h3><strong>-o, --options</strong></h3>
+<p>認識する短いオプションを定義します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>value<span style="color: #F8F8F8"> </span>-bc
+<span style="color: #000; font-style: italic"> -a &#39;value&#39; -b -c --</span>
 </pre></div>
 <h3><strong>-q, --quiet</strong></h3>
-<p>エラーメッセージを表示しません。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:bc<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-d
-<span style="color: #000; font-style: italic"> -- -d</span>
+<p>エラーメッセージを抑制します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:b<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-x
+<span style="color: #000; font-style: italic"> --</span>
+</pre></div>
+<h3><strong>-Q, --quiet-output</strong></h3>
+<p>通常の出力を抑制します（有効なオプションの確認時に便利）</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-Q<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:b<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>value
+</pre></div>
+<h3><strong>-s, --shell</strong></h3>
+<p>指定されたシェル（bash、sh、csh）に従って引用規則を設定します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>bash<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;file with spaces&quot;</span>
+<span style="color: #000; font-style: italic"> -a &#39;file with spaces&#39; --</span>
+</pre></div>
+<h3><strong>-T, --test</strong></h3>
+<p>テストモード - 解析されたオプションを出力しますが実行しません</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-T<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:b<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>value<span style="color: #F8F8F8"> </span>-b
+<span style="color: #000; font-style: italic"> -a &#39;value&#39; -b --</span>
+</pre></div>
+<h3><strong>-u, --unquoted</strong></h3>
+<p>出力を引用符で囲みません</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:b<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>value
+<span style="color: #000; font-style: italic"> -a value --</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的なシェルスクリプトでの使用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>example.sh
+<h3>シェルスクリプトでの基本的なオプション解析</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>myscript.sh
 <span style="color: #8F5902">#</span>!/bin/bash
-<span style="color: #8F5902"># </span>オプションを解析
-<span style="color: #000; font-style: italic">OPTS=$(getopt -o a:bc -l alpha:,beta,gamma -n &quot;$(basename $0)&quot; -- &quot;$@&quot;)</span>
-<span style="color: #000; font-style: italic">if [ $? -ne 0 ]; then</span>
-<span style="color: #000; font-style: italic">    exit 1</span>
-<span style="color: #000; font-style: italic">fi</span>
+<span style="color: #000; font-style: italic">OPTS=$(getopt -o a:bc -l alpha:,beta,charlie -- &quot;$@&quot;)</span>
 <span style="color: #000; font-style: italic">eval set -- &quot;$OPTS&quot;</span>
-
-<span style="color: #8F5902"># </span>オプションを処理
 <span style="color: #000; font-style: italic">while true; do</span>
-<span style="color: #000; font-style: italic">    case &quot;$1&quot; in</span>
-<span style="color: #000; font-style: italic">        -a|--alpha) echo &quot;Alpha option with value: $2&quot;; shift 2 ;;</span>
-<span style="color: #000; font-style: italic">        -b|--beta) echo &quot;Beta option enabled&quot;; shift ;;</span>
-<span style="color: #000; font-style: italic">        -c|--gamma) echo &quot;Gamma option enabled&quot;; shift ;;</span>
-<span style="color: #000; font-style: italic">        --) shift; break ;;</span>
-<span style="color: #000; font-style: italic">        *) echo &quot;Internal error!&quot;; exit 1 ;;</span>
-<span style="color: #000; font-style: italic">    esac</span>
+<span style="color: #000; font-style: italic">  case &quot;$1&quot; in</span>
+<span style="color: #000; font-style: italic">    -a|--alpha) echo &quot;Alpha option with value: $2&quot;; shift 2 ;;</span>
+<span style="color: #000; font-style: italic">    -b|--beta) echo &quot;Beta option enabled&quot;; shift ;;</span>
+<span style="color: #000; font-style: italic">    -c|--charlie) echo &quot;Charlie option enabled&quot;; shift ;;</span>
+<span style="color: #000; font-style: italic">    --) shift; break ;;</span>
+<span style="color: #000; font-style: italic">    *) echo &quot;Internal error!&quot;; exit 1 ;;</span>
+<span style="color: #000; font-style: italic">  esac</span>
 <span style="color: #000; font-style: italic">done</span>
-
-<span style="color: #8F5902"># </span>残りの引数を処理
 <span style="color: #000; font-style: italic">echo &quot;Remaining arguments: $@&quot;</span>
 
-<span style="color: #8F5902">$ </span>./example.sh<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hello world&quot;</span><span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2
-<span style="color: #000; font-style: italic">Alpha option with value: hello world</span>
+<span style="color: #8F5902">$ </span>./myscript.sh<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>foo<span style="color: #F8F8F8"> </span>--beta<span style="color: #F8F8F8"> </span>arg1<span style="color: #F8F8F8"> </span>arg2
+<span style="color: #000; font-style: italic">Alpha option with value: foo</span>
 <span style="color: #000; font-style: italic">Beta option enabled</span>
-<span style="color: #000; font-style: italic">Remaining arguments: file1 file2</span>
+<span style="color: #000; font-style: italic">Remaining arguments: arg1 arg2</span>
 </pre></div>
-<h3>長いオプションの使用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>./example.sh<span style="color: #F8F8F8"> </span>--alpha<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;hello world&quot;</span><span style="color: #F8F8F8"> </span>--gamma<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2
-<span style="color: #000; font-style: italic">Alpha option with value: hello world</span>
-<span style="color: #000; font-style: italic">Gamma option enabled</span>
-<span style="color: #000; font-style: italic">Remaining arguments: file1 file2</span>
+<h3>値に空白を含むオプションの処理</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>d:<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;my directory&quot;</span>
+<span style="color: #000; font-style: italic"> -d &#39;my directory&#39; --</span>
+</pre></div>
+<h3>単一ダッシュの長いオプションに代替モードを使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getopt<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;&quot;</span><span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>help,version<span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>-help<span style="color: #F8F8F8"> </span>-version
+<span style="color: #000; font-style: italic"> --help --version --</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>GNU getopt と拡張 getopt の違い</h3>
-<p>多くのLinuxディストリビューションではGNU getoptが使用されていますが、一部のシステム（特に古いUnix系）では拡張機能（長いオプションなど）をサポートしていない場合があります。スクリプトの互換性を確保するには、最初に <code>getopt -T</code> でテストするとよいでしょう。</p>
-<h3>エラー処理を忘れずに</h3>
-<p>getoptの戻り値を確認し、オプション解析に失敗した場合は適切にエラー処理を行いましょう。</p>
-<h3>引数に空白やシェル特殊文字が含まれる場合</h3>
-<p>引数に空白やシェル特殊文字が含まれる場合は、<code>eval set -- &quot;$OPTS&quot;</code> を使用して適切に処理する必要があります。</p>
-<h2>よくある質問</h2>
-<h4>Q1. getoptとgetopts（シェル組み込みコマンド）の違いは何ですか？</h4>
-<p>A. <code>getopt</code>は外部コマンドで、長いオプション（--option形式）をサポートしています。一方、<code>getopts</code>はシェル組み込みコマンドで、短いオプション（-o形式）のみをサポートしますが、より移植性が高いです。</p>
-<h4>Q2. getoptでオプションの順序を強制できますか？</h4>
-<p>A. いいえ、getoptはオプションの順序を強制しません。ユーザーは任意の順序でオプションを指定できます。</p>
-<h4>Q3. getoptは必須オプションを指定できますか？</h4>
-<p>A. getopt自体には必須オプションを指定する機能はありません。スクリプト内でオプションが指定されているかどうかを確認する必要があります。</p>
-<h4>Q4. 長いオプションと短いオプションを関連付けるにはどうすればよいですか？</h4>
-<p>A. スクリプト内の<code>case</code>文で、<code>-a|--alpha)</code>のように両方のオプションを同じケースで処理します。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSのデフォルトの<code>getopt</code>は拡張機能（長いオプションなど）をサポートしていません。GNU getoptを使用するには、Homebrewを使ってインストールする必要があります：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>brew<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>gnu-getopt
-<span style="color: #8F5902">$ </span><span style="color: #000">PATH</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;/usr/local/opt/gnu-getopt/bin:</span><span style="color: #000">$PATH</span><span style="color: #4E9A06">&quot;</span>
+<h3>常にエラーをチェックする</h3>
+<p>スクリプトを続行する前に、オプションが有効であることを確認するために、常にgetoptのリターンコードをチェックしましょう。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span>!<span style="color: #F8F8F8"> </span><span style="color: #000">OPTS</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>getopt<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>a:b<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$0</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$@</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">exit</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">fi</span>
 </pre></div>
-<p>または、macOSでは代わりに<code>getopts</code>（シェル組み込みコマンド）の使用を検討してください。</p>
-<h2>参考文献</h2>
+<h3>eval set -- を使用して出力を処理する</h3>
+<p>スクリプトでgetoptを使用する標準的な方法は、その出力をキャプチャし、<code>eval set --</code>を使用して処理された引数でスクリプトの引数を置き換えることです。</p>
+<h3>基本的なgetoptよりも拡張getoptを優先する</h3>
+<p>拡張getopt（util-linuxから）は、一部のシステムで見られる基本バージョンよりも長いオプションとより良いエラー処理をサポートしています。<code>getopt -V</code>でどのバージョンを持っているか確認できます。</p>
+<h3>引数の空白の処理</h3>
+<p>空白を正しく処理するために、getoptに変数を渡す際は常に引用符で囲みましょう：<code>getopt ... -- &quot;$@&quot;</code>であり、<code>getopt ... -- $@</code>ではありません。</p>
+<h2>よくある質問</h2>
+<h4>Q1. getoptとgetoptsの違いは何ですか？</h4>
+<p>A. <code>getopt</code>は短いオプションと長いオプションの両方をサポートする外部コマンドであり、<code>getopts</code>は短いオプションのみを処理するシェル組み込みコマンドですが、異なるUnixライクシステム間でより移植性があります。</p>
+<h4>Q2. 値を必要とするオプションを指定するにはどうすればよいですか？</h4>
+<p>A. 短いオプションの場合、オプション文字列でオプション文字の後にコロンを追加します（例：<code>a:</code>は<code>-a value</code>用）。長いオプションの場合、オプション名の後にコロンを追加します（例：<code>alpha:</code>は<code>--alpha=value</code>用）。</p>
+<h4>Q3. オプション引数を持つオプションを処理するにはどうすればよいですか？</h4>
+<p>A. 拡張getoptは、2つのコロンを使用して長いオプションのオプション引数をサポートしています（例：<code>alpha::</code>は<code>--alpha[=value]</code>用）。</p>
+<h4>Q4. なぜスクリプトが「getopt: unrecognized option」で失敗するのですか？</h4>
+<p>A. 長いオプションをサポートしない基本バージョンのgetoptを使用している可能性があります。短いオプションのみを使用するか、拡張バージョンにアップグレードしてみてください。</p>
+<h2>参照</h2>
 <p>https://man7.org/linux/man-pages/man1/getopt.1.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

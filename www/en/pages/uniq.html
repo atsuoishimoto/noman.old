@@ -49,104 +49,136 @@
   <h1>uniq command</h1>
 <p>Filter out or report adjacent duplicate lines from input.</p>
 <h2>Overview</h2>
-<p>The <code>uniq</code> command examines adjacent lines in a file or standard input and removes or identifies duplicate lines. It's important to note that <code>uniq</code> only detects adjacent duplicate lines, so input is typically sorted first using the <code>sort</code> command.</p>
+<p>The <code>uniq</code> command processes text input and filters out or identifies repeated lines that appear consecutively. It requires sorted input to work properly, as it only compares adjacent lines. Commonly used with the <code>sort</code> command, <code>uniq</code> helps eliminate duplicates or count how many times each line appears in a file.</p>
 <h2>Options</h2>
-<h3><strong>-c (count)</strong></h3>
-<p>Prefixes lines with the number of occurrences</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>names.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-c
-<span style="color: #000; font-style: italic">      2 Alice</span>
-<span style="color: #000; font-style: italic">      1 Bob</span>
+<h3><strong>-c, --count</strong></h3>
+<p>Prefix lines with the number of occurrences</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>names.txt
+<span style="color: #000; font-style: italic">Alice</span>
+<span style="color: #000; font-style: italic">Bob</span>
+<span style="color: #000; font-style: italic">Bob</span>
+<span style="color: #000; font-style: italic">Charlie</span>
+<span style="color: #000; font-style: italic">Charlie</span>
+<span style="color: #000; font-style: italic">Charlie</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>names.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-c
+<span style="color: #000; font-style: italic">      1 Alice</span>
+<span style="color: #000; font-style: italic">      2 Bob</span>
 <span style="color: #000; font-style: italic">      3 Charlie</span>
 </pre></div>
-<h3><strong>-d (duplicates only)</strong></h3>
-<p>Only prints duplicate lines (one copy of each)</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>names.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-d
+<h3><strong>-d, --repeated</strong></h3>
+<p>Only print duplicate lines, one for each group</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>names.txt
 <span style="color: #000; font-style: italic">Alice</span>
+<span style="color: #000; font-style: italic">Bob</span>
+<span style="color: #000; font-style: italic">Bob</span>
+<span style="color: #000; font-style: italic">Charlie</span>
+<span style="color: #000; font-style: italic">Charlie</span>
+<span style="color: #000; font-style: italic">Charlie</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>names.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-d
+<span style="color: #000; font-style: italic">Bob</span>
 <span style="color: #000; font-style: italic">Charlie</span>
 </pre></div>
-<h3><strong>-u (unique only)</strong></h3>
-<p>Only prints lines that appear exactly once</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>names.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-u
+<h3><strong>-u, --unique</strong></h3>
+<p>Only print unique lines (not duplicated in input)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>names.txt
+<span style="color: #000; font-style: italic">Alice</span>
 <span style="color: #000; font-style: italic">Bob</span>
+<span style="color: #000; font-style: italic">Bob</span>
+<span style="color: #000; font-style: italic">Charlie</span>
+<span style="color: #000; font-style: italic">Charlie</span>
+<span style="color: #000; font-style: italic">Charlie</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>names.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-u
+<span style="color: #000; font-style: italic">Alice</span>
 </pre></div>
-<h3><strong>-i (ignore case)</strong></h3>
-<p>Ignores differences in case when comparing lines</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">case</span>.txt
-<span style="color: #000; font-style: italic">Hello</span>
-<span style="color: #000; font-style: italic">HELLO</span>
-<span style="color: #000; font-style: italic">hello</span>
-<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">case</span>.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-i
-<span style="color: #000; font-style: italic">hello</span>
+<h3><strong>-i, --ignore-case</strong></h3>
+<p>Ignore differences in case when comparing lines</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>mixed-case.txt
+<span style="color: #000; font-style: italic">apple</span>
+<span style="color: #000; font-style: italic">Apple</span>
+<span style="color: #000; font-style: italic">banana</span>
+<span style="color: #000; font-style: italic">BANANA</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>mixed-case.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-i
+<span style="color: #000; font-style: italic">apple</span>
+<span style="color: #000; font-style: italic">banana</span>
 </pre></div>
-<h3><strong>-f N (skip fields)</strong></h3>
-<p>Skips the first N fields before checking for uniqueness</p>
+<h3><strong>-f N, --skip-fields=N</strong></h3>
+<p>Skip comparing the first N fields</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.txt
-<span style="color: #000; font-style: italic">1 Apple Red</span>
-<span style="color: #000; font-style: italic">2 Apple Red</span>
+<span style="color: #000; font-style: italic">1 John Smith</span>
+<span style="color: #000; font-style: italic">1 Jane Doe</span>
+<span style="color: #000; font-style: italic">2 John Smith</span>
 <span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>data.txt
-<span style="color: #000; font-style: italic">1 Apple Red</span>
+<span style="color: #000; font-style: italic">1 John Smith</span>
+<span style="color: #000; font-style: italic">1 Jane Doe</span>
+<span style="color: #000; font-style: italic">2 John Smith</span>
 </pre></div>
-<h3><strong>-s N (skip chars)</strong></h3>
-<p>Skips the first N characters before checking for uniqueness</p>
+<h3><strong>-s N, --skip-chars=N</strong></h3>
+<p>Skip comparing the first N characters</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>codes.txt
 <span style="color: #000; font-style: italic">ABC123</span>
-<span style="color: #000; font-style: italic">ABD123</span>
-<span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>codes.txt
+<span style="color: #000; font-style: italic">ABC456</span>
+<span style="color: #000; font-style: italic">DEF123</span>
+<span style="color: #8F5902">$ </span>uniq<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>codes.txt
 <span style="color: #000; font-style: italic">ABC123</span>
+<span style="color: #000; font-style: italic">DEF123</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic usage with sort</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>fruits.txt
-<span style="color: #000; font-style: italic">apple</span>
-<span style="color: #000; font-style: italic">banana</span>
-<span style="color: #000; font-style: italic">apple</span>
-<span style="color: #000; font-style: italic">orange</span>
-<span style="color: #000; font-style: italic">banana</span>
-<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>fruits.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq
-<span style="color: #000; font-style: italic">apple</span>
-<span style="color: #000; font-style: italic">banana</span>
-<span style="color: #000; font-style: italic">orange</span>
-</pre></div>
-<h3>Counting all occurrences</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>fruits.txt
-<span style="color: #000; font-style: italic">apple</span>
-<span style="color: #000; font-style: italic">banana</span>
-<span style="color: #000; font-style: italic">apple</span>
-<span style="color: #000; font-style: italic">orange</span>
-<span style="color: #000; font-style: italic">banana</span>
-<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>fruits.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-c
-<span style="color: #000; font-style: italic">      2 apple</span>
-<span style="color: #000; font-style: italic">      2 banana</span>
-<span style="color: #000; font-style: italic">      1 orange</span>
+<h3>Counting unique words in a file</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>words.txt
+<span style="color: #000; font-style: italic">hello</span>
+<span style="color: #000; font-style: italic">world</span>
+<span style="color: #000; font-style: italic">hello</span>
+<span style="color: #000; font-style: italic">computer</span>
+<span style="color: #000; font-style: italic">world</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>words.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-c
+<span style="color: #000; font-style: italic">      1 computer</span>
+<span style="color: #000; font-style: italic">      2 hello</span>
+<span style="color: #000; font-style: italic">      2 world</span>
 </pre></div>
 <h3>Finding only unique entries</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>fruits.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-u
-<span style="color: #000; font-style: italic">orange</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>log.txt
+<span style="color: #000; font-style: italic">ERROR: Connection failed</span>
+<span style="color: #000; font-style: italic">INFO: Starting application</span>
+<span style="color: #000; font-style: italic">ERROR: Connection failed</span>
+<span style="color: #000; font-style: italic">INFO: Application ready</span>
+<span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>log.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-u
+<span style="color: #000; font-style: italic">INFO: Application ready</span>
+<span style="color: #000; font-style: italic">INFO: Starting application</span>
+</pre></div>
+<h3>Combining with other commands in a pipeline</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>access.log<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;404&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d<span style="color: #4E9A06">&#39; &#39;</span><span style="color: #F8F8F8"> </span>-f1<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-c
+<span style="color: #000; font-style: italic">     15 192.168.1.5</span>
+<span style="color: #000; font-style: italic">      3 192.168.1.7</span>
+<span style="color: #000; font-style: italic">     22 192.168.1.10</span>
 </pre></div>
 <h2>Tips:</h2>
 <h3>Always Sort First</h3>
-<p>Since <code>uniq</code> only works on adjacent duplicate lines, always pipe the output of <code>sort</code> to <code>uniq</code> unless you're certain the input is already sorted.</p>
-<h3>Combine with Other Commands</h3>
-<p><code>uniq</code> works well in pipelines with <code>sort</code>, <code>grep</code>, and <code>wc</code> for powerful text processing:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>log.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span>-nr
+<p>The <code>uniq</code> command only detects adjacent duplicate lines, so always use <code>sort</code> before <code>uniq</code> to ensure all duplicates are detected:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq
 </pre></div>
-<p>This sorts lines, counts occurrences, and sorts by frequency (most frequent first).</p>
-<h3>Use -c for Frequency Analysis</h3>
-<p>The <code>-c</code> option is particularly useful for analyzing how often items appear in logs or datasets.</p>
+<h3>Count Occurrences of All Lines</h3>
+<p>To see how many times each unique line appears in a file, use:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span>-nr
+</pre></div>
+<p>This sorts by frequency (most frequent first).</p>
+<h3>Finding Non-Unique Lines</h3>
+<p>To find only lines that appear more than once:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sort<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>uniq<span style="color: #F8F8F8"> </span>-d
+</pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. Why isn't <code>uniq</code> removing all duplicates from my file?</h4>
-<p>A. <code>uniq</code> only removes adjacent duplicate lines. You need to sort the file first: <code>sort file.txt | uniq</code>.</p>
+<h4>Q1. Why doesn't <code>uniq</code> remove all duplicates in my file?</h4>
+<p>A. <code>uniq</code> only removes adjacent duplicate lines. You must sort the file first with <code>sort file.txt | uniq</code>.</p>
 <h4>Q2. How can I count the number of unique lines in a file?</h4>
-<p>A. Use: <code>sort file.txt | uniq | wc -l</code></p>
-<h4>Q3. How do I find the most common lines in a file?</h4>
-<p>A. Use: <code>sort file.txt | uniq -c | sort -nr</code></p>
-<h4>Q4. Can <code>uniq</code> ignore specific parts of lines when comparing?</h4>
-<p>A. Yes, use <code>-f</code> to skip fields or <code>-s</code> to skip characters at the beginning of lines.</p>
+<p>A. Use <code>sort file.txt | uniq | wc -l</code> to count unique lines.</p>
+<h4>Q3. Can <code>uniq</code> ignore specific parts of lines when comparing?</h4>
+<p>A. Yes, use <code>-f N</code> to skip N fields or <code>-s N</code> to skip N characters at the beginning of each line.</p>
+<h4>Q4. How do I find the most common lines in a file?</h4>
+<p>A. Use <code>sort file.txt | uniq -c | sort -nr</code> to list lines by frequency (most frequent first).</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/uniq-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

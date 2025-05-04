@@ -4,13 +4,13 @@ Determine file type by examining file contents.
 
 ## Overview
 
-The `file` command identifies the type of a file by examining its contents, rather than relying on filename extensions. It can recognize text files, executables, images, archives, and many other formats by analyzing the file's data patterns, headers, and structure.
+The `file` command examines each file argument to classify its type. It performs a series of tests to determine if the file is text, executable, data, or another format. Unlike many commands that rely on file extensions, `file` looks at the actual content of files to identify their types.
 
 ## Options
 
 ### **-b, --brief**
 
-Display the result without the filename prefix
+Display the result without the filename prefix.
 
 ```console
 $ file -b document.txt
@@ -19,7 +19,7 @@ ASCII text
 
 ### **-i, --mime**
 
-Display the MIME type of the file
+Display MIME type strings instead of traditional descriptions.
 
 ```console
 $ file -i document.txt
@@ -28,20 +28,29 @@ document.txt: text/plain; charset=us-ascii
 
 ### **-z, --uncompress**
 
-Try to look inside compressed files
+Try to look inside compressed files.
 
 ```console
-$ file -z archive.tar.gz
-archive.tar.gz: gzip compressed data, from Unix, original size modulo 2^32 10240
+$ file -z archive.gz
+archive.gz: ASCII text (gzip compressed data, was "notes.txt", last modified: Wed Apr 28 15:30:45 2021, from Unix)
 ```
 
 ### **-L, --dereference**
 
-Follow symbolic links
+Follow symbolic links.
 
 ```console
 $ file -L symlink
 symlink: ASCII text
+```
+
+### **-s, --special-files**
+
+Read block or character special files.
+
+```console
+$ file -s /dev/sda1
+/dev/sda1: Linux rev 1.0 ext4 filesystem data (extents) (large files)
 ```
 
 ## Usage Examples
@@ -51,67 +60,73 @@ symlink: ASCII text
 ```console
 $ file document.txt image.png script.sh
 document.txt: ASCII text
-image.png: PNG image data, 800 x 600, 8-bit/color RGB, non-interlaced
-script.sh: Bourne-Again shell script, ASCII text executable
+image.png:    PNG image data, 1920 x 1080, 8-bit/color RGB, non-interlaced
+script.sh:    Bourne-Again shell script, ASCII text executable
 ```
 
-### Checking multiple files at once
+### Examining multiple files
 
 ```console
 $ file *
 document.txt:  ASCII text
-image.jpg:     JPEG image data, JFIF standard 1.01
-program:       ELF 64-bit LSB executable, x86-64
-archive.zip:   Zip archive data, at least v2.0 to extract
+image.png:     PNG image data, 1920 x 1080, 8-bit/color RGB, non-interlaced
+script.sh:     Bourne-Again shell script, ASCII text executable
+archive.tar:   POSIX tar archive (GNU)
+binary:        ELF 64-bit LSB executable, x86-64
 ```
 
-### Examining a binary file
+### Examining a directory
 
 ```console
-$ file /bin/ls
-/bin/ls: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=123456789abcdef, stripped
+$ file projects/
+projects/: directory
 ```
 
 ## Tips
 
-### Use with Directories
+### Use with Pipes
 
-When used on a directory, `file` simply identifies it as a directory. To examine files within a directory, combine with `find`:
+You can pipe output from other commands to `file` using the special `-` argument to read from stdin:
 
 ```console
-$ find /path/to/dir -type f -exec file {} \;
+$ cat unknown_file | file -
+/dev/stdin: ASCII text
 ```
 
-### Examining Special Files
+### Recursive File Type Identification
 
-For device files or sockets, `file` may only report their type without detailed information.
-
-### Magic Database
-
-The `file` command uses a "magic" database to identify file types. If you encounter incorrect identifications, your magic database might need updating.
-
-### Pipe Usage
-
-You can pipe content to `file` using the special `-` argument:
+Combine with `find` to identify file types recursively:
 
 ```console
-$ cat document.txt | file -
-/dev/stdin: ASCII text
+$ find . -type f -exec file {} \;
+```
+
+### Identifying Executables
+
+The `file` command can help determine if a binary is 32-bit or 64-bit, and what architecture it's compiled for:
+
+```console
+$ file /bin/ls
+/bin/ls: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. How does `file` determine a file's type?
-A. `file` examines the file's content patterns, headers, and structure using a "magic" database of file signatures, rather than relying on filename extensions.
+#### Q1. How does the `file` command determine file types?
+A. `file` uses "magic" tests - examining the first few bytes of a file and comparing them against known patterns in a database (usually located at `/usr/share/file/magic`).
 
-#### Q2. Can `file` identify the encoding of text files?
-A. Yes, using `file -i` will often show the character encoding (charset) of text files.
+#### Q2. Can `file` identify all file types?
+A. While `file` can identify many common file types, it may not recognize specialized or proprietary formats. It provides its best guess based on file content.
 
-#### Q3. Why does `file` sometimes misidentify my files?
-A. `file` relies on pattern matching which isn't perfect. Some file formats are similar or ambiguous, and the magic database might be outdated for newer formats.
+#### Q3. Why does `file` sometimes report text files as having specific encodings?
+A. `file` analyzes character patterns to detect text encodings like UTF-8, ASCII, or other character sets.
 
-#### Q4. Can `file` identify files without extensions?
-A. Yes, since `file` examines the content rather than the filename, it works perfectly well on files without extensions.
+#### Q4. How can I get just the MIME type without the filename?
+A. Use `file -b -i filename` to get only the MIME type without the filename prefix.
+
+## macOS Considerations
+
+On macOS, the `file` command works similarly to Linux versions but may have slightly different output formats or detection capabilities. The magic database location is typically at `/usr/share/file/magic` or `/etc/magic`.
 
 ## References
 
@@ -119,4 +134,4 @@ https://man7.org/linux/man-pages/man1/file.1.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

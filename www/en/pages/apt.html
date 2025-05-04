@@ -47,149 +47,145 @@
     <main>
       
   <h1>apt command</h1>
-<p>Package management tool for Debian-based Linux distributions like Ubuntu.</p>
+<p>Package management utility for Debian-based Linux distributions like Ubuntu.</p>
 <h2>Overview</h2>
 <p><code>apt</code> (Advanced Package Tool) is a command-line utility for installing, updating, removing, and managing software packages on Debian-based Linux distributions. It simplifies package management by handling dependencies automatically and providing a user-friendly interface compared to lower-level tools like <code>dpkg</code>.</p>
 <h2>Options</h2>
-<h3><strong>apt update</strong></h3>
-<p>Updates the package lists from repositories</p>
+<h3><strong>-y, --yes, --assume-yes</strong></h3>
+<p>Automatically answer &quot;yes&quot; to prompts, allowing for non-interactive use</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>firefox<span style="color: #F8F8F8"> </span>-y
+<span style="color: #000; font-style: italic">Reading package lists... Done</span>
+<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
+<span style="color: #000; font-style: italic">Reading state information... Done</span>
+<span style="color: #000; font-style: italic">firefox is already the newest version (115.0+build2-0ubuntu0.22.04.1).</span>
+<span style="color: #000; font-style: italic">0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.</span>
+</pre></div>
+<h3><strong>-q, --quiet</strong></h3>
+<p>Produces output suitable for logging, omitting progress indicators</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>update<span style="color: #F8F8F8"> </span>-q
+<span style="color: #000; font-style: italic">Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease</span>
+<span style="color: #000; font-style: italic">Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]</span>
+<span style="color: #000; font-style: italic">Fetched 110 kB in 1s (110 kB/s)</span>
+<span style="color: #000; font-style: italic">Reading package lists...</span>
+<span style="color: #000; font-style: italic">Building dependency tree...</span>
+<span style="color: #000; font-style: italic">Reading state information...</span>
+<span style="color: #000; font-style: italic">All packages are up to date.</span>
+</pre></div>
+<h3><strong>--no-install-recommends</strong></h3>
+<p>Skip installation of recommended packages, installing only required dependencies</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>gimp<span style="color: #F8F8F8"> </span>--no-install-recommends
+<span style="color: #000; font-style: italic">Reading package lists... Done</span>
+<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
+<span style="color: #000; font-style: italic">Reading state information... Done</span>
+<span style="color: #000; font-style: italic">The following packages will be installed:</span>
+<span style="color: #000; font-style: italic">  gimp gimp-data libbabl-0.1-0 libgegl-0.4-0 [...]</span>
+</pre></div>
+<h3><strong>-s, --simulate, --just-print, --dry-run, --recon, --no-act</strong></h3>
+<p>Simulate actions but don't actually change the system</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>remove<span style="color: #F8F8F8"> </span>firefox<span style="color: #F8F8F8"> </span>-s
+<span style="color: #000; font-style: italic">NOTE: This is only a simulation!</span>
+<span style="color: #000; font-style: italic">      apt needs root privileges for real execution.</span>
+<span style="color: #000; font-style: italic">Reading package lists... Done</span>
+<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
+<span style="color: #000; font-style: italic">Reading state information... Done</span>
+<span style="color: #000; font-style: italic">The following packages will be REMOVED:</span>
+<span style="color: #000; font-style: italic">  firefox</span>
+<span style="color: #000; font-style: italic">0 upgraded, 0 newly installed, 1 to remove and 0 not upgraded.</span>
+<span style="color: #000; font-style: italic">Remv firefox [115.0+build2-0ubuntu0.22.04.1]</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Installing a package</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>vlc
+<span style="color: #000; font-style: italic">Reading package lists... Done</span>
+<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
+<span style="color: #000; font-style: italic">Reading state information... Done</span>
+<span style="color: #000; font-style: italic">The following additional packages will be installed:</span>
+<span style="color: #000; font-style: italic">  libvlc-bin libvlc5 libvlccore9 vlc-bin vlc-data vlc-plugin-base</span>
+<span style="color: #000; font-style: italic">Suggested packages:</span>
+<span style="color: #000; font-style: italic">  vlc-plugin-access-extra vlc-plugin-video-output vlc-plugin-video-splitter</span>
+<span style="color: #000; font-style: italic">  vlc-plugin-visualization</span>
+<span style="color: #000; font-style: italic">The following NEW packages will be installed:</span>
+<span style="color: #000; font-style: italic">  libvlc-bin libvlc5 libvlccore9 vlc vlc-bin vlc-data vlc-plugin-base</span>
+<span style="color: #000; font-style: italic">0 upgraded, 7 newly installed, 0 to remove and 0 not upgraded.</span>
+<span style="color: #000; font-style: italic">Need to get 7,192 kB of archives.</span>
+<span style="color: #000; font-style: italic">After this operation, 32.8 MB of additional disk space will be used.</span>
+<span style="color: #000; font-style: italic">Do you want to continue? [Y/n] y</span>
+</pre></div>
+<h3>Updating package lists</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>update
 <span style="color: #000; font-style: italic">Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease</span>
 <span style="color: #000; font-style: italic">Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]</span>
 <span style="color: #000; font-style: italic">Get:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [119 kB]</span>
+<span style="color: #000; font-style: italic">Fetched 229 kB in 2s (114 kB/s)</span>
 <span style="color: #000; font-style: italic">Reading package lists... Done</span>
 <span style="color: #000; font-style: italic">Building dependency tree... Done</span>
 <span style="color: #000; font-style: italic">Reading state information... Done</span>
 <span style="color: #000; font-style: italic">All packages are up to date.</span>
 </pre></div>
-<h3><strong>apt install</strong></h3>
-<p>Installs new packages</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #000; font-style: italic">Reading package lists... Done</span>
-<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
-<span style="color: #000; font-style: italic">Reading state information... Done</span>
-<span style="color: #000; font-style: italic">The following additional packages will be installed:</span>
-<span style="color: #000; font-style: italic">  firefox-locale-en</span>
-<span style="color: #000; font-style: italic">Suggested packages:</span>
-<span style="color: #000; font-style: italic">  fonts-lyx</span>
-<span style="color: #000; font-style: italic">The following NEW packages will be installed:</span>
-<span style="color: #000; font-style: italic">  firefox firefox-locale-en</span>
-<span style="color: #000; font-style: italic">0 upgraded, 2 newly installed, 0 to remove and 0 not upgraded.</span>
-<span style="color: #000; font-style: italic">Need to get 74.3 MB of archives.</span>
-<span style="color: #000; font-style: italic">After this operation, 239 MB of additional disk space will be used.</span>
-<span style="color: #000; font-style: italic">Do you want to continue? [Y/n] y</span>
-</pre></div>
-<h3><strong>apt remove</strong></h3>
-<p>Removes packages but keeps configuration files</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>remove<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #000; font-style: italic">Reading package lists... Done</span>
-<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
-<span style="color: #000; font-style: italic">Reading state information... Done</span>
-<span style="color: #000; font-style: italic">The following packages will be REMOVED:</span>
-<span style="color: #000; font-style: italic">  firefox firefox-locale-en</span>
-<span style="color: #000; font-style: italic">0 upgraded, 0 newly installed, 2 to remove and 0 not upgraded.</span>
-<span style="color: #000; font-style: italic">After this operation, 239 MB disk space will be freed.</span>
-<span style="color: #000; font-style: italic">Do you want to continue? [Y/n] y</span>
-</pre></div>
-<h3><strong>apt purge</strong></h3>
-<p>Completely removes packages including configuration files</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>purge<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #000; font-style: italic">Reading package lists... Done</span>
-<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
-<span style="color: #000; font-style: italic">Reading state information... Done</span>
-<span style="color: #000; font-style: italic">The following packages will be REMOVED:</span>
-<span style="color: #000; font-style: italic">  firefox* firefox-locale-en*</span>
-<span style="color: #000; font-style: italic">0 upgraded, 0 newly installed, 2 to remove and 0 not upgraded.</span>
-<span style="color: #000; font-style: italic">After this operation, 239 MB disk space will be freed.</span>
-<span style="color: #000; font-style: italic">Do you want to continue? [Y/n] y</span>
-</pre></div>
-<h3><strong>apt upgrade</strong></h3>
-<p>Upgrades all installed packages to their latest versions</p>
+<h3>Upgrading installed packages</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>upgrade
 <span style="color: #000; font-style: italic">Reading package lists... Done</span>
 <span style="color: #000; font-style: italic">Building dependency tree... Done</span>
 <span style="color: #000; font-style: italic">Reading state information... Done</span>
 <span style="color: #000; font-style: italic">Calculating upgrade... Done</span>
 <span style="color: #000; font-style: italic">The following packages will be upgraded:</span>
-<span style="color: #000; font-style: italic">  firefox libc6 python3-apt</span>
-<span style="color: #000; font-style: italic">3 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.</span>
-<span style="color: #000; font-style: italic">Need to get 85.6 MB of archives.</span>
-<span style="color: #000; font-style: italic">After this operation, 2,048 B of additional disk space will be used.</span>
+<span style="color: #000; font-style: italic">  firefox libnss3 python3-software-properties software-properties-common</span>
+<span style="color: #000; font-style: italic">4 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.</span>
+<span style="color: #000; font-style: italic">Need to get 75.8 MB of archives.</span>
+<span style="color: #000; font-style: italic">After this operation, 1,024 B of additional disk space will be used.</span>
 <span style="color: #000; font-style: italic">Do you want to continue? [Y/n] y</span>
 </pre></div>
-<h3><strong>apt search</strong></h3>
-<p>Searches for packages by name or description</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt<span style="color: #F8F8F8"> </span>search<span style="color: #F8F8F8"> </span>text<span style="color: #F8F8F8"> </span>editor
-<span style="color: #000; font-style: italic">Sorting... Done</span>
-<span style="color: #000; font-style: italic">Full Text Search... Done</span>
-<span style="color: #000; font-style: italic">gedit/jammy,now 41.0-1 amd64 [installed]</span>
-<span style="color: #000; font-style: italic">  GNU text editor for the GNOME desktop environment</span>
-
-<span style="color: #000; font-style: italic">nano/jammy,now 6.2-1 amd64 [installed]</span>
-<span style="color: #000; font-style: italic">  small, friendly text editor inspired by Pico</span>
-
-<span style="color: #000; font-style: italic">vim/jammy 2:8.2.3995-1ubuntu2 amd64</span>
-<span style="color: #000; font-style: italic">  Vi IMproved - enhanced vi editor</span>
-</pre></div>
-<h3><strong>apt list</strong></h3>
-<p>Lists packages based on package names</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt<span style="color: #F8F8F8"> </span>list<span style="color: #F8F8F8"> </span>--installed<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #000; font-style: italic">firefox/jammy-updates,jammy-security,now 112.0+build2-0ubuntu0.22.04.1 amd64 [installed]</span>
-<span style="color: #000; font-style: italic">firefox-locale-en/jammy-updates,jammy-security,now 112.0+build2-0ubuntu0.22.04.1 amd64 [installed,automatic]</span>
-</pre></div>
-<h2>Usage Examples</h2>
-<h3>Updating and upgrading the system</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>update<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>upgrade<span style="color: #F8F8F8"> </span>-y
-<span style="color: #000; font-style: italic">[update output]</span>
-<span style="color: #000; font-style: italic">[upgrade output]</span>
-</pre></div>
-<h3>Installing multiple packages at once</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>vim<span style="color: #F8F8F8"> </span>curl
-<span style="color: #000; font-style: italic">Reading package lists... Done</span>
-<span style="color: #000; font-style: italic">Building dependency tree... Done</span>
-<span style="color: #000; font-style: italic">Reading state information... Done</span>
-<span style="color: #000; font-style: italic">The following additional packages will be installed:</span>
-<span style="color: #000; font-style: italic">  [list of dependencies]</span>
-<span style="color: #000; font-style: italic">Do you want to continue? [Y/n] y</span>
-</pre></div>
-<h3>Removing unused dependencies</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>autoremove
+<h3>Removing a package</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt<span style="color: #F8F8F8"> </span>remove<span style="color: #F8F8F8"> </span>gimp
 <span style="color: #000; font-style: italic">Reading package lists... Done</span>
 <span style="color: #000; font-style: italic">Building dependency tree... Done</span>
 <span style="color: #000; font-style: italic">Reading state information... Done</span>
 <span style="color: #000; font-style: italic">The following packages will be REMOVED:</span>
-<span style="color: #000; font-style: italic">  libllvm13 linux-headers-5.15.0-60 linux-headers-5.15.0-60-generic</span>
-<span style="color: #000; font-style: italic">0 upgraded, 0 newly installed, 3 to remove and 0 not upgraded.</span>
-<span style="color: #000; font-style: italic">After this operation, 122 MB disk space will be freed.</span>
+<span style="color: #000; font-style: italic">  gimp</span>
+<span style="color: #000; font-style: italic">0 upgraded, 0 newly installed, 1 to remove and 0 not upgraded.</span>
+<span style="color: #000; font-style: italic">After this operation, 20.5 MB disk space will be freed.</span>
 <span style="color: #000; font-style: italic">Do you want to continue? [Y/n] y</span>
 </pre></div>
-<h2>Tips:</h2>
+<h3>Searching for packages</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>apt<span style="color: #F8F8F8"> </span>search<span style="color: #F8F8F8"> </span>text-editor
+<span style="color: #000; font-style: italic">Sorting... Done</span>
+<span style="color: #000; font-style: italic">Full Text Search... Done</span>
+<span style="color: #000; font-style: italic">gedit/jammy,now 41.0-3 amd64 [installed]</span>
+<span style="color: #000; font-style: italic">  GNU text editor for the GNOME desktop environment</span>
+
+<span style="color: #000; font-style: italic">mousepad/jammy 0.5.8-1 amd64</span>
+<span style="color: #000; font-style: italic">  simple Xfce oriented text editor</span>
+
+<span style="color: #000; font-style: italic">nano/jammy,now 6.2-1 amd64 [installed]</span>
+<span style="color: #000; font-style: italic">  small, friendly text editor inspired by Pico</span>
+</pre></div>
+<h2>Tips</h2>
 <h3>Use apt instead of apt-get</h3>
-<p><code>apt</code> provides a more user-friendly interface with progress bars and color output compared to the older <code>apt-get</code> command.</p>
-<h3>Check package information before installing</h3>
-<p>Use <code>apt show package-name</code> to view detailed information about a package before installing it.</p>
+<p><code>apt</code> provides a more user-friendly interface with progress bars and colored output compared to the older <code>apt-get</code> command, while offering the most commonly used functionality.</p>
+<h3>Clean up unused packages</h3>
+<p>Run <code>sudo apt autoremove</code> periodically to remove packages that were automatically installed as dependencies but are no longer needed.</p>
 <h3>Fix broken packages</h3>
-<p>If you encounter issues with broken packages, try running <code>sudo apt --fix-broken install</code> to resolve dependency problems.</p>
-<h3>Clean up package cache</h3>
-<p>Run <code>sudo apt clean</code> periodically to free up disk space by removing downloaded package files from the local cache.</p>
-<h3>Simulate installations</h3>
-<p>Use the <code>-s</code> or <code>--simulate</code> option with any apt command to see what would happen without actually making changes to your system.</p>
+<p>If you encounter package installation issues, try <code>sudo apt --fix-broken install</code> to resolve dependency problems.</p>
+<h3>Check available disk space</h3>
+<p>Before large installations or upgrades, check available disk space with <code>df -h</code>. Package operations can fail if you run out of space.</p>
+<h3>Use apt-mark to protect packages</h3>
+<p>Use <code>sudo apt-mark hold package_name</code> to prevent a package from being automatically upgraded, removed, or installed.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between apt and apt-get?</h4>
 <p>A. <code>apt</code> is a newer, more user-friendly command that combines the most commonly used features of <code>apt-get</code> and <code>apt-cache</code> with improved output formatting and progress information.</p>
-<h4>Q2. How do I install a specific version of a package?</h4>
-<p>A. Use <code>sudo apt install package=version</code>. For example: <code>sudo apt install nginx=1.18.0-0ubuntu1</code>.</p>
-<h4>Q3. How can I see what packages are available for upgrade?</h4>
-<p>A. Run <code>apt list --upgradable</code> to see a list of packages that can be upgraded.</p>
+<h4>Q2. How do I completely remove a package including configuration files?</h4>
+<p>A. Use <code>sudo apt purge package_name</code> instead of <code>remove</code>. To also remove dependencies that are no longer needed, add <code>autoremove</code>: <code>sudo apt purge package_name &amp;&amp; sudo apt autoremove</code>.</p>
+<h4>Q3. How can I install a specific version of a package?</h4>
+<p>A. Use <code>sudo apt install package_name=version</code>. For example: <code>sudo apt install nginx=1.18.0-0ubuntu1</code>.</p>
 <h4>Q4. How do I fix &quot;Unable to lock the administration directory&quot; errors?</h4>
-<p>A. This usually means another package manager is running. Wait for it to finish or check for stuck processes with <code>ps aux | grep apt</code> and terminate them if necessary.</p>
-<h4>Q5. How do I add a new repository?</h4>
-<p>A. Use <code>sudo add-apt-repository ppa:repository-name</code> for PPAs or edit the <code>/etc/apt/sources.list</code> file, then run <code>sudo apt update</code>.</p>
+<p>A. This usually means another package manager is running. Wait for it to finish or check for stuck processes with <code>ps aux | grep apt</code> and kill them if necessary. You might also need to remove lock files with <code>sudo rm /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/lib/dpkg/lock*</code>.</p>
+<h4>Q5. How do I update a single package?</h4>
+<p>A. Use <code>sudo apt install --only-upgrade package_name</code>.</p>
 <h2>References</h2>
 <p>https://manpages.ubuntu.com/manpages/jammy/man8/apt.8.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

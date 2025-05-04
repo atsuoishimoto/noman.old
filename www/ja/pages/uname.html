@@ -47,92 +47,91 @@
     <main>
       
   <h1>uname コマンド</h1>
-<p>システムの情報を表示するコマンドです。</p>
+<p>システムのオペレーティングシステムに関する情報を表示します。</p>
 <h2>概要</h2>
-<p><code>uname</code> コマンドはシステムの基本情報（カーネル名、ホスト名、オペレーティングシステム、プロセッサアーキテクチャなど）を表示します。オプションなしで実行すると、カーネル名のみを表示します。システム管理やスクリプト内での環境判定に役立ちます。</p>
+<p><code>uname</code> コマンドは、コンピュータで実行されているオペレーティングシステムに関するシステム情報を表示します。カーネル名、ネットワークホスト名、カーネルリリース、カーネルバージョン、マシンハードウェア、プロセッサタイプ、オペレーティングシステムなどの詳細を表示できます。</p>
 <h2>オプション</h2>
-<h3><strong>-a (--all)</strong></h3>
-<p>すべてのシステム情報を表示します。</p>
+<h3><strong>-a, --all</strong></h3>
+<p>カーネル名、ネットワークホスト名、カーネルリリース、カーネルバージョン、マシンハードウェア、プロセッサタイプ、オペレーティングシステムの順にすべての情報を表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-a
-<span style="color: #000; font-style: italic">Darwin MacBook-Pro.local 21.6.0 Darwin Kernel Version 21.6.0: Mon Aug 22 20:19:52 PDT 2022; root:xnu-8020.140.49~2/RELEASE_ARM64_T6000 arm64</span>
+<span style="color: #000; font-style: italic">Linux hostname 5.15.0-91-generic #101-Ubuntu SMP Tue Apr 16 14:15:57 UTC 2024 x86_64 x86_64 GNU/Linux</span>
 </pre></div>
-<h3><strong>-s (--kernel-name)</strong></h3>
-<p>カーネル名を表示します（デフォルトの動作）。</p>
+<h3><strong>-s, --kernel-name</strong></h3>
+<p>カーネル名を表示します。オプションが指定されていない場合のデフォルトです。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-s
-<span style="color: #000; font-style: italic">Darwin</span>
+<span style="color: #000; font-style: italic">Linux</span>
 </pre></div>
-<h3><strong>-n (--nodename)</strong></h3>
-<p>ネットワークノード名（ホスト名）を表示します。</p>
+<h3><strong>-n, --nodename</strong></h3>
+<p>ネットワークノードのホスト名を表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-n
-<span style="color: #000; font-style: italic">MacBook-Pro.local</span>
+<span style="color: #000; font-style: italic">hostname</span>
 </pre></div>
-<h3><strong>-r (--kernel-release)</strong></h3>
-<p>カーネルリリース番号を表示します。</p>
+<h3><strong>-r, --kernel-release</strong></h3>
+<p>カーネルリリースを表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-r
-<span style="color: #000; font-style: italic">21.6.0</span>
+<span style="color: #000; font-style: italic">5.15.0-91-generic</span>
 </pre></div>
-<h3><strong>-v (--kernel-version)</strong></h3>
-<p>カーネルのバージョン情報を表示します。</p>
+<h3><strong>-v, --kernel-version</strong></h3>
+<p>カーネルバージョンを表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-v
-<span style="color: #000; font-style: italic">Darwin Kernel Version 21.6.0: Mon Aug 22 20:19:52 PDT 2022; root:xnu-8020.140.49~2/RELEASE_ARM64_T6000</span>
+<span style="color: #8F5902">#</span><span style="color: #0000CF; font-weight: bold">101</span>-Ubuntu<span style="color: #F8F8F8"> </span>SMP<span style="color: #F8F8F8"> </span>Tue<span style="color: #F8F8F8"> </span>Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">16</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">14</span>:15:57<span style="color: #F8F8F8"> </span>UTC<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2024</span>
 </pre></div>
-<h3><strong>-m (--machine)</strong></h3>
-<p>ハードウェアのマシンタイプ（アーキテクチャ）を表示します。</p>
+<h3><strong>-m, --machine</strong></h3>
+<p>マシンハードウェア名を表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-m
-<span style="color: #000; font-style: italic">arm64</span>
+<span style="color: #000; font-style: italic">x86_64</span>
 </pre></div>
-<h3><strong>-p (--processor)</strong></h3>
-<p>プロセッサタイプを表示します（多くのシステムでは「unknown」と表示されることがあります）。</p>
+<h3><strong>-p, --processor</strong></h3>
+<p>プロセッサタイプを表示します（判断できない場合は「unknown」と表示されます）。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-p
-<span style="color: #000; font-style: italic">arm</span>
+<span style="color: #000; font-style: italic">x86_64</span>
 </pre></div>
-<h3><strong>-o (--operating-system)</strong></h3>
-<p>オペレーティングシステム名を表示します。</p>
+<h3><strong>-o, --operating-system</strong></h3>
+<p>オペレーティングシステムを表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-o
-<span style="color: #000; font-style: italic">Darwin</span>
+<span style="color: #000; font-style: italic">GNU/Linux</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>複数の情報を組み合わせて表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-sr
-<span style="color: #000; font-style: italic">Darwin 21.6.0</span>
+<h3>互換性のためにカーネルバージョンを確認する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-r
+<span style="color: #000; font-style: italic">5.15.0-91-generic</span>
 </pre></div>
-<h3>スクリプト内での使用例</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">os_type</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>uname<span style="color: #F8F8F8"> </span>-s<span style="color: #204A87; font-weight: bold">)</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$os_type</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Darwin&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;macOSで実行中です&quot;</span>
-<span style="color: #000; font-style: italic">&gt; else</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;macOS以外のシステムで実行中です&quot;</span>
-<span style="color: #000; font-style: italic">&gt; fi</span>
-<span style="color: #000; font-style: italic">macOSで実行中です</span>
+<h3>システムの完全な情報を取得する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">Linux hostname 5.15.0-91-generic #101-Ubuntu SMP Tue Apr 16 14:15:57 UTC 2024 x86_64 x86_64 GNU/Linux</span>
+</pre></div>
+<h3>ソフトウェアインストール用にアーキテクチャを確認する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-m
+<span style="color: #000; font-style: italic">x86_64</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>シェルスクリプトでの条件分岐</h3>
-<p><code>uname</code> の出力を使って、異なるOSに応じた処理を行うことができます。例えば：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">$(</span>uname<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Darwin&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
-<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># macOS固有の処理</span>
-<span style="color: #204A87; font-weight: bold">elif</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">$(</span>uname<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Linux&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
-<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># Linux固有の処理</span>
-<span style="color: #204A87; font-weight: bold">fi</span>
+<h3>他のコマンドと組み合わせる</h3>
+<p><code>uname</code> を <code>lsb_release</code> などの他のコマンドと組み合わせて、より詳細なディストリビューション情報を取得できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span>lsb_release<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">5.15.0-91-generic</span>
+<span style="color: #000; font-style: italic">No LSB modules are available.</span>
+<span style="color: #000; font-style: italic">Distributor ID: Ubuntu</span>
+<span style="color: #000; font-style: italic">Description:    Ubuntu 22.04.3 LTS</span>
+<span style="color: #000; font-style: italic">Release:        22.04</span>
+<span style="color: #000; font-style: italic">Codename:       jammy</span>
 </pre></div>
-<h3>アーキテクチャの確認</h3>
-<p>Apple Silicon（M1/M2）とIntelプロセッサの区別が必要な場合は <code>uname -m</code> を使用します。arm64ならApple Silicon、x86_64ならIntelです。</p>
-<h3>システム情報の取得</h3>
-<p><code>uname -a</code> は、サポートを求める際やバグレポートを提出する際に、システム情報を簡潔に伝えるのに役立ちます。</p>
+<h3>スクリプトでの使用</h3>
+<p><code>uname</code> コマンドは、システム固有の操作を実行する前にオペレーティングシステムやアーキテクチャを判断するシェルスクリプトで特に役立ちます。</p>
+<h3>macOSに関する考慮事項</h3>
+<p>macOSでは、<code>uname -s</code> は「Linux」ではなく「Darwin」を返し、<code>-o</code> などの一部のオプションは利用できないか、動作が異なる場合があります。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>uname</code> と <code>sw_vers</code>（macOS）の違いは何ですか？</h4>
-<p>A. <code>uname</code> はカーネルレベルの情報を表示しますが、<code>sw_vers</code> はmacOSのバージョン情報（例：macOS 13.0 Ventura）を表示します。</p>
-<h4>Q2. Linuxディストリビューション名を取得できますか？</h4>
-<p>A. <code>uname</code> だけではディストリビューション名（Ubuntu、Fedoraなど）は取得できません。代わりに <code>/etc/os-release</code> ファイルを確認するか、<code>lsb_release -a</code> コマンドを使用してください。</p>
-<h4>Q3. macOSでプロセッサの詳細情報を取得するには？</h4>
-<p>A. <code>sysctl -n machdep.cpu.brand_string</code> コマンドを使用すると、より詳細なプロセッサ情報を取得できます。</p>
-<h2>参考情報</h2>
+<h4>Q1. 実行中のLinuxカーネルバージョンを確認するにはどうすればよいですか？</h4>
+<p>A. <code>uname -r</code> を使用してカーネルリリースバージョンを表示します。</p>
+<h4>Q2. システムが32ビットか64ビットかを確認するにはどうすればよいですか？</h4>
+<p>A. <code>uname -m</code> を使用してマシンハードウェア名を表示します。「x86_64」は64ビットシステムを示し、「i686」または「i386」は32ビットシステムを示します。</p>
+<h4>Q3. <code>uname -r</code> と <code>uname -v</code> の違いは何ですか？</h4>
+<p>A. <code>uname -r</code> はカーネルリリース（「5.15.0-91-generic」など）を表示し、<code>uname -v</code> はカーネルバージョンを表示します。これには通常、ビルド情報（「#101-Ubuntu SMP Tue Apr 16 14:15:57 UTC 2024」など）が含まれます。</p>
+<h4>Q4. なぜ <code>uname -p</code> が時々「unknown」を返すのですか？</h4>
+<p>A. 一部のシステムではプロセッサタイプを判断できない場合があり、その場合は「unknown」が返されます。</p>
+<h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/uname-invocation.html</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは、<code>uname -o</code> オプションがサポートされていない場合があります。また、macOSの正確なバージョン情報を取得するには、<code>sw_vers</code> コマンドを使用することをお勧めします。</p>
 <h2>改訂履歴</h2>
-<ul>
-<li>2025/04/30 初版作成</li>
-</ul>
+<p>2025/05/04 初版作成</p>
 
 
     </main>

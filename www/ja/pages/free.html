@@ -47,74 +47,145 @@
     <main>
       
   <h1>free コマンド</h1>
-<p>システムのメモリ使用状況を表示します。</p>
+<p>システム内の空きメモリと使用中メモリの量を表示します。</p>
 <h2>概要</h2>
-<p><code>free</code> コマンドはシステムの物理メモリ（RAM）とスワップメモリの使用状況を表示します。利用可能なメモリ、使用中のメモリ、バッファやキャッシュとして使われているメモリなどの情報を確認できます。システムのメモリリソースを監視する際に役立ちます。</p>
+<p><code>free</code>コマンドは、物理RAMとスワップスペースの両方について、システムのメモリ使用状況（合計、使用中、利用可能なメモリ）に関する情報を提供します。メモリリソースを素早く確認し、潜在的なメモリ制約を特定するための簡単な方法です。</p>
 <h2>オプション</h2>
-<h3><strong>-h (human-readable)</strong></h3>
-<p>メモリサイズを読みやすい単位（KB、MB、GB）で表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-h
-<span style="color: #000; font-style: italic">              total        used        free      shared  buff/cache   available</span>
-<span style="color: #000; font-style: italic">Mem:          7.7Gi       3.2Gi       1.2Gi       264Mi       3.3Gi       3.9Gi</span>
-<span style="color: #000; font-style: italic">Swap:         2.0Gi       156Mi       1.8Gi</span>
+<h3><strong>-b, --bytes</strong></h3>
+<p>メモリ量をバイト単位で表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-b
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:     8273514496  3145728000  1073741824   536870912  4053844992  4594966528</span>
+<span style="color: #000; font-style: italic">Swap:    2147483648   268435456  1879048192</span>
 </pre></div>
-<h3><strong>-b, -k, -m, -g</strong></h3>
-<p>メモリサイズをバイト(-b)、キロバイト(-k)、メガバイト(-m)、ギガバイト(-g)単位で表示します。</p>
+<h3><strong>-k, --kilo</strong></h3>
+<p>メモリ量をキロバイト単位で表示します（デフォルト）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-k
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:        8080580     3072000     1048576      524288     3959808     4487272</span>
+<span style="color: #000; font-style: italic">Swap:       2097152      262144     1835008</span>
+</pre></div>
+<h3><strong>-m, --mega</strong></h3>
+<p>メモリ量をメガバイト単位で表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-m
-<span style="color: #000; font-style: italic">              total        used        free      shared  buff/cache   available</span>
-<span style="color: #000; font-style: italic">Mem:           7861        3312        1226         264        3322        4028</span>
-<span style="color: #000; font-style: italic">Swap:          2048         156        1892</span>
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:           7890        3000        1024         512        3866        4382</span>
+<span style="color: #000; font-style: italic">Swap:          2048         256        1792</span>
 </pre></div>
-<h3><strong>-t (total)</strong></h3>
-<p>RAM とスワップメモリの合計行を追加表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-ht
-<span style="color: #000; font-style: italic">              total        used        free      shared  buff/cache   available</span>
-<span style="color: #000; font-style: italic">Mem:          7.7Gi       3.2Gi       1.2Gi       264Mi       3.3Gi       3.9Gi</span>
-<span style="color: #000; font-style: italic">Swap:         2.0Gi       156Mi       1.8Gi</span>
-<span style="color: #000; font-style: italic">Total:        9.7Gi       3.3Gi       3.0Gi</span>
+<h3><strong>-g, --giga</strong></h3>
+<p>メモリ量をギガバイト単位で表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-g
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:              7           2           1           0           3           4</span>
+<span style="color: #000; font-style: italic">Swap:             2           0           1</span>
 </pre></div>
-<h3><strong>-s N (seconds)</strong></h3>
-<p>N秒ごとに継続的にメモリ情報を表示します。Ctrl+Cで終了できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
-<span style="color: #8F5902"># </span>2秒ごとにメモリ情報が更新表示される
+<h3><strong>-h, --human</strong></h3>
+<p>すべての出力フィールドを自動的に最短の3桁単位にスケーリングし、単位を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-h
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:           7.7Gi       3.0Gi       1.0Gi       512Mi       3.7Gi       4.2Gi</span>
+<span style="color: #000; font-style: italic">Swap:          2.0Gi       256Mi       1.7Gi</span>
+</pre></div>
+<h3><strong>-s, --seconds N</strong></h3>
+<p>N秒間隔で結果を継続的に表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:           7890        3000        1024         512        3866        4382</span>
+<span style="color: #000; font-style: italic">Swap:          2048         256        1792</span>
+
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:           7890        3010        1014         512        3866        4372</span>
+<span style="color: #000; font-style: italic">Swap:          2048         256        1792</span>
+</pre></div>
+<h3><strong>-c, --count N</strong></h3>
+<p>結果をN回表示した後、終了します。-sオプションと一緒に使用する必要があります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:           7890        3000        1024         512        3866        4382</span>
+<span style="color: #000; font-style: italic">Swap:          2048         256        1792</span>
+
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:           7890        3010        1014         512        3866        4372</span>
+<span style="color: #000; font-style: italic">Swap:          2048         256        1792</span>
+
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:           7890        3020        1004         512        3866        4362</span>
+<span style="color: #000; font-style: italic">Swap:          2048         256        1792</span>
+</pre></div>
+<h3><strong>-t, --total</strong></h3>
+<p>列の合計を示す行を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-t
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:           7890        3000        1024         512        3866        4382</span>
+<span style="color: #000; font-style: italic">Swap:          2048         256        1792</span>
+<span style="color: #000; font-style: italic">Total:         9938        3256        2816</span>
+</pre></div>
+<h3><strong>-w, --wide</strong></h3>
+<p>ワイドモードに切り替えます。ワイドモードでは80文字より長い行が生成されます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-w
+<span style="color: #000; font-style: italic">               total        used        free      shared     buffers       cache   available</span>
+<span style="color: #000; font-style: italic">Mem:           7890        3000        1024         512         366        3500        4382</span>
+<span style="color: #000; font-style: italic">Swap:          2048         256        1792</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的なメモリ情報の表示</h3>
+<h3>基本的なメモリ情報</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free
-<span style="color: #000; font-style: italic">              total        used        free      shared  buff/cache   available</span>
-<span style="color: #000; font-style: italic">Mem:        8030208     3391488     1255424      270336     3383296     4123648</span>
-<span style="color: #000; font-style: italic">Swap:       2097152      159744     1937408</span>
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:           7890        3000        1024         512        3866        4382</span>
+<span style="color: #000; font-style: italic">Swap:          2048         256        1792</span>
 </pre></div>
-<h3>継続的なメモリ監視（5秒間隔）</h3>
+<h3>人間が読みやすい形式でのメモリ情報と合計</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-ht
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:           7.7Gi       3.0Gi       1.0Gi       512Mi       3.7Gi       4.2Gi</span>
+<span style="color: #000; font-style: italic">Swap:          2.0Gi       256Mi       1.7Gi</span>
+<span style="color: #000; font-style: italic">Total:         9.7Gi       3.2Gi       2.7Gi</span>
+</pre></div>
+<h3>5秒間隔での継続的なモニタリング</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #8F5902"># </span>5秒ごとにメモリ情報が更新表示される
-<span style="color: #8F5902"># </span>Ctrl+Cで終了
-</pre></div>
-<h3>カウント指定での繰り返し表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #8F5902"># </span>メモリ情報を3回表示して終了
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:           7.7Gi       3.0Gi       1.0Gi       512Mi       3.7Gi       4.2Gi</span>
+<span style="color: #000; font-style: italic">Swap:          2.0Gi       256Mi       1.7Gi</span>
+
+<span style="color: #000; font-style: italic">               total        used        free      shared  buff/cache   available</span>
+<span style="color: #000; font-style: italic">Mem:           7.7Gi       3.1Gi       900Mi       512Mi       3.7Gi       4.1Gi</span>
+<span style="color: #000; font-style: italic">Swap:          2.0Gi       256Mi       1.7Gi</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>バッファとキャッシュについて理解する</h3>
-<p><code>buff/cache</code> 列はLinuxがファイルシステムのパフォーマンス向上のために使用しているメモリです。このメモリは必要に応じて解放されるため、実質的に利用可能なメモリは <code>available</code> 列で確認するのが適切です。</p>
-<h3>実質的な空きメモリを確認する</h3>
-<p><code>free</code> 列だけでなく <code>available</code> 列も確認しましょう。<code>available</code> はバッファやキャッシュも含めて、アプリケーションが利用可能なメモリ量を示しています。</p>
-<h3>スワップの使用状況を監視する</h3>
-<p>スワップメモリの過度な使用はシステムパフォーマンスの低下を示す可能性があります。<code>free</code> でスワップの使用率が高い場合は、物理メモリの増設を検討するか、メモリを多く消費するプロセスを特定して対処しましょう。</p>
+<h3>出力列の理解</h3>
+<ul>
+<li><strong>total</strong>: インストールされた総メモリ</li>
+<li><strong>used</strong>: 現在使用中のメモリ</li>
+<li><strong>free</strong>: 未使用のメモリ</li>
+<li><strong>shared</strong>: 複数のプロセスで共有されているメモリ</li>
+<li><strong>buff/cache</strong>: カーネルバッファとページキャッシュで使用されているメモリ</li>
+<li><strong>available</strong>: スワップなしで新しいアプリケーションに利用可能なメモリの推定値</li>
+</ul>
+<h3>利用可能なメモリに注目する</h3>
+<p>「available」列は「free」列よりも重要です。これには、必要に応じてバッファやキャッシュから再利用できるメモリが含まれているためです。</p>
+<h3>時間経過によるメモリのモニタリング</h3>
+<p><code>free -s</code>を使用して時間経過によるメモリ使用状況をモニタリングすると、メモリリークや使用パターンを特定するのに役立ちます。</p>
+<h3>他のコマンドと組み合わせる</h3>
+<p><code>free</code>の出力を他のコマンドにパイプして特定の情報を取得できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>free<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>Mem
+<span style="color: #000; font-style: italic">Mem:           7890        3000        1024         512        3866        4382</span>
+</pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. <code>free</code> と <code>top</code> コマンドのメモリ表示の違いは何ですか？</h4>
-<p>A. <code>free</code> はメモリ情報のみをシンプルに表示しますが、<code>top</code> はメモリ情報に加えてCPU使用率やプロセス情報なども表示します。<code>free</code> はメモリ状況の素早い確認に適しています。</p>
-<h4>Q2. バッファとキャッシュの違いは何ですか？</h4>
-<p>A. バッファはディスクブロックの一時的なストレージとして使用され、キャッシュはファイルの内容を保持するために使用されます。どちらも必要に応じて解放可能なメモリです。</p>
-<h4>Q3. 「available」メモリとは何ですか？</h4>
-<p>A. 新しいアプリケーションが起動できる実質的に利用可能なメモリ量を示します。これには「free」メモリに加えて、必要に応じて解放できるバッファやキャッシュも含まれます。</p>
-<h4>Q4. スワップメモリとは何ですか？</h4>
-<p>A. 物理メモリ（RAM）が不足した場合に使用されるディスク上の領域です。RAMより遅いため、過度な使用はシステムの遅延を引き起こす可能性があります。</p>
+<h4>Q1. 「free」と「available」メモリの違いは何ですか？</h4>
+<p>A. 「free」メモリは完全に未使用のメモリであるのに対し、「available」にはスワップなしで新しいアプリケーションのためにバッファやキャッシュから再利用できるメモリが含まれています。</p>
+<h4>Q2. なぜ「free」メモリが少ないのですか？</h4>
+<p>A. Linuxはパフォーマンス向上のために利用可能なメモリをディスクキャッシュに使用します。アプリケーションが使用できるメモリの指標としては「available」列を見るのがより適切です。</p>
+<h4>Q3. システムのメモリ不足をどうやって確認できますか？</h4>
+<p>A. 「available」列をモニタリングしてください。それが常に低く、スワップ使用量が高い場合、システムはメモリ圧迫状態にある可能性があります。</p>
+<h4>Q4. 「buff/cache」列は何を表していますか？</h4>
+<p>A. カーネルバッファとディスクキャッシュに使用されているメモリを示しています。このメモリは、アプリケーションが必要とする場合に再利用できることが多いです。</p>
+<h4>Q5. メモリ使用状況を継続的にモニタリングするにはどうすればよいですか？</h4>
+<p>A. <code>free -s N</code>を使用します。Nは更新間隔の秒数です。</p>
 <h2>参考資料</h2>
 <p>https://www.man7.org/linux/man-pages/man1/free.1.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

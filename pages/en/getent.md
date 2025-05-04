@@ -1,46 +1,50 @@
 # getent command
 
-Retrieve entries from administrative databases (like passwd, group, hosts, etc).
+Retrieve entries from administrative databases (hosts, users, groups, etc.).
 
 ## Overview
 
-`getent` retrieves entries from various system databases like users, groups, hosts, services, and protocols. It's a versatile tool for querying system information that's normally spread across different configuration files or network services.
+`getent` retrieves entries from various administrative databases supported by the Name Service Switch (NSS) libraries. It's commonly used to look up information about users, groups, hosts, networks, services, and protocols from system databases, regardless of whether they're stored locally or remotely.
 
 ## Options
 
-### **database**
+### **-s, --service=CONFIG**
 
-Specify which database to query (passwd, group, hosts, services, protocols, networks, etc.)
-
-```console
-$ getent passwd
-root:x:0:0:root:/root:/bin/bash
-daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
-bin:x:2:2:bin:/bin:/usr/sbin/nologin
-...
-```
-
-### **-s SOURCE**
-
-Specify which service source to use (files, db, nis, etc.)
+Specify which service provider to use
 
 ```console
 $ getent -s files passwd root
 root:x:0:0:root:/root:/bin/bash
 ```
 
-### **-i**
+### **-i, --no-idn**
 
-Return numeric addresses instead of names for hosts database
+Disable IDN encoding for the hosts database
 
 ```console
 $ getent -i hosts example.com
-93.184.216.34 example.com
+93.184.216.34    example.com
+```
+
+### **-h, --help**
+
+Display help information and exit
+
+```console
+$ getent --help
+Usage: getent [OPTION...] database [key ...]
+Get entries from administrative database.
+
+  -i, --no-idn               Disable IDN encoding
+  -s, --service=CONFIG       Service configuration to be used
+  -?, --help                 Give this help list
+      --usage                Give a short usage message
+  -V, --version              Print program version
 ```
 
 ## Usage Examples
 
-### Looking up a specific user
+### Looking up user information
 
 ```console
 $ getent passwd username
@@ -54,55 +58,56 @@ $ getent hosts github.com
 140.82.121.4     github.com
 ```
 
-### Listing all available services
+### Listing all groups
 
 ```console
-$ getent services
-tcpmux          1/tcp
-echo            7/tcp
-echo            7/udp
-discard         9/tcp sink null
-...
+$ getent group
+root:x:0:
+daemon:x:1:
+bin:x:2:
+sys:x:3:
+adm:x:4:syslog,username
+[additional groups...]
 ```
 
-### Looking up a specific group
+### Looking up a service port
 
 ```console
-$ getent group sudo
-sudo:x:27:user1,user2
+$ getent services ssh
+ssh                  22/tcp
 ```
 
 ## Tips:
 
 ### Check if a User Exists
 
-Use `getent passwd username` to check if a user exists on the system. If the command returns output, the user exists; if not, the user doesn't exist.
+Use `getent passwd username` to check if a user exists in the system. If the command returns output, the user exists; if not, the user doesn't exist.
 
-### Find Group Members
+### Find All Members of a Group
 
-Use `getent group groupname` to see all members of a specific group, which is useful for checking access permissions.
+Use `getent group groupname` to see all users who are members of a specific group.
 
-### Resolve Hostnames
+### Test Name Resolution
 
-`getent hosts hostname` can be used as an alternative to `nslookup` or `dig` for simple hostname resolution, showing both IP address and hostname.
+Use `getent hosts hostname` to test if a hostname can be resolved. This works regardless of whether the resolution comes from DNS or the local hosts file.
 
-### Use with Grep for Filtering
+### Available Databases
 
-Combine with grep to filter results: `getent passwd | grep '/home'` to find all regular users with home directories.
+Common databases you can query include: `passwd`, `group`, `hosts`, `services`, `protocols`, `networks`, and `netgroup`. The exact list depends on your system configuration.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `getent` and directly reading files like `/etc/passwd`?
-A. `getent` queries the system's Name Service Switch (NSS), which can include not just local files but also LDAP, NIS, DNS, and other sources, depending on your system configuration.
+#### Q1. What's the difference between `getent hosts` and `ping`?
+A. `getent hosts` only performs name resolution without sending any packets, while `ping` actually sends ICMP packets to the host. `getent` is useful for just checking if a hostname can be resolved to an IP address.
 
-#### Q2. How can I check if a specific user is in a group?
-A. Use `getent group groupname` and check if the username appears in the output.
+#### Q2. Can I use `getent` in scripts?
+A. Yes, `getent` is commonly used in shell scripts to verify if users, groups, or hosts exist before performing operations on them.
 
-#### Q3. Can I use `getent` to query LDAP information?
-A. Yes, if your system is configured to use LDAP through NSS, `getent` will retrieve information from LDAP automatically.
+#### Q3. Why might `getent passwd username` show different results than looking at `/etc/passwd`?
+A. `getent` queries all configured NSS sources, which might include LDAP, NIS, or other network authentication systems, not just the local `/etc/passwd` file.
 
-#### Q4. Why does `getent hosts` sometimes return multiple IP addresses?
-A. A hostname can be associated with multiple IP addresses for load balancing, redundancy, or when a host has multiple network interfaces.
+#### Q4. How can I see all available databases?
+A. The available databases depend on your system configuration. Common ones include passwd, group, hosts, services, protocols, networks, and netgroup.
 
 ## References
 
@@ -110,4 +115,4 @@ https://man7.org/linux/man-pages/man1/getent.1.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

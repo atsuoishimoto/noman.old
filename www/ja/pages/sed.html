@@ -47,142 +47,126 @@
     <main>
       
   <h1>sed コマンド</h1>
-<p>テキストストリームを変換・編集するためのストリームエディタです。</p>
+<p>テキストのフィルタリングと変換のためのストリームエディタ。</p>
 <h2>概要</h2>
-<p><code>sed</code>（Stream EDitor）は、テキストファイルやパイプからのテキスト入力を処理するためのコマンドラインユーティリティです。正規表現を使用したパターンマッチングによる置換、削除、挿入などの編集操作を行うことができます。<code>sed</code>は非対話的に動作し、スクリプトやコマンドラインから指定された編集コマンドに基づいてテキストを処理します。</p>
+<p><code>sed</code>（ストリームエディタ）は、テキストを行ごとに解析して変換する強力なユーティリティです。ファイルや標準入力からテキストを読み取り、指定された編集コマンドを適用し、結果を標準出力に出力します。検索と置換操作、テキスト抽出、その他のテキスト操作をシェルスクリプトやコマンドライン操作で行うために広く使用されています。</p>
 <h2>オプション</h2>
-<h3><strong>-e スクリプト</strong></h3>
-<p>複数の編集コマンドを指定できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/Hello/Hi/&#39;</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/World/Everyone/&#39;</span>
-<span style="color: #000; font-style: italic">Hi Everyone</span>
+<h3><strong>-e スクリプト, --expression=スクリプト</strong></h3>
+<p>実行するコマンドセットにスクリプト内のコマンドを追加します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hello world&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/hello/goodbye/&#39;</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/world/universe/&#39;</span>
+<span style="color: #000; font-style: italic">goodbye universe</span>
+<span style="color: #8F5902"># </span>複数の置換コマンドを順番に適用している
 </pre></div>
-<h3><strong>-i[拡張子]</strong></h3>
-<p>ファイルを直接編集します。拡張子を指定すると、元のファイルのバックアップが作成されます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sed<span style="color: #F8F8F8"> </span>-i.bak<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/old/new/g&#39;</span><span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902"># </span>file.txtが直接編集され、file.txt.bakというバックアップファイルが作成される
+<h3><strong>-f スクリプトファイル, --file=スクリプトファイル</strong></h3>
+<p>スクリプトファイルからコマンドを読み込み、実行するコマンドセットに追加します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>script.sed
+<span style="color: #000; font-style: italic">s/hello/goodbye/</span>
+<span style="color: #000; font-style: italic">s/world/universe/</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hello world&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>script.sed
+<span style="color: #000; font-style: italic">goodbye universe</span>
+<span style="color: #8F5902"># </span>ファイルに保存された複数のsedコマンドを実行している
 </pre></div>
-<h3><strong>-n</strong></h3>
-<p>自動出力を抑制し、明示的に出力を指定する場合に使用します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;line1\nline2\nline3&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;2p&#39;</span>
-<span style="color: #000; font-style: italic">line2</span>
+<h3><strong>-i[接尾辞], --in-place[=接尾辞]</strong></h3>
+<p>ファイルを直接編集します（接尾辞を指定するとバックアップを作成します）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hello world&quot;</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #8F5902">$ </span>sed<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/hello/goodbye/&#39;</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">goodbye world</span>
+<span style="color: #8F5902"># </span>ファイルを直接編集して内容を変更している
 </pre></div>
-<h3><strong>-f スクリプトファイル</strong></h3>
-<p>編集コマンドをファイルから読み込みます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;commands.sed の内容: s/Hello/Hi/g&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>commands.sed
-<span style="color: #000; font-style: italic">Hi World</span>
+<h3><strong>-n, --quiet, --silent</strong></h3>
+<p>パターンスペースの自動出力を抑制します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;line 1\nline 2\nline 3&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;2p&#39;</span>
+<span style="color: #000; font-style: italic">line 2</span>
+<span style="color: #8F5902"># </span>-nオプションと組み合わせて2行目だけを表示している
 </pre></div>
-<h2>編集コマンド</h2>
-<h3><strong>s/パターン/置換/[フラグ]</strong></h3>
-<p>パターンに一致するテキストを置換します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/Hello/Hi/&#39;</span>
-<span style="color: #000; font-style: italic">Hi World</span>
-</pre></div>
-<h3><strong>g フラグ（全置換）</strong></h3>
-<p>行内のすべての一致を置換します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/Hello/Hi/g&#39;</span>
-<span style="color: #000; font-style: italic">Hi Hi World</span>
-</pre></div>
-<h3><strong>d（削除）</strong></h3>
-<p>パターンに一致する行を削除します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;line1\nline2\nline3&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;2d&#39;</span>
-<span style="color: #000; font-style: italic">line1</span>
-<span style="color: #000; font-style: italic">line3</span>
-</pre></div>
-<h3><strong>p（表示）</strong></h3>
-<p>パターンに一致する行を表示します（通常は -n と共に使用）。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;line1\nline2\nline3&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;2p&#39;</span>
-<span style="color: #000; font-style: italic">line2</span>
-</pre></div>
-<h3><strong>i\（前に挿入）</strong></h3>
-<p>指定した行の前に新しいテキストを挿入します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;line1\nline2&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;1i\新しい行&#39;</span>
-<span style="color: #000; font-style: italic">新しい行</span>
-<span style="color: #000; font-style: italic">line1</span>
-<span style="color: #000; font-style: italic">line2</span>
-</pre></div>
-<h3><strong>a\（後に追加）</strong></h3>
-<p>指定した行の後に新しいテキストを追加します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;line1\nline2&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;1a\新しい行&#39;</span>
-<span style="color: #000; font-style: italic">line1</span>
-<span style="color: #000; font-style: italic">新しい行</span>
-<span style="color: #000; font-style: italic">line2</span>
+<h3><strong>-r, --regexp-extended</strong></h3>
+<p>スクリプトで拡張正規表現を使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hello 123 world&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/[0-9]+/NUMBER/&#39;</span>
+<span style="color: #000; font-style: italic">hello NUMBER world</span>
+<span style="color: #8F5902"># </span>拡張正規表現を使って数字を置換している
 </pre></div>
 <h2>使用例</h2>
 <h3>基本的な置換</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;The quick brown fox&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/brown/red/&#39;</span>
 <span style="color: #000; font-style: italic">The quick red fox</span>
+<span style="color: #8F5902"># </span>「brown」を「red」に置換している
 </pre></div>
-<h3>ファイル内のすべての一致を置換</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>sample.txt
-<span style="color: #000; font-style: italic">Hello World</span>
-<span style="color: #000; font-style: italic">Hello Everyone</span>
-<span style="color: #8F5902">$ </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/Hello/Hi/g&#39;</span><span style="color: #F8F8F8"> </span>sample.txt
-<span style="color: #000; font-style: italic">Hi World</span>
-<span style="color: #000; font-style: italic">Hi Everyone</span>
+<h3>グローバル置換</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;one two one three one&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/one/ONE/g&#39;</span>
+<span style="color: #000; font-style: italic">ONE two ONE three ONE</span>
+<span style="color: #8F5902"># </span>gフラグを使って「one」のすべての出現を「ONE」に置換している
 </pre></div>
-<h3>特定の行を抽出</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>numbers.txt
-<span style="color: #000; font-style: italic">1: First line</span>
-<span style="color: #000; font-style: italic">2: Second line</span>
-<span style="color: #000; font-style: italic">3: Third line</span>
-<span style="color: #8F5902">$ </span>sed<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;2p&#39;</span><span style="color: #F8F8F8"> </span>numbers.txt
-<span style="color: #000; font-style: italic">2: Second line</span>
+<h3>特定の行を表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">Line 1</span>
+<span style="color: #000; font-style: italic">Line 2</span>
+<span style="color: #000; font-style: italic">Line 3</span>
+<span style="color: #000; font-style: italic">Line 4</span>
+<span style="color: #8F5902">$ </span>sed<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;2,3p&#39;</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">Line 2</span>
+<span style="color: #000; font-style: italic">Line 3</span>
+<span style="color: #8F5902"># </span>2行目から3行目までを表示している
 </pre></div>
-<h3>複数の編集コマンドを連結</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World 123&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/Hello/Hi/g; s/123/456/g&#39;</span>
-<span style="color: #000; font-style: italic">Hi World 456</span>
+<h3>行の削除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">Line 1</span>
+<span style="color: #000; font-style: italic">Line 2</span>
+<span style="color: #000; font-style: italic">Line 3</span>
+<span style="color: #000; font-style: italic">Line 4</span>
+<span style="color: #8F5902">$ </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;2,3d&#39;</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">Line 1</span>
+<span style="color: #000; font-style: italic">Line 4</span>
+<span style="color: #8F5902"># </span>2行目から3行目までを削除している
+</pre></div>
+<h3>複数の編集コマンド</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hello world&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/hello/hi/; s/world/there/&#39;</span>
+<span style="color: #000; font-style: italic">hi there</span>
+<span style="color: #8F5902"># </span>セミコロンで区切って複数のコマンドを実行している
 </pre></div>
 <h2>ヒント:</h2>
-<h3>バックアップを作成してから編集</h3>
-<p>ファイルを直接編集する際は、<code>-i.bak</code>オプションを使用してバックアップを作成することをお勧めします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sed<span style="color: #F8F8F8"> </span>-i.bak<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/old/new/g&#39;</span><span style="color: #F8F8F8"> </span>important_file.txt
-<span style="color: #8F5902"># </span>important_file.txtが編集され、important_file.txt.bakというバックアップが作成される
+<h3>'/' 以外の区切り文字を使用する</h3>
+<p>パターンや置換文字列にスラッシュが含まれる場合は、別の区切り文字を使用してエスケープを避けることができます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;/usr/local/bin&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s:/usr:~:&#39;</span>
+<span style="color: #000; font-style: italic">~/local/bin</span>
+<span style="color: #8F5902"># </span>パスを扱う際にコロンを区切り文字として使用している
 </pre></div>
-<h3>正規表現の活用</h3>
-<p><code>sed</code>は強力な正規表現をサポートしています。例えば、<code>.*</code>は任意の文字列に一致します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;prefix_12345_suffix&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/prefix_.*_suffix/REPLACED/&#39;</span>
-<span style="color: #000; font-style: italic">REPLACED</span>
+<h3>インプレース編集時のバックアップ作成</h3>
+<p><code>-i</code>オプションを使用してファイルを直接編集する場合は、常にバックアップを作成することをお勧めします：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sed<span style="color: #F8F8F8"> </span>-i.bak<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/old/new/g&#39;</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #8F5902"># </span>.bakという拡張子でバックアップファイルが作成される
 </pre></div>
-<h3>アドレス範囲の指定</h3>
-<p>特定の行範囲に対して操作を適用できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>numbers.txt
-<span style="color: #000; font-style: italic">1: First line</span>
-<span style="color: #000; font-style: italic">2: Second line</span>
-<span style="color: #000; font-style: italic">3: Third line</span>
-<span style="color: #000; font-style: italic">4: Fourth line</span>
-<span style="color: #8F5902">$ </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;2,3d&#39;</span><span style="color: #F8F8F8"> </span>numbers.txt
-<span style="color: #000; font-style: italic">1: First line</span>
-<span style="color: #000; font-style: italic">4: Fourth line</span>
+<h3>アドレス範囲</h3>
+<p>行番号、パターン、または範囲を使用して特定の行をターゲットにできます：</p>
+<ul>
+<li><code>1,5</code> - 1行目から5行目まで</li>
+<li><code>/start/,/end/</code> - パターン「start」からパターン「end」までの行</li>
+<li><code>5,+2</code> - 5行目とその後の2行</li>
+</ul>
+<h3>行の追加、挿入、変更</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;line 1\nline 2\nline 3&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sed<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;2a\new line after 2&#39;</span>
+<span style="color: #000; font-style: italic">line 1</span>
+<span style="color: #000; font-style: italic">line 2</span>
+<span style="color: #000; font-style: italic">new line after 2</span>
+<span style="color: #000; font-style: italic">line 3</span>
+<span style="color: #8F5902"># </span>2行目の後に新しい行を追加している
 </pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. <code>sed</code>と<code>awk</code>の違いは何ですか？</h4>
-<p>A. <code>sed</code>は主にテキスト置換に特化したストリームエディタであるのに対し、<code>awk</code>はより複雑なテキスト処理やデータ抽出のためのプログラミング言語的な機能を持っています。</p>
-<h4>Q2. MacOSの<code>sed</code>とGNU <code>sed</code>の違いは何ですか？</h4>
-<p>A. MacOSのデフォルトの<code>sed</code>はBSD版で、GNU版とは一部の動作や構文が異なります。特に<code>-i</code>オプションでは、MacOSでは必ずバックアップ拡張子を指定する必要があります。</p>
-<h4>Q3. 複数のファイルを一度に編集するにはどうすればよいですか？</h4>
-<p>A. ワイルドカードを使用するか、ファイル名を複数指定することで可能です：<code>sed 's/old/new/g' file1.txt file2.txt</code></p>
-<h4>Q4. 特定の行だけを編集するにはどうすればよいですか？</h4>
-<p>A. アドレス指定を使用します：<code>sed '3s/old/new/' file.txt</code>は3行目のみを編集します。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSのデフォルトの<code>sed</code>はBSD版であり、GNU版とは異なる動作をします。特に以下の点に注意してください：</p>
-<ol>
-<li><p><code>-i</code>オプションを使用する場合、必ずバックアップ拡張子を指定する必要があります：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sed<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/old/new/g&#39;</span><span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># バックアップなし</span>
-<span style="color: #8F5902">$ </span>sed<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;.bak&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/old/new/g&#39;</span><span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># .bakという拡張子でバックアップ</span>
-</pre></div>
-</li>
-<li><p>一部の正規表現構文が異なる場合があります。GNU版の高度な機能を使いたい場合は、Homebrewなどでインストールできます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>brew<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>gnu-sed
-<span style="color: #8F5902">$ </span>gsed<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;s/old/new/g&#39;</span><span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># gsedとして使用</span>
-</pre></div>
-</li>
-</ol>
-<h2>参考資料</h2>
+<h4>Q1. ファイル内のテキストを永続的に置換するにはどうすればよいですか？</h4>
+<p>A. <code>-i</code>オプションを使用します：<code>sed -i 's/old/new/g' filename</code>。バックアップを作成するには <code>-i.bak</code> のように接尾辞を追加します。</p>
+<h4>Q2. パターンに一致する行だけを表示するにはどうすればよいですか？</h4>
+<p>A. <code>-n</code>オプションと<code>p</code>コマンドを使用します：<code>sed -n '/pattern/p' filename</code>。</p>
+<h4>Q3. 's/pattern/replacement/' と 's/pattern/replacement/g' の違いは何ですか？</h4>
+<p>A. <code>g</code>フラグがない場合、各行の最初の出現のみが置換されます。<code>g</code>フラグがあると、すべての出現が置換されます。</p>
+<h4>Q4. パターンに一致する行を削除するにはどうすればよいですか？</h4>
+<p>A. <code>d</code>コマンドを使用します：<code>sed '/pattern/d' filename</code>。</p>
+<h4>Q5. sedコマンドで変数を使用するにはどうすればよいですか？</h4>
+<p>A. 二重引用符を使用し、特殊文字をエスケープします：<code>sed &quot;s/$var/replacement/g&quot; filename</code>。</p>
+<h2>参照</h2>
 <p>https://www.gnu.org/software/sed/manual/sed.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

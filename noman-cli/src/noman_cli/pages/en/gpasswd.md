@@ -1,78 +1,92 @@
 # gpasswd command
 
-Manage group memberships and passwords in the system's group database.
+Administers group membership and authentication information in the /etc/group and /etc/gshadow files.
 
 ## Overview
 
-`gpasswd` is a command for administering the `/etc/group` and `/etc/gshadow` files. It allows system administrators to add and remove users from groups, set group administrators, and manage group passwords. This tool is primarily used for group management on Linux systems.
+`gpasswd` is a command used to administer groups on Linux systems. It allows administrators to add or remove users from groups, set group passwords, and designate group administrators and members. This command manages the information stored in the `/etc/group` and `/etc/gshadow` files.
 
 ## Options
 
-### **-a user**
+### **-a, --add** *USER*
 
-Add a user to the specified group
+Add a user to the specified group.
 
 ```console
 $ sudo gpasswd -a john developers
 Adding user john to group developers
 ```
 
-### **-d user**
+### **-d, --delete** *USER*
 
-Remove a user from the specified group
+Remove a user from the specified group.
 
 ```console
 $ sudo gpasswd -d john developers
 Removing user john from group developers
 ```
 
-### **-A user1,user2,...**
+### **-r, --remove-password**
 
-Set the list of administrative users for the group
+Remove the password from the specified group.
+
+```console
+$ sudo gpasswd -r developers
+Removing password from group developers
+```
+
+### **-R, --restrict**
+
+Restrict access to the group to its members only.
+
+```console
+$ sudo gpasswd -R developers
+```
+
+### **-A, --administrators** *USER1,USER2,...*
+
+Set the list of administrative users for the group.
 
 ```console
 $ sudo gpasswd -A jane,mike developers
 ```
 
-### **-M user1,user2,...**
+### **-M, --members** *USER1,USER2,...*
 
-Set the list of members for the group, replacing the current member list
+Set the list of members for the group.
 
 ```console
 $ sudo gpasswd -M john,jane,mike developers
 ```
 
-### **-r**
-
-Remove the password from the specified group
-
-```console
-$ sudo gpasswd -r developers
-```
-
 ## Usage Examples
 
-### Adding a user to multiple groups
+### Adding a user to a group
 
 ```console
-$ sudo gpasswd -a sarah developers
-Adding user sarah to group developers
-$ sudo gpasswd -a sarah designers
-Adding user sarah to group designers
+$ sudo gpasswd -a username groupname
+Adding user username to group groupname
 ```
 
 ### Setting a group password
 
 ```console
 $ sudo gpasswd developers
+Changing the password for group developers
 New Password: 
 Re-enter new password: 
 ```
 
-### Making a user a group administrator
+### Setting multiple administrators for a group
 
 ```console
-$ sudo gpasswd -A mike developers
+$ sudo gpasswd -A user1,user2,user3 groupname
+```
+
+### Removing all members from a group
+
+```console
+$ sudo gpasswd -M "" groupname
 ```
 
 ## Tips:
@@ -82,41 +96,39 @@ $ sudo gpasswd -A mike developers
 Use the `groups` command to check which groups a user belongs to:
 
 ```console
-$ groups john
-john : users developers docker
+$ groups username
 ```
 
 ### View Group Information
 
-The `/etc/group` file contains all group information. You can view it with:
+The `/etc/group` file contains group information. View it with:
 
 ```console
-$ cat /etc/group | grep developers
-developers:x:1001:john,jane,mike
+$ cat /etc/group | grep groupname
 ```
 
-### Root Privileges Required
+### Group Administration Workflow
 
-Most `gpasswd` operations require root privileges or sudo access. Regular users can only use `gpasswd` to change their own group password if they're group administrators.
+When setting up a new project team, first create the group with `groupadd`, then add members with `gpasswd -a` or set all members at once with `gpasswd -M`.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `gpasswd` and `usermod` for adding users to groups?
-A. Both can add users to groups, but `gpasswd` is specifically designed for group management with more group-specific options. `usermod -aG` is often used for simple group additions.
+#### Q1. What's the difference between `gpasswd` and `usermod -G`?
+A. `gpasswd` is specifically designed for group management and can set group administrators and passwords. `usermod -G` can add users to groups but replaces all existing group memberships unless you use `-a` with it.
 
 #### Q2. Can regular users use `gpasswd`?
-A. Regular users can only use `gpasswd` if they've been designated as group administrators with the `-A` option, and even then, they can only add/remove members.
+A. Regular users can only use `gpasswd` if they are designated as group administrators with the `-A` option, and even then they have limited capabilities.
 
-#### Q3. How do I see all members of a group?
-A. Use `getent group groupname` to see all members of a specific group.
+#### Q3. How do I remove a group password?
+A. Use `gpasswd -r groupname` to remove a password from a group.
 
 #### Q4. What happens when I set a group password?
-A. When a group has a password, users who aren't members of the group can temporarily gain group privileges by using the `newgrp` command and entering the password.
+A. When a group has a password, users who are not members of the group can temporarily join the group during a session by using the `newgrp` command and providing the correct password.
 
 ## References
 
-https://linux.die.net/man/1/gpasswd
+https://man7.org/linux/man-pages/man1/gpasswd.1.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

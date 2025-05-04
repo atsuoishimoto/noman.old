@@ -1,54 +1,67 @@
 # lsof コマンド
 
-システム上で開いているファイルを一覧表示します。
+システム上で開いているファイルとそれを開いているプロセスを一覧表示します。
 
 ## 概要
 
-`lsof`（List Open Files）は、プロセスによって開かれているファイル、ソケット、パイプなどのリソースを表示するコマンドです。システム管理やトラブルシューティングに非常に役立ち、どのプロセスがどのファイルやポートを使用しているかを確認できます。
+`lsof`（List Open Files）は、システム上で実行中のプロセスによって現在開かれているファイルに関する情報を表示します。特定のファイルを開いているプロセスや、特定のプロセスが開いているファイル、その他のファイル使用状況の詳細を表示できます。このコマンドは、システム管理者や開発者がトラブルシューティングやシステムリソースの監視を行う際に特に役立ちます。
 
 ## オプション
 
-### **-p [PID]**
+### **-p PID**
 
-指定したプロセスID（PID）が開いているファイルのみを表示します。
+指定したプロセスIDが開いているファイルを一覧表示します
 
 ```console
 $ lsof -p 1234
-COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
-chrome  1234 user    cwd    DIR    8,1     4096 123456 /home/user
-chrome  1234 user    txt    REG    8,1  3284744 789012 /usr/bin/chrome
+COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
+bash     1234   user  cwd    DIR    8,1     4096 131073 /home/user
+bash     1234   user  rtd    DIR    8,1     4096      2 /
+bash     1234   user  txt    REG    8,1  1113504 917562 /bin/bash
 ```
 
-### **-i**
+### **-i [プロトコル][@ホスト名|ホストアドレス][:サービス|ポート]**
 
-ネットワーク接続（TCP/UDPソケット）を表示します。特定のポートを指定することも可能です。
+インターネット接続用に開かれたファイルを一覧表示します（プロトコル、ホスト、ポートの指定は任意）
 
 ```console
-$ lsof -i :80
-COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
-nginx   1000   root    6u  IPv4  12345      0t0  TCP *:http (LISTEN)
+$ lsof -i TCP:22
+COMMAND  PID    USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+sshd    1234    root    3u  IPv4  12345      0t0  TCP *:ssh (LISTEN)
+sshd    5678    root    4u  IPv6  23456      0t0  TCP *:ssh (LISTEN)
 ```
 
-### **-u [ユーザー名]**
+### **-u ユーザー名**
 
-特定のユーザーが開いているファイルを表示します。
+特定のユーザーが開いているファイルを一覧表示します
 
 ```console
-$ lsof -u username
-COMMAND   PID    USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
-bash     2345 username  cwd    DIR    8,1     4096 234567 /home/username
-vim      2346 username  cwd    DIR    8,1     4096 234567 /home/username
+$ lsof -u john
+COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
+bash     1234   john  cwd    DIR    8,1     4096 131073 /home/john
+chrome   2345   john   10u   REG    8,1    12345 262144 /tmp/file.tmp
 ```
 
-### **-c [コマンド名]**
+### **-c コマンド**
 
-特定のコマンド/プログラムが開いているファイルを表示します。
+指定したコマンド名を持つプロセスが開いているファイルを一覧表示します
 
 ```console
-$ lsof -c firefox
-COMMAND   PID    USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
-firefox  3456    user  cwd    DIR    8,1     4096 345678 /home/user
-firefox  3456    user  txt    REG    8,1  5678901 456789 /usr/lib/firefox
+$ lsof -c nginx
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
+nginx   1234 root  cwd    DIR    8,1     4096      2 /
+nginx   1234 root  txt    REG    8,1  1234567 917562 /usr/sbin/nginx
+nginx   1235 www   cwd    DIR    8,1     4096      2 /
+```
+
+### **-t**
+
+プロセスIDのみを表示します（スクリプト作成に便利）
+
+```console
+$ lsof -t -i TCP:80
+1234
+5678
 ```
 
 ## 使用例
@@ -58,68 +71,63 @@ firefox  3456    user  txt    REG    8,1  5678901 456789 /usr/lib/firefox
 ```console
 $ lsof /var/log/syslog
 COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
-rsyslogd 854   root    7w   REG    8,1   256789 567890 /var/log/syslog
+rsyslogd 854 syslog    7w   REG    8,1   256789 131074 /var/log/syslog
 ```
 
-### 特定のポートを使用しているプロセスを見つける
+### ネットワークポートをリッスンしているプロセスを確認する
 
 ```console
-$ lsof -i :3306
-COMMAND  PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
-mysqld  1234 mysql   10u  IPv4  12346      0t0  TCP *:mysql (LISTEN)
+$ lsof -i -P -n | grep LISTEN
+sshd      1234    root    3u  IPv4  12345      0t0  TCP *:22 (LISTEN)
+nginx     2345    root    6u  IPv4  23456      0t0  TCP *:80 (LISTEN)
+mysqld    3456   mysql   10u  IPv4  34567      0t0  TCP 127.0.0.1:3306 (LISTEN)
 ```
 
-### 削除されたが、まだプロセスが開いているファイルを見つける
+### 特定のユーザーがディレクトリ内で開いているすべてのファイルを見つける
 
 ```console
-$ lsof | grep deleted
-chrome    3456 user  123r   REG    8,1    12345 678901 /tmp/file (deleted)
+$ lsof -u john /home/john
+COMMAND  PID  USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
+bash    1234  john  cwd    DIR    8,1     4096 131073 /home/john
+vim     2345  john    4u   REG    8,1    12345 262144 /home/john/document.txt
 ```
 
 ## ヒント:
 
-### 複数のオプションを組み合わせる
+### 複数のフィルターを組み合わせる
 
-`lsof -i -u username` のように複数のオプションを組み合わせることで、特定のユーザーのネットワーク接続のみを表示するなど、より絞り込んだ検索が可能です。
+複数のオプションを組み合わせて結果を絞り込むことができます。例えば、`lsof -u ユーザー名 -i TCP`は特定のユーザーのTCP接続を表示します。
 
-### 出力を整理する
+### 使用中の削除されたファイルを見つける
 
-`lsof` の出力は非常に多くなることがあります。`grep`、`sort`、`awk` などと組み合わせて必要な情報だけを抽出すると便利です。
+`lsof +L1`を使用して、プロセスによってまだ開かれている削除済みファイルを見つけることができます。これはディスク容量の解放を妨げているプロセスを特定するのに役立ちます。
 
-### 定期的な監視
+### ネットワーク接続の監視
 
-`watch lsof -i` のように `watch` コマンドと組み合わせることで、ネットワーク接続の変化をリアルタイムで監視できます。
+`lsof -i`を定期的に使用して、ネットワーク接続を監視し、セキュリティ問題を示す可能性がある予期しないネットワークアクティビティを特定します。
+
+### grepと組み合わせて対象を絞った結果を得る
+
+`lsof`の出力を`grep`にパイプして特定の情報をフィルタリングできます。例えば、`lsof | grep "/var/log"`でログファイルにアクセスしているプロセスを見つけることができます。
 
 ## よくある質問
 
-#### Q1. `lsof` の出力の各列は何を意味していますか？
-A. 主な列は以下の通りです：
-- COMMAND: プロセス名
-- PID: プロセスID
-- USER: ユーザー名
-- FD: ファイル記述子（r=読み取り、w=書き込み、u=読み書き両方）
-- TYPE: ファイルタイプ（REG=通常ファイル、DIR=ディレクトリ、IPv4/IPv6=ネットワークソケット）
-- DEVICE: デバイス番号
-- SIZE/OFF: ファイルサイズまたはオフセット
-- NODE: iノード番号
-- NAME: ファイル名やソケット情報
+#### Q1. 特定のポートを使用しているプロセスを見つけるにはどうすればよいですか？
+A. `lsof -i:ポート番号`を使用します（例：HTTPポートの場合は`lsof -i:80`）。
 
-#### Q2. 特定のポート範囲を監視するにはどうすればよいですか？
-A. `lsof -i :1-1024` のように範囲を指定できます。これは1〜1024番のポートを使用しているプロセスを表示します。
+#### Q2. すべてのネットワーク接続を確認するにはどうすればよいですか？
+A. `lsof -i`を使用してすべてのネットワーク接続を表示します。`-P`を追加するとサービス名ではなくポート番号が表示されます。
 
-#### Q3. macOSで `lsof` を実行すると「permission denied」エラーが出る場合はどうすればよいですか？
-A. 多くの場合、`sudo lsof` のように管理者権限で実行する必要があります。特にシステムプロセスが開いているファイルを表示する場合に必要です。
+#### Q3. 特定のファイルにアクセスしているプロセスを見つけるにはどうすればよいですか？
+A. 単に`lsof /path/to/file`を実行すると、そのファイルを開いているすべてのプロセスが表示されます。
 
-## macOSでの注意点
+#### Q4. 特定のプロセスが開いているすべてのファイルを見つけるにはどうすればよいですか？
+A. `lsof -p PID`を使用します。PIDは対象のプロセスIDです。
 
-macOSでは、一部のシステムファイルやプロセスの情報を取得するために管理者権限が必要な場合があります。また、macOSのセキュリティ機能（System Integrity Protection）により、一部のシステムプロセスの情報が制限されることがあります。
+## References
 
-また、macOSでは `-X` オプションを使用することで、デバイスファイルの詳細情報を表示できます。これはmacOS固有の機能です。
+https://man7.org/linux/man-pages/man8/lsof.8.html
 
-## 参考資料
+## Revisions
 
-https://www.freebsd.org/cgi/man.cgi?query=lsof
-
-## 改訂履歴
-
-- 2025/04/30 初版作成
+- 2025/05/04 初回リビジョン

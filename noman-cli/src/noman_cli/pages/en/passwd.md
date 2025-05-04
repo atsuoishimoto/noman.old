@@ -4,7 +4,7 @@ Change user password.
 
 ## Overview
 
-The `passwd` command allows users to change their own password or, for system administrators, to change or manage other users' passwords. It handles password authentication, modification, and enforces password policies on Unix-like systems.
+The `passwd` command allows users to change their own password or, for system administrators, to change or administer passwords for other users. It modifies the `/etc/passwd` and `/etc/shadow` files that store user account information and encrypted passwords.
 
 ## Options
 
@@ -14,43 +14,43 @@ Delete a user's password (make it empty)
 
 ```console
 $ sudo passwd -d username
-Password for username deleted
-```
-
-### **-l, --lock**
-
-Lock a user's password (disable the account)
-
-```console
-$ sudo passwd -l username
-Password for username has been locked
-```
-
-### **-u, --unlock**
-
-Unlock a user's password (re-enable the account)
-
-```console
-$ sudo passwd -u username
-Password for username has been unlocked
+passwd: password expiry information changed.
 ```
 
 ### **-e, --expire**
 
-Force password expiration (user must change password at next login)
+Force password to expire immediately, requiring the user to change it at next login
 
 ```console
 $ sudo passwd -e username
-Password for username has been expired
+passwd: password expiry information changed.
+```
+
+### **-l, --lock**
+
+Lock the specified account by adding a '!' character at the beginning of the password, disabling the account
+
+```console
+$ sudo passwd -l username
+passwd: password expiry information changed.
+```
+
+### **-u, --unlock**
+
+Unlock a previously locked account by removing the '!' character from the password
+
+```console
+$ sudo passwd -u username
+passwd: password expiry information changed.
 ```
 
 ### **-S, --status**
 
-Display password status information for a user
+Display account status information for a user
 
 ```console
 $ passwd -S username
-username PS 2025-04-15 0 99999 7 -1
+username PS 2023-05-04 0 99999 7 -1
 ```
 
 ## Usage Examples
@@ -59,63 +59,56 @@ username PS 2025-04-15 0 99999 7 -1
 
 ```console
 $ passwd
-Changing password for current_user
+Changing password for user1.
 Current password: 
 New password: 
 Retype new password: 
-passwd: password updated successfully
+passwd: all authentication tokens updated successfully.
 ```
 
-### Changing another user's password (requires root privileges)
+### Changing another user's password (as root)
 
 ```console
 $ sudo passwd username
 New password: 
 Retype new password: 
-passwd: password updated successfully
+passwd: all authentication tokens updated successfully.
 ```
 
 ### Checking password status for a user
 
 ```console
-$ passwd -S username
-username PS 2025-04-15 0 99999 7 -1
+$ sudo passwd -S username
+username PS 2023-05-04 0 99999 7 -1
 ```
 
 ## Tips:
 
 ### Understanding Password Status Output
 
-The output of `passwd -S` shows several fields: username, password status (PS=set, LK=locked, NP=no password), date of last change, minimum age, maximum age, warning period, and inactivity period.
+When using `passwd -S`, the output format is: `username PASSWORD-STATUS CHANGE-DATE MIN-DAYS MAX-DAYS WARN-DAYS INACTIVE-DAYS EXPIRE-DATE`. The PASSWORD-STATUS field can be PS (usable password), LK (locked password), or NP (no password).
 
-### Password Security
+### Secure Password Practices
 
-Create strong passwords with a mix of uppercase, lowercase, numbers, and special characters. Avoid using personal information or common words.
+When creating passwords, use a mix of uppercase, lowercase, numbers, and special characters. The system may enforce password complexity requirements depending on your configuration.
 
-### Root Password Management
+### Password Files Location
 
-Be extremely careful when changing the root password. If forgotten, recovery can be difficult and might require booting into single-user mode.
-
-### Password Files
-
-The `passwd` command modifies `/etc/passwd` and `/etc/shadow` files. Never edit these files directly; always use the proper commands.
+The encrypted passwords are stored in `/etc/shadow`, which is only readable by root. This provides better security than the older method of storing hashed passwords in the world-readable `/etc/passwd` file.
 
 ## Frequently Asked Questions
 
 #### Q1. How do I change my own password?
-A. Simply type `passwd` and follow the prompts to enter your current password and then your new password twice.
+A. Simply type `passwd` without any options and follow the prompts to enter your current password and then your new password twice.
 
-#### Q2. How can I force a user to change their password at next login?
-A. Use `sudo passwd -e username` to expire a user's password.
+#### Q2. Why does the system reject my new password?
+A. Most systems have password complexity requirements. Your password might be rejected if it's too short, too simple, based on a dictionary word, or reuses too many characters from your previous password.
 
-#### Q3. What happens when I lock a user account?
-A. The `passwd -l` command prepends the encrypted password with an exclamation mark (!), preventing the user from logging in with their password, but other authentication methods might still work.
+#### Q3. How can I force a user to change their password at next login?
+A. Use `sudo passwd -e username` to expire the user's password, forcing them to change it when they next log in.
 
-#### Q4. Can I make a user account passwordless?
-A. Yes, with `sudo passwd -d username`, but this is generally insecure and should be avoided in most cases.
-
-#### Q5. How do I know if a password is locked?
-A. Use `passwd -S username` and check if the status shows "LK" (locked).
+#### Q4. What's the difference between locking an account and deleting its password?
+A. Locking an account (`passwd -l`) prevents login while preserving the password hash. Deleting a password (`passwd -d`) removes the password entirely, which might allow passwordless login depending on system configuration.
 
 ## References
 
@@ -123,4 +116,4 @@ https://man7.org/linux/man-pages/man1/passwd.1.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

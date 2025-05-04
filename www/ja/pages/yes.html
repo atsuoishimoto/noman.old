@@ -47,72 +47,87 @@
     <main>
       
   <h1>yes コマンド</h1>
-<p>指定された文字列を繰り返し出力します。</p>
+<p>文字列を中断されるまで繰り返し出力します。</p>
 <h2>概要</h2>
-<p><code>yes</code> コマンドは、指定された文字列（デフォルトでは &quot;y&quot;）を無限に繰り返し出力するシンプルなコマンドです。主に、他のコマンドへの入力として自動的に「はい」と応答するために使用されます。</p>
+<p><code>yes</code> コマンドは、デフォルトでは「y」という文字列を改行付きで、終了されるまで連続して出力します。主に確認を求めるコマンドプロンプトに自動的に応答するために使用され、スクリプトが手動介入なしで実行できるようにします。</p>
 <h2>オプション</h2>
-<p><code>yes</code> コマンドには特に重要なオプションはありません。代わりに、出力する文字列を引数として指定できます。</p>
-<h3><strong>引数なし</strong></h3>
-<p>引数なしで実行すると、&quot;y&quot; を無限に出力します。</p>
+<h3><strong>-V, --version</strong></h3>
+<p>バージョン情報を表示して終了します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes<span style="color: #F8F8F8"> </span>--version
+<span style="color: #000; font-style: italic">yes (GNU coreutils) 9.0</span>
+<span style="color: #000; font-style: italic">Copyright (C) 2021 Free Software Foundation, Inc.</span>
+<span style="color: #000; font-style: italic">License GPLv3+: GNU GPL version 3 or later &lt;https://gnu.org/licenses/gpl.html&gt;.</span>
+<span style="color: #000; font-style: italic">This is free software: you are free to change and redistribute it.</span>
+<span style="color: #000; font-style: italic">There is NO WARRANTY, to the extent permitted by law.</span>
+
+<span style="color: #000; font-style: italic">Written by David MacKenzie.</span>
+</pre></div>
+<h3><strong>--help</strong></h3>
+<p>ヘルプ情報を表示して終了します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes<span style="color: #F8F8F8"> </span>--help
+<span style="color: #000; font-style: italic">Usage: yes [STRING]...</span>
+<span style="color: #000; font-style: italic">  or:  yes OPTION</span>
+<span style="color: #000; font-style: italic">Repeatedly output a line with all specified STRING(s), or &#39;y&#39;.</span>
+
+<span style="color: #000; font-style: italic">      --help     display this help and exit</span>
+<span style="color: #000; font-style: italic">      --version  output version information and exit</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>デフォルトの動作（「y」を出力）</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes
 <span style="color: #000; font-style: italic">y</span>
 <span style="color: #000; font-style: italic">y</span>
 <span style="color: #000; font-style: italic">y</span>
 <span style="color: #000; font-style: italic">y</span>
-<span style="color: #000; font-style: italic">...（Ctrl+Cで停止するまで続く）</span>
+<span style="color: #000; font-style: italic">[Ctrl+Cで中断されるまで続く]</span>
 </pre></div>
-<h3><strong>文字列の指定</strong></h3>
-<p>任意の文字列を指定すると、その文字列を繰り返し出力します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;承認します&quot;</span>
-<span style="color: #000; font-style: italic">承認します</span>
-<span style="color: #000; font-style: italic">承認します</span>
-<span style="color: #000; font-style: italic">承認します</span>
-<span style="color: #000; font-style: italic">...（Ctrl+Cで停止するまで続く）</span>
+<h3>カスタム文字列の出力</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;同意します&quot;</span>
+<span style="color: #000; font-style: italic">同意します</span>
+<span style="color: #000; font-style: italic">同意します</span>
+<span style="color: #000; font-style: italic">同意します</span>
+<span style="color: #000; font-style: italic">[Ctrl+Cで中断されるまで続く]</span>
 </pre></div>
-<h2>使用例</h2>
-<h3>パイプラインでの使用</h3>
-<p><code>yes</code> の主な用途は、対話的なプロンプトに自動的に応答することです。</p>
+<h3>スクリプトでのプロンプトへの自動応答</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>rm<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>*.txt
-<span style="color: #8F5902"># </span>すべての確認プロンプトに自動的に「y」と応答する
+<span style="color: #000; font-style: italic">rm: remove regular file &#39;file1.txt&#39;? rm: remove regular file &#39;file2.txt&#39;?</span>
 </pre></div>
-<h3>複数の単語を出力</h3>
-<p>スペースを含む文字列を出力する場合は引用符で囲みます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span>
-<span style="color: #000; font-style: italic">Hello World</span>
-<span style="color: #000; font-style: italic">Hello World</span>
-<span style="color: #000; font-style: italic">Hello World</span>
-<span style="color: #000; font-style: italic">...（Ctrl+Cで停止するまで続く）</span>
+<h3>コマンドに複数の入力を提供</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes<span style="color: #F8F8F8"> </span>n<span style="color: #F8F8F8"> </span>y<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>rm<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">rm: remove regular file &#39;file1.txt&#39;? rm: remove regular file &#39;file2.txt&#39;?</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>CPU負荷に注意</h3>
-<p><code>yes</code> コマンドは非常に高速に出力を生成するため、長時間実行するとCPUリソースを大量に消費する可能性があります。必要な時間だけ実行し、終了したら必ず停止してください。</p>
-<h3>出力のリダイレクト</h3>
-<p><code>yes</code> の出力をファイルにリダイレクトする場合は注意が必要です。ディスクがすぐに一杯になる可能性があります。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>output.txt<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># ディスクが一杯になるまで実行されるので危険</span>
-</pre></div>
-<h3>回数を制限する方法</h3>
-<p>特定の回数だけ出力したい場合は、<code>head</code> コマンドと組み合わせることができます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># 「y」を5回だけ出力する</span>
+<h3>コマンドの停止</h3>
+<p><code>yes</code> は Ctrl+C で停止するまで無限に実行されることを常に覚えておきましょう。終了し忘れると、システムリソースを不必要に消費する可能性があります。</p>
+<h3>出力の制限</h3>
+<p>出力回数を制限したい場合は、<code>yes</code> を <code>head</code> にパイプすることができます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>yes<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
 <span style="color: #000; font-style: italic">y</span>
 <span style="color: #000; font-style: italic">y</span>
 <span style="color: #000; font-style: italic">y</span>
 <span style="color: #000; font-style: italic">y</span>
 <span style="color: #000; font-style: italic">y</span>
 </pre></div>
+<h3>パフォーマンステスト</h3>
+<p><code>yes</code> コマンドは、最大速度で出力を生成するため、簡単なパフォーマンステストやシステムに負荷をかけるために使用できます。</p>
+<h3>破壊的なコマンドでの注意</h3>
+<p><code>rm -rf</code> のような破壊的なコマンドで <code>yes</code> を使用する際は注意が必要である。期待通りの動作をするか、まず安全なコマンドでテストしてから使用すること。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>yes</code> コマンドの主な用途は何ですか？</h4>
-<p>A. 対話的なプロンプトに自動的に「はい」と応答するために使用されます。特に、確認を求める操作を自動化する場合に便利です。</p>
+<h4>Q1. <code>yes</code> コマンドの目的は何ですか？</h4>
+<p>A. 主な目的は、スクリプト内の対話式プロンプトに自動的に応答することで、通常は確認の質問に「y」で答えます。</p>
 <h4>Q2. <code>yes</code> コマンドを停止するにはどうすればよいですか？</h4>
-<p>A. <code>Ctrl+C</code> を押すことで停止できます。これはターミナルでコマンドを中断する標準的な方法です。</p>
-<h4>Q3. <code>yes</code> コマンドで複数の単語を出力するにはどうすればよいですか？</h4>
-<p>A. 引用符で囲んで引数として渡します。例: <code>yes &quot;Hello World&quot;</code></p>
-<h4>Q4. <code>yes</code> コマンドの出力速度を制限することはできますか？</h4>
-<p>A. <code>yes</code> 自体には速度制限オプションはありませんが、<code>sleep</code> コマンドと組み合わせたシェルスクリプトを作成することで制限できます。</p>
-<h2>参考資料</h2>
+<p>A. Ctrl+C を押してコマンドを終了します。</p>
+<h4>Q3. <code>yes</code> に「y」以外の文字列を出力させることはできますか？</h4>
+<p>A. はい、引数として希望の文字列を指定するだけです：<code>yes &quot;カスタムテキスト&quot;</code></p>
+<h4>Q4. <code>yes</code> が文字列を出力する回数を制限する方法はありますか？</h4>
+<p>A. コマンド自体にはこのオプションはありませんが、<code>head</code> に <code>-n</code> オプションを付けてパイプすることができます：<code>yes | head -n 10</code></p>
+<h4>Q5. <code>yes</code> はシステムリソースを多く消費しますか？</h4>
+<p>A. 可能な限り高速に出力を生成するため、かなりのCPUリソースを消費する可能性があります。必要がなくなったら必ず終了してください。</p>
+<h2>参考文献</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/yes-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

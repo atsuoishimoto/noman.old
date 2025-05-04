@@ -47,98 +47,122 @@
     <main>
       
   <h1>ltrace コマンド</h1>
-<p>実行中のプログラムが行うライブラリコール（関数呼び出し）をトレースします。</p>
+<p>プログラムのライブラリ呼び出しをトレースします。</p>
 <h2>概要</h2>
-<p><code>ltrace</code>は、プログラムが実行中に呼び出すライブラリ関数をリアルタイムで監視・表示するデバッグツールです。システム管理者や開発者がプログラムの動作を理解したり、問題を診断したりするのに役立ちます。<code>strace</code>がシステムコールを追跡するのに対し、<code>ltrace</code>はライブラリ関数の呼び出しを追跡します。</p>
+<p><code>ltrace</code>はプログラムが行う動的ライブラリ呼び出しを表示するデバッグユーティリティです。システムコールやプロセスが受信したシグナルも表示できます。このツールは、ソースコードが利用できない場合のプログラムのデバッグや、プログラムがライブラリとどのように相互作用するかを理解するのに特に役立ちます。</p>
 <h2>オプション</h2>
-<h3><strong>-c</strong></h3>
-<p>関数呼び出しの統計情報を表示します。各関数の呼び出し回数、費やした時間などの概要を示します。</p>
+<h3><strong>-c, --count</strong></h3>
+<p>各ライブラリ呼び出しの時間と回数をカウントし、最後に要約を報告します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>ls
 <span style="color: #8F5902">% </span><span style="color: #204A87">time</span><span style="color: #F8F8F8">     </span>seconds<span style="color: #F8F8F8">  </span>usecs/call<span style="color: #F8F8F8">     </span>calls<span style="color: #F8F8F8">      </span><span style="color: #204A87; font-weight: bold">function</span>
 <span style="color: #000; font-style: italic">------ ----------- ----------- --------- --------------------</span>
-<span style="color: #000; font-style: italic"> 28.57    0.000040          40         1 setlocale</span>
-<span style="color: #000; font-style: italic"> 21.43    0.000030          30         1 bindtextdomain</span>
-<span style="color: #000; font-style: italic"> 21.43    0.000030          30         1 textdomain</span>
-<span style="color: #000; font-style: italic"> 14.29    0.000020          20         1 __cxa_atexit</span>
-<span style="color: #000; font-style: italic"> 14.29    0.000020          20         1 isatty</span>
+<span style="color: #000; font-style: italic"> 21.05    0.000080          2        40 strlen</span>
+<span style="color: #000; font-style: italic"> 15.79    0.000060          2        30 __ctype_b_loc</span>
+<span style="color: #000; font-style: italic"> 10.53    0.000040          2        20 readdir64</span>
+<span style="color: #000; font-style: italic">  7.89    0.000030          2        15 fwrite</span>
+<span style="color: #000; font-style: italic">  5.26    0.000020          2        10 malloc</span>
+<span style="color: #000; font-style: italic">  5.26    0.000020          2        10 free</span>
+<span style="color: #000; font-style: italic">  5.26    0.000020          2        10 __errno_location</span>
+<span style="color: #000; font-style: italic">  5.26    0.000020          2        10 __cxa_atexit</span>
+<span style="color: #000; font-style: italic">  5.26    0.000020         20         1 opendir</span>
+<span style="color: #000; font-style: italic">  5.26    0.000020         20         1 closedir</span>
+<span style="color: #000; font-style: italic">  5.26    0.000020         20         1 setlocale</span>
+<span style="color: #000; font-style: italic">  5.26    0.000020         20         1 isatty</span>
+<span style="color: #000; font-style: italic">  2.63    0.000010         10         1 bindtextdomain</span>
 <span style="color: #000; font-style: italic">------ ----------- ----------- --------- --------------------</span>
-<span style="color: #000; font-style: italic">100.00    0.000140                     5 total</span>
+<span style="color: #000; font-style: italic">100.00    0.000380                   150 total</span>
 </pre></div>
-<h3><strong>-f</strong></h3>
-<p>フォークされた子プロセスも追跡します。プログラムが新しいプロセスを作成する場合に便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>bash<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ls&quot;</span>
-<span style="color: #000; font-style: italic">[pid 12345] __libc_start_main(0x401a90, 2, 0x7ffc123456, 0x4028a0, 0x402880</span>
-<span style="color: #000; font-style: italic">[pid 12345] setlocale(LC_ALL, &quot;&quot;)                                = &quot;en_US.UTF-8&quot;</span>
-<span style="color: #000; font-style: italic">[pid 12345] bindtextdomain(&quot;coreutils&quot;, &quot;/usr/share/locale&quot;)     = &quot;/usr/share/locale&quot;</span>
-<span style="color: #000; font-style: italic">[pid 12345] textdomain(&quot;coreutils&quot;)                              = &quot;coreutils&quot;</span>
-<span style="color: #000; font-style: italic">...</span>
+<h3><strong>-f, --follow</strong></h3>
+<p>現在トレースされているプロセスによって作成される子プロセスをトレースします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>./program
+<span style="color: #000; font-style: italic">[pid 12345] malloc(32)                                  = 0x55d7e9fa7260</span>
+<span style="color: #000; font-style: italic">[pid 12345] fork()                                      = 12346</span>
+<span style="color: #000; font-style: italic">[pid 12346] malloc(64)                                  = 0x55d7e9fa7290</span>
 </pre></div>
-<h3><strong>-p PID</strong></h3>
-<p>既に実行中のプロセスにアタッチします。実行中のプログラムをデバッグする際に便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
-<span style="color: #000; font-style: italic">[pid 1234] read(5, &quot;Hello World&quot;, 4096)                         = 11</span>
-<span style="color: #000; font-style: italic">[pid 1234] printf(&quot;Received: %s\n&quot;, &quot;Hello World&quot;)              = 19</span>
-<span style="color: #000; font-style: italic">[pid 1234] write(1, &quot;Received: Hello World\n&quot;, 23)              = 23</span>
-</pre></div>
-<h3><strong>-S</strong></h3>
-<p>ライブラリコールに加えてシステムコールも表示します。プログラムの動作をより包括的に理解するのに役立ちます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>ls
-<span style="color: #000; font-style: italic">SYS_brk(0)                                                       = 0x55a54e2c2000</span>
-<span style="color: #000; font-style: italic">SYS_access(&quot;/etc/ld.so.preload&quot;, R_OK)                          = -2</span>
-<span style="color: #000; font-style: italic">SYS_openat(AT_FDCWD, &quot;/etc/ld.so.cache&quot;, O_RDONLY|O_CLOEXEC)    = 3</span>
-<span style="color: #000; font-style: italic">SYS_fstat(3, 0x7ffd123456)                                      = 0</span>
-<span style="color: #000; font-style: italic">setlocale(LC_ALL, &quot;&quot;)                                           = &quot;en_US.UTF-8&quot;</span>
-<span style="color: #000; font-style: italic">bindtextdomain(&quot;coreutils&quot;, &quot;/usr/share/locale&quot;)                = &quot;/usr/share/locale&quot;</span>
-<span style="color: #000; font-style: italic">...</span>
-</pre></div>
-<h2>使用例</h2>
-<h3>基本的な使用方法</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>ls
-<span style="color: #000; font-style: italic">__libc_start_main(0x401a90, 1, 0x7ffc123456, 0x4028a0, 0x402880) = 0x7f123456</span>
-<span style="color: #000; font-style: italic">setlocale(LC_ALL, &quot;&quot;)                                           = &quot;en_US.UTF-8&quot;</span>
-<span style="color: #000; font-style: italic">bindtextdomain(&quot;coreutils&quot;, &quot;/usr/share/locale&quot;)                = &quot;/usr/share/locale&quot;</span>
-<span style="color: #000; font-style: italic">textdomain(&quot;coreutils&quot;)                                         = &quot;coreutils&quot;</span>
-<span style="color: #000; font-style: italic">__cxa_atexit(0x402860, 0, 0, 0x736c6974756572)                  = 0</span>
-<span style="color: #000; font-style: italic">isatty(1)                                                       = 1</span>
-<span style="color: #000; font-style: italic">...</span>
-</pre></div>
-<h3>特定の関数のみをトレース</h3>
+<h3><strong>-e, --expr=EXPR</strong></h3>
+<p>トレースまたはフィルタリングするライブラリ呼び出しを指定します。形式は[!][?][=][%][/@][+|-]pattern[@arch][:function]です。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>malloc+free<span style="color: #F8F8F8"> </span>ls
-<span style="color: #000; font-style: italic">malloc(32)                                                      = 0x55a54e2c3010</span>
-<span style="color: #000; font-style: italic">malloc(4096)                                                    = 0x55a54e2c4000</span>
-<span style="color: #000; font-style: italic">malloc(13)                                                      = 0x55a54e2c5000</span>
-<span style="color: #000; font-style: italic">free(0x55a54e2c5000)                                            = &lt;void&gt;</span>
-<span style="color: #000; font-style: italic">free(0x55a54e2c4000)                                            = &lt;void&gt;</span>
-<span style="color: #000; font-style: italic">free(0x55a54e2c3010)                                            = &lt;void&gt;</span>
+<span style="color: #000; font-style: italic">ls-&gt;malloc(32)                                          = 0x55d7e9fa7260</span>
+<span style="color: #000; font-style: italic">ls-&gt;malloc(64)                                          = 0x55d7e9fa7290</span>
+<span style="color: #000; font-style: italic">ls-&gt;free(0x55d7e9fa7260)                                = &lt;void&gt;</span>
+<span style="color: #000; font-style: italic">ls-&gt;free(0x55d7e9fa7290)                                = &lt;void&gt;</span>
 </pre></div>
-<h3>出力をファイルに保存</h3>
+<h3><strong>-p, --pid=PID</strong></h3>
+<p>指定されたPIDのプロセスにアタッチしてトレースを開始します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
+<span style="color: #000; font-style: italic">[pid 1234] read(5, &quot;data&quot;, 1024)                        = 4</span>
+<span style="color: #000; font-style: italic">[pid 1234] write(1, &quot;output&quot;, 6)                        = 6</span>
+</pre></div>
+<h3><strong>-S, --summary</strong></h3>
+<p>トレースの最後にライブラリ呼び出しの使用状況の要約を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>ls
+<span style="color: #000; font-style: italic">ls-&gt;__libc_start_main(0x401670, 1, 0x7ffd2d121768, 0x4017a0 &lt;unfinished ...&gt;</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">+++ exited (status 0) +++</span>
+<span style="color: #8F5902">% </span><span style="color: #204A87">time</span><span style="color: #F8F8F8">     </span>seconds<span style="color: #F8F8F8">  </span>usecs/call<span style="color: #F8F8F8">     </span>calls<span style="color: #F8F8F8">      </span><span style="color: #204A87; font-weight: bold">function</span>
+<span style="color: #000; font-style: italic">------ ----------- ----------- --------- --------------------</span>
+<span style="color: #000; font-style: italic"> 21.05    0.000080          2        40 strlen</span>
+<span style="color: #000; font-style: italic"> 15.79    0.000060          2        30 __ctype_b_loc</span>
+<span style="color: #000; font-style: italic"> 10.53    0.000040          2        20 readdir64</span>
+</pre></div>
+<h3><strong>-o, --output=FILE</strong></h3>
+<p>トレース出力を標準エラー出力ではなくFILEに書き込みます。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>trace.log<span style="color: #F8F8F8"> </span>ls
 <span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>trace.log
-<span style="color: #000; font-style: italic">__libc_start_main(0x401a90, 1, 0x7ffc123456, 0x4028a0, 0x402880) = 0x7f123456</span>
-<span style="color: #000; font-style: italic">setlocale(LC_ALL, &quot;&quot;)                                           = &quot;en_US.UTF-8&quot;</span>
+<span style="color: #000; font-style: italic">ls-&gt;__libc_start_main(0x401670, 1, 0x7ffd2d121768, 0x4017a0 &lt;unfinished ...&gt;</span>
+<span style="color: #000; font-style: italic">ls-&gt;setlocale(6, &quot;&quot;)                                    = &quot;en_US.UTF-8&quot;</span>
+<span style="color: #000; font-style: italic">ls-&gt;bindtextdomain(&quot;coreutils&quot;, &quot;/usr/share/locale&quot;)    = &quot;/usr/share/locale&quot;</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>基本的な使用法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>ls
+<span style="color: #000; font-style: italic">ls-&gt;__libc_start_main(0x401670, 1, 0x7ffd2d121768, 0x4017a0 &lt;unfinished ...&gt;</span>
+<span style="color: #000; font-style: italic">ls-&gt;setlocale(6, &quot;&quot;)                                    = &quot;en_US.UTF-8&quot;</span>
+<span style="color: #000; font-style: italic">ls-&gt;bindtextdomain(&quot;coreutils&quot;, &quot;/usr/share/locale&quot;)    = &quot;/usr/share/locale&quot;</span>
+<span style="color: #000; font-style: italic">ls-&gt;textdomain(&quot;coreutils&quot;)                             = &quot;coreutils&quot;</span>
+<span style="color: #000; font-style: italic">ls-&gt;__cxa_atexit(0x4014a0, 0, 0, 0x736c6974)            = 0</span>
+<span style="color: #000; font-style: italic">ls-&gt;getenv(&quot;QUOTING_STYLE&quot;)                             = nil</span>
 <span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">+++ exited (status 0) +++</span>
+</pre></div>
+<h3>特定のライブラリ呼び出しのトレース</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>malloc+free+open<span style="color: #F8F8F8"> </span>./program
+<span style="color: #000; font-style: italic">./program-&gt;malloc(1024)                                 = 0x55d7e9fa7260</span>
+<span style="color: #000; font-style: italic">./program-&gt;open(&quot;/etc/passwd&quot;, 0, 0)                    = 3</span>
+<span style="color: #000; font-style: italic">./program-&gt;malloc(2048)                                 = 0x55d7e9fa7660</span>
+<span style="color: #000; font-style: italic">./program-&gt;free(0x55d7e9fa7260)                         = &lt;void&gt;</span>
+<span style="color: #000; font-style: italic">./program-&gt;free(0x55d7e9fa7660)                         = &lt;void&gt;</span>
+</pre></div>
+<h3>時間情報付きのトレース</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ltrace<span style="color: #F8F8F8"> </span>-tt<span style="color: #F8F8F8"> </span>./program
+<span style="color: #000; font-style: italic">15:30:45.123456 __libc_start_main(0x401670, 1, 0x7ffd2d121768, 0x4017a0 &lt;unfinished ...&gt;</span>
+<span style="color: #000; font-style: italic">15:30:45.123789 setlocale(6, &quot;&quot;)                        = &quot;en_US.UTF-8&quot;</span>
+<span style="color: #000; font-style: italic">15:30:45.124012 malloc(1024)                            = 0x55d7e9fa7260</span>
+<span style="color: #000; font-style: italic">15:30:45.124234 free(0x55d7e9fa7260)                    = &lt;void&gt;</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>デバッグシンボルをインストールする</h3>
-<p>より詳細な情報を得るには、デバッグシンボルパッケージをインストールしてください。Ubuntuでは<code>apt install libc6-dbg</code>のようなコマンドを使用します。</p>
-<h3>出力のフィルタリング</h3>
-<p><code>-e</code>オプションを使用して特定の関数だけをトレースできます。例えば、<code>ltrace -e malloc+free+open</code>とすると、メモリ割り当てとファイル操作のみを追跡できます。</p>
-<h3>再帰的な関数呼び出しの深さ制限</h3>
-<p><code>-L</code>オプションを使用して、再帰的な関数呼び出しの深さを制限できます。大きなプログラムをトレースする際に出力を管理しやすくします。</p>
+<h3>ノイズをフィルタリングする</h3>
+<p><code>-e</code>オプションを使用して、関心のある特定の関数呼び出しに焦点を当てましょう。これにより出力量が減少し、分析が容易になります。</p>
+<h3>straceと組み合わせる</h3>
+<p>包括的なデバッグのために、ライブラリ呼び出し用の<code>ltrace</code>とシステムコール用の<code>strace</code>の両方を使用しましょう。これによりプログラムの動作の完全な全体像が得られます。</p>
+<h3>分析のための出力リダイレクト</h3>
+<p>複雑なプログラムの場合、<code>-o</code>で出力をファイルにリダイレクトし、<code>grep</code>や<code>awk</code>などのツールを使用してトレースデータを分析しましょう。</p>
+<h3>コアダンプとの併用</h3>
+<p>クラッシュのデバッグ時には、<code>ltrace</code>でプログラムを実行して、クラッシュ前に行われたライブラリ呼び出しを確認しましょう。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>ltrace</code>と<code>strace</code>の違いは何ですか？</h4>
-<p>A. <code>ltrace</code>はライブラリ関数の呼び出しを追跡するのに対し、<code>strace</code>はシステムコール（OSカーネルへの呼び出し）を追跡します。</p>
-<h4>Q2. <code>ltrace</code>を使用するために特別な権限が必要ですか？</h4>
-<p>A. 通常、自分のプロセスをトレースするには特別な権限は必要ありませんが、他のユーザーのプロセスをトレースするには管理者権限（root）が必要です。</p>
-<h4>Q3. <code>ltrace</code>の出力が多すぎる場合はどうすればよいですか？</h4>
-<p>A. <code>-e</code>オプションで特定の関数のみをトレースしたり、<code>-o</code>オプションで出力をファイルに保存したり、<code>-c</code>オプションで統計情報のみを表示したりできます。</p>
-<h4>Q4. macOSで<code>ltrace</code>は使用できますか？</h4>
-<p>A. macOSには標準で<code>ltrace</code>は含まれていません。代わりに<code>dtruss</code>や<code>dtrace</code>などのツールを使用できますが、機能は異なります。Homebrewなどのパッケージマネージャーを通じてインストールすることもできますが、システムの制限により完全な機能を提供できない場合があります。</p>
-<h2>参考文献</h2>
+<h4>Q1. ltraceとstraceの違いは何ですか？</h4>
+<p>A. <code>ltrace</code>はライブラリ呼び出し（libcなどの共有ライブラリ内の関数）をトレースするのに対し、<code>strace</code>はシステムコール（カーネルとの直接的な相互作用）をトレースします。<code>ltrace</code>は<code>printf()</code>のようなより高レベルの操作を表示し、<code>strace</code>は<code>write()</code>のようなより低レベルの操作を表示します。</p>
+<h4>Q2. ltraceはトレース対象のプログラムを遅くしますか？</h4>
+<p>A. はい、トレースには大きなオーバーヘッドが加わります。傍受される各呼び出しはコンテキストスイッチを必要とし、特に多くのライブラリ呼び出しを行うプログラムでは、かなり遅くなる可能性があります。</p>
+<h4>Q3. 特定のライブラリ関数だけをトレースするにはどうすればよいですか？</h4>
+<p>A. <code>-e</code>オプションをパターンと共に使用します。例えば：<code>ltrace -e malloc+free+fopen ./program</code>とすると、メモリ割り当てとファイル操作のみをトレースします。</p>
+<h4>Q4. ltraceは静的にリンクされたプログラムをトレースできますか？</h4>
+<p>A. いいえ、<code>ltrace</code>は主に動的にリンクされたプログラムで動作します。静的にリンクされたプログラムでは、ライブラリ呼び出しは実行可能ファイルにコンパイルされ、動的リンカーを通じて行われません。</p>
+<h2>参考資料</h2>
 <p>https://man7.org/linux/man-pages/man1/ltrace.1.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

@@ -47,65 +47,75 @@
     <main>
       
   <h1>groupadd コマンド</h1>
-<p>新しいグループをシステムに追加します。</p>
+<p>システムに新しいグループを作成します。</p>
 <h2>概要</h2>
-<p><code>groupadd</code> コマンドは、システムに新しいグループを作成するために使用されます。システム管理者がユーザーアクセス権を管理するために、ユーザーをグループ化する際に役立ちます。このコマンドはルート権限（sudo）が必要です。</p>
+<p><code>groupadd</code> コマンドはシステムに新しいグループアカウントを作成します。指定されたグループ名でシステムのグループファイル（通常は <code>/etc/group</code>）にエントリを追加し、一意のグループID（GID）を割り当てます。</p>
 <h2>オプション</h2>
-<h3><strong>-g GID</strong></h3>
-<p>グループIDを指定します。指定しない場合は、利用可能な次のGIDが自動的に割り当てられます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1001</span><span style="color: #F8F8F8"> </span>developers
+<h3><strong>-f, --force</strong></h3>
+<p>グループがすでに存在する場合でも正常終了し、GIDがすでに使用されている場合は -g オプションをキャンセルします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>developers
 </pre></div>
-<h3><strong>-r</strong></h3>
-<p>システムグループを作成します。システムグループは通常、デーモンやシステムサービス用に使用されます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>webservice
+<h3><strong>-g, --gid GID</strong></h3>
+<p>グループのID（GID）の数値を指定します。この値は -o オプションを使用しない限り、一意である必要があります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1500</span><span style="color: #F8F8F8"> </span>project-team
 </pre></div>
-<h3><strong>-f</strong></h3>
-<p>グループがすでに存在する場合でもエラーを表示せず、正常終了します（強制モード）。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>marketing
+<h3><strong>-K, --key KEY=VALUE</strong></h3>
+<p>/etc/login.defs のデフォルト値（GID_MIN、GID_MAX など）を上書きします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-K<span style="color: #F8F8F8"> </span><span style="color: #000">GID_MIN</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">5000</span><span style="color: #F8F8F8"> </span>new-group
 </pre></div>
-<h3><strong>-K KEY=VALUE</strong></h3>
-<p>デフォルトの設定を上書きします。例えば、<code>GID_MIN</code>や<code>GID_MAX</code>などを指定できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-K<span style="color: #F8F8F8"> </span><span style="color: #000">GID_MIN</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">5000</span><span style="color: #F8F8F8"> </span>newgroup
+<h3><strong>-o, --non-unique</strong></h3>
+<p>一意でないGIDを持つグループの作成を許可します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1500</span><span style="color: #F8F8F8"> </span>another-group
+</pre></div>
+<h3><strong>-p, --password PASSWORD</strong></h3>
+<p>新しいグループの暗号化されたパスワードを設定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>encrypted_password<span style="color: #F8F8F8"> </span>finance
+</pre></div>
+<h3><strong>-r, --system</strong></h3>
+<p>システムGID範囲内のGIDを持つシステムグループを作成します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>sysgroup
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的なグループ作成</h3>
+<h3>基本的なグループの作成</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>developers
-<span style="color: #8F5902"># </span>新しいグループ「developers」が作成される
-</pre></div>
-<h3>特定のGIDでグループを作成</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2000</span><span style="color: #F8F8F8"> </span>designers
-<span style="color: #8F5902"># </span>GID<span style="color: #F8F8F8"> </span>2000で「designers」グループが作成される
 </pre></div>
 <h3>システムグループの作成</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>nginx
-<span style="color: #8F5902"># </span>システムグループ「nginx」が作成される
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>docker
+</pre></div>
+<h3>特定のGIDを持つグループの作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2000</span><span style="color: #F8F8F8"> </span>project-team
+</pre></div>
+<h3>すでに存在する可能性のあるグループの作成</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupadd<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>webadmins
 </pre></div>
 <h2>ヒント:</h2>
-<h3>グループ情報の確認</h3>
-<p>グループが正しく作成されたかを確認するには、<code>getent group グループ名</code>または<code>cat /etc/group | grep グループ名</code>コマンドを使用します。</p>
+<h3>グループ作成の確認</h3>
+<p>グループを作成した後、<code>getent group</code> コマンドを使用して正しく追加されたことを確認できます：</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>group<span style="color: #F8F8F8"> </span>developers
 <span style="color: #000; font-style: italic">developers:x:1001:</span>
 </pre></div>
 <h3>グループIDの範囲</h3>
-<p>一般的に、システムグループは低いGID（通常1000未満）を使用し、通常のユーザーグループは1000以上のGIDを使用します。システムによって異なる場合があります。</p>
-<h3>グループ削除</h3>
-<p>不要になったグループを削除するには、<code>groupdel</code>コマンドを使用します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupdel<span style="color: #F8F8F8"> </span>developers
-</pre></div>
+<p>システムグループは通常、低いGID（多くの場合1000未満）を使用し、ユーザーグループはより高いGIDを使用します。特定の範囲については、システムの <code>/etc/login.defs</code> ファイルを確認してください。</p>
+<h3>グループ管理</h3>
+<p><code>groupadd</code> はグループの作成のみを行うことを覚えておいてください。既存のグループを変更するには <code>groupmod</code> を、削除するには <code>groupdel</code> を使用します。</p>
+<h3>グループメンバーシップ</h3>
+<p>グループを作成した後、<code>usermod -aG グループ名 ユーザー名</code> を使用してユーザーをグループに追加できます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>groupadd</code>と<code>useradd -G</code>の違いは何ですか？</h4>
-<p>A. <code>groupadd</code>は新しいグループを作成するだけです。一方、<code>useradd -G</code>は新しいユーザーを作成し、そのユーザーを指定したグループに追加します。既存のユーザーをグループに追加するには<code>usermod -aG</code>を使用します。</p>
-<h4>Q2. 作成したグループにユーザーを追加するにはどうすればよいですか？</h4>
-<p>A. <code>usermod -aG グループ名 ユーザー名</code>コマンドを使用します。例：<code>sudo usermod -aG developers john</code></p>
-<h4>Q3. グループのGIDを後から変更できますか？</h4>
-<p>A. はい、<code>groupmod -g 新しいGID グループ名</code>コマンドで変更できます。ただし、すでにそのグループに関連付けられたファイルがある場合は注意が必要です。</p>
-<h4>Q4. グループ作成時にエラーが発生する場合はどうすればよいですか？</h4>
-<p>A. 多くの場合、権限の問題（sudoを使用していない）か、すでに存在するグループ名やGIDを指定している可能性があります。<code>-f</code>オプションを使用するか、別の名前やGIDを選択してください。</p>
-<h2>参考</h2>
-<p>https://www.man7.org/linux/man-pages/man8/groupadd.8.html</p>
-<h2>改訂</h2>
+<h4>Q1. 新しいグループを作成するにはどうすればよいですか？</h4>
+<p>A. <code>sudo groupadd グループ名</code> を使用して、指定した名前の新しいグループを作成します。</p>
+<h4>Q2. グループを作成する際にカスタムGIDを指定するにはどうすればよいですか？</h4>
+<p>A. <code>sudo groupadd -g GID グループ名</code> を使用します。GIDは割り当てたい数値のグループIDです。</p>
+<h4>Q3. システムグループと通常のグループの違いは何ですか？</h4>
+<p>A. システムグループ（<code>-r</code> で作成）は通常、システムサービスやデーモン用に使用され、通常のグループは人間のユーザー用です。システムグループは通常、より低いGIDを持ちます。</p>
+<h4>Q4. グループがすでに存在するかどうかを確認するにはどうすればよいですか？</h4>
+<p>A. <code>getent group グループ名</code> を使用してグループが存在するかどうかを確認します。</p>
+<h4>Q5. 既存のグループと同じGIDを持つグループを作成できますか？</h4>
+<p>A. はい、ただし <code>-o</code>（非一意）オプションを使用する必要があります：<code>sudo groupadd -o -g 既存のgid 新しいグループ</code></p>
+<h2>参考資料</h2>
+<p>https://man7.org/linux/man-pages/man8/groupadd.8.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

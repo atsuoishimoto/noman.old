@@ -1,16 +1,16 @@
 # set command
 
-Display, set, or unset shell options and positional parameters.
+Display or set shell options and positional parameters.
 
 ## Overview
 
-The `set` command is a built-in shell command that allows you to control various aspects of the shell's behavior. It can display all shell variables, set shell options that change how the shell behaves, and manipulate positional parameters. It's commonly used in shell scripts to enable error handling, debugging, and to control script execution flow.
+The `set` command is used to manipulate shell options and positional parameters. It can display all variables, change the behavior of the shell by enabling or disabling options, or set positional parameters. It's a powerful command for controlling shell execution environments and debugging scripts.
 
 ## Options
 
-### **-e (errexit)**
+### **-e (--errexit)**
 
-Exits immediately if a command returns a non-zero status (fails)
+Exit immediately if a command exits with a non-zero status.
 
 ```console
 $ set -e
@@ -20,9 +20,9 @@ $ echo "This won't be executed"
 [Shell has already exited due to the error]
 ```
 
-### **-x (xtrace)**
+### **-x (--xtrace)**
 
-Prints each command before executing it, prefixed with '+'
+Print commands and their arguments as they are executed. Useful for debugging scripts.
 
 ```console
 $ set -x
@@ -31,9 +31,9 @@ $ echo "Hello World"
 Hello World
 ```
 
-### **-u (nounset)**
+### **-u (--nounset)**
 
-Treats unset variables as errors when referenced
+Treat unset variables as an error when substituting.
 
 ```console
 $ set -u
@@ -41,106 +41,109 @@ $ echo $UNDEFINED_VARIABLE
 bash: UNDEFINED_VARIABLE: unbound variable
 ```
 
-### **-o option**
+### **-o option-name**
 
-Sets a specific option by name
+Set the option corresponding to option-name.
 
 ```console
 $ set -o pipefail
-$ non_existent_command | echo "This command runs"
-This command runs
+$ non_existent_command | echo "This will still run"
+This will still run
 $ echo $?
 127
 ```
 
-### **+o option**
+### **+o option-name**
 
-Unsets a specific option by name
+Unset the option corresponding to option-name.
 
 ```console
 $ set +o pipefail
-$ non_existent_command | echo "This command runs"
-This command runs
+$ non_existent_command | echo "This will run"
+This will run
 $ echo $?
 0
 ```
 
 ### **--**
 
-Assigns following arguments to positional parameters
+End option processing. Useful when you want to set positional parameters that start with a dash.
 
 ```console
-$ set -- arg1 arg2 arg3
+$ set -- -a -b -c
 $ echo $1 $2 $3
-arg1 arg2 arg3
+-a -b -c
 ```
 
 ## Usage Examples
 
-### Setting multiple options at once
-
-```console
-$ set -exu
-$ echo "Now the script will exit on errors, show commands, and error on unset variables"
-+ echo 'Now the script will exit on errors, show commands, and error on unset variables'
-Now the script will exit on errors, show commands, and error on unset variables
-```
-
-### Displaying all variables
+### Displaying all variables and functions
 
 ```console
 $ set
 BASH=/bin/bash
-BASHOPTS=checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob:extquote:force_fignore:histappend:interactive_comments:progcomp:promptvars:sourcepath
-BASH_ALIASES=()
+BASHOPTS=checkwinsize:cmdhist:complete_fullquote:expand_aliases:...
 ...
-[many more variables shown]
+[many more variables and functions]
 ```
 
-### Using set in a script for error handling
+### Setting positional parameters
 
 ```console
-$ cat error_handling.sh
-#!/bin/bash
-set -e  # Exit immediately if a command fails
-set -u  # Treat unset variables as errors
-set -o pipefail  # Return value of a pipeline is the value of the last command to exit with non-zero status
+$ set one two three
+$ echo $1 $2 $3
+one two three
+```
 
-echo "Starting script with error handling enabled"
-# Script continues...
+### Enabling multiple options at once
+
+```console
+$ set -ex
+$ echo "Commands will be traced and script will exit on error"
++ echo 'Commands will be traced and script will exit on error'
+Commands will be traced and script will exit on error
+```
+
+### Saving and restoring shell options
+
+```console
+$ oldstate=$(set +o)
+$ set -e
+$ # Do something that might fail
+$ eval "$oldstate"  # Restore previous state
 ```
 
 ## Tips
 
 ### Use set -e in Scripts
 
-Adding `set -e` at the beginning of your scripts makes them fail fast when errors occur, preventing cascading failures that can be hard to debug.
-
-### Combine Options for Robust Scripts
-
-The combination `set -euo pipefail` is often used in production scripts as a best practice for error handling. It's sometimes called "strict mode."
-
-### Save and Restore Settings
-
-You can save the current options with `old_opts=$(set +o)` and restore them later with `eval "$old_opts"` when you need to temporarily change settings.
+Adding `set -e` at the beginning of your scripts makes them fail fast when errors occur, preventing cascading failures that might be harder to debug.
 
 ### Debugging with set -x
 
-When troubleshooting scripts, temporarily adding `set -x` helps you see exactly what commands are being executed and with what values.
+When a script isn't working as expected, temporarily add `set -x` to see each command as it executes with its expanded variables.
+
+### Combine Options for Safer Scripts
+
+The combination `set -euo pipefail` is commonly used in scripts to make them more robust by failing on errors, undefined variables, and pipeline failures.
+
+### Reset Positional Parameters
+
+Use `set --` with no arguments to clear all positional parameters.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `set` and `export`?
-A. `set` controls shell behavior and positional parameters, while `export` makes variables available to child processes.
+A. `set` displays/changes shell options and positional parameters, while `export` makes variables available to child processes.
 
-#### Q2. How do I turn off an option that was set with `set -o`?
-A. Use `set +o option_name`. The plus sign (+) disables the option.
+#### Q2. How do I turn off a set option?
+A. Use the `+` sign instead of `-`. For example, `set +x` turns off command tracing that was enabled with `set -x`.
 
-#### Q3. How can I see what options are currently enabled?
-A. Use `set -o` to see a list of all options and their current status.
+#### Q3. How can I see what options are currently set?
+A. Use `set -o` to see the current state of all shell options.
 
-#### Q4. What does `set --` do?
-A. It assigns the arguments that follow to the positional parameters ($1, $2, etc.), replacing any existing values.
+#### Q4. Can I use `set` to create variables?
+A. No, `set` doesn't create regular variables. Use variable assignment like `VAR=value` instead. `set` only affects shell options and positional parameters.
 
 ## References
 
@@ -148,4 +151,4 @@ https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

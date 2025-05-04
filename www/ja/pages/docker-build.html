@@ -47,12 +47,12 @@
     <main>
       
   <h1>docker build コマンド</h1>
-<p>Dockerfileからイメージを構築するためのコマンドです。</p>
+<p>Dockerfileからイメージをビルドします。</p>
 <h2>概要</h2>
-<p><code>docker build</code> コマンドは、Dockerfileと呼ばれる指示ファイルからDockerイメージを作成します。このコマンドは、アプリケーションとその依存関係を含む一貫した実行環境を構築するために使用されます。ビルドコンテキスト（通常はカレントディレクトリ）内のファイルを使用して、再現可能な方法でイメージを作成できます。</p>
+<p><code>docker build</code>コマンドは、DockerfileとコンテキストからDockerイメージをビルドします。コンテキストとは、指定されたPATHまたはURLにある一連のファイルのことです。ビルドプロセスはコンテキスト内のどのファイルも参照できます。Dockerfileには、Dockerが新しいイメージを作成するための指示が含まれています。</p>
 <h2>オプション</h2>
 <h3><strong>-t, --tag</strong></h3>
-<p>イメージに名前とオプションでタグを付けます。</p>
+<p>ビルドしたイメージに名前とオプションでタグを「名前:タグ」形式で付けます。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:1.0<span style="color: #F8F8F8"> </span>.
 <span style="color: #000; font-style: italic">[+] Building 10.5s (10/10) FINISHED</span>
 <span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile                       0.1s</span>
@@ -60,121 +60,96 @@
 <span style="color: #000; font-style: italic"> =&gt; [internal] load .dockerignore                                          0.0s</span>
 <span style="color: #000; font-style: italic"> =&gt; =&gt; transferring context: 2B                                            0.0s</span>
 <span style="color: #000; font-style: italic"> =&gt; [internal] load metadata for docker.io/library/node:14                 1.2s</span>
-<span style="color: #000; font-style: italic"> =&gt; [1/5] FROM docker.io/library/node:14@sha256:fcb6...                    0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; [1/5] FROM docker.io/library/node:14@sha256:123abc...                  0.0s</span>
 <span style="color: #000; font-style: italic"> =&gt; [internal] load build context                                          0.1s</span>
-<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring context: 3.25kB                                        0.0s</span>
-<span style="color: #000; font-style: italic"> =&gt; CACHED [2/5] WORKDIR /app                                              0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring context: 32.5kB                                        0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; [2/5] WORKDIR /app                                                     0.3s</span>
 <span style="color: #000; font-style: italic"> =&gt; [3/5] COPY package*.json ./                                            0.1s</span>
-<span style="color: #000; font-style: italic"> =&gt; [4/5] RUN npm install                                                  8.2s</span>
+<span style="color: #000; font-style: italic"> =&gt; [4/5] RUN npm install                                                  7.5s</span>
 <span style="color: #000; font-style: italic"> =&gt; [5/5] COPY . .                                                         0.1s</span>
-<span style="color: #000; font-style: italic"> =&gt; exporting to image                                                     0.7s</span>
-<span style="color: #000; font-style: italic"> =&gt; =&gt; exporting layers                                                    0.7s</span>
-<span style="color: #000; font-style: italic"> =&gt; =&gt; writing image sha256:a1b2c3...                                      0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; exporting to image                                                     1.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; exporting layers                                                    1.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; writing image sha256:def456...                                      0.0s</span>
 <span style="color: #000; font-style: italic"> =&gt; =&gt; naming to docker.io/library/myapp:1.0                               0.0s</span>
 </pre></div>
 <h3><strong>-f, --file</strong></h3>
-<p>Dockerfileの名前と場所を指定します。デフォルトは現在のディレクトリの <code>Dockerfile</code> です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>Dockerfile.dev<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:dev<span style="color: #F8F8F8"> </span>.
-<span style="color: #000; font-style: italic">[+] Building 8.2s (10/10) FINISHED</span>
-<span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile.dev                   0.1s</span>
-<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring dockerfile: 240B                                       0.0s</span>
+<p>Dockerfileの名前を指定します（デフォルトは「PATH/Dockerfile」）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>Dockerfile.prod<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:prod<span style="color: #F8F8F8"> </span>.
+<span style="color: #000; font-style: italic">[+] Building 12.3s (10/10) FINISHED</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile.prod                  0.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring dockerfile: 256B                                       0.0s</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
 <h3><strong>--no-cache</strong></h3>
-<p>ビルド時にキャッシュを使用しないようにします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>--no-cache<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:latest<span style="color: #F8F8F8"> </span>.
-<span style="color: #000; font-style: italic">[+] Building 25.3s (10/10) FINISHED</span>
+<p>イメージのビルド時にキャッシュを使用しません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>--no-cache<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp<span style="color: #F8F8F8"> </span>.
+<span style="color: #000; font-style: italic">[+] Building 25.7s (10/10) FINISHED</span>
 <span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile                       0.1s</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
 <h3><strong>--build-arg</strong></h3>
-<p>Dockerfile内のARG命令で定義された変数に値を渡します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>--build-arg<span style="color: #F8F8F8"> </span><span style="color: #000">VERSION</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">2</span>.0<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:2.0<span style="color: #F8F8F8"> </span>.
-<span style="color: #000; font-style: italic">[+] Building 12.1s (10/10) FINISHED</span>
+<p>Dockerfile内でARG命令を使用して定義されたビルド時変数を設定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>--build-arg<span style="color: #F8F8F8"> </span><span style="color: #000">NODE_ENV</span><span style="color: #CE5C00; font-weight: bold">=</span>production<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp<span style="color: #F8F8F8"> </span>.
+<span style="color: #000; font-style: italic">[+] Building 11.2s (10/10) FINISHED</span>
 <span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile                       0.1s</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
 <h3><strong>--target</strong></h3>
-<p>マルチステージビルドで特定のステージまでビルドします。</p>
+<p>マルチステージビルドを使用する際にビルドするターゲットステージを設定します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>--target<span style="color: #F8F8F8"> </span>development<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:dev<span style="color: #F8F8F8"> </span>.
-<span style="color: #000; font-style: italic">[+] Building 9.7s (8/8) FINISHED</span>
+<span style="color: #000; font-style: italic">[+] Building 8.3s (8/8) FINISHED</span>
 <span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile                       0.1s</span>
 <span style="color: #000; font-style: italic"> =&gt; [internal] load .dockerignore                                          0.0s</span>
 <span style="color: #000; font-style: italic"> =&gt; [internal] load metadata for docker.io/library/node:14                 1.2s</span>
-<span style="color: #000; font-style: italic"> =&gt; [development 1/4] FROM docker.io/library/node:14                       0.0s</span>
-<span style="color: #000; font-style: italic"> =&gt; [development 2/4] WORKDIR /app                                         0.1s</span>
-<span style="color: #000; font-style: italic"> =&gt; [development 3/4] COPY package*.json ./                                0.1s</span>
-<span style="color: #000; font-style: italic"> =&gt; [development 4/4] RUN npm install                                      8.0s</span>
-<span style="color: #000; font-style: italic"> =&gt; exporting to image                                                     0.2s</span>
+<span style="color: #000; font-style: italic"> =&gt; [development 1/4] FROM docker.io/library/node:14@sha256:123abc...      0.0s</span>
+<span style="color: #000; font-style: italic">...</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的なイメージのビルド</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>.
+<h3>タグ付きでイメージをビルドする</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:latest<span style="color: #F8F8F8"> </span>.
 <span style="color: #000; font-style: italic">[+] Building 15.2s (10/10) FINISHED</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<p>カレントディレクトリのDockerfileを使用してイメージをビルドしています。</p>
-<h3>タグ付きイメージのビルド</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>mycompany/myapp:1.0<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>mycompany/myapp:latest<span style="color: #F8F8F8"> </span>.
-<span style="color: #000; font-style: italic">[+] Building 14.7s (10/10) FINISHED</span>
+<h3>複数のタグでビルドする</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:latest<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:1.0<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>registry.example.com/myapp:latest<span style="color: #F8F8F8"> </span>.
+<span style="color: #000; font-style: italic">[+] Building 14.8s (10/10) FINISHED</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<p>複数のタグを付けてイメージをビルドしています。</p>
-<h3>特定のコンテキストからのビルド</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:1.0<span style="color: #F8F8F8"> </span>https://github.com/user/repo.git#main
-<span style="color: #000; font-style: italic">[+] Building 18.3s (10/10) FINISHED</span>
+<h3>特定のコンテキストからビルドする</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp<span style="color: #F8F8F8"> </span>https://github.com/user/repo.git#main
+<span style="color: #000; font-style: italic">[+] Building 22.5s (10/10) FINISHED</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<p>GitリポジトリからDockerfileとビルドコンテキストを取得してビルドしています。</p>
-<h3>マルチステージビルドの特定ステージまでビルド</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>--target<span style="color: #F8F8F8"> </span>builder<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:build-only<span style="color: #F8F8F8"> </span>.
-<span style="color: #000; font-style: italic">[+] Building 12.3s (6/6) FINISHED</span>
-<span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile                       0.1s</span>
-<span style="color: #000; font-style: italic"> =&gt; [builder 1/3] FROM docker.io/library/node:14                           0.0s</span>
-<span style="color: #000; font-style: italic"> =&gt; [builder 2/3] WORKDIR /app                                             0.1s</span>
-<span style="color: #000; font-style: italic"> =&gt; [builder 3/3] RUN npm run build                                        12.0s</span>
-<span style="color: #000; font-style: italic"> =&gt; exporting to image                                                     0.1s</span>
+<h3>特定のDockerfileとターゲットステージでビルドする</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>Dockerfile.multistage<span style="color: #F8F8F8"> </span>--target<span style="color: #F8F8F8"> </span>production<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:prod<span style="color: #F8F8F8"> </span>.
+<span style="color: #000; font-style: italic">[+] Building 18.7s (12/12) FINISHED</span>
+<span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<p>Dockerfile内の「builder」という名前のステージまでビルドしています。</p>
 <h2>ヒント:</h2>
 <h3>.dockerignoreファイルを使用する</h3>
-<p><code>.dockerignore</code> ファイルを作成して、ビルドコンテキストから除外するファイルやディレクトリを指定できます。これによりビルド速度が向上し、イメージサイズも小さくなります。</p>
+<p><code>.dockerignore</code>ファイルを作成して、ビルドコンテキストからファイルやディレクトリを除外しましょう。これにより、不要なファイルがDockerデーモンに送信されるのを防ぎ、ビルド時間とサイズを削減できます。</p>
+<h3>ビルドキャッシュを活用する</h3>
+<p>Dockerは中間レイヤーをキャッシュします。キャッシュの使用を最大化するために、Dockerfileのコマンドを変更頻度の低いものから高いものへと順序付けましょう。例えば、アプリケーションコードをコピーする前に依存関係をインストールします。</p>
 <h3>マルチステージビルドを活用する</h3>
-<p>本番環境用のイメージサイズを小さくするために、マルチステージビルドを使用しましょう。ビルドステージで依存関係をインストールし、実行ステージには必要なファイルだけをコピーします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic"># ビルドステージ</span>
-<span style="color: #204A87; font-weight: bold">FROM</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">node:14</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">AS</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">builder</span>
-<span style="color: #204A87; font-weight: bold">WORKDIR</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">/app</span>
-<span style="color: #204A87; font-weight: bold">COPY</span><span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>.
-<span style="color: #204A87; font-weight: bold">RUN</span><span style="color: #F8F8F8"> </span>npm<span style="color: #F8F8F8"> </span>ci<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span>npm<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>build
-
-<span style="color: #8F5902; font-style: italic"># 実行ステージ</span>
-<span style="color: #204A87; font-weight: bold">FROM</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">nginx:alpine</span>
-<span style="color: #204A87; font-weight: bold">COPY</span><span style="color: #F8F8F8"> </span>--from<span style="color: #CE5C00; font-weight: bold">=</span>builder<span style="color: #F8F8F8"> </span>/app/build<span style="color: #F8F8F8"> </span>/usr/share/nginx/html
-</pre></div>
-<h3>キャッシュを効率的に使う</h3>
-<p>Dockerfileの命令順序を工夫して、変更が少ない命令（依存関係のインストールなど）を先に配置し、頻繁に変更されるコード部分を後ろに配置することで、キャッシュを効率的に活用できます。</p>
-<h3>ビルドするステージの指定方法</h3>
-<p>マルチステージビルドで特定のステージまでビルドするには、<code>--target</code> オプションを使用します。これは開発環境と本番環境で異なるイメージを作成する場合に便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>--target<span style="color: #F8F8F8"> </span>development<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:dev<span style="color: #F8F8F8"> </span>.
-</pre></div>
-<p>上記のコマンドは、Dockerfile内の「development」という名前のステージまでビルドする。</p>
+<p>マルチステージビルドでは、Dockerfile内で複数のFROM文を使用できます。これはビルドステージから必要なアーティファクトのみをコピーすることで、より小さな本番イメージを作成するのに役立ちます。</p>
+<h3>レイヤー数を最小限に抑える</h3>
+<p>関連するコマンドを単一のRUN命令内で<code>&amp;&amp;</code>を使って結合することで、レイヤー数を減らし、より小さなイメージを作成できます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. docker buildとdocker-composeの違いは何ですか？</h4>
-<p>A. <code>docker build</code>は単一のイメージを構築するコマンドです。一方、<code>docker-compose</code>は複数のコンテナを定義し、管理するためのツールで、<code>docker-compose build</code>でまとめてイメージをビルドできます。</p>
-<h4>Q2. ビルド中にエラーが発生した場合はどうすればよいですか？</h4>
-<p>A. エラーメッセージを確認し、問題のあるDockerfileの行を修正します。<code>--no-cache</code>オプションを使用して完全に新しいビルドを試すこともできます。</p>
-<h4>Q3. イメージサイズを小さくするにはどうすればよいですか？</h4>
-<p>A. マルチステージビルドの使用、不要なファイルの削除、軽量ベースイメージ（Alpine Linuxなど）の使用、RUN命令の結合などが効果的です。</p>
-<h4>Q4. ビルド時に環境変数を渡すにはどうすればよいですか？</h4>
-<p>A. <code>--build-arg</code>オプションを使用して、Dockerfile内のARG命令で定義された変数に値を渡すことができます。</p>
-<h4>Q5. マルチステージビルドとは何ですか？</h4>
-<p>A. 1つのDockerfile内で複数のFROM命令を使用し、異なるステージでビルドと実行環境を分離する手法です。最終イメージには必要なファイルのみを含めることができ、イメージサイズを小さくできます。</p>
+<h4>Q1. <code>docker build</code>と<code>docker image build</code>の違いは何ですか？</h4>
+<p>A. 両者は同じコマンドです。<code>docker image build</code>はDockerのコマンド再構成で導入されたより明示的な形式ですが、<code>docker build</code>も引き続きサポートされており、より一般的に使用されています。</p>
+<h4>Q2. キャッシュを使用せずにイメージをビルドするにはどうすればよいですか？</h4>
+<p>A. <code>--no-cache</code>オプションを使用します：<code>docker build --no-cache -t myapp .</code></p>
+<h4>Q3. ビルドプロセスに環境変数を渡すにはどうすればよいですか？</h4>
+<p>A. <code>--build-arg</code>オプションを使用します：<code>docker build --build-arg VAR_NAME=value -t myapp .</code></p>
+<h4>Q4. マルチステージDockerfileで特定のステージをビルドするにはどうすればよいですか？</h4>
+<p>A. <code>--target</code>オプションを使用します：<code>docker build --target stage_name -t myapp .</code></p>
+<h4>Q5. Gitリポジトリからビルドできますか？</h4>
+<p>A. はい、ビルドコンテキストとしてGitリポジトリのURLを指定できます：<code>docker build -t myapp https://github.com/user/repo.git</code></p>
 <h2>参考資料</h2>
 <p>https://docs.docker.com/engine/reference/commandline/build/</p>
-<h2>Revisions</h2>
+<h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 マルチステージビルドに関する情報を追加、--targetオプションの説明と使用例を追加</li>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

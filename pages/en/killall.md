@@ -1,37 +1,71 @@
 # killall command
 
-Kill processes by name rather than by process ID (PID).
+Kill processes by name rather than by process ID.
 
 ## Overview
 
-The `killall` command terminates running processes based on their names rather than their process IDs. It's particularly useful when you need to stop multiple instances of the same program or when you don't know the specific PID of a process.
+The `killall` command terminates running processes based on their names rather than process IDs (PIDs). It's particularly useful when you need to stop multiple instances of the same program or when you don't know the specific PID of a process.
 
 ## Options
 
-### **-s, --signal SIGNAL**
+### **-e, --exact**
 
-Specify the signal to send to processes (default is TERM)
+Require an exact match for very long names
 
 ```console
-$ killall -s KILL firefox
+$ killall -e firefox
+```
+
+### **-I, --ignore-case**
+
+Case insensitive process name match
+
+```console
+$ killall -I firefox
 ```
 
 ### **-i, --interactive**
 
-Ask for confirmation before killing each process
+Ask for confirmation before killing
 
 ```console
 $ killall -i chrome
-Kill chrome(1234)? (y/N) y
-Kill chrome(5678)? (y/N) n
+Kill chrome(1234) ? (y/N) y
+Kill chrome(5678) ? (y/N) n
+```
+
+### **-l, --list**
+
+List all known signal names
+
+```console
+$ killall -l
+HUP INT QUIT ILL TRAP ABRT BUS FPE KILL USR1 SEGV USR2 PIPE ALRM TERM STKFLT CHLD CONT STOP TSTP TTIN TTOU URG XCPU XFSZ VTALRM PROF WINCH POLL PWR SYS
+```
+
+### **-q, --quiet**
+
+Don't print complaints if no processes were killed
+
+```console
+$ killall -q nonexistentprocess
+```
+
+### **-s, --signal SIGNAL, -SIGNAL**
+
+Send a specific signal instead of SIGTERM
+
+```console
+$ killall -s SIGKILL firefox
+$ killall -KILL firefox  # Equivalent
 ```
 
 ### **-u, --user USER**
 
-Kill only processes owned by the specified user
+Kill only processes owned by specified user
 
 ```console
-$ killall -u john firefox
+$ killall -u username firefox
 ```
 
 ### **-v, --verbose**
@@ -68,51 +102,50 @@ $ killall -9 chrome
 ### Killing processes owned by a specific user
 
 ```console
-$ killall -u john bash
+$ killall -u john java
 ```
 
-### Killing processes with confirmation
+### Killing processes and waiting for confirmation
 
 ```console
-$ killall -i spotify
-Kill spotify(1234)? (y/N) y
+$ killall -i -w firefox
+Kill firefox(1234) ? (y/N) y
 ```
 
-## Tips
+## Tips:
 
-### Use the Correct Process Name
+### Use Confirmation for Important Processes
 
-The process name must match exactly what appears in the process list. Use `ps aux` to see the exact process names.
+Always use the `-i` (interactive) option when killing critical processes to avoid accidentally terminating the wrong ones.
 
-### Force Kill Stubborn Processes
+### Verify Process Names First
 
-If a process doesn't respond to the default TERM signal, use `-9` (SIGKILL) to force termination: `killall -9 processname`. Be cautious as this doesn't allow the process to clean up.
+Run `ps aux | grep process_name` before using killall to confirm the exact process name you want to terminate.
 
-### Verify Before Killing
+### Wait for Completion
 
-When dealing with critical processes, use the `-i` option to confirm each kill action or `-v` to see which processes are being terminated.
+Use the `-w` option when you need to ensure processes are fully terminated before proceeding with other operations.
 
-### Specify Signal by Name or Number
+### Be Careful with Common Names
 
-You can specify signals by name (TERM, KILL, HUP) or by number (15, 9, 1).
+Avoid using killall with very generic process names like "http" or "java" without specifying a user (-u) or using interactive mode (-i), as this could terminate important system processes.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `kill` and `killall`?
-A. `kill` terminates processes by their PID, while `killall` terminates processes by their name.
+A. `kill` terminates processes by their PID (Process ID), while `killall` terminates processes by their name.
 
-#### Q2. How do I kill all instances of a program?
-A. Simply run `killall programname` to terminate all instances of that program.
+#### Q2. How do I force kill a stubborn process?
+A. Use `killall -9 process_name` or `killall -KILL process_name` to send the SIGKILL signal, which cannot be caught or ignored by the process.
 
-#### Q3. What if `killall` doesn't work?
-A. Try using the `-9` option (`killall -9 programname`) to send a SIGKILL signal, which forces termination. If that fails, the process might be in an uninterruptible state or you might need root privileges.
+#### Q3. Can I kill multiple different processes at once?
+A. Yes, just list all the process names: `killall firefox chrome gedit`
 
-#### Q4. Is there a way to test without actually killing processes?
-A. Yes, use `killall -l` to list all available signals or `killall -s 0 processname` to test if processes exist without sending a kill signal.
+#### Q4. How do I know if killall succeeded?
+A. Use the `-v` (verbose) option to see confirmation messages for each process killed.
 
-## macOS Considerations
-
-On macOS, the `killall` command behaves slightly differently than on Linux. It doesn't support all the same options, and the syntax may vary. For example, the `-u` option to specify a user isn't available on macOS. Also, macOS's `killall` is generally less flexible with pattern matching for process names.
+#### Q5. Is killall available on all Unix systems?
+A. No, while common on Linux, some Unix variants like Solaris have a different `killall` command that kills ALL processes, which can be dangerous. Always check the man page on unfamiliar systems.
 
 ## References
 
@@ -120,4 +153,4 @@ https://man7.org/linux/man-pages/man1/killall.1.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

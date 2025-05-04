@@ -4,55 +4,74 @@ Print the resolved absolute file path.
 
 ## Overview
 
-The `realpath` command resolves a file path to its absolute, canonical form, following all symbolic links and removing any redundant components like `.` and `..`. It's useful for scripts that need to work with absolute paths or when you need to determine where a symbolic link actually points.
+The `realpath` command resolves a pathname to its absolute path, following all symbolic links. It's useful for determining the actual location of files, especially when working with symbolic links or relative paths.
 
 ## Options
 
-### **-s, --strip, --no-symlinks**
-
-Don't expand symbolic links; instead show the absolute path to the symlink itself.
-
-```console
-$ ln -s /etc/hosts mylink
-$ realpath mylink
-/etc/hosts
-$ realpath -s mylink
-/home/user/mylink
-```
-
 ### **-e, --canonicalize-existing**
 
-All components of the path must exist.
+All components of the path must exist
 
 ```console
 $ realpath -e /etc/hosts
 /etc/hosts
-$ realpath -e /nonexistent
-realpath: /nonexistent: No such file or directory
+
+$ realpath -e /nonexistent/file
+realpath: /nonexistent/file: No such file or directory
 ```
 
 ### **-m, --canonicalize-missing**
 
-No path components need to exist or be a directory.
+No path components need to exist or be a directory
 
 ```console
-$ realpath -m /nonexistent/file.txt
-/nonexistent/file.txt
+$ realpath -m /nonexistent/file
+/nonexistent/file
+```
+
+### **-L, --logical**
+
+Resolve '..' components before symlinks (default behavior)
+
+```console
+$ ln -s /usr/bin bin_link
+$ realpath -L bin_link/../share
+/usr/share
+```
+
+### **-P, --physical**
+
+Resolve symlinks as encountered, then resolve '..' components
+
+```console
+$ ln -s /usr/bin bin_link
+$ realpath -P bin_link/../share
+/share
 ```
 
 ### **-q, --quiet**
 
-Suppress error messages.
+Suppress error messages
 
 ```console
-$ realpath -q /nonexistent
+$ realpath -q /nonexistent/file
 $ echo $?
 1
 ```
 
+### **-s, --strip, --no-symlinks**
+
+Don't expand symlinks
+
+```console
+$ ln -s /usr/bin bin_link
+$ realpath -s bin_link
+/home/user/bin_link
+```
+
 ### **-z, --zero**
 
-End each output line with NUL, not newline (useful for parsing in scripts).
+End each output line with NUL, not newline
 
 ```console
 $ realpath -z /etc/hosts | hexdump -C
@@ -70,25 +89,26 @@ $ realpath bin/../share
 /usr/local/share
 ```
 
-### Finding where a symbolic link points
+### Working with symbolic links
 
 ```console
-$ ln -s /var/log/syslog logfile
-$ realpath logfile
-/var/log/syslog
+$ ln -s /var/log logs
+$ realpath logs
+/var/log
 ```
 
-### Using in shell scripts
+### Using in scripts to get absolute paths
 
 ```console
-$ SCRIPT_DIR=$(realpath $(dirname "$0"))
-$ echo "This script is located in: $SCRIPT_DIR"
-This script is located in: /home/user/scripts
+$ cat myscript.sh
+#!/bin/bash
+SCRIPT_DIR=$(realpath $(dirname "$0"))
+echo "Script is located in: $SCRIPT_DIR"
 ```
 
 ## Tips
 
-### Use in Scripts for Reliable Paths
+### Use in Shell Scripts
 
 When writing shell scripts, use `realpath` to get the absolute path of the script directory with `SCRIPT_DIR=$(realpath $(dirname "$0"))`. This ensures your script works correctly regardless of where it's called from.
 
@@ -96,23 +116,23 @@ When writing shell scripts, use `realpath` to get the absolute path of the scrip
 
 Pair `realpath` with commands like `find` or `xargs` to process files with their absolute paths: `find . -type f | xargs realpath`.
 
-### Check if Two Paths Reference the Same File
+### Handling Errors
 
-Use `realpath` to determine if two different paths actually point to the same file: `[ "$(realpath path1)" = "$(realpath path2)" ]`.
+Use the `-q` option when you want to suppress error messages, and check the exit status instead. This is useful in scripts where you want to handle errors gracefully.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `realpath` and `readlink -f`?
-A. They're similar, but `realpath` is part of GNU coreutils and has more options. `readlink -f` is more commonly available on different Unix systems.
+A. Both commands resolve symbolic links and return absolute paths, but `realpath` offers more options for controlling how paths are resolved. `readlink -f` is more commonly available on older systems.
 
-#### Q2. How do I use `realpath` to get the directory of a script?
-A. Use `realpath $(dirname "$0")` in your script to get its directory.
+#### Q2. How do I use `realpath` to check if a file exists?
+A. Use `realpath -e` which will return an error if the file doesn't exist.
 
-#### Q3. Can `realpath` handle paths with spaces?
-A. Yes, but make sure to quote the paths: `realpath "path with spaces"`.
+#### Q3. Can `realpath` handle spaces in filenames?
+A. Yes, but when using it in scripts, make sure to quote the arguments: `realpath "$filename"`.
 
-#### Q4. What happens if I use `realpath` on a non-existent path?
-A. By default, it will return an error. Use `-m` option to get the canonical path even if it doesn't exist.
+#### Q4. What's the difference between `-L` and `-P` options?
+A. `-L` (logical) resolves '..' components before symlinks, while `-P` (physical) resolves symlinks first, then resolves '..' components. The default is `-L`.
 
 ## References
 
@@ -120,4 +140,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/realpath-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

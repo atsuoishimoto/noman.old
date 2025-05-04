@@ -49,78 +49,91 @@
   <h1>split command</h1>
 <p>Split a file into pieces.</p>
 <h2>Overview</h2>
-<p>The <code>split</code> command divides a file into multiple smaller files. It's useful when you need to break up large files for easier handling, transfer, or storage. By default, it creates files named 'xaa', 'xab', etc., each containing a specified number of lines or bytes from the original file.</p>
+<p>The <code>split</code> command divides a file into multiple smaller files. It's useful when you need to break up large files for easier handling, transfer, or storage. By default, it creates files named 'xaa', 'xab', etc., with each containing a specified number of lines or bytes from the original file.</p>
 <h2>Options</h2>
 <h3><strong>-b, --bytes=SIZE</strong></h3>
-<p>Split by bytes instead of lines. SIZE can be a number followed by a unit (K for kilobytes, M for megabytes, G for gigabytes).</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>1M<span style="color: #F8F8F8"> </span>largefile.txt<span style="color: #F8F8F8"> </span>chunk_
+<p>Split by bytes instead of lines. SIZE can be a number followed by a multiplier: k (1024), m (1024²), g (1024³), etc.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>1M<span style="color: #F8F8F8"> </span>largefile.dat<span style="color: #F8F8F8"> </span>chunk_
 <span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>chunk_*
 <span style="color: #000; font-style: italic">chunk_aa  chunk_ab  chunk_ac</span>
 </pre></div>
 <h3><strong>-l, --lines=NUMBER</strong></h3>
-<p>Split by a specific number of lines (default is 1000 lines).</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span>data.csv<span style="color: #F8F8F8"> </span>data_part_
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>data_part_*
-<span style="color: #000; font-style: italic">data_part_aa  data_part_ab  data_part_ac</span>
+<p>Split by a specific number of lines per output file (default is 1000 lines).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span>data.csv<span style="color: #F8F8F8"> </span>part_
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>part_*
+<span style="color: #000; font-style: italic">part_aa  part_ab  part_ac  part_ad</span>
 </pre></div>
 <h3><strong>-d, --numeric-suffixes[=FROM]</strong></h3>
 <p>Use numeric suffixes instead of alphabetic ones, starting at FROM (default 0).</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span>report.txt<span style="color: #F8F8F8"> </span>report_
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>report_*
-<span style="color: #000; font-style: italic">report_00  report_01  report_02</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span>data.txt<span style="color: #F8F8F8"> </span>section_
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>section_*
+<span style="color: #000; font-style: italic">section_00  section_01  section_02</span>
 </pre></div>
 <h3><strong>-a, --suffix-length=N</strong></h3>
-<p>Use suffixes of length N (default 2).</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>10M<span style="color: #F8F8F8"> </span>backup.tar<span style="color: #F8F8F8"> </span>backup_
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>backup_*
-<span style="color: #000; font-style: italic">backup_aaa  backup_aab  backup_aac</span>
+<p>Generate suffixes of length N (default 2).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span>data.txt<span style="color: #F8F8F8"> </span>part_
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>part_*
+<span style="color: #000; font-style: italic">part_aaa  part_aab  part_aac  part_aad</span>
+</pre></div>
+<h3><strong>--additional-suffix=SUFFIX</strong></h3>
+<p>Append an additional SUFFIX to file names.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span>--additional-suffix<span style="color: #CE5C00; font-weight: bold">=</span>.txt<span style="color: #F8F8F8"> </span>data.csv<span style="color: #F8F8F8"> </span>part_
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>part_*
+<span style="color: #000; font-style: italic">part_aa.txt  part_ab.txt  part_ac.txt</span>
+</pre></div>
+<h3><strong>-n, --number=CHUNKS</strong></h3>
+<p>Split into CHUNKS files based on size or number.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>largefile.dat<span style="color: #F8F8F8"> </span>chunk_
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>chunk_*
+<span style="color: #000; font-style: italic">chunk_aa  chunk_ab  chunk_ac</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Splitting a large log file by size</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>50M<span style="color: #F8F8F8"> </span>large_log.log<span style="color: #F8F8F8"> </span>log_chunk_
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>10M<span style="color: #F8F8F8"> </span>large_log.log<span style="color: #F8F8F8"> </span>log_chunk_
 <span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-lh<span style="color: #F8F8F8"> </span>log_chunk_*
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 50M Apr 30 10:15 log_chunk_aa</span>
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 50M Apr 30 10:15 log_chunk_ab</span>
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 23M Apr 30 10:15 log_chunk_ac</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 10M May 4 10:15 log_chunk_aa</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 10M May 4 10:15 log_chunk_ab</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 5.2M May 4 10:15 log_chunk_ac</span>
 </pre></div>
-<h3>Splitting a CSV file by line count with numeric suffixes</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1000</span><span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>customers.csv<span style="color: #F8F8F8"> </span>customer_
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>customer_*
-<span style="color: #000; font-style: italic">customer_00  customer_01  customer_02  customer_03</span>
+<h3>Splitting a CSV file by line count with numbered output</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1000</span><span style="color: #F8F8F8"> </span>--additional-suffix<span style="color: #CE5C00; font-weight: bold">=</span>.csv<span style="color: #F8F8F8"> </span>large_dataset.csv<span style="color: #F8F8F8"> </span>dataset_
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>dataset_*
+<span style="color: #000; font-style: italic">dataset_00.csv  dataset_01.csv  dataset_02.csv</span>
 </pre></div>
-<h3>Splitting a file and specifying output directory</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>100M<span style="color: #F8F8F8"> </span>backup.img<span style="color: #F8F8F8"> </span>/tmp/backup_parts/part_
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>/tmp/backup_parts/
-<span style="color: #000; font-style: italic">part_aa  part_ab  part_ac</span>
+<h3>Splitting a file into equal parts</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>l/4<span style="color: #F8F8F8"> </span>bigfile.txt<span style="color: #F8F8F8"> </span>equal_part_
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-lh<span style="color: #F8F8F8"> </span>equal_part_*
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 2.5M May 4 10:20 equal_part_aa</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 2.5M May 4 10:20 equal_part_ab</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 2.5M May 4 10:20 equal_part_ac</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 2.5M May 4 10:20 equal_part_ad</span>
 </pre></div>
 <h2>Tips</h2>
-<h3>Reassembling Split Files</h3>
-<p>To reassemble split files back into the original, use the <code>cat</code> command:</p>
+<h3>Recombining Split Files</h3>
+<p>To recombine files split with the <code>split</code> command, use the <code>cat</code> command with the files in the correct order:</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>chunk_*<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>original_file_restored
 </pre></div>
-<h3>Preserving File Extensions</h3>
-<p>Split doesn't preserve file extensions. If you need to maintain the extension for each part, you'll need to manually rename the files or use a script.</p>
-<h3>Estimating Output File Count</h3>
-<p>To estimate how many files will be created, divide the total file size by the chunk size. For example, a 100MB file split into 10MB chunks will create approximately 10 files.</p>
-<h3>Combining with Compression</h3>
-<p>For large files, consider compressing before splitting:</p>
+<h3>Choosing Appropriate Split Sizes</h3>
+<p>When splitting files for transfer (like email attachments), consider the destination's size limits. For example, use <code>-b 10M</code> for files that need to be under 10MB.</p>
+<h3>Using with Compression</h3>
+<p>Split after compression for better efficiency:</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>largefile<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>largefile.gz
-<span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>50M<span style="color: #F8F8F8"> </span>largefile.gz<span style="color: #F8F8F8"> </span>largefile.gz.part_
+<span style="color: #8F5902">$ </span>split<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>10M<span style="color: #F8F8F8"> </span>largefile.gz<span style="color: #F8F8F8"> </span>largefile.gz.part_
 </pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How do I join split files back together?</h4>
-<p>A. Use the <code>cat</code> command with wildcard matching: <code>cat prefix_* &gt; original_file</code></p>
-<h4>Q2. Can I split a file without reading it entirely into memory?</h4>
-<p>A. Yes, <code>split</code> processes the file sequentially and doesn't load the entire file into memory.</p>
-<h4>Q3. How do I split a file into a specific number of parts instead of by size?</h4>
-<p>A. First determine the total size with <code>wc -c filename</code>, then divide by the number of parts you want, and use that value with the <code>-b</code> option.</p>
-<h4>Q4. Does split work with binary files?</h4>
-<p>A. Yes, <code>split</code> works with any file type, including binary files.</p>
+<h4>Q1. How do I split a file into equal-sized chunks?</h4>
+<p>A. Use <code>split -n l/N filename</code>, where N is the number of equal parts you want.</p>
+<h4>Q2. How can I split a file and maintain the original file extension?</h4>
+<p>A. Use the <code>--additional-suffix</code> option: <code>split -l 1000 file.csv part_ --additional-suffix=.csv</code></p>
+<h4>Q3. What's the difference between <code>-b</code> and <code>-n</code>?</h4>
+<p>A. <code>-b</code> splits by exact byte size, while <code>-n</code> splits into a specific number of chunks, potentially of different sizes.</p>
+<h4>Q4. Can I preview what split would do without actually splitting the file?</h4>
+<p>A. No, <code>split</code> doesn't have a preview or dry-run option. You can use <code>wc -l</code> to count lines first to help plan your split.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/split-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

@@ -4,66 +4,106 @@ Display the effective username of the current user.
 
 ## Overview
 
-The `whoami` command prints the username of the person currently logged into the terminal session. It's a simple way to verify which user account is being used for the current session, which can be particularly useful when switching between multiple user accounts or when using sudo.
+The `whoami` command prints the username associated with the current effective user ID. This simple utility helps identify which user account is being used for the current session, which is particularly useful in scripts, when switching between users, or when troubleshooting permission issues.
 
 ## Options
 
-The `whoami` command is straightforward and typically used without options, as its primary function is simply to display the current username.
+The `whoami` command has very few options as it performs a single, straightforward function.
+
+### **--help**
+
+Display help information and exit.
 
 ```console
-$ whoami
-username
+$ whoami --help
+Usage: whoami [OPTION]...
+Print the user name associated with the current effective user ID.
+Same as id -un.
+
+      --help     display this help and exit
+      --version  output version information and exit
+
+GNU coreutils online help: <https://www.gnu.org/software/coreutils/>
+Report whoami translation bugs to <https://translationproject.org/team/>
+```
+
+### **--version**
+
+Display version information and exit.
+
+```console
+$ whoami --version
+whoami (GNU coreutils) 8.32
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Richard Mlynarik.
 ```
 
 ## Usage Examples
 
-### Basic usage
+### Basic Usage
+
+Simply type `whoami` to see your current effective username:
 
 ```console
 $ whoami
-john
+alice
 ```
 
-### Using with other commands
+### Using in Scripts
+
+The command is often used in shell scripts to check the current user:
 
 ```console
-$ echo "Current user is $(whoami)"
-Current user is john
+$ if [ "$(whoami)" != "root" ]; then
+>   echo "This script must be run as root"
+>   exit 1
+> fi
+This script must be run as root
 ```
 
-### Checking user after sudo
+### After Switching Users
+
+After using `su` or `sudo` to change users, `whoami` shows the new effective user:
 
 ```console
 $ whoami
-john
-$ sudo whoami
+alice
+$ sudo -s
+# whoami
 root
 ```
 
 ## Tips
 
-### Difference from `id` command
+### Understanding Effective vs. Real User ID
 
-While `whoami` only shows the username, the `id` command provides more comprehensive information including user ID, group ID, and all groups the user belongs to.
+`whoami` shows the effective user ID, which may differ from your real user ID when using commands like `sudo`. To see both real and effective IDs, use the `id` command instead.
 
-### Use in scripts
+### Alternative Commands
 
-`whoami` is useful in shell scripts when you need to perform different actions based on which user is running the script, or to verify that a script is being run with the correct permissions.
+The `id -un` command provides the same information as `whoami` and is available on all UNIX-like systems, making it a more portable alternative in scripts.
 
-### Security context
+### Security Considerations
 
-When troubleshooting permission issues, `whoami` helps confirm which user identity is active, especially after using commands like `su` or `sudo` that change the effective user.
+When writing security-sensitive scripts, remember that `whoami` only shows the effective user, not necessarily the user who originally launched the process.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `whoami` and `who am i`?
-A. `whoami` shows the effective username (the user you're currently running as), while `who am i` (or `who -m`) shows the original login name, which might be different if you've used `su` or similar commands.
+A. `whoami` shows the effective username of the current process, while `who am i` (or `who -m`) shows the original login name, terminal, and login time.
 
-#### Q2. Does `whoami` show the real or effective user ID?
-A. `whoami` displays the effective user ID, which is the user identity the system uses to determine your permissions.
+#### Q2. Can `whoami` tell me if I'm running as root?
+A. Yes. If `whoami` returns "root", you're running with root privileges.
 
-#### Q3. How can I see more information about my user account?
-A. Use the `id` command instead, which shows your user ID, group ID, and all groups you belong to.
+#### Q3. Does `whoami` work the same on all Unix/Linux systems?
+A. Yes, the basic functionality is consistent across Unix-like systems, though some systems might have slightly different output formatting.
+
+#### Q4. Why would I use `whoami` instead of `id`?
+A. `whoami` is simpler and provides just the username, while `id` gives more comprehensive information including user ID, group ID, and group memberships.
 
 ## References
 
@@ -71,4 +111,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/whoami-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

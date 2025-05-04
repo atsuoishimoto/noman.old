@@ -4,124 +4,141 @@
 
 ## 概要
 
-`head` コマンドはファイルの先頭から指定した行数（デフォルトでは10行）を表示するためのコマンドです。大きなファイルの内容を確認する際や、ファイルの構造を素早く把握したい場合に便利です。複数のファイルを指定すると、それぞれのファイルの先頭部分を順番に表示します。
+`head` コマンドはファイルの先頭部分を標準出力に出力します。デフォルトでは、指定された各ファイルの最初の10行を表示します。複数のファイルが指定された場合、各ファイルの内容の前にファイル名を示すヘッダーが表示されます。
 
 ## オプション
 
-### **-n, --lines=N**
+### **-n, --lines=[-]NUM**
 
-表示する行数を指定します。Nは表示したい行数です。
+デフォルトの10行ではなく、最初のNUM行を表示します。先頭に「-」をつけると、各ファイルの最後のNUM行を除くすべての行を表示します。
 
 ```console
-$ head -n 3 /etc/passwd
-root:x:0:0:root:/root:/bin/bash
-daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
-bin:x:2:2:bin:/bin:/usr/sbin/nologin
+$ head -n 5 file.txt
+Line 1
+Line 2
+Line 3
+Line 4
+Line 5
 ```
 
-### **-c, --bytes=N**
+### **-c, --bytes=[-]NUM**
 
-表示するバイト数を指定します。Nは表示したいバイト数です。
+行数ではなく、最初のNUMバイトを表示します。先頭に「-」をつけると、各ファイルの最後のNUMバイトを除くすべてのバイトを表示します。
 
 ```console
-$ head -c 20 /etc/passwd
-root:x:0:0:root:/ro
+$ head -c 20 file.txt
+This is the first 20
 ```
 
 ### **-q, --quiet, --silent**
 
-複数ファイルを処理する際にファイル名のヘッダーを表示しません。
+ファイル名を示すヘッダーを表示しません。
 
 ```console
-$ head -q -n 1 file1.txt file2.txt
-これはfile1.txtの1行目です
-これはfile2.txtの1行目です
+$ head -q file1.txt file2.txt
+(file1.txtの内容)
+(file2.txtの内容)
+```
+
+### **-v, --verbose**
+
+常にファイル名を示すヘッダーを表示します。
+
+```console
+$ head -v file.txt
+==> file.txt <==
+Line 1
+Line 2
+...
 ```
 
 ## 使用例
 
-### 基本的な使用方法
+### ログファイルの先頭部分を確認する
 
 ```console
-$ head /etc/passwd
-root:x:0:0:root:/root:/bin/bash
-daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
-bin:x:2:2:bin:/bin:/usr/sbin/nologin
-sys:x:3:3:sys:/dev:/usr/sbin/nologin
-sync:x:4:65534:sync:/bin:/bin/sync
-games:x:5:60:games:/usr/games:/usr/sbin/nologin
-man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
-lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
-mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
-news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+$ head /var/log/syslog
+May  3 14:22:01 hostname systemd[1]: Starting Daily apt download activities...
+May  3 14:22:01 hostname systemd[1]: apt-daily.service: Succeeded.
+May  3 14:22:01 hostname systemd[1]: Finished Daily apt download activities.
+...
 ```
 
-### 複数ファイルの先頭を表示
+### 複数のファイルを一度に表示する
 
 ```console
 $ head -n 2 file1.txt file2.txt
 ==> file1.txt <==
-これはfile1.txtの1行目です
-これはfile1.txtの2行目です
+First line of file1
+Second line of file1
 
 ==> file2.txt <==
-これはfile2.txtの1行目です
-これはfile2.txtの2行目です
+First line of file2
+Second line of file2
 ```
 
-### パイプラインでの使用
+### 最後のN行を除くすべての行を表示する
 
 ```console
-$ ls -l | head -n 5
-total 120
-drwxr-xr-x  2 user user 4096 Apr 30 10:00 Desktop
-drwxr-xr-x  2 user user 4096 Apr 30 10:00 Documents
-drwxr-xr-x  2 user user 4096 Apr 30 10:00 Downloads
-drwxr-xr-x  2 user user 4096 Apr 30 10:00 Music
+$ head -n -2 file.txt
+Line 1
+Line 2
+Line 3
+...
+(最後の2行を除くすべての行)
 ```
 
 ## ヒント:
 
-### 負の行数を指定する
+### 他のコマンドと組み合わせる
 
-`head -n -N` を使用すると、ファイルの最後のN行を除いた全ての行を表示できます。
-
-```console
-$ head -n -2 file.txt
-# file.txtの最後の2行を除いた全ての行が表示される
-```
-
-### 大きなログファイルの確認
-
-ログファイルの最新の状態を確認するには、`tail` コマンドの方が適していますが、ログの初期部分を確認するには `head` が便利です。
+`head`をパイプと組み合わせて、他のコマンドの出力を制限できます：
 
 ```console
-$ head /var/log/syslog
-# システムログの先頭10行が表示される
+$ ls -l | head -n 5
 ```
 
-### 複数ファイルの処理
+これにより、ディレクトリリストの最初の5エントリのみが表示される。
 
-複数のファイルを処理する際、各ファイルの先頭にファイル名が表示されます。これを抑制するには `-q` オプションを使用します。
+### 大きなファイルの先頭部分を確認する
+
+非常に大きなファイルの場合、ファイル全体をロードせずに内容をプレビューするために`head`を使用できます：
+
+```console
+$ head -n 20 huge_log.txt
+```
+
+### tailと組み合わせて中間部分を抽出する
+
+`head`と`tail`を組み合わせて、ファイルの中間部分を抽出できます：
+
+```console
+$ head -n 20 file.txt | tail -n 10
+```
+
+これにより、ファイルの11〜20行目が表示される。
 
 ## よくある質問
 
-#### Q1. `head` と `tail` の違いは何ですか？
-A. `head` はファイルの先頭部分を表示し、`tail` はファイルの末尾部分を表示します。
+#### Q1. ファイルから特定の行数を表示するにはどうすればよいですか？
+A. `head -n 数字 ファイル名`を使用して、最初の指定した行数を表示できます。
 
-#### Q2. デフォルトで表示される行数を変更できますか？
-A. はい、`-n` オプションで行数を指定できます。例えば `head -n 20` は先頭20行を表示します。
+#### Q2. headで複数のファイルを一度に表示できますか？
+A. はい、すべてのファイル名をリストするだけです：`head file1.txt file2.txt file3.txt`
 
-#### Q3. 標準入力からデータを読み取ることはできますか？
-A. はい、パイプラインを使用して標準入力からデータを読み取ることができます。例：`cat file.txt | head -n 5`
+#### Q3. 行ではなく最初の数バイトを表示するにはどうすればよいですか？
+A. `head -c 数字 ファイル名`を使用して、最初の指定したバイト数を表示できます。
 
-#### Q4. macOSとLinuxで `head` コマンドに違いはありますか？
-A. 基本的な機能は同じですが、一部のオプションや動作が異なる場合があります。特に `-c` オプションの解釈が異なることがあります。
+#### Q4. 最後の数行を除くすべての行を表示するにはどうすればよいですか？
+A. `head -n -数字 ファイル名`を使用して、最後の指定した行数を除くすべての行を表示できます。
 
-## 参考
+#### Q5. 複数のファイルを表示する際にファイル名のヘッダーを非表示にするにはどうすればよいですか？
+A. `-q`オプションを使用します：`head -q file1.txt file2.txt`
+
+## 参考資料
 
 https://www.gnu.org/software/coreutils/manual/html_node/head-invocation.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+2025/05/04 初版作成

@@ -49,80 +49,82 @@
   <h1>su command</h1>
 <p>Switch user identity or become another user temporarily.</p>
 <h2>Overview</h2>
-<p>The <code>su</code> command allows you to switch to another user account, most commonly the root (superuser) account. Without specifying a username, <code>su</code> defaults to the root user. It creates a new shell with the target user's environment and privileges.</p>
+<p>The <code>su</code> command allows you to switch to another user account, most commonly the root user. Without specifying a username, <code>su</code> defaults to the superuser (root). It creates a new shell with the target user's environment and privileges.</p>
 <h2>Options</h2>
-<h3><strong>-l, --login</strong></h3>
-<p>Provides a login shell, simulating a full login as the target user, including their environment variables and home directory</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>su<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>john
+<h3><strong>-</strong> or <strong>-l</strong>, <strong>--login</strong></h3>
+<p>Provide a login environment, simulating a direct login for the specified user</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>su<span style="color: #F8F8F8"> </span>-<span style="color: #F8F8F8"> </span>john
 <span style="color: #000; font-style: italic">Password: </span>
 <span style="color: #8F5902">john@hostname:~$</span>
 </pre></div>
-<h3><strong>-c, --command</strong></h3>
-<p>Executes a single command as the specified user and then exits</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>su<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;apt update&quot;</span><span style="color: #F8F8F8"> </span>root
+<h3><strong>-c</strong>, <strong>--command=COMMAND</strong></h3>
+<p>Execute a single command as the specified user and then exit</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>su<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ls -la /root&quot;</span><span style="color: #F8F8F8"> </span>root
 <span style="color: #000; font-style: italic">Password: </span>
-<span style="color: #000; font-style: italic">[apt update output]</span>
-<span style="color: #8F5902">$</span>
+<span style="color: #000; font-style: italic">total 28</span>
+<span style="color: #000; font-style: italic">drwx------  4 root root 4096 May  4 10:15 .</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x 20 root root 4096 Apr 15 09:30 ..</span>
+<span style="color: #000; font-style: italic">-rw-------  1 root root  982 May  1 14:22 .bash_history</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 root root 3106 Dec  5  2024 .bashrc</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  3 root root 4096 Jan 10  2025 .config</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 root root  161 Dec  5  2024 .profile</span>
+<span style="color: #000; font-style: italic">drwx------  2 root root 4096 Feb 20  2025 .ssh</span>
 </pre></div>
-<h3><strong>-s, --shell</strong></h3>
-<p>Specifies the shell to use instead of the default shell for the target user</p>
+<h3><strong>-s</strong>, <strong>--shell=SHELL</strong></h3>
+<p>Run the specified shell instead of the default shell for the user</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>su<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/bin/zsh<span style="color: #F8F8F8"> </span>john
-<span style="color: #000; font-style: italic">Password:</span>
+<span style="color: #000; font-style: italic">Password: </span>
 <span style="color: #8F5902">john@hostname:~$</span>
 </pre></div>
-<h3><strong>-p, --preserve-environment</strong></h3>
-<p>Preserves the current environment variables when switching users</p>
+<h3><strong>-p</strong>, <strong>--preserve-environment</strong></h3>
+<p>Preserve the current environment variables when switching users</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>su<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>john
-<span style="color: #000; font-style: italic">Password:</span>
+<span style="color: #000; font-style: italic">Password: </span>
 <span style="color: #8F5902">john@hostname:/current/directory$</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Becoming the root user</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>su
 <span style="color: #000; font-style: italic">Password: </span>
-<span style="color: #8F5902">#</span>
+<span style="color: #8F5902">root@hostname:/home/user#</span>
 </pre></div>
-<h3>Switching to another user with their environment</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>su<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>sarah
+<h3>Running a command as root and returning to normal user</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>su<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;apt update &amp;&amp; apt upgrade -y&quot;</span><span style="color: #F8F8F8"> </span>root
 <span style="color: #000; font-style: italic">Password: </span>
-<span style="color: #8F5902">sarah@hostname:~$</span>
-</pre></div>
-<h3>Running a command as root without staying in root shell</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>su<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;systemctl restart nginx&quot;</span><span style="color: #F8F8F8"> </span>root
-<span style="color: #000; font-style: italic">Password: </span>
-<span style="color: #000; font-style: italic">[command output]</span>
+<span style="color: #000; font-style: italic">[apt update and upgrade output]</span>
 <span style="color: #8F5902">$</span>
 </pre></div>
-<h3>Switching to root with login environment</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>su<span style="color: #F8F8F8"> </span>-
+<h3>Switching to another user with their environment</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>su<span style="color: #F8F8F8"> </span>-<span style="color: #F8F8F8"> </span>john
 <span style="color: #000; font-style: italic">Password: </span>
-<span style="color: #8F5902">root@hostname:~#</span>
+<span style="color: #8F5902">john@hostname:~$</span>
 </pre></div>
-<h2>Tips</h2>
+<h2>Tips:</h2>
 <h3>Use sudo Instead When Possible</h3>
-<p>On many modern systems, using <code>sudo command</code> is preferred over <code>su</code> as it provides better logging and more granular permission control.</p>
-<h3>Exit the Superuser Shell When Done</h3>
-<p>Always exit the root shell when you've finished your administrative tasks to avoid accidentally running commands with elevated privileges.</p>
+<p>For most administrative tasks, using <code>sudo command</code> is preferable to <code>su</code> as it:</p>
+<ul>
+<li>Logs all commands executed</li>
+<li>Doesn't require sharing the root password</li>
+<li>Provides more granular permission control</li>
+</ul>
+<h3>Exit the Superuser Shell Safely</h3>
+<p>Always type <code>exit</code> or press Ctrl+D when you're done with the superuser shell to return to your regular user account.</p>
 <h3>Be Careful with Environment Variables</h3>
-<p>When switching users without the <code>-l</code> option, you keep your current environment variables, which might cause unexpected behavior.</p>
-<h3>Root Password vs. Your Password</h3>
-<p>With <code>su</code>, you need to know the target user's password. With <code>sudo</code>, you typically use your own password (if you have sudo privileges).</p>
+<p>When using plain <code>su</code> (without <code>-</code>), you keep your current environment variables, which might cause unexpected behavior. Use <code>su -</code> for a clean environment.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between <code>su</code> and <code>sudo</code>?</h4>
-<p>A. <code>su</code> switches your entire user context and requires the target user's password, while <code>sudo</code> runs a single command with elevated privileges and typically requires your own password.</p>
-<h4>Q2. How do I exit from a su session?</h4>
+<p>A. <code>su</code> switches your entire user session to another user (typically root), while <code>sudo</code> executes just a single command with elevated privileges and then returns to your normal user.</p>
+<h4>Q2. Why does <code>su</code> sometimes fail with &quot;Authentication failure&quot;?</h4>
+<p>A. This usually happens because the root account password is incorrect or the root account is locked (common in Ubuntu and other distributions that prefer sudo).</p>
+<h4>Q3. How do I exit from the su session?</h4>
 <p>A. Type <code>exit</code> or press Ctrl+D to return to your original user account.</p>
-<h4>Q3. Why does <code>su -</code> work the same as <code>su -l root</code>?</h4>
-<p>A. The hyphen alone (<code>su -</code>) is a shorthand for <code>su -l root</code>, providing a login shell for the root user.</p>
-<h4>Q4. Can I use <code>su</code> to switch to any user?</h4>
-<p>A. Yes, but you need to know that user's password unless you're already the root user.</p>
-<h2>macOS Considerations</h2>
-<p>On macOS, the root account is disabled by default for security reasons. Instead of using <code>su</code>, Apple recommends using <code>sudo</code> for administrative tasks. If you need a root shell, use <code>sudo -s</code> or <code>sudo -i</code>.</p>
+<h4>Q4. What's the difference between <code>su</code> and <code>su -</code>?</h4>
+<p>A. <code>su</code> only changes the user ID but keeps your current environment variables and working directory. <code>su -</code> provides a complete login environment for the new user, changing to their home directory and loading their profile.</p>
 <h2>References</h2>
-<p>https://www.man7.org/linux/man-pages/man1/su.1.html</p>
+<p>https://www.gnu.org/software/coreutils/manual/html_node/su-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

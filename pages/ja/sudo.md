@@ -1,120 +1,138 @@
 # sudo コマンド
 
-他のユーザー（通常はroot）の権限でコマンドを実行します。
+別のユーザー（通常は管理者権限を持つユーザー）として、コマンドを実行します。
 
 ## 概要
 
-`sudo`（superuser do）は、一般ユーザーが管理者（root）権限を一時的に借りてコマンドを実行するためのコマンドです。システム管理タスクやセキュリティ上の理由で制限されている操作を実行する際に使用します。パスワード認証が必要で、実行権限はシステム管理者によって`/etc/sudoers`ファイルで設定されます。
+`sudo`（superuser do）は、認可されたユーザーが別のユーザー（デフォルトではスーパーユーザー/root）のセキュリティ権限でコマンドを実行できるようにします。これにより、rootユーザーとしてログインせずに管理タスクを実行でき、特権アクセスを制限することでシステムセキュリティを向上させます。
 
 ## オプション
 
-### **-u, --user=ユーザー名**
+### **-u, --user=USER**
 
-指定したユーザーの権限でコマンドを実行します。
+デフォルトのターゲットユーザー（root）以外のユーザーとしてコマンドを実行します
 
 ```console
 $ sudo -u postgres psql
-postgres=# \q
+psql (14.5)
+Type "help" for help.
+
+postgres=#
 ```
 
 ### **-i, --login**
 
-ターゲットユーザーのログインシェルを起動します（rootユーザーになります）。
+ターゲットユーザーとしてログインシェルを実行します。完全なログインをシミュレートします
 
 ```console
 $ sudo -i
-# whoami
-root
-# exit
+[root@hostname ~]#
 ```
 
 ### **-s, --shell**
 
-現在のシェル環境でrootシェルを起動します。
+ターゲットユーザーのパスワードデータベースエントリで指定されたシェルを実行します
 
 ```console
 $ sudo -s
-# whoami
-root
-# exit
+root@hostname:/home/user#
 ```
 
 ### **-l, --list**
 
-現在のユーザーが実行できる`sudo`コマンドを一覧表示します。
+呼び出しユーザーに許可された（および禁止された）コマンドを一覧表示します
 
 ```console
 $ sudo -l
-User username may run the following commands on hostname:
-    (ALL) ALL
+User user may run the following commands on hostname:
+    (ALL : ALL) ALL
+```
+
+### **-v, --validate**
+
+ユーザーのキャッシュされた認証情報を更新し、sudoのタイムアウトを延長します
+
+```console
+$ sudo -v
+[sudo] password for user: 
+```
+
+### **-k, --reset-timestamp**
+
+ユーザーのキャッシュされた認証情報を無効にします
+
+```console
+$ sudo -k
 ```
 
 ## 使用例
 
-### パッケージのインストール
+### root権限でコマンドを実行する
 
 ```console
-$ sudo apt install nginx
-[sudo] password for username: 
-Reading package lists... Done
-Building dependency tree... Done
+$ sudo apt update
+[sudo] password for user: 
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
 ...
 ```
 
-### ファイルの編集（rootが所有するファイル）
+### システム設定ファイルを編集する
 
 ```console
 $ sudo nano /etc/hosts
-[sudo] password for username: 
+[sudo] password for user:
 ```
 
-### サービスの再起動
+### 別のユーザーとしてコマンドを実行する
 
 ```console
-$ sudo systemctl restart nginx
-[sudo] password for username: 
+$ sudo -u www-data ls -la /var/www/html
+total 16
+drwxr-xr-x 2 www-data www-data 4096 May  4 10:15 .
+drwxr-xr-x 3 root     root     4096 May  4 10:14 ..
+-rw-r--r-- 1 www-data www-data  612 May  4 10:15 index.html
 ```
 
 ## ヒント:
 
-### パスワード入力の省略
+### `sudo !!` を使用して前のコマンドをsudoで繰り返す
 
-`sudo`コマンドを実行すると、デフォルトで5分間はパスワード入力が不要になります。連続して管理者権限が必要な作業を行う場合は効率的です。
+sudoが必要なコマンドを実行する際にsudoを付け忘れた場合、`sudo !!`と入力すると、前のコマンドをsudo権限で繰り返すことができます。
 
-### sudoersファイルの編集
+### 特定のコマンドに対してパスワードなしでsudoを設定する
 
-sudoersファイルを編集する場合は、必ず`visudo`コマンドを使用してください。これにより構文エラーを防ぎ、システムがロックされるのを防ぎます。
-
-```console
-$ sudo visudo
+`sudo visudo`でsudoersファイルを編集し、特定のコマンドをパスワードプロンプトなしで実行できるようにします。例：
+```
+username ALL=(ALL) NOPASSWD: /usr/bin/apt update
 ```
 
-### コマンドの実行履歴
+### `sudo -E`を使用して環境変数を保持する
 
-`sudo`で実行したコマンドは通常ログに記録されるため、システム管理者はユーザーのアクションを追跡できます。セキュリティ上重要なコマンドを実行する際は注意しましょう。
+sudoでコマンドを実行する際に現在の環境変数を保持する必要がある場合は、`-E`オプションを使用します。
+
+### sudoersファイルの編集には常に`visudo`を使用する
+
+`/etc/sudoers`を直接編集しないでください。常に`sudo visudo`を使用してください。これは保存前に構文エラーをチェックし、sudo権限へのアクセスをロックしてしまうことを防ぎます。
 
 ## よくある質問
 
-#### Q1. sudoとsuの違いは何ですか？
-A. `sudo`は特定のコマンドだけを管理者権限で実行するのに対し、`su`はユーザーを完全に切り替えます。`sudo`はより安全で、実行ログが残り、rootパスワードを共有せずに済みます。
+#### Q1. `sudo -i`と`sudo -s`の違いは何ですか？
+A. `sudo -i`は完全なログインをシミュレートし、ターゲットユーザーのホームディレクトリに移動して環境を設定します。`sudo -s`はターゲットユーザーとしてシェルを起動するだけで、現在の環境と作業ディレクトリを保持します。
 
-#### Q2. sudoコマンドを実行する権限がないとどうなりますか？
-A. 権限がない場合、「username is not in the sudoers file. This incident will be reported.」というメッセージが表示され、コマンドは実行されません。
+#### Q2. sudo認証はどれくらいの期間有効ですか？
+A. デフォルトでは、sudoは認証情報を15分間キャッシュします。`sudo -v`で延長したり、`sudo -k`でリセットしたりできます。
 
-#### Q3. sudoコマンドでパスワードを間違えるとどうなりますか？
-A. 通常3回までパスワード入力のチャンスがあり、それ以上間違えると一定時間`sudo`コマンドが使用できなくなります。
+#### Q3. 複数のコマンドをsudoで実行するにはどうすればよいですか？
+A. `sudo sh -c "command1 && command2"`を使用するか、`sudo -i`でrootシェルを起動してからコマンドを実行します。
 
-#### Q4. sudoの設定はどこで行いますか？
-A. `/etc/sudoers`ファイルで設定します。ただし、直接編集せず`visudo`コマンドを使用してください。
-
-## macOSでの注意点
-
-macOSでは`sudo`コマンドの動作はLinuxと基本的に同じですが、管理者グループは「admin」と呼ばれます。また、macOSではセキュリティ強化のため、一部のシステムディレクトリは「System Integrity Protection (SIP)」によって保護されており、`sudo`でも変更できない場合があります。
+#### Q4. ユーザーをsudoersに追加するにはどうすればよいですか？
+A. Debian/Ubuntuでは`usermod -aG sudo username`でユーザーをsudoグループに追加します。RHEL/CentOSシステムではwheelグループに追加します。
 
 ## 参考資料
 
 https://www.sudo.ws/docs/man/sudo.man/
 
-## 改訂履歴
+## Revisions
 
-- 2025/04/30 初版作成
+- 2025/05/04 初回リビジョン

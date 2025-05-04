@@ -1,135 +1,164 @@
 # update-alternatives コマンド
 
-システム上の複数のバージョンのコマンドやライブラリを管理し、デフォルトを設定するためのツールです。
+代替システム内のシンボリックリンクを管理し、デフォルトコマンドを決定します。
 
 ## 概要
 
-`update-alternatives` は Debian ベースのシステム（Ubuntu など）で使用されるコマンドで、同じ機能を持つ複数のプログラムやライブラリのバージョンを管理します。これにより、システム全体のデフォルトとして使用するバージョンを簡単に切り替えることができます。例えば、複数のバージョンの Java や Python がインストールされている場合に、どのバージョンをデフォルトとして使用するかを指定できます。
+`update-alternatives`は代替システム内のシンボリックリンクを作成、削除、維持、表示するためのコマンドです。このシステムにより、同じプログラムの複数のバージョンを共存させ、そのうちの1つをデフォルトとして指定できます。主にDebianベースのLinuxディストリビューションで、ユーザーがコマンドを実行したときにどのバージョンのプログラムが実行されるかを管理するために使用されます。
 
 ## オプション
 
-### **--display**
+### **--install** (`-i`)
 
-特定のコマンドやライブラリの現在の設定を表示します。
+新しい代替リンクグループを作成します
 
 ```console
-$ update-alternatives --display java
-java - auto mode
-  link best version is /usr/lib/jvm/java-11-openjdk-amd64/bin/java
-  link currently points to /usr/lib/jvm/java-11-openjdk-amd64/bin/java
-  link java is /usr/bin/java
-  slave java.1.gz is /usr/share/man/man1/java.1.gz
-/usr/lib/jvm/java-8-openjdk-amd64/bin/java - priority 1081
-/usr/lib/jvm/java-11-openjdk-amd64/bin/java - priority 1111
+$ sudo update-alternatives --install /usr/bin/editor editor /usr/bin/vim 50
+update-alternatives: using /usr/bin/vim to provide /usr/bin/editor (editor) in auto mode
 ```
 
-### **--config**
+### **--remove** (`-r`)
 
-対話的にデフォルトのプログラムを選択します。
+システムから代替を削除します
+
+```console
+$ sudo update-alternatives --remove editor /usr/bin/vim
+update-alternatives: removing editor (/usr/bin/vim) from auto mode
+```
+
+### **--config** (`-c`)
+
+リンクグループで利用可能な代替を表示し、対話的に選択できるようにします
 
 ```console
 $ sudo update-alternatives --config editor
-There are 4 choices for the alternative editor (providing /usr/bin/editor).
+There are 3 choices for the alternative editor (providing /usr/bin/editor).
 
-  Selection    Path                Priority   Status
+  Selection    Path              Priority   Status
 ------------------------------------------------------------
-* 0            /usr/bin/vim.basic   50        auto mode
-  1            /bin/nano            40        manual mode
-  2            /usr/bin/vim.basic   50        manual mode
-  3            /usr/bin/vim.tiny    10        manual mode
+* 0            /usr/bin/vim       50        auto mode
+  1            /usr/bin/nano      40        manual mode
+  2            /usr/bin/emacs     30        manual mode
+  3            /usr/bin/vim       50        manual mode
 
 Press <enter> to keep the current choice[*], or type selection number:
 ```
 
-### **--install**
+### **--display** (`-d`)
 
-新しい選択肢を alternatives システムに追加します。
+リンクグループに関する情報を表示します
 
 ```console
-$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.9 20
-update-alternatives: using /usr/bin/python3.9 to provide /usr/bin/python (python) in auto mode
+$ update-alternatives --display editor
+editor - auto mode
+  link best version is /usr/bin/vim
+  link currently points to /usr/bin/vim
+  link editor is /usr/bin/editor
+  slave editor.1.gz is /usr/share/man/man1/editor.1.gz
+  slave editor.fr.1.gz is /usr/share/man/fr/man1/editor.1.gz
+  slave editor.it.1.gz is /usr/share/man/it/man1/editor.1.gz
+  slave editor.pl.1.gz is /usr/share/man/pl/man1/editor.1.gz
+  slave editor.ru.1.gz is /usr/share/man/ru/man1/editor.1.gz
+/usr/bin/vim - priority 50
+  slave editor.1.gz: /usr/share/man/man1/vim.1.gz
+  slave editor.fr.1.gz: /usr/share/man/fr/man1/vim.1.gz
+  slave editor.it.1.gz: /usr/share/man/it/man1/vim.1.gz
+  slave editor.pl.1.gz: /usr/share/man/pl/man1/vim.1.gz
+  slave editor.ru.1.gz: /usr/share/man/ru/man1/vim.1.gz
 ```
 
-### **--remove**
+### **--auto** (`-a`)
 
-alternatives システムから選択肢を削除します。
+リンクグループを自動モードに設定します（最も優先度の高い代替が使用されます）
 
 ```console
-$ sudo update-alternatives --remove python /usr/bin/python3.8
-update-alternatives: removing python (/usr/bin/python3.8) from auto mode
+$ sudo update-alternatives --auto editor
+update-alternatives: using /usr/bin/vim to provide /usr/bin/editor (editor) in auto mode
+```
+
+### **--set** (`-s`)
+
+特定の代替をリンクグループの選択肢として設定します
+
+```console
+$ sudo update-alternatives --set editor /usr/bin/nano
+update-alternatives: using /usr/bin/nano to provide /usr/bin/editor (editor) in manual mode
 ```
 
 ## 使用例
 
-### Java のデフォルトバージョンを確認する
+### 新しいJavaバージョンを代替に追加する
 
 ```console
-$ update-alternatives --display java
-java - auto mode
-  link best version is /usr/lib/jvm/java-11-openjdk-amd64/bin/java
-  link currently points to /usr/lib/jvm/java-11-openjdk-amd64/bin/java
-  link java is /usr/bin/java
-  slave java.1.gz is /usr/share/man/man1/java.1.gz
-/usr/lib/jvm/java-8-openjdk-amd64/bin/java - priority 1081
-/usr/lib/jvm/java-11-openjdk-amd64/bin/java - priority 1111
+$ sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-11-openjdk/bin/java 1100
+update-alternatives: using /usr/lib/jvm/java-11-openjdk/bin/java to provide /usr/bin/java (java) in auto mode
 ```
 
-### デフォルトのエディタを変更する
+### 異なるJavaバージョン間を切り替える
 
 ```console
-$ sudo update-alternatives --config editor
-There are 4 choices for the alternative editor (providing /usr/bin/editor).
+$ sudo update-alternatives --config java
+There are 3 choices for the alternative java (providing /usr/bin/java).
 
-  Selection    Path                Priority   Status
+  Selection    Path                                           Priority   Status
 ------------------------------------------------------------
-* 0            /usr/bin/vim.basic   50        auto mode
-  1            /bin/nano            40        manual mode
-  2            /usr/bin/vim.basic   50        manual mode
-  3            /usr/bin/vim.tiny    10        manual mode
+* 0            /usr/lib/jvm/java-11-openjdk/bin/java          1100      auto mode
+  1            /usr/lib/jvm/java-8-openjdk/bin/java           1080      manual mode
+  2            /usr/lib/jvm/java-17-openjdk/bin/java          1170      manual mode
+  3            /usr/lib/jvm/java-11-openjdk/bin/java          1100      manual mode
 
-Press <enter> to keep the current choice[*], or type selection number: 1
-update-alternatives: using /bin/nano to provide /usr/bin/editor (editor) in manual mode
+Press <enter> to keep the current choice[*], or type selection number: 2
+update-alternatives: using /usr/lib/jvm/java-17-openjdk/bin/java to provide /usr/bin/java (java) in manual mode
 ```
 
-### 新しいPythonバージョンをシステムに追加する
+### 特定のコマンドのすべての代替を一覧表示する
 
 ```console
-$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.10 30
-update-alternatives: using /usr/bin/python3.10 to provide /usr/bin/python (python) in auto mode
+$ update-alternatives --list java
+/usr/lib/jvm/java-8-openjdk/bin/java
+/usr/lib/jvm/java-11-openjdk/bin/java
+/usr/lib/jvm/java-17-openjdk/bin/java
 ```
 
 ## ヒント:
 
-### 優先度の理解
+### 優先度の値を理解する
 
-`--install` オプションを使用する際、優先度（priority）の値が高いほど、自動モードでその選択肢が選ばれやすくなります。例えば、Python 3.10に優先度30を、Python 3.9に優先度20を設定すると、自動モードではPython 3.10が選択されます。
+高い優先度の値（例えば50より100）は、自動モードでどの代替が選択されるかを決定します。新しい代替をインストールする際、それをデフォルトにしたい場合は、既存のものより高い優先度を割り当てます。
 
-### グループ管理
+### 関連コマンドのグループを管理する
 
-Java のような複数の関連コマンド（java, javac, javadoc など）を管理する場合、`--slave` オプションを使用して一括で切り替えることができます。これにより、一貫性のある環境を維持できます。
+Javaのように複数の関連コマンド（java、javac、jar）を持つプログラムの場合、代替をインストールする際に`--slave`オプションを使用して一緒に管理できます。
+
+### 現在のデフォルトを確認する
+
+変更を加える前に、`--display`を使用して代替グループの現在の設定を確認しましょう。これにより、システムへの意図しない変更を避けることができます。
 
 ### 自動モードと手動モード
 
-自動モードでは、システムが最も高い優先度を持つ選択肢を自動的に選びます。手動モード（`--config` で選択した場合）では、優先度に関係なく、明示的に選んだ選択肢が使用されます。
+自動モードでは、システムは最も優先度の高い代替を自動的に選択します。手動モードでは、優先度に関係なく、手動で選択した代替が維持されます。
 
 ## よくある質問
 
-#### Q1. update-alternatives と環境変数の違いは何ですか？
-A. `update-alternatives` はシステム全体の設定を変更し、すべてのユーザーに影響します。環境変数はユーザーごとに設定でき、ユーザー固有の環境を構築できます。
+#### Q1. update-alternativesとシンボリックリンクの違いは何ですか？
+A. `update-alternatives`はシンボリックリンクを標準化された方法で管理する高レベルのシステムです。プログラムのバージョン間を切り替えるための一貫したインターフェースを提供し、利用可能な代替を追跡します。
 
-#### Q2. 変更を元に戻すにはどうすればよいですか？
-A. `sudo update-alternatives --config コマンド名` を実行し、以前の選択肢を選ぶことで元に戻せます。または、`--auto コマンド名` を使用して自動モードに戻すこともできます。
+#### Q2. どのプログラムが代替システムを使用しているか知るにはどうすればいいですか？
+A. `update-alternatives --get-selections`で管理されているすべての代替を一覧表示できます。
 
-#### Q3. alternatives システムで管理されているすべてのプログラムを確認するには？
-A. `update-alternatives --get-selections` コマンドを実行すると、管理されているすべてのプログラムとその現在の設定が表示されます。
+#### Q3. 代替をシステムから完全に削除できますか？
+A. はい、`update-alternatives --remove-all <名前>`を使用して、特定のコマンドのすべての代替を削除できます。
 
-#### Q4. 特定のコマンドに対する全ての選択肢を一覧表示するには？
-A. `update-alternatives --display コマンド名` を使用すると、そのコマンドに対して登録されているすべての選択肢と現在の設定が表示されます。
+#### Q4. 代替を提供する新しいパッケージをインストールするとどうなりますか？
+A. パッケージマネージャーは通常、インストール中に`update-alternatives`を呼び出して、事前定義された優先度で新しい代替をシステムに追加します。
+
+#### Q5. 壊れた代替を修正するにはどうすればいいですか？
+A. 代替が存在しないファイルを指している場合、`--remove`でそれを削除し、正しい代替を再インストールできます。
 
 ## 参考資料
 
-https://manpages.debian.org/buster/dpkg/update-alternatives.1.en.html
+https://manpages.debian.org/bullseye/dpkg/update-alternatives.1.en.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+2025/05/04 初回改訂

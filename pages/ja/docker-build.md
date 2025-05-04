@@ -1,16 +1,16 @@
 # docker build コマンド
 
-Dockerfileからイメージを構築するためのコマンドです。
+Dockerfileからイメージをビルドします。
 
 ## 概要
 
-`docker build` コマンドは、Dockerfileと呼ばれる指示ファイルからDockerイメージを作成します。このコマンドは、アプリケーションとその依存関係を含む一貫した実行環境を構築するために使用されます。ビルドコンテキスト（通常はカレントディレクトリ）内のファイルを使用して、再現可能な方法でイメージを作成できます。
+`docker build`コマンドは、DockerfileとコンテキストからDockerイメージをビルドします。コンテキストとは、指定されたPATHまたはURLにある一連のファイルのことです。ビルドプロセスはコンテキスト内のどのファイルも参照できます。Dockerfileには、Dockerが新しいイメージを作成するための指示が含まれています。
 
 ## オプション
 
 ### **-t, --tag**
 
-イメージに名前とオプションでタグを付けます。
+ビルドしたイメージに名前とオプションでタグを「名前:タグ」形式で付けます。
 
 ```console
 $ docker build -t myapp:1.0 .
@@ -20,174 +20,140 @@ $ docker build -t myapp:1.0 .
  => [internal] load .dockerignore                                          0.0s
  => => transferring context: 2B                                            0.0s
  => [internal] load metadata for docker.io/library/node:14                 1.2s
- => [1/5] FROM docker.io/library/node:14@sha256:fcb6...                    0.0s
+ => [1/5] FROM docker.io/library/node:14@sha256:123abc...                  0.0s
  => [internal] load build context                                          0.1s
- => => transferring context: 3.25kB                                        0.0s
- => CACHED [2/5] WORKDIR /app                                              0.0s
+ => => transferring context: 32.5kB                                        0.0s
+ => [2/5] WORKDIR /app                                                     0.3s
  => [3/5] COPY package*.json ./                                            0.1s
- => [4/5] RUN npm install                                                  8.2s
+ => [4/5] RUN npm install                                                  7.5s
  => [5/5] COPY . .                                                         0.1s
- => exporting to image                                                     0.7s
- => => exporting layers                                                    0.7s
- => => writing image sha256:a1b2c3...                                      0.0s
+ => exporting to image                                                     1.1s
+ => => exporting layers                                                    1.1s
+ => => writing image sha256:def456...                                      0.0s
  => => naming to docker.io/library/myapp:1.0                               0.0s
 ```
 
 ### **-f, --file**
 
-Dockerfileの名前と場所を指定します。デフォルトは現在のディレクトリの `Dockerfile` です。
+Dockerfileの名前を指定します（デフォルトは「PATH/Dockerfile」）。
 
 ```console
-$ docker build -f Dockerfile.dev -t myapp:dev .
-[+] Building 8.2s (10/10) FINISHED
- => [internal] load build definition from Dockerfile.dev                   0.1s
- => => transferring dockerfile: 240B                                       0.0s
+$ docker build -f Dockerfile.prod -t myapp:prod .
+[+] Building 12.3s (10/10) FINISHED
+ => [internal] load build definition from Dockerfile.prod                  0.1s
+ => => transferring dockerfile: 256B                                       0.0s
 ...
 ```
 
 ### **--no-cache**
 
-ビルド時にキャッシュを使用しないようにします。
+イメージのビルド時にキャッシュを使用しません。
 
 ```console
-$ docker build --no-cache -t myapp:latest .
-[+] Building 25.3s (10/10) FINISHED
+$ docker build --no-cache -t myapp .
+[+] Building 25.7s (10/10) FINISHED
  => [internal] load build definition from Dockerfile                       0.1s
 ...
 ```
 
 ### **--build-arg**
 
-Dockerfile内のARG命令で定義された変数に値を渡します。
+Dockerfile内でARG命令を使用して定義されたビルド時変数を設定します。
 
 ```console
-$ docker build --build-arg VERSION=2.0 -t myapp:2.0 .
-[+] Building 12.1s (10/10) FINISHED
+$ docker build --build-arg NODE_ENV=production -t myapp .
+[+] Building 11.2s (10/10) FINISHED
  => [internal] load build definition from Dockerfile                       0.1s
 ...
 ```
 
 ### **--target**
 
-マルチステージビルドで特定のステージまでビルドします。
+マルチステージビルドを使用する際にビルドするターゲットステージを設定します。
 
 ```console
 $ docker build --target development -t myapp:dev .
-[+] Building 9.7s (8/8) FINISHED
+[+] Building 8.3s (8/8) FINISHED
  => [internal] load build definition from Dockerfile                       0.1s
  => [internal] load .dockerignore                                          0.0s
  => [internal] load metadata for docker.io/library/node:14                 1.2s
- => [development 1/4] FROM docker.io/library/node:14                       0.0s
- => [development 2/4] WORKDIR /app                                         0.1s
- => [development 3/4] COPY package*.json ./                                0.1s
- => [development 4/4] RUN npm install                                      8.0s
- => exporting to image                                                     0.2s
+ => [development 1/4] FROM docker.io/library/node:14@sha256:123abc...      0.0s
+...
 ```
 
 ## 使用例
 
-### 基本的なイメージのビルド
+### タグ付きでイメージをビルドする
 
 ```console
-$ docker build .
+$ docker build -t myapp:latest .
 [+] Building 15.2s (10/10) FINISHED
 ...
 ```
 
-カレントディレクトリのDockerfileを使用してイメージをビルドしています。
-
-### タグ付きイメージのビルド
+### 複数のタグでビルドする
 
 ```console
-$ docker build -t mycompany/myapp:1.0 -t mycompany/myapp:latest .
-[+] Building 14.7s (10/10) FINISHED
+$ docker build -t myapp:latest -t myapp:1.0 -t registry.example.com/myapp:latest .
+[+] Building 14.8s (10/10) FINISHED
 ...
 ```
 
-複数のタグを付けてイメージをビルドしています。
-
-### 特定のコンテキストからのビルド
+### 特定のコンテキストからビルドする
 
 ```console
-$ docker build -t myapp:1.0 https://github.com/user/repo.git#main
-[+] Building 18.3s (10/10) FINISHED
+$ docker build -t myapp https://github.com/user/repo.git#main
+[+] Building 22.5s (10/10) FINISHED
 ...
 ```
 
-GitリポジトリからDockerfileとビルドコンテキストを取得してビルドしています。
-
-### マルチステージビルドの特定ステージまでビルド
+### 特定のDockerfileとターゲットステージでビルドする
 
 ```console
-$ docker build --target builder -t myapp:build-only .
-[+] Building 12.3s (6/6) FINISHED
- => [internal] load build definition from Dockerfile                       0.1s
- => [builder 1/3] FROM docker.io/library/node:14                           0.0s
- => [builder 2/3] WORKDIR /app                                             0.1s
- => [builder 3/3] RUN npm run build                                        12.0s
- => exporting to image                                                     0.1s
+$ docker build -f Dockerfile.multistage --target production -t myapp:prod .
+[+] Building 18.7s (12/12) FINISHED
+...
 ```
-
-Dockerfile内の「builder」という名前のステージまでビルドしています。
 
 ## ヒント:
 
 ### .dockerignoreファイルを使用する
 
-`.dockerignore` ファイルを作成して、ビルドコンテキストから除外するファイルやディレクトリを指定できます。これによりビルド速度が向上し、イメージサイズも小さくなります。
+`.dockerignore`ファイルを作成して、ビルドコンテキストからファイルやディレクトリを除外しましょう。これにより、不要なファイルがDockerデーモンに送信されるのを防ぎ、ビルド時間とサイズを削減できます。
+
+### ビルドキャッシュを活用する
+
+Dockerは中間レイヤーをキャッシュします。キャッシュの使用を最大化するために、Dockerfileのコマンドを変更頻度の低いものから高いものへと順序付けましょう。例えば、アプリケーションコードをコピーする前に依存関係をインストールします。
 
 ### マルチステージビルドを活用する
 
-本番環境用のイメージサイズを小さくするために、マルチステージビルドを使用しましょう。ビルドステージで依存関係をインストールし、実行ステージには必要なファイルだけをコピーします。
+マルチステージビルドでは、Dockerfile内で複数のFROM文を使用できます。これはビルドステージから必要なアーティファクトのみをコピーすることで、より小さな本番イメージを作成するのに役立ちます。
 
-```dockerfile
-# ビルドステージ
-FROM node:14 AS builder
-WORKDIR /app
-COPY . .
-RUN npm ci && npm run build
+### レイヤー数を最小限に抑える
 
-# 実行ステージ
-FROM nginx:alpine
-COPY --from=builder /app/build /usr/share/nginx/html
-```
-
-### キャッシュを効率的に使う
-
-Dockerfileの命令順序を工夫して、変更が少ない命令（依存関係のインストールなど）を先に配置し、頻繁に変更されるコード部分を後ろに配置することで、キャッシュを効率的に活用できます。
-
-### ビルドするステージの指定方法
-
-マルチステージビルドで特定のステージまでビルドするには、`--target` オプションを使用します。これは開発環境と本番環境で異なるイメージを作成する場合に便利です。
-
-```console
-$ docker build --target development -t myapp:dev .
-```
-
-上記のコマンドは、Dockerfile内の「development」という名前のステージまでビルドする。
+関連するコマンドを単一のRUN命令内で`&&`を使って結合することで、レイヤー数を減らし、より小さなイメージを作成できます。
 
 ## よくある質問
 
-#### Q1. docker buildとdocker-composeの違いは何ですか？
-A. `docker build`は単一のイメージを構築するコマンドです。一方、`docker-compose`は複数のコンテナを定義し、管理するためのツールで、`docker-compose build`でまとめてイメージをビルドできます。
+#### Q1. `docker build`と`docker image build`の違いは何ですか？
+A. 両者は同じコマンドです。`docker image build`はDockerのコマンド再構成で導入されたより明示的な形式ですが、`docker build`も引き続きサポートされており、より一般的に使用されています。
 
-#### Q2. ビルド中にエラーが発生した場合はどうすればよいですか？
-A. エラーメッセージを確認し、問題のあるDockerfileの行を修正します。`--no-cache`オプションを使用して完全に新しいビルドを試すこともできます。
+#### Q2. キャッシュを使用せずにイメージをビルドするにはどうすればよいですか？
+A. `--no-cache`オプションを使用します：`docker build --no-cache -t myapp .`
 
-#### Q3. イメージサイズを小さくするにはどうすればよいですか？
-A. マルチステージビルドの使用、不要なファイルの削除、軽量ベースイメージ（Alpine Linuxなど）の使用、RUN命令の結合などが効果的です。
+#### Q3. ビルドプロセスに環境変数を渡すにはどうすればよいですか？
+A. `--build-arg`オプションを使用します：`docker build --build-arg VAR_NAME=value -t myapp .`
 
-#### Q4. ビルド時に環境変数を渡すにはどうすればよいですか？
-A. `--build-arg`オプションを使用して、Dockerfile内のARG命令で定義された変数に値を渡すことができます。
+#### Q4. マルチステージDockerfileで特定のステージをビルドするにはどうすればよいですか？
+A. `--target`オプションを使用します：`docker build --target stage_name -t myapp .`
 
-#### Q5. マルチステージビルドとは何ですか？
-A. 1つのDockerfile内で複数のFROM命令を使用し、異なるステージでビルドと実行環境を分離する手法です。最終イメージには必要なファイルのみを含めることができ、イメージサイズを小さくできます。
+#### Q5. Gitリポジトリからビルドできますか？
+A. はい、ビルドコンテキストとしてGitリポジトリのURLを指定できます：`docker build -t myapp https://github.com/user/repo.git`
 
 ## 参考資料
 
 https://docs.docker.com/engine/reference/commandline/build/
 
-## Revisions
+## 改訂履歴
 
-- 2025/04/30 マルチステージビルドに関する情報を追加、--targetオプションの説明と使用例を追加
-- 2025/04/30 初版作成
+- 2025/05/04 初回改訂

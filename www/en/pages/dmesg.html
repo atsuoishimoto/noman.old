@@ -47,92 +47,90 @@
     <main>
       
   <h1>dmesg command</h1>
-<p>Display or control the kernel ring buffer, which contains kernel messages and logs.</p>
+<p>Display or control the kernel message buffer.</p>
 <h2>Overview</h2>
-<p>The <code>dmesg</code> command displays kernel-related messages from the system's boot process and ongoing operations. It's useful for troubleshooting hardware issues, checking system startup messages, and monitoring kernel events. These messages are stored in the kernel ring buffer, a circular buffer that overwrites old messages when full.</p>
+<p>The <code>dmesg</code> command displays kernel messages from the system ring buffer, which contains information about hardware, device drivers, and system initialization. It's particularly useful for troubleshooting hardware issues, checking boot messages, and monitoring kernel events.</p>
 <h2>Options</h2>
-<h3><strong>-H, --human</strong></h3>
-<p>Display output in a human-readable format with colors and timestamps</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-H
-<span style="color: #000; font-style: italic">[Apr 30 10:15:23] Linux version 5.15.0-91-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #101-Ubuntu SMP Tue Apr 20 14:33:09 UTC 2023</span>
-<span style="color: #000; font-style: italic">[Apr 30 10:15:23] Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-91-generic root=UUID=1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p ro quiet splash</span>
-<span style="color: #000; font-style: italic">[Apr 30 10:15:24] Memory: 16302756K/16677440K available (14339K kernel code, 2394K rwdata, 4760K rodata, 2756K init, 5068K bss, 374684K reserved, 0K cma-reserved)</span>
-</pre></div>
 <h3><strong>-c, --clear</strong></h3>
-<p>Clear the kernel ring buffer after displaying its contents</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-c
-<span style="color: #000; font-style: italic">[    0.000000] microcode: microcode updated early to revision 0x2f, date = 2019-02-17</span>
-<span style="color: #000; font-style: italic">[    0.000000] Linux version 5.15.0-91-generic (buildd@lcy02-amd64-017)</span>
-<span style="color: #000; font-style: italic">[    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-91-generic root=UUID=1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p ro quiet splash</span>
+<p>Clear the ring buffer after printing its contents.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dmesg<span style="color: #F8F8F8"> </span>-c
+<span style="color: #000; font-style: italic">[    0.000000] Linux version 5.15.0-76-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #83-Ubuntu SMP</span>
+<span style="color: #000; font-style: italic">[...]</span>
+</pre></div>
+<h3><strong>-H, --human</strong></h3>
+<p>Enable human-readable output with colors, relative timestamps, and appropriate line breaks.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-H
+<span style="color: #000; font-style: italic">[May 4 09:15] Linux version 5.15.0-76-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #83-Ubuntu SMP</span>
+<span style="color: #000; font-style: italic">[...]</span>
 </pre></div>
 <h3><strong>-l, --level</strong></h3>
-<p>Filter messages by priority level (emerg, alert, crit, err, warn, notice, info, debug)</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>--level<span style="color: #CE5C00; font-weight: bold">=</span>err
-<span style="color: #000; font-style: italic">[    4.302053] EXT4-fs (sda1): re-mounted. Opts: errors=remount-ro</span>
-<span style="color: #000; font-style: italic">[   15.485922] usb 1-2: device descriptor read/64, error -71</span>
+<p>Restrict output to the specified priority levels (comma-separated list).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>err,warn
+<span style="color: #000; font-style: italic">[    5.123456] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.GFX0.DD1F], AE_NOT_FOUND</span>
+<span style="color: #000; font-style: italic">[    7.654321] WARNING: CPU: 2 PID: 123 at drivers/gpu/drm/i915/intel_runtime_pm.c:655</span>
 </pre></div>
 <h3><strong>-f, --facility</strong></h3>
-<p>Filter messages by facility (kern, user, mail, daemon, auth, syslog, etc.)</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>kern
-<span style="color: #000; font-style: italic">[    0.000000] Linux version 5.15.0-91-generic (buildd@lcy02-amd64-017)</span>
-<span style="color: #000; font-style: italic">[    0.000000] KERNEL supported cpus:</span>
-<span style="color: #000; font-style: italic">[    0.000000] Intel GenuineIntel</span>
+<p>Restrict output to the specified facilities (comma-separated list).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>kern,daemon
+<span style="color: #000; font-style: italic">[    0.123456] kernel: Memory: 16123456K/16777216K available</span>
+<span style="color: #000; font-style: italic">[    1.234567] systemd[1]: Detected virtualization kvm.</span>
 </pre></div>
 <h3><strong>-t, --notime</strong></h3>
-<p>Don't print timestamps</p>
+<p>Don't print timestamps.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-t
-<span style="color: #000; font-style: italic">microcode: microcode updated early to revision 0x2f, date = 2019-02-17</span>
-<span style="color: #000; font-style: italic">Linux version 5.15.0-91-generic (buildd@lcy02-amd64-017)</span>
-<span style="color: #000; font-style: italic">Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-91-generic root=UUID=1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p ro quiet splash</span>
+<span style="color: #000; font-style: italic">Linux version 5.15.0-76-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #83-Ubuntu SMP</span>
+<span style="color: #000; font-style: italic">[...]</span>
+</pre></div>
+<h3><strong>-w, --follow</strong></h3>
+<p>Wait for new messages (similar to <code>tail -f</code>).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-w
+<span style="color: #000; font-style: italic">[    0.000000] Linux version 5.15.0-76-generic</span>
+<span style="color: #000; font-style: italic">[...]</span>
+<span style="color: #000; font-style: italic">[  123.456789] usb 1-2: new high-speed USB device number 3 using xhci_hcd</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Searching for specific hardware information</h3>
+<h3>Filtering for USB-related messages</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>usb
-<span style="color: #000; font-style: italic">[    2.332145] usb: USB bus registered</span>
-<span style="color: #000; font-style: italic">[    2.332146] usbcore: registered new interface driver usbfs</span>
-<span style="color: #000; font-style: italic">[    2.332147] usbcore: registered new interface driver hub</span>
-<span style="color: #000; font-style: italic">[    2.332148] usbcore: registered new device driver usb</span>
-<span style="color: #000; font-style: italic">[    3.452149] usb 1-1: new high-speed USB device number 2 using ehci-pci</span>
+<span style="color: #000; font-style: italic">[    2.123456] usb 1-1: new high-speed USB device number 2 using xhci_hcd</span>
+<span style="color: #000; font-style: italic">[    2.234567] usb 1-1: New USB device found, idVendor=8087, idProduct=0024, bcdDevice= 0.01</span>
+<span style="color: #000; font-style: italic">[    2.345678] usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0</span>
 </pre></div>
-<h3>Checking for disk or filesystem errors</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>error
-<span style="color: #000; font-style: italic">[    5.123456] EXT4-fs (sda1): re-mounted. Opts: errors=remount-ro</span>
-<span style="color: #000; font-style: italic">[   10.234567] ata3.00: error: { UNC }</span>
-<span style="color: #000; font-style: italic">[   15.345678] sd 2:0:0:0: [sdb] Sense Key : Medium Error [current]</span>
+<h3>Checking for hardware errors</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>--level<span style="color: #CE5C00; font-weight: bold">=</span>err
+<span style="color: #000; font-style: italic">[    5.123456] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.GFX0.DD1F], AE_NOT_FOUND</span>
+<span style="color: #000; font-style: italic">[   10.234567] EXT4-fs error (device sda1): ext4_lookup:1809: inode #2: comm systemd-journal: deleted inode referenced: 12345</span>
 </pre></div>
-<h3>Monitoring recent kernel messages in real-time</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dmesg<span style="color: #F8F8F8"> </span>-w
-<span style="color: #000; font-style: italic">[Apr 30 14:23:45] usb 1-2: new high-speed USB device number 4 using xhci_hcd</span>
-<span style="color: #000; font-style: italic">[Apr 30 14:23:46] usb 1-2: New USB device found, idVendor=0781, idProduct=5567, bcdDevice= 1.00</span>
-<span style="color: #000; font-style: italic">[Apr 30 14:23:46] usb 1-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3</span>
-<span style="color: #000; font-style: italic">[Apr 30 14:23:46] usb 1-2: Product: Cruzer Blade</span>
+<h3>Monitoring kernel messages in real-time</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dmesg<span style="color: #F8F8F8"> </span>--follow<span style="color: #F8F8F8"> </span>--human
+<span style="color: #000; font-style: italic">[May 4 09:20] Linux version 5.15.0-76-generic</span>
+<span style="color: #000; font-style: italic">[...]</span>
+<span style="color: #000; font-style: italic">[+0.005678] Booting paravirtualized kernel on bare hardware</span>
+<span style="color: #000; font-style: italic">[+1.234567] usb 1-2: new high-speed USB device number 3 using xhci_hcd</span>
 </pre></div>
-<h2>Tips:</h2>
-<h3>Use sudo for Full Access</h3>
-<p>On many systems, regular users may have limited access to kernel messages. Use <code>sudo dmesg</code> to see all messages, especially when troubleshooting hardware issues.</p>
+<h2>Tips</h2>
+<h3>Use Human-Readable Format for Better Readability</h3>
+<p>The <code>-H</code> or <code>--human</code> option makes output much easier to read with relative timestamps, colors, and proper formatting.</p>
 <h3>Combine with grep for Targeted Troubleshooting</h3>
-<p>When troubleshooting specific hardware, pipe <code>dmesg</code> output to <code>grep</code> with relevant keywords like <code>dmesg | grep -i wifi</code> or <code>dmesg | grep -i error</code>.</p>
-<h3>Watch for New Messages</h3>
-<p>Use <code>dmesg -w</code> to continuously watch for new kernel messages, similar to <code>tail -f</code>. This is useful when monitoring hardware that's being connected or troubleshooting intermittent issues.</p>
-<h3>Check Boot Time Issues</h3>
-<p>After a system crash or unexpected reboot, use <code>dmesg</code> immediately to check for error messages that might explain what happened before the logs are cleared.</p>
+<p>When troubleshooting specific hardware, pipe <code>dmesg</code> output to <code>grep</code> with relevant keywords like &quot;usb&quot;, &quot;wifi&quot;, or &quot;error&quot;.</p>
+<h3>Clear the Buffer After Reading</h3>
+<p>Use <code>sudo dmesg -c</code> to clear the buffer after reading it. This can help when you want to monitor only new messages that appear after a specific action.</p>
+<h3>Save Boot Messages for Later Analysis</h3>
+<p>After booting, save the kernel messages with <code>dmesg &gt; boot_log.txt</code> for later analysis or comparison.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What is the kernel ring buffer?</h4>
-<p>A. The kernel ring buffer is a circular data structure that stores messages generated by the Linux kernel. It has a fixed size, and when it fills up, new messages overwrite the oldest ones.</p>
-<h4>Q2. How do I clear the kernel ring buffer?</h4>
-<p>A. Use <code>sudo dmesg -c</code> to display and then clear the buffer. To clear without displaying, use <code>sudo dmesg -C</code>.</p>
-<h4>Q3. Why do I see &quot;permission denied&quot; when running dmesg?</h4>
-<p>A. On many modern Linux distributions, access to kernel logs is restricted for security reasons. Use <code>sudo dmesg</code> to view the complete logs.</p>
-<h4>Q4. How can I see timestamps in a readable format?</h4>
-<p>A. Use <code>dmesg -T</code> for human-readable timestamps or <code>dmesg -H</code> for a fully human-readable output with colors and formatting.</p>
+<h4>Q1. Why do I get &quot;dmesg: read kernel buffer failed: Operation not permitted&quot;?</h4>
+<p>A. On many systems, you need root privileges to access the kernel buffer. Use <code>sudo dmesg</code> instead.</p>
+<h4>Q2. How can I see only recent messages?</h4>
+<p>A. Use <code>dmesg | tail</code> to see the most recent messages, or use <code>dmesg -T</code> to show human-readable timestamps and filter by time.</p>
+<h4>Q3. How do I interpret the timestamps in dmesg output?</h4>
+<p>A. By default, timestamps show seconds since boot. Use <code>-T</code> or <code>--ctime</code> for human-readable timestamps, or <code>-H</code> for relative timestamps.</p>
+<h4>Q4. Can I monitor dmesg continuously like tail -f?</h4>
+<p>A. Yes, use <code>dmesg -w</code> or <code>dmesg --follow</code> to continuously monitor new kernel messages.</p>
 <h2>macOS Considerations</h2>
-<p>On macOS, <code>dmesg</code> functionality is more limited compared to Linux. For comprehensive system logs on macOS, consider using <code>log show</code> or viewing logs through Console.app instead. The macOS version of <code>dmesg</code> doesn't support many of the options available in Linux.</p>
+<p>On macOS, the <code>dmesg</code> command has fewer options than on Linux. It doesn't support options like <code>--human</code> or <code>--follow</code>. For more detailed system logs on macOS, consider using the <code>log</code> command instead, e.g., <code>log show --predicate 'eventMessage contains &quot;kernel&quot;'</code>.</p>
 <h2>References</h2>
 <p>https://man7.org/linux/man-pages/man1/dmesg.1.html</p>
 <h2>Revisions</h2>
-<ul>
-<li>2025/04/30 First revision</li>
-</ul>
+<p>2025/05/04 First revision</p>
 
 
     </main>

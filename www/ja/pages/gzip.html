@@ -47,82 +47,101 @@
     <main>
       
   <h1>gzip コマンド</h1>
-<p>ファイルを圧縮・展開するためのコマンドラインユーティリティです。</p>
+<p>ファイルをLempel-Ziv符号化（LZ77）を使用して圧縮または展開します。</p>
 <h2>概要</h2>
-<p>gzipはファイルを圧縮または展開するためのコマンドです。圧縮されたファイルは元のファイル名に「.gz」拡張子が追加されます。デフォルトでは、圧縮後に元のファイルは削除されます。gzipは主にテキストファイルの圧縮に効果的で、多くのUNIXシステムで標準的に利用されています。</p>
+<p><code>gzip</code>はLempel-Ziv圧縮を使用してファイルサイズを縮小します。デフォルトでは、元のファイルを<code>.gz</code>拡張子を持つ圧縮バージョンに置き換え、元のファイルの所有権、権限、タイムスタンプを保持します。単一ファイルの圧縮やパイプライン操作の一部としてデータストリームを圧縮するために一般的に使用されます。</p>
 <h2>オプション</h2>
-<h3><strong>-d (--decompress)</strong></h3>
-<p>圧縮ファイルを展開します。</p>
+<h3><strong>-d, --decompress, --uncompress</strong></h3>
+<p>ファイルを圧縮する代わりに展開します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>file.gz
-<span style="color: #8F5902"># </span>file.gzが展開されてfileが作成される
 </pre></div>
-<h3><strong>-k (--keep)</strong></h3>
-<p>圧縮・展開時に元のファイルを保持します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902"># </span>file.txtが保持されたままfile.txt.gzが作成される
-</pre></div>
-<h3><strong>-c (--stdout)</strong></h3>
-<p>圧縮・展開結果を標準出力に出力します。元のファイルは変更されません。</p>
+<h3><strong>-c, --stdout, --to-stdout</strong></h3>
+<p>出力を標準出力に書き込み、元のファイルを変更せずに保持します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>file.txt.gz
-<span style="color: #8F5902"># </span>標準出力に圧縮結果を出力し、リダイレクトでファイルに保存
 </pre></div>
-<h3><strong>-r (--recursive)</strong></h3>
-<p>ディレクトリを再帰的に処理します。</p>
+<h3><strong>-f, --force</strong></h3>
+<p>ファイルに複数のリンクがある場合や、対応するファイルが既に存在する場合でも、強制的に圧縮または展開します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>already_compressed.gz
+</pre></div>
+<h3><strong>-k, --keep</strong></h3>
+<p>圧縮または展開中に入力ファイルを保持します（削除しません）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>important_file.txt
+</pre></div>
+<h3><strong>-l, --list</strong></h3>
+<p>圧縮されたファイルごとに圧縮サイズ、非圧縮サイズ、圧縮率、ファイル名を一覧表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>*.gz
+<span style="color: #000; font-style: italic">         compressed        uncompressed  ratio uncompressed_name</span>
+<span style="color: #000; font-style: italic">                 220                 631  65.1% file1.txt</span>
+<span style="color: #000; font-style: italic">                 143                 341  58.1% file2.txt</span>
+</pre></div>
+<h3><strong>-r, --recursive</strong></h3>
+<p>ディレクトリ内のファイルを再帰的に圧縮します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>directory/
-<span style="color: #8F5902"># </span>directory内のすべてのファイルを圧縮
 </pre></div>
-<h3><strong>-[1-9] (圧縮レベル)</strong></h3>
-<p>圧縮レベルを1（最速、圧縮率低）から9（最も遅い、圧縮率高）まで指定します。デフォルトは6です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-9<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902"># </span>最高圧縮率でfile.txtを圧縮
+<h3><strong>-v, --verbose</strong></h3>
+<p>圧縮または展開された各ファイルの名前と削減率を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">file.txt:       63.4% -- replaced with file.txt.gz</span>
+</pre></div>
+<h3><strong>-[1-9], --fast, --best</strong></h3>
+<p>指定された数字を使用して圧縮速度を調整します。-1（または--fast）は最速の圧縮方法（圧縮率は低い）を示し、-9（または--best）は最も遅い（最高の圧縮率）を示します。デフォルトの圧縮レベルは-6です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-9<span style="color: #F8F8F8"> </span>large_file.txt
 </pre></div>
 <h2>使用例</h2>
 <h3>基本的な圧縮</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>large_file.txt
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>document.txt
 <span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">large_file.txt.gz</span>
+<span style="color: #000; font-style: italic">document.txt.gz</span>
 </pre></div>
 <h3>複数ファイルの圧縮</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt
 <span style="color: #8F5902">$ </span>ls
 <span style="color: #000; font-style: italic">file1.txt.gz file2.txt.gz file3.txt.gz</span>
 </pre></div>
-<h3>圧縮ファイルの展開</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>archive.gz
+<h3>元ファイルを保持しながらの圧縮</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>important_data.txt
 <span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">archive</span>
+<span style="color: #000; font-style: italic">important_data.txt important_data.txt.gz</span>
 </pre></div>
-<h3>標準入出力を使った圧縮</h3>
+<h3>展開せずに圧縮ファイルの内容を表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>file.txt.gz
+<span style="color: #8F5902">$ </span>zcat<span style="color: #F8F8F8"> </span>file.txt.gz
+<span style="color: #000; font-style: italic">[file.txtの内容が表示される]</span>
+</pre></div>
+<h3>標準入力の圧縮</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>gzip<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>file.txt.gz
-<span style="color: #8F5902"># </span>file.txtの内容を圧縮してfile.txt.gzに保存
 </pre></div>
 <h2>ヒント:</h2>
-<h3>パイプラインでの利用</h3>
-<p>gzipは標準入出力と連携できるため、パイプラインでの処理に適しています。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>cf<span style="color: #F8F8F8"> </span>-<span style="color: #F8F8F8"> </span>directory<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>gzip<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>directory.tar.gz
-<span style="color: #8F5902"># </span>ディレクトリをtarでアーカイブし、gzipで圧縮
+<h3>tarとの組み合わせでディレクトリを圧縮</h3>
+<p><code>gzip</code>は単一ファイルを圧縮しますが、ディレクトリ全体を圧縮するには<code>tar</code>と組み合わせて使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-czf<span style="color: #F8F8F8"> </span>archive.tar.gz<span style="color: #F8F8F8"> </span>directory/
 </pre></div>
-<h3>圧縮率と速度のバランス</h3>
-<p>大きなファイルを扱う場合、<code>-1</code>（高速・低圧縮）から<code>-9</code>（低速・高圧縮）までのオプションを状況に応じて選択しましょう。</p>
-<h3>ファイルの中身を確認</h3>
-<p>圧縮ファイルを展開せずに中身を確認するには、<code>zcat</code>、<code>zless</code>、<code>zgrep</code>などの関連コマンドが便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>zcat<span style="color: #F8F8F8"> </span>file.gz
-<span style="color: #8F5902"># </span>圧縮ファイルの内容を表示
+<h3>圧縮率の確認</h3>
+<p><code>-l</code>オプションを使用して、ファイルがどの程度圧縮されているかを確認してから、保持するかどうかを決定できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>gzip<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>*.gz
 </pre></div>
+<h3>スクリプトでのgzipパイプの使用</h3>
+<p>スクリプトやデータ処理での一時的な圧縮には、パイプを使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>large_file<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>gzip<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>ssh<span style="color: #F8F8F8"> </span>remote_server<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;gunzip &gt; large_file&quot;</span>
+</pre></div>
+<h3>最適な圧縮レベル</h3>
+<p>ほとんどのファイルでは、デフォルトの圧縮レベル（-6）が速度と圧縮率のバランスが良いです。ファイルサイズが重要で処理時間が問題にならない場合にのみ-9を使用してください。</p>
 <h2>よくある質問</h2>
-<h4>Q1. gzipで圧縮したファイルを展開するには？</h4>
-<p>A. <code>gzip -d ファイル名.gz</code> または <code>gunzip ファイル名.gz</code> を使用します。</p>
-<h4>Q2. 元のファイルを残したまま圧縮するには？</h4>
-<p>A. <code>gzip -k ファイル名</code> を使用します。</p>
-<h4>Q3. 複数のファイルを一つのgzipファイルにまとめるには？</h4>
-<p>A. gzip単体ではできません。通常は<code>tar</code>と組み合わせて使用します：<code>tar czf アーカイブ名.tar.gz ファイル名...</code></p>
-<h4>Q4. 圧縮ファイルの内容を確認するには？</h4>
-<p>A. <code>zcat</code>、<code>zless</code>、<code>zgrep</code>などのコマンドを使用します。</p>
-<h2>参考資料</h2>
+<h4>Q1. .gzファイルを展開するにはどうすればよいですか？</h4>
+<p>A. <code>gzip -d filename.gz</code>または同等のコマンド<code>gunzip filename.gz</code>を使用します。</p>
+<h4>Q2. gzipはディレクトリを圧縮できますか？</h4>
+<p>A. いいえ、<code>gzip</code>は個々のファイルのみを圧縮します。ディレクトリを圧縮するには、まず<code>tar</code>を使用してアーカイブを作成し、その後<code>gzip</code>で圧縮するか（または<code>tar</code>の<code>-z</code>オプションを使用する）必要があります。</p>
+<h4>Q3. 展開せずに.gzファイルの内容を表示するにはどうすればよいですか？</h4>
+<p>A. 圧縮ファイルの表示用に特別に設計された<code>zcat</code>、<code>zless</code>、または<code>zmore</code>コマンドを使用します。</p>
+<h4>Q4. gzipは圧縮後に元のファイルを削除しますか？</h4>
+<p>A. はい、デフォルトでは<code>gzip</code>は元のファイルを圧縮バージョンに置き換えます。元のファイルを保持するには<code>-k</code>オプションを使用してください。</p>
+<h4>Q5. 圧縮レベルを比較するにはどうすればよいですか？</h4>
+<p>A. 異なる数字で<code>gzip -[1-9] -c file &gt; file.gz</code>を使用し、<code>ls -l</code>で結果のファイルサイズを確認します。</p>
+<h2>References</h2>
 <p>https://www.gnu.org/software/gzip/manual/gzip.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

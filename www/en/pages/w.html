@@ -47,80 +47,90 @@
     <main>
       
   <h1>w command</h1>
-<p>Display information about users currently logged in and their processes.</p>
+<p>Show who is logged in and what they are doing.</p>
 <h2>Overview</h2>
-<p>The <code>w</code> command shows who is logged into the system and what they are doing. It displays a summary of the current system status, followed by a list of users who are currently logged in, along with their processes and system activity.</p>
+<p>The <code>w</code> command displays information about currently logged-in users and their activities. It shows login names, terminal types, remote hosts, login times, idle times, CPU usage, and the command they are currently running. This is useful for system administrators to monitor user activity on a system.</p>
 <h2>Options</h2>
-<h3><strong>-h (--no-header)</strong></h3>
-<p>Suppresses the header information that normally appears at the top of the output.</p>
+<h3><strong>-h, --no-header</strong></h3>
+<p>Don't display the header information</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>-h
 <span style="color: #000; font-style: italic">user     tty      from             login@   idle   JCPU   PCPU  what</span>
-<span style="color: #000; font-style: italic">john     tty1     -                09:15    0.00s  0.05s  0.01s  w -h</span>
-<span style="color: #000; font-style: italic">alice    pts/0    192.168.1.5      08:30    2:35   0.10s  0.05s  vim document.txt</span>
+<span style="color: #000; font-style: italic">john     tty1                      10:15    0.00s  0.05s  0.01s  w -h</span>
+<span style="color: #000; font-style: italic">alice    pts/0    192.168.1.5      09:30    2:35   0.10s  0.05s  vim report.txt</span>
 </pre></div>
-<h3><strong>-s (--short)</strong></h3>
-<p>Displays a short format, omitting the login time, JCPU, and PCPU columns.</p>
+<h3><strong>-s, --short</strong></h3>
+<p>Display short format, omitting login time, JCPU and PCPU times</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>-s
-<span style="color: #000; font-style: italic"> 10:15:24 up  1:23,  3 users,  load average: 0.15, 0.10, 0.09</span>
+<span style="color: #000; font-style: italic"> 10:30:25 up  1:15,  3 users,  load average: 0.15, 0.10, 0.09</span>
 <span style="color: #000; font-style: italic">USER     TTY      FROM             IDLE   WHAT</span>
-<span style="color: #000; font-style: italic">john     tty1     -                0.00s  w -s</span>
-<span style="color: #000; font-style: italic">alice    pts/0    192.168.1.5      2:35   vim document.txt</span>
-<span style="color: #000; font-style: italic">bob      pts/1    10.0.0.25        0.00s  bash</span>
+<span style="color: #000; font-style: italic">john     tty1                       0.00s  w -s</span>
+<span style="color: #000; font-style: italic">alice    pts/0    192.168.1.5       2:35  vim report.txt</span>
+<span style="color: #000; font-style: italic">bob      pts/1    10.0.0.2         23.00s  bash</span>
 </pre></div>
-<h3><strong>-f (--from)</strong></h3>
-<p>Toggles the display of the FROM field (remote hostname).</p>
+<h3><strong>-f, --from</strong></h3>
+<p>Toggle printing the <code>from</code> (remote hostname) field</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>-f
-<span style="color: #000; font-style: italic"> 10:15:24 up  1:23,  3 users,  load average: 0.15, 0.10, 0.09</span>
-<span style="color: #000; font-style: italic">USER     TTY      LOGIN@   IDLE   JCPU   PCPU  WHAT</span>
-<span style="color: #000; font-style: italic">john     tty1     09:15    0.00s  0.05s  0.01s  w -f</span>
-<span style="color: #000; font-style: italic">alice    pts/0    08:30    2:35   0.10s  0.05s  vim document.txt</span>
-<span style="color: #000; font-style: italic">bob      pts/1    10:00    0.00s  0.08s  0.02s  bash</span>
+<span style="color: #000; font-style: italic"> 10:30:25 up  1:15,  3 users,  load average: 0.15, 0.10, 0.09</span>
+<span style="color: #000; font-style: italic">USER     TTY        LOGIN@   IDLE   JCPU   PCPU  WHAT</span>
+<span style="color: #000; font-style: italic">john     tty1      10:15     0.00s  0.05s  0.01s  w -f</span>
+<span style="color: #000; font-style: italic">alice    pts/0     09:30     2:35   0.10s  0.05s  vim report.txt</span>
+<span style="color: #000; font-style: italic">bob      pts/1     10:05    23.00s  0.07s  0.02s  bash</span>
+</pre></div>
+<h3><strong>-i, --ip-addr</strong></h3>
+<p>Display IP address instead of hostname in the FROM field</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>-i
+<span style="color: #000; font-style: italic"> 10:30:25 up  1:15,  3 users,  load average: 0.15, 0.10, 0.09</span>
+<span style="color: #000; font-style: italic">USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU  WHAT</span>
+<span style="color: #000; font-style: italic">john     tty1                      10:15    0.00s  0.05s  0.01s  w -i</span>
+<span style="color: #000; font-style: italic">alice    pts/0    192.168.1.5      09:30     2:35  0.10s  0.05s  vim report.txt</span>
+<span style="color: #000; font-style: italic">bob      pts/1    10.0.0.2         10:05    23.00s 0.07s  0.02s  bash</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Basic usage</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w
-<span style="color: #000; font-style: italic"> 10:15:24 up  1:23,  3 users,  load average: 0.15, 0.10, 0.09</span>
+<span style="color: #000; font-style: italic"> 10:30:25 up  1:15,  3 users,  load average: 0.15, 0.10, 0.09</span>
 <span style="color: #000; font-style: italic">USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU  WHAT</span>
-<span style="color: #000; font-style: italic">john     tty1     -                09:15    0.00s  0.05s  0.01s  w</span>
-<span style="color: #000; font-style: italic">alice    pts/0    192.168.1.5      08:30    2:35   0.10s  0.05s  vim document.txt</span>
-<span style="color: #000; font-style: italic">bob      pts/1    10.0.0.25        10:00    0.00s  0.08s  0.02s  bash</span>
+<span style="color: #000; font-style: italic">john     tty1                      10:15    0.00s  0.05s  0.01s  w</span>
+<span style="color: #000; font-style: italic">alice    pts/0    server2          09:30     2:35  0.10s  0.05s  vim report.txt</span>
+<span style="color: #000; font-style: italic">bob      pts/1    workstation5     10:05    23.00s 0.07s  0.02s  bash</span>
 </pre></div>
-<h3>Checking a specific user</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>alice
-<span style="color: #000; font-style: italic"> 10:15:24 up  1:23,  3 users,  load average: 0.15, 0.10, 0.09</span>
-<span style="color: #000; font-style: italic">USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU  WHAT</span>
-<span style="color: #000; font-style: italic">alice    pts/0    192.168.1.5      08:30    2:35   0.10s  0.05s  vim document.txt</span>
+<h3>Combining options</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>-hi
+<span style="color: #000; font-style: italic">USER     TTY      FROM             IDLE   JCPU   PCPU  WHAT</span>
+<span style="color: #000; font-style: italic">john     tty1                      0.00s  0.05s  0.01s  w -hi</span>
+<span style="color: #000; font-style: italic">alice    pts/0    192.168.1.5      2:35   0.10s  0.05s  vim report.txt</span>
+<span style="color: #000; font-style: italic">bob      pts/1    10.0.0.2         23.00s 0.07s  0.02s  bash</span>
 </pre></div>
-<h2>Tips:</h2>
-<h3>Understanding the Output Columns</h3>
+<h2>Tips</h2>
+<h3>Understanding the output columns</h3>
 <ul>
 <li><strong>USER</strong>: Username of the logged-in user</li>
 <li><strong>TTY</strong>: Terminal name the user is logged in on</li>
-<li><strong>FROM</strong>: Remote hostname (IP address) the user is connected from</li>
+<li><strong>FROM</strong>: Remote hostname or IP address</li>
 <li><strong>LOGIN@</strong>: Time when the user logged in</li>
 <li><strong>IDLE</strong>: Time since the user's last activity</li>
 <li><strong>JCPU</strong>: Time used by all processes attached to the tty</li>
-<li><strong>PCPU</strong>: Time used by the current process (shown in WHAT)</li>
-<li><strong>WHAT</strong>: Command currently being run by the user</li>
+<li><strong>PCPU</strong>: Time used by the current process</li>
+<li><strong>WHAT</strong>: Current command the user is running</li>
 </ul>
-<h3>Combine with grep for Filtering</h3>
-<p>Use <code>w | grep username</code> to quickly find information about a specific user without having to see all users.</p>
-<h3>System Load Understanding</h3>
-<p>The load averages (shown in the header) represent system load over the last 1, 5, and 15 minutes. A value close to the number of CPU cores indicates the system is fully utilized.</p>
+<h3>Checking system load</h3>
+<p>The header shows system uptime and load averages for the last 1, 5, and 15 minutes, which helps assess system performance at a glance.</p>
+<h3>Identifying inactive users</h3>
+<p>Look for users with high IDLE times to identify inactive sessions that might be candidates for termination to free up resources.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between <code>w</code> and <code>who</code>?</h4>
-<p>A. <code>w</code> provides more detailed information than <code>who</code>, including what each user is doing and system load information. <code>who</code> simply lists who is logged in.</p>
-<h4>Q2. What does the IDLE time represent?</h4>
-<p>A. IDLE shows how long it's been since the user performed any activity on their terminal. A high value might indicate an inactive or abandoned session.</p>
-<h4>Q3. How can I see only the summary line about system uptime?</h4>
-<p>A. Use <code>uptime</code> instead of <code>w</code>. The first line of <code>w</code> output is identical to the output of the <code>uptime</code> command.</p>
-<h4>Q4. What do the load average numbers mean?</h4>
-<p>A. They represent the average system load over the last 1, 5, and 15 minutes. Values below your CPU core count generally indicate the system isn't overloaded.</p>
+<h4>Q1. What's the difference between <code>w</code> and <code>who</code> commands?</h4>
+<p>A. <code>w</code> provides more detailed information than <code>who</code>, including what each user is doing, idle time, and CPU usage statistics. <code>who</code> simply lists who is logged in.</p>
+<h4>Q2. How do I interpret the load average numbers?</h4>
+<p>A. Load averages represent the average system load over 1, 5, and 15 minutes. On a single-core system, values above 1.0 indicate the system is overloaded. For multi-core systems, divide by the number of cores to assess load.</p>
+<h4>Q3. What does the IDLE column mean?</h4>
+<p>A. The IDLE column shows how long it's been since the user performed any activity on their terminal. This helps identify inactive sessions.</p>
+<h4>Q4. How can I see only a specific user's activity?</h4>
+<p>A. Use <code>w username</code> to display information only for that specific user.</p>
 <h2>References</h2>
 <p>https://www.man7.org/linux/man-pages/man1/w.1.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

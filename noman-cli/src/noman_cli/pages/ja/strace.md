@@ -1,155 +1,163 @@
 # strace コマンド
 
-プロセスのシステムコールとシグナルをトレースするためのユーティリティ。
+プロセスが行うシステムコールとシグナルをトレースします。
 
 ## 概要
 
-`strace` はプログラムが実行中に行うシステムコール（OSへの呼び出し）とシグナルを監視・記録するツールです。デバッグやパフォーマンス分析に非常に役立ち、プログラムがどのようにOSと対話しているかを可視化します。システム管理者や開発者がプログラムの動作を理解したり、問題を診断したりする際に頻繁に使用されます。
+`strace`はLinux向けの診断・デバッグツールで、指定したプログラムのシステムコールとシグナルを監視します。プロセスが行うシステムコールとプロセスが受け取るシグナルを傍受して記録します。このツールは問題のトラブルシューティング、プログラムがオペレーティングシステムとどのように相互作用するかの理解、パフォーマンス問題の分析に非常に役立ちます。
 
 ## オプション
 
-### **-f**
+### **-f, --follow-forks**
 
-子プロセスも追跡します。プログラムが `fork()` を呼び出した場合に便利です。
+現在トレースされているプロセスによって作成される子プロセスもトレースします。
 
 ```console
-$ strace -f ls
-execve("/bin/ls", ["ls"], 0x7ffc4d0bb4a0 /* 21 vars */) = 0
-brk(NULL)                               = 0x55a932d9c000
-access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
-...
+$ strace -f ./my_program
+[pid 12345] execve("./my_program", ["./my_program"], 0x7ffc123456) = 0
+[pid 12345] brk(NULL)                  = 0x55555555
+[pid 12345] clone(...)                 = 12346
+[pid 12346] open("file.txt", O_RDONLY) = 3
 ```
 
-### **-o ファイル名**
+### **-o, --output=FILE**
 
-出力を指定したファイルに保存します。
+トレース出力を標準エラー出力ではなく指定したファイルに書き込みます。
 
 ```console
 $ strace -o trace.log ls
 $ cat trace.log
-execve("/bin/ls", ["ls"], 0x7ffd8e5b0810 /* 21 vars */) = 0
-brk(NULL)                               = 0x55c3e2a4c000
-...
+execve("/bin/ls", ["ls"], 0x7ffc123456) = 0
+brk(NULL)                               = 0x55555555
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT
 ```
 
-### **-p PID**
+### **-p, --attach=PID**
 
-実行中のプロセスにアタッチします。
+指定したPIDのプロセスにアタッチしてトレースを開始します。
 
 ```console
 $ strace -p 1234
-strace: Process 1234 attached
-read(3, "some data", 4096)              = 9
-write(1, "output", 6)                   = 6
-...
+Process 1234 attached
+read(3, "Hello World", 1024)            = 11
+write(1, "Hello World", 11)             = 11
 ```
 
-### **-e expr**
+### **-e, --expr=EXPR**
 
-トレースするシステムコールを指定します。
+トレースするイベントやトレース方法を指定する修飾子です。
 
 ```console
-$ strace -e open,read ls
+$ strace -e open,close ls
 open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\360q\2\0\0\0\0\0"..., 832) = 832
-...
+close(3)                                = 0
+open("/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+close(3)                                = 0
 ```
 
-### **-c**
+### **-c, --summary-only**
 
-各システムコールの統計情報を表示します。
+各システムコールの時間、呼び出し回数、エラー数をカウントして要約を報告します。
 
 ```console
 $ strace -c ls
-file1.txt  file2.txt  file3.txt
 % time     seconds  usecs/call     calls    errors syscall
 ------ ----------- ----------- --------- --------- ----------------
-  0.00    0.000000           0         9           read
-  0.00    0.000000           0         1           write
-...
+ 25.91    0.000091          5        18           mmap
+ 17.66    0.000062          6        10           openat
+ 11.08    0.000039          3        12           close
+  9.12    0.000032          5         6           read
+  8.83    0.000031          5         6           fstat
+  ...
 ------ ----------- ----------- --------- --------- ----------------
-100.00    0.000123                   106        11 total
+100.00    0.000351                   98         5 total
 ```
 
-### **-t**
+### **-t, --relative-timestamps**
 
-各システムコールの時刻を表示します。
+各出力行の先頭に時刻を付加します。
 
 ```console
 $ strace -t ls
-14:23:01 execve("/bin/ls", ["ls"], 0x7ffc4d0bb4a0 /* 21 vars */) = 0
-14:23:01 brk(NULL)                     = 0x55a932d9c000
-...
+14:15:32 execve("/bin/ls", ["ls"], 0x7ffc123456) = 0
+14:15:32 brk(NULL)                      = 0x55555555
+14:15:32 access("/etc/ld.so.preload", R_OK) = -1 ENOENT
 ```
 
 ## 使用例
 
-### 基本的な使い方
+### プログラムの最初から最後までトレース
 
 ```console
-$ strace ls
-execve("/bin/ls", ["ls"], 0x7ffc4d0bb4a0 /* 21 vars */) = 0
-brk(NULL)                               = 0x55a932d9c000
-access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+$ strace ls -l
+execve("/bin/ls", ["ls", "-l"], 0x7ffc123456) = 0
+brk(NULL)                               = 0x55555555
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT
 ...
+write(1, "total 20\n-rw-r--r-- 1 user user...", 612) = 612
+exit_group(0)                           = ?
++++ exited with 0 +++
 ```
 
-### ファイルアクセスのみをトレース
+### 特定のシステムコールのトレース
+
+```console
+$ strace -e trace=open,read,write echo "Hello World"
+execve("/bin/echo", ["echo", "Hello World"], 0x7ffc123456) = 0
+write(1, "Hello World\n", 12)           = 12
++++ exited with 0 +++
+```
+
+### ファイルアクセスパターンの分析
 
 ```console
 $ strace -e trace=file ls
-execve("/bin/ls", ["ls"], 0x7ffd8e5b0810 /* 21 vars */) = 0
-access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+execve("/bin/ls", ["ls"], 0x7ffc123456) = 0
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT
 openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-...
-```
-
-### パフォーマンス分析
-
-```console
-$ strace -c -p 1234
-strace: Process 1234 attached
-^C
-% time     seconds  usecs/call     calls    errors syscall
------- ----------- ----------- --------- --------- ----------------
- 99.82    0.005517          18       302           poll
-  0.18    0.000010           0        21           read
-...
------- ----------- ----------- --------- --------- ----------------
-100.00    0.005527                   323         0 total
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+stat(".", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
++++ exited with 0 +++
 ```
 
 ## ヒント:
 
-### システムコールの絞り込み
+### 特定のシステムコールでノイズをフィルタリング
 
-`-e trace=network` のように、特定のカテゴリのシステムコールだけをトレースすることで、出力を整理できます。一般的なカテゴリには `file`、`process`、`network`、`signal` などがあります。
+デバッグ時には、`-e trace=`の後にシステムコール名を指定して関連するシステムコールに焦点を当てましょう。例えば、`strace -e trace=open,read,write`を使用すると、ファイル操作のみを表示できます。
 
-### 出力の読みやすさを向上
+### 出力をファイルにリダイレクト
 
-`-s` オプションを使用して文字列の表示長を増やすことで、より詳細な情報を得られます。例: `strace -s 256 command`
+長時間実行されるプロセスの場合、`-o filename.log`で出力をファイルにリダイレクトすると、端末が煩雑になるのを避け、後で分析することができます。
 
-### 時間情報の活用
+### 実行中のプロセスをトレース
 
-`-r` オプションを使用すると、各システムコール間の相対時間が表示され、パフォーマンスのボトルネックを特定するのに役立ちます。
+`-p PID`を使用して、すでに実行中のプロセスにアタッチできます。これは、プログラムがすでに問題を抱えていて、再起動したくない場合に便利です。
+
+### システムコールの時間を測定
+
+各システムコールにかかる時間を表示するには`-T`を使用します。これはパフォーマンスのボトルネックを特定するのに役立ちます。
+
+### ネットワークアクティビティのトレース
+
+ネットワーク関連のシステムコールに焦点を当てるには`-e trace=network`を使用します。これは接続問題のデバッグに役立ちます。
 
 ## よくある質問
 
-#### Q1. strace を使うとプログラムの実行速度が遅くなりますか？
-A. はい、strace はプログラムの実行を大幅に遅くする可能性があります。本番環境での使用は注意が必要です。
+#### Q1. straceとltraceの違いは何ですか？
+A. `strace`はシステムコール（プログラムとカーネルの間の相互作用）をトレースするのに対し、`ltrace`はライブラリコール（プログラムとライブラリの間の相互作用）をトレースします。
 
-#### Q2. root 権限なしで他のユーザーのプロセスをトレースできますか？
-A. 通常はできません。他のユーザーのプロセスをトレースするには root 権限が必要です。
+#### Q2. straceの出力の冗長性を減らすにはどうすればよいですか？
+A. `-e trace=`を使用して関心のあるシステムコールのみを指定するか、`-c`を使用して詳細な出力ではなく要約カウントを取得します。
 
-#### Q3. strace と ltrace の違いは何ですか？
-A. strace はシステムコール（OSへの呼び出し）をトレースするのに対し、ltrace はライブラリ関数の呼び出しをトレースします。
+#### Q3. straceはトレース対象のプログラムを遅くすることがありますか？
+A. はい、`strace`はすべてのシステムコールを傍受するため、かなりのオーバーヘッドが発生します。パフォーマンスに敏感なアプリケーションでは、使用を控えるか、特定のフィルターを使用してください。
 
-#### Q4. macOS で strace は使えますか？
-A. macOS では strace は直接使用できません。代わりに `dtruss` や `dtrace` を使用します。ただし、SIP (System Integrity Protection) が有効な場合は制限があります。
+#### Q4. 子プロセスを作成するプログラムをトレースするにはどうすればよいですか？
+A. `-f`オプションを使用してフォークをフォローし、子プロセスもトレースします。
 
-## macOS での注意点
-
-macOS では `strace` コマンドは利用できません。代わりに `dtruss` コマンドを使用できますが、System Integrity Protection (SIP) が有効な場合は制限があります。`dtruss` を使用するには、ターミナルで `sudo dtruss command` のように実行します。また、より高度なトレースには `dtrace` コマンドも利用できます。
+#### Q5. macOSでstraceを使用できますか？
+A. いいえ、`strace`はLinux固有のツールです。macOSでは、同様の機能のために`dtruss`や`dtrace`を使用できますが、これらは管理者権限が必要です。
 
 ## 参考文献
 
@@ -157,4 +165,4 @@ https://man7.org/linux/man-pages/man1/strace.1.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+2025/05/04 初版作成

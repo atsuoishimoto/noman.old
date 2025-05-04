@@ -1,75 +1,98 @@
 # unzip コマンド
 
-ZIP アーカイブファイルを展開するコマンド。
+ZIPアーカイブからファイルを展開します。
 
 ## 概要
 
-`unzip` コマンドは、ZIP 形式で圧縮されたファイルを解凍するために使用されます。ファイル名を指定するだけで、現在のディレクトリにアーカイブの内容を展開できます。また、特定のファイルのみを抽出したり、展開先ディレクトリを指定したりすることも可能です。
+`unzip`コマンドはZIPアーカイブからファイルを展開するツールです。様々な圧縮方式に対応し、パスワード保護されたアーカイブの処理、アーカイブの内容表示（展開なし）、特定ファイルの選択的展開などが可能です。Unix系システムでZIPファイルを扱う標準的なツールとして広く使われています。
 
 ## オプション
 
-### **-l (リスト表示)**
+### **-l (--list)**
 
-ZIP ファイル内のファイル一覧を表示します（実際に展開はしません）。
+ZIPアーカイブの内容を展開せずに一覧表示します
 
 ```console
 $ unzip -l archive.zip
 Archive:  archive.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-      100  2025-04-20 10:30   file1.txt
-      200  2025-04-20 10:31   file2.txt
-      300  2025-04-20 10:32   folder/file3.txt
+     1234  2025-01-01 12:34   file1.txt
+      567  2025-01-02 15:45   file2.txt
 ---------                     -------
-      600                     3 files
+     1801                     2 files
 ```
 
-### **-d (ディレクトリ指定)**
+### **-t (--test)**
 
-ZIP ファイルを展開する先のディレクトリを指定します。
+ZIPアーカイブの整合性を展開せずにテストします
 
 ```console
-$ unzip archive.zip -d extracted_files
+$ unzip -t archive.zip
 Archive:  archive.zip
-  inflating: extracted_files/file1.txt
-  inflating: extracted_files/file2.txt
-  inflating: extracted_files/folder/file3.txt
+    testing: file1.txt               OK
+    testing: file2.txt               OK
+No errors detected in compressed data of archive.zip.
 ```
 
-### **-o (上書き)**
+### **-o (--overwrite)**
 
-既存のファイルを確認なしで上書きします。
+確認なしに既存のファイルを上書きします
 
 ```console
 $ unzip -o archive.zip
 Archive:  archive.zip
   inflating: file1.txt
   inflating: file2.txt
-  inflating: folder/file3.txt
 ```
 
-### **-q (静かモード)**
+### **-n (--never-overwrite)**
 
-解凍中の詳細な出力を表示せず、静かに実行します。
+既存のファイルを上書きしません（既に存在するファイルの展開をスキップします）
 
 ```console
-$ unzip -q archive.zip
+$ unzip -n archive.zip
+Archive:  archive.zip
+ extracting: file1.txt
+ extracting: file2.txt
+```
+
+### **-d (--directory)**
+
+指定したディレクトリにファイルを展開します
+
+```console
+$ unzip archive.zip -d extracted_files/
+Archive:  archive.zip
+   creating: extracted_files/
+  inflating: extracted_files/file1.txt
+  inflating: extracted_files/file2.txt
+```
+
+### **-P (--password)**
+
+暗号化されたアーカイブのパスワードを指定します
+
+```console
+$ unzip -P mypassword protected.zip
+Archive:  protected.zip
+  inflating: secret.txt
+```
+
+### **-j (--junk-paths)**
+
+ディレクトリ構造を作成せずにファイルを展開します（パスを無視します）
+
+```console
+$ unzip -j archive.zip
+Archive:  archive.zip
+  inflating: file1.txt
+  inflating: file2.txt
 ```
 
 ## 使用例
 
-### 基本的な解凍
-
-```console
-$ unzip archive.zip
-Archive:  archive.zip
-  inflating: file1.txt
-  inflating: file2.txt
-  creating: folder/
-  inflating: folder/file3.txt
-```
-
-### 特定のファイルのみを解凍
+### アーカイブから特定のファイルを展開する
 
 ```console
 $ unzip archive.zip file1.txt
@@ -77,69 +100,67 @@ Archive:  archive.zip
   inflating: file1.txt
 ```
 
-### パスワード付きZIPファイルの解凍
+### ワイルドカードパターンを使ってファイルを展開する
 
 ```console
-$ unzip -P mypassword secure.zip
-Archive:  secure.zip
-  inflating: confidential.txt
+$ unzip archive.zip "*.txt"
+Archive:  archive.zip
+  inflating: file1.txt
+  inflating: file2.txt
 ```
 
-### 解凍前にファイル内容を確認
+### 詳細な出力で展開する
 
 ```console
-$ unzip -l archive.zip
+$ unzip -v archive.zip
 Archive:  archive.zip
-  Length     Date   Time    Name
- --------    ----   ----    ----
-      100  04-20-25 10:30   file1.txt
-      200  04-20-25 10:31   file2.txt
-      300  04-20-25 10:32   folder/file3.txt
- --------                   -------
-      600                   3 files
+ Length   Method    Size  Cmpr    Date    Time   CRC-32   Name
+--------  ------  ------- ---- ---------- ----- --------  ----
+    1234  Defl:N      567  54% 2025-01-01 12:34 a1b2c3d4  file1.txt
+     567  Defl:N      234  59% 2025-01-02 15:45 e5f6g7h8  file2.txt
+--------          -------  ---                            -------
+    1801              801  56%                            2 files
 ```
 
 ## ヒント:
 
-### 日本語ファイル名の文字化け対策
+### 展開前にアーカイブの内容をプレビューする
 
-macOSでは、日本語ファイル名が含まれるZIPファイルを解凍すると文字化けすることがあります。その場合は `unar` コマンド（`brew install unar` でインストール）を使用すると良いでしょう。
+展開前に必ず`unzip -l archive.zip`を使用して内容を確認しましょう。これにより、既存のファイルを誤って上書きしてしまう可能性を避けることができます。
 
-### 解凍前の内容確認
+### パストラバーサルを安全に処理する
 
-大きなZIPファイルを解凍する前に `-l` オプションで内容を確認しましょう。これにより、不要なファイルの解凍を避けることができます。
+信頼できないソースからのアーカイブには注意が必要です。一部のZIPファイルには「../」パスを含むエントリが含まれており、展開ディレクトリ外のファイルを上書きする可能性があります。`-d`オプションを使用して専用の展開ディレクトリを指定することをお勧めします。
 
-### 既存ファイルの保護
+### 一時ディレクトリへの展開
 
-重要なファイルを誤って上書きしないように、新しいディレクトリに解凍する `-d` オプションを活用しましょう。
+不慣れなアーカイブを扱う場合は、まず`unzip archive.zip -d temp/`を使用して一時ディレクトリに展開し、最終的な場所に移動する前に内容を確認しましょう。
+
+### 大きなアーカイブの処理
+
+大きなアーカイブの場合は、`unzip -q`（静かモード）を使用して出力を減らし展開を高速化するか、以前の展開を再開する場合は`unzip -n`を使用して既存のファイルを上書きしないようにしましょう。
 
 ## よくある質問
 
-#### Q1. ZIPファイルが破損しているかどうかを確認するには？
-A. `unzip -t archive.zip` コマンドを使用すると、ZIPファイルの整合性をテストできます。
+#### Q1. パスワード保護されたZIPファイルを展開するにはどうすればよいですか？
+A. `unzip -P パスワード archive.zip`を使用します。コマンド履歴にパスワードを残したくない場合は、-Pオプションを省略すると、unzipがパスワードの入力を求めます。
 
-#### Q2. 解凍せずにZIPファイルの内容を見るには？
-A. `unzip -l archive.zip` を使用すると、ファイルを実際に解凍せずに内容を確認できます。
+#### Q2. ZIPアーカイブから特定のファイルだけを展開するにはどうすればよいですか？
+A. `unzip archive.zip ファイル名1 ファイル名2`のように指定したファイルのみを展開できます。`unzip archive.zip "*.txt"`のようにワイルドカードも使用できます。
 
-#### Q3. 特定のファイルやディレクトリだけを解凍するには？
-A. `unzip archive.zip filename` のようにZIPファイル名の後に抽出したいファイル名を指定します。ワイルドカード（`*.txt`など）も使用できます。
+#### Q3. ディレクトリ構造を作成せずにZIPファイルを展開するにはどうすればよいですか？
+A. `unzip -j archive.zip`を使用すると、サブディレクトリを作成せずに現在のディレクトリにすべてのファイルを展開します。
 
-#### Q4. 解凍時にファイル名の文字化けを防ぐには？
-A. macOSでは、`The Unarchiver`や`unar`コマンドラインツールを使用すると文字化けを防げることが多いです。
+#### Q4. ZIPファイルを展開せずに有効かどうかを確認するにはどうすればよいですか？
+A. `unzip -t archive.zip`を使用すると、ファイルを展開せずにアーカイブの整合性をテストできます。
 
-## macOSでの注意点
+#### Q5. ファイル名のエンコーディングの問題を処理するにはどうすればよいですか？
+A. ファイル名が文字化けする場合は、`-O`オプションを使用してエンコーディングを指定してみてください。例えば、中国語のWindowsアーカイブの場合は`unzip -O CP936 archive.zip`のようにします。
 
-macOSの標準の`unzip`コマンドは、日本語などの非ASCII文字を含むファイル名を正しく処理できないことがあります。このような場合は、Homebrewを使って`unar`をインストールし、代わりに使用することをお勧めします：
-
-```console
-$ brew install unar
-$ unar archive.zip
-```
-
-## 参考
+## References
 
 https://linux.die.net/man/1/unzip
 
-## 改訂履歴
+## Revisions
 
-- 2025/04/30 初版作成
+- 2025/05/04 初回リビジョン

@@ -1,54 +1,63 @@
 # sftp コマンド
 
-セキュアなファイル転送プロトコル（SSH File Transfer Protocol）を使用してファイルを転送します。
+暗号化された接続を介してホスト間でファイルを安全に転送します。
 
 ## 概要
 
-`sftp`は、SSHプロトコルを使用してリモートサーバーとの間でファイルを安全に転送するためのコマンドです。FTPと似た操作性を持ちながら、通信が暗号化されるため、セキュリティが確保されます。ファイルのアップロード、ダウンロード、リモートディレクトリの操作などが可能です。
+SFTP（Secure File Transfer Protocol）は、コンピュータ間でファイルを安全に転送するためのネットワークプロトコルです。SSH上で動作し、暗号化と認証を提供します。`sftp`コマンドはFTPに似た対話型のファイル転送プログラムですが、SSH暗号化を使用しています。
 
 ## オプション
 
-### **-P port**
+### **-b** / **--batch** *バッチファイル*
 
-接続先のポート番号を指定します。
+対話的に実行する代わりに、sftpコマンドのバッチファイルを処理します。
 
 ```console
-$ sftp -P 2222 user@example.com
-Connected to example.com.
+$ sftp -b commands.txt user@remote.server
+Connecting to remote.server...
+Batch file commands.txt processed
+```
+
+### **-P** / **--port** *ポート*
+
+リモートホストに接続するポートを指定します。
+
+```console
+$ sftp -P 2222 user@remote.server
+Connecting to remote.server port 2222...
 sftp>
 ```
 
-### **-i identity_file**
+### **-i** / **--identity** *アイデンティティファイル*
 
-SSH認証に使用する秘密鍵ファイルを指定します。
+公開鍵認証に使用するアイデンティティ（秘密鍵）を読み込むファイルを選択します。
 
 ```console
-$ sftp -i ~/.ssh/my_key user@example.com
-Connected to example.com.
+$ sftp -i ~/.ssh/my_key user@remote.server
+Connecting to remote.server...
 sftp>
 ```
 
-### **-b batchfile**
+### **-r** / **--recursive**
 
-バッチファイルからコマンドを読み込んで実行します。
-
-```console
-$ cat commands.txt
-cd /remote/dir
-get important.txt
-bye
-
-$ sftp -b commands.txt user@example.com
-# コマンドが自動実行される
-```
-
-### **-r**
-
-ディレクトリを再帰的にコピーします（get/putコマンドと組み合わせて使用）。
+アップロードまたはダウンロード時にディレクトリ全体を再帰的にコピーします。
 
 ```console
+$ sftp user@remote.server
 sftp> get -r remote_directory
 Fetching /remote_directory/ to remote_directory
+sftp>
+```
+
+### **-v** / **--verbose**
+
+ログレベルを上げ、詳細なデバッグ出力を提供します。
+
+```console
+$ sftp -v user@remote.server
+OpenSSH_8.9p1, LibreSSL 3.3.6
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: Connecting to remote.server port 22.
 ...
 sftp>
 ```
@@ -58,81 +67,89 @@ sftp>
 ### リモートサーバーへの接続
 
 ```console
-$ sftp user@example.com
-Connected to example.com.
+$ sftp user@remote.server
+Connected to remote.server.
 sftp>
 ```
 
 ### ファイルのダウンロード
 
 ```console
+$ sftp user@remote.server
 sftp> get remote_file.txt
 Fetching /home/user/remote_file.txt to remote_file.txt
-/home/user/remote_file.txt                        100%  1234     1.2KB/s   00:01
 sftp>
 ```
 
 ### ファイルのアップロード
 
 ```console
+$ sftp user@remote.server
 sftp> put local_file.txt
 Uploading local_file.txt to /home/user/local_file.txt
-local_file.txt                                    100%  2345     2.3KB/s   00:01
 sftp>
 ```
 
-### リモートディレクトリの操作
+### ディレクトリの移動
 
 ```console
+$ sftp user@remote.server
 sftp> pwd
 Remote working directory: /home/user
 sftp> cd documents
-sftp> ls
-file1.txt    file2.txt    projects/
-sftp> mkdir new_folder
-sftp>
+sftp> lpwd
+Local working directory: /Users/localuser
+sftp> lcd Downloads
 ```
 
 ## ヒント:
 
-### 対話モードでのコマンド補完
+### タブ補完を使用する
 
-sftpの対話モードでは、Tabキーを使ってコマンドやファイル名を補完できます。長いファイル名を入力する手間が省けます。
+SFTPはローカルとリモートの両方のファイルに対してタブ補完をサポートしており、完全なパスを入力せずに簡単にナビゲートできます。
 
-### ローカルコマンドの実行
+### 対話的なコマンド
 
-コマンドの前に「!」をつけると、ローカルシェルでコマンドを実行できます。例えば、`!ls`でローカルディレクトリの内容を表示できます。
+- `ls` - リモートファイルを一覧表示する
+- `lls` - ローカルファイルを一覧表示する
+- `cd` - リモートディレクトリを変更する
+- `lcd` - ローカルディレクトリを変更する
+- `mkdir` - リモートディレクトリを作成する
+- `rmdir` - リモートディレクトリを削除する
+- `rm` - リモートファイルを削除する
+- `help`または`?` - 利用可能なコマンドを表示する
 
-### 複数ファイルの転送
+### 自動化のためのバッチモード
 
-ワイルドカードを使用して複数のファイルを一度に転送できます。例：`get *.txt`
+sftpコマンドを含むテキストファイルを作成し、スクリプトでの自動転送には`-b`オプションを使用します。
 
-### 対話モードでのヘルプ表示
+### 複数のファイルにワイルドカードを使用する
 
-`help`または`?`コマンドを使用すると、利用可能なコマンドの一覧が表示されます。
+```console
+sftp> get *.txt
+```
 
 ## よくある質問
 
-#### Q1. sftpとscpの違いは何ですか？
-A. sftpは対話的なセッションを提供し、複数の操作を連続して行えます。一方、scpは単一のファイル転送操作に特化しています。sftpはより多機能ですが、scpはシンプルな転送には便利です。
+#### Q1. SFTPとSCPの違いは何ですか？
+A. SFTPはSSH上で動作する対話型のファイル転送プロトコルであるのに対し、SCPは安全なコピーのための非対話型コマンドです。SFTPは転送の再開やディレクトリ一覧表示などの機能を提供します。
 
-#### Q2. sftpセッション内でファイルの権限を変更できますか？
-A. はい、`chmod`コマンドを使用してリモートファイルの権限を変更できます。例：`chmod 644 file.txt`
+#### Q2. ディレクトリ全体を転送するにはどうすればよいですか？
+A. getまたはputコマンドで`-r`（再帰的）オプションを使用します：`get -r remote_directory`または`put -r local_directory`。
 
-#### Q3. 転送速度を向上させる方法はありますか？
-A. `-C`オプションを使用して圧縮を有効にすると、低速ネットワークでの転送速度が向上する場合があります。また、適切な暗号化アルゴリズムを選択することも効果的です。
+#### Q3. スクリプトでSFTPを使用できますか？
+A. はい、SFTPコマンドを含むバッチファイルと共に`-b`オプションを使用します：`sftp -b commands.txt user@remote.server`。
 
-#### Q4. sftpセッションを終了するにはどうすればよいですか？
-A. `exit`、`quit`、または`bye`コマンドを使用するか、Ctrl+Dを押すことでセッションを終了できます。
+#### Q4. リモートファイルの権限を変更するにはどうすればよいですか？
+A. SFTPセッション内で`chmod`コマンドを使用します：`chmod 644 remote_file.txt`。
 
-## macOSでの注意点
+#### Q5. 中断されたファイル転送を再開するにはどうすればよいですか？
+A. ファイルのダウンロードを再開するには`reget`コマンドを、アップロードを再開するには`reput`コマンドを使用します。
 
-macOSでは、OpenSSHのバージョンが古い場合があります。最新の機能を利用するには、Homebrewなどのパッケージマネージャーを使用してOpenSSHを更新することをお勧めします。また、macOSのキーチェーンとの連携により、パスフレーズの入力を省略できる場合があります。
-
-## 参考
+## 参考文献
 
 https://man.openbsd.org/sftp.1
 
-## 改訂
+## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初回改訂

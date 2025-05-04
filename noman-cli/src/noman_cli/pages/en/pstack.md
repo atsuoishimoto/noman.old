@@ -4,7 +4,7 @@ Print a stack trace of running processes.
 
 ## Overview
 
-`pstack` is a diagnostic tool that displays the execution stack trace of a running process. It helps developers and system administrators debug programs by showing the function calls that led to the current execution point. This command is particularly useful for diagnosing hung or misbehaving processes.
+`pstack` is a utility that attaches to a running process and prints a stack trace of all threads in that process. It's useful for debugging programs, especially when they're hung or consuming excessive resources, as it shows what functions are currently being executed.
 
 ## Options
 
@@ -12,84 +12,72 @@ Print a stack trace of running processes.
 
 ### **Basic Usage**
 
-Simply provide the PID of the process you want to examine:
-
 ```console
-$ pstack 1234
+$ pstack PID
 ```
+
+Where `PID` is the process ID of the target process.
 
 ## Usage Examples
 
-### Examining a specific process
+### Examining a running process
 
 ```console
-$ pstack 3456
-#0  0x00007f8e2d72ead3 in __read_nocancel () from /lib64/libc.so.6
-#1  0x00007f8e2c8b89c0 in ?? () from /lib64/libpthread.so.0
-#2  0x00000000004e472d in read_packet ()
-#3  0x00000000004e2d2c in process_input ()
-#4  0x000000000046574c in main ()
+$ pstack 1234
+Thread 1 (process 1234):
+#0  0x00007f8e2e2b7550 in poll () from /lib64/libc.so.6
+#1  0x00007f8e2d8c3432 in ?? () from /lib64/libpthread.so.0
+#2  0x000055c6a12b4e6a in main () at myprogram.c:42
 ```
 
 ### Examining multiple processes
 
 ```console
-$ pstack 3456 7890
-==> 3456 <==
-#0  0x00007f8e2d72ead3 in __read_nocancel () from /lib64/libc.so.6
-#1  0x00007f8e2c8b89c0 in ?? () from /lib64/libpthread.so.0
-#2  0x00000000004e472d in read_packet ()
-#3  0x00000000004e2d2c in process_input ()
-#4  0x000000000046574c in main ()
+$ pstack 1234 5678
+==> 1234 <==
+Thread 1 (process 1234):
+#0  0x00007f8e2e2b7550 in poll () from /lib64/libc.so.6
+#1  0x00007f8e2d8c3432 in ?? () from /lib64/libpthread.so.0
+#2  0x000055c6a12b4e6a in main () at myprogram.c:42
 
-==> 7890 <==
-#0  0x00007f4a3c45e923 in poll () from /lib64/libc.so.6
-#1  0x000000000045e2fc in wait_for_event ()
-#2  0x000000000040a8e3 in main ()
+==> 5678 <==
+Thread 1 (process 5678):
+#0  0x00007f8e2e2b7550 in read () from /lib64/libc.so.6
+#1  0x000055c6a12b4e6a in process_data () at otherprogram.c:123
+#2  0x000055c6a12b4f2b in main () at otherprogram.c:45
 ```
 
 ## Tips
 
-### Use with sudo for processes owned by other users
+### Root Privileges May Be Required
 
-If you need to examine a process owned by another user, you'll need to use `sudo`:
+You might need root privileges to examine processes that don't belong to your user. Use `sudo pstack PID` in such cases.
 
-```console
-$ sudo pstack 1234
-```
+### Alternative Commands
 
-### Combine with other diagnostic tools
+On some systems, `pstack` might not be available. You can use `gdb -p PID -ex "thread apply all bt" -ex "quit"` as an alternative.
 
-For comprehensive debugging, use `pstack` alongside other tools like `strace`, `ltrace`, or `gdb` to get a complete picture of what a process is doing.
+### Combine with Other Diagnostic Tools
 
-### Alternative commands
+Use `pstack` alongside other diagnostic tools like `top`, `ps`, and `strace` for comprehensive debugging.
 
-On some systems, `pstack` might not be available. You can use equivalent commands:
-- `gdb -p PID -batch -ex "thread apply all bt" -ex "quit"`
-- On Linux, you can also check `/proc/PID/stack`
+### Finding Process IDs
+
+Use `ps aux | grep program_name` to find the PID of a specific program before using `pstack`.
 
 ## Frequently Asked Questions
 
-#### Q1. What does a stack trace tell me?
-A. A stack trace shows the sequence of function calls that led to the current execution point in a process, helping you understand what the program was doing when it was examined.
+#### Q1. What does `pstack` actually do?
+A. `pstack` attaches to a running process and uses debugging information to generate a stack trace showing the call hierarchy of functions currently being executed in each thread.
 
-#### Q2. Why does my pstack output show question marks or missing function names?
-A. This typically happens when debugging information is not available for the binary or its libraries. Programs compiled without debugging symbols will show incomplete information.
+#### Q2. Why does `pstack` show "??" for some function names?
+A. This typically happens when debugging symbols are missing. The program may have been compiled without debug information, or the symbols might be in a separate file that `pstack` can't locate.
 
-#### Q3. Is pstack available on all Unix systems?
-A. No, `pstack` is not universally available. It's common on Solaris and some Linux distributions, but may be missing on others. On macOS, similar functionality is available through other tools.
+#### Q3. Can I use `pstack` on any process?
+A. You can use `pstack` on any process for which you have appropriate permissions. Typically, you can examine your own processes, but you'll need root privileges to examine processes owned by other users.
 
-#### Q4. Can pstack affect the running process?
-A. `pstack` is generally non-intrusive and doesn't modify the target process, making it safe to use on production systems.
-
-## macOS Considerations
-
-`pstack` is not natively available on macOS. Instead, you can use:
-
-- `sample` command: `sample PID 1 -file /dev/stdout`
-- `lldb` (the macOS debugger): `lldb -p PID -o "bt all" -o "quit"`
-
-These alternatives provide similar stack trace information on macOS systems.
+#### Q4. Is `pstack` available on all Unix systems?
+A. No, `pstack` is not a standard Unix utility. It's commonly found on Linux systems, particularly those derived from Red Hat. On other systems, you might need to use alternatives like `gdb` commands.
 
 ## References
 
@@ -97,4 +85,4 @@ https://man7.org/linux/man-pages/man1/pstack.1.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+2025/05/04 First revision

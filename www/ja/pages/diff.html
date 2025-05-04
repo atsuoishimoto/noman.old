@@ -47,92 +47,117 @@
     <main>
       
   <h1>diff コマンド</h1>
-<p>ファイル間の違いを比較して表示します。</p>
+<p>ファイルを行ごとに比較します。</p>
 <h2>概要</h2>
-<p><code>diff</code> コマンドは2つのファイルを行ごとに比較し、その違いを表示します。テキストファイルの変更点を確認したり、コードの修正箇所を特定したりする際に非常に便利です。デフォルトでは、異なる行を含むブロックと、それらがどのように変更されたかを示します。</p>
+<p><code>diff</code> コマンドは2つのファイルやディレクトリを比較し、その違いを表示します。ファイルの変更内容の確認、パッチファイルの作成、設定ファイルの比較などによく使用されます。出力結果は、ファイルを同一にするために変更が必要な行を示します。</p>
 <h2>オプション</h2>
-<h3><strong>-u（統合形式）</strong></h3>
-<p>変更された行の前後にコンテキスト（変更されていない行）も含めて表示します。これにより変更内容を理解しやすくなります。</p>
+<h3><strong>-u, --unified</strong></h3>
+<p>統一フォーマットで差分を出力し、変更箇所の前後に文脈を表示します。これは最も読みやすく、一般的に使用されるフォーマットです。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">--- file1.txt	2025-04-30 10:00:00.000000000 +0900</span>
-<span style="color: #000; font-style: italic">+++ file2.txt	2025-04-30 10:05:00.000000000 +0900</span>
+<span style="color: #000; font-style: italic">--- file1.txt	2025-05-04 10:00:00.000000000 -0400</span>
+<span style="color: #000; font-style: italic">+++ file2.txt	2025-05-04 10:30:00.000000000 -0400</span>
 <span style="color: #000; font-style: italic">@@ -1,3 +1,4 @@</span>
-<span style="color: #000; font-style: italic"> これは最初の行です。</span>
-<span style="color: #000; font-style: italic">-これは削除される行です。</span>
-<span style="color: #000; font-style: italic">+これは変更された行です。</span>
-<span style="color: #000; font-style: italic"> これは最後の行です。</span>
-<span style="color: #000; font-style: italic">+これは追加された行です。</span>
+<span style="color: #000; font-style: italic"> This is a test file.</span>
+<span style="color: #000; font-style: italic">-It has some content.</span>
+<span style="color: #000; font-style: italic">+It has some modified content.</span>
+<span style="color: #000; font-style: italic"> The end of the file.</span>
+<span style="color: #000; font-style: italic">+A new line was added.</span>
 </pre></div>
-<h3><strong>-i（大文字小文字を無視）</strong></h3>
-<p>大文字と小文字の違いを無視して比較します。</p>
+<h3><strong>-i, --ignore-case</strong></h3>
+<p>ファイル比較時に大文字と小文字の違いを無視します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>uppercase.txt<span style="color: #F8F8F8"> </span>lowercase.txt
-<span style="color: #8F5902">$ </span><span style="color: #8F5902; font-style: italic"># 大文字小文字のみが異なる場合は何も出力されない</span>
+<span style="color: #000; font-style: italic">[大文字小文字のみが異なる場合は出力なし]</span>
 </pre></div>
-<h3><strong>-r（再帰的に比較）</strong></h3>
-<p>ディレクトリを再帰的に比較します。サブディレクトリ内のファイルも含めて比較します。</p>
+<h3><strong>-b, --ignore-space-change</strong></h3>
+<p>空白の量の変化を無視します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>spaced.txt<span style="color: #F8F8F8"> </span>compact.txt
+<span style="color: #000; font-style: italic">[スペースの違いのみの場合は出力なし]</span>
+</pre></div>
+<h3><strong>-w, --ignore-all-space</strong></h3>
+<p>行を比較する際にすべての空白を無視します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">[空白のみが異なる場合は出力なし]</span>
+</pre></div>
+<h3><strong>-r, --recursive</strong></h3>
+<p>見つかったサブディレクトリを再帰的に比較します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>dir1<span style="color: #F8F8F8"> </span>dir2
-<span style="color: #000; font-style: italic">diff -r dir1/file.txt dir2/file.txt</span>
-<span style="color: #000; font-style: italic">2c2</span>
-<span style="color: #000; font-style: italic">&lt; これは dir1 のファイルです。</span>
+<span style="color: #000; font-style: italic">Only in dir1: unique_file1.txt</span>
+<span style="color: #000; font-style: italic">Only in dir2: unique_file2.txt</span>
+<span style="color: #000; font-style: italic">diff -r dir1/common.txt dir2/common.txt</span>
+<span style="color: #000; font-style: italic">1c1</span>
+<span style="color: #000; font-style: italic">&lt; Original content</span>
 <span style="color: #000; font-style: italic">---</span>
-<span style="color: #000; font-style: italic">&gt; これは dir2 のファイルです。</span>
+<span style="color: #000; font-style: italic">&gt; Modified content</span>
 </pre></div>
-<h3><strong>-y（並列表示）</strong></h3>
-<p>2つのファイルを並べて表示し、違いを視覚的に確認しやすくします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-y<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">これは最初の行です。                  これは最初の行です。</span>
-<span style="color: #000; font-style: italic">これは削除される行です。             | これは変更された行です。</span>
-<span style="color: #000; font-style: italic">これは最後の行です。                  これは最後の行です。</span>
-<span style="color: #000; font-style: italic">                                    &gt; これは追加された行です。</span>
+<h3><strong>-q, --brief</strong></h3>
+<p>ファイルが異なるかどうかのみを報告し、違いの詳細は表示しません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">Files file1.txt and file2.txt differ</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な比較</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file1.txt
-<span style="color: #000; font-style: italic">Hello</span>
-<span style="color: #000; font-style: italic">World</span>
-<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">Hello</span>
-<span style="color: #000; font-style: italic">Beautiful</span>
-<span style="color: #000; font-style: italic">World</span>
-<span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">1a2</span>
-<span style="color: #000; font-style: italic">&gt; Beautiful</span>
+<h3>基本的なファイル比較</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">2c2</span>
+<span style="color: #000; font-style: italic">&lt; It has some content.</span>
+<span style="color: #000; font-style: italic">---</span>
+<span style="color: #000; font-style: italic">&gt; It has some modified content.</span>
+<span style="color: #000; font-style: italic">3a4</span>
+<span style="color: #000; font-style: italic">&gt; A new line was added.</span>
 </pre></div>
-<h3>変更内容をパッチファイルとして保存</h3>
+<h3>パッチファイルの作成</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>modified.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>changes.patch
-<span style="color: #8F5902">$ </span><span style="color: #8F5902; font-style: italic"># 変更内容がパッチファイルとして保存される</span>
+<span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">patching file original.txt</span>
 </pre></div>
 <h3>ディレクトリの比較</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>project_v1<span style="color: #F8F8F8"> </span>project_v2
-<span style="color: #8F5902"># </span>2つのプロジェクトディレクトリ間の違いが表示される
+<span style="color: #000; font-style: italic">Only in project_v2: new_feature.py</span>
+<span style="color: #000; font-style: italic">diff -r project_v1/main.py project_v2/main.py</span>
+<span style="color: #000; font-style: italic">10c10,12</span>
+<span style="color: #000; font-style: italic">&lt; print(&quot;Hello World&quot;)</span>
+<span style="color: #000; font-style: italic">---</span>
+<span style="color: #000; font-style: italic">&gt; print(&quot;Hello World!&quot;)</span>
+<span style="color: #000; font-style: italic">&gt; print(&quot;Version 2.0&quot;)</span>
+<span style="color: #000; font-style: italic">&gt; print(&quot;Copyright 2025&quot;)</span>
+</pre></div>
+<h3>横並び比較</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-y<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">This is a test file.                 This is a test file.</span>
+<span style="color: #000; font-style: italic">It has some content.               | It has some modified content.</span>
+<span style="color: #000; font-style: italic">The end of the file.                 The end of the file.</span>
+<span style="color: #000; font-style: italic">                                   &gt; A new line was added.</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>出力の読み方</h3>
-<p><code>diff</code>の基本出力では、<code>&lt;</code>は最初のファイルの行、<code>&gt;</code>は2番目のファイルの行を示します。<code>a</code>（追加）、<code>c</code>（変更）、<code>d</code>（削除）の記号は変更の種類を表します。</p>
-<h3>パッチの適用</h3>
-<p><code>diff -u</code>で作成したパッチファイルは、<code>patch</code>コマンドで適用できます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<h3>読みやすさを向上させるためのカラー表示</h3>
+<p>多くのシステムには <code>colordiff</code> がインストールされており、diff出力にカラーハイライトを追加できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>colordiff<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
 </pre></div>
-<h3>色付き出力</h3>
-<p>多くのシステムでは、<code>diff --color</code>を使用すると変更箇所が色分けされて表示されます。</p>
-<h3>バイナリファイルの比較</h3>
-<p>テキストファイル以外を比較する場合は、<code>cmp</code>コマンドや<code>hexdump</code>と組み合わせた方法を検討してください。</p>
+<h3>コンテキスト制御</h3>
+<p><code>-U NUM</code> または <code>--unified=NUM</code> で表示されるコンテキストの量を制御できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-U1<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+</pre></div>
+<h3>バージョン管理ファイルを無視する</h3>
+<p>ディレクトリを比較する際に、<code>--exclude=PATTERN</code> を使用して特定のファイルを無視できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>--exclude<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;.git&quot;</span><span style="color: #F8F8F8"> </span>dir1<span style="color: #F8F8F8"> </span>dir2
+</pre></div>
+<h3>バージョン管理システムでの使用</h3>
+<p>バージョン管理システムには独自のdiffツールがありますが、外部diffを使用することもできます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>diff<span style="color: #F8F8F8"> </span>--no-index<span style="color: #F8F8F8"> </span>--external-diff<span style="color: #CE5C00; font-weight: bold">=</span>diff<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+</pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. <code>diff</code>と<code>git diff</code>の違いは何ですか？</h4>
-<p>A. <code>diff</code>は基本的なファイル比較ツールで、<code>git diff</code>はGitリポジトリ内の変更を表示するためのGit固有のコマンドです。<code>git diff</code>はGitの追跡情報を利用して、より詳細な変更履歴を提供します。</p>
-<h4>Q2. 大きなファイルを比較する場合、パフォーマンスの問題はありますか？</h4>
-<p>A. はい、非常に大きなファイルを比較する場合、<code>diff</code>は遅くなることがあります。そのような場合は、<code>comm</code>や<code>cmp</code>などの代替コマンドを検討するか、ファイルを分割して比較することをお勧めします。</p>
-<h4>Q3. バイナリファイルを比較できますか？</h4>
-<p>A. <code>diff</code>は主にテキストファイル用に設計されています。バイナリファイルを比較するには、<code>cmp</code>や<code>hexdump</code>と組み合わせた方法、または専用のバイナリ比較ツールを使用することをお勧めします。</p>
-<h4>Q4. 3つ以上のファイルを比較できますか？</h4>
-<p>A. 標準の<code>diff</code>は2つのファイルのみを比較します。3つ以上のファイルを比較するには、<code>diff3</code>コマンドや、より高度な比較ツール（例：<code>meld</code>、<code>kdiff3</code>）を使用してください。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSの<code>diff</code>はGNU版と若干の違いがあります。特に<code>--color</code>オプションがない場合があります。カラー出力が必要な場合は、Homebrewで<code>colordiff</code>をインストールするか、GNU版の<code>diff</code>（<code>gdiff</code>）をインストールすることを検討してください。</p>
-<h2>参考情報</h2>
+<h4>Q1. diffの出力に表示される記号の意味は何ですか？</h4>
+<p>A. 通常の出力では、<code>a</code>は追加、<code>d</code>は削除、<code>c</code>は変更を意味します。<code>&lt;</code>で始まる行は最初のファイルからの行、<code>&gt;</code>は2番目のファイルからの行、<code>---</code>は変更を区切ります。</p>
+<h4>Q2. diffの出力をより読みやすくするにはどうすればよいですか？</h4>
+<p>A. 統一フォーマット（<code>-u</code>）または横並びフォーマット（<code>-y</code>）を使用してください。カラー出力には、可能であれば<code>colordiff</code>を使用します。</p>
+<h4>Q3. 後で適用できるパッチファイルを作成するにはどうすればよいですか？</h4>
+<p>A. <code>diff -u 元のファイル 変更後のファイル &gt; パッチファイル.patch</code>を使用し、その後<code>patch 元のファイル &lt; パッチファイル.patch</code>で適用します。</p>
+<h4>Q4. diffはバイナリファイルを比較できますか？</h4>
+<p>A. デフォルトでは、diffはテキストファイル用です。バイナリファイルの場合は、<code>cmp</code>や<code>xxdiff</code>、<code>hexdump</code>とdiffを組み合わせた特殊なツールの使用を検討してください。</p>
+<h2>参考資料</h2>
 <p>https://www.gnu.org/software/diffutils/manual/html_node/diff.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

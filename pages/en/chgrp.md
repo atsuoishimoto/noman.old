@@ -4,103 +4,130 @@ Change the group ownership of files or directories.
 
 ## Overview
 
-The `chgrp` command changes the group ownership of files and directories. It allows system administrators and users to reassign which group has access to specific files, which is useful for managing file permissions and access control in multi-user environments.
+The `chgrp` command changes the group ownership of files and directories. It allows users with appropriate permissions to modify which group has access to specific files or directories, which is an important aspect of Unix file permission management.
 
 ## Options
 
-### **-R, --recursive**
+### **-c, --changes**
 
-Change group ownership recursively, affecting all files and directories within the specified directory
+Report when a change is made to the group ownership.
 
 ```console
-$ chgrp -R developers project/
+$ chgrp -c staff document.txt
+changed group of 'document.txt' from 'users' to 'staff'
+```
+
+### **-f, --silent, --quiet**
+
+Suppress most error messages.
+
+```console
+$ chgrp -f nonexistent_group document.txt
 ```
 
 ### **-v, --verbose**
 
-Display a diagnostic message for every file processed
+Output a diagnostic for every file processed.
 
 ```console
-$ chgrp -v staff report.txt
-changed group of 'report.txt' from 'users' to 'staff'
+$ chgrp -v staff *.txt
+group of 'document.txt' retained as 'staff'
+group of 'notes.txt' changed from 'users' to 'staff'
 ```
 
-### **-c, --changes**
+### **-R, --recursive**
 
-Like verbose, but only report when a change is made
+Operate on files and directories recursively.
 
 ```console
-$ chgrp -c staff *.txt
-changed group of 'document.txt' from 'users' to 'staff'
+$ chgrp -R developers project_folder/
 ```
 
 ### **-h, --no-dereference**
 
-Affect symbolic links instead of referenced files
+Affect symbolic links instead of referenced files.
 
 ```console
-$ chgrp -h developers symlink
+$ chgrp -h staff symlink_file
+```
+
+### **--reference=RFILE**
+
+Use RFILE's group rather than specifying a GROUP value.
+
+```console
+$ chgrp --reference=template.txt document.txt
 ```
 
 ## Usage Examples
 
-### Basic usage
+### Changing group ownership of a single file
 
 ```console
-$ chgrp accounting financial.xlsx
-$ ls -l financial.xlsx
--rw-r--r--  1 john  accounting  2048 Apr 28 10:15 financial.xlsx
+$ ls -l document.txt
+-rw-r--r-- 1 user users 1024 May 4 10:30 document.txt
+$ chgrp staff document.txt
+$ ls -l document.txt
+-rw-r--r-- 1 user staff 1024 May 4 10:30 document.txt
 ```
 
-### Changing group for multiple files
+### Changing group ownership recursively
 
 ```console
-$ chgrp developers *.py
-$ ls -l
--rw-r--r--  1 alice  developers  1024 Apr 29 14:30 app.py
--rw-r--r--  1 alice  developers   512 Apr 29 14:32 utils.py
+$ chgrp -R developers project/
+$ ls -l project/
+total 8
+drwxr-xr-x 2 user developers 4096 May 4 10:35 src/
+-rw-r--r-- 1 user developers 2048 May 4 10:32 README.md
 ```
 
-### Recursive and verbose change
+### Using a reference file for group ownership
 
 ```console
-$ chgrp -Rv webteam website/
-changed group of 'website/index.html' from 'alice' to 'webteam'
-changed group of 'website/css/style.css' from 'alice' to 'webteam'
-changed group of 'website/js/script.js' from 'alice' to 'webteam'
+$ ls -l template.txt document.txt
+-rw-r--r-- 1 user developers 1024 May 4 10:30 template.txt
+-rw-r--r-- 1 user users 2048 May 4 10:32 document.txt
+$ chgrp --reference=template.txt document.txt
+$ ls -l document.txt
+-rw-r--r-- 1 user developers 2048 May 4 10:32 document.txt
 ```
 
-## Tips
+## Tips:
 
-### Check Available Groups
+### Check Group Membership First
 
-Before changing group ownership, use the `groups` command to see which groups you belong to, or check `/etc/group` to see all system groups.
+Before changing a file's group, ensure you are a member of the target group using the `groups` command. You can only change a file's group to one you belong to (unless you're root).
 
-### Permissions Required
+### Use Numeric Group IDs
 
-You must be the owner of the file or have superuser (root) privileges to change a file's group. Additionally, you can only assign a file to a group that you are a member of (unless you're root).
+If you know the group ID number, you can use it instead of the group name:
 
-### Use with chmod
+```console
+$ chgrp 1000 document.txt
+```
 
-Often used together with `chmod` to set both group ownership and permissions. For example: `chgrp developers project/ && chmod g+w project/` changes the group and gives that group write permissions.
+### Combine with chmod
 
-### Reference File's Group
+After changing group ownership, you might need to adjust group permissions with `chmod`:
 
-Use the `--reference=RFILE` option to set the same group as another file: `chgrp --reference=template.txt newfile.txt`
+```console
+$ chgrp developers project/
+$ chmod g+w project/
+```
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between chgrp and chown?
-A. `chgrp` only changes the group ownership of a file, while `chown` can change both the user and group ownership. `chown user:group file` is equivalent to running both `chown user file` and `chgrp group file`.
+#### Q1. Who can change a file's group?
+A. The file owner can change a file's group, but only to a group they are a member of. The root user can change any file's group to any group.
 
-#### Q2. How do I see which group a file currently belongs to?
-A. Use `ls -l filename` to see detailed file information including group ownership.
+#### Q2. How do I see what groups I belong to?
+A. Use the `groups` command to see all groups you belong to.
 
-#### Q3. Can I use group ID numbers instead of group names?
-A. Yes, you can use either the group name or its numeric GID: `chgrp 1001 file.txt`
+#### Q3. Can I change both owner and group at once?
+A. No, `chgrp` only changes the group. Use `chown` with the syntax `chown user:group file` to change both simultaneously.
 
-#### Q4. How do I change group ownership of a symbolic link?
-A. Use the `-h` option: `chgrp -h newgroup symlink`
+#### Q4. Why do I get "Operation not permitted" errors?
+A. This usually happens when you're not the file owner, not a member of the target group, or the file has special permissions like the immutable flag set.
 
 ## References
 
@@ -108,4 +135,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/chgrp-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

@@ -49,79 +49,96 @@
   <h1>cat コマンド</h1>
 <p>ファイルの内容を表示したり、複数のファイルを連結したりします。</p>
 <h2>概要</h2>
-<p><code>cat</code>（concatenate の略）は、ファイルの内容を標準出力に表示するシンプルなコマンドです。複数のファイルを指定すると、それらを連結して出力します。また、標準入力からのデータを読み取ることもできます。テキストファイルの内容確認や、ファイルの結合、新しいファイルの作成など、日常的なファイル操作に便利です。</p>
+<p><code>cat</code>コマンドはファイルを読み込み、その内容を標準出力に出力します。ファイルの内容表示、複数ファイルの結合、新しいファイルの作成によく使用されます。「cat」という名前は「concatenate（連結する）」に由来し、ファイルを結合する機能を反映しています。</p>
 <h2>オプション</h2>
-<h3><strong>-n（行番号表示）</strong></h3>
-<p>各行の先頭に行番号を表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>sample.txt
+<h3><strong>-n, --number</strong></h3>
+<p>すべての出力行に1から始まる行番号を付けます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>file.txt
 <span style="color: #000; font-style: italic">     1  これは1行目です</span>
 <span style="color: #000; font-style: italic">     2  これは2行目です</span>
 <span style="color: #000; font-style: italic">     3  これは3行目です</span>
 </pre></div>
-<h3><strong>-b（空行以外に行番号表示）</strong></h3>
-<p>空行を除いた各行の先頭に行番号を表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>sample.txt
+<h3><strong>-b, --number-nonblank</strong></h3>
+<p>空でない出力行にのみ1から始まる行番号を付けます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>file.txt
 <span style="color: #000; font-style: italic">     1  これは1行目です</span>
 <span style="color: #000; font-style: italic">     2  これは2行目です</span>
 
 <span style="color: #000; font-style: italic">     3  これは4行目です</span>
 </pre></div>
-<h3><strong>-s（連続する空行を圧縮）</strong></h3>
-<p>連続する空行を1行にまとめます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>sample.txt
-<span style="color: #000; font-style: italic">これは1行目です</span>
-<span style="color: #000; font-style: italic">これは2行目です</span>
+<h3><strong>-s, --squeeze-blank</strong></h3>
+<p>連続する空行を圧縮し、複数の空行の代わりに1つの空行のみを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>file_with_blanks.txt
+<span style="color: #000; font-style: italic">これはテキストです。</span>
 
-<span style="color: #000; font-style: italic">これは4行目です</span>
+<span style="color: #000; font-style: italic">これは複数の空行ではなく、段落間に1つの空行だけがあります。</span>
 </pre></div>
-<h3><strong>-A（すべての制御文字を表示）</strong></h3>
-<p>タブや改行などの制御文字を可視化します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span>sample.txt
+<h3><strong>-A, --show-all</strong></h3>
+<p>すべての制御文字と非表示文字を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">これはタブ^Iと改行を含む行です$</span>
+</pre></div>
+<h3><strong>-E, --show-ends</strong></h3>
+<p>各行の末尾に$を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>-E<span style="color: #F8F8F8"> </span>file.txt
 <span style="color: #000; font-style: italic">これは1行目です$</span>
 <span style="color: #000; font-style: italic">これは2行目です$</span>
-<span style="color: #8F5902">$</span>
-<span style="color: #000; font-style: italic">これは4行目です$</span>
+</pre></div>
+<h3><strong>-T, --show-tabs</strong></h3>
+<p>タブ文字を^Iとして表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>-T<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">これはタブ文字を含む行です^I。</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>複数ファイルの連結表示</h3>
+<h3>ファイル内容の表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">これはdocument.txtの内容です。</span>
+<span style="color: #000; font-style: italic">複数行あります。</span>
+</pre></div>
+<h3>複数ファイルの連結</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">file1の内容</span>
-<span style="color: #000; font-style: italic">file2の内容</span>
+<span style="color: #000; font-style: italic">file1.txtの内容</span>
+<span style="color: #000; font-style: italic">file2.txtの内容</span>
 </pre></div>
-<h3>ファイルの作成</h3>
+<h3>リダイレクションを使用した新しいファイルの作成</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>newfile.txt
-<span style="color: #000; font-style: italic">これは新しいファイルの内容です</span>
-<span style="color: #000; font-style: italic">（Ctrl+Dで入力終了）</span>
+<span style="color: #000; font-style: italic">これは新しいファイルです。</span>
+<span style="color: #000; font-style: italic">直接内容を入力しています。</span>
+<span style="color: #000; font-style: italic">[Ctrl+Dで入力終了]</span>
 </pre></div>
-<h3>ファイルの連結と保存</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>combined.txt
-<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>combined.txt
-<span style="color: #000; font-style: italic">file1の内容</span>
-<span style="color: #000; font-style: italic">file2の内容</span>
+<h3>既存のファイルへの追加</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>&gt;&gt;<span style="color: #F8F8F8"> </span>existing.txt
+<span style="color: #000; font-style: italic">このテキストはファイルの末尾に追加されます。</span>
+<span style="color: #000; font-style: italic">[Ctrl+Dで入力終了]</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>パイプラインでの活用</h3>
-<p><code>cat</code>はパイプラインの最初のコマンドとしてよく使われます。ファイルの内容を他のコマンドに渡すことができます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>large_file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;検索語句&quot;</span>
+<h3>修正なしでファイルを表示</h3>
+<p>テキストエディタとは異なり、<code>cat</code>はファイルを修正せずにそのまま表示するため、ファイルの内容を素早く確認するのに最適です。</p>
+<h3>パイプを使用した処理</h3>
+<p><code>cat</code>を他のコマンドとパイプで組み合わせることができます：<code>cat file.txt | grep &quot;検索語句&quot;</code>でコンテンツをフィルタリングできます。</p>
+<h3>不必要な<code>cat</code>の使用を避ける</h3>
+<p>大きなファイルの場合、<code>cat</code>はファイル全体をターミナルに出力するため、ページごとに表示する<code>less</code>や<code>more</code>を代わりに使用するとよいでしょう。</p>
+<h3>ヒアドキュメントでファイルを作成</h3>
+<p>複数行のファイルを作成する場合、ヒアドキュメントを使用できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>&lt;&lt;<span style="color: #F8F8F8"> </span>EOF<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">1行目</span>
+<span style="color: #000; font-style: italic">2行目</span>
+<span style="color: #000; font-style: italic">EOF</span>
 </pre></div>
-<h3>不要な使用を避ける</h3>
-<p><code>cat file | grep pattern</code>のような使い方は可能ですが、<code>grep pattern file</code>と直接指定する方が効率的である場合が多いです。</p>
-<h3>バイナリファイルの表示に注意</h3>
-<p>バイナリファイルを<code>cat</code>で表示すると、ターミナルが文字化けすることがあります。その場合は<code>reset</code>コマンドでターミナルをリセットできます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>cat</code>コマンドの名前の由来は何ですか？</h4>
-<p>A. <code>cat</code>は「concatenate（連結する）」の略です。複数のファイルを連結して表示する機能に由来しています。</p>
-<h4>Q2. 大きなファイルを表示する場合、どうすればよいですか？</h4>
-<p>A. 大きなファイルは<code>less</code>や<code>more</code>コマンドを使うと、ページ単位で閲覧できるため便利です。</p>
-<h4>Q3. ファイルの最初の数行だけ表示するには？</h4>
-<p>A. <code>cat</code>の代わりに<code>head</code>コマンドを使用します。例えば<code>head -n 5 file.txt</code>で最初の5行を表示できます。</p>
-<h4>Q4. macOSと Linux で<code>cat</code>コマンドに違いはありますか？</h4>
-<p>A. 基本的な機能は同じですが、一部のオプションが異なる場合があります。macOSの<code>cat</code>はBSD由来で、Linuxの<code>cat</code>はGNU由来です。</p>
+<h4>Q1. <code>cat</code>と<code>less</code>の違いは何ですか？</h4>
+<p>A. <code>cat</code>はファイル全体を一度に表示しますが、<code>less</code>はファイルを1画面ずつ表示し、スクロールできるようにします。</p>
+<h4>Q2. <code>cat</code>で行番号を表示するにはどうすればよいですか？</h4>
+<p>A. すべての行に行番号を表示するには<code>cat -n ファイル名</code>を、空白でない行のみに番号を付けるには<code>cat -b ファイル名</code>を使用します。</p>
+<h4>Q3. <code>cat</code>でバイナリファイルを表示できますか？</h4>
+<p>A. 可能ですが、ターミナルに影響を与える可能性のある表示できない文字が生成されるため、推奨されません。バイナリファイルには<code>hexdump</code>や<code>xxd</code>などの専用ツールを使用してください。</p>
+<h4>Q4. 複数のファイルを<code>cat</code>で結合するにはどうすればよいですか？</h4>
+<p>A. 単にすべてのファイルを引数としてリストします：<code>cat file1.txt file2.txt file3.txt</code>。</p>
 <h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/cat-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

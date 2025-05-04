@@ -1,131 +1,143 @@
 # iotop コマンド
 
-I/O 使用量をプロセスごとに監視するリアルタイムモニタリングツール。
+システム上のプロセスによるI/O使用状況を監視します。
 
 ## 概要
 
-`iotop` は Linux システム上でプロセスごとの I/O（入出力）使用状況をリアルタイムで表示するコマンドです。ディスク I/O のボトルネックを特定したり、どのプロセスがディスクを最も使用しているかを確認したりするのに役立ちます。`top` コマンドに似ていますが、CPU やメモリではなく I/O 使用量に特化しています。
+`iotop`は、プロセスのリアルタイムディスクI/O使用情報を表示するtopに似たユーティリティです。どのプロセスがディスクを使用しているか、どれだけ読み書きしているか、そしてそのI/O優先度を表示します。このツールは、高いディスクアクティビティを引き起こしているプロセスを特定するのに特に役立ちます。
 
 ## オプション
 
 ### **-o, --only**
 
-I/O を実際に行っているプロセスのみを表示します。
+実際にI/Oを実行しているプロセスやスレッドのみを表示します
 
 ```console
 $ sudo iotop -o
-Total DISK READ:       0.00 B/s | Total DISK WRITE:       7.63 K/s
-Current DISK READ:     0.00 B/s | Current DISK WRITE:     0.00 B/s
-  PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
- 1234  be/4  root        0.00 B    7.63 K/s  0.00 %  0.00 % systemd-journald
+Total DISK READ:         0.00 B/s | Total DISK WRITE:         7.56 K/s
+Current DISK READ:       0.00 B/s | Current DISK WRITE:       0.00 B/s
+    PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
+   1234 be/4 root        0.00 B/s    7.56 K/s  0.00 %  0.00 % systemd-journald
 ```
 
 ### **-b, --batch**
 
-バッチモードで実行します。非対話的な出力形式で、ログファイルへのリダイレクトに適しています。
+非対話モードで実行します。ログ記録に便利です
 
 ```console
 $ sudo iotop -b -n 3
-Total DISK READ:       0.00 B/s | Total DISK WRITE:      15.27 K/s
-Current DISK READ:     0.00 B/s | Current DISK WRITE:     0.00 B/s
-  PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
-    1  be/4  root        0.00 B    0.00 B/s  0.00 %  0.00 % systemd
-  ...
+Total DISK READ:         0.00 B/s | Total DISK WRITE:        15.69 K/s
+Current DISK READ:       0.00 B/s | Current DISK WRITE:       0.00 B/s
+    PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
+      1 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % systemd
+    346 be/4 root        0.00 B/s    7.84 K/s  0.00 %  0.00 % systemd-journald
+[...]
 ```
 
 ### **-n NUM, --iter=NUM**
 
-指定した回数だけ更新して終了します。バッチモードと組み合わせて使用すると便利です。
+終了前の繰り返し回数を設定します（非対話モード用）
 
 ```console
 $ sudo iotop -b -n 2
-Total DISK READ:       0.00 B/s | Total DISK WRITE:      15.27 K/s
-...
-Total DISK READ:       0.00 B/s | Total DISK WRITE:      12.45 K/s
-...
+[ディスクI/O統計の2回の繰り返しを表示]
 ```
 
 ### **-d SEC, --delay=SEC**
 
-更新間隔を秒単位で指定します（デフォルトは1秒）。
+繰り返し間の遅延を秒単位で設定します（デフォルトは1.0）
 
 ```console
 $ sudo iotop -d 5
-# 5秒ごとに画面が更新される
+[5秒ごとに表示を更新]
+```
+
+### **-p PID, --pid=PID**
+
+指定したプロセスIDのみを監視します
+
+```console
+$ sudo iotop -p 1234
+[PID 1234のプロセスのI/O統計のみを表示]
+```
+
+### **-a, --accumulated**
+
+帯域幅ではなく累積I/Oを表示します
+
+```console
+$ sudo iotop -a
+[iotop起動以降の各プロセスが実行した総I/Oを表示]
 ```
 
 ## 使用例
 
-### 実際に I/O を行っているプロセスのみを表示
+### 基本的な監視
 
 ```console
-$ sudo iotop -o
-Total DISK READ:       1.02 M/s | Total DISK WRITE:      156.68 K/s
-Current DISK READ:     0.00 B/s | Current DISK WRITE:     23.44 K/s
-  PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
- 1234  be/4  postgres   1.02 M/s    0.00 B/s  0.00 %  0.12 % postgres: autovacuum worker process
-  567  be/4  www-data   0.00 B/s  156.68 K/s  0.00 %  0.05 % apache2 -k start
+$ sudo iotop
+Total DISK READ:         0.00 B/s | Total DISK WRITE:        23.45 K/s
+Current DISK READ:       0.00 B/s | Current DISK WRITE:       7.84 K/s
+    PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
+      1 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % systemd
+    346 be/4 root        0.00 B/s    7.84 K/s  0.00 %  0.00 % systemd-journald
+[...]
 ```
 
-### 特定のプロセスの I/O 使用状況を監視してログに記録
+### アクティブなI/Oプロセスのみを監視してファイルにログを記録
 
 ```console
-$ sudo iotop -b -o -p 1234,5678 -n 10 > io_log.txt
-# プロセスID 1234と5678の I/O 使用状況を10回記録してio_log.txtに保存
+$ sudo iotop -bo -n 60 -d 10 > disk_activity.log
+[I/Oを実行しているプロセスの10秒間隔で60回のスナップショットを記録]
 ```
 
-### 累積 I/O 統計を表示
+### 特定のプロセスの監視
 
 ```console
-$ sudo iotop -a
-# 起動してから累積された I/O 統計が表示される
-# 通常モードでは「A」キーを押すことでも切り替え可能
+$ sudo iotop -p 1234,5678
+[PID 1234と5678のプロセスのI/O統計のみを表示]
 ```
 
 ## ヒント:
 
-### 対話モードでのキーボードショートカット
+### sudoで実行
 
-対話モードでは、以下のキーを使用して表示を制御できます：
-- `o`: I/O を行っているプロセスのみ表示/すべて表示を切り替え
-- `p`: PID でソート
-- `a`: 累積 I/O 統計の表示/非表示を切り替え
-- `q`: 終了
+`iotop`はI/O統計にアクセスするためにroot権限が必要です。常に`sudo`を付けるかrootユーザーとして実行してください。
 
-### root 権限が必要
+### 忙しいシステムでは-oを使用
 
-`iotop` は通常、root 権限が必要です。一般ユーザーで実行する場合は `sudo` を使用してください。
+多くのプロセスが動作しているシステムでは、`-o`オプションを使用して実際にI/O操作を実行しているプロセスのみを表示すると、問題のあるプロセスを特定しやすくなります。
 
-### 長時間の I/O モニタリング
+### キーボードショートカット
 
-長時間の I/O 使用状況を分析するには、バッチモードとリダイレクトを組み合わせて使用します：
-```bash
-sudo iotop -b -o -n 60 -d 60 > io_usage.log
-```
-これにより、1時間にわたって1分ごとに I/O を行っているプロセスの情報が記録されます。
+対話モードで実行中に以下のキーが使えます：
+- `o` --onlyオプションの切り替え
+- `p` プロセス表示の切り替え（スレッドではなく）
+- `a` 累積I/Oモードの切り替え
+- `q` 終了
+
+### ログ記録と組み合わせる
+
+断続的なI/O問題のトラブルシューティングには、`iotop`をバッチモードで実行し、出力をログファイルにリダイレクトして後で分析できるようにしましょう。
 
 ## よくある質問
 
-#### Q1. `iotop` をインストールするにはどうすればよいですか？
-A. Debian/Ubuntu では `sudo apt install iotop`、CentOS/RHEL では `sudo yum install iotop` でインストールできます。
+#### Q1. 「iotop: command not found」と表示されるのはなぜですか？
+A. `iotop`はデフォルトではインストールされていない場合があります。ディストリビューションのパッケージマネージャを使用してインストールしてください（例：Debian/Ubuntuでは`apt install iotop`、RHEL/CentOSでは`yum install iotop`）。
 
-#### Q2. `iotop` が「CONFIG_TASK_DELAY_ACCT not enabled in kernel」というエラーを表示する場合はどうすればよいですか？
-A. このエラーはカーネルに必要な機能が有効になっていないことを示しています。カーネルを再コンパイルするか、より新しいバージョンのディストリビューションを使用する必要があります。
+#### Q2. iotopを実行すると「Permission denied」と表示されるのはなぜですか？
+A. `iotop`はI/O統計にアクセスするためにroot権限が必要です。`sudo iotop`として実行するか、rootユーザーとして実行してください。
 
-#### Q3. 特定のプロセスだけを監視するにはどうすればよいですか？
-A. `-p PID` または `--pid=PID` オプションを使用して、特定のプロセス ID を指定できます。複数のプロセスを監視する場合はカンマで区切ります（例：`-p 1234,5678`）。
+#### Q3. ディスクI/Oスパイクを引き起こしているプロセスを確認するにはどうすればよいですか？
+A. `sudo iotop -o`を実行して、アクティブにI/O操作を実行しているプロセスのみを表示します。
 
-#### Q4. `iotop` の出力を理解するにはどうすればよいですか？
-A. 主な列は以下の通りです：
-- DISK READ/WRITE: プロセスのディスク読み書き速度
-- SWAPIN: スワップインの割合
-- IO>: プロセスが I/O 待ちで費やした時間の割合
-- COMMAND: プロセス名とコマンドライン引数
+#### Q4. SWAPINとIO列は何を意味していますか？
+A. SWAPINはプロセスがスワップインに費やした時間の割合を示し、IOはプロセスがI/O待ちに費やした時間の割合を示します。
 
 ## 参考資料
 
-https://linux.die.net/man/1/iotop
+https://man7.org/linux/man-pages/man8/iotop.8.html
 
-## Revisions
+## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初回改訂

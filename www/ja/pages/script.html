@@ -47,92 +47,115 @@
     <main>
       
   <h1>script コマンド</h1>
-<p>ターミナルセッションの全入出力を記録し、タイプスクリプトファイルに保存します。</p>
+<p>ターミナルセッションの全アクティビティを記録し、タイプスクリプトを作成します。</p>
 <h2>概要</h2>
-<p><code>script</code> コマンドは、ターミナルでの操作内容（コマンドの入力と出力）を全て記録し、ファイルに保存するためのツールです。デフォルトでは「typescript」という名前のファイルに記録されますが、別のファイル名を指定することも可能です。このコマンドはトレーニング資料の作成、問題のデバッグ、操作手順の文書化などに役立ちます。</p>
+<p><code>script</code> コマンドはターミナルセッション中に表示されるすべての内容を記録します。すべての入力と出力をキャプチャし、ファイル（デフォルトでは「typescript」という名前）に保存します。これは手順の文書化、チュートリアルの作成、またはターミナルセッションのログを保持するのに役立ちます。</p>
 <h2>オプション</h2>
 <h3><strong>-a, --append</strong></h3>
-<p>既存のファイルに追記します（上書きではなく）</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>session.log
-<span style="color: #000; font-style: italic">Script started, output log file is &#39;session.log&#39;.</span>
+<p>指定したファイルまたはデフォルトの typescript ファイルに出力を上書きではなく追記します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>session_log.txt
+<span style="color: #000; font-style: italic">Script started, output file is session_log.txt</span>
 <span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">Documents  Downloads  Pictures</span>
+<span style="color: #000; font-style: italic">Documents Downloads Pictures</span>
 <span style="color: #8F5902">$ </span><span style="color: #204A87">exit</span>
-<span style="color: #000; font-style: italic">Script done.</span>
+<span style="color: #000; font-style: italic">Script done, output file is session_log.txt</span>
 </pre></div>
 <h3><strong>-f, --flush</strong></h3>
-<p>各コマンドの実行後、すぐにログファイルに書き込みます（バッファリングなし）</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>realtime.log
-<span style="color: #000; font-style: italic">Script started, output log file is &#39;realtime.log&#39;.</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;このコマンドはすぐにログに書き込まれます&quot;</span>
-<span style="color: #000; font-style: italic">このコマンドはすぐにログに書き込まれます</span>
+<p>各書き込み後に出力をフラッシュして、リアルタイム記録を確保します。記録中に typescript ファイルを監視する場合に便利です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>realtime_log.txt
+<span style="color: #000; font-style: italic">Script started, output file is realtime_log.txt</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;これはすぐにフラッシュされます&quot;</span>
+<span style="color: #000; font-style: italic">これはすぐにフラッシュされます</span>
 <span style="color: #8F5902">$ </span><span style="color: #204A87">exit</span>
-<span style="color: #000; font-style: italic">Script done.</span>
+<span style="color: #000; font-style: italic">Script done, output file is realtime_log.txt</span>
 </pre></div>
 <h3><strong>-q, --quiet</strong></h3>
-<p>開始・終了メッセージを表示しません</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>quiet.log
-<span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">Documents  Downloads  Pictures</span>
+<p>静かモードで実行し、開始および終了メッセージを表示しません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>quiet_log.txt
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;開始メッセージは表示されていません&quot;</span>
+<span style="color: #000; font-style: italic">開始メッセージは表示されていません</span>
 <span style="color: #8F5902">$ </span><span style="color: #204A87">exit</span>
 </pre></div>
-<h3><strong>-t, --timing=ファイル</strong></h3>
-<p>タイミング情報を別ファイルに記録します</p>
+<h3><strong>-t, --timing[=FILE]</strong></h3>
+<p>タイミングデータを FILE に出力します。FILE が指定されていない場合は標準エラーに出力します。これは scriptreplay でセッションを再生する際に使用できます。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>timing.log<span style="color: #F8F8F8"> </span>session.log
-<span style="color: #000; font-style: italic">Script started, output log file is &#39;session.log&#39;.</span>
-<span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">Documents  Downloads  Pictures</span>
+<span style="color: #000; font-style: italic">Script started, output file is session.log</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;このセッションは時間計測されています&quot;</span>
+<span style="color: #000; font-style: italic">このセッションは時間計測されています</span>
 <span style="color: #8F5902">$ </span><span style="color: #204A87">exit</span>
-<span style="color: #000; font-style: italic">Script done.</span>
+<span style="color: #000; font-style: italic">Script done, output file is session.log</span>
+</pre></div>
+<h3><strong>-c, --command COMMAND</strong></h3>
+<p>対話型シェルの代わりに指定されたコマンドを実行します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ls -la&quot;</span><span style="color: #F8F8F8"> </span>command_output.txt
+<span style="color: #000; font-style: italic">Script started, output file is command_output.txt</span>
+<span style="color: #000; font-style: italic">total 32</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  5 user  staff   160 May  4 10:15 .</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff    96 May  4 10:10 ..</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1024 May  4 10:12 file1.txt</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  2048 May  4 10:14 file2.txt</span>
+<span style="color: #000; font-style: italic">Script done, output file is command_output.txt</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な使用方法</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>my_session.log
-<span style="color: #000; font-style: italic">Script started, output log file is &#39;my_session.log&#39;.</span>
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-la
-<span style="color: #000; font-style: italic">total 20</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  2 user user 4096 Apr 30 10:00 .</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x 20 user user 4096 Apr 30 09:50 ..</span>
-<span style="color: #000; font-style: italic">-rw-r--r--  1 user user  123 Apr 30 10:00 file.txt</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;これはログに記録されます&quot;</span>
-<span style="color: #000; font-style: italic">これはログに記録されます</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">exit</span>
-<span style="color: #000; font-style: italic">Script done.</span>
-</pre></div>
-<h3>記録したセッションの再生</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>timing.data<span style="color: #F8F8F8"> </span>recording.log
-<span style="color: #000; font-style: italic">Script started, output log file is &#39;recording.log&#39;.</span>
+<h3>基本的なセッション記録</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>my_session.txt
+<span style="color: #000; font-style: italic">Script started, output file is my_session.txt</span>
 <span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">Documents  Downloads  Pictures</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span>
-<span style="color: #000; font-style: italic">Hello World</span>
+<span style="color: #000; font-style: italic">Documents Downloads Pictures</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">pwd</span>
+<span style="color: #000; font-style: italic">/home/user</span>
 <span style="color: #8F5902">$ </span><span style="color: #204A87">exit</span>
-<span style="color: #000; font-style: italic">Script done.</span>
+<span style="color: #000; font-style: italic">Script done, output file is my_session.txt</span>
+</pre></div>
+<h3>記録されたセッションの表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>my_session.txt
+<span style="color: #000; font-style: italic">Script started on Sun May  4 10:20:00 2025</span>
+<span style="color: #8F5902">$ </span>ls
+<span style="color: #000; font-style: italic">Documents Downloads Pictures</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">pwd</span>
+<span style="color: #000; font-style: italic">/home/user</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">exit</span>
 
-<span style="color: #8F5902">$ </span>scriptreplay<span style="color: #F8F8F8"> </span>timing.data<span style="color: #F8F8F8"> </span>recording.log
-<span style="color: #8F5902"># </span>記録されたセッションが再生されます
+<span style="color: #000; font-style: italic">Script done on Sun May  4 10:21:30 2025</span>
+</pre></div>
+<h3>セッションの記録と再生</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>script<span style="color: #F8F8F8"> </span>--timing<span style="color: #CE5C00; font-weight: bold">=</span>timing.log<span style="color: #F8F8F8"> </span>session.log
+<span style="color: #000; font-style: italic">Script started, output file is session.log</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;こんにちは、これはデモです&quot;</span>
+<span style="color: #000; font-style: italic">こんにちは、これはデモです</span>
+<span style="color: #8F5902">$ </span>ls
+<span style="color: #000; font-style: italic">Documents Downloads Pictures</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">exit</span>
+<span style="color: #000; font-style: italic">Script done, output file is session.log</span>
+
+<span style="color: #8F5902">$ </span>scriptreplay<span style="color: #F8F8F8"> </span>timing.log<span style="color: #F8F8F8"> </span>session.log
+<span style="color: #8F5902"># </span>セッションが元のタイミングで再生されます
 </pre></div>
 <h2>ヒント:</h2>
-<h3>セッション記録の終了方法</h3>
-<p><code>script</code> コマンドを終了するには、<code>exit</code> コマンドを入力するか、Ctrl+D を押します。これにより記録が停止し、ファイルが保存されます。</p>
-<h3>記録ファイルの確認</h3>
-<p>記録されたファイルは通常のテキストファイルとして <code>cat</code>、<code>less</code> などで確認できますが、エスケープシーケンスなどの制御文字が含まれているため、読みにくい場合があります。</p>
-<h3>自動化スクリプトでの利用</h3>
-<p><code>script</code> コマンドは自動化スクリプトでも利用できますが、インタラクティブなプロンプトが必要な場合は <code>expect</code> などのツールと組み合わせると効果的です。</p>
+<h3>scriptreplay との併用</h3>
+<p><code>-t</code> オプションを使用してタイミング情報を記録すると、後で <code>scriptreplay</code> コマンドでセッションを再生できます。これにより、元々入力されたのと同じペースで出力が表示されます。</p>
+<h3>制御文字のクリーンアップ</h3>
+<p>typescript ファイルには読みにくい制御文字が含まれている場合があります。<code>col -b</code> のようなツールを使用してクリーンアップできます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>col<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>my_session.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>clean_session.txt
+</pre></div>
+<h3>複雑な手順の文書化</h3>
+<p>複雑なシステム管理タスクやソフトウェアインストールを文書化する際に <code>script</code> を使用すると、後で参照したり同僚と共有したりできる完全な記録を作成できます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>script</code> コマンドで記録したファイルのサイズが大きくなりすぎる場合はどうすればよいですか？</h4>
-<p>A. 必要な操作だけを記録するように計画し、長時間の記録は避けましょう。また、<code>-q</code> オプションを使用して開始・終了メッセージを省略することでファイルサイズを少し削減できます。</p>
-<h4>Q2. カラー出力も記録されますか？</h4>
-<p>A. はい、ターミナルのカラー出力を含むANSIエスケープシーケンスも記録されます。ただし、表示するときは対応するビューアが必要です。</p>
-<h4>Q3. 記録中に特定のコマンドだけ記録したくない場合はどうすればよいですか？</h4>
-<p>A. 一時的に <code>script</code> を終了し、記録したくないコマンドを実行した後、<code>script -a</code> で記録を再開することができます。</p>
-<h4>Q4. macOSでの注意点はありますか？</h4>
-<p>A. macOSの <code>script</code> コマンドはLinuxバージョンと若干異なり、一部のオプション（特に <code>-t</code> や <code>scriptreplay</code> との連携）が利用できない場合があります。詳細は <code>man script</code> で確認してください。</p>
-<h2>参考情報</h2>
+<h4>Q1. script セッションの記録を停止するにはどうすればよいですか？</h4>
+<p>A. <code>exit</code> と入力するか、Ctrl+D を押してセッションを終了し、記録を停止します。</p>
+<h4>Q2. 開始と終了のメッセージを表示せずにセッションを記録できますか？</h4>
+<p>A. はい、<code>-q</code> または <code>--quiet</code> オプションを使用してこれらのメッセージを抑制できます。</p>
+<h4>Q3. 記録されたセッションを再生するにはどうすればよいですか？</h4>
+<p>A. <code>-t</code> を使用してタイミング情報を記録した場合、<code>scriptreplay</code> コマンドを使用してセッションを再生できます。</p>
+<h4>Q4. 入力したパスワードは記録されますか？</h4>
+<p>A. いいえ、適切に設計されたパスワードプロンプトは文字をターミナルにエコーしないため、通常パスワードは typescript ファイルに表示されません。</p>
+<h4>Q5. 既存の typescript ファイルに追記できますか？</h4>
+<p>A. はい、<code>-a</code> または <code>--append</code> オプションを使用して、既存のファイルを上書きするのではなく追加できます。</p>
+<h2>参考資料</h2>
 <p>https://man7.org/linux/man-pages/man1/script.1.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

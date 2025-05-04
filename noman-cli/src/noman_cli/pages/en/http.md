@@ -1,52 +1,53 @@
 # http command
 
-Send HTTP requests from the command line and display responses.
+Send arbitrary HTTP requests and display responses from the command line.
 
 ## Overview
 
-The `http` command is a user-friendly HTTP client for the command line, provided by HTTPie. It allows you to make HTTP requests, test APIs, and interact with web services using a simple syntax. HTTPie is designed to be more intuitive than curl, with colorized output and JSON support built-in.
+The `http` command is part of HTTPie, a user-friendly command-line HTTP client designed to make CLI interaction with web services as human-friendly as possible. It provides a simple interface for sending HTTP requests with various methods (GET, POST, PUT, etc.) and displays colorized output for better readability.
 
 ## Options
 
-### **-f, --form**
-
-Send data as form-encoded (similar to browser form submission)
-
-```console
-$ http -f POST example.com name=John age=30
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    "message": "Form data received",
-    "form": {
-        "name": "John",
-        "age": "30"
-    }
-}
-```
-
 ### **-j, --json**
 
-Send data as JSON (default for sending data)
+Send JSON data in the request body.
 
 ```console
 $ http -j POST example.com name=John age:=30
-HTTP/1.1 200 OK
-Content-Type: application/json
+```
 
-{
-    "message": "JSON data received",
-    "json": {
-        "name": "John",
-        "age": 30
-    }
-}
+### **-f, --form**
+
+Send form-encoded data in the request body.
+
+```console
+$ http -f POST example.com name=John age=30
+```
+
+### **-a, --auth**
+
+Specify authentication credentials.
+
+```console
+$ http -a username:password example.com
+```
+
+### **-h, --headers**
+
+Print only the response headers.
+
+```console
+$ http -h example.com
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Date: Sat, 04 May 2025 12:00:00 GMT
+Server: nginx
+Content-Length: 1256
 ```
 
 ### **-v, --verbose**
 
-Show the full HTTP exchange (request and response headers)
+Print the whole HTTP exchange (request and response).
 
 ```console
 $ http -v example.com
@@ -58,16 +59,9 @@ Accept: */*
 Connection: keep-alive
 
 HTTP/1.1 200 OK
-Age: 595934
-Cache-Control: max-age=604800
 Content-Type: text/html; charset=UTF-8
-Date: Fri, 30 Apr 2025 12:34:56 GMT
-Etag: "3147526947+ident"
-Expires: Fri, 07 May 2025 12:34:56 GMT
-Last-Modified: Thu, 17 Oct 2024 07:18:26 GMT
-Server: ECS (dcb/7F83)
-Vary: Accept-Encoding
-X-Cache: HIT
+Date: Sat, 04 May 2025 12:00:00 GMT
+Server: nginx
 Content-Length: 1256
 
 <!doctype html>
@@ -75,39 +69,21 @@ Content-Length: 1256
 ...
 ```
 
-### **-a, --auth**
+### **--verify**
 
-Add authentication to the request
+Control SSL verification. Can be set to `no` to disable verification.
 
 ```console
-$ http -a username:password example.com/api/protected
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    "authenticated": true,
-    "user": "username"
-}
+$ http --verify=no https://example.com
 ```
 
-### **-h, --headers**
+### **--session**
 
-Show only the response headers
+Create or reuse a session for multiple requests.
 
 ```console
-$ http -h example.com
-HTTP/1.1 200 OK
-Age: 595934
-Cache-Control: max-age=604800
-Content-Type: text/html; charset=UTF-8
-Date: Fri, 30 Apr 2025 12:34:56 GMT
-Etag: "3147526947+ident"
-Expires: Fri, 07 May 2025 12:34:56 GMT
-Last-Modified: Thu, 17 Oct 2024 07:18:26 GMT
-Server: ECS (dcb/7F83)
-Vary: Accept-Encoding
-X-Cache: HIT
-Content-Length: 1256
+$ http --session=mysession -a username:password example.com
+$ http --session=mysession example.com/api/resource
 ```
 
 ## Usage Examples
@@ -118,6 +94,8 @@ Content-Length: 1256
 $ http example.com
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=UTF-8
+Date: Sat, 04 May 2025 12:00:00 GMT
+Server: nginx
 Content-Length: 1256
 
 <!doctype html>
@@ -125,35 +103,24 @@ Content-Length: 1256
 ...
 ```
 
-### POST request with JSON data
+### POST with JSON data
 
 ```console
-$ http POST api.example.com/users name=John email=john@example.com
+$ http POST api.example.com/users name=John age:=30 is_active:=true
 HTTP/1.1 201 Created
 Content-Type: application/json
+Location: /users/123
+Content-Length: 42
 
 {
     "id": 123,
     "name": "John",
-    "email": "john@example.com",
-    "created_at": "2025-04-30T12:34:56Z"
+    "age": 30,
+    "is_active": true
 }
 ```
 
-### Adding custom headers
-
-```console
-$ http example.com/api X-API-Token:abc123 Accept:application/json
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    "status": "success",
-    "data": { ... }
-}
-```
-
-### Downloading a file
+### Download a file
 
 ```console
 $ http --download https://example.com/file.zip
@@ -161,44 +128,55 @@ Downloading to "file.zip"
 Done. 15.43 MB in 2.32s (6.65 MB/s)
 ```
 
+### Custom headers
+
+```console
+$ http example.com X-API-Token:abc123 User-Agent:MyApp/1.0
+```
+
 ## Tips
 
-### JSON Data Types
+### Use Shortcuts for Common HTTP Methods
 
-When sending JSON data, use `:=` for numbers, booleans, and null: `count:=42 active:=true data:=null`
+HTTPie provides shortcuts for common HTTP methods, so you can use `http example.com` instead of `http GET example.com`.
 
-### URL Parameters
+### JSON Data Syntax
 
-Add URL parameters with `==`: `http example.com/search q==httpie`
+When sending JSON data, use `:=` for numbers and booleans, and `=` for strings:
+- `name=John` becomes `{"name": "John"}`
+- `age:=30` becomes `{"age": 30}`
+- `active:=true` becomes `{"active": true}`
 
-### File Upload
+### Pipe Output to Other Tools
 
-Upload files using `@` symbol: `http POST example.com/upload file@/path/to/file.txt`
+You can pipe the output to tools like `jq` for JSON processing:
+```console
+$ http api.example.com/users | jq '.[] | select(.active==true)'
+```
 
-### Session Support
+### Use Output Redirection
 
-Use `--session=NAME` to maintain cookies between requests: `http --session=logged-in -a user:pass example.com`
-
-### Redirect Output
-
-Save response body to a file: `http example.com/file.pdf > file.pdf`
+Save response bodies to files using standard output redirection:
+```console
+$ http example.com/image.jpg > image.jpg
+```
 
 ## Frequently Asked Questions
 
-#### Q1. How is HTTPie different from curl?
-A. HTTPie has a more intuitive syntax, colorized output, and built-in JSON support. It's designed to be more user-friendly for API testing and development.
+#### Q1. How do I send a POST request with form data?
+A. Use `http -f POST example.com name=value` to send form-encoded data.
 
-#### Q2. How do I install HTTPie?
-A. You can install it via pip (`pip install httpie`), Homebrew on macOS (`brew install httpie`), or apt on Ubuntu/Debian (`apt install httpie`).
+#### Q2. How do I include authentication in my request?
+A. Use the `-a` or `--auth` option: `http -a username:password example.com`.
 
-#### Q3. How do I send form data vs. JSON data?
-A. Use `-f` or `--form` for form data, and `-j` or `--json` for JSON data (JSON is the default when sending data).
+#### Q3. How can I see the full HTTP exchange?
+A. Use the `-v` or `--verbose` option to see both request and response details.
 
-#### Q4. How can I see the full HTTP request being sent?
-A. Use the `-v` or `--verbose` flag to see the complete HTTP exchange, including all request and response headers.
+#### Q4. How do I send a file in my request?
+A. Use `@filename` to include file contents: `http POST example.com file@/path/to/file.txt`.
 
-#### Q5. How do I set cookies for a request?
-A. Use the `Cookie:` header: `http example.com Cookie:'name=value; another=value2'`
+#### Q5. How do I set cookies for my request?
+A. Use the `--session` option to maintain cookies between requests, or manually set the Cookie header.
 
 ## References
 
@@ -206,4 +184,4 @@ https://httpie.io/docs/cli
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

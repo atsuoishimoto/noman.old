@@ -47,97 +47,112 @@
     <main>
       
   <h1>od コマンド</h1>
-<p>ファイルやデータをさまざまな形式（8進数、16進数など）でダンプ表示します。</p>
+<p>ファイルの内容を様々な形式（主に8進数、16進数、その他の数値表現）で表示します。</p>
 <h2>概要</h2>
-<p><code>od</code>（octal dump）コマンドは、ファイルやデータの内容を8進数、16進数、ASCII文字など様々な形式で表示するためのユーティリティです。バイナリファイルの内容を確認したり、テキストファイルに含まれる非表示文字を検出したりする際に便利です。</p>
+<p><code>od</code>（octal dump）コマンドは、ファイルの内容を様々な形式で表示します。元々は8進数形式でファイル内容を表示するために設計されましたが、現代のバージョンでは16進数、10進数、ASCII、その他多くの出力形式をサポートしています。バイナリファイルの検査、非表示文字の表示、ファイル構造の分析に特に役立ちます。</p>
 <h2>オプション</h2>
-<h3><strong>-t TYPE</strong></h3>
-<p>出力形式を指定します。主な形式は以下の通りです：</p>
+<h3><strong>-t, --format=TYPE</strong></h3>
+<p>出力形式のタイプを指定します。一般的な形式タイプには以下があります：</p>
 <ul>
 <li><code>a</code> - 名前付き文字</li>
-<li><code>c</code> - ASCII文字と8進数のエスケープシーケンス</li>
+<li><code>c</code> - ASCII文字またはバックスラッシュエスケープ</li>
 <li><code>d</code> - 符号付き10進数</li>
-<li><code>o</code> - 8進数</li>
+<li><code>o</code> - 8進数（デフォルト）</li>
 <li><code>x</code> - 16進数</li>
-<li><code>f</code> - 浮動小数点数</li>
+<li><code>f</code> - 浮動小数点</li>
 </ul>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>od<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>c
 <span style="color: #000; font-style: italic">0000000   H   e   l   l   o  \n</span>
 <span style="color: #000; font-style: italic">0000006</span>
 </pre></div>
-<h3><strong>-A FORMAT</strong></h3>
-<p>アドレス表示の基数を指定します：</p>
+<h3><strong>-A, --address-radix=RADIX</strong></h3>
+<p>ファイルオフセットを表示する基数を選択します。オプションには以下があります：</p>
 <ul>
 <li><code>d</code> - 10進数（デフォルト）</li>
 <li><code>o</code> - 8進数</li>
 <li><code>x</code> - 16進数</li>
-<li><code>n</code> - アドレスを表示しない</li>
+<li><code>n</code> - なし（アドレスなし）</li>
 </ul>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>od<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span>x<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>c
 <span style="color: #000; font-style: italic">000000   H   e   l   l   o  \n</span>
 <span style="color: #000; font-style: italic">000006</span>
 </pre></div>
-<h3><strong>-N BYTES</strong></h3>
-<p>指定したバイト数だけ読み込みます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>od<span style="color: #F8F8F8"> </span>-N<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>c
+<h3><strong>-j, --skip-bytes=BYTES</strong></h3>
+<p>データを読み取る前にBYTESバイト分の入力をスキップします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>od<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>c<span style="color: #F8F8F8"> </span>-j<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">6</span>
+<span style="color: #000; font-style: italic">0000006   W   o   r   l   d  \n</span>
+<span style="color: #000; font-style: italic">0000014</span>
+</pre></div>
+<h3><strong>-N, --read-bytes=BYTES</strong></h3>
+<p>ダンプをBYTESバイト分の入力に制限します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>od<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>c<span style="color: #F8F8F8"> </span>-N<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
 <span style="color: #000; font-style: italic">0000000   H   e   l   l   o</span>
 <span style="color: #000; font-style: italic">0000005</span>
 </pre></div>
-<h3><strong>-j BYTES</strong></h3>
-<p>指定したバイト数をスキップして表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>od<span style="color: #F8F8F8"> </span>-j<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">7</span><span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>c
-<span style="color: #000; font-style: italic">0000007   W   o   r   l   d  \n</span>
-<span style="color: #000; font-style: italic">0000015</span>
-</pre></div>
-<h2>使用例</h2>
-<h3>バイナリファイルの16進数表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>od<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>x1<span style="color: #F8F8F8"> </span>/bin/ls<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-5
-<span style="color: #000; font-style: italic">0000000 cf fa ed fe 07 00 00 01 03 00 00 00 02 00 00 00</span>
-<span style="color: #000; font-style: italic">0000020 19 00 00 00 48 01 00 00 85 00 20 00 00 00 00 00</span>
-<span style="color: #000; font-style: italic">0000040 19 00 00 00 38 00 00 00 5f 5f 50 41 47 45 5a 45</span>
-<span style="color: #000; font-style: italic">0000060 52 4f 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span>
-<span style="color: #000; font-style: italic">0000100 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00</span>
-</pre></div>
-<h3>テキストファイルの非表示文字を確認</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello\tWorld\nNew Line&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>od<span style="color: #F8F8F8"> </span>-c
-<span style="color: #000; font-style: italic">0000000   H   e   l   l   o  \t   W   o   r   l   d  \n   N   e   w    </span>
-<span style="color: #000; font-style: italic">0000020   L   i   n   e  \n                                            </span>
-<span style="color: #000; font-style: italic">0000025</span>
-</pre></div>
-<h3>複数の形式で同時に表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ABC123&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>od<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>x1z<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>c
-<span style="color: #000; font-style: italic">0000000  41  42  43  31  32  33  0a                              &gt;ABC123.&lt;</span>
-<span style="color: #000; font-style: italic">         A   B   C   1   2   3  \n</span>
-<span style="color: #000; font-style: italic">0000007</span>
-</pre></div>
-<h2>ヒント:</h2>
-<h3>複数の形式を同時に表示する</h3>
-<p><code>-t</code> オプションを複数回使用することで、同じデータを複数の形式で同時に表示できます。これはバイナリデータを解析する際に特に便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>od<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>x1<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>c
-<span style="color: #000; font-style: italic">0000000  48  65  6c  6c  6f  0a</span>
-<span style="color: #000; font-style: italic">         H   e   l   l   o  \n</span>
+<h3><strong>-v, --output-duplicates</strong></h3>
+<p>行の抑制を示す*（アスタリスク）を使用しません。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;AAAAA&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>od<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>c<span style="color: #F8F8F8"> </span>-v
+<span style="color: #000; font-style: italic">0000000   A   A   A   A   A  \n</span>
 <span style="color: #000; font-style: italic">0000006</span>
 </pre></div>
-<h3>非表示文字の検出</h3>
-<p>テキストファイルに含まれる制御文字やヌル文字などの非表示文字を検出するには、<code>-c</code> オプションを使用します。これはファイルの問題をデバッグする際に役立ちます。</p>
-<h3>バイト単位での表示</h3>
-<p>大きなファイルの特定部分だけを調べたい場合は、<code>-j</code>（スキップ）と<code>-N</code>（バイト数）オプションを組み合わせて使用すると効率的です。</p>
+<h3><strong>-w, --width=BYTES</strong></h3>
+<p>出力行あたりBYTESバイト出力します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>od<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>c<span style="color: #F8F8F8"> </span>-w3
+<span style="color: #000; font-style: italic">0000000   H   e   l</span>
+<span style="color: #000; font-style: italic">0000003   l   o      </span>
+<span style="color: #000; font-style: italic">0000006   W   o   r</span>
+<span style="color: #000; font-style: italic">0000011   l   d  \n</span>
+<span style="color: #000; font-style: italic">0000014</span>
+</pre></div>
+<h2>使用例</h2>
+<h3>ファイルを16進数形式で表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>od<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>x1
+<span style="color: #000; font-style: italic">0000000 48 65 6c 6c 6f 0a</span>
+<span style="color: #000; font-style: italic">0000006</span>
+</pre></div>
+<h3>ファイルを複数の形式で同時に表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ABC&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>od<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>x1z<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>c
+<span style="color: #000; font-style: italic">0000000 41 42 43 0a                                &gt;ABC.&lt;</span>
+<span style="color: #000; font-style: italic">0000004   A   B   C  \n</span>
+<span style="color: #000; font-style: italic">0000004</span>
+</pre></div>
+<h3>バイナリファイル構造の検査</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>od<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>x1<span style="color: #F8F8F8"> </span>-N<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">16</span><span style="color: #F8F8F8"> </span>/bin/ls
+<span style="color: #000; font-style: italic">0000000 cf fa ed fe 07 00 00 01 03 00 00 80 02 00 00 00</span>
+<span style="color: #000; font-style: italic">0000020</span>
+</pre></div>
+<h3>カスタムアドレス形式とバイト幅でファイルを表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>od<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span>x<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>c<span style="color: #F8F8F8"> </span>-w4
+<span style="color: #000; font-style: italic">000000   H   e   l   l</span>
+<span style="color: #000; font-style: italic">000004   o       W   o</span>
+<span style="color: #000; font-style: italic">000008   r   l   d  \n</span>
+<span style="color: #000; font-style: italic">00000c</span>
+</pre></div>
+<h2>ヒント:</h2>
+<h3>より良い分析のために形式タイプを組み合わせる</h3>
+<p>複数の <code>-t</code> オプションを使用して同じデータを異なる形式で同時に表示すると、バイナリデータの解釈が容易になります。</p>
+<h3>パイプを使用して素早くデータを検査</h3>
+<p>コマンド出力を直接 <code>od</code> にパイプすることで、一時ファイルを作成せずにバイナリや特殊文字データを素早く検査できます。</p>
+<h3>読みやすさのためにアドレス表示をカスタマイズ</h3>
+<p><code>-A</code> を使用してアドレスの表示方法を変更できます。例えば、<code>-A n</code> は内容だけに関心がある場合にアドレスを完全に削除します。</p>
+<h3>大きなファイルの特定部分を検査</h3>
+<p><code>-j</code>（スキップ）と <code>-N</code>（制限）を組み合わせて、ファイル全体をロードせずに大きなファイルの特定のセクションを検査できます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>od</code>と<code>hexdump</code>の違いは何ですか？</h4>
-<p>A. どちらもバイナリデータを表示するコマンドですが、<code>od</code>はより古いコマンドで、<code>hexdump</code>はより柔軟なフォーマットオプションを提供します。多くの場合、<code>hexdump -C</code>は<code>od -t x1c</code>と同様の出力を生成します。</p>
-<h4>Q2. 大きなファイルの一部だけを表示するにはどうすればよいですか？</h4>
-<p>A. <code>-j</code>オプションでスキップするバイト数を指定し、<code>-N</code>オプションで表示するバイト数を指定します。例：<code>od -j 1000 -N 100 -t x1 file.bin</code></p>
-<h4>Q3. ファイルの先頭だけを確認するにはどうすればよいですか？</h4>
-<p>A. <code>od</code>コマンドを<code>head</code>コマンドと組み合わせるか、<code>-N</code>オプションを使用します。例：<code>od -N 100 -t x1 file.bin</code></p>
-<h4>Q4. 特定のバイトパターンを検索するにはどうすればよいですか？</h4>
-<p>A. <code>od</code>自体には検索機能はありませんが、出力を<code>grep</code>にパイプすることで特定のパターンを検索できます。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSの<code>od</code>コマンドはGNU版と若干の違いがあります。特に、一部のフォーマット指定子の動作が異なる場合があります。また、macOSでは<code>hexdump</code>コマンドがより多く使用される傾向があります。</p>
-<h2>参考文献</h2>
+<h4>Q1. &quot;od&quot;は何の略ですか？</h4>
+<p>A. &quot;od&quot;は&quot;octal dump&quot;（8進数ダンプ）の略で、元々はファイルの内容を8進数形式で表示する目的を反映しています。</p>
+<h4>Q2. ファイルを16進数形式で表示するにはどうすればよいですか？</h4>
+<p>A. <code>od -t x1</code> を使用すると、1バイトごとに16進数でファイルを表示できます。</p>
+<h4>Q3. 16進数とASCII表現の両方を表示するにはどうすればよいですか？</h4>
+<p>A. <code>od -t x1 -t c</code> を使用すると、16進数と文字表現の両方を並べて表示できます。</p>
+<h4>Q4. 大きなファイルの一部だけを検査するにはどうすればよいですか？</h4>
+<p>A. <code>od -j OFFSET -N LENGTH</code> を使用して特定のセクションを検査できます。OFFSETは開始バイト位置、LENGTHは読み取るバイト数です。</p>
+<h4>Q5. 出力にアスタリスク(*)が表示されるのはなぜですか？</h4>
+<p>A. アスタリスクは抑制された繰り返し行を示します。すべての行を抑制なしで表示するには <code>-v</code> オプションを使用してください。</p>
+<h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/od-invocation.html</p>
-<h2>改訂履歴</h2>
+<h2>Revisions</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回リビジョン</li>
 </ul>
 
 

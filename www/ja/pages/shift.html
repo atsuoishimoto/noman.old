@@ -47,75 +47,94 @@
     <main>
       
   <h1>shift コマンド</h1>
-<p>シェルスクリプト内で位置パラメータをシフトします。</p>
+<p>シェルスクリプト内の位置パラメータをシフトし、最初のパラメータを削除して他のすべてのパラメータを1つ下の位置に移動します。</p>
 <h2>概要</h2>
-<p><code>shift</code> コマンドはシェルスクリプト内で使用され、位置パラメータ（コマンドライン引数）を左にシフトします。デフォルトでは、<code>$2</code> が <code>$1</code> になり、<code>$3</code> が <code>$2</code> になるといった具合に、すべての引数が一つずつ左に移動します。元の <code>$1</code> は削除されます。これは、多数の引数を順番に処理する場合や、オプションを解析する場合に特に便利です。</p>
+<p><code>shift</code>コマンドはシェル組み込みコマンドで、シェルスクリプト内の位置パラメータ（$1、$2など）を調整します。デフォルトでは、最初のパラメータ（$1）を削除し、残りのすべてのパラメータを1つ下の位置にシフトします（$2が$1に、$3が$2になるなど）。スクリプト内でコマンドライン引数を順番に処理する際によく使用されます。</p>
 <h2>オプション</h2>
-<h3><strong>N（数値）</strong></h3>
-<p>シフトする位置パラメータの数を指定します。デフォルトは1です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">shift</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># 2つの位置パラメータをシフト</span>
+<h3><strong>-n N</strong>（Bashのみ）</h3>
+<p>位置パラメータを1つではなくN個の位置だけシフトします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">set</span><span style="color: #F8F8F8"> </span>--<span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span>b<span style="color: #F8F8F8"> </span>c<span style="color: #F8F8F8"> </span>d<span style="color: #F8F8F8"> </span>e
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$1</span><span style="color: #F8F8F8"> </span><span style="color: #000">$2</span><span style="color: #F8F8F8"> </span><span style="color: #000">$3</span>
+<span style="color: #000; font-style: italic">a b c</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">shift</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$1</span><span style="color: #F8F8F8"> </span><span style="color: #000">$2</span><span style="color: #F8F8F8"> </span><span style="color: #000">$3</span>
+<span style="color: #000; font-style: italic">c d e</span>
 </pre></div>
+<p>注意：<code>shift</code>コマンドのオプションは非常に少なく、その主な目的はシンプルです。</p>
 <h2>使用例</h2>
-<h3>基本的な使用方法</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">#</span>!/bin/bash
+<h3>スクリプト内での基本的な使用法</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>shift_example.sh
+<span style="color: #8F5902">#</span>!/bin/bash
+<span style="color: #000; font-style: italic">echo &quot;引数の総数: $#&quot;</span>
 <span style="color: #000; font-style: italic">echo &quot;最初の引数: $1&quot;</span>
-<span style="color: #000; font-style: italic">echo &quot;2番目の引数: $2&quot;</span>
 <span style="color: #000; font-style: italic">shift</span>
 <span style="color: #000; font-style: italic">echo &quot;シフト後の最初の引数: $1&quot;</span>
-<span style="color: #000; font-style: italic">echo &quot;シフト後の2番目の引数: $2&quot;</span>
-</pre></div>
-<p>実行結果:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>./script.sh<span style="color: #F8F8F8"> </span>apple<span style="color: #F8F8F8"> </span>orange<span style="color: #F8F8F8"> </span>banana
+<span style="color: #000; font-style: italic">echo &quot;シフト後の引数の総数: $#&quot;</span>
+
+<span style="color: #8F5902">$ </span>./shift_example.sh<span style="color: #F8F8F8"> </span>apple<span style="color: #F8F8F8"> </span>banana<span style="color: #F8F8F8"> </span>cherry
+<span style="color: #000; font-style: italic">引数の総数: 3</span>
 <span style="color: #000; font-style: italic">最初の引数: apple</span>
-<span style="color: #000; font-style: italic">2番目の引数: orange</span>
-<span style="color: #000; font-style: italic">シフト後の最初の引数: orange</span>
-<span style="color: #000; font-style: italic">シフト後の2番目の引数: banana</span>
+<span style="color: #000; font-style: italic">シフト後の最初の引数: banana</span>
+<span style="color: #000; font-style: italic">シフト後の引数の総数: 2</span>
 </pre></div>
-<h3>複数の引数をシフトする</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">#</span>!/bin/bash
-<span style="color: #000; font-style: italic">echo &quot;引数: $1 $2 $3&quot;</span>
-<span style="color: #000; font-style: italic">shift 2</span>
-<span style="color: #000; font-style: italic">echo &quot;2つシフト後の引数: $1 $2 $3&quot;</span>
-</pre></div>
-<p>実行結果:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>./script.sh<span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span>b<span style="color: #F8F8F8"> </span>c<span style="color: #F8F8F8"> </span>d
-<span style="color: #000; font-style: italic">引数: a b c</span>
-<span style="color: #000; font-style: italic">2つシフト後の引数: c d</span>
-</pre></div>
-<h3>while ループでの使用例</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">#</span>!/bin/bash
+<h3>ループ内ですべての引数を処理する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>process_args.sh
+<span style="color: #8F5902">#</span>!/bin/bash
 <span style="color: #000; font-style: italic">while [ $# -gt 0 ]; do</span>
-<span style="color: #000; font-style: italic">    echo &quot;処理中の引数: $1&quot;</span>
+<span style="color: #000; font-style: italic">    echo &quot;処理中: $1&quot;</span>
 <span style="color: #000; font-style: italic">    shift</span>
 <span style="color: #000; font-style: italic">done</span>
+
+<span style="color: #8F5902">$ </span>./process_args.sh<span style="color: #F8F8F8"> </span>one<span style="color: #F8F8F8"> </span>two<span style="color: #F8F8F8"> </span>three
+<span style="color: #000; font-style: italic">処理中: one</span>
+<span style="color: #000; font-style: italic">処理中: two</span>
+<span style="color: #000; font-style: italic">処理中: three</span>
 </pre></div>
-<p>実行結果:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>./script.sh<span style="color: #F8F8F8"> </span>apple<span style="color: #F8F8F8"> </span>orange<span style="color: #F8F8F8"> </span>banana
-<span style="color: #000; font-style: italic">処理中の引数: apple</span>
-<span style="color: #000; font-style: italic">処理中の引数: orange</span>
-<span style="color: #000; font-style: italic">処理中の引数: banana</span>
+<h3>数値を指定したshift（Bash）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>shift_multiple.sh
+<span style="color: #8F5902">#</span>!/bin/bash
+<span style="color: #000; font-style: italic">echo &quot;元の引数: $@&quot;</span>
+<span style="color: #000; font-style: italic">echo &quot;数: $#&quot;</span>
+<span style="color: #000; font-style: italic">shift 2</span>
+<span style="color: #000; font-style: italic">echo &quot;shift 2後: $@&quot;</span>
+<span style="color: #000; font-style: italic">echo &quot;数: $#&quot;</span>
+
+<span style="color: #8F5902">$ </span>./shift_multiple.sh<span style="color: #F8F8F8"> </span>a<span style="color: #F8F8F8"> </span>b<span style="color: #F8F8F8"> </span>c<span style="color: #F8F8F8"> </span>d<span style="color: #F8F8F8"> </span>e
+<span style="color: #000; font-style: italic">元の引数: a b c d e</span>
+<span style="color: #000; font-style: italic">数: 5</span>
+<span style="color: #000; font-style: italic">shift 2後: c d e</span>
+<span style="color: #000; font-style: italic">数: 3</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>引数の数を確認する</h3>
-<p><code>$#</code> 変数を使用して、残りの引数の数を確認できます。これは、すべての引数を処理したかどうかを判断するのに役立ちます。</p>
-<h3>エラー処理</h3>
-<p>シフトする引数がない場合（<code>$#</code> が0の場合）に <code>shift</code> を実行すると、エラーが発生します。常に <code>$#</code> をチェックしてからシフトすることをお勧めします。</p>
-<h3>オプション解析での活用</h3>
-<p><code>shift</code> はコマンドラインオプションを解析する際に非常に便利です。オプションを処理した後にシフトすることで、次のオプションに進むことができます。</p>
+<h3>残りの引数を確認する</h3>
+<p>特に<code>shift n</code>を使用する場合は、シフトする前に十分な引数が残っているかを常に確認してください。引数の数よりも多くの位置をシフトしようとすると、シェルによってはエラーが発生します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>safe_shift.sh
+<span style="color: #8F5902">#</span>!/bin/bash
+<span style="color: #000; font-style: italic">if [ $# -ge 2 ]; then</span>
+<span style="color: #000; font-style: italic">    shift 2</span>
+<span style="color: #000; font-style: italic">else</span>
+<span style="color: #000; font-style: italic">    echo &quot;2つの位置をシフトするのに十分な引数がありません&quot;</span>
+<span style="color: #000; font-style: italic">fi</span>
+</pre></div>
+<h3>getoptsと組み合わせる</h3>
+<p>オプションと引数の両方を処理する場合は、まず<code>getopts</code>でオプションを処理し、その後<code>shift</code>を使用して残りの引数を処理します。</p>
+<h3>$0は変更されないことを覚えておく</h3>
+<p><code>shift</code>コマンドは位置パラメータ（$1、$2など）にのみ影響します。スクリプト名（$0）は変更されません。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>shift</code> コマンドは何に使われますか？</h4>
-<p>A. シェルスクリプト内で位置パラメータ（コマンドライン引数）を左にシフトするために使用されます。これにより、多数の引数を順番に処理できます。</p>
-<h4>Q2. <code>shift</code> を使うと元の引数はどうなりますか？</h4>
-<p>A. シフトされた引数は完全に削除されます。例えば、<code>shift</code> を実行すると、元の <code>$1</code> の値は失われ、<code>$2</code> の値が新しい <code>$1</code> になります。</p>
-<h4>Q3. 引数がない状態で <code>shift</code> を実行するとどうなりますか？</h4>
-<p>A. 引数がない状態（<code>$#</code> が0の場合）で <code>shift</code> を実行すると、エラーが発生します。常に <code>$#</code> をチェックしてからシフトすることをお勧めします。</p>
-<h4>Q4. <code>shift</code> コマンドは特定のシェルでのみ使用できますか？</h4>
-<p>A. <code>shift</code> は bash、sh、zsh など、ほとんどのUNIXシェルで使用できる組み込みコマンドです。</p>
-<h2>参考文献</h2>
-<p>https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-shift</p>
+<h4>Q1. 引数が残っていない場合に shift を使用するとどうなりますか？</h4>
+<p>A. ほとんどのシェルでは、引数が残っていない状態で<code>shift</code>を使用してもエラーは発生しませんが、n個未満の引数しか残っていない状態で<code>shift n</code>を使用すると、シェルによってはエラーが発生する場合があります。</p>
+<h4>Q2. shift は $@ と $* 変数に影響しますか？</h4>
+<p>A. はい、$@と$*の両方がシフト後の新しい位置パラメータのセットを反映するように更新されます。</p>
+<h4>Q3. 対話型シェルセッションでshiftを使用できますか？</h4>
+<p>A. はい、使用できますが、主にスクリプトで役立ちます。対話型セッションでは、まず<code>set -- arg1 arg2</code>を使用して位置パラメータを設定できます。</p>
+<h4>Q4. シフト後に残っている引数の数をどうやって知ることができますか？</h4>
+<p>A. $#変数を使用します。これは常に現在の位置パラメータの数を含んでいます。</p>
+<h2>参考資料</h2>
+<p><code>shift</code>コマンドはシェル組み込みコマンドで、Bashマニュアルに記載されています：
+https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-shift</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

@@ -1,130 +1,138 @@
 # scp コマンド
 
-ネットワーク経由でファイルやディレクトリを安全にコピーします。
+ネットワーク上のホスト間でSSHを使用してファイルを安全にコピーします。
 
 ## 概要
 
-`scp`（Secure Copy Protocol）は、SSHプロトコルを使用してローカルマシンとリモートマシン間、またはリモートマシン同士でファイルを安全に転送するためのコマンドです。データは暗号化されて送信されるため、セキュリティが確保されます。
+`scp`（secure copy）は、暗号化されたSSH接続を介してコンピュータ間でファイルを安全に転送できるコマンドラインユーティリティです。`cp`コマンドの機能とSSHのセキュリティを組み合わせており、リモートサーバーとの間でファイルをコピーする安全な方法を提供します。
 
 ## オプション
 
-### **-r**（再帰的コピー）
+### **-r, --recursive**
 
-ディレクトリとその中身を再帰的にコピーします。
+ディレクトリを再帰的にコピーします
 
 ```console
-$ scp -r ~/Documents/project user@remote-host:/home/user/backup/
-project/                                   100%  4096     1.2MB/s   00:00    
-file1.txt                                  100%  1024     0.5MB/s   00:00
-file2.txt                                  100%  2048     0.8MB/s   00:00
+$ scp -r documents/ user@remote:/home/user/backup/
+documents/file1.txt                 100%  123     1.2KB/s   00:00    
+documents/file2.txt                 100%  456     2.3KB/s   00:00
+documents/subfolder/file3.txt       100%  789     3.4KB/s   00:00
 ```
 
-### **-P**（ポート指定）
+### **-P, --port**
 
-デフォルト（22）以外のSSHポートを指定します。
+リモートホストに接続する際の異なるポートを指定します
 
 ```console
-$ scp -P 2222 file.txt user@remote-host:/home/user/
-file.txt                                   100%  1024     0.5MB/s   00:00
+$ scp -P 2222 file.txt user@remote:/home/user/
+file.txt                            100%  123     1.2KB/s   00:00
 ```
 
-### **-p**（パーミッション保持）
+### **-p**
 
-元のファイルの修正時刻、アクセス時刻、モードを保持します。
+元のファイルから更新時刻、アクセス時刻、モードを保持します
 
 ```console
-$ scp -p important.conf user@remote-host:/etc/
-important.conf                             100%  2048     0.8MB/s   00:00
+$ scp -p important.txt user@remote:/home/user/
+important.txt                       100%  123     1.2KB/s   00:00
 ```
 
-### **-C**（圧縮）
+### **-q, --quiet**
 
-転送中にデータを圧縮します。低速ネットワークで有用です。
+静かモード：進捗メーターと警告/診断メッセージを無効にします
 
 ```console
-$ scp -C large_file.zip user@remote-host:~/
-large_file.zip                             100%  10MB     2.5MB/s   00:04
+$ scp -q large_file.zip user@remote:/home/user/
 ```
 
-### **-q**（静かモード）
+### **-C, --compress**
 
-進行状況メーターやエラー以外のメッセージを表示しません。
+ファイル転送中に圧縮を有効にします
 
 ```console
-$ scp -q file.txt user@remote-host:~/
+$ scp -C large_file.zip user@remote:/home/user/
+large_file.zip                      100%  10MB    5.0MB/s   00:02
+```
+
+### **-l, --limit-bandwidth**
+
+使用する帯域幅を制限します（Kbit/s単位で指定）
+
+```console
+$ scp -l 1000 large_file.zip user@remote:/home/user/
+large_file.zip                      100%  10MB    1.0MB/s   00:10
 ```
 
 ## 使用例
 
-### ローカルからリモートへのファイルコピー
+### ローカルファイルをリモートサーバーにコピーする
 
 ```console
-$ scp document.txt user@remote-host:/path/to/destination/
-document.txt                               100%  1024     0.5MB/s   00:00
+$ scp document.txt user@remote.server:/path/to/destination/
+document.txt                        100%  123     1.2KB/s   00:00
 ```
 
-### リモートからローカルへのファイルコピー
+### リモートサーバーからローカルマシンにファイルをコピーする
 
 ```console
-$ scp user@remote-host:/path/to/file.txt ./
-file.txt                                   100%  2048     0.8MB/s   00:00
+$ scp user@remote.server:/path/to/file.txt ./
+file.txt                            100%  123     1.2KB/s   00:00
 ```
 
-### リモートからリモートへのファイルコピー
+### 2つのリモートサーバー間でコピーする
 
 ```console
-$ scp user1@host1:/path/file.txt user2@host2:/path/
-file.txt                                   100%  1024     0.5MB/s   00:00
+$ scp user1@server1:/path/to/file.txt user2@server2:/path/to/destination/
+file.txt                            100%  123     1.2KB/s   00:00
 ```
 
-### ワイルドカードを使用した複数ファイルのコピー
+### 複数のファイルを一度にコピーする
 
 ```console
-$ scp user@remote-host:/path/*.txt ./
-file1.txt                                  100%  1024     0.5MB/s   00:00
-file2.txt                                  100%  2048     0.8MB/s   00:00
+$ scp file1.txt file2.txt user@remote:/home/user/
+file1.txt                           100%  123     1.2KB/s   00:00
+file2.txt                           100%  456     2.3KB/s   00:00
 ```
 
 ## ヒント:
 
-### SSH鍵認証の利用
+### パスワードなしの転送にSSH鍵を使用する
 
-パスワード入力を省略するためにSSH鍵認証を設定しておくと、自動化スクリプトでの利用が容易になります。
+SSH鍵認証を設定して、転送ごとにパスワードを入力する必要をなくしましょう。これは頻繁な転送において、より安全で便利な方法です。
 
-### 大きなファイルの転送
+### ファイル名の特殊文字をエスケープする
 
-大きなファイルを転送する場合は、`-C`オプションで圧縮するか、事前にファイルを圧縮してから転送すると効率的です。
+スペースや特殊文字を含むファイルを転送する場合は、引用符を使用するか文字をエスケープしてください：
+```console
+$ scp "file with spaces.txt" user@remote:/home/user/
+```
 
-### 安全な接続の確認
+### 新しい接続のフィンガープリントを確認する
 
-初めて接続するホストの場合、フィンガープリントの確認を求められます。セキュリティのため、これを確認することが重要です。
+中間者攻撃を防ぐため、新しいサーバーに接続する際は常にSSHフィンガープリントを確認しましょう。
 
-### 帯域制限
+### 低速接続には圧縮を使用する
 
-`-l`オプションを使用して帯域幅を制限できます（例：`scp -l 1000`で約1Mbps）。共有ネットワークでの大きなファイル転送時に有用です。
+`-C`オプションは圧縮を有効にし、特にテキストファイルの場合、低速ネットワーク接続での転送速度を大幅に向上させることができます。
 
 ## よくある質問
 
-#### Q1. scpとrsyncの違いは何ですか？
-A. scpは単純なファイルコピーに適していますが、rsyncは差分転送や同期機能があり、大量のファイルや定期的な同期に適しています。
+#### Q1. scpは通常のcpとどう違いますか？
+A. `scp`はSSH暗号化を使用してネットワーク経由で動作しますが、`cp`はローカルでのみ動作します。`scp`は認証が必要で、安全で暗号化されたファイル転送を提供します。
 
-#### Q2. パスワードなしでscpを使うにはどうすればいいですか？
-A. SSH鍵ペアを生成し、`ssh-copy-id user@remote-host`でリモートホストに公開鍵を登録します。
+#### Q2. 中断されたファイル転送をscpで再開できますか？
+A. いいえ、`scp`は中断された転送の再開をサポートしていません。その機能が必要な場合は、`-P`オプション付きの`rsync`の使用を検討してください。
 
-#### Q3. 特定のSSH設定ファイルを使用するには？
-A. `-F`オプションで設定ファイルを指定できます：`scp -F /path/to/ssh_config file.txt user@host:~/`
+#### Q3. ディレクトリ全体を転送するにはどうすればよいですか？
+A. `-r`（再帰的）オプションを使用します：`scp -r /path/to/directory user@remote:/destination/`
 
-#### Q4. 転送速度が遅い場合はどうすればいいですか？
-A. `-C`オプションで圧縮を有効にするか、Cipher指定（`-c aes128-ctr`など）で高速な暗号化アルゴリズムを選択できます。
+#### Q4. 標準以外のSSHポートを指定するにはどうすればよいですか？
+A. `-P`オプションを使用します：`scp -P 2222 file.txt user@remote:/home/user/`
 
-## macOSでの注意点
-
-macOSでは、Homebrewを使って最新版のOpenSSHをインストールすることができます。デフォルトのバージョンでは一部の新しいオプションが使えない場合があります。また、macOSのファイルシステム属性（拡張属性）は転送されないため、重要な場合は`tar`でアーカイブしてから転送することをお勧めします。
-
-## 参考
+## 参考文献
 
 https://man.openbsd.org/scp.1
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

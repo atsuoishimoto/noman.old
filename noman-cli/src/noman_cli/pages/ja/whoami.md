@@ -1,107 +1,114 @@
 # whoami コマンド
 
-現在のユーザー名を表示します。
+現在の実効ユーザー名を表示します。
 
 ## 概要
 
-`whoami` コマンドは、現在のシェルセッションで実行しているユーザーの名前（ユーザーID）を表示します。システム管理やスクリプト作成時に、現在どのユーザーとして操作しているかを確認するのに役立ちます。
+`whoami`コマンドは、現在の実効ユーザーIDに関連付けられたユーザー名を出力します。このシンプルなユーティリティは、現在のセッションでどのユーザーアカウントが使用されているかを識別するのに役立ちます。特にスクリプト内での使用、ユーザー間の切り替え時、またはパーミッションの問題をトラブルシューティングする際に便利です。
 
 ## オプション
 
-`whoami` コマンドは基本的にオプションなしで使用されることが多いですが、いくつかの一般的なオプションがあります。
+`whoami`コマンドは単一の明確な機能を実行するため、オプションはほとんどありません。
 
 ### **--help**
 
-ヘルプメッセージを表示します。
+ヘルプ情報を表示して終了します。
 
 ```console
 $ whoami --help
-使用法: whoami [オプション]...
-現在の実効ユーザーIDに関連付けられたユーザー名を表示する
+Usage: whoami [OPTION]...
+Print the user name associated with the current effective user ID.
+Same as id -un.
 
-      --help     このヘルプを表示して終了
-      --version  バージョン情報を表示して終了
+      --help     display this help and exit
+      --version  output version information and exit
+
+GNU coreutils online help: <https://www.gnu.org/software/coreutils/>
+Report whoami translation bugs to <https://translationproject.org/team/>
 ```
 
 ### **--version**
 
-バージョン情報を表示します。
+バージョン情報を表示して終了します。
 
 ```console
 $ whoami --version
 whoami (GNU coreutils) 8.32
 Copyright (C) 2020 Free Software Foundation, Inc.
-ライセンス GPLv3+: GNU GPL バージョン 3 以降 <https://gnu.org/licenses/gpl.html>.
-これはフリーソフトウェアです: 自由に変更および配布できます.
-法律の許す限り、　無保証　です.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Richard Mlynarik.
 ```
 
 ## 使用例
 
-### 基本的な使用法
+### 基本的な使い方
+
+単に`whoami`と入力すると、現在の実効ユーザー名が表示されます：
 
 ```console
 $ whoami
-username
+alice
 ```
 
-上記の例では、現在ログインしているユーザー名（この場合は「username」）が表示されています。
+### スクリプト内での使用
 
-### スクリプト内での使用例
+このコマンドは、シェルスクリプト内で現在のユーザーを確認するためによく使用されます：
 
 ```console
-$ echo "現在のユーザー: $(whoami)"
-現在のユーザー: username
+$ if [ "$(whoami)" != "root" ]; then
+>   echo "このスクリプトはroot権限で実行する必要があります"
+>   exit 1
+> fi
+このスクリプトはroot権限で実行する必要があります
 ```
 
-### sudo と組み合わせた使用例
+### ユーザー切り替え後
+
+`su`や`sudo`を使用してユーザーを変更した後、`whoami`は新しい実効ユーザーを表示します：
 
 ```console
 $ whoami
-username
-$ sudo whoami
+alice
+$ sudo -s
+# whoami
 root
 ```
 
-通常のユーザーと、sudo（管理者権限）を使用した場合のユーザーの違いを確認できます。
-
 ## ヒント:
 
-### ユーザー切り替え確認
+### 実効ユーザーIDと実ユーザーIDの違いを理解する
 
-`su` や `sudo` コマンドでユーザーを切り替えた後、正しく切り替わったかを確認するために使用できます。
+`whoami`は実効ユーザーIDを表示しますが、これは`sudo`などのコマンドを使用する場合、実ユーザーIDとは異なる場合があります。両方のIDを確認するには、代わりに`id`コマンドを使用してください。
 
-### スクリプト内での条件分岐
+### 代替コマンド
 
-シェルスクリプト内で現在のユーザーに基づいて処理を分岐させる際に役立ちます。
+`id -un`コマンドは`whoami`と同じ情報を提供し、すべてのUNIX系システムで利用可能なため、スクリプトではより移植性の高い代替手段となります。
 
-```bash
-if [ "$(whoami)" = "root" ]; then
-    echo "管理者として実行中です"
-else
-    echo "一般ユーザーとして実行中です"
-fi
-```
+### セキュリティに関する考慮事項
 
-### 関連コマンド
-
-`id` コマンドを使うと、ユーザー名だけでなくユーザーIDやグループ情報も表示できます。
+セキュリティに敏感なスクリプトを作成する場合、`whoami`は実効ユーザーのみを表示し、必ずしもプロセスを最初に起動したユーザーを表示するわけではないことを覚えておいてください。
 
 ## よくある質問
 
-#### Q1. `whoami` と `who am i` の違いは何ですか？
-A. `whoami` は現在の実効ユーザーを表示しますが、`who am i`（または `who -m`）はログイン時のユーザー情報を表示します。`su` などでユーザーを切り替えた場合に違いが出ます。
+#### Q1. `whoami`と`who am i`の違いは何ですか？
+A. `whoami`は現在のプロセスの実効ユーザー名を表示しますが、`who am i`（または`who -m`）は元のログイン名、端末、およびログイン時間を表示します。
 
-#### Q2. `whoami` と `id` の違いは何ですか？
-A. `whoami` はユーザー名のみを表示しますが、`id` コマンドはユーザーID、グループIDなどより詳細な情報を表示します。
+#### Q2. `whoami`でroot権限で実行しているかどうかを確認できますか？
+A. はい。`whoami`が「root」を返す場合、root権限で実行していることになります。
 
-#### Q3. スクリプト内で `whoami` の出力を変数に格納するにはどうすればよいですか？
-A. `USER=$(whoami)` のように変数に代入できます。その後、`$USER` で参照できます。
+#### Q3. `whoami`はすべてのUnix/Linuxシステムで同じように動作しますか？
+A. はい、基本的な機能はUnix系システム間で一貫していますが、一部のシステムでは出力形式が若干異なる場合があります。
 
-## 参考情報
+#### Q4. なぜ`id`の代わりに`whoami`を使用するのですか？
+A. `whoami`はよりシンプルで、ユーザー名のみを提供します。一方、`id`はユーザーID、グループID、およびグループメンバーシップを含むより包括的な情報を提供します。
+
+## 参考資料
 
 https://www.gnu.org/software/coreutils/manual/html_node/whoami-invocation.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

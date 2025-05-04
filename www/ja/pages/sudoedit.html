@@ -47,68 +47,66 @@
     <main>
       
   <h1>sudoedit コマンド</h1>
-<p>特権が必要なファイルを安全に編集するためのコマンド。</p>
+<p>特権ユーザーとしてファイルを安全に編集し、ファイルの所有権と権限を維持します。</p>
 <h2>概要</h2>
-<p><code>sudoedit</code>（または <code>sudo -e</code>）は、root 権限が必要なファイルを一般ユーザーの権限で安全に編集するためのコマンドです。通常のテキストエディタを使用しながら、特権が必要なファイルを編集できます。このコマンドは、一時ファイルにコピーを作成し、編集後に元のファイルに変更を適用するため、セキュリティリスクを最小限に抑えることができます。</p>
+<p><code>sudoedit</code>（<code>sudo -e</code> としても利用可能）は、ユーザー自身のエディタ設定を使用しながら、特権が必要なファイルを編集できるようにするコマンドです。<code>sudo vim</code> で直接編集する場合と異なり、<code>sudoedit</code> はファイルの一時コピーを作成し、そのコピーをユーザーが好みのエディタで編集した後、変更を元のファイルに反映します。これにより、ファイルの元の所有権と権限が保持されます。</p>
 <h2>オプション</h2>
-<h3><strong>-u, --user=ユーザー名</strong></h3>
-<p>指定したユーザーとしてファイルを編集します。</p>
+<h3><strong>-u ユーザー名/ID</strong> / <strong>--user=ユーザー名/ID</strong></h3>
+<p>root ではなく指定したユーザーとしてファイルを編集します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>www-data<span style="color: #F8F8F8"> </span>/var/www/html/index.html
-<span style="color: #8F5902"># </span>www-dataユーザーとしてindex.htmlを編集する
 </pre></div>
-<h3><strong>-H</strong></h3>
-<p>ホームディレクトリを対象ユーザーのものに設定します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>-H<span style="color: #F8F8F8"> </span>/etc/hosts
-<span style="color: #8F5902"># </span>環境変数HOMEを対象ユーザー（root）のホームディレクトリに設定して編集
+<h3><strong>-H</strong> / <strong>--set-home</strong></h3>
+<p>HOME 環境変数をターゲットユーザーのホームディレクトリに設定します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>-H<span style="color: #F8F8F8"> </span>/etc/ssh/sshd_config
 </pre></div>
-<h3><strong>-E</strong></h3>
-<p>現在の環境変数を保持したまま編集します。</p>
+<h3><strong>-C 数値</strong> / <strong>--close-from=数値</strong></h3>
+<p>コマンド実行前に指定した数値以上のすべてのファイルディスクリプタを閉じます</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>/etc/hosts
+</pre></div>
+<h3><strong>-E</strong> / <strong>--preserve-env</strong></h3>
+<p>編集時にユーザーの環境変数を保持します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>-E<span style="color: #F8F8F8"> </span>/etc/nginx/nginx.conf
-<span style="color: #8F5902"># </span>現在のユーザーの環境変数を保持したままnginx.confを編集
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な使用方法</h3>
+<h3>基本的なファイル編集</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>/etc/ssh/sshd_config
-<span style="color: #8F5902"># </span>一時ファイルにコピーされ、編集後に元のファイルに変更が適用される
+<span style="color: #000; font-style: italic">[デフォルトエディタでファイルが開かれる]</span>
 </pre></div>
-<h3>複数ファイルの編集</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>/etc/resolv.conf
-<span style="color: #8F5902"># </span>複数のシステムファイルを連続して編集
+<h3>sudo -e の使用（sudoedit と同等）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>/etc/fstab
+<span style="color: #000; font-style: italic">[デフォルトエディタでファイルが開かれる]</span>
 </pre></div>
-<h3>特定のエディタを使用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">EDITOR</span><span style="color: #CE5C00; font-weight: bold">=</span>vim<span style="color: #F8F8F8"> </span>sudoedit<span style="color: #F8F8F8"> </span>/etc/fstab
-<span style="color: #8F5902"># </span>vimエディタを使用してfstabファイルを編集
+<h3>複数ファイルの同時編集</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>/etc/hostname
+<span style="color: #000; font-style: italic">[デフォルトエディタで最初のファイル、次に2番目のファイルが開かれる]</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>エディタの設定</h3>
-<p><code>sudoedit</code> は環境変数 <code>VISUAL</code> または <code>EDITOR</code> で指定されたエディタを使用します。これらが設定されていない場合は、デフォルトのエディタ（多くの場合 vi または nano）が使用されます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">export</span><span style="color: #F8F8F8"> </span><span style="color: #000">EDITOR</span><span style="color: #CE5C00; font-weight: bold">=</span>nano
-<span style="color: #8F5902">$ </span>sudoedit<span style="color: #F8F8F8"> </span>/etc/passwd
-<span style="color: #8F5902"># </span>nanoエディタでpasswdファイルを編集する
+<h3>好みのエディタの設定</h3>
+<p><code>sudoedit</code> は SUDO_EDITOR、VISUAL、または EDITOR 環境変数（この順序）を使用して、どのエディタを使用するかを決定します。シェル設定ファイルでこれらのいずれかを設定しましょう：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;export EDITOR=vim&#39;</span><span style="color: #F8F8F8"> </span>&gt;&gt;<span style="color: #F8F8F8"> </span>~/.bashrc
 </pre></div>
-<h3>一時ファイルの場所</h3>
-<p><code>sudoedit</code> は編集対象ファイルの一時コピーを <code>/tmp</code> などの一時ディレクトリに作成します。編集中に問題が発生した場合、この一時ファイルが残ることがあるので注意が必要です。</p>
-<h3>sudo -e の使用</h3>
-<p><code>sudoedit</code> は <code>sudo -e</code> の別名であり、どちらも同じ機能を持っています。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>/etc/default/grub
-<span style="color: #8F5902"># </span>sudoeditと同じ動作をする
+<h3>保存前の差分確認</h3>
+<p>重要なシステムファイルを編集する場合、変更が適用される前に diff コマンドを使用して変更内容を確認できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>/etc/ssh/sshd_config<span style="color: #F8F8F8"> </span>/tmp/sshd_config.tmp
 </pre></div>
+<h3>セキュリティ上の利点</h3>
+<p><code>sudoedit</code> は <code>sudo vim</code> よりも安全です。特権で過ごす時間を最小限に抑え、エディタのプラグインが root 権限で悪意のあるコードを実行する可能性を防ぎます。</p>
 <h2>よくある質問</h2>
 <h4>Q1. <code>sudoedit</code> と <code>sudo vim</code> の違いは何ですか？</h4>
-<p>A. <code>sudoedit</code> は一時ファイルを作成し、ユーザー権限でエディタを実行するため、セキュリティ上より安全です。一方、<code>sudo vim</code> はエディタ自体が root 権限で実行されるため、潜在的なセキュリティリスクがあります。</p>
-<h4>Q2. 編集中に変更を保存せずに終了するにはどうすればよいですか？</h4>
-<p>A. 使用しているエディタの通常の「保存せずに終了」コマンドを使用します（例：vim では <code>:q!</code>、nano では <code>Ctrl+X</code> の後に <code>N</code>）。一時ファイルが破棄され、元のファイルは変更されません。</p>
-<h4>Q3. <code>sudoedit</code> で使用するエディタを変更するにはどうすればよいですか？</h4>
-<p>A. 環境変数 <code>EDITOR</code> または <code>VISUAL</code> を設定します：<code>export EDITOR=nano</code> または <code>export VISUAL=code</code></p>
-<h4>Q4. <code>sudoedit</code> が「command not found」と表示される場合はどうすればよいですか？</h4>
-<p>A. <code>sudo -e</code> を代わりに使用するか、sudo パッケージが正しくインストールされていることを確認してください。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは、<code>sudoedit</code> コマンドの代わりに <code>sudo -e</code> を使用することが推奨されます。また、macOSのセキュリティ設定によっては、特定のシステムファイルの編集に追加の権限が必要な場合があります。System Integrity Protection (SIP) が有効な場合、一部のシステムファイルは編集できないことがあります。</p>
+<p>A. <code>sudoedit</code> はファイルの一時コピーを作成し、通常の権限でそれを編集した後、sudo 権限でコピーを元に戻します。これは <code>sudo vim</code> でエディタ全体を root として実行するよりも安全です。</p>
+<h4>Q2. <code>sudoedit</code> で使用するエディタを指定するにはどうすればよいですか？</h4>
+<p>A. シェル設定ファイル（例：~/.bashrc）で SUDO_EDITOR、VISUAL、または EDITOR 環境変数を設定します。</p>
+<h4>Q3. <code>sudoedit</code> で複数のファイルを一度に編集できますか？</h4>
+<p>A. はい、編集したいすべてのファイルを引数として列挙するだけです：<code>sudoedit file1 file2 file3</code></p>
+<h4>Q4. なぜ <code>sudoedit</code> が「sudoedit: no writable temporary directory found」というエラーで失敗することがありますか？</h4>
+<p>A. これは <code>sudoedit</code> が適切な権限を持つ一時ディレクトリを見つけられない場合に発生します。TMPDIR 環境変数を書き込み可能なディレクトリに設定してみてください。</p>
+<h2>macOSに関する注意点</h2>
+<p>macOSでは、<code>sudoedit</code> はLinuxと同様に動作しますが、デフォルトのエディタが異なる場合があります。macOSは通常、デフォルトエディタとしてnanoを使用します。これを変更するには、~/.zshrcまたは~/.bash_profileファイルでEDITOR環境変数を設定してください。</p>
 <h2>参考資料</h2>
 <p>https://www.sudo.ws/docs/man/sudoedit.man/</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

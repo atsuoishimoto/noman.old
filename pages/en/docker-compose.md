@@ -4,21 +4,66 @@ Define and run multi-container Docker applications.
 
 ## Overview
 
-Docker Compose is a tool for defining and running multi-container Docker applications. With a YAML file, you configure your application's services, networks, and volumes, then start all services with a single command. It simplifies the process of managing complex applications that require multiple interconnected containers.
+Docker Compose is a tool for defining and running multi-container Docker applications. With a YAML file, you configure your application's services, networks, and volumes, then start all services with a single command. It simplifies the process of managing multiple containers that work together as part of an application.
 
 ## Options
 
-### **up**
+### **-f, --file FILE**
 
-Start containers defined in the docker-compose.yml file
+Specify an alternate compose file (default: docker-compose.yml)
 
 ```console
-$ docker-compose up
+$ docker-compose -f custom-compose.yml up
+Creating network "myapp_default" with the default driver
+Creating myapp_web_1 ... done
+Creating myapp_db_1  ... done
+```
+
+### **-p, --project-name NAME**
+
+Specify an alternate project name (default: directory name)
+
+```console
+$ docker-compose -p myproject up
 Creating network "myproject_default" with the default driver
-Creating myproject_db_1    ... done
-Creating myproject_redis_1 ... done
-Creating myproject_web_1   ... done
-Attaching to myproject_db_1, myproject_redis_1, myproject_web_1
+Creating myproject_web_1 ... done
+Creating myproject_db_1  ... done
+```
+
+### **--verbose**
+
+Show more output
+
+```console
+$ docker-compose --verbose up
+compose.config.config.find: Using configuration files: ./docker-compose.yml
+docker.auth.find_config_file: Trying paths: ['/home/user/.docker/config.json', '/home/user/.dockercfg']
+docker.auth.find_config_file: Found file at path: /home/user/.docker/config.json
+...
+```
+
+### **--log-level LEVEL**
+
+Set log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+
+```console
+$ docker-compose --log-level INFO up
+Creating network "myapp_default" with the default driver
+Creating myapp_web_1 ... done
+Creating myapp_db_1  ... done
+```
+
+## Common Commands
+
+### **up**
+
+Create and start containers
+
+```console
+$ docker-compose up -d
+Creating network "myapp_default" with the default driver
+Creating myapp_web_1 ... done
+Creating myapp_db_1  ... done
 ```
 
 ### **down**
@@ -27,26 +72,23 @@ Stop and remove containers, networks, images, and volumes
 
 ```console
 $ docker-compose down
-Stopping myproject_web_1   ... done
-Stopping myproject_redis_1 ... done
-Stopping myproject_db_1    ... done
-Removing myproject_web_1   ... done
-Removing myproject_redis_1 ... done
-Removing myproject_db_1    ... done
-Removing network myproject_default
+Stopping myapp_web_1 ... done
+Stopping myapp_db_1  ... done
+Removing myapp_web_1 ... done
+Removing myapp_db_1  ... done
+Removing network myapp_default
 ```
 
 ### **ps**
 
-List containers managed by docker-compose
+List containers
 
 ```console
 $ docker-compose ps
-       Name                     Command               State           Ports
------------------------------------------------------------------------------------
-myproject_db_1      docker-entrypoint.sh mysqld      Up      3306/tcp, 33060/tcp
-myproject_redis_1   docker-entrypoint.sh redis ...   Up      6379/tcp
-myproject_web_1     docker-entrypoint.sh php-fpm     Up      9000/tcp
+    Name                  Command               State           Ports
+-----------------------------------------------------------------------------
+myapp_db_1    docker-entrypoint.sh mysqld      Up      3306/tcp, 33060/tcp
+myapp_web_1   docker-php-entrypoint php-fpm    Up      9000/tcp
 ```
 
 ### **logs**
@@ -54,10 +96,21 @@ myproject_web_1     docker-entrypoint.sh php-fpm     Up      9000/tcp
 View output from containers
 
 ```console
-$ docker-compose logs web
-Attaching to myproject_web_1
-web_1  | [30-Apr-2025 10:15:30] NOTICE: fpm is running, pid 1
-web_1  | [30-Apr-2025 10:15:30] NOTICE: ready to handle connections
+$ docker-compose logs
+Attaching to myapp_web_1, myapp_db_1
+db_1   | 2025-05-04T10:15:30.123456Z 0 [Note] mysqld: ready for connections.
+web_1  | [04-May-2025 10:15:32] NOTICE: fpm is running, pid 1
+```
+
+### **exec**
+
+Execute a command in a running container
+
+```console
+$ docker-compose exec web php -v
+PHP 8.2.0 (cli) (built: Dec 6 2024) (NTS)
+Copyright (c) The PHP Group
+Zend Engine v4.2.0, Copyright (c) Zend Technologies
 ```
 
 ### **build**
@@ -67,55 +120,51 @@ Build or rebuild services
 ```console
 $ docker-compose build
 Building web
-Step 1/10 : FROM php:7.4-fpm
- ---> 2a78649a8a79
-Step 2/10 : RUN apt-get update
+Step 1/10 : FROM php:8.2-fpm
+ ---> 123456789abc
+Step 2/10 : WORKDIR /var/www/html
  ---> Using cache
- ---> 7f41c1f2c2d3
+ ---> abcdef123456
 ...
-Successfully built 3a7e6d23f5a2
-Successfully tagged myproject_web:latest
+Successfully built 987654321fed
+Successfully tagged myapp_web:latest
 ```
 
 ## Usage Examples
 
-### Starting containers in detached mode
+### Basic Web Application with Database
 
 ```console
+$ cat docker-compose.yml
+version: '3'
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html:/usr/share/nginx/html
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: myapp
+
 $ docker-compose up -d
-Creating myproject_db_1    ... done
-Creating myproject_redis_1 ... done
-Creating myproject_web_1   ... done
+Creating network "myapp_default" with the default driver
+Creating myapp_web_1 ... done
+Creating myapp_db_1  ... done
 ```
 
-### Scaling a specific service
+### Scaling Services
 
 ```console
 $ docker-compose up -d --scale web=3
-Creating myproject_db_1    ... done
-Creating myproject_redis_1 ... done
-Creating myproject_web_1   ... done
-Creating myproject_web_2   ... done
-Creating myproject_web_3   ... done
-```
-
-### Running a command in a service container
-
-```console
-$ docker-compose exec web php artisan migrate
-Migration table created successfully.
-Migrating: 2023_04_30_create_users_table
-Migrated:  2023_04_30_create_users_table
-```
-
-### Viewing logs with follow option
-
-```console
-$ docker-compose logs -f
-Attaching to myproject_web_1, myproject_redis_1, myproject_db_1
-web_1    | [30-Apr-2025 10:15:30] NOTICE: fpm is running, pid 1
-redis_1  | 1:C 30 Apr 2025 10:15:30.000 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
-db_1     | 2025-04-30T10:15:30.000000Z 0 [Note] mysqld: ready for connections.
+Creating network "myapp_default" with the default driver
+Creating myapp_web_1 ... done
+Creating myapp_web_2 ... done
+Creating myapp_web_3 ... done
+Creating myapp_db_1  ... done
 ```
 
 ## Tips
@@ -126,44 +175,79 @@ Store sensitive information like passwords in a `.env` file instead of hardcodin
 
 ```console
 $ cat .env
-DB_PASSWORD=secret
+DB_PASSWORD=secretpassword
+
+$ cat docker-compose.yml
+version: '3'
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
 ```
 
-### Version Control Your Compose File
+### Use Profiles for Selective Service Startup
 
-Keep your docker-compose.yml in version control, but exclude the .env file to avoid exposing sensitive information.
+Profiles allow you to start only specific services when needed.
 
-### Use Named Volumes for Persistence
+```console
+$ cat docker-compose.yml
+version: '3.9'
+services:
+  app:
+    image: myapp
+  db:
+    image: mysql
+  test:
+    image: myapp-test
+    profiles:
+      - testing
 
-Named volumes ensure your data persists even when containers are removed.
-
-```yaml
-volumes:
-  db_data:
+$ docker-compose --profile testing up
 ```
 
-### Use docker-compose.override.yml
+### Use Docker Compose Override Files
 
-Create a `docker-compose.override.yml` file for environment-specific settings that shouldn't be in version control.
+Create a `docker-compose.override.yml` file to override settings in your main compose file without modifying it.
+
+```console
+$ cat docker-compose.yml
+version: '3'
+services:
+  web:
+    image: nginx
+
+$ cat docker-compose.override.yml
+version: '3'
+services:
+  web:
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html:/usr/share/nginx/html
+```
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `docker-compose up` and `docker-compose start`?
-A. `up` creates and starts containers based on your configuration, while `start` only starts existing containers that were previously created and stopped.
+#### Q1. What's the difference between `docker-compose up` and `docker-compose up -d`?
+A. `docker-compose up` starts containers and shows their output in the terminal. The `-d` flag (detached mode) runs containers in the background.
 
-#### Q2. How do I update a single service?
-A. Use `docker-compose up --build <service_name>` to rebuild and update a specific service.
+#### Q2. How do I update a single service without affecting others?
+A. Use `docker-compose up -d --no-deps --build service_name` to rebuild and update a specific service without restarting dependent services.
 
-#### Q3. Can I use Docker Compose in production?
-A. While possible, Docker Compose is primarily designed for development and testing. For production, consider Docker Swarm or Kubernetes.
+#### Q3. How can I view logs for a specific service?
+A. Use `docker-compose logs service_name` to view logs for a specific service. Add `-f` to follow the logs in real-time.
 
-#### Q4. How do I specify a different compose file?
-A. Use the `-f` flag: `docker-compose -f custom-compose.yml up`.
+#### Q4. Can I use Docker Compose in production?
+A. While Docker Compose can be used in production, Docker Swarm or Kubernetes are often preferred for production deployments due to their additional orchestration features.
+
+#### Q5. How do I clean up unused volumes?
+A. Use `docker-compose down -v` to remove containers, networks, and volumes defined in your compose file.
 
 ## References
 
-https://docs.docker.com/compose/
+https://docs.docker.com/compose/reference/
 
 ## Revisions
 
-- 2025/04/30 First revision
+2025/05/04 First revision

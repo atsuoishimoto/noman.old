@@ -47,78 +47,102 @@
     <main>
       
   <h1>docker run コマンド</h1>
-<p>新しいコンテナを作成し、指定されたイメージから起動するコマンドです。</p>
+<p>指定したイメージから新しいコンテナを作成して起動します。</p>
 <h2>概要</h2>
-<p><code>docker run</code> コマンドは、新しいコンテナを作成し、指定されたイメージから起動します。このコマンドは、イメージのダウンロード（必要な場合）、コンテナの作成、起動、そして指定されたコマンドの実行までを一度に行います。開発環境の構築、アプリケーションのテスト、本番環境へのデプロイなど、Dockerを使用する際の基本的なコマンドです。</p>
+<p><code>docker run</code> コマンドは、Dockerイメージからコンテナを作成して起動します。このコマンドは <code>docker create</code> と <code>docker start</code> の機能を1つのコマンドに統合したものです。コンテナを起動する際に、ランタイムパラメータ、環境変数、ネットワーク設定、ボリュームマウントなどの設定オプションを指定することができます。</p>
 <h2>オプション</h2>
+<h3><strong>-d, --detach</strong></h3>
+<p>コンテナをバックグラウンド（デタッチモード）で実行し、コンテナIDを表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>nginx
+<span style="color: #000; font-style: italic">3a41f9da42324b98a5f34d8c5c09c319f7e8e99cf24c573fc603ed52b11c42e7</span>
+</pre></div>
 <h3><strong>-i, --interactive</strong></h3>
-<p>コンテナの標準入力を開いたままにします。通常は <code>-t</code> オプションと組み合わせて使用します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>ubuntu
-<span style="color: #8F5902"># </span>標準入力が開いたままになる
+<p>アタッチされていなくても標準入力（STDIN）を開いたままにし、対話型セッションを可能にします</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>ubuntu<span style="color: #F8F8F8"> </span>/bin/bash
+<span style="color: #8F5902">root@7c3bfd21a2a4:/#</span>
 </pre></div>
 <h3><strong>-t, --tty</strong></h3>
-<p>疑似TTY（ターミナル）を割り当てます。対話型シェルを使用する場合に便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-it<span style="color: #F8F8F8"> </span>ubuntu<span style="color: #F8F8F8"> </span>bash
-<span style="color: #8F5902">root@f8d9c7b6a5:/# </span>ls
+<p>疑似TTYを割り当てます。通常は対話型ターミナルセッション用に <code>-i</code> と一緒に使用します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-it<span style="color: #F8F8F8"> </span>ubuntu
+<span style="color: #8F5902">root@7c3bfd21a2a4:/# </span>ls
 <span style="color: #000; font-style: italic">bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var</span>
+</pre></div>
+<h3><strong>-p, --publish [ホストポート]:[コンテナポート]</strong></h3>
+<p>コンテナのポートをホストに公開します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>:80<span style="color: #F8F8F8"> </span>nginx
+</pre></div>
+<h3><strong>-v, --volume [ホストパス]:[コンテナパス]</strong></h3>
+<p>ホストからコンテナにボリュームをバインドマウントします</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>/host/path:/container/path<span style="color: #F8F8F8"> </span>nginx
+</pre></div>
+<h3><strong>-e, --env [キー]=[値]</strong></h3>
+<p>コンテナ内に環境変数を設定します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #000">DB_HOST</span><span style="color: #CE5C00; font-weight: bold">=</span>localhost<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #000">DB_PORT</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">5432</span><span style="color: #F8F8F8"> </span>postgres
+</pre></div>
+<h3><strong>--name [名前]</strong></h3>
+<p>コンテナに名前を割り当てます</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>--name<span style="color: #F8F8F8"> </span>my-web-server<span style="color: #F8F8F8"> </span>nginx
 </pre></div>
 <h3><strong>--rm</strong></h3>
-<p>コンテナ終了時に自動的に削除します。一時的な作業やテストに便利です。</p>
+<p>コンテナ終了時に自動的に削除します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>--rm<span style="color: #F8F8F8"> </span>alpine<span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, World!&quot;</span>
 <span style="color: #000; font-style: italic">Hello, World!</span>
-<span style="color: #8F5902"># </span>コンテナは実行後に自動的に削除される
+</pre></div>
+<h3><strong>--network [ネットワーク]</strong></h3>
+<p>コンテナをネットワークに接続します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>--network<span style="color: #F8F8F8"> </span>my-network<span style="color: #F8F8F8"> </span>nginx
 </pre></div>
 <h2>使用例</h2>
-<h3>対話型シェルの起動</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-it<span style="color: #F8F8F8"> </span>ubuntu<span style="color: #F8F8F8"> </span>bash
-<span style="color: #8F5902">root@f8d9c7b6a5:/# </span>ls
-<span style="color: #000; font-style: italic">bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var</span>
+<h3>ポートマッピングを行いデタッチモードでコンテナを実行</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>:80<span style="color: #F8F8F8"> </span>--name<span style="color: #F8F8F8"> </span>web-server<span style="color: #F8F8F8"> </span>nginx
+<span style="color: #000; font-style: italic">3a41f9da42324b98a5f34d8c5c09c319f7e8e99cf24c573fc603ed52b11c42e7</span>
 </pre></div>
-<p>このコマンドはUbuntuコンテナを対話モードで起動し、bashシェルを実行している。</p>
-<h3>バックグラウンドでのWebサーバー起動</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>:80<span style="color: #F8F8F8"> </span>--name<span style="color: #F8F8F8"> </span>my-web-server<span style="color: #F8F8F8"> </span>nginx
-<span style="color: #000; font-style: italic">b8a5f8d9c9e8f7d6e5c4b3a2</span>
+<h3>コンテナ内で対話型シェルを実行</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-it<span style="color: #F8F8F8"> </span>--rm<span style="color: #F8F8F8"> </span>ubuntu<span style="color: #F8F8F8"> </span>bash
+<span style="color: #8F5902">root@7c3bfd21a2a4:/# </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;I&#39;m in a container&quot;</span>
+<span style="color: #000; font-style: italic">I&#39;m in a container</span>
+<span style="color: #8F5902">root@7c3bfd21a2a4:/# </span><span style="color: #204A87">exit</span>
 </pre></div>
-<p>このコマンドはnginxコンテナをバックグラウンドで起動し、ホストの8080ポートをコンテナの80ポートにマッピングしている。</p>
-<h3>一時的なコンテナでのコマンド実行</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>--rm<span style="color: #F8F8F8"> </span>alpine<span style="color: #F8F8F8"> </span>ls<span style="color: #F8F8F8"> </span>-la
-<span style="color: #000; font-style: italic">total 64</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x    1 root     root          4096 Apr 30 12:34 .</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x    1 root     root          4096 Apr 30 12:34 ..</span>
-<span style="color: #000; font-style: italic">-rwxr-xr-x    1 root     root             0 Apr 30 12:34 .dockerenv</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x    2 root     root          4096 Mar 23 00:00 bin</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x    5 root     root           340 Apr 30 12:34 dev</span>
-<span style="color: #000; font-style: italic">...</span>
+<h3>ボリュームマウントと環境変数を使用してコンテナを実行</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\</span>
+<span style="color: #F8F8F8">  </span>--name<span style="color: #F8F8F8"> </span>postgres-db<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\</span>
+<span style="color: #F8F8F8">  </span>-e<span style="color: #F8F8F8"> </span><span style="color: #000">POSTGRES_PASSWORD</span><span style="color: #CE5C00; font-weight: bold">=</span>mysecretpassword<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\</span>
+<span style="color: #F8F8F8">  </span>-e<span style="color: #F8F8F8"> </span><span style="color: #000">POSTGRES_USER</span><span style="color: #CE5C00; font-weight: bold">=</span>myuser<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\</span>
+<span style="color: #F8F8F8">  </span>-v<span style="color: #F8F8F8"> </span>pgdata:/var/lib/postgresql/data<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\</span>
+<span style="color: #F8F8F8">  </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5432</span>:5432<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\</span>
+<span style="color: #F8F8F8">  </span>postgres:13
 </pre></div>
-<p>このコマンドはAlpineコンテナを起動してls -laコマンドを実行し、終了後にコンテナを削除している。</p>
 <h2>ヒント:</h2>
-<h3>コンテナの名前付け</h3>
-<p><code>--name</code> オプションを使用して、コンテナに分かりやすい名前を付けると、後で参照しやすくなります。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>--name<span style="color: #F8F8F8"> </span>my-app-container<span style="color: #F8F8F8"> </span>nginx
+<h3>永続データには名前付きボリュームを使用する</h3>
+<p>特定のホストパスにバインドする代わりに、名前付きボリュームを使用すると移植性が向上します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>mydata:/app/data<span style="color: #F8F8F8"> </span>nginx
 </pre></div>
-<h3>環境変数の設定</h3>
-<p><code>-e</code> または <code>--env</code> オプションを使用して、コンテナ内で使用する環境変数を設定できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #000">DB_HOST</span><span style="color: #CE5C00; font-weight: bold">=</span>localhost<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #000">DB_PORT</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">5432</span><span style="color: #F8F8F8"> </span>my-app
+<h3>コンテナのリソースを制限する</h3>
+<p><code>--memory</code> と <code>--cpus</code> を使用してコンテナのリソース使用量を制限できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>--memory<span style="color: #CE5C00; font-weight: bold">=</span>512m<span style="color: #F8F8F8"> </span>--cpus<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">0</span>.5<span style="color: #F8F8F8"> </span>nginx
 </pre></div>
-<h3>ボリュームマウントの活用</h3>
-<p>開発中は <code>-v</code> オプションを使ってソースコードをマウントすると、コンテナを再ビルドせずに変更を反映できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span><span style="color: #204A87">pwd</span><span style="color: #204A87; font-weight: bold">)</span>:/app<span style="color: #F8F8F8"> </span>my-dev-image
+<h3>複数の環境変数にはファイルを使用する</h3>
+<p>多くの環境変数が必要なコンテナには、環境変数ファイルを使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>--env-file<span style="color: #F8F8F8"> </span>./env.list<span style="color: #F8F8F8"> </span>nginx
 </pre></div>
+<h3>コンテナを自動的にクリーンアップする</h3>
+<p>短時間だけ実行するコンテナには常に <code>--rm</code> を使用して、停止したコンテナが蓄積するのを防ぎましょう。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>-i</code> と <code>-t</code> オプションの違いは何ですか？</h4>
-<p>A. <code>-i</code>（interactive）はコンテナの標準入力を開いたままにし、<code>-t</code>（tty）は疑似ターミナルを割り当てます。通常は <code>-it</code> として一緒に使用し、対話型シェルを実現します。</p>
-<h4>Q2. コンテナを一時的に使用するにはどうすればよいですか？</h4>
-<p>A. <code>--rm</code> オプションを使用すると、コンテナが停止した後に自動的に削除されます。一時的な作業やテストに便利です。</p>
-<h4>Q3. コンテナ内で実行されるデフォルトのコマンドを上書きするにはどうすればよいですか？</h4>
-<p>A. <code>docker run</code> コマンドの最後にコマンドを指定することで、イメージのデフォルトコマンドを上書きできます。例：<code>docker run ubuntu echo &quot;Hello&quot;</code></p>
-<h4>Q4. macOSでボリュームマウントが遅い場合はどうすればよいですか？</h4>
-<p>A. macOSでは、特に大量のファイルを扱う場合、ボリュームマウントのパフォーマンスが低下することがあります。Docker Desktop for Macの設定で、ファイル共有の最適化オプションを確認するか、Docker Volumeを使用することを検討してください。</p>
-<h2>参考文献</h2>
+<h4>Q1. <code>docker run</code> と <code>docker start</code> の違いは何ですか？</h4>
+<p>A. <code>docker run</code> はイメージから新しいコンテナを作成して起動しますが、<code>docker start</code> は既に存在する停止中のコンテナを再起動します。</p>
+<h4>Q2. コンテナをバックグラウンドで実行するにはどうすればよいですか？</h4>
+<p>A. <code>-d</code> または <code>--detach</code> フラグを使用します：<code>docker run -d nginx</code></p>
+<h4>Q3. 実行中のコンテナのシェルにアクセスするにはどうすればよいですか？</h4>
+<p>A. 新しいコンテナをシェル付きで起動するには <code>docker run -it [イメージ] bash</code> を、既に実行中のコンテナのシェルにアクセスするには <code>docker exec -it [コンテナID] bash</code> を使用します。</p>
+<h4>Q4. 複数のポートを公開するにはどうすればよいですか？</h4>
+<p>A. 複数の <code>-p</code> フラグを使用します：<code>docker run -p 80:80 -p 443:443 nginx</code></p>
+<h4>Q5. 特定のユーザーでコンテナを実行するにはどうすればよいですか？</h4>
+<p>A. <code>--user</code> フラグを使用します：<code>docker run --user 1000:1000 nginx</code></p>
+<h2>参考資料</h2>
 <p>https://docs.docker.com/engine/reference/commandline/run/</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 -i, -t, --rmオプションの詳細説明を追加し、使用例を更新</li>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

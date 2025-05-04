@@ -1,10 +1,10 @@
 # ls command
 
-List information about files and directories in the specified location.
+List directory contents.
 
 ## Overview
 
-The `ls` command displays the contents of a directory, showing files and directories. By default, it lists the contents of the current working directory in alphabetical order, excluding hidden files (those starting with a dot). It's one of the most frequently used commands for navigating and exploring the filesystem.
+The `ls` command displays files and directories in the specified location. By default, it shows the contents of the current directory, sorted alphabetically. It's one of the most frequently used commands for navigating and examining the file system.
 
 ## Options
 
@@ -19,7 +19,7 @@ total 16
 drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects
 ```
 
-### **-a** (All files)
+### **-a** (All)
 
 Shows all files, including hidden files (those starting with a dot).
 
@@ -41,16 +41,16 @@ drwxr-xr-x  3 user  staff   96B Apr 9  14:22 projects
 
 ### **-d** (Directory)
 
-Lists directories themselves, not their contents. Useful when you want to see information about the directory rather than what's inside it.
+Lists directories themselves, not their contents.
 
 ```console
-$ ls -ld projects
-drwxr-xr-x  3 user  staff  96 Apr 9 14:22 projects
+$ ls -d */
+projects/  documents/  downloads/
 ```
 
 ### **-s** (Size)
 
-Shows the allocated size of each file in blocks.
+Prints the allocated size of each file in blocks.
 
 ```console
 $ ls -s
@@ -60,7 +60,7 @@ total 16
 
 ### **-t** (Time)
 
-Sorts files by modification time, with newest files first.
+Sorts files by modification time, newest first.
 
 ```console
 $ ls -lt
@@ -71,10 +71,10 @@ drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects
 
 ### **-r** (Reverse)
 
-Reverses the order of the sort. When combined with other sorting options like `-t`, it reverses that order.
+Reverses the order of the sort.
 
 ```console
-$ ls -ltr
+$ ls -lr
 total 16
 drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects
 -rw-r--r--  1 user  staff  1024 Apr 10 15:30 document.txt
@@ -87,9 +87,9 @@ drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects
 ```console
 $ ls -lha
 total 20K
-drwxr-xr-x  4 user  staff  128B Apr 30 10:15 .
-drwxr-xr-x 18 user  staff  576B Apr 29 09:30 ..
--rw-r--r--  1 user  staff   74B Apr 28 14:22 .hidden
+drwxr-xr-x  4 user  staff  128B Apr 10 15:35 .
+drwxr-xr-x 18 user  staff  576B Apr 10 14:00 ..
+-rw-r--r--  1 user  staff   74B Apr 10 15:32 .hidden
 -rw-r--r--  1 user  staff  1.0K Apr 10 15:30 document.txt
 drwxr-xr-x  3 user  staff   96B Apr 9  14:22 projects
 ```
@@ -101,34 +101,32 @@ $ ls *.txt
 document.txt  notes.txt  readme.txt
 ```
 
-### Listing files in multiple directories
+### Sorting files by size (largest first)
 
 ```console
-$ ls -l /usr/bin /usr/local/bin
-/usr/bin:
-[output shows contents of /usr/bin directory]
-
-/usr/local/bin:
-[output shows contents of /usr/local/bin directory]
+$ ls -lhS
+total 16K
+-rw-r--r--  1 user  staff  1.0K Apr 10 15:30 document.txt
+drwxr-xr-x  3 user  staff   96B Apr 9  14:22 projects
 ```
 
 ## Tips
 
 ### Color-coded Output
 
-On many systems, you can use `ls --color=auto` to get color-coded output that distinguishes between different file types. On macOS, use `ls -G` instead.
-
-### Sorting by File Size
-
-Use `ls -lS` to sort files by size, with largest files first. Add `-r` (e.g., `ls -lSr`) to reverse the order.
-
-### Finding Recently Modified Files
-
-Combine `-t` with `-l` and limit results with `head`: `ls -lt | head -5` shows the five most recently modified files.
+Many systems configure `ls` to display different file types in different colors. You can enforce this with `ls --color=auto` on Linux or `ls -G` on macOS.
 
 ### Recursive Listing
 
-Use `ls -R` to list all files in the current directory and all subdirectories recursively. Be careful in large directory structures as this can produce a lot of output.
+Use `ls -R` to list subdirectories recursively, showing the entire directory tree.
+
+### Combining Sort Options
+
+When combining sort options like `-t` (time) and `-r` (reverse), remember that `-r` always reverses the current sort order. For example, `ls -ltr` shows the oldest files first.
+
+### Aliases
+
+Many users create aliases like `ll` for `ls -l` and `la` for `ls -la` in their shell configuration files to save typing common combinations.
 
 ## Frequently Asked Questions
 
@@ -136,17 +134,23 @@ Use `ls -R` to list all files in the current directory and all subdirectories re
 A. Use `ls -d */` to list only directories in the current location.
 
 #### Q2. How can I see file sizes in a readable format?
-A. Use `ls -lh` to display file sizes in KB, MB, or GB instead of bytes.
+A. Use `ls -lh` to see file sizes in KB, MB, or GB instead of bytes.
 
-#### Q3. How do I sort files by modification time?
-A. Use `ls -lt` to sort by modification time with newest files first. Use `ls -ltr` to show oldest files first.
+#### Q3. How do I sort files by size?
+A. Use `ls -lS` to sort files by size (largest first). Add `-r` (`ls -lSr`) to reverse the order.
 
-#### Q4. How can I list files with their absolute paths?
-A. Use `ls -d $PWD/*` to show the full path of each file.
+#### Q4. How can I see the most recently modified files first?
+A. Use `ls -lt` to sort by modification time with newest files first.
 
-## macOS Specifics
+#### Q5. How do I list files with their inode numbers?
+A. Use `ls -i` to display the index number (inode) of each file.
 
-On macOS, some GNU ls options may not be available. Instead of `--color=auto`, use `-G` for colored output. The `-h` option works the same way for human-readable sizes. For extended attributes, macOS provides the `-@` option which shows extended file attributes.
+## macOS Considerations
+
+On macOS, some GNU ls options may not be available or may work differently:
+- Use `-G` instead of `--color` to enable colorized output
+- The `-h` option works the same way as on Linux
+- For extended attributes, use `ls -@` which is specific to macOS
 
 ## References
 
@@ -154,4 +158,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/ls-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 Added -d, -s, -t, -r options and macOS considerations.

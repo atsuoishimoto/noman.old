@@ -47,98 +47,111 @@
     <main>
       
   <h1>jq command</h1>
-<p>Process and manipulate JSON data from the command line.</p>
+<p>Process and transform JSON data with a lightweight and flexible command-line processor.</p>
 <h2>Overview</h2>
-<p><code>jq</code> is a lightweight and flexible command-line JSON processor. It allows you to slice, filter, map, and transform structured data with the same ease that <code>sed</code>, <code>awk</code>, and <code>grep</code> let you play with text. It works like a filter, taking input from files or stdin, and outputting processed JSON to stdout.</p>
+<p><code>jq</code> is a command-line JSON processor that allows you to slice, filter, map, and transform structured data with ease. It works like <code>sed</code> for JSON data – you can use it to extract specific fields, transform values, filter arrays, and much more without writing complex scripts.</p>
 <h2>Options</h2>
 <h3><strong>-r, --raw-output</strong></h3>
-<p>Outputs raw strings rather than JSON encoded strings (removes quotes)</p>
+<p>Output strings without quotes for more readable results.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;name&quot;: &quot;John&quot;}&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;.name&#39;</span>
 <span style="color: #000; font-style: italic">John</span>
 </pre></div>
-<h3><strong>-c, --compact-output</strong></h3>
-<p>Produces compact output without pretty-printing</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 30}&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span>-c
-<span style="color: #000; font-style: italic">{&quot;name&quot;:&quot;John&quot;,&quot;age&quot;:30}</span>
-</pre></div>
 <h3><strong>-s, --slurp</strong></h3>
-<p>Reads all inputs into an array and applies the filter to it</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;id&quot;: 1}&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;id&quot;: 2}&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span>-s
+<p>Read multiple JSON objects and combine them into an array.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;id&quot;: 1}\n{&quot;id&quot;: 2}&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;.&#39;</span>
 <span style="color: #000; font-style: italic">[</span>
-<span style="color: #000; font-style: italic">  {&quot;id&quot;: 1},</span>
-<span style="color: #000; font-style: italic">  {&quot;id&quot;: 2}</span>
+<span style="color: #000; font-style: italic">  {</span>
+<span style="color: #000; font-style: italic">    &quot;id&quot;: 1</span>
+<span style="color: #000; font-style: italic">  },</span>
+<span style="color: #000; font-style: italic">  {</span>
+<span style="color: #000; font-style: italic">    &quot;id&quot;: 2</span>
+<span style="color: #000; font-style: italic">  }</span>
 <span style="color: #000; font-style: italic">]</span>
 </pre></div>
-<h3><strong>-f, --from-file</strong></h3>
-<p>Reads filter from a file</p>
+<h3><strong>-f, --from-file FILENAME</strong></h3>
+<p>Read filter from a file instead of command line.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 30}&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>filter.jq
-<span style="color: #8F5902"># </span>Output<span style="color: #F8F8F8"> </span>depends<span style="color: #F8F8F8"> </span>on<span style="color: #F8F8F8"> </span>the<span style="color: #F8F8F8"> </span>content<span style="color: #F8F8F8"> </span>of<span style="color: #F8F8F8"> </span>filter.jq
+<span style="color: #8F5902"># </span>Where<span style="color: #F8F8F8"> </span>filter.jq<span style="color: #F8F8F8"> </span>contains:<span style="color: #F8F8F8"> </span>.name
+<span style="color: #000; font-style: italic">&quot;John&quot;</span>
+</pre></div>
+<h3><strong>-c, --compact-output</strong></h3>
+<p>Output compact JSON instead of pretty-printed format.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 30}&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;.&#39;</span>
+<span style="color: #000; font-style: italic">{&quot;name&quot;:&quot;John&quot;,&quot;age&quot;:30}</span>
+</pre></div>
+<h3><strong>-n, --null-input</strong></h3>
+<p>Don't read any input, but generate results based on the filter.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>jq<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;hello&quot;: &quot;world&quot;}&#39;</span>
+<span style="color: #000; font-style: italic">{</span>
+<span style="color: #000; font-style: italic">  &quot;hello&quot;: &quot;world&quot;</span>
+<span style="color: #000; font-style: italic">}</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic Property Access</h3>
+<h3>Extracting specific fields</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;user&quot;: {&quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 30}}&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;.user.name&#39;</span>
 <span style="color: #000; font-style: italic">&quot;John&quot;</span>
 </pre></div>
-<h3>Array Operations</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;[{&quot;name&quot;: &quot;John&quot;}, {&quot;name&quot;: &quot;Jane&quot;}]&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;.[].name&#39;</span>
-<span style="color: #000; font-style: italic">&quot;John&quot;</span>
-<span style="color: #000; font-style: italic">&quot;Jane&quot;</span>
-</pre></div>
-<h3>Filtering Arrays</h3>
+<h3>Filtering arrays</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;[{&quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 30}, {&quot;name&quot;: &quot;Jane&quot;, &quot;age&quot;: 25}]&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;.[] | select(.age &gt; 28)&#39;</span>
 <span style="color: #000; font-style: italic">{</span>
 <span style="color: #000; font-style: italic">  &quot;name&quot;: &quot;John&quot;,</span>
 <span style="color: #000; font-style: italic">  &quot;age&quot;: 30</span>
 <span style="color: #000; font-style: italic">}</span>
 </pre></div>
-<h3>Creating New JSON</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;first&quot;: &quot;John&quot;, &quot;last&quot;: &quot;Doe&quot;}&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{full_name: .first + &quot; &quot; + .last}&#39;</span>
-<span style="color: #000; font-style: italic">{</span>
-<span style="color: #000; font-style: italic">  &quot;full_name&quot;: &quot;John Doe&quot;</span>
-<span style="color: #000; font-style: italic">}</span>
-</pre></div>
-<h2>Tips:</h2>
-<h3>Pipe Multiple Filters</h3>
-<p>Chain multiple operations with pipes within jq to perform complex transformations:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;[{&quot;id&quot;: 1, &quot;value&quot;: &quot;a&quot;}, {&quot;id&quot;: 2, &quot;value&quot;: &quot;b&quot;}]&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;.[] | {id: .id, upper: (.value | ascii_upcase)}&#39;</span>
-<span style="color: #000; font-style: italic">{</span>
-<span style="color: #000; font-style: italic">  &quot;id&quot;: 1,</span>
-<span style="color: #000; font-style: italic">  &quot;upper&quot;: &quot;A&quot;</span>
-<span style="color: #000; font-style: italic">}</span>
-<span style="color: #000; font-style: italic">{</span>
-<span style="color: #000; font-style: italic">  &quot;id&quot;: 2,</span>
-<span style="color: #000; font-style: italic">  &quot;upper&quot;: &quot;B&quot;</span>
-<span style="color: #000; font-style: italic">}</span>
-</pre></div>
-<h3>Use Built-in Functions</h3>
-<p>jq has many built-in functions for string manipulation, math operations, and more:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;[&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;map(length)&#39;</span>
+<h3>Transforming data</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;[{&quot;name&quot;: &quot;John&quot;}, {&quot;name&quot;: &quot;Jane&quot;}]&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;map({username: .name})&#39;</span>
 <span style="color: #000; font-style: italic">[</span>
-<span style="color: #000; font-style: italic">  5,</span>
-<span style="color: #000; font-style: italic">  6,</span>
-<span style="color: #000; font-style: italic">  6</span>
+<span style="color: #000; font-style: italic">  {</span>
+<span style="color: #000; font-style: italic">    &quot;username&quot;: &quot;John&quot;</span>
+<span style="color: #000; font-style: italic">  },</span>
+<span style="color: #000; font-style: italic">  {</span>
+<span style="color: #000; font-style: italic">    &quot;username&quot;: &quot;Jane&quot;</span>
+<span style="color: #000; font-style: italic">  }</span>
 <span style="color: #000; font-style: italic">]</span>
 </pre></div>
-<h3>Format JSON Files</h3>
-<p>Use jq as a simple JSON formatter/pretty-printer:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>jq<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;.&#39;</span><span style="color: #F8F8F8"> </span>messy.json<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>formatted.json
+<h3>Working with arrays</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;users&quot;: [&quot;John&quot;, &quot;Jane&quot;, &quot;Bob&quot;]}&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;.users[1]&#39;</span>
+<span style="color: #000; font-style: italic">&quot;Jane&quot;</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Pipe Multiple Filters</h3>
+<p>Chain multiple filters with pipes to perform complex transformations:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;[{&quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 30}, {&quot;name&quot;: &quot;Jane&quot;, &quot;age&quot;: 25}]&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;.[] | select(.age &gt; 25) | .name&#39;</span>
+<span style="color: #000; font-style: italic">&quot;John&quot;</span>
+</pre></div>
+<h3>Use Built-in Functions</h3>
+<p><code>jq</code> has many built-in functions like <code>length</code>, <code>keys</code>, <code>has</code>, and <code>map</code> that make data manipulation easier:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;a&quot;: 1, &quot;b&quot;: 2, &quot;c&quot;: 3}&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;keys&#39;</span>
+<span style="color: #000; font-style: italic">[</span>
+<span style="color: #000; font-style: italic">  &quot;a&quot;,</span>
+<span style="color: #000; font-style: italic">  &quot;b&quot;,</span>
+<span style="color: #000; font-style: italic">  &quot;c&quot;</span>
+<span style="color: #000; font-style: italic">]</span>
+</pre></div>
+<h3>Create Variables</h3>
+<p>Use the <code>as</code> keyword to create variables for reuse in complex filters:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;items&quot;: [{&quot;price&quot;: 10}, {&quot;price&quot;: 20}]}&#39;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;.items | map(.price) | add as $total | {&quot;total&quot;: $total, &quot;count&quot;: length}&#39;</span>
+<span style="color: #000; font-style: italic">{</span>
+<span style="color: #000; font-style: italic">  &quot;total&quot;: 30,</span>
+<span style="color: #000; font-style: italic">  &quot;count&quot;: 2</span>
+<span style="color: #000; font-style: italic">}</span>
 </pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How do I extract a specific field from JSON?</h4>
-<p>A. Use the dot notation: <code>jq '.fieldname'</code> or for nested fields: <code>jq '.parent.child'</code>.</p>
-<h4>Q2. How do I process multiple JSON files?</h4>
-<p>A. You can use shell loops or the <code>-s</code> (slurp) option to combine multiple files into an array.</p>
-<h4>Q3. How do I convert JSON to CSV?</h4>
-<p>A. Use raw output with string concatenation: <code>jq -r '.[] | [.field1, .field2] | @csv'</code>.</p>
-<h4>Q4. How do I handle JSON with special characters?</h4>
-<p>A. jq handles escaping automatically, but you can use the <code>-r</code> flag to get raw output when needed.</p>
-<h4>Q5. Can jq modify JSON files in-place?</h4>
-<p>A. No, jq doesn't modify files in-place. You need to redirect output to a new file and then replace the original.</p>
+<h4>Q1. How do I format JSON with jq?</h4>
+<p>A. Simply pipe your JSON through <code>jq '.'</code> to get pretty-printed output.</p>
+<h4>Q2. How can I extract values without quotes?</h4>
+<p>A. Use the <code>-r</code> or <code>--raw-output</code> option to output strings without quotes.</p>
+<h4>Q3. How do I filter an array based on a condition?</h4>
+<p>A. Use <code>select()</code> with a condition: <code>jq '.[] | select(.field == &quot;value&quot;)'</code></p>
+<h4>Q4. How do I process multiple JSON files?</h4>
+<p>A. Use the <code>-s</code> (slurp) option to combine multiple inputs into an array.</p>
+<h4>Q5. How can I create new JSON from existing data?</h4>
+<p>A. Create object literals in your filter: <code>jq '{new_key: .old_key, calculated: (.value * 2)}'</code></p>
 <h2>References</h2>
 <p>https://stedolan.github.io/jq/manual/</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

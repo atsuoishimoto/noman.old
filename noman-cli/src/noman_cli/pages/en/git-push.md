@@ -1,16 +1,16 @@
 # git push command
 
-Send local branch commits to a remote repository.
+Update remote references along with associated objects.
 
 ## Overview
 
-`git push` uploads your local repository content to a remote repository. It transfers commits, branches, and tags from your local repository to update the corresponding remote repository, making your changes available to others.
+`git push` sends local branch commits to the corresponding remote repository. It updates remote references (like branches and tags) and transfers the necessary objects to keep repositories in sync. This command is essential for sharing your work with others or backing up your local changes to a remote repository.
 
 ## Options
 
 ### **-u, --set-upstream**
 
-Set up tracking relationship between local and remote branch, allowing future pushes without specifying the remote branch.
+Set upstream for the current branch, allowing future pushes to use the same remote branch without specifying it again.
 
 ```console
 $ git push -u origin main
@@ -26,12 +26,12 @@ To github.com:username/repository.git
 Branch 'main' set up to track remote branch 'main' from 'origin'.
 ```
 
-### **--force, -f**
+### **-f, --force**
 
-Force update the remote branch with your local branch, even if it results in a non-fast-forward merge. Use with caution as it can overwrite remote changes.
+Force update the remote branch with your local branch, even if it results in a non-fast-forward update. Use with caution as it can overwrite changes on the remote.
 
 ```console
-$ git push --force origin feature
+$ git push -f origin main
 Enumerating objects: 5, done.
 Counting objects: 100% (5/5), done.
 Delta compression using up to 8 threads
@@ -39,7 +39,7 @@ Compressing objects: 100% (3/3), done.
 Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
 Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
 remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
- + a1b2c3d...e4f5g6h feature -> feature (forced update)
+ + a1b2c3d...e4f5g6h main -> main (forced update)
 ```
 
 ### **--tags**
@@ -59,20 +59,30 @@ To github.com:username/repository.git
 
 ### **--delete**
 
-Delete a remote branch or tag.
+Delete the specified branch from the remote repository.
 
 ```console
-$ git push origin --delete old-feature
+$ git push origin --delete feature-branch
 To github.com:username/repository.git
- - [deleted]         old-feature
+ - [deleted]         feature-branch
+```
+
+### **--dry-run**
+
+Show what would be done, without actually pushing anything.
+
+```console
+$ git push --dry-run origin main
+To github.com:username/repository.git
+   a1b2c3d..e4f5g6h  main -> main
 ```
 
 ## Usage Examples
 
-### Basic push to remote
+### Pushing to the default remote branch
 
 ```console
-$ git push origin main
+$ git push
 Enumerating objects: 5, done.
 Counting objects: 100% (5/5), done.
 Delta compression using up to 8 threads
@@ -84,65 +94,70 @@ To github.com:username/repository.git
    a1b2c3d..e4f5g6h  main -> main
 ```
 
-### Push all branches to remote
+### Pushing a specific branch to a specific remote
 
 ```console
-$ git push --all origin
-Enumerating objects: 8, done.
-Counting objects: 100% (8/8), done.
+$ git push origin feature-branch
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
 Delta compression using up to 8 threads
-Compressing objects: 100% (6/6), done.
-Writing objects: 100% (6/6), 594 bytes | 594.00 KiB/s, done.
-Total 6 (delta 2), reused 0 (delta 0), pack-reused 0
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
 remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
 To github.com:username/repository.git
-   a1b2c3d..e4f5g6h  main -> main
-   b2c3d4e..f5g6h7i  feature -> feature
+   a1b2c3d..e4f5g6h  feature-branch -> feature-branch
+```
+
+### Pushing a local branch to a differently named remote branch
+
+```console
+$ git push origin local-branch:remote-branch
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:username/repository.git
+   a1b2c3d..e4f5g6h  local-branch -> remote-branch
 ```
 
 ## Tips
 
-### Use `git push -u` for New Branches
+### Set Up Tracking Branches
 
-When pushing a new branch for the first time, use `-u` to set up tracking. This allows you to use `git pull` and `git push` without specifying the remote and branch names in the future.
+When creating a new branch, use `git push -u origin branch-name` to set up tracking. This allows you to use `git pull` and `git push` without specifying the remote and branch each time.
 
-### Check Remote Status Before Pushing
+### Push All Branches
 
-Run `git fetch` followed by `git status` before pushing to see if your local branch is behind the remote. This helps avoid merge conflicts.
+Use `git push --all origin` to push all your local branches to the remote repository. This is useful when you want to back up all your work.
 
-### Use `--force-with-lease` Instead of `--force`
+### Handle Rejected Pushes
 
-`--force-with-lease` is safer than `--force` as it ensures you don't overwrite others' changes that you haven't seen yet.
+If your push is rejected because the remote contains work you don't have locally, use `git pull` to integrate the remote changes before pushing again. Alternatively, if you're certain your changes should take precedence, use `git push --force` (with caution).
 
-```console
-$ git push --force-with-lease origin feature
-```
+### Push Only Specific Commits
 
-### Push to Multiple Remotes
-
-You can configure a branch to push to multiple remotes simultaneously by setting up multiple push URLs:
-
-```console
-$ git remote set-url --add --push origin git@github.com:username/repository.git
-$ git remote set-url --add --push origin git@gitlab.com:username/repository.git
-```
+To push only specific commits up to a certain point, use `git push origin <commit-hash>:branch-name`. This is useful when you want to share only part of your work.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `git push` and `git push origin main`?
-A. `git push` without arguments pushes the current branch to its upstream branch. `git push origin main` explicitly pushes the local main branch to the main branch on the origin remote.
+A. `git push` pushes the current branch to its upstream branch if configured. `git push origin main` explicitly pushes the local main branch to the main branch on the origin remote, regardless of which branch you're currently on.
 
-#### Q2. How do I push a new local branch to a remote repository?
-A. Use `git push -u origin branch-name` to push and set up tracking for a new branch.
+#### Q2. How do I push a new local branch to the remote repository?
+A. Use `git push -u origin branch-name` to push the new branch and set up tracking.
 
-#### Q3. I get a "non-fast-forward updates were rejected" error. What does it mean?
-A. This means the remote branch has commits that your local branch doesn't have. You need to pull the remote changes first with `git pull` or use `--force` if you're sure you want to overwrite remote changes.
+#### Q3. How can I undo a push?
+A. You can't directly "undo" a push. Instead, you need to revert the changes locally (using `git revert` or `git reset`) and then push the new state with `git push --force`. Be cautious with force pushing as it can overwrite others' work.
 
-#### Q4. How can I push only specific commits?
-A. You can't push specific commits directly. Instead, create a new branch at the desired commit with `git checkout -b new-branch commit-hash`, then push that branch.
+#### Q4. Why does my push get rejected?
+A. Pushes are typically rejected when the remote branch has commits that your local branch doesn't have. This happens when someone else pushed changes to the same branch. Use `git pull` to integrate their changes before pushing.
 
-#### Q5. How do I undo a push?
-A. You can revert the changes with `git revert` and push the revert, or use `git reset` to move back to a previous commit and then force push with `git push --force`.
+#### Q5. How do I push to multiple remotes at once?
+A. Git doesn't have a built-in way to push to multiple remotes simultaneously. You need to push to each remote separately, or set up a remote that points to multiple URLs.
 
 ## References
 
@@ -150,4 +165,4 @@ https://git-scm.com/docs/git-push
 
 ## Revisions
 
-- 2025/04/30 First revision
+2025/05/04 First revision

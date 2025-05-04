@@ -1,28 +1,27 @@
 # du コマンド
 
-ディスク使用量を表示するコマンドです。
+ファイルやディレクトリの使用ディスク容量を推定します。
 
 ## 概要
 
-`du`（disk usage）コマンドは、ファイルやディレクトリが使用しているディスク容量を表示します。デフォルトでは、指定したディレクトリとそのサブディレクトリのサイズを表示します。ストレージ容量の管理や、大きなファイルやディレクトリを特定するのに役立ちます。
+`du`（disk usage）コマンドは、ファイルやディレクトリが使用しているディスク容量を推定して表示します。大容量のファイルやディレクトリを見つけて、ストレージを効率的に管理するのに役立ちます。
 
 ## オプション
 
 ### **-h, --human-readable**
 
-サイズを人間が読みやすい形式（K, M, G）で表示します。
+サイズを人間が読みやすい形式（例：1K、234M、2G）でブロック数ではなく表示します。
 
 ```console
 $ du -h Documents
-4.0K    Documents/notes
-8.0K    Documents/projects/old
-16K     Documents/projects
+16K     Documents/notes
+4.0K    Documents/templates
 24K     Documents
 ```
 
 ### **-s, --summarize**
 
-指定したディレクトリの合計サイズのみを表示します。
+各引数の合計のみを表示します（要約表示）。
 
 ```console
 $ du -s Documents
@@ -31,104 +30,131 @@ $ du -s Documents
 
 ### **-a, --all**
 
-ディレクトリだけでなく、すべてのファイルのサイズも表示します。
+ディレクトリだけでなく、すべてのファイルのサイズを表示します。
 
 ```console
 $ du -a Documents
 4       Documents/notes/todo.txt
-4       Documents/notes
-8       Documents/projects/old/backup.zip
-8       Documents/projects/old
-4       Documents/projects/current.doc
-16      Documents/projects
+8       Documents/notes/meeting.txt
+16      Documents/notes
+4       Documents/templates/letter.txt
+4       Documents/templates
 24      Documents
 ```
 
 ### **-c, --total**
 
-全体の合計を最後に表示します。
+すべての引数を処理した後、総合計を表示します。
 
 ```console
-$ du -c Documents
+$ du -c Documents Downloads
 24      Documents
-24      合計
+156     Downloads
+180     total
 ```
 
 ### **--max-depth=N**
 
-指定した深さまでのディレクトリのみ表示します。
+コマンドライン引数から N レベル以下のディレクトリの合計のみを表示します。
 
 ```console
-$ du -h --max-depth=1 Documents
-16K     Documents/projects
-4.0K    Documents/notes
-24K     Documents
+$ du --max-depth=1 /home/user
+24      /home/user/Documents
+156     /home/user/Downloads
+84      /home/user/Pictures
+1024    /home/user
+```
+
+### **-x, --one-file-system**
+
+異なるファイルシステム上のディレクトリをスキップします。
+
+```console
+$ du -x /home
 ```
 
 ## 使用例
 
-### 特定のディレクトリの容量を人間が読みやすい形式で確認
+### 最大のディレクトリを見つける
+
+```console
+$ du -h --max-depth=1 /home/user | sort -hr
+1.0G    /home/user
+450M    /home/user/Videos
+350M    /home/user/Downloads
+120M    /home/user/Pictures
+24M     /home/user/Documents
+```
+
+### 特定のディレクトリサイズを人間が読みやすい形式で確認する
 
 ```console
 $ du -sh /var/log
 156M    /var/log
 ```
 
-### 現在のディレクトリで最も容量を使用しているディレクトリを特定
+### 最も大きい5つのファイル/ディレクトリを見つける
 
 ```console
-$ du -h --max-depth=1 | sort -hr
-1.2G    .
-820M    ./Videos
-245M    ./Pictures
-98M     ./Documents
-42M     ./Music
-```
-
-### 特定のファイルタイプの合計サイズを確認
-
-```console
-$ find . -name "*.mp4" -exec du -ch {} \; | grep 合計
-1.5G    合計
+$ du -ha /home/user | sort -hr | head -5
+1.0G    /home/user
+450M    /home/user/Videos
+350M    /home/user/Downloads
+200M    /home/user/Videos/movie.mp4
+120M    /home/user/Pictures
 ```
 
 ## ヒント:
 
-### 大きなファイルを素早く見つける
+### sortと組み合わせてより良い洞察を得る
 
-`du -h | sort -hr | head -10` を使用すると、最も容量を使用している10個のディレクトリを表示できます。
+`du`の出力を`sort`コマンドに`-h`（人間が読みやすい）と`-r`（逆順）オプションでパイプすると、ディレクトリを降順でサイズ順に表示できます。
 
-### パイプラインでの活用
+```console
+$ du -h --max-depth=1 | sort -hr
+```
 
-`find` コマンドと組み合わせることで、特定のファイルタイプのディスク使用量を計算できます。
+### 特定のディレクトリを除外する
 
-### 除外パターンの指定
+`--exclude`オプションを使用して特定のディレクトリをスキップできます：
 
-`du --exclude="*.log"` のように、特定のパターンを除外してディスク使用量を計算できます。
+```console
+$ du -h --exclude="node_modules" --max-depth=1
+```
+
+### grepと組み合わせて特定のパターンを見つける
+
+`grep`と組み合わせて結果をフィルタリングできます：
+
+```console
+$ du -ha | grep "\.mp4$"
+```
 
 ## よくある質問
 
-#### Q1. `du` と `df` の違いは何ですか？
-A. `du` は特定のファイルやディレクトリが使用しているディスク容量を表示しますが、`df` はファイルシステム全体の使用状況（総容量、使用量、空き容量など）を表示します。
+#### Q1. `du`と`df`の違いは何ですか？
+A. `du`はファイルやディレクトリのディスク使用量を表示しますが、`df`はファイルシステム全体のディスク容量使用状況を表示します。
 
-#### Q2. なぜ `du` と `ls -l` で表示されるサイズが異なるのですか？
-A. `ls -l` はファイルの実際のサイズを表示しますが、`du` はファイルが占めるディスクブロックのサイズを表示します。ファイルシステムのブロックサイズにより、小さなファイルでも最小ブロックサイズ分の容量を消費します。
+#### Q2. なぜ`du`が表示するサイズがファイルマネージャで見るサイズと異なることがありますか？
+A. `du`はディスク上で使用されている容量（ファイルシステムのオーバーヘッドを含む）を測定しますが、ファイルマネージャはファイルサイズを表示することが多いです。また、ブロックサイズや割り当て方法によっても違いが生じることがあります。
 
-#### Q3. 特定のディレクトリの合計サイズだけを知りたい場合はどうすればよいですか？
-A. `du -sh ディレクトリ名` を使用すると、そのディレクトリの合計サイズのみを人間が読みやすい形式で表示できます。
+#### Q3. 大きなディレクトリで`du`をより速く実行するにはどうすればよいですか？
+A. `du -s`を使用して要約のみを取得するか、`--max-depth=N`を使用して再帰の深さを制限します。
+
+#### Q4. `du`で「permission denied」エラーが出るのはなぜですか？
+A. チェックするすべてのディレクトリに対する読み取り権限が必要です。システムディレクトリをチェックする必要がある場合は、`sudo`で実行してみてください。
 
 ## macOSでの注意点
 
-macOSの`du`コマンドはGNU版と若干異なります。例えば、`--max-depth`オプションの代わりに`-d`を使用します。また、デフォルトのブロックサイズが異なるため、同じファイルでもLinuxとmacOSで表示される数値が異なる場合があります。
+macOSでは、BSDバージョンの`du`が使用されており、オプションが若干異なります：
+- `--max-depth`の代わりに`-d`を使用します
+- `--exclude`のようなGNUオプションは利用できません
+- 人間が読みやすい出力を得るには、`du -h | awk '{print $1, $2}'`を使用するとより見やすくなります
 
-```console
-$ du -d 1 -h Documents  # macOSでの深さ指定
-```
-
-## 参考
+## 参考資料
 
 https://www.gnu.org/software/coreutils/manual/html_node/du-invocation.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

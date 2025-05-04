@@ -47,91 +47,106 @@
     <main>
       
   <h1>sftp コマンド</h1>
-<p>セキュアなファイル転送プロトコル（SSH File Transfer Protocol）を使用してファイルを転送します。</p>
+<p>暗号化された接続を介してホスト間でファイルを安全に転送します。</p>
 <h2>概要</h2>
-<p><code>sftp</code>は、SSHプロトコルを使用してリモートサーバーとの間でファイルを安全に転送するためのコマンドです。FTPと似た操作性を持ちながら、通信が暗号化されるため、セキュリティが確保されます。ファイルのアップロード、ダウンロード、リモートディレクトリの操作などが可能です。</p>
+<p>SFTP（Secure File Transfer Protocol）は、コンピュータ間でファイルを安全に転送するためのネットワークプロトコルです。SSH上で動作し、暗号化と認証を提供します。<code>sftp</code>コマンドはFTPに似た対話型のファイル転送プログラムですが、SSH暗号化を使用しています。</p>
 <h2>オプション</h2>
-<h3><strong>-P port</strong></h3>
-<p>接続先のポート番号を指定します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2222</span><span style="color: #F8F8F8"> </span>user@example.com
-<span style="color: #000; font-style: italic">Connected to example.com.</span>
+<h3><strong>-b</strong> / <strong>--batch</strong> <em>バッチファイル</em></h3>
+<p>対話的に実行する代わりに、sftpコマンドのバッチファイルを処理します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>commands.txt<span style="color: #F8F8F8"> </span>user@remote.server
+<span style="color: #000; font-style: italic">Connecting to remote.server...</span>
+<span style="color: #000; font-style: italic">Batch file commands.txt processed</span>
+</pre></div>
+<h3><strong>-P</strong> / <strong>--port</strong> <em>ポート</em></h3>
+<p>リモートホストに接続するポートを指定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2222</span><span style="color: #F8F8F8"> </span>user@remote.server
+<span style="color: #000; font-style: italic">Connecting to remote.server port 2222...</span>
 <span style="color: #000; font-style: italic">sftp&gt;</span>
 </pre></div>
-<h3><strong>-i identity_file</strong></h3>
-<p>SSH認証に使用する秘密鍵ファイルを指定します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>~/.ssh/my_key<span style="color: #F8F8F8"> </span>user@example.com
-<span style="color: #000; font-style: italic">Connected to example.com.</span>
+<h3><strong>-i</strong> / <strong>--identity</strong> <em>アイデンティティファイル</em></h3>
+<p>公開鍵認証に使用するアイデンティティ（秘密鍵）を読み込むファイルを選択します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>~/.ssh/my_key<span style="color: #F8F8F8"> </span>user@remote.server
+<span style="color: #000; font-style: italic">Connecting to remote.server...</span>
 <span style="color: #000; font-style: italic">sftp&gt;</span>
 </pre></div>
-<h3><strong>-b batchfile</strong></h3>
-<p>バッチファイルからコマンドを読み込んで実行します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>commands.txt
-<span style="color: #000; font-style: italic">cd /remote/dir</span>
-<span style="color: #000; font-style: italic">get important.txt</span>
-<span style="color: #000; font-style: italic">bye</span>
-
-<span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>commands.txt<span style="color: #F8F8F8"> </span>user@example.com
-<span style="color: #8F5902"># </span>コマンドが自動実行される
-</pre></div>
-<h3><strong>-r</strong></h3>
-<p>ディレクトリを再帰的にコピーします（get/putコマンドと組み合わせて使用）。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #000; font-style: italic">sftp&gt; get -r remote_directory</span>
+<h3><strong>-r</strong> / <strong>--recursive</strong></h3>
+<p>アップロードまたはダウンロード時にディレクトリ全体を再帰的にコピーします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>user@remote.server
+<span style="color: #000; font-style: italic">sftp&gt; get -r remote_directory</span>
 <span style="color: #000; font-style: italic">Fetching /remote_directory/ to remote_directory</span>
+<span style="color: #000; font-style: italic">sftp&gt;</span>
+</pre></div>
+<h3><strong>-v</strong> / <strong>--verbose</strong></h3>
+<p>ログレベルを上げ、詳細なデバッグ出力を提供します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>user@remote.server
+<span style="color: #000; font-style: italic">OpenSSH_8.9p1, LibreSSL 3.3.6</span>
+<span style="color: #000; font-style: italic">debug1: Reading configuration data /etc/ssh/ssh_config</span>
+<span style="color: #000; font-style: italic">debug1: Connecting to remote.server port 22.</span>
 <span style="color: #000; font-style: italic">...</span>
 <span style="color: #000; font-style: italic">sftp&gt;</span>
 </pre></div>
 <h2>使用例</h2>
 <h3>リモートサーバーへの接続</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>user@example.com
-<span style="color: #000; font-style: italic">Connected to example.com.</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>user@remote.server
+<span style="color: #000; font-style: italic">Connected to remote.server.</span>
 <span style="color: #000; font-style: italic">sftp&gt;</span>
 </pre></div>
 <h3>ファイルのダウンロード</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #000; font-style: italic">sftp&gt; get remote_file.txt</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>user@remote.server
+<span style="color: #000; font-style: italic">sftp&gt; get remote_file.txt</span>
 <span style="color: #000; font-style: italic">Fetching /home/user/remote_file.txt to remote_file.txt</span>
-<span style="color: #000; font-style: italic">/home/user/remote_file.txt                        100%  1234     1.2KB/s   00:01</span>
 <span style="color: #000; font-style: italic">sftp&gt;</span>
 </pre></div>
 <h3>ファイルのアップロード</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #000; font-style: italic">sftp&gt; put local_file.txt</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>user@remote.server
+<span style="color: #000; font-style: italic">sftp&gt; put local_file.txt</span>
 <span style="color: #000; font-style: italic">Uploading local_file.txt to /home/user/local_file.txt</span>
-<span style="color: #000; font-style: italic">local_file.txt                                    100%  2345     2.3KB/s   00:01</span>
 <span style="color: #000; font-style: italic">sftp&gt;</span>
 </pre></div>
-<h3>リモートディレクトリの操作</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #000; font-style: italic">sftp&gt; pwd</span>
+<h3>ディレクトリの移動</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>user@remote.server
+<span style="color: #000; font-style: italic">sftp&gt; pwd</span>
 <span style="color: #000; font-style: italic">Remote working directory: /home/user</span>
 <span style="color: #000; font-style: italic">sftp&gt; cd documents</span>
-<span style="color: #000; font-style: italic">sftp&gt; ls</span>
-<span style="color: #000; font-style: italic">file1.txt    file2.txt    projects/</span>
-<span style="color: #000; font-style: italic">sftp&gt; mkdir new_folder</span>
-<span style="color: #000; font-style: italic">sftp&gt;</span>
+<span style="color: #000; font-style: italic">sftp&gt; lpwd</span>
+<span style="color: #000; font-style: italic">Local working directory: /Users/localuser</span>
+<span style="color: #000; font-style: italic">sftp&gt; lcd Downloads</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>対話モードでのコマンド補完</h3>
-<p>sftpの対話モードでは、Tabキーを使ってコマンドやファイル名を補完できます。長いファイル名を入力する手間が省けます。</p>
-<h3>ローカルコマンドの実行</h3>
-<p>コマンドの前に「!」をつけると、ローカルシェルでコマンドを実行できます。例えば、<code>!ls</code>でローカルディレクトリの内容を表示できます。</p>
-<h3>複数ファイルの転送</h3>
-<p>ワイルドカードを使用して複数のファイルを一度に転送できます。例：<code>get *.txt</code></p>
-<h3>対話モードでのヘルプ表示</h3>
-<p><code>help</code>または<code>?</code>コマンドを使用すると、利用可能なコマンドの一覧が表示されます。</p>
-<h2>よくある質問</h2>
-<h4>Q1. sftpとscpの違いは何ですか？</h4>
-<p>A. sftpは対話的なセッションを提供し、複数の操作を連続して行えます。一方、scpは単一のファイル転送操作に特化しています。sftpはより多機能ですが、scpはシンプルな転送には便利です。</p>
-<h4>Q2. sftpセッション内でファイルの権限を変更できますか？</h4>
-<p>A. はい、<code>chmod</code>コマンドを使用してリモートファイルの権限を変更できます。例：<code>chmod 644 file.txt</code></p>
-<h4>Q3. 転送速度を向上させる方法はありますか？</h4>
-<p>A. <code>-C</code>オプションを使用して圧縮を有効にすると、低速ネットワークでの転送速度が向上する場合があります。また、適切な暗号化アルゴリズムを選択することも効果的です。</p>
-<h4>Q4. sftpセッションを終了するにはどうすればよいですか？</h4>
-<p>A. <code>exit</code>、<code>quit</code>、または<code>bye</code>コマンドを使用するか、Ctrl+Dを押すことでセッションを終了できます。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは、OpenSSHのバージョンが古い場合があります。最新の機能を利用するには、Homebrewなどのパッケージマネージャーを使用してOpenSSHを更新することをお勧めします。また、macOSのキーチェーンとの連携により、パスフレーズの入力を省略できる場合があります。</p>
-<h2>参考</h2>
-<p>https://man.openbsd.org/sftp.1</p>
-<h2>改訂</h2>
+<h3>タブ補完を使用する</h3>
+<p>SFTPはローカルとリモートの両方のファイルに対してタブ補完をサポートしており、完全なパスを入力せずに簡単にナビゲートできます。</p>
+<h3>対話的なコマンド</h3>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li><code>ls</code> - リモートファイルを一覧表示する</li>
+<li><code>lls</code> - ローカルファイルを一覧表示する</li>
+<li><code>cd</code> - リモートディレクトリを変更する</li>
+<li><code>lcd</code> - ローカルディレクトリを変更する</li>
+<li><code>mkdir</code> - リモートディレクトリを作成する</li>
+<li><code>rmdir</code> - リモートディレクトリを削除する</li>
+<li><code>rm</code> - リモートファイルを削除する</li>
+<li><code>help</code>または<code>?</code> - 利用可能なコマンドを表示する</li>
+</ul>
+<h3>自動化のためのバッチモード</h3>
+<p>sftpコマンドを含むテキストファイルを作成し、スクリプトでの自動転送には<code>-b</code>オプションを使用します。</p>
+<h3>複数のファイルにワイルドカードを使用する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #000; font-style: italic">sftp&gt; get *.txt</span>
+</pre></div>
+<h2>よくある質問</h2>
+<h4>Q1. SFTPとSCPの違いは何ですか？</h4>
+<p>A. SFTPはSSH上で動作する対話型のファイル転送プロトコルであるのに対し、SCPは安全なコピーのための非対話型コマンドです。SFTPは転送の再開やディレクトリ一覧表示などの機能を提供します。</p>
+<h4>Q2. ディレクトリ全体を転送するにはどうすればよいですか？</h4>
+<p>A. getまたはputコマンドで<code>-r</code>（再帰的）オプションを使用します：<code>get -r remote_directory</code>または<code>put -r local_directory</code>。</p>
+<h4>Q3. スクリプトでSFTPを使用できますか？</h4>
+<p>A. はい、SFTPコマンドを含むバッチファイルと共に<code>-b</code>オプションを使用します：<code>sftp -b commands.txt user@remote.server</code>。</p>
+<h4>Q4. リモートファイルの権限を変更するにはどうすればよいですか？</h4>
+<p>A. SFTPセッション内で<code>chmod</code>コマンドを使用します：<code>chmod 644 remote_file.txt</code>。</p>
+<h4>Q5. 中断されたファイル転送を再開するにはどうすればよいですか？</h4>
+<p>A. ファイルのダウンロードを再開するには<code>reget</code>コマンドを、アップロードを再開するには<code>reput</code>コマンドを使用します。</p>
+<h2>参考文献</h2>
+<p>https://man.openbsd.org/sftp.1</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

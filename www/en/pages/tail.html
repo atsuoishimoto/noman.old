@@ -49,81 +49,86 @@
   <h1>tail command</h1>
 <p>Display the last part of files.</p>
 <h2>Overview</h2>
-<p>The <code>tail</code> command outputs the last portion of files, typically the last 10 lines by default. It's particularly useful for viewing recent entries in log files, monitoring file changes in real-time, and checking the end of large files without opening them entirely.</p>
+<p>The <code>tail</code> command outputs the last part (tail) of files. By default, it prints the last 10 lines of each specified file to standard output. It's commonly used to view recent entries in log files, monitor file changes in real-time, or check the end of any text file.</p>
 <h2>Options</h2>
 <h3><strong>-n, --lines=NUM</strong></h3>
-<p>Display the last NUM lines instead of the default 10 lines</p>
+<p>Output the last NUM lines, instead of the default 10</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>/var/log/syslog
-<span style="color: #000; font-style: italic">Apr 30 10:15:22 server systemd[1]: Started Daily apt upgrade and clean activities.</span>
-<span style="color: #000; font-style: italic">Apr 30 10:15:22 server systemd[1]: apt-daily-upgrade.service: Deactivated successfully.</span>
-<span style="color: #000; font-style: italic">Apr 30 10:17:01 server CRON[12345]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)</span>
-<span style="color: #000; font-style: italic">Apr 30 10:30:01 server CRON[12346]: (root) CMD ([ -x /etc/init.d/anacron ] &amp;&amp; /etc/init.d/anacron start)</span>
-<span style="color: #000; font-style: italic">Apr 30 10:45:01 server CRON[12347]: (user) CMD (/usr/local/bin/backup.sh)</span>
+<span style="color: #000; font-style: italic">May  3 21:45:12 hostname systemd[1]: Started Daily apt download activities.</span>
+<span style="color: #000; font-style: italic">May  3 21:45:12 hostname systemd[1]: apt-daily.service: Succeeded.</span>
+<span style="color: #000; font-style: italic">May  3 22:17:01 hostname CRON[12345]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)</span>
+<span style="color: #000; font-style: italic">May  3 23:17:01 hostname CRON[12346]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)</span>
+<span style="color: #000; font-style: italic">May  4 00:17:01 hostname CRON[12347]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)</span>
 </pre></div>
 <h3><strong>-f, --follow</strong></h3>
-<p>Output appended data as the file grows (follow mode)</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/apache2/access.log
-<span style="color: #000; font-style: italic">192.168.1.101 - - [30/Apr/2025:10:42:15 +0000] &quot;GET /index.html HTTP/1.1&quot; 200 1234</span>
-<span style="color: #000; font-style: italic">192.168.1.102 - - [30/Apr/2025:10:42:18 +0000] &quot;GET /images/logo.png HTTP/1.1&quot; 200 5678</span>
-<span style="color: #000; font-style: italic">192.168.1.103 - - [30/Apr/2025:10:42:20 +0000] &quot;POST /login HTTP/1.1&quot; 302 0</span>
-<span style="color: #000; font-style: italic">...</span>
+<p>Output appended data as the file grows; follow the file's end</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/syslog
+<span style="color: #000; font-style: italic">May  4 00:17:01 hostname CRON[12347]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)</span>
+<span style="color: #000; font-style: italic">May  4 01:17:01 hostname CRON[12348]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)</span>
+<span style="color: #000; font-style: italic">May  4 02:17:01 hostname CRON[12349]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)</span>
+<span style="color: #000; font-style: italic">[new entries appear in real-time as they&#39;re added to the file]</span>
 </pre></div>
 <h3><strong>-c, --bytes=NUM</strong></h3>
-<p>Output the last NUM bytes instead of lines</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">50</span><span style="color: #F8F8F8"> </span>document.txt
-<span style="color: #000; font-style: italic">end of the document with the last 50 characters only.</span>
+<p>Output the last NUM bytes, instead of the last 10 lines</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">50</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">last 50 bytes of the file will be displayed here.</span>
 </pre></div>
 <h3><strong>-q, --quiet, --silent</strong></h3>
 <p>Never output headers giving file names</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">Last lines of file1.txt</span>
-<span style="color: #000; font-style: italic">Last lines of file2.txt</span>
+<span style="color: #000; font-style: italic">[displays last 10 lines of each file without headers]</span>
 </pre></div>
 <h2>Usage Examples</h2>
+<h3>Monitoring a log file in real-time</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/apache2/access.log
+<span style="color: #000; font-style: italic">192.168.1.1 - - [04/May/2025:10:15:32 +0000] &quot;GET /index.html HTTP/1.1&quot; 200 1234</span>
+<span style="color: #000; font-style: italic">192.168.1.2 - - [04/May/2025:10:15:45 +0000] &quot;GET /images/logo.png HTTP/1.1&quot; 200 5678</span>
+<span style="color: #000; font-style: italic">[continues to show new entries as they appear]</span>
+</pre></div>
+<h3>Viewing the last 20 lines of multiple files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">==&gt; file1.txt &lt;==</span>
+<span style="color: #000; font-style: italic">[last 20 lines of file1.txt]</span>
+
+<span style="color: #000; font-style: italic">==&gt; file2.txt &lt;==</span>
+<span style="color: #000; font-style: italic">[last 20 lines of file2.txt]</span>
+</pre></div>
 <h3>Following multiple files simultaneously</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/syslog<span style="color: #F8F8F8"> </span>/var/log/auth.log
 <span style="color: #000; font-style: italic">==&gt; /var/log/syslog &lt;==</span>
-<span style="color: #000; font-style: italic">Apr 30 11:01:22 server systemd[1]: Started Session 123 of user admin.</span>
+<span style="color: #000; font-style: italic">[last 10 lines of syslog]</span>
 
 <span style="color: #000; font-style: italic">==&gt; /var/log/auth.log &lt;==</span>
-<span style="color: #000; font-style: italic">Apr 30 11:01:22 server sshd[12345]: Accepted publickey for admin from 192.168.1.10</span>
-</pre></div>
-<h3>Monitoring a log file with line numbers</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>/var/log/nginx/error.log
-<span style="color: #000; font-style: italic">2025/04/30 11:05:12 [error] 12345#0: *67 open() &quot;/var/www/html/favicon.ico&quot; failed (2: No such file or directory)</span>
-<span style="color: #000; font-style: italic">2025/04/30 11:05:15 [error] 12345#0: *68 connect() failed (111: Connection refused) while connecting to upstream</span>
-<span style="color: #000; font-style: italic">2025/04/30 11:05:20 [notice] 12345#0: signal process started</span>
-</pre></div>
-<h3>Viewing the last 20 lines with a specific pattern</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>access.log<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;404&quot;</span>
-<span style="color: #000; font-style: italic">192.168.1.105 - - [30/Apr/2025:11:10:15 +0000] &quot;GET /missing-page.html HTTP/1.1&quot; 404 345</span>
-<span style="color: #000; font-style: italic">192.168.1.106 - - [30/Apr/2025:11:12:18 +0000] &quot;GET /old-link.php HTTP/1.1&quot; 404 345</span>
+<span style="color: #000; font-style: italic">[last 10 lines of auth.log]</span>
+<span style="color: #000; font-style: italic">[continues to show new entries from both files]</span>
 </pre></div>
 <h2>Tips</h2>
-<h3>Monitor Multiple Files Efficiently</h3>
-<p>When monitoring multiple log files, use <code>tail -f file1 file2 file3</code> instead of running multiple tail commands. This is more efficient and keeps your terminal organized.</p>
-<h3>Combine with grep for Filtering</h3>
-<p>Pipe <code>tail</code> output to <code>grep</code> to filter for specific patterns: <code>tail -f log.txt | grep ERROR</code> will show only lines containing &quot;ERROR&quot; as they appear.</p>
-<h3>Use --follow=name for Rotating Logs</h3>
-<p>For log files that get rotated (renamed and recreated), use <code>tail --follow=name logfile</code> to continue following the file even after rotation.</p>
-<h3>Limit Buffer Size for Long-Running Tail</h3>
-<p>For long-running <code>tail -f</code> sessions, consider using <code>tail -f -n 0</code> to start with zero lines and only show new content, reducing initial output.</p>
+<h3>Use with grep for filtering</h3>
+<p>Combine <code>tail</code> with <code>grep</code> to filter specific entries from log files:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/var/log/syslog<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>ERROR
+</pre></div>
+<h3>Follow files even if they're rotated</h3>
+<p>Use <code>tail -F</code> (capital F) instead of <code>-f</code> to continue following a file even if it gets rotated or recreated:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-F<span style="color: #F8F8F8"> </span>/var/log/application.log
+</pre></div>
+<h3>Specify number of lines with a shorthand</h3>
+<p>You can use <code>-n</code> with a number without a space:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tail<span style="color: #F8F8F8"> </span>-n50<span style="color: #F8F8F8"> </span>file.txt
+</pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How do I stop a running tail -f command?</h4>
+<h4>Q1. What's the difference between <code>tail -f</code> and <code>tail -F</code>?</h4>
+<p>A. <code>tail -f</code> follows the file descriptor, which means it may stop if the file is renamed. <code>tail -F</code> follows the filename, continuing to display content even if the file is rotated or recreated.</p>
+<h4>Q2. How do I exit from <code>tail -f</code>?</h4>
 <p>A. Press Ctrl+C to terminate the command and return to the prompt.</p>
-<h4>Q2. Can tail show lines from the beginning of a file?</h4>
-<p>A. No, use the <code>head</code> command instead. <code>tail</code> only shows the end of files.</p>
-<h4>Q3. How can I see both the beginning and end of a file?</h4>
-<p>A. Use <code>head</code> for the beginning and <code>tail</code> for the end, or use <code>less</code> to navigate through the entire file.</p>
-<h4>Q4. Does tail work with compressed files?</h4>
-<p>A. Not directly. For compressed files, use tools like <code>zcat file.gz | tail</code> or specialized commands like <code>zless</code>.</p>
-<h4>Q5. How can I monitor a file for specific changes?</h4>
-<p>A. Use <code>tail -f file | grep &quot;pattern&quot;</code> to monitor and filter for specific content.</p>
+<h4>Q3. Can I see both the beginning and end of a file?</h4>
+<p>A. No, <code>tail</code> only shows the end. Use <code>head</code> for the beginning or combine them with a pipe: <code>head -n 5 file.txt &amp;&amp; tail -n 5 file.txt</code>.</p>
+<h4>Q4. How can I monitor multiple log files at once?</h4>
+<p>A. Simply list all files after the <code>tail -f</code> command: <code>tail -f file1.log file2.log file3.log</code>.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/tail-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

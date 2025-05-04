@@ -4,32 +4,29 @@ Execute commands from a file or script in the current shell environment.
 
 ## Overview
 
-The `source` command (also accessible via the `.` shorthand) reads and executes commands from a specified file in the current shell session. Unlike running a script normally, which creates a new shell process, `source` runs commands in your current shell, allowing environment variables and functions defined in the sourced file to persist in your current session.
+The `source` command (also available as the `.` command) reads and executes commands from a specified file in the current shell environment. Unlike running a script directly, which creates a new shell process, `source` runs the commands in your current shell, allowing environment variables and functions defined in the sourced file to persist in your current session.
 
 ## Options
 
-The `source` command has very few options as its primary purpose is straightforward.
+The `source` command has very few options as it's a shell builtin command.
 
-### **Basic Usage**
+### **-h (--help)**
 
-Source a file to execute its contents in the current shell:
-
-```console
-$ source filename
-```
-
-or using the shorthand:
+Display help information about the `source` command.
 
 ```console
-$ . filename
-```
-
-### **With Arguments**
-
-Pass arguments to the sourced script:
-
-```console
-$ source script.sh arg1 arg2
+$ source --help
+source: source filename [arguments]
+    Execute commands from a file in the current shell.
+    
+    Read and execute commands from FILENAME in the current shell.  The
+    entries in $PATH are used to find the directory containing FILENAME.
+    If any ARGUMENTS are supplied, they become the positional parameters
+    when FILENAME is executed.
+    
+    Exit Status:
+    Returns the status of the last command executed in FILENAME; fails if
+    FILENAME cannot be read.
 ```
 
 ## Usage Examples
@@ -40,72 +37,76 @@ $ source script.sh arg1 arg2
 $ source ~/.bashrc
 ```
 
-This reloads your bash configuration without needing to start a new terminal session.
+This reloads your bash configuration without requiring you to start a new terminal session.
 
-### Loading environment variables
+### Sourcing a script with variables
 
 ```console
-$ cat env.sh
+$ cat setup_env.sh
+#!/bin/bash
 export PROJECT_ROOT="/home/user/projects"
-export API_KEY="abc123"
+export DEBUG_MODE="true"
 
-$ source env.sh
+$ source setup_env.sh
 $ echo $PROJECT_ROOT
 /home/user/projects
 ```
 
-### Activating a virtual environment
+### Passing arguments to a sourced file
+
+```console
+$ cat greet.sh
+echo "Hello, $1!"
+
+$ source greet.sh World
+Hello, World!
+```
+
+## Tips
+
+### Use source to activate virtual environments
+
+When working with Python, you can use `source` to activate virtual environments:
 
 ```console
 $ source venv/bin/activate
 (venv) $
 ```
 
-This is commonly used with Python virtual environments to set up the necessary environment variables.
+### Dot command as an alternative
 
-## Tips
-
-### Use source for Shell Functions
-
-When defining shell functions in a file, you must use `source` to make them available in your current shell:
+The `.` command is a shorter alternative to `source` and works identically:
 
 ```console
-$ cat functions.sh
-function hello() {
-  echo "Hello, $1!"
-}
-
-$ source functions.sh
-$ hello World
-Hello, World!
+$ . ~/.bashrc
 ```
 
-### Debugging Sourced Files
+### Check if a file exists before sourcing
 
-If a sourced file has errors, they will affect your current shell. To debug, consider using `set -x` at the beginning of the file to see each command as it executes.
+To avoid errors, check if a file exists before sourcing it:
 
-### Relative Paths
-
-When sourcing files, paths are relative to your current working directory, not the location of the script doing the sourcing.
+```console
+$ [ -f ~/.env_vars ] && source ~/.env_vars
+```
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `source` and executing a script directly?
-A. When you execute a script directly (e.g., `./script.sh`), it runs in a new subshell. Changes to variables or functions don't affect your current shell. With `source`, the commands run in your current shell, so any changes persist after the script completes.
+A. When you `source` a script, it runs in your current shell environment, allowing variables and functions to persist. When you execute a script directly (e.g., `./script.sh`), it runs in a new subshell, and any variables or functions defined in it are lost when the script completes.
 
 #### Q2. Can I use `source` with any type of file?
-A. `source` works with any text file containing valid shell commands. It's commonly used with shell scripts (`.sh`), configuration files, and environment setup files.
+A. `source` is designed to work with shell script files. It reads and executes the commands in the file as if you had typed them at the command line. It's typically used with bash, zsh, or other shell script files.
 
-#### Q3. What's the difference between `source` and the dot operator (`.`)?
-A. They are functionally identical. The dot operator (`.`) is the POSIX-standard version, while `source` is a more readable synonym available in bash and some other shells.
+#### Q3. Does `source` work the same in all shells?
+A. While the basic functionality is similar across shells, there may be subtle differences. In bash and zsh, both `source` and `.` work, but some shells like sh only support the `.` command.
 
-#### Q4. Does `source` work in all shells?
-A. The `.` command works in all POSIX-compliant shells. The `source` command is specific to bash and some other shells like zsh. For maximum portability, use the `.` command.
+#### Q4. How can I debug a sourced file?
+A. You can add `set -x` at the beginning of the file to enable debug mode, which will print each command before executing it.
 
 ## References
 
-https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html
+Bash manual: https://www.gnu.org/software/bash/manual/bash.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

@@ -47,81 +47,69 @@
     <main>
       
   <h1>mkdir コマンド</h1>
-<p>ディレクトリを作成します。</p>
+<p>ディレクトリ（フォルダ）を作成します。</p>
 <h2>概要</h2>
-<p><code>mkdir</code>（make directory）コマンドは、新しいディレクトリ（フォルダ）を作成するために使用されます。単一のディレクトリから複数の階層構造を持つディレクトリまで、様々なディレクトリを作成できます。</p>
+<p><code>mkdir</code>コマンドは、ファイルシステム内に一つまたは複数のディレクトリを作成します。指定したディレクトリがすでに存在する場合、特定のオプションを使用しない限り、通常は失敗します。ファイルを整理したりディレクトリ構造を設定したりするための基本的なコマンドです。</p>
 <h2>オプション</h2>
-<h3><strong>-p（--parents）</strong></h3>
-<p>親ディレクトリが存在しない場合でも、必要に応じて親ディレクトリを作成します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>projects/website/css
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>projects/
-<span style="color: #000; font-style: italic">total 0</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  2 user  staff  64 May  3 10:00 website</span>
+<h3><strong>-p, --parents</strong></h3>
+<p>必要に応じて親ディレクトリも作成します。親ディレクトリが存在しない場合でも、一つのコマンドでディレクトリパス全体を作成できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>プロジェクト/ウェブサイト/css
 </pre></div>
-<h3><strong>-m（--mode）</strong></h3>
-<p>新しく作成するディレクトリのパーミッション（アクセス権限）を設定します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">700</span><span style="color: #F8F8F8"> </span>private_dir
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l
-<span style="color: #000; font-style: italic">total 0</span>
-<span style="color: #000; font-style: italic">drwx------  2 user  staff  64 May  3 10:05 private_dir</span>
+<h3><strong>-m, --mode=MODE</strong></h3>
+<p>作成するディレクトリのファイルモード（パーミッション）を設定します。モードは8進数で指定できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">755</span><span style="color: #F8F8F8"> </span>secure_folder
 </pre></div>
-<h3><strong>-v（--verbose）</strong></h3>
-<p>作成したディレクトリの情報を表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>new_folder
-<span style="color: #000; font-style: italic">mkdir: created directory &#39;new_folder&#39;</span>
+<h3><strong>-v, --verbose</strong></h3>
+<p>作成される各ディレクトリについてメッセージを表示し、何が作成されているかを示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>新しいフォルダ
+<span style="color: #000; font-style: italic">mkdir: ディレクトリ &#39;新しいフォルダ&#39; を作成しました</span>
+</pre></div>
+<h3><strong>-Z, --context=CONTEXT</strong></h3>
+<p>作成された各ディレクトリのSELinuxセキュリティコンテキストをデフォルトタイプに設定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-Z<span style="color: #F8F8F8"> </span>secure_data
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的なディレクトリ作成</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>documents
-<span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">documents</span>
+<h3>複数のディレクトリを一度に作成する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>docs<span style="color: #F8F8F8"> </span>images<span style="color: #F8F8F8"> </span>videos
 </pre></div>
-<h3>複数のディレクトリを一度に作成</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>photos<span style="color: #F8F8F8"> </span>videos<span style="color: #F8F8F8"> </span>music
-<span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">music  photos  videos</span>
+<h3>特定のパーミッションでディレクトリを作成する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">700</span><span style="color: #F8F8F8"> </span>private_files
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-ld<span style="color: #F8F8F8"> </span>private_files
+<span style="color: #000; font-style: italic">drwx------ 2 user user 4096 5月  4 10:30 private_files</span>
 </pre></div>
-<h3>階層構造のディレクトリを作成</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>projects/webapp/src/components
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span>projects
-<span style="color: #000; font-style: italic">projects:</span>
-<span style="color: #000; font-style: italic">webapp</span>
-
-<span style="color: #000; font-style: italic">projects/webapp:</span>
-<span style="color: #000; font-style: italic">src</span>
-
-<span style="color: #000; font-style: italic">projects/webapp/src:</span>
-<span style="color: #000; font-style: italic">components</span>
+<h3>詳細出力付きでネストしたディレクトリを作成する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-pv<span style="color: #F8F8F8"> </span>projects/webapp/src/components
+<span style="color: #000; font-style: italic">mkdir: ディレクトリ &#39;projects&#39; を作成しました</span>
+<span style="color: #000; font-style: italic">mkdir: ディレクトリ &#39;projects/webapp&#39; を作成しました</span>
+<span style="color: #000; font-style: italic">mkdir: ディレクトリ &#39;projects/webapp/src&#39; を作成しました</span>
+<span style="color: #000; font-style: italic">mkdir: ディレクトリ &#39;projects/webapp/src/components&#39; を作成しました</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>パスに空白を含むディレクトリ名</h3>
-<p>空白を含むディレクトリ名を作成する場合は、引用符で囲むか、バックスラッシュでエスケープします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;My Documents&quot;</span>
-<span style="color: #8F5902"># </span>または
-<span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>My<span style="color: #4E9A06">\ </span>Documents
+<h3>タブ補完を使用する</h3>
+<p>既存のパスにディレクトリを作成する場合、タブ補完を使用して入力ミスを避け、時間を節約できます。</p>
+<h3>ディレクトリの作成と移動を一度に行う</h3>
+<p><code>mkdir</code>と<code>cd</code>を<code>&amp;&amp;</code>で組み合わせて、ディレクトリを作成してすぐにそこに移動できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>new_project<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">cd</span><span style="color: #F8F8F8"> </span>new_project
 </pre></div>
-<h3>既存のディレクトリ</h3>
-<p>既に存在するディレクトリを作成しようとすると、エラーが発生します。<code>-p</code>オプションを使用すると、既存のディレクトリがあってもエラーにならず、存在しない部分だけ作成します。</p>
-<h3>日付付きディレクトリの作成</h3>
-<p>バックアップなどのために日付付きディレクトリを作成する場合：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>date<span style="color: #F8F8F8"> </span>+%Y-%m-%d<span style="color: #204A87; font-weight: bold">)</span>
-<span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">2025-05-03</span>
+<h3>関連するディレクトリには中括弧展開を使用する</h3>
+<p>中括弧展開を使用して、関連する複数のディレクトリを効率的に作成できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>project/<span style="color: #CE5C00; font-weight: bold">{</span>src,docs,tests<span style="color: #CE5C00; font-weight: bold">}</span>/<span style="color: #CE5C00; font-weight: bold">{</span>js,css,img<span style="color: #CE5C00; font-weight: bold">}</span>
 </pre></div>
+<p>これにより、ソースコード、ドキュメント、テスト用のサブディレクトリを持つプロジェクト構造が作成され、それぞれにjs、css、imgフォルダが含まれます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. 既に存在するディレクトリを作成しようとするとどうなりますか？</h4>
-<p>A. エラーメッセージ「mkdir: cannot create directory 'dirname': File exists」が表示されます。<code>-p</code>オプションを使用すると、このエラーは表示されません。</p>
-<h4>Q2. ディレクトリに特定のパーミッションを設定するにはどうすればよいですか？</h4>
-<p>A. <code>-m</code>オプションを使用します。例えば、<code>mkdir -m 755 dirname</code>とすると、所有者に読み書き実行権限、グループとその他のユーザーに読み実行権限を与えます。</p>
-<h4>Q3. 複数の階層のディレクトリを一度に作成するにはどうすればよいですか？</h4>
-<p>A. <code>-p</code>オプションを使用します。例：<code>mkdir -p dir1/dir2/dir3</code></p>
-<h4>Q4. 作成したディレクトリの所有者を変更するにはどうすればよいですか？</h4>
-<p>A. <code>mkdir</code>では所有者を変更できません。ディレクトリ作成後に<code>chown</code>コマンドを使用して所有者を変更します。</p>
-<h2>参考</h2>
+<h4>Q1. すでに存在する可能性があるディレクトリを作成するにはどうすればよいですか？</h4>
+<p>A. <code>mkdir -p ディレクトリ名</code>を使用します。<code>-p</code>オプションを使うと、ディレクトリがすでに存在していてもコマンドは失敗しません。</p>
+<h4>Q2. 複数のネストしたディレクトリを一度に作成するにはどうすればよいですか？</h4>
+<p>A. <code>mkdir -p 親/子/孫</code>を使用します。<code>-p</code>オプションによりパス内のすべてのディレクトリが作成されます。</p>
+<h4>Q3. ディレクトリを作成する際に特定のパーミッションを設定するにはどうすればよいですか？</h4>
+<p>A. <code>mkdir -m モード ディレクトリ名</code>を使用します。モードは8進数のパーミッション値です（例：<code>mkdir -m 755 ディレクトリ名</code>）。</p>
+<h4>Q4. すでに存在するディレクトリを作成しようとするとどうなりますか？</h4>
+<p>A. <code>-p</code>オプションがない場合、<code>mkdir</code>はエラーを表示します。<code>-p</code>オプションを使用すると、エラーなく静かに処理を続行します。</p>
+<h2>参照</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/mkdir-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/03 初版作成</li>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

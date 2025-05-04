@@ -1,70 +1,78 @@
 # jq command
 
-Process and manipulate JSON data from the command line.
+Process and transform JSON data with a lightweight and flexible command-line processor.
 
 ## Overview
 
-`jq` is a lightweight and flexible command-line JSON processor. It allows you to slice, filter, map, and transform structured data with the same ease that `sed`, `awk`, and `grep` let you play with text. It works like a filter, taking input from files or stdin, and outputting processed JSON to stdout.
+`jq` is a command-line JSON processor that allows you to slice, filter, map, and transform structured data with ease. It works like `sed` for JSON data – you can use it to extract specific fields, transform values, filter arrays, and much more without writing complex scripts.
 
 ## Options
 
 ### **-r, --raw-output**
 
-Outputs raw strings rather than JSON encoded strings (removes quotes)
+Output strings without quotes for more readable results.
 
 ```console
 $ echo '{"name": "John"}' | jq -r '.name'
 John
 ```
 
-### **-c, --compact-output**
-
-Produces compact output without pretty-printing
-
-```console
-$ echo '{"name": "John", "age": 30}' | jq -c
-{"name":"John","age":30}
-```
-
 ### **-s, --slurp**
 
-Reads all inputs into an array and applies the filter to it
+Read multiple JSON objects and combine them into an array.
 
 ```console
-$ echo '{"id": 1}' | echo '{"id": 2}' | jq -s
+$ echo '{"id": 1}\n{"id": 2}' | jq -s '.'
 [
-  {"id": 1},
-  {"id": 2}
+  {
+    "id": 1
+  },
+  {
+    "id": 2
+  }
 ]
 ```
 
-### **-f, --from-file**
+### **-f, --from-file FILENAME**
 
-Reads filter from a file
+Read filter from a file instead of command line.
 
 ```console
 $ echo '{"name": "John", "age": 30}' | jq -f filter.jq
-# Output depends on the content of filter.jq
+# Where filter.jq contains: .name
+"John"
+```
+
+### **-c, --compact-output**
+
+Output compact JSON instead of pretty-printed format.
+
+```console
+$ echo '{"name": "John", "age": 30}' | jq -c '.'
+{"name":"John","age":30}
+```
+
+### **-n, --null-input**
+
+Don't read any input, but generate results based on the filter.
+
+```console
+$ jq -n '{"hello": "world"}'
+{
+  "hello": "world"
+}
 ```
 
 ## Usage Examples
 
-### Basic Property Access
+### Extracting specific fields
 
 ```console
 $ echo '{"user": {"name": "John", "age": 30}}' | jq '.user.name'
 "John"
 ```
 
-### Array Operations
-
-```console
-$ echo '[{"name": "John"}, {"name": "Jane"}]' | jq '.[].name'
-"John"
-"Jane"
-```
-
-### Filtering Arrays
+### Filtering arrays
 
 ```console
 $ echo '[{"name": "John", "age": 30}, {"name": "Jane", "age": 25}]' | jq '.[] | select(.age > 28)'
@@ -74,70 +82,79 @@ $ echo '[{"name": "John", "age": 30}, {"name": "Jane", "age": 25}]' | jq '.[] | 
 }
 ```
 
-### Creating New JSON
+### Transforming data
 
 ```console
-$ echo '{"first": "John", "last": "Doe"}' | jq '{full_name: .first + " " + .last}'
-{
-  "full_name": "John Doe"
-}
+$ echo '[{"name": "John"}, {"name": "Jane"}]' | jq 'map({username: .name})'
+[
+  {
+    "username": "John"
+  },
+  {
+    "username": "Jane"
+  }
+]
 ```
 
-## Tips:
+### Working with arrays
+
+```console
+$ echo '{"users": ["John", "Jane", "Bob"]}' | jq '.users[1]'
+"Jane"
+```
+
+## Tips
 
 ### Pipe Multiple Filters
 
-Chain multiple operations with pipes within jq to perform complex transformations:
+Chain multiple filters with pipes to perform complex transformations:
 
 ```console
-$ echo '[{"id": 1, "value": "a"}, {"id": 2, "value": "b"}]' | jq '.[] | {id: .id, upper: (.value | ascii_upcase)}'
-{
-  "id": 1,
-  "upper": "A"
-}
-{
-  "id": 2,
-  "upper": "B"
-}
+$ echo '[{"name": "John", "age": 30}, {"name": "Jane", "age": 25}]' | jq '.[] | select(.age > 25) | .name'
+"John"
 ```
 
 ### Use Built-in Functions
 
-jq has many built-in functions for string manipulation, math operations, and more:
+`jq` has many built-in functions like `length`, `keys`, `has`, and `map` that make data manipulation easier:
 
 ```console
-$ echo '["apple", "banana", "cherry"]' | jq 'map(length)'
+$ echo '{"a": 1, "b": 2, "c": 3}' | jq 'keys'
 [
-  5,
-  6,
-  6
+  "a",
+  "b",
+  "c"
 ]
 ```
 
-### Format JSON Files
+### Create Variables
 
-Use jq as a simple JSON formatter/pretty-printer:
+Use the `as` keyword to create variables for reuse in complex filters:
 
 ```console
-$ jq '.' messy.json > formatted.json
+$ echo '{"items": [{"price": 10}, {"price": 20}]}' | jq '.items | map(.price) | add as $total | {"total": $total, "count": length}'
+{
+  "total": 30,
+  "count": 2
+}
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. How do I extract a specific field from JSON?
-A. Use the dot notation: `jq '.fieldname'` or for nested fields: `jq '.parent.child'`.
+#### Q1. How do I format JSON with jq?
+A. Simply pipe your JSON through `jq '.'` to get pretty-printed output.
 
-#### Q2. How do I process multiple JSON files?
-A. You can use shell loops or the `-s` (slurp) option to combine multiple files into an array.
+#### Q2. How can I extract values without quotes?
+A. Use the `-r` or `--raw-output` option to output strings without quotes.
 
-#### Q3. How do I convert JSON to CSV?
-A. Use raw output with string concatenation: `jq -r '.[] | [.field1, .field2] | @csv'`.
+#### Q3. How do I filter an array based on a condition?
+A. Use `select()` with a condition: `jq '.[] | select(.field == "value")'`
 
-#### Q4. How do I handle JSON with special characters?
-A. jq handles escaping automatically, but you can use the `-r` flag to get raw output when needed.
+#### Q4. How do I process multiple JSON files?
+A. Use the `-s` (slurp) option to combine multiple inputs into an array.
 
-#### Q5. Can jq modify JSON files in-place?
-A. No, jq doesn't modify files in-place. You need to redirect output to a new file and then replace the original.
+#### Q5. How can I create new JSON from existing data?
+A. Create object literals in your filter: `jq '{new_key: .old_key, calculated: (.value * 2)}'`
 
 ## References
 
@@ -145,4 +162,4 @@ https://stedolan.github.io/jq/manual/
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

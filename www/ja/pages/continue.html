@@ -47,95 +47,67 @@
     <main>
       
   <h1>continue コマンド</h1>
-<p>シェルスクリプトで中断された繰り返し処理を再開します。</p>
+<p>一時停止したジョブをフォアグラウンドまたはバックグラウンドで再開します。</p>
 <h2>概要</h2>
-<p><code>continue</code> コマンドは、シェルスクリプト内のループ（for、while、until）において、現在の繰り返し処理をスキップして次の繰り返しに進むために使用されます。条件に基づいて特定の繰り返し処理をスキップしたい場合に便利です。</p>
+<p><code>continue</code> コマンドはシェルの組み込みコマンドで、一時停止されたジョブ（通常は Ctrl+Z で停止されたもの）の実行を再開します。一時停止したプロセスをフォアグラウンド（ターミナルと対話可能な状態）またはバックグラウンド（ターミナル入力を必要とせずに実行される状態）に戻すことができます。</p>
 <h2>オプション</h2>
-<p><code>continue</code> コマンドには特別なオプションはありません。ただし、数値引数を指定することで、どのレベルのループに影響を与えるかを制御できます。</p>
-<h3><strong>continue</strong></h3>
-<p>引数なしで使用すると、最も内側のループの現在の繰り返しをスキップします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
-<span style="color: #000; font-style: italic">&gt;   if [ $i -eq 3 ]; then</span>
-<span style="color: #000; font-style: italic">&gt;     echo &quot;$i をスキップします&quot;</span>
-<span style="color: #000; font-style: italic">&gt;     continue</span>
-<span style="color: #000; font-style: italic">&gt;   fi</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;処理中: $i&quot;</span>
-<span style="color: #000; font-style: italic">&gt; done</span>
-<span style="color: #000; font-style: italic">処理中: 1</span>
-<span style="color: #000; font-style: italic">処理中: 2</span>
-<span style="color: #000; font-style: italic">3 をスキップします</span>
-<span style="color: #000; font-style: italic">処理中: 4</span>
-<span style="color: #000; font-style: italic">処理中: 5</span>
+<h3><strong>fg</strong> - フォアグラウンド</h3>
+<p>一時停止したジョブをフォアグラウンドに戻し、実行を継続してターミナルとの対話を可能にします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">fg</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span>ジョブ指定<span style="color: #CE5C00; font-weight: bold">]</span>
 </pre></div>
-<h3><strong>continue n</strong></h3>
-<p>数値 <code>n</code> を指定すると、n番目のネストされたループに対して continue を適用します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;外側ループ: $i&quot;</span>
-<span style="color: #000; font-style: italic">&gt;   for j in a b c; do</span>
-<span style="color: #000; font-style: italic">&gt;     if [ $j = &quot;b&quot; ]; then</span>
-<span style="color: #000; font-style: italic">&gt;       echo &quot;  $j をスキップします&quot;</span>
-<span style="color: #000; font-style: italic">&gt;       continue 1  # 内側のループの現在の繰り返しをスキップ</span>
-<span style="color: #000; font-style: italic">&gt;     fi</span>
-<span style="color: #000; font-style: italic">&gt;     echo &quot;  内側ループ: $j&quot;</span>
-<span style="color: #000; font-style: italic">&gt;   done</span>
-<span style="color: #000; font-style: italic">&gt; done</span>
-<span style="color: #000; font-style: italic">外側ループ: 1</span>
-<span style="color: #000; font-style: italic">  内側ループ: a</span>
-<span style="color: #000; font-style: italic">  b をスキップします</span>
-<span style="color: #000; font-style: italic">  内側ループ: c</span>
-<span style="color: #000; font-style: italic">外側ループ: 2</span>
-<span style="color: #000; font-style: italic">  内側ループ: a</span>
-<span style="color: #000; font-style: italic">  b をスキップします</span>
-<span style="color: #000; font-style: italic">  内側ループ: c</span>
+<h3><strong>bg</strong> - バックグラウンド</h3>
+<p>一時停止したジョブをバックグラウンドで継続し、ターミナルを占有せずに実行できるようにします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">bg</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span>ジョブ指定<span style="color: #CE5C00; font-weight: bold">]</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>奇数のみを処理する例</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>num<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span>..10<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
-<span style="color: #000; font-style: italic">&gt;   if [ $((num % 2)) -eq 0 ]; then</span>
-<span style="color: #000; font-style: italic">&gt;     continue  # 偶数をスキップ</span>
-<span style="color: #000; font-style: italic">&gt;   fi</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;奇数を処理: $num&quot;</span>
-<span style="color: #000; font-style: italic">&gt; done</span>
-<span style="color: #000; font-style: italic">奇数を処理: 1</span>
-<span style="color: #000; font-style: italic">奇数を処理: 3</span>
-<span style="color: #000; font-style: italic">奇数を処理: 5</span>
-<span style="color: #000; font-style: italic">奇数を処理: 7</span>
-<span style="color: #000; font-style: italic">奇数を処理: 9</span>
+<h3>最近一時停止したジョブをフォアグラウンドで再開する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">fg</span>
+<span style="color: #000; font-style: italic">[1]+ 実行中     vim document.txt</span>
 </pre></div>
-<h3>エラー条件をスキップする例</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>*.txt<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
-<span style="color: #000; font-style: italic">&gt;   if [ ! -r &quot;$file&quot; ]; then</span>
-<span style="color: #000; font-style: italic">&gt;     echo &quot;$file は読み取り不可のためスキップします&quot;</span>
-<span style="color: #000; font-style: italic">&gt;     continue</span>
-<span style="color: #000; font-style: italic">&gt;   fi</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;$file を処理しています...&quot;</span>
-<span style="color: #000; font-style: italic">&gt;   # ファイル処理コード</span>
-<span style="color: #000; font-style: italic">&gt; done</span>
-<span style="color: #000; font-style: italic">example.txt を処理しています...</span>
-<span style="color: #000; font-style: italic">notes.txt は読み取り不可のためスキップします</span>
-<span style="color: #000; font-style: italic">readme.txt を処理しています...</span>
+<h3>特定のジョブをフォアグラウンドで再開する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">fg</span><span style="color: #F8F8F8"> </span>%2
+<span style="color: #000; font-style: italic">[2]+ 実行中     nano notes.txt</span>
+</pre></div>
+<h3>一時停止したジョブをバックグラウンドで継続する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">bg</span>
+<span style="color: #000; font-style: italic">[1]+ 実行中     find / -name &quot;*.log&quot; &amp;</span>
+</pre></div>
+<h3>特定のジョブをバックグラウンドで継続する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">bg</span><span style="color: #F8F8F8"> </span>%3
+<span style="color: #000; font-style: italic">[3]+ 実行中     tar -czf archive.tar.gz directory/ &amp;</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>continue と break の違いを理解する</h3>
-<p><code>continue</code> はループの現在の繰り返しをスキップしますが、ループ自体は継続します。一方、<code>break</code> はループ全体を終了します。</p>
-<h3>ネストされたループでの使用に注意</h3>
-<p>デフォルトでは <code>continue</code> は最も内側のループにのみ影響します。外側のループに影響を与えたい場合は、数値引数を使用してください。</p>
-<h3>無限ループでの使用</h3>
-<p><code>while true</code> などの無限ループ内で <code>continue</code> を使用する場合は、ループが終了する条件が別に存在することを確認してください。そうしないと、プログラムが永遠に実行され続ける可能性があります。</p>
-<h2>よくある質問</h2>
-<h4>Q1. continue と break の違いは何ですか？</h4>
-<p>A. <code>continue</code> は現在の繰り返しをスキップして次の繰り返しに進みますが、<code>break</code> はループ全体を終了します。</p>
-<h4>Q2. if 文の中で continue を使わないとどうなりますか？</h4>
-<p>A. <code>continue</code> を使わない場合、条件に関係なくすべてのコードが実行されます。<code>continue</code> は特定の条件下でループの残りの部分をスキップするために使用されます。</p>
-<h4>Q3. continue に引数を指定するとどうなりますか？</h4>
-<p>A. 数値引数 <code>n</code> を指定すると、n番目のネストされたループに対して continue が適用されます。デフォルトは 1 で、最も内側のループを指します。</p>
-<h4>Q4. シェルスクリプト以外でも continue は使えますか？</h4>
-<p>A. <code>continue</code> はほとんどのプログラミング言語（C、Java、Python など）でも同様の機能を持っていますが、構文や動作が若干異なる場合があります。</p>
-<h2>参照</h2>
-<p>https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-continue</p>
-<h2>改訂</h2>
+<h3>すべてのジョブを表示する</h3>
+<p><code>continue</code> コマンドを使用する前に、<code>jobs</code> コマンドですべての一時停止中およびバックグラウンドジョブを表示して、再開したいジョブを特定できます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">jobs</span>
+<span style="color: #000; font-style: italic">[1]  停止中    vim document.txt</span>
+<span style="color: #000; font-style: italic">[2]- 実行中    find / -name &quot;*.log&quot; &amp;</span>
+<span style="color: #000; font-style: italic">[3]+ 停止中    nano notes.txt</span>
+</pre></div>
+<h3>ジョブの指定方法</h3>
+<p>ジョブは以下の方法で指定できます：</p>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li><code>%n</code> - ジョブ番号（例：<code>%1</code>）</li>
+<li><code>%+</code> または <code>%%</code> - 現在のジョブ（最近一時停止したもの）</li>
+<li><code>%-</code> - 前のジョブ</li>
+</ul>
+<h3>実行中のプロセスを一時停止する</h3>
+<p>実行中のフォアグラウンドプロセスを一時停止するには、Ctrl+Z を押します。これにより、後で <code>fg</code> または <code>bg</code> を使用して再開できるようになります。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>fg</code> と <code>bg</code> の違いは何ですか？</h4>
+<p>A. <code>fg</code> はジョブをフォアグラウンドに戻してターミナルとの対話を可能にし、<code>bg</code> はジョブをバックグラウンドで実行してターミナルとの対話を必要としません。</p>
+<h4>Q2. どのジョブが再開可能か知るにはどうすればよいですか？</h4>
+<p>A. <code>jobs</code> コマンドを使用して、すべての一時停止中およびバックグラウンドジョブを一覧表示できます。</p>
+<h4>Q3. すでにバックグラウンドで実行中のジョブを continue できますか？</h4>
+<p>A. いいえ、<code>continue</code> コマンドは一時停止中のジョブ用です。すでにバックグラウンドで実行中のジョブはすでに実行を継続しています。</p>
+<h4>Q4. ジョブ番号を指定しない場合はどうなりますか？</h4>
+<p>A. ジョブ指定がない場合、<code>fg</code> と <code>bg</code> は現在のジョブ（<code>jobs</code> 出力で <code>+</code> マークが付いているもの）に対して操作します。</p>
+<h2>参考資料</h2>
+<p>これらのコマンドはシェルの組み込みコマンドで、Bash マニュアルに記載されています：
+https://www.gnu.org/software/bash/manual/html_node/Job-Control-Builtins.html</p>
+<h2>改訂履歴</h2>
+<ul>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

@@ -47,77 +47,90 @@
     <main>
       
   <h1>w コマンド</h1>
-<p>現在ログインしているユーザーとその活動状況を表示します。</p>
+<p>現在ログインしているユーザーと彼らの行動を表示します。</p>
 <h2>概要</h2>
-<p><code>w</code> コマンドは、システムにログインしているユーザーの一覧と、各ユーザーが何をしているかを表示します。システムの稼働時間、負荷平均、ログインユーザー数なども確認できます。システム管理者やユーザーが、誰がシステムを使用しているか、どのようなプロセスを実行しているかを把握するのに役立ちます。</p>
+<p><code>w</code> コマンドは、現在ログインしているユーザーとその活動に関する情報を表示します。ログイン名、端末タイプ、リモートホスト、ログイン時間、アイドル時間、CPU使用率、現在実行中のコマンドを表示します。これはシステム管理者がシステム上のユーザー活動を監視するのに役立ちます。</p>
 <h2>オプション</h2>
-<h3><strong>-h (--no-header)</strong></h3>
-<p>ヘッダー情報（システムの稼働時間、負荷平均など）を表示しません。</p>
+<h3><strong>-h, --no-header</strong></h3>
+<p>ヘッダー情報を表示しません</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>-h
 <span style="color: #000; font-style: italic">user     tty      from             login@   idle   JCPU   PCPU  what</span>
-<span style="color: #000; font-style: italic">yamada   pts/0    192.168.1.5      08:30    2:35   0.10s  0.05s  vim report.txt</span>
-<span style="color: #000; font-style: italic">tanaka   pts/1    192.168.1.10     09:15    0.00s  0.25s  0.25s  w</span>
+<span style="color: #000; font-style: italic">john     tty1                      10:15    0.00s  0.05s  0.01s  w -h</span>
+<span style="color: #000; font-style: italic">alice    pts/0    192.168.1.5      09:30    2:35   0.10s  0.05s  vim report.txt</span>
 </pre></div>
-<h3><strong>-s (--short)</strong></h3>
-<p>短い形式で表示します。ログイン時間、JCPU、PCPUの列を省略します。</p>
+<h3><strong>-s, --short</strong></h3>
+<p>短い形式で表示し、ログイン時間、JCPUとPCPU時間を省略します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>-s
-<span style="color: #000; font-style: italic"> 10:30:25 up  3:45,  2 users,  load average: 0.08, 0.12, 0.10</span>
+<span style="color: #000; font-style: italic"> 10:30:25 up  1:15,  3 users,  load average: 0.15, 0.10, 0.09</span>
 <span style="color: #000; font-style: italic">USER     TTY      FROM             IDLE   WHAT</span>
-<span style="color: #000; font-style: italic">yamada   pts/0    192.168.1.5      2:35   vim report.txt</span>
-<span style="color: #000; font-style: italic">tanaka   pts/1    192.168.1.10     0.00s  w -s</span>
+<span style="color: #000; font-style: italic">john     tty1                       0.00s  w -s</span>
+<span style="color: #000; font-style: italic">alice    pts/0    192.168.1.5       2:35  vim report.txt</span>
+<span style="color: #000; font-style: italic">bob      pts/1    10.0.0.2         23.00s  bash</span>
 </pre></div>
-<h3><strong>-u (--no-current)</strong></h3>
-<p>現在のプロセス名とCPU時間の計算をスキップします。表示が高速になります。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>-u
-<span style="color: #000; font-style: italic"> 10:30:25 up  3:45,  2 users,  load average: 0.08, 0.12, 0.10</span>
-<span style="color: #000; font-style: italic">USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT</span>
-<span style="color: #000; font-style: italic">yamada   pts/0    192.168.1.5      08:30    2:35   ?      ?    -</span>
-<span style="color: #000; font-style: italic">tanaka   pts/1    192.168.1.10     09:15    0.00s  ?      ?    -</span>
+<h3><strong>-f, --from</strong></h3>
+<p><code>from</code>（リモートホスト名）フィールドの表示を切り替えます</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>-f
+<span style="color: #000; font-style: italic"> 10:30:25 up  1:15,  3 users,  load average: 0.15, 0.10, 0.09</span>
+<span style="color: #000; font-style: italic">USER     TTY        LOGIN@   IDLE   JCPU   PCPU  WHAT</span>
+<span style="color: #000; font-style: italic">john     tty1      10:15     0.00s  0.05s  0.01s  w -f</span>
+<span style="color: #000; font-style: italic">alice    pts/0     09:30     2:35   0.10s  0.05s  vim report.txt</span>
+<span style="color: #000; font-style: italic">bob      pts/1     10:05    23.00s  0.07s  0.02s  bash</span>
+</pre></div>
+<h3><strong>-i, --ip-addr</strong></h3>
+<p>FROMフィールドにホスト名の代わりにIPアドレスを表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>-i
+<span style="color: #000; font-style: italic"> 10:30:25 up  1:15,  3 users,  load average: 0.15, 0.10, 0.09</span>
+<span style="color: #000; font-style: italic">USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU  WHAT</span>
+<span style="color: #000; font-style: italic">john     tty1                      10:15    0.00s  0.05s  0.01s  w -i</span>
+<span style="color: #000; font-style: italic">alice    pts/0    192.168.1.5      09:30     2:35  0.10s  0.05s  vim report.txt</span>
+<span style="color: #000; font-style: italic">bob      pts/1    10.0.0.2         10:05    23.00s 0.07s  0.02s  bash</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な使用方法</h3>
+<h3>基本的な使用法</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w
-<span style="color: #000; font-style: italic"> 10:30:25 up  3:45,  2 users,  load average: 0.08, 0.12, 0.10</span>
-<span style="color: #000; font-style: italic">USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT</span>
-<span style="color: #000; font-style: italic">yamada   pts/0    192.168.1.5      08:30    2:35   0.10s  0.05s vim report.txt</span>
-<span style="color: #000; font-style: italic">tanaka   pts/1    192.168.1.10     09:15    0.00s  0.25s  0.25s w</span>
+<span style="color: #000; font-style: italic"> 10:30:25 up  1:15,  3 users,  load average: 0.15, 0.10, 0.09</span>
+<span style="color: #000; font-style: italic">USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU  WHAT</span>
+<span style="color: #000; font-style: italic">john     tty1                      10:15    0.00s  0.05s  0.01s  w</span>
+<span style="color: #000; font-style: italic">alice    pts/0    server2          09:30     2:35  0.10s  0.05s  vim report.txt</span>
+<span style="color: #000; font-style: italic">bob      pts/1    workstation5     10:05    23.00s 0.07s  0.02s  bash</span>
 </pre></div>
-<h3>特定のユーザーの情報を表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>yamada
-<span style="color: #000; font-style: italic"> 10:30:25 up  3:45,  2 users,  load average: 0.08, 0.12, 0.10</span>
-<span style="color: #000; font-style: italic">USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT</span>
-<span style="color: #000; font-style: italic">yamada   pts/0    192.168.1.5      08:30    2:35   0.10s  0.05s vim report.txt</span>
+<h3>オプションの組み合わせ</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>w<span style="color: #F8F8F8"> </span>-hi
+<span style="color: #000; font-style: italic">USER     TTY      FROM             IDLE   JCPU   PCPU  WHAT</span>
+<span style="color: #000; font-style: italic">john     tty1                      0.00s  0.05s  0.01s  w -hi</span>
+<span style="color: #000; font-style: italic">alice    pts/0    192.168.1.5      2:35   0.10s  0.05s  vim report.txt</span>
+<span style="color: #000; font-style: italic">bob      pts/1    10.0.0.2         23.00s 0.07s  0.02s  bash</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>出力の見方</h3>
+<h3>出力列の理解</h3>
 <ul>
-<li><strong>USER</strong>: ログインしているユーザー名</li>
-<li><strong>TTY</strong>: ユーザーが接続しているターミナル</li>
-<li><strong>FROM</strong>: ユーザーがログインした場所（IPアドレスなど）</li>
-<li><strong>LOGIN@</strong>: ログインした時刻</li>
-<li><strong>IDLE</strong>: アイドル時間（何も操作していない時間）</li>
-<li><strong>JCPU</strong>: そのターミナルに関連するすべてのプロセスが使用したCPU時間</li>
-<li><strong>PCPU</strong>: 現在実行中のプロセスが使用したCPU時間</li>
-<li><strong>WHAT</strong>: 現在実行中のコマンド</li>
+<li><strong>USER</strong>: ログインしているユーザーのユーザー名</li>
+<li><strong>TTY</strong>: ユーザーがログインしている端末名</li>
+<li><strong>FROM</strong>: リモートホスト名またはIPアドレス</li>
+<li><strong>LOGIN@</strong>: ユーザーがログインした時間</li>
+<li><strong>IDLE</strong>: ユーザーの最後の活動からの経過時間</li>
+<li><strong>JCPU</strong>: ttyに接続されたすべてのプロセスで使用された時間</li>
+<li><strong>PCPU</strong>: 現在のプロセスで使用された時間</li>
+<li><strong>WHAT</strong>: ユーザーが現在実行しているコマンド</li>
 </ul>
-<h3>関連コマンド</h3>
-<p><code>who</code> や <code>users</code> コマンドも同様にログインユーザーの情報を表示しますが、<code>w</code> コマンドはより詳細な情報を提供します。</p>
 <h3>システム負荷の確認</h3>
-<p>ヘッダー部分の「load average」の値が継続的に高い場合（例：1.0以上）、システムに負荷がかかっている可能性があります。</p>
+<p>ヘッダーには、システムの稼働時間と過去1分、5分、15分の平均負荷が表示され、システムのパフォーマンスを一目で評価するのに役立ちます。</p>
+<h3>非アクティブなユーザーの特定</h3>
+<p>IDLE時間が長いユーザーを探すことで、リソースを解放するために終了候補となる可能性のある非アクティブなセッションを特定できます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>w</code> コマンドと <code>who</code> コマンドの違いは何ですか？</h4>
-<p>A. <code>w</code> コマンドは <code>who</code> コマンドの情報に加えて、システムの稼働時間、負荷平均、各ユーザーが実行しているプロセスなどの詳細情報も表示します。</p>
-<h4>Q2. IDLE列の時間が長いユーザーはどういう意味ですか？</h4>
-<p>A. そのユーザーが指定された時間の間、キーボードやマウスなどの入力を行っていないことを示します。長時間アイドル状態のセッションは、放置されている可能性があります。</p>
-<h4>Q3. 負荷平均（load average）の値はどう解釈すればよいですか？</h4>
-<p>A. 負荷平均は直近1分、5分、15分のシステム負荷を示します。一般的に、この値がCPUコア数を超えると、システムが過負荷状態にあると考えられます。</p>
-<h4>Q4. macOSでの注意点はありますか？</h4>
-<p>A. macOSでは一部のオプションが異なる場合があります。特に <code>-u</code> オプションの動作がLinuxとは異なることがあるため、<code>man w</code> で確認することをお勧めします。</p>
-<h2>参照</h2>
-<p>https://man7.org/linux/man-pages/man1/w.1.html</p>
-<h2>改訂</h2>
+<h4>Q1. <code>w</code>コマンドと<code>who</code>コマンドの違いは何ですか？</h4>
+<p>A. <code>w</code>は<code>who</code>よりも詳細な情報を提供し、各ユーザーが何をしているか、アイドル時間、CPU使用統計などが含まれます。<code>who</code>は単にログインしている人を一覧表示するだけです。</p>
+<h4>Q2. 負荷平均の数値はどのように解釈すればよいですか？</h4>
+<p>A. 負荷平均は1分、5分、15分間のシステム平均負荷を表します。シングルコアシステムでは、1.0を超える値はシステムが過負荷であることを示します。マルチコアシステムの場合は、コア数で割って負荷を評価します。</p>
+<h4>Q3. IDLEカラムは何を意味しますか？</h4>
+<p>A. IDLEカラムは、ユーザーが端末で最後に活動してからの経過時間を示します。これは非アクティブなセッションを特定するのに役立ちます。</p>
+<h4>Q4. 特定のユーザーの活動だけを見るにはどうすればよいですか？</h4>
+<p>A. <code>w ユーザー名</code>を使用すると、その特定のユーザーの情報のみが表示されます。</p>
+<h2>参考資料</h2>
+<p>https://www.man7.org/linux/man-pages/man1/w.1.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

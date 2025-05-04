@@ -47,72 +47,68 @@
     <main>
       
   <h1>unlink コマンド</h1>
-<p>ファイルへのリンクを削除します。</p>
+<p>ファイルシステムから単一のファイルを削除します。</p>
 <h2>概要</h2>
-<p><code>unlink</code> コマンドは、指定されたファイルへのリンク（ファイル名）を削除するシンプルなコマンドです。これは <code>rm</code> コマンドの単一ファイル版と考えることができます。<code>unlink</code> は常に1つのファイルのみを処理し、ディレクトリやワイルドカードの展開はサポートしていません。</p>
+<p><code>unlink</code>コマンドは、ファイルシステムからリンクを削除することで単一のファイルを削除するために使用されます。1つのファイルだけを削除する場合には、<code>rm</code>コマンドよりもシンプルな代替手段です。<code>rm</code>と異なり、<code>unlink</code>は複数のファイルやディレクトリを削除することができず、オプションも少なくなっています。</p>
 <h2>オプション</h2>
-<p><code>unlink</code> コマンドはシンプルで、一般的に使用されるオプションはほとんどありません。</p>
-<h3><strong>--help</strong></h3>
-<p>ヘルプメッセージを表示します。</p>
+<h3><strong>-h, --help</strong></h3>
+<p>ヘルプ情報を表示して終了します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>unlink<span style="color: #F8F8F8"> </span>--help
-<span style="color: #000; font-style: italic">使用法: unlink ファイル</span>
-<span style="color: #000; font-style: italic">  または:  unlink オプション</span>
-<span style="color: #000; font-style: italic">指定したファイルへのリンクを削除します。</span>
+<span style="color: #000; font-style: italic">Usage: unlink FILE</span>
+<span style="color: #000; font-style: italic">  or:  unlink OPTION</span>
+<span style="color: #000; font-style: italic">Call the unlink function to remove the specified FILE.</span>
 
-<span style="color: #000; font-style: italic">      --help     このヘルプを表示して終了する</span>
-<span style="color: #000; font-style: italic">      --version  バージョン情報を表示して終了する</span>
+<span style="color: #000; font-style: italic">      --help     display this help and exit</span>
+<span style="color: #000; font-style: italic">      --version  output version information and exit</span>
 </pre></div>
 <h3><strong>--version</strong></h3>
-<p>バージョン情報を表示します。</p>
+<p>バージョン情報を出力して終了します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>unlink<span style="color: #F8F8F8"> </span>--version
 <span style="color: #000; font-style: italic">unlink (GNU coreutils) 8.32</span>
 <span style="color: #000; font-style: italic">Copyright (C) 2020 Free Software Foundation, Inc.</span>
-<span style="color: #000; font-style: italic">ライセンス GPLv3+: GNU GPL バージョン 3 以降 &lt;https://gnu.org/licenses/gpl.html&gt;.</span>
-<span style="color: #000; font-style: italic">これはフリーソフトウェアです: 自由に変更および配布できます.</span>
-<span style="color: #000; font-style: italic">法律の許す限り、　無保証　です.</span>
+<span style="color: #000; font-style: italic">License GPLv3+: GNU GPL version 3 or later &lt;https://gnu.org/licenses/gpl.html&gt;.</span>
+<span style="color: #000; font-style: italic">This is free software: you are free to change and redistribute it.</span>
+<span style="color: #000; font-style: italic">There is NO WARRANTY, to the extent permitted by law.</span>
+
+<span style="color: #000; font-style: italic">Written by Michael Stone.</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>通常のファイル削除</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>testfile.txt
+<h3>ファイルの削除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>temp_file.txt
 <span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">testfile.txt</span>
-<span style="color: #8F5902">$ </span>unlink<span style="color: #F8F8F8"> </span>testfile.txt
+<span style="color: #000; font-style: italic">temp_file.txt</span>
+<span style="color: #8F5902">$ </span>unlink<span style="color: #F8F8F8"> </span>temp_file.txt
 <span style="color: #8F5902">$ </span>ls
-<span style="color: #8F5902"># </span>ファイルが削除されたため何も表示されない
+<span style="color: #8F5902">$</span>
 </pre></div>
-<h3>シンボリックリンクの削除</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>original.txt
-<span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>link.txt
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l
-<span style="color: #000; font-style: italic">合計 0</span>
-<span style="color: #000; font-style: italic">lrwxrwxrwx 1 user user 12 4月 30 10:00 link.txt -&gt; original.txt</span>
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 user user  0 4月 30 10:00 original.txt</span>
-<span style="color: #8F5902">$ </span>unlink<span style="color: #F8F8F8"> </span>link.txt
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l
-<span style="color: #000; font-style: italic">合計 0</span>
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 user user  0 4月 30 10:00 original.txt</span>
+<h3>ディレクトリの削除を試みる（失敗します）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>test_dir
+<span style="color: #8F5902">$ </span>unlink<span style="color: #F8F8F8"> </span>test_dir
+<span style="color: #000; font-style: italic">unlink: cannot unlink &#39;test_dir&#39;: Is a directory</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3><code>rm</code> との違い</h3>
-<p><code>unlink</code> は常に1つのファイルのみを処理します。複数のファイルを削除したり、ディレクトリを削除したりする場合は <code>rm</code> コマンドを使用してください。</p>
-<h3>エラーの理解</h3>
-<p>ディレクトリに対して <code>unlink</code> を使用すると、「操作は許可されていません」というエラーが表示されます。ディレクトリを削除するには <code>rmdir</code>（空のディレクトリの場合）または <code>rm -r</code>（中身があるディレクトリの場合）を使用してください。</p>
-<h3>ハードリンクの削除</h3>
-<p><code>unlink</code> はハードリンクを削除する場合にも使用できます。ハードリンクを削除しても、他のリンクが存在する限り、ファイルデータは保持されます。</p>
+<h3>複数ファイルには<code>rm</code>を使用する</h3>
+<p>複数のファイルを削除する必要がある場合は、<code>unlink</code>ではなく<code>rm</code>を使用してください。<code>unlink</code>コマンドは一度に1つのファイルしか削除できません。</p>
+<h3>シンボリックリンク</h3>
+<p>シンボリックリンクに対して<code>unlink</code>を使用すると、リンク先のファイルではなくリンク自体が削除されます。</p>
+<h3>復元不可</h3>
+<p><code>unlink</code>で削除されたファイルはゴミ箱やリサイクルビンに送られません。完全に削除され、バックアップからしか復元できません。</p>
+<h3>確認なし</h3>
+<p><code>rm</code>コマンドは<code>-i</code>オプションで削除前に確認を求めることができますが、<code>unlink</code>はファイル削除前の確認プロンプトを提供しません。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>unlink</code> と <code>rm</code> の違いは何ですか？</h4>
-<p>A. <code>unlink</code> は1つのファイルのみを削除でき、ワイルドカードやオプションをサポートしていません。<code>rm</code> はより多機能で、複数のファイルやディレクトリを削除できます。</p>
-<h4>Q2. <code>unlink</code> でディレクトリを削除できますか？</h4>
-<p>A. いいえ、<code>unlink</code> はディレクトリを削除できません。ディレクトリを削除するには <code>rmdir</code>（空のディレクトリの場合）または <code>rm -r</code>（中身があるディレクトリの場合）を使用してください。</p>
-<h4>Q3. <code>unlink</code> コマンドを使うべき状況はありますか？</h4>
-<p>A. シェルスクリプトなど、単一ファイルの削除のみが必要で、余分な機能が不要な場合に適しています。また、<code>rm</code> コマンドが何らかの理由で使用できない場合のバックアップとしても役立ちます。</p>
-<h4>Q4. <code>unlink</code> でファイルを誤って削除した場合、復元できますか？</h4>
-<p>A. 通常のファイル削除と同様に、<code>unlink</code> で削除したファイルの復元は困難です。重要なファイルを操作する前にバックアップを取ることをお勧めします。</p>
-<h2>参考文献</h2>
+<h4>Q1. <code>unlink</code>と<code>rm</code>の違いは何ですか？</h4>
+<p>A. <code>unlink</code>は単一のファイルのみを削除でき、オプションも最小限ですが、<code>rm</code>は複数のファイル、ディレクトリ（<code>-r</code>オプション使用時）を削除でき、多くの追加オプションがあります。</p>
+<h4>Q2. <code>unlink</code>でディレクトリを削除できますか？</h4>
+<p>A. いいえ、<code>unlink</code>はディレクトリを削除できません。空のディレクトリには<code>rmdir</code>を、内容のあるディレクトリには<code>rm -r</code>を使用してください。</p>
+<h4>Q3. <code>unlink</code>はファイルをゴミ箱に移動しますか？</h4>
+<p>A. いいえ、<code>unlink</code>は永久にファイルを削除します。ゴミ箱やリサイクルビンから復元することはできません。</p>
+<h4>Q4. 存在しないファイルを<code>unlink</code>しようとするとどうなりますか？</h4>
+<p>A. <code>unlink</code>はファイルが存在しないというエラーメッセージを返します。</p>
+<h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/unlink-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

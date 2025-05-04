@@ -4,29 +4,25 @@ Execute commands repeatedly as long as a condition is true.
 
 ## Overview
 
-The `while` command is a shell construct that creates a loop, executing a set of commands repeatedly as long as a specified condition evaluates to true. It's commonly used for iterating a fixed number of times, processing input line by line, or running commands until a specific condition changes.
+The `while` command is a shell construct that creates a loop, executing a set of commands repeatedly as long as a specified condition evaluates to true. It's commonly used in shell scripts for tasks that need to be repeated until a certain condition is met, such as processing files line by line or implementing countdown timers.
 
 ## Options
 
-The `while` command doesn't have traditional command-line options as it's a shell construct rather than a standalone program. Instead, it uses a specific syntax structure.
-
-### **Basic Syntax**
+The `while` command itself doesn't have options like standalone Unix commands. Instead, it's a shell control structure with a specific syntax:
 
 ```bash
-while [ condition ]
-do
-  # commands to execute
+while CONDITION; do
+  COMMANDS
 done
 ```
 
 ## Usage Examples
 
-### Counting with a numeric condition
+### Basic while loop with a counter
 
 ```console
 $ i=1
-$ while [ $i -le 5 ]
-> do
+$ while [ $i -le 5 ]; do
 >   echo "Count: $i"
 >   i=$((i+1))
 > done
@@ -40,81 +36,107 @@ Count: 5
 ### Reading file line by line
 
 ```console
-$ while read line
-> do
->   echo "Line: $line"
-> done < file.txt
-Line: This is the first line
-Line: This is the second line
-Line: This is the third line
+$ cat names.txt
+Alice
+Bob
+Charlie
+$ while read name; do
+>   echo "Hello, $name!"
+> done < names.txt
+Hello, Alice!
+Hello, Bob!
+Hello, Charlie!
 ```
 
-### Running until a condition changes
-
-```console
-$ while [ ! -f stop_file.txt ]
-> do
->   echo "Waiting for stop file to appear..."
->   sleep 5
-> done
-Waiting for stop file to appear...
-Waiting for stop file to appear...
-Waiting for stop file to appear...
-```
-
-### Infinite loop with break
+### Infinite loop with break condition
 
 ```console
 $ i=1
-$ while true
-> do
->   echo "Iteration: $i"
+$ while true; do
+>   echo "Iteration $i"
 >   if [ $i -eq 3 ]; then
 >     echo "Breaking out of loop"
 >     break
 >   fi
 >   i=$((i+1))
 > done
-Iteration: 1
-Iteration: 2
-Iteration: 3
+Iteration 1
+Iteration 2
+Iteration 3
 Breaking out of loop
+```
+
+### Waiting for a condition
+
+```console
+$ while [ ! -f /tmp/ready.txt ]; do
+>   echo "Waiting for file to appear..."
+>   sleep 1
+> done
+Waiting for file to appear...
+Waiting for file to appear...
+Waiting for file to appear...
 ```
 
 ## Tips
 
-### Use Control-C to Exit Infinite Loops
+### Use `break` to Exit Early
 
-If your `while` loop becomes stuck in an infinite loop, press Control-C to interrupt and terminate the execution.
+The `break` command can be used inside a while loop to exit immediately, regardless of the condition:
 
-### Check Your Condition Carefully
-
-Ensure your condition will eventually become false, or use a `break` statement to exit the loop, otherwise you'll create an infinite loop.
-
-### Use the `continue` Statement
-
-The `continue` statement skips the rest of the current iteration and jumps to the next iteration, useful for filtering or skipping certain cases.
-
-### Combine with Command Substitution
-
-You can use command substitution to process command output in a loop:
 ```bash
-while read line; do echo "Processing: $line"; done < <(ls -1)
+while condition; do
+  if [other_condition]; then
+    break  # Exit the loop
+  fi
+  # commands
+done
+```
+
+### Use `continue` to Skip Iterations
+
+The `continue` command skips the rest of the current iteration and jumps back to the condition check:
+
+```bash
+while condition; do
+  if [skip_condition]; then
+    continue  # Skip to next iteration
+  fi
+  # commands that won't run if continue is executed
+done
+```
+
+### Avoid Infinite Loops
+
+Always ensure your while loop has a way to terminate. Include a condition that will eventually become false or use a `break` statement. If you accidentally create an infinite loop, press Ctrl+C to terminate it.
+
+### Use `sleep` for Timed Loops
+
+When polling for a condition, use the `sleep` command to prevent excessive CPU usage:
+
+```bash
+while [ condition ]; do
+  # commands
+  sleep 1  # Wait 1 second before checking again
+done
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `while` and `for` loops?
-A. `while` loops continue as long as a condition is true, making them suitable for situations where the number of iterations isn't known in advance. `for` loops typically iterate over a predefined list of items.
+#### Q1. What's the difference between `while` and `until`?
+A. `while` executes commands as long as the condition is true, whereas `until` executes commands as long as the condition is false (until it becomes true).
 
-#### Q2. How do I create an infinite loop?
-A. Use `while true` or `while :` to create an infinite loop. Make sure to include a way to exit the loop (like a `break` statement) to avoid having to forcibly terminate it.
-
-#### Q3. How can I read a file line by line?
+#### Q2. How do I read a file line by line with a while loop?
 A. Use `while read line; do commands; done < file.txt` to process each line of a file.
 
-#### Q4. Can I use `while` to wait for a condition?
-A. Yes, `while` is often used to wait for conditions like file existence or process completion. For example: `while [ ! -f file.txt ]; do sleep 1; done`
+#### Q3. How can I create an infinite loop?
+A. Use `while true; do commands; done` or `while :; do commands; done` to create an infinite loop. Remember to include a way to exit the loop (like a `break` statement).
+
+#### Q4. Can I nest while loops?
+A. Yes, you can nest while loops inside other while loops. Each loop needs its own `do` and `done` keywords.
+
+#### Q5. How do I use while with command output?
+A. You can pipe command output to a while loop: `command | while read line; do something; done`
 
 ## References
 
@@ -122,4 +144,4 @@ https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+2025/05/04 First revision

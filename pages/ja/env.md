@@ -1,117 +1,136 @@
 # env コマンド
 
-現在の環境変数を表示または変更します。
+現在の環境変数を表示したり、変更された環境で指定したコマンドを実行したりします。
 
 ## 概要
 
-`env` コマンドは、現在のシェル環境の環境変数を表示したり、一時的に環境変数を設定してコマンドを実行したりするために使用します。環境変数はシステム全体やプログラムの動作に影響を与える設定値で、プロセスが利用できる情報を保持しています。
+`env` コマンドは、すべての環境変数を表示したり、変更された環境でプログラムを実行したりすることができます。環境変数は、システム上でプロセスの実行に影響を与える名前と値のペアです。このコマンドは、現在の環境を確認したり、一時的に環境変数を変更して単一のコマンドを実行したり、コマンドを実行する前に環境をクリアしたりする場合に便利です。
 
 ## オプション
 
 ### **-i, --ignore-environment**
 
-すべての継承された環境変数を無視して、クリーンな環境でコマンドを実行します。
+空の環境から開始し、継承された環境変数を無視します。
 
 ```console
-$ env -i python3 -c "import os; print(os.environ)"
-{}
+$ env -i bash -c 'echo $HOME'
+
 ```
 
 ### **-u, --unset=NAME**
 
-指定した環境変数を削除します。
+指定した NAME 変数を環境から削除します。
 
 ```console
-$ env -u HOME python3 -c "import os; print('HOME' in os.environ)"
-False
+$ env -u HOME bash -c 'echo $HOME'
+
 ```
 
-### **--**
+### **-0, --null**
 
-それ以降の引数をオプションとして解釈しないようにします。
+各出力行を改行ではなくヌル文字で終了します。
 
 ```console
-$ env -- echo $HOME
-/home/user
+$ env -0 | tr '\0' '\n' | head -3
+TERM=xterm-256color
+SHELL=/bin/bash
+USER=username
+```
+
+### **--help**
+
+ヘルプ情報を表示して終了します。
+
+```console
+$ env --help
+Usage: env [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]
+Set each NAME to VALUE in the environment and run COMMAND.
+...
+```
+
+### **--version**
+
+バージョン情報を表示して終了します。
+
+```console
+$ env --version
+env (GNU coreutils) 8.32
+Copyright (C) 2020 Free Software Foundation, Inc.
+...
 ```
 
 ## 使用例
 
-### 現在の環境変数をすべて表示する
+### すべての環境変数を表示する
 
 ```console
 $ env
 SHELL=/bin/bash
 USER=username
+HOME=/home/username
 PATH=/usr/local/bin:/usr/bin:/bin
 PWD=/home/username
-HOME=/home/username
+LANG=en_US.UTF-8
 ...
 ```
 
-### 一時的に環境変数を設定してコマンドを実行する
+### 変更された環境でコマンドを実行する
 
 ```console
-$ env DEBUG=true python3 app.py
-デバッグモードで起動しています
+$ env DEBUG=true NODE_ENV=development node app.js
 ```
 
-### 特定の環境変数だけを表示する
+### 環境をクリアしてからコマンドを実行する
 
 ```console
-$ env | grep PATH
-PATH=/usr/local/bin:/usr/bin:/bin
+$ env -i PATH=/bin:/usr/bin HOME=/tmp bash -c 'echo $HOME'
+/tmp
+```
+
+### 複数の環境変数を設定してコマンドを実行する
+
+```console
+$ env LANG=ja_JP.UTF-8 TZ=Asia/Tokyo date
+2025年 5月 4日 日曜日 12:00:00 JST
 ```
 
 ## ヒント:
 
-### 環境変数のソート表示
+### 特定の環境変数を表示する
 
-`env` の出力を `sort` コマンドにパイプすると、アルファベット順に環境変数を表示できます。
+`env | grep PATTERN` を使用して、特定の環境変数をフィルタリングして見つけることができます：
 
 ```console
-$ env | sort
-HOME=/home/user
+$ env | grep PATH
 PATH=/usr/local/bin:/usr/bin:/bin
-SHELL=/bin/bash
-...
+MANPATH=/usr/local/man:/usr/local/share/man:/usr/share/man
 ```
 
-### 環境変数の一時的な変更
+### 一時的な環境変更
 
-スクリプトやプログラムをテストする際に、環境変数を一時的に変更して実行できます。これはグローバルな環境を変更せずにテストするのに便利です。
+`env` コマンドは、現在のシェルセッションではなく、実行されるコマンドの環境のみを変更します。永続的な変更を行うには、シェルの設定ファイルを変更する必要があります。
 
-```console
-$ env NODE_ENV=production node server.js
-本番モードでサーバーを起動しています
-```
+### 環境の問題のデバッグ
 
-### 環境変数の数を確認する
+アプリケーションの問題をトラブルシューティングする際は、`env` を使用して特定の環境変数でアプリケーションを実行し、設定の問題を特定するのに役立ちます。
 
-現在設定されている環境変数の数を確認するには、次のコマンドを使用します。
+### セキュリティに関する考慮事項
 
-```console
-$ env | wc -l
-53
-```
+スクリプトで `env -i` を使用する場合は注意が必要です。PATHなどの重要な環境変数が削除されます。このオプションを使用する場合は、常に必要最小限の変数を指定してください。
 
 ## よくある質問
 
 #### Q1. `env` と `export` の違いは何ですか？
-A. `env` はコマンドを実行する際に一時的に環境変数を設定しますが、`export` はシェルセッション中に永続的に環境変数を設定します。
+A. `env` は環境変数を表示したり、変更された環境変数でコマンドを実行したりしますが、変更はそのコマンドにのみ影響します。`export` は変数を現在のシェルのすべての子プロセスで利用できるようにします。
 
 #### Q2. 環境変数を永続的に設定するにはどうすればよいですか？
-A. `.bashrc`、`.bash_profile`、`.zshrc` などのシェル設定ファイルに `export VAR=value` の形式で追加します。
+A. `env` は一時的にのみ変数を設定します。永続的な変更を行うには、シェルの設定ファイル（~/.bashrcや~/.zshrcなど）にexportコマンドを追加してください。
 
-#### Q3. 特定のプログラムだけに環境変数を設定するにはどうすればよいですか？
-A. `env VAR=value command` の形式で実行します。これにより、そのコマンドの実行中だけ環境変数が設定されます。
+#### Q3. `env` を使用して複数の変数を一度に削除できますか？
+A. はい、複数の `-u` オプションを使用できます：`env -u VAR1 -u VAR2 command`
 
-#### Q4. 環境変数をクリアしてコマンドを実行するにはどうすればよいですか？
-A. `env -i command` を使用すると、すべての環境変数をクリアした状態でコマンドを実行できます。
-
-## macOSでの注意点
-
-macOSでは、システム全体の環境変数は `/etc/launchd.conf` や `~/.launchd.conf` で設定できますが、最新のmacOSバージョンではこの方法は推奨されていません。代わりに、`~/.zshrc`（または使用しているシェルの設定ファイル）で環境変数を設定することをお勧めします。
+#### Q4. コマンドを実行する前にすべての環境変数をクリアするにはどうすればよいですか？
+A. `env -i command` を使用して空の環境から開始し、必要な変数のみを追加してください。
 
 ## 参考資料
 
@@ -119,4 +138,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/env-invocation.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

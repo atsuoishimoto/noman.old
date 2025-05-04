@@ -47,65 +47,92 @@
     <main>
       
   <h1>chmod コマンド</h1>
-<p>ファイルやディレクトリのアクセス権限を変更します。</p>
+<p>ファイルやディレクトリのモードビット（アクセス権限）を変更します。</p>
 <h2>概要</h2>
-<p><code>chmod</code>（change mode）は、ファイルやディレクトリのアクセス権限を変更するコマンドです。Unixシステムでは、各ファイルに対して「所有者」「グループ」「その他のユーザー」の3種類のユーザーカテゴリに対して、「読み取り(r)」「書き込み(w)」「実行(x)」の権限を設定できます。</p>
+<p><code>chmod</code>コマンドは、Unix系オペレーティングシステムにおいてファイルやディレクトリのアクセス権限を変更するために使用されます。ファイルモードビットを変更することで、誰がファイルを読み取り、書き込み、実行できるかを制御します。このコマンドはファイルのセキュリティとアクセス制御の管理に不可欠です。</p>
 <h2>オプション</h2>
 <h3><strong>-R, --recursive</strong></h3>
-<p>指定したディレクトリ内のすべてのファイルとサブディレクトリに対して再帰的に権限を変更します。</p>
+<p>権限を再帰的に変更し、指定されたディレクトリ内のすべてのファイルとサブディレクトリに影響を与えます。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chmod<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">755</span><span style="color: #F8F8F8"> </span>projects/
-<span style="color: #8F5902"># </span>projects/ディレクトリとその中のすべてのファイルとディレクトリに755の権限を設定する
 </pre></div>
 <h3><strong>-v, --verbose</strong></h3>
-<p>処理されるファイルごとに診断メッセージを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chmod<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">644</span><span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">mode of &#39;file.txt&#39; changed from 0755 (rwxr-xr-x) to 0644 (rw-r--r--)</span>
+<p>処理されるすべてのファイルについて、行われる変更を示す診断メッセージを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chmod<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">644</span><span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">mode of &#39;document.txt&#39; changed from 0600 (rw-------) to 0644 (rw-r--r--)</span>
 </pre></div>
 <h3><strong>-c, --changes</strong></h3>
-<p><code>-v</code>と似ていますが、実際に変更があった場合のみ出力します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chmod<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">644</span><span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">mode of &#39;file.txt&#39; changed from 0755 (rwxr-xr-x) to 0644 (rw-r--r--)</span>
+<p>verboseと似ていますが、実際に変更が行われた場合のみ報告します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chmod<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">644</span><span style="color: #F8F8F8"> </span>document.txt
+<span style="color: #000; font-style: italic">mode of &#39;document.txt&#39; changed from 0600 (rw-------) to 0644 (rw-r--r--)</span>
+</pre></div>
+<h3><strong>-f, --silent, --quiet</strong></h3>
+<p>ほとんどのエラーメッセージを抑制します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chmod<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">644</span><span style="color: #F8F8F8"> </span>nonexistent.txt
 </pre></div>
 <h2>使用例</h2>
-<h3>数値モードでの権限変更</h3>
+<h3>数値（8進数）モードの使用</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chmod<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">755</span><span style="color: #F8F8F8"> </span>script.sh
 <span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>script.sh
-<span style="color: #000; font-style: italic">-rwxr-xr-x  1 user  staff  1024 Apr 30 15:30 script.sh</span>
+<span style="color: #000; font-style: italic">-rwxr-xr-x 1 user group 1024 May 4 10:00 script.sh</span>
 </pre></div>
-<p>数値モードでは、最初の数字が所有者、2番目がグループ、3番目がその他のユーザーの権限を表します。各数字は、読み取り(4)、書き込み(2)、実行(1)の合計値です。</p>
-<h3>シンボリックモードでの権限変更</h3>
+<h3>シンボリックモードの使用</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chmod<span style="color: #F8F8F8"> </span>u+x<span style="color: #F8F8F8"> </span>script.sh
 <span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>script.sh
-<span style="color: #000; font-style: italic">-rwxr--r--  1 user  staff  1024 Apr 30 15:30 script.sh</span>
+<span style="color: #000; font-style: italic">-rwxr--r-- 1 user group 1024 May 4 10:00 script.sh</span>
 </pre></div>
-<p>シンボリックモードでは、<code>u</code>（所有者）、<code>g</code>（グループ）、<code>o</code>（その他）、<code>a</code>（すべて）に対して、<code>+</code>（追加）、<code>-</code>（削除）、<code>=</code>（設定）の操作を行います。</p>
-<h3>ディレクトリとその内容に再帰的に権限を設定</h3>
+<h3>再帰的に権限を変更する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chmod<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span>go-w<span style="color: #F8F8F8"> </span>documents/
-<span style="color: #8F5902"># </span>documents/ディレクトリとその中のすべてのファイルからグループとその他のユーザーの書き込み権限を削除
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>documents/
+<span style="color: #000; font-style: italic">total 8</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 1024 May 4 10:00 file1.txt</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 2048 May 4 10:00 file2.txt</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x 2 user group 4096 May 4 10:00 subfolder</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>実行可能スクリプトの作成</h3>
-<p>新しく作成したシェルスクリプトを実行可能にするには、<code>chmod +x script.sh</code>を使用します。これにより、<code>./script.sh</code>として直接実行できるようになります。</p>
-<h3>ディレクトリの権限設定</h3>
-<p>ディレクトリには通常、所有者に対して<code>rwx</code>（7）、グループとその他に対して<code>r-x</code>（5）の権限を設定します（<code>chmod 755 directory/</code>）。これにより、所有者はファイルの作成や削除ができ、他のユーザーはディレクトリ内を閲覧できます。</p>
-<h3>セキュリティに関する注意点</h3>
-<p>重要なファイルには適切な権限を設定しましょう。例えば、秘密鍵ファイルには<code>chmod 600 ~/.ssh/id_rsa</code>（所有者のみ読み書き可能）を設定するのが一般的です。</p>
+<h3>権限表記の理解</h3>
+<ul>
+<li><p>数値（8進数）モード:</p>
+<ul>
+<li>1桁目: 所有者の権限（4=読取、2=書込、1=実行）</li>
+<li>2桁目: グループの権限</li>
+<li>3桁目: その他のユーザーの権限</li>
+<li>例: 755 = rwxr-xr-x（所有者は読取/書込/実行可能、グループとその他は読取/実行可能）</li>
+</ul>
+</li>
+<li><p>シンボリックモード:</p>
+<ul>
+<li>u: ユーザー/所有者、g: グループ、o: その他、a: すべて</li>
+<li>+: 権限追加、-: 権限削除、=: 権限を正確に設定</li>
+<li>r: 読取、w: 書込、x: 実行</li>
+<li>例: u+x（所有者に実行権限を追加）</li>
+</ul>
+</li>
+</ul>
+<h3>一般的な権限パターン</h3>
+<ul>
+<li>755 (rwxr-xr-x): ディレクトリと実行可能スクリプトの標準</li>
+<li>644 (rw-r--r--): 通常ファイルの標準</li>
+<li>600 (rw-------): プライベートファイル（所有者のみ読取/書込可能）</li>
+<li>777 (rwxrwxrwx): 全員がフルアクセス可能（注意して使用）</li>
+</ul>
+<h3>変更前の確認</h3>
+<p>特に再帰的オプションを使用する場合は、変更を行う前に<code>ls -l</code>で現在の権限を確認することをお勧めします。</p>
 <h2>よくある質問</h2>
-<h4>Q1. 数値モードの755や644は何を意味していますか？</h4>
-<p>A. 数値モードでは、各桁が所有者、グループ、その他のユーザーの権限を表します。各桁は読み取り(4)、書き込み(2)、実行(1)の合計値です。755は所有者に読み書き実行(7)、グループとその他に読み取りと実行(5)を与えます。644は所有者に読み書き(6)、グループとその他に読み取り(4)を与えます。</p>
-<h4>Q2. ファイルを所有者だけが読み書きできるようにするには？</h4>
-<p>A. <code>chmod 600 file.txt</code>を使用します。これにより、所有者のみがファイルを読み書きでき、他のユーザーはアクセスできなくなります。</p>
-<h4>Q3. 「Permission denied」エラーが出た場合はどうすればよいですか？</h4>
-<p>A. そのファイルの所有者であるか、または<code>sudo</code>権限を持っている必要があります。所有者の場合は<code>chmod</code>コマンドを使用し、そうでない場合は<code>sudo chmod</code>を使用してください。</p>
-<h4>Q4. シンボリックモードと数値モードの違いは何ですか？</h4>
-<p>A. シンボリックモード（<code>u+x</code>など）は現在の権限を基に変更を加えるのに対し、数値モード（<code>755</code>など）は権限を完全に上書きします。シンボリックモードは特定の権限だけを変更したい場合に便利です。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは、一部のシステムディレクトリに対する権限変更が制限されている場合があります。System Integrity Protection (SIP)が有効な場合、システムファイルの権限を変更するには特別な手順が必要です。また、外部ドライブのファイルシステム（FAT32やexFATなど）では、Unixの権限システムが完全にサポートされていない場合があります。</p>
+<h4>Q1. ファイルを実行可能にするにはどうすればよいですか？</h4>
+<p>A. <code>chmod +x ファイル名</code>または<code>chmod u+x ファイル名</code>を使用して、所有者のみが実行できるようにします。</p>
+<h4>Q2. シンボリックモードと数値モードの違いは何ですか？</h4>
+<p>A. シンボリックモード（u+xなど）はより直感的で、相対的な変更が可能です。数値モード（755など）は絶対的な権限を設定し、より簡潔です。</p>
+<h4>Q3. ファイルの所有者のみに読み取りと書き込みの権限を与えるにはどうすればよいですか？</h4>
+<p>A. <code>chmod 600 ファイル名</code>または<code>chmod u=rw,go= ファイル名</code>を使用します。</p>
+<h4>Q4. chmodでファイルの所有権を変更できますか？</h4>
+<p>A. いいえ、chmodは権限のみを変更します。ファイルの所有権を変更するには<code>chown</code>を使用してください。</p>
+<h4>Q5. 「Permission denied」エラーを修正するにはどうすればよいですか？</h4>
+<p>A. <code>chmod</code>でファイルの権限を変更するか、<code>sudo</code>を使用して昇格した権限でコマンドを実行します。</p>
 <h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/chmod-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

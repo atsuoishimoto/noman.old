@@ -1,175 +1,222 @@
 # tree コマンド
 
-ディレクトリ構造をツリー形式で表示します。
+ディレクトリの内容をツリー状のフォーマットで表示し、ディレクトリとファイルの階層構造を視覚化します。
 
 ## 概要
 
-`tree`コマンドは、ディレクトリとファイルの階層構造を視覚的に表示するツールです。ディレクトリ内のファイルやサブディレクトリを木構造（ツリー）形式で出力するため、プロジェクトの構造を把握したり、ファイル配置を確認したりする際に便利です。
+`tree` コマンドは、ディレクトリの内容を再帰的にツリー状のフォーマットで表示します。ファイルとディレクトリをインデントと接続線で表示することで階層構造を表現し、ファイルがどのように整理されているかを明確に把握できます。
 
 ## オプション
 
-### **-L [level]**
+### **-a, --all**
 
-表示する階層の深さを指定します。
-
-```console
-$ tree -L 2
-.
-├── documents
-│   ├── personal
-│   └── work
-├── downloads
-│   └── software
-└── pictures
-    ├── family
-    └── vacation
-
-7 directories, 0 files
-```
-
-### **-d**
-
-ディレクトリのみを表示します。
-
-```console
-$ tree -d
-.
-├── documents
-│   ├── personal
-│   └── work
-├── downloads
-│   └── software
-└── pictures
-    ├── family
-    └── vacation
-
-7 directories
-```
-
-### **-a**
-
-隠しファイル（ドットで始まるファイル）も表示します。
+隠しファイル（ドットで始まるファイル）を含むすべてのファイルを表示します
 
 ```console
 $ tree -a
 .
-├── .config
-│   └── .settings.json
-├── documents
-│   ├── personal
-│   └── work
-└── .gitignore
+├── .git
+│   ├── HEAD
+│   ├── config
+│   └── hooks
+├── README.md
+└── src
+    ├── .env
+    └── main.js
 
-4 directories, 2 files
+3 directories, 5 files
 ```
 
-### **-I [pattern]**
+### **-d, --dirs-only**
 
-指定したパターンに一致するファイルやディレクトリを除外します。
+ファイルを除き、ディレクトリのみをリストします
 
 ```console
-$ tree -I "node_modules|.git"
+$ tree -d
 .
-├── package.json
-├── public
-│   └── index.html
+├── docs
+├── node_modules
+│   ├── express
+│   └── lodash
 └── src
-    ├── App.js
+    └── components
+
+5 directories
+```
+
+### **-L, --level [level]**
+
+ディレクトリの再帰の深さを指定したレベルに制限します
+
+```console
+$ tree -L 2
+.
+├── docs
+├── node_modules
+│   ├── express
+│   └── lodash
+├── package.json
+└── src
+    ├── components
     └── index.js
 
-2 directories, 3 files
+5 directories, 2 files
 ```
 
-### **-C**
+### **-I, --ignore [pattern]**
 
-出力に色を付けます。
-
-```console
-$ tree -C
-# 色付きで表示されます（実際の色はターミナルの設定によります）
-```
-
-## 使用例
-
-### プロジェクトディレクトリの構造を表示
+パターンに一致するファイル/ディレクトリを無視します（シェルのグロブパターンを使用）
 
 ```console
-$ tree my_project
-my_project
-├── README.md
-├── src
-│   ├── main.js
-│   └── utils
-│       └── helpers.js
-└── tests
-    └── main.test.js
+$ tree -I "node_modules"
+.
+├── docs
+├── package.json
+└── src
+    ├── components
+    │   └── Button.js
+    └── index.js
 
 3 directories, 3 files
 ```
 
-### ファイルサイズを含めて表示
+### **-C, --color**
+
+カラー出力を有効にします
+
+```console
+$ tree -C
+```
+
+### **-F, --classify**
+
+エントリに識別子を追加します（ディレクトリには/、実行可能ファイルには*など）
+
+```console
+$ tree -F
+.
+├── docs/
+├── package.json
+└── src/
+    ├── components/
+    │   └── Button.js
+    └── index.js*
+
+3 directories, 3 files
+```
+
+### **-h, --human-readable**
+
+サイズを人間が読みやすい形式で表示します（例：1K、234M、2G）
 
 ```console
 $ tree -h
 .
-├── [4.0K]  documents
-│   ├── [4.0K]  personal
-│   └── [4.0K]  work
-├── [2.1M]  image.jpg
-└── [ 15K]  report.pdf
+├── [4.0K]  docs
+├── [ 340]  package.json
+└── [4.0K]  src
+    ├── [4.0K]  components
+    │   └── [1.2K]  Button.js
+    └── [ 256]  index.js
 
-3 directories, 2 files
+3 directories, 3 files
 ```
 
-### JSONファイルのみを表示
+## 使用例
+
+### 基本的なディレクトリリスト
 
 ```console
-$ tree -P "*.json"
+$ tree
 .
-├── config.json
-└── data
-    └── settings.json
+├── docs
+│   └── README.md
+├── package.json
+└── src
+    ├── components
+    │   └── Button.js
+    └── index.js
 
-1 directory, 2 files
+3 directories, 3 files
+```
+
+### 深さを制限して特定のファイルタイプのみを表示
+
+```console
+$ tree -L 2 --prune -P "*.js"
+.
+├── package.json
+└── src
+    ├── components
+    └── index.js
+
+2 directories, 2 files
+```
+
+### 人間が読みやすい形式でファイルサイズを表示
+
+```console
+$ tree -h --du
+.
+├── [4.0K]  docs
+│   └── [ 340]  README.md
+├── [ 340]  package.json
+└── [5.5K]  src
+    ├── [4.3K]  components
+    │   └── [1.2K]  Button.js
+    └── [ 256]  index.js
+
+3 directories, 3 files
 ```
 
 ## ヒント:
 
-### インストール方法
+### ツリー出力をファイルに保存する
 
-macOSでは、Homebrewを使ってインストールできます：`brew install tree`
-Linuxでは、パッケージマネージャーを使用します：`apt install tree`（Debian/Ubuntu）または`yum install tree`（RHEL/CentOS）
+ドキュメント作成のために出力をファイルにリダイレクトできます：
+```console
+$ tree > directory_structure.txt
+```
 
-### 出力をファイルに保存
+### 複数のパターンを除外する
 
-`tree > structure.txt`のようにリダイレクトすることで、出力をファイルに保存できます。
+複数の `-I` オプションを使用するか、パイプで区切ったパターンを使用します：
+```console
+$ tree -I "node_modules|*.log|.git"
+```
 
-### 大きなディレクトリでの使用
+### 大きなディレクトリを見つける
 
-大きなディレクトリで実行すると出力が膨大になるため、`-L`オプションで深さを制限するか、`-I`オプションで不要なディレクトリを除外することをお勧めします。
+`-h` と `--du` を組み合わせて、ディレクトリサイズを表示し、容量を多く消費しているディレクトリを特定します：
+```console
+$ tree -h --du -d
+```
+
+### カスタム出力フォーマット
+
+ディレクトリ構造をプログラム的に処理する必要がある場合は、JSON出力用の `-J` またはXML出力用の `-X` を使用します。
 
 ## よくある質問
 
-#### Q1. treeコマンドがインストールされていないとどうなりますか？
-A. 「command not found」エラーが表示されます。お使いのOSのパッケージマネージャーを使ってインストールする必要があります。
+#### Q1. システムにtreeをインストールするにはどうすればよいですか？
+A. Debian/Ubuntuでは `sudo apt install tree`、macOSのHomebrewでは `brew install tree`、CentOS/RHELでは `sudo yum install tree` を実行します。
 
-#### Q2. 特定の拡張子のファイルだけを表示するにはどうすればいいですか？
-A. `-P "*.拡張子"`オプションを使います。例えば、`tree -P "*.txt"`はテキストファイルのみを表示します。
+#### Q2. 表示するディレクトリの深さを制限するにはどうすればよいですか？
+A. `-L` オプションの後に深さのレベルを指定します：`tree -L 2` は2レベルの深さまでしか表示しません。
 
-#### Q3. ディレクトリの深さを制限するにはどうすればいいですか？
-A. `-L 数字`オプションを使います。例えば、`tree -L 2`は2階層までのディレクトリとファイルを表示します。
+#### Q3. 特定のディレクトリを出力から除外するにはどうすればよいですか？
+A. `-I` オプションの後にパターンを指定します：`tree -I "node_modules"` はnode_modulesディレクトリを除外します。
 
-#### Q4. 出力から特定のディレクトリを除外するにはどうすればいいですか？
-A. `-I "パターン"`オプションを使います。例えば、`tree -I "node_modules|.git"`はnode_modulesと.gitディレクトリを除外します。
+#### Q4. ディレクトリのみを表示するにはどうすればよいですか？
+A. `-d` オプションを使用します：`tree -d` はファイルを除いてディレクトリのみを表示します。
 
-## macOSでの注意点
+#### Q5. 隠しファイルを表示するにはどうすればよいですか？
+A. `-a` オプションを使用します：`tree -a` は隠しファイルを含むすべてのファイルを表示します。
 
-macOSのデフォルトバージョンのtreeコマンドは、Linuxバージョンと比べて一部のオプションが異なる場合があります。最新の機能を使用したい場合は、Homebrewを使って最新版をインストールすることをお勧めします。また、macOSでは隠しファイルの表示に関して、システムの設定によって動作が異なる場合があります。
-
-## 参考
+## References
 
 https://linux.die.net/man/1/tree
 
-## 改訂履歴
+## Revisions
 
-- 2025/04/30 初版作成
+- 2025/05/04 初回リビジョン

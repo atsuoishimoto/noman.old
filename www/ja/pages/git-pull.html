@@ -47,90 +47,95 @@
     <main>
       
   <h1>git pull コマンド</h1>
-<p>リモートリポジトリから変更を取得し、ローカルブランチに統合します。</p>
+<p>リモートリポジトリやローカルブランチから変更を取得して統合します。</p>
 <h2>概要</h2>
-<p><code>git pull</code> は、リモートリポジトリから最新の変更を取得し（<code>git fetch</code>）、その変更をローカルブランチに統合（<code>git merge</code> または <code>git rebase</code>）するコマンドです。これにより、ローカルの作業コピーを最新の状態に保つことができます。</p>
+<p><code>git pull</code> は、リモートリポジトリからの変更を現在のローカル作業ブランチに更新するGitコマンドです。このコマンドは2つの操作を組み合わせています：<code>git fetch</code>（リモートリポジトリからコンテンツをダウンロード）と<code>git merge</code>（取得したコンテンツをローカルブランチに統合）です。このコマンドは、他の人が行った変更とローカルリポジトリを同期させるために不可欠です。</p>
 <h2>オプション</h2>
-<h3><strong>--rebase</strong></h3>
-<p>マージの代わりにリベースを使用して変更を統合します。これにより、履歴がよりクリーンになります。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>--rebase<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>main
-<span style="color: #000; font-style: italic">remote: Enumerating objects: 5, done.</span>
-<span style="color: #000; font-style: italic">remote: Counting objects: 100% (5/5), done.</span>
-<span style="color: #000; font-style: italic">remote: Compressing objects: 100% (2/2), done.</span>
-<span style="color: #000; font-style: italic">remote: Total 3 (delta 1), reused 3 (delta 1), pack-reused 0</span>
-<span style="color: #000; font-style: italic">Unpacking objects: 100% (3/3), 285 bytes | 285.00 KiB/s, done.</span>
-<span style="color: #000; font-style: italic">From github.com:username/repo</span>
-<span style="color: #000; font-style: italic">   a1b2c3d..e4f5g6h  main     -&gt; origin/main</span>
-<span style="color: #000; font-style: italic">Successfully rebased and updated refs/heads/main.</span>
+<h3><strong>-r, --rebase[=false|true|merges|interactive]</strong></h3>
+<p>マージの代わりに、フェッチ後にアップストリームブランチの上に現在のブランチをリベースします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">From github.com:user/repo</span>
+<span style="color: #000; font-style: italic"> * branch            main       -&gt; FETCH_HEAD</span>
+<span style="color: #000; font-style: italic">Successfully rebased and updated refs/heads/feature.</span>
 </pre></div>
-<h3><strong>--ff-only</strong></h3>
-<p>Fast-forwardできる場合のみマージを実行します。コンフリクトを避けたい場合に便利です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>--ff-only
-<span style="color: #000; font-style: italic">Updating a1b2c3d..e4f5g6h</span>
+<h3><strong>--ff, --no-ff, --ff-only</strong></h3>
+<p>マージの処理方法を制御します：</p>
+<ul>
+<li><code>--ff</code>：早送り（fast-forward）マージを許可（デフォルト）</li>
+<li><code>--no-ff</code>：早送りが可能な場合でもマージコミットを作成</li>
+<li><code>--ff-only</code>：早送りマージのみを許可し、不可能な場合は中止</li>
+</ul>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>--ff-only<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">From github.com:user/repo</span>
+<span style="color: #000; font-style: italic"> * branch            main       -&gt; FETCH_HEAD</span>
+<span style="color: #000; font-style: italic">Updating 5ab1c2d..8ef9a3b</span>
 <span style="color: #000; font-style: italic">Fast-forward</span>
-<span style="color: #000; font-style: italic"> README.md | 2 ++</span>
-<span style="color: #000; font-style: italic"> 1 file changed, 2 insertions(+)</span>
+<span style="color: #000; font-style: italic"> README.md | 5 +++++</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 5 insertions(+)</span>
+</pre></div>
+<h3><strong>-q, --quiet</strong></h3>
+<p>進行状況のレポートを抑制して静かに操作します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>main
 </pre></div>
 <h3><strong>-v, --verbose</strong></h3>
-<p>詳細な情報を表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>-v
-<span style="color: #000; font-style: italic">From github.com:username/repo</span>
-<span style="color: #000; font-style: italic"> * branch            main     -&gt; FETCH_HEAD</span>
-<span style="color: #000; font-style: italic">Updating a1b2c3d..e4f5g6h</span>
+<p>より詳細な情報を表示し、フェッチとマージ操作に関する詳細情報を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">From github.com:user/repo</span>
+<span style="color: #000; font-style: italic"> * branch            main       -&gt; FETCH_HEAD</span>
+<span style="color: #000; font-style: italic">Updating 5ab1c2d..8ef9a3b</span>
 <span style="color: #000; font-style: italic">Fast-forward</span>
-<span style="color: #000; font-style: italic"> README.md | 2 ++</span>
-<span style="color: #000; font-style: italic"> 1 file changed, 2 insertions(+)</span>
+<span style="color: #000; font-style: italic"> README.md | 5 +++++</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 5 insertions(+)</span>
+</pre></div>
+<h3><strong>--autostash</strong></h3>
+<p>pull操作の前後に未コミットの変更を自動的にスタッシュして復元します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>--autostash<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">Created autostash: 73a4e9d</span>
+<span style="color: #000; font-style: italic">Applied autostash.</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>特定のリモートとブランチから変更を取得</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>develop
-<span style="color: #000; font-style: italic">From github.com:username/repo</span>
-<span style="color: #000; font-style: italic"> * branch            develop   -&gt; FETCH_HEAD</span>
-<span style="color: #000; font-style: italic">Updating a1b2c3d..e4f5g6h</span>
+<h3>リモートからの基本的なプル</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">From github.com:user/repo</span>
+<span style="color: #000; font-style: italic"> * branch            main       -&gt; FETCH_HEAD</span>
+<span style="color: #000; font-style: italic">Updating 5ab1c2d..8ef9a3b</span>
 <span style="color: #000; font-style: italic">Fast-forward</span>
-<span style="color: #000; font-style: italic"> src/main.js | 10 +++++++---</span>
-<span style="color: #000; font-style: italic"> 1 file changed, 7 insertions(+), 3 deletions(-)</span>
+<span style="color: #000; font-style: italic"> README.md | 5 +++++</span>
+<span style="color: #000; font-style: italic"> 1 file changed, 5 insertions(+)</span>
 </pre></div>
-<h3>複数のリモートリポジトリから変更を取得</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>upstream<span style="color: #F8F8F8"> </span>main<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>main
-<span style="color: #000; font-style: italic">From github.com:upstream/repo</span>
-<span style="color: #000; font-style: italic"> * branch            main     -&gt; FETCH_HEAD</span>
+<h3>リベースを使用したプル</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull<span style="color: #F8F8F8"> </span>--rebase<span style="color: #F8F8F8"> </span>origin<span style="color: #F8F8F8"> </span>feature
+<span style="color: #000; font-style: italic">From github.com:user/repo</span>
+<span style="color: #000; font-style: italic"> * branch            feature    -&gt; FETCH_HEAD</span>
+<span style="color: #000; font-style: italic">Successfully rebased and updated refs/heads/feature.</span>
+</pre></div>
+<h3>アップストリームブランチからのプル</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull
 <span style="color: #000; font-style: italic">Already up to date.</span>
-<span style="color: #000; font-style: italic">From github.com:username/repo</span>
-<span style="color: #000; font-style: italic"> * branch            main     -&gt; FETCH_HEAD</span>
-<span style="color: #000; font-style: italic">Updating a1b2c3d..e4f5g6h</span>
-<span style="color: #000; font-style: italic">Fast-forward</span>
-<span style="color: #000; font-style: italic"> README.md | 2 ++</span>
-<span style="color: #000; font-style: italic"> 1 file changed, 2 insertions(+)</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>プルする前に変更を退避する</h3>
-<p>未コミットの変更がある場合、<code>git stash</code>で一時的に保存してからプルし、その後<code>git stash pop</code>で復元するとコンフリクトを避けられます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash
-<span style="color: #000; font-style: italic">Saved working directory and index state WIP on main: a1b2c3d Initial commit</span>
-<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>pull
-<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>stash<span style="color: #F8F8F8"> </span>pop
-</pre></div>
-<h3>リベースを使用してクリーンな履歴を維持する</h3>
-<p><code>git pull --rebase</code>を使用すると、マージコミットが作成されず、履歴が直線的になります。チームで作業する場合に特に便利です。</p>
-<h3>プル前にローカルの状態を確認する</h3>
-<p><code>git status</code>を実行して、未コミットの変更がないことを確認してからプルすると安全です。</p>
-<h2>Frequently Asked Questions</h2>
-<h4>Q1. <code>git pull</code>と<code>git fetch</code>の違いは何ですか？</h4>
-<p>A. <code>git fetch</code>はリモートの変更を取得するだけで、ローカルブランチには統合しません。一方、<code>git pull</code>は<code>fetch</code>と<code>merge</code>（または<code>rebase</code>）を一度に行います。</p>
-<h4>Q2. プル時にコンフリクトが発生した場合はどうすればよいですか？</h4>
-<p>A. コンフリクトを解決するには、コンフリクトファイルを編集し、<code>git add</code>でマークしてから<code>git commit</code>（マージの場合）または<code>git rebase --continue</code>（リベースの場合）を実行します。</p>
-<h4>Q3. 特定のブランチだけをプルするにはどうすればよいですか？</h4>
-<p>A. <code>git pull origin branch-name</code>のように、リモート名とブランチ名を指定します。</p>
-<h4>Q4. プルを取り消すにはどうすればよいですか？</h4>
-<p>A. マージの場合は<code>git reset --hard ORIG_HEAD</code>、リベースの場合は<code>git reflog</code>で以前の状態を見つけて<code>git reset --hard</code>で戻します。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは特別な注意点はありませんが、Keychain Accessを使用してGitの認証情報を保存している場合があります。認証に問題がある場合は、Keychain Accessアプリで認証情報を確認してください。</p>
-<h2>References</h2>
+<h3>トラッキングブランチの設定</h3>
+<p><code>git branch --set-upstream-to=origin/branch-name</code> でローカルブランチがリモートブランチを追跡するように設定できます。これにより、リモートとブランチを指定せずに単に <code>git pull</code> を使用できるようになります。</p>
+<h3>公開ブランチでは注意してプルを使用する</h3>
+<p>共有ブランチで作業する場合は、<code>git pull</code> の代わりに <code>git fetch</code> の後に <code>git merge</code> または <code>git rebase</code> を使用して、統合プロセスをより細かく制御することを検討してください。</p>
+<h3>競合を適切に解決する</h3>
+<p><code>git pull</code> がマージ競合を引き起こした場合は、それらを正しく解決するために時間をかけてください。<code>git status</code> を使用して競合したファイルを確認し、<code>git mergetool</code> を使用して解決を支援します。</p>
+<h3>作業中の変更には <code>--autostash</code> を使用する</h3>
+<p>コミットされていない変更があるが更新をプルする必要がある場合、<code>--autostash</code> を使用すると変更を自動的に保存して復元できます。</p>
+<h2>よくある質問</h2>
+<h4>Q1. <code>git pull</code> と <code>git fetch</code> の違いは何ですか？</h4>
+<p>A. <code>git fetch</code> はリモートリポジトリから新しいデータをダウンロードするだけで、作業ファイルに変更を統合しません。<code>git pull</code> は両方を行います：フェッチしてから自動的に変更を現在のブランチにマージします。</p>
+<h4>Q2. <code>git pull</code> を元に戻すにはどうすればよいですか？</h4>
+<p>A. 追加の変更を行っていない場合は、<code>git reset --hard ORIG_HEAD</code> を使用してプル前の状態に戻すことができます。</p>
+<h4>Q3. マージせずにプルするにはどうすればよいですか？</h4>
+<p>A. <code>git pull</code> の代わりに <code>git fetch</code> を使用します。これにより、ローカルブランチを変更せずにリモート追跡ブランチが更新されます。</p>
+<h4>Q4. <code>git pull</code> のコンテキストでの「fast-forward（早送り）」とは何ですか？</h4>
+<p>A. 早送りマージは、現在のブランチのポインタが単にマージされるブランチの最新コミットに移動し、新しいマージコミットを作成しない場合に発生します。これは、現在のブランチに分岐した変更がない場合に可能です。</p>
+<h2>参考資料</h2>
 <p>https://git-scm.com/docs/git-pull</p>
-<h2>Revisions</h2>
+<h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初回作成</li>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

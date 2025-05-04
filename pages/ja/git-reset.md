@@ -1,141 +1,132 @@
 # git reset コマンド
 
-コミットポインタを特定のコミットに移動させ、作業ツリーやインデックスを選択的にリセットします。
+指定した状態に現在のHEADをリセットします。
 
 ## 概要
 
-`git reset` は、現在のブランチの HEAD ポインタを移動させるコマンドです。オプションによって、インデックス（ステージングエリア）や作業ディレクトリの状態も変更できます。主に、コミットの取り消しやステージングした変更の取り消しに使用されます。
+`git reset`は、現在のブランチポインタを別のコミットに移動させることで変更を元に戻すコマンドです。使用するモードによって、ステージングエリア（インデックス）や作業ディレクトリも変更できます。このコマンドは、ファイルのステージング解除、コミットの取り消し、またはGit履歴内の以前の状態に完全に戻すために一般的に使用されます。
 
 ## オプション
 
 ### **--soft**
 
-HEAD ポインタのみを移動し、インデックスと作業ディレクトリはそのままにします。
+HEADを指定したコミットに移動しますが、インデックスと作業ディレクトリは変更しません。これにより、すべての変更をステージングしたまま、コミットを取り消すことができます。
 
 ```console
 $ git reset --soft HEAD~1
-# 直前のコミットを取り消し、変更はステージングされたままになる
 ```
 
 ### **--mixed（デフォルト）**
 
-HEAD ポインタとインデックスを移動しますが、作業ディレクトリはそのままにします。
+HEADを指定したコミットに移動し、インデックスを一致するように更新しますが、作業ディレクトリは変更しません。これにより、変更を作業ディレクトリに保持したまま、ステージングを解除します。
 
 ```console
-$ git reset HEAD~1
-# 直前のコミットを取り消し、変更は作業ディレクトリに残るがステージングは解除される
+$ git reset HEAD file.txt
 ```
 
 ### **--hard**
 
-HEAD ポインタ、インデックス、作業ディレクトリをすべて指定したコミットの状態にリセットします。
+HEADを指定したコミットに移動し、インデックスと作業ディレクトリの両方を一致するように更新します。これにより、ステージングエリアと作業ディレクトリのすべての変更が破棄されます。
 
 ```console
-$ git reset --hard HEAD~1
-# 直前のコミットを完全に取り消し、変更も削除される
+$ git reset --hard HEAD~2
 ```
 
-### **<commit>**
+### **--patch (-p)**
 
-リセット先のコミットを指定します。コミットハッシュ、ブランチ名、タグ名、または相対参照（HEAD~n など）を使用できます。
+リセットする変更の塊（ハンク）を対話的に選択します。
 
 ```console
-$ git reset --mixed 5a8e4ca
-# 指定したコミットに HEAD とインデックスをリセット
+$ git reset -p
 ```
 
-### **<paths>...**
+### **--keep**
 
-特定のファイルやディレクトリのみをインデックスからリセットします（HEAD は移動しません）。
+インデックスエントリをリセットしますが、インデックスと作業ツリーの間で異なるファイルは保持します。
 
 ```console
-$ git reset -- file.txt
-# file.txt のステージングを解除する
+$ git reset --keep HEAD~1
 ```
 
 ## 使用例
 
-### コミットの取り消し（変更を保持）
+### ファイルのステージング解除
 
 ```console
-$ git reset --soft HEAD~3
-# 直近3つのコミットを取り消し、変更はステージングされたままになる
+$ git add file.txt
+$ git status
+On branch main
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   file.txt
+
+$ git reset file.txt
+$ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   file.txt
 ```
 
-### ステージングの解除
+### 最後のコミットを取り消すが変更は保持する
 
 ```console
-$ git reset HEAD file.txt
-# file.txt のステージングを解除する（作業ディレクトリの変更は保持される）
+$ git reset --soft HEAD~1
 ```
 
-### 特定のコミットまで完全にリセット
+### 最近のコミットと変更を完全に破棄する
 
 ```console
-$ git log --oneline
-a1b2c3d ファイル追加
-e4f5g6h バグ修正
-i7j8k9l 初期コミット
-
-$ git reset --hard e4f5g6h
-HEAD is now at e4f5g6h バグ修正
-# e4f5g6h のコミットまで戻り、それ以降の変更はすべて削除される
+$ git reset --hard HEAD~3
+HEAD is now at a1b2c3d 3コミット前のメッセージ
 ```
 
-### マージの取り消し
+### 特定のコミットにリセットする
 
 ```console
-$ git reset --hard ORIG_HEAD
-# 直前のマージを取り消す
+$ git reset --mixed 5a78ef2
 ```
 
 ## ヒント:
 
-### リセット前にブランチを作成する
+### リセットを安全に試す
 
-重要な変更をリセットする前に、現在の状態を新しいブランチに保存しておくと安全です。
+`git reset --hard`を使用する前に、`git branch backup-branch`でバックアップブランチを作成しておくと、必要に応じて復元できます。
 
-```console
-$ git branch backup-branch
-$ git reset --hard HEAD~3
-# 万が一リセットを後悔しても、backup-branch に戻れる
-```
+### ハードリセットから復元する
 
-### --hard は注意して使用する
+誤って`--hard`で遠くまでリセットしてしまった場合は、`git reflog`を使用して戻りたいコミットを見つけ、`git reset --hard COMMIT_HASH`で戻ることができます。
 
-`--hard` オプションは作業ディレクトリの変更も削除するため、コミットされていない変更が失われます。使用前に `git status` で状態を確認しましょう。
+### すべてのファイルのステージング解除
 
-### reflog で失われたコミットを復元
+引数なしで`git reset`を使用すると、作業ディレクトリの変更を保持したまま、すべてのファイルのステージングを解除できます。
 
-`--hard` リセット後でも、`git reflog` コマンドを使用すれば、通常は失われたコミットを見つけて復元できます。
+### 選択的なステージング解除
 
-```console
-$ git reflog
-5a8e4ca HEAD@{0}: reset: moving to HEAD~1
-2c3d4e5 HEAD@{1}: commit: 失われたコミット
-
-$ git reset --hard 2c3d4e5
-# 失われたコミットを復元
-```
+`git reset -p`を使用すると、ステージング解除するファイルの特定の部分を選択できる対話的なステージング解除が可能です。
 
 ## よくある質問
 
-#### Q1. `git reset` と `git revert` の違いは何ですか？
-A. `git reset` はコミット履歴を書き換えますが、`git revert` は元に戻す操作自体を新しいコミットとして追加します。共有リポジトリでは `git revert` の使用が推奨されます。
+#### Q1. `git reset`と`git revert`の違いは何ですか？
+A. `git reset`はブランチポインタを移動させて履歴を変更しますが、`git revert`は以前の変更を元に戻す新しいコミットを作成し、履歴を保持します。
 
-#### Q2. ステージングしたファイルを一部だけ解除するには？
-A. `git reset <file>` または `git reset -- <file>` を使用して、特定のファイルのみステージングを解除できます。
+#### Q2. `git reset --hard`を元に戻すにはどうすればよいですか？
+A. `git reflog`を使用してリセット前のコミットハッシュを見つけ、`git reset --hard COMMIT_HASH`でその時点に復元します。
 
-#### Q3. リセット後に失われたコミットを復元できますか？
-A. はい、`git reflog` を使用して過去の HEAD の位置を確認し、`git reset --hard <commit-hash>` で復元できます。
+#### Q3. 公開ブランチで`git reset`を使用できますか？
+A. 共有リポジトリにすでにプッシュしたブランチでは、履歴を書き換えるため`git reset`の使用は推奨されません。代わりに`git revert`を使用してください。
 
-#### Q4. リモートブランチをリセットするには？
-A. ローカルブランチをリセットした後、`git push --force` でリモートブランチを更新できますが、共有リポジトリでは注意が必要です。
+#### Q4. すべてのファイルのステージングを解除するにはどうすればよいですか？
+A. 引数なしで`git reset`を実行すると、すべてのファイルのステージングが解除されます。
 
-## 参考
+#### Q5. `git reset HEAD~1`の`HEAD~1`とは何を意味しますか？
+A. `HEAD~1`は現在のHEADの前のコミット（履歴の1コミット前）を指します。
+
+## 参考資料
 
 https://git-scm.com/docs/git-reset
 
-## Revisions
+## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

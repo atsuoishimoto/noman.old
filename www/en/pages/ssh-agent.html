@@ -47,82 +47,97 @@
     <main>
       
   <h1>ssh-agent command</h1>
-<p>Manages SSH private keys and their passphrases in memory for single sign-on access to SSH servers.</p>
+<p>Authentication agent that manages SSH private keys for secure connections without repeated passphrase entry.</p>
 <h2>Overview</h2>
-<p><code>ssh-agent</code> is a background program that holds private keys used for SSH public key authentication. It eliminates the need to enter passphrases repeatedly when connecting to multiple SSH servers, as it stores the decrypted keys in memory for the duration of a session.</p>
+<p><code>ssh-agent</code> is a program that holds private keys used for SSH public key authentication. It runs in the background and eliminates the need to enter your passphrase each time you use SSH to connect to a remote server. When you add a key to the agent, you enter the passphrase once, and the agent keeps the decrypted key in memory for future use.</p>
 <h2>Options</h2>
+<h3><strong>-a socket</strong></h3>
+<p>Bind the agent to a specific Unix-domain socket.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>/tmp/ssh-agent.socket
+<span style="color: #000; font-style: italic">SSH_AUTH_SOCK=/tmp/ssh-agent.socket; export SSH_AUTH_SOCK;</span>
+<span style="color: #000; font-style: italic">SSH_AGENT_PID=1234; export SSH_AGENT_PID;</span>
+<span style="color: #000; font-style: italic">echo Agent pid 1234;</span>
+</pre></div>
 <h3><strong>-c</strong></h3>
 <p>Generate C-shell commands on stdout. This is the default if SHELL looks like it's a csh style shell.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-c
-<span style="color: #000; font-style: italic">setenv SSH_AUTH_SOCK /tmp/ssh-XXXXXX2LUbUP/agent.12345;</span>
-<span style="color: #000; font-style: italic">setenv SSH_AGENT_PID 12345;</span>
-<span style="color: #000; font-style: italic">echo Agent pid 12345;</span>
-</pre></div>
-<h3><strong>-s</strong></h3>
-<p>Generate Bourne shell commands on stdout. This is the default if SHELL does not look like it's a csh style shell.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-s
-<span style="color: #000; font-style: italic">SSH_AUTH_SOCK=/tmp/ssh-XXXXXX5TbcZp/agent.12345; export SSH_AUTH_SOCK;</span>
-<span style="color: #000; font-style: italic">SSH_AGENT_PID=12345; export SSH_AGENT_PID;</span>
-<span style="color: #000; font-style: italic">echo Agent pid 12345;</span>
+<span style="color: #000; font-style: italic">setenv SSH_AUTH_SOCK /tmp/ssh-XXXXXXXXXX/agent.1234;</span>
+<span style="color: #000; font-style: italic">setenv SSH_AGENT_PID 1234;</span>
+<span style="color: #000; font-style: italic">echo Agent pid 1234;</span>
 </pre></div>
 <h3><strong>-d</strong></h3>
-<p>Debug mode. When this option is specified, ssh-agent will not fork and will write debug information to standard error.</p>
+<p>Debug mode. The agent will not fork and will write debug information to standard error.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-d
-<span style="color: #000; font-style: italic">SSH_AUTH_SOCK=/tmp/ssh-XXXXXXzUqaQn/agent.12345; export SSH_AUTH_SOCK;</span>
-<span style="color: #000; font-style: italic">SSH_AGENT_PID=12345; export SSH_AGENT_PID;</span>
-<span style="color: #000; font-style: italic">echo Agent pid 12345;</span>
-<span style="color: #000; font-style: italic">[debug output follows]</span>
+<span style="color: #000; font-style: italic">debug: ssh-agent: starting</span>
+<span style="color: #000; font-style: italic">debug: ssh-agent: listening on socket: /tmp/ssh-XXXXXXXXXX/agent.1234</span>
 </pre></div>
 <h3><strong>-k</strong></h3>
 <p>Kill the current agent (given by the SSH_AGENT_PID environment variable).</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-k
-<span style="color: #000; font-style: italic">unset SSH_AUTH_SOCK;</span>
-<span style="color: #000; font-style: italic">unset SSH_AGENT_PID;</span>
-<span style="color: #000; font-style: italic">echo Agent pid 12345 killed;</span>
+<span style="color: #000; font-style: italic">Agent pid 1234 killed</span>
+</pre></div>
+<h3><strong>-s</strong></h3>
+<p>Generate Bourne shell commands on stdout. This is the default if SHELL does not look like it's a csh style shell.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-s
+<span style="color: #000; font-style: italic">SSH_AUTH_SOCK=/tmp/ssh-XXXXXXXXXX/agent.1234; export SSH_AUTH_SOCK;</span>
+<span style="color: #000; font-style: italic">SSH_AGENT_PID=1234; export SSH_AGENT_PID;</span>
+<span style="color: #000; font-style: italic">echo Agent pid 1234;</span>
+</pre></div>
+<h3><strong>-t life</strong></h3>
+<p>Set a default maximum lifetime for identities added to the agent. The lifetime may be specified in seconds or in a time format specified in sshd_config(5).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>1h
+<span style="color: #000; font-style: italic">SSH_AUTH_SOCK=/tmp/ssh-XXXXXXXXXX/agent.1234; export SSH_AUTH_SOCK;</span>
+<span style="color: #000; font-style: italic">SSH_AGENT_PID=1234; export SSH_AGENT_PID;</span>
+<span style="color: #000; font-style: italic">echo Agent pid 1234;</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Starting ssh-agent and adding a key</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>ssh-agent<span style="color: #204A87; font-weight: bold">)</span>
-<span style="color: #000; font-style: italic">Agent pid 12345</span>
+<span style="color: #000; font-style: italic">Agent pid 1234</span>
 <span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa
 <span style="color: #000; font-style: italic">Enter passphrase for /home/user/.ssh/id_rsa: </span>
 <span style="color: #000; font-style: italic">Identity added: /home/user/.ssh/id_rsa</span>
 </pre></div>
 <h3>Starting ssh-agent with a specific lifetime</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-agent<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>1h
-<span style="color: #000; font-style: italic">SSH_AUTH_SOCK=/tmp/ssh-XXXXXXzUqaQn/agent.12345; export SSH_AUTH_SOCK;</span>
-<span style="color: #000; font-style: italic">SSH_AGENT_PID=12345; export SSH_AGENT_PID;</span>
-<span style="color: #000; font-style: italic">echo Agent pid 12345;</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>ssh-agent<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>4h<span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #000; font-style: italic">Agent pid 1235</span>
+<span style="color: #8F5902">$ </span>ssh-add
+<span style="color: #000; font-style: italic">Enter passphrase for /home/user/.ssh/id_rsa: </span>
+<span style="color: #000; font-style: italic">Identity added: /home/user/.ssh/id_rsa</span>
 </pre></div>
-<h3>Listing keys managed by the agent</h3>
+<h3>Listing keys in the agent</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh-add<span style="color: #F8F8F8"> </span>-l
 <span style="color: #000; font-style: italic">2048 SHA256:abcdefghijklmnopqrstuvwxyz1234567890ABCD /home/user/.ssh/id_rsa (RSA)</span>
 </pre></div>
-<h2>Tips</h2>
-<h3>Use eval to Set Environment Variables</h3>
-<p>Always use <code>eval $(ssh-agent)</code> to start the agent, as this automatically sets the required environment variables.</p>
-<h3>Add Keys Automatically on Login</h3>
-<p>Add <code>ssh-add</code> commands to your shell startup files (like <code>.bashrc</code> or <code>.zshrc</code>) to automatically load your keys when you log in.</p>
-<h3>Forward Your Agent When Needed</h3>
-<p>Use <code>ssh -A user@host</code> to forward your agent connection to remote servers, allowing you to use your local keys for authentication on those servers. Be cautious with this feature as it poses security risks on untrusted servers.</p>
-<h3>Kill the Agent When Done</h3>
-<p>Run <code>ssh-agent -k</code> when you're done to terminate the agent and remove the decrypted keys from memory, especially on shared systems.</p>
+<h3>Killing the ssh-agent</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>ssh-agent<span style="color: #F8F8F8"> </span>-k<span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #000; font-style: italic">Agent pid 1234 killed</span>
+</pre></div>
+<h2>Tips:</h2>
+<h3>Start ssh-agent Automatically</h3>
+<p>Add <code>eval $(ssh-agent)</code> to your shell startup file (like <code>.bashrc</code> or <code>.zshrc</code>) to automatically start the agent when you log in.</p>
+<h3>Use ssh-agent with SSH Config</h3>
+<p>Combine ssh-agent with SSH config files (~/.ssh/config) to manage different keys for different hosts automatically.</p>
+<h3>Forward Your SSH Agent</h3>
+<p>When connecting to a remote server that needs to access other servers, use <code>ssh -A user@host</code> to forward your local agent to the remote server. Be cautious with this feature as it poses security risks on untrusted servers.</p>
+<h3>Check for Running Agents</h3>
+<p>Before starting a new agent, check if one is already running with <code>echo $SSH_AGENT_PID</code> to avoid having multiple agents.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between ssh-agent and ssh-add?</h4>
 <p>A. <code>ssh-agent</code> is the background program that holds your decrypted keys, while <code>ssh-add</code> is used to add keys to the running agent.</p>
-<h4>Q2. How do I know if ssh-agent is already running?</h4>
-<p>A. Check if the SSH_AGENT_PID environment variable is set: <code>echo $SSH_AGENT_PID</code>.</p>
-<h4>Q3. Why do I need to use eval with ssh-agent?</h4>
-<p>A. <code>ssh-agent</code> outputs shell commands that set environment variables. Using <code>eval</code> executes these commands in your current shell.</p>
-<h4>Q4. How can I limit how long keys are stored in the agent?</h4>
-<p>A. Use the <code>-t</code> option with a time specification: <code>ssh-agent -t 1h</code> for one hour.</p>
+<h4>Q2. How do I make ssh-agent remember my keys after a reboot?</h4>
+<p>A. ssh-agent doesn't persist across reboots. You need to restart it and add your keys again. Consider using tools like keychain or a startup script.</p>
+<h4>Q3. How can I tell if ssh-agent is running?</h4>
+<p>A. Check if the SSH_AGENT_PID environment variable is set: <code>echo $SSH_AGENT_PID</code>. If it returns a number, an agent is running.</p>
+<h4>Q4. How do I remove a key from ssh-agent?</h4>
+<p>A. Use <code>ssh-add -d ~/.ssh/keyfile</code> to remove a specific key, or <code>ssh-add -D</code> to remove all keys.</p>
 <h2>macOS Considerations</h2>
-<p>On macOS, the system keychain can integrate with SSH keys. You can add <code>UseKeychain yes</code> to your <code>~/.ssh/config</code> file to store passphrases in the keychain. Additionally, macOS may start its own ssh-agent automatically, so check if one is already running before starting a new one.</p>
+<p>On macOS, the system keychain integration allows for automatic loading of keys. The built-in ssh-agent is managed by launchd and starts automatically. You can add keys to the macOS keychain with <code>ssh-add -K ~/.ssh/id_rsa</code> (older versions) or <code>ssh-add --apple-use-keychain ~/.ssh/id_rsa</code> (newer versions), which will make them persist across reboots.</p>
 <h2>References</h2>
 <p>https://man.openbsd.org/ssh-agent</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

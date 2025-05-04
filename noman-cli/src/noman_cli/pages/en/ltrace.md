@@ -1,148 +1,167 @@
 # ltrace command
 
-Trace library calls made by a program, showing function calls, arguments, and return values.
+Trace library calls of a program.
 
 ## Overview
 
-`ltrace` is a debugging utility that intercepts and records dynamic library calls made by a program, as well as signals received by the program. It's particularly useful for understanding how a program interacts with libraries, troubleshooting issues, or reverse engineering applications when source code is unavailable.
+`ltrace` is a debugging utility that displays dynamic library calls made by a program. It can also show system calls and signals received by the process. This tool is particularly useful for debugging programs when source code is unavailable or for understanding how a program interacts with libraries.
 
 ## Options
 
-### **-c**
+### **-c, --count**
 
-Count and summarize all function calls
+Count time and calls for each library call and report a summary at the end.
 
 ```console
 $ ltrace -c ls
 % time     seconds  usecs/call     calls      function
 ------ ----------- ----------- --------- --------------------
- 24.45    0.000212          30         7 malloc
- 15.67    0.000136          22         6 strlen
- 11.53    0.000100          16         6 __ctype_b_loc
-  9.94    0.000086          14         6 __cxa_atexit
-  8.92    0.000077          15         5 free
-  [...]
+ 21.05    0.000080          2        40 strlen
+ 15.79    0.000060          2        30 __ctype_b_loc
+ 10.53    0.000040          2        20 readdir64
+  7.89    0.000030          2        15 fwrite
+  5.26    0.000020          2        10 malloc
+  5.26    0.000020          2        10 free
+  5.26    0.000020          2        10 __errno_location
+  5.26    0.000020          2        10 __cxa_atexit
+  5.26    0.000020         20         1 opendir
+  5.26    0.000020         20         1 closedir
+  5.26    0.000020         20         1 setlocale
+  5.26    0.000020         20         1 isatty
+  2.63    0.000010         10         1 bindtextdomain
+------ ----------- ----------- --------- --------------------
+100.00    0.000380                   150 total
 ```
 
-### **-f**
+### **-f, --follow**
 
-Trace child processes as they are created by the currently traced process
+Trace child processes as they are created by the currently traced process.
 
 ```console
 $ ltrace -f ./program
-[pid 12345] malloc(32)                                  = 0x55d45e9a12a0
+[pid 12345] malloc(32)                                  = 0x55d7e9fa7260
 [pid 12345] fork()                                      = 12346
-[pid 12346] malloc(64)                                  = 0x55d45e9a1340
-[pid 12345] waitpid(12346, 0x7ffd8a7b5a9c, 0)           = 12346
+[pid 12346] malloc(64)                                  = 0x55d7e9fa7290
 ```
 
-### **-e PATTERN**
+### **-e, --expr=EXPR**
 
-Filter which library calls to trace using a pattern
+Specify the library calls to trace or filter. Format is [!][?][=][%][/@][+|-]pattern[@arch][:function].
 
 ```console
 $ ltrace -e malloc+free ls
-ls->malloc(32)                                         = 0x55d45e9a12a0
-ls->malloc(64)                                         = 0x55d45e9a1340
-ls->free(0x55d45e9a12a0)                               = <void>
-ls->free(0x55d45e9a1340)                               = <void>
+ls->malloc(32)                                          = 0x55d7e9fa7260
+ls->malloc(64)                                          = 0x55d7e9fa7290
+ls->free(0x55d7e9fa7260)                                = <void>
+ls->free(0x55d7e9fa7290)                                = <void>
 ```
 
-### **-p PID**
+### **-p, --pid=PID**
 
-Attach to a running process with the specified PID
+Attach to the process with the specified PID and begin tracing.
 
 ```console
 $ ltrace -p 1234
-[pid 1234] read(5, "data", 1024)                       = 4
-[pid 1234] write(1, "data\n", 5)                       = 5
+[pid 1234] read(5, "data", 1024)                        = 4
+[pid 1234] write(1, "output", 6)                        = 6
 ```
 
-### **-S**
+### **-S, --summary**
 
-Display system calls as well as library calls
+Display a summary of library call usage at the end of the trace.
 
 ```console
 $ ltrace -S ls
-SYS_brk(0)                                             = 0x55d45e9a1000
-SYS_access("/etc/ld.so.preload", 04)                   = -2
-ls->malloc(32)                                         = 0x55d45e9a12a0
-SYS_write(1, "file.txt\n", 9)                          = 9
+ls->__libc_start_main(0x401670, 1, 0x7ffd2d121768, 0x4017a0 <unfinished ...>
+...
++++ exited (status 0) +++
+% time     seconds  usecs/call     calls      function
+------ ----------- ----------- --------- --------------------
+ 21.05    0.000080          2        40 strlen
+ 15.79    0.000060          2        30 __ctype_b_loc
+ 10.53    0.000040          2        20 readdir64
+```
+
+### **-o, --output=FILE**
+
+Write the trace output to FILE instead of stderr.
+
+```console
+$ ltrace -o trace.log ls
+$ cat trace.log
+ls->__libc_start_main(0x401670, 1, 0x7ffd2d121768, 0x4017a0 <unfinished ...>
+ls->setlocale(6, "")                                    = "en_US.UTF-8"
+ls->bindtextdomain("coreutils", "/usr/share/locale")    = "/usr/share/locale"
 ```
 
 ## Usage Examples
 
-### Tracing a specific program
+### Basic Usage
 
 ```console
-$ ltrace ./myprogram
-myprogram->printf("Hello, world!\n")                   = 14
-myprogram->malloc(1024)                                = 0x55d45e9a12a0
-myprogram->free(0x55d45e9a12a0)                        = <void>
-myprogram->exit(0)                                     = <no return>
+$ ltrace ls
+ls->__libc_start_main(0x401670, 1, 0x7ffd2d121768, 0x4017a0 <unfinished ...>
+ls->setlocale(6, "")                                    = "en_US.UTF-8"
+ls->bindtextdomain("coreutils", "/usr/share/locale")    = "/usr/share/locale"
+ls->textdomain("coreutils")                             = "coreutils"
+ls->__cxa_atexit(0x4014a0, 0, 0, 0x736c6974)            = 0
+ls->getenv("QUOTING_STYLE")                             = nil
+...
++++ exited (status 0) +++
 ```
 
-### Limiting output depth
+### Tracing Specific Library Calls
 
 ```console
-$ ltrace -L 3 ./myprogram
-myprogram->printf("Hello, world!\n") = 14
-  -> puts("Hello, world!") = 14
-    -> strlen("Hello, world!") = 13
-      -> ... <deeper calls not shown>
+$ ltrace -e malloc+free+open ./program
+./program->malloc(1024)                                 = 0x55d7e9fa7260
+./program->open("/etc/passwd", 0, 0)                    = 3
+./program->malloc(2048)                                 = 0x55d7e9fa7660
+./program->free(0x55d7e9fa7260)                         = <void>
+./program->free(0x55d7e9fa7660)                         = <void>
 ```
 
-### Saving trace output to a file
+### Tracing with Time Information
 
 ```console
-$ ltrace -o trace.log ./myprogram
-$ cat trace.log
-printf("Hello, world!\n")                              = 14
-malloc(1024)                                           = 0x55d45e9a12a0
-free(0x55d45e9a12a0)                                   = <void>
-exit(0)                                                = <no return>
+$ ltrace -tt ./program
+15:30:45.123456 __libc_start_main(0x401670, 1, 0x7ffd2d121768, 0x4017a0 <unfinished ...>
+15:30:45.123789 setlocale(6, "")                        = "en_US.UTF-8"
+15:30:45.124012 malloc(1024)                            = 0x55d7e9fa7260
+15:30:45.124234 free(0x55d7e9fa7260)                    = <void>
 ```
 
 ## Tips
 
-### Filter Noisy Functions
+### Filter Out Noise
 
-Use `-e` to filter out noisy functions that aren't relevant to your debugging:
-```console
-$ ltrace -e '!__cxa_*' ./myprogram
-```
-
-### Increase String Length
-
-By default, ltrace truncates string arguments. Use `-s` to increase the displayed length:
-```console
-$ ltrace -s 100 ./myprogram
-```
+Use the `-e` option to focus on specific function calls you're interested in. This helps reduce the output volume and makes analysis easier.
 
 ### Combine with strace
 
-For comprehensive debugging, use both `ltrace` for library calls and `strace` for system calls:
-```console
-$ ltrace -S ./myprogram
-```
+For comprehensive debugging, use both `ltrace` for library calls and `strace` for system calls. This provides a complete picture of program behavior.
 
-### Demangle C++ Names
+### Redirect Output for Analysis
 
-Use `-C` to demangle C++ function names for better readability when tracing C++ programs.
+For complex programs, redirect output to a file with `-o` and then use tools like `grep` or `awk` to analyze the trace data.
+
+### Use with Core Dumps
+
+When debugging crashes, run the program with `ltrace` to see which library calls were made before the crash occurred.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between ltrace and strace?
-A. `ltrace` traces library calls (functions from shared libraries), while `strace` traces system calls (interactions with the kernel). `ltrace` is better for understanding application logic, while `strace` is better for understanding OS interactions.
+A. `ltrace` traces library calls (functions in shared libraries like libc), while `strace` traces system calls (direct kernel interactions). `ltrace` shows higher-level operations like `printf()`, while `strace` shows lower-level operations like `write()`.
 
-#### Q2. Why doesn't ltrace show all function calls?
-A. `ltrace` only shows calls to external libraries, not internal function calls within the program itself. It also can't trace statically linked libraries.
+#### Q2. Can ltrace slow down the traced program?
+A. Yes, tracing adds significant overhead. Each intercepted call requires context switches, which can slow down the program considerably, especially for programs making many library calls.
 
-#### Q3. Can ltrace affect program performance?
-A. Yes, tracing adds significant overhead. Programs run much slower when being traced, so performance measurements under `ltrace` are not representative of normal execution.
+#### Q3. How do I trace only specific library functions?
+A. Use the `-e` option with a pattern, for example: `ltrace -e malloc+free+fopen ./program` to trace only memory allocation and file operations.
 
-#### Q4. How do I trace a specific set of functions?
-A. Use the `-e` option with a pattern: `ltrace -e malloc+free+open ./program` to trace only malloc, free, and open calls.
+#### Q4. Can ltrace trace statically linked programs?
+A. No, `ltrace` primarily works with dynamically linked programs. For statically linked programs, the library calls are compiled into the executable and not made through the dynamic linker.
 
 ## References
 
@@ -150,4 +169,4 @@ https://man7.org/linux/man-pages/man1/ltrace.1.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

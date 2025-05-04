@@ -1,129 +1,162 @@
 # script コマンド
 
-ターミナルセッションの全入出力を記録し、タイプスクリプトファイルに保存します。
+ターミナルセッションの全アクティビティを記録し、タイプスクリプトを作成します。
 
 ## 概要
 
-`script` コマンドは、ターミナルでの操作内容（コマンドの入力と出力）を全て記録し、ファイルに保存するためのツールです。デフォルトでは「typescript」という名前のファイルに記録されますが、別のファイル名を指定することも可能です。このコマンドはトレーニング資料の作成、問題のデバッグ、操作手順の文書化などに役立ちます。
+`script` コマンドはターミナルセッション中に表示されるすべての内容を記録します。すべての入力と出力をキャプチャし、ファイル（デフォルトでは「typescript」という名前）に保存します。これは手順の文書化、チュートリアルの作成、またはターミナルセッションのログを保持するのに役立ちます。
 
 ## オプション
 
 ### **-a, --append**
 
-既存のファイルに追記します（上書きではなく）
+指定したファイルまたはデフォルトの typescript ファイルに出力を上書きではなく追記します。
 
 ```console
-$ script -a session.log
-Script started, output log file is 'session.log'.
+$ script -a session_log.txt
+Script started, output file is session_log.txt
 $ ls
-Documents  Downloads  Pictures
+Documents Downloads Pictures
 $ exit
-Script done.
+Script done, output file is session_log.txt
 ```
 
 ### **-f, --flush**
 
-各コマンドの実行後、すぐにログファイルに書き込みます（バッファリングなし）
+各書き込み後に出力をフラッシュして、リアルタイム記録を確保します。記録中に typescript ファイルを監視する場合に便利です。
 
 ```console
-$ script -f realtime.log
-Script started, output log file is 'realtime.log'.
-$ echo "このコマンドはすぐにログに書き込まれます"
-このコマンドはすぐにログに書き込まれます
+$ script -f realtime_log.txt
+Script started, output file is realtime_log.txt
+$ echo "これはすぐにフラッシュされます"
+これはすぐにフラッシュされます
 $ exit
-Script done.
+Script done, output file is realtime_log.txt
 ```
 
 ### **-q, --quiet**
 
-開始・終了メッセージを表示しません
+静かモードで実行し、開始および終了メッセージを表示しません。
 
 ```console
-$ script -q quiet.log
-$ ls
-Documents  Downloads  Pictures
+$ script -q quiet_log.txt
+$ echo "開始メッセージは表示されていません"
+開始メッセージは表示されていません
 $ exit
 ```
 
-### **-t, --timing=ファイル**
+### **-t, --timing[=FILE]**
 
-タイミング情報を別ファイルに記録します
+タイミングデータを FILE に出力します。FILE が指定されていない場合は標準エラーに出力します。これは scriptreplay でセッションを再生する際に使用できます。
 
 ```console
 $ script -t timing.log session.log
-Script started, output log file is 'session.log'.
-$ ls
-Documents  Downloads  Pictures
+Script started, output file is session.log
+$ echo "このセッションは時間計測されています"
+このセッションは時間計測されています
 $ exit
-Script done.
+Script done, output file is session.log
+```
+
+### **-c, --command COMMAND**
+
+対話型シェルの代わりに指定されたコマンドを実行します。
+
+```console
+$ script -c "ls -la" command_output.txt
+Script started, output file is command_output.txt
+total 32
+drwxr-xr-x  5 user  staff   160 May  4 10:15 .
+drwxr-xr-x  3 user  staff    96 May  4 10:10 ..
+-rw-r--r--  1 user  staff  1024 May  4 10:12 file1.txt
+-rw-r--r--  1 user  staff  2048 May  4 10:14 file2.txt
+Script done, output file is command_output.txt
 ```
 
 ## 使用例
 
-### 基本的な使用方法
+### 基本的なセッション記録
 
 ```console
-$ script my_session.log
-Script started, output log file is 'my_session.log'.
-$ ls -la
-total 20
-drwxr-xr-x  2 user user 4096 Apr 30 10:00 .
-drwxr-xr-x 20 user user 4096 Apr 30 09:50 ..
--rw-r--r--  1 user user  123 Apr 30 10:00 file.txt
-$ echo "これはログに記録されます"
-これはログに記録されます
+$ script my_session.txt
+Script started, output file is my_session.txt
+$ ls
+Documents Downloads Pictures
+$ pwd
+/home/user
 $ exit
-Script done.
+Script done, output file is my_session.txt
 ```
 
-### 記録したセッションの再生
+### 記録されたセッションの表示
 
 ```console
-$ script -t timing.data recording.log
-Script started, output log file is 'recording.log'.
+$ cat my_session.txt
+Script started on Sun May  4 10:20:00 2025
 $ ls
-Documents  Downloads  Pictures
-$ echo "Hello World"
-Hello World
+Documents Downloads Pictures
+$ pwd
+/home/user
 $ exit
-Script done.
 
-$ scriptreplay timing.data recording.log
-# 記録されたセッションが再生されます
+Script done on Sun May  4 10:21:30 2025
+```
+
+### セッションの記録と再生
+
+```console
+$ script --timing=timing.log session.log
+Script started, output file is session.log
+$ echo "こんにちは、これはデモです"
+こんにちは、これはデモです
+$ ls
+Documents Downloads Pictures
+$ exit
+Script done, output file is session.log
+
+$ scriptreplay timing.log session.log
+# セッションが元のタイミングで再生されます
 ```
 
 ## ヒント:
 
-### セッション記録の終了方法
+### scriptreplay との併用
 
-`script` コマンドを終了するには、`exit` コマンドを入力するか、Ctrl+D を押します。これにより記録が停止し、ファイルが保存されます。
+`-t` オプションを使用してタイミング情報を記録すると、後で `scriptreplay` コマンドでセッションを再生できます。これにより、元々入力されたのと同じペースで出力が表示されます。
 
-### 記録ファイルの確認
+### 制御文字のクリーンアップ
 
-記録されたファイルは通常のテキストファイルとして `cat`、`less` などで確認できますが、エスケープシーケンスなどの制御文字が含まれているため、読みにくい場合があります。
+typescript ファイルには読みにくい制御文字が含まれている場合があります。`col -b` のようなツールを使用してクリーンアップできます：
 
-### 自動化スクリプトでの利用
+```console
+$ col -b < my_session.txt > clean_session.txt
+```
 
-`script` コマンドは自動化スクリプトでも利用できますが、インタラクティブなプロンプトが必要な場合は `expect` などのツールと組み合わせると効果的です。
+### 複雑な手順の文書化
+
+複雑なシステム管理タスクやソフトウェアインストールを文書化する際に `script` を使用すると、後で参照したり同僚と共有したりできる完全な記録を作成できます。
 
 ## よくある質問
 
-#### Q1. `script` コマンドで記録したファイルのサイズが大きくなりすぎる場合はどうすればよいですか？
-A. 必要な操作だけを記録するように計画し、長時間の記録は避けましょう。また、`-q` オプションを使用して開始・終了メッセージを省略することでファイルサイズを少し削減できます。
+#### Q1. script セッションの記録を停止するにはどうすればよいですか？
+A. `exit` と入力するか、Ctrl+D を押してセッションを終了し、記録を停止します。
 
-#### Q2. カラー出力も記録されますか？
-A. はい、ターミナルのカラー出力を含むANSIエスケープシーケンスも記録されます。ただし、表示するときは対応するビューアが必要です。
+#### Q2. 開始と終了のメッセージを表示せずにセッションを記録できますか？
+A. はい、`-q` または `--quiet` オプションを使用してこれらのメッセージを抑制できます。
 
-#### Q3. 記録中に特定のコマンドだけ記録したくない場合はどうすればよいですか？
-A. 一時的に `script` を終了し、記録したくないコマンドを実行した後、`script -a` で記録を再開することができます。
+#### Q3. 記録されたセッションを再生するにはどうすればよいですか？
+A. `-t` を使用してタイミング情報を記録した場合、`scriptreplay` コマンドを使用してセッションを再生できます。
 
-#### Q4. macOSでの注意点はありますか？
-A. macOSの `script` コマンドはLinuxバージョンと若干異なり、一部のオプション（特に `-t` や `scriptreplay` との連携）が利用できない場合があります。詳細は `man script` で確認してください。
+#### Q4. 入力したパスワードは記録されますか？
+A. いいえ、適切に設計されたパスワードプロンプトは文字をターミナルにエコーしないため、通常パスワードは typescript ファイルに表示されません。
 
-## 参考情報
+#### Q5. 既存の typescript ファイルに追記できますか？
+A. はい、`-a` または `--append` オプションを使用して、既存のファイルを上書きするのではなく追加できます。
+
+## 参考資料
 
 https://man7.org/linux/man-pages/man1/script.1.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

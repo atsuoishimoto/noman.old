@@ -47,71 +47,78 @@
     <main>
       
   <h1>whoami コマンド</h1>
-<p>現在のユーザー名を表示します。</p>
+<p>現在の実効ユーザー名を表示します。</p>
 <h2>概要</h2>
-<p><code>whoami</code> コマンドは、現在のシェルセッションで実行しているユーザーの名前（ユーザーID）を表示します。システム管理やスクリプト作成時に、現在どのユーザーとして操作しているかを確認するのに役立ちます。</p>
+<p><code>whoami</code>コマンドは、現在の実効ユーザーIDに関連付けられたユーザー名を出力します。このシンプルなユーティリティは、現在のセッションでどのユーザーアカウントが使用されているかを識別するのに役立ちます。特にスクリプト内での使用、ユーザー間の切り替え時、またはパーミッションの問題をトラブルシューティングする際に便利です。</p>
 <h2>オプション</h2>
-<p><code>whoami</code> コマンドは基本的にオプションなしで使用されることが多いですが、いくつかの一般的なオプションがあります。</p>
+<p><code>whoami</code>コマンドは単一の明確な機能を実行するため、オプションはほとんどありません。</p>
 <h3><strong>--help</strong></h3>
-<p>ヘルプメッセージを表示します。</p>
+<p>ヘルプ情報を表示して終了します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>whoami<span style="color: #F8F8F8"> </span>--help
-<span style="color: #000; font-style: italic">使用法: whoami [オプション]...</span>
-<span style="color: #000; font-style: italic">現在の実効ユーザーIDに関連付けられたユーザー名を表示する</span>
+<span style="color: #000; font-style: italic">Usage: whoami [OPTION]...</span>
+<span style="color: #000; font-style: italic">Print the user name associated with the current effective user ID.</span>
+<span style="color: #000; font-style: italic">Same as id -un.</span>
 
-<span style="color: #000; font-style: italic">      --help     このヘルプを表示して終了</span>
-<span style="color: #000; font-style: italic">      --version  バージョン情報を表示して終了</span>
+<span style="color: #000; font-style: italic">      --help     display this help and exit</span>
+<span style="color: #000; font-style: italic">      --version  output version information and exit</span>
+
+<span style="color: #000; font-style: italic">GNU coreutils online help: &lt;https://www.gnu.org/software/coreutils/&gt;</span>
+<span style="color: #000; font-style: italic">Report whoami translation bugs to &lt;https://translationproject.org/team/&gt;</span>
 </pre></div>
 <h3><strong>--version</strong></h3>
-<p>バージョン情報を表示します。</p>
+<p>バージョン情報を表示して終了します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>whoami<span style="color: #F8F8F8"> </span>--version
 <span style="color: #000; font-style: italic">whoami (GNU coreutils) 8.32</span>
 <span style="color: #000; font-style: italic">Copyright (C) 2020 Free Software Foundation, Inc.</span>
-<span style="color: #000; font-style: italic">ライセンス GPLv3+: GNU GPL バージョン 3 以降 &lt;https://gnu.org/licenses/gpl.html&gt;.</span>
-<span style="color: #000; font-style: italic">これはフリーソフトウェアです: 自由に変更および配布できます.</span>
-<span style="color: #000; font-style: italic">法律の許す限り、　無保証　です.</span>
+<span style="color: #000; font-style: italic">License GPLv3+: GNU GPL version 3 or later &lt;https://gnu.org/licenses/gpl.html&gt;.</span>
+<span style="color: #000; font-style: italic">This is free software: you are free to change and redistribute it.</span>
+<span style="color: #000; font-style: italic">There is NO WARRANTY, to the extent permitted by law.</span>
+
+<span style="color: #000; font-style: italic">Written by Richard Mlynarik.</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な使用法</h3>
+<h3>基本的な使い方</h3>
+<p>単に<code>whoami</code>と入力すると、現在の実効ユーザー名が表示されます：</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>whoami
-<span style="color: #000; font-style: italic">username</span>
+<span style="color: #000; font-style: italic">alice</span>
 </pre></div>
-<p>上記の例では、現在ログインしているユーザー名（この場合は「username」）が表示されています。</p>
-<h3>スクリプト内での使用例</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;現在のユーザー: </span><span style="color: #204A87; font-weight: bold">$(</span>whoami<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span>
-<span style="color: #000; font-style: italic">現在のユーザー: username</span>
+<h3>スクリプト内での使用</h3>
+<p>このコマンドは、シェルスクリプト内で現在のユーザーを確認するためによく使用されます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">$(</span>whoami<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span>!<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;root&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;このスクリプトはroot権限で実行する必要があります&quot;</span>
+<span style="color: #000; font-style: italic">&gt;   exit 1</span>
+<span style="color: #000; font-style: italic">&gt; fi</span>
+<span style="color: #000; font-style: italic">このスクリプトはroot権限で実行する必要があります</span>
 </pre></div>
-<h3>sudo と組み合わせた使用例</h3>
+<h3>ユーザー切り替え後</h3>
+<p><code>su</code>や<code>sudo</code>を使用してユーザーを変更した後、<code>whoami</code>は新しい実効ユーザーを表示します：</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>whoami
-<span style="color: #000; font-style: italic">username</span>
-<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>whoami
+<span style="color: #000; font-style: italic">alice</span>
+<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-s
+<span style="color: #8F5902"># </span>whoami
 <span style="color: #000; font-style: italic">root</span>
 </pre></div>
-<p>通常のユーザーと、sudo（管理者権限）を使用した場合のユーザーの違いを確認できます。</p>
 <h2>ヒント:</h2>
-<h3>ユーザー切り替え確認</h3>
-<p><code>su</code> や <code>sudo</code> コマンドでユーザーを切り替えた後、正しく切り替わったかを確認するために使用できます。</p>
-<h3>スクリプト内での条件分岐</h3>
-<p>シェルスクリプト内で現在のユーザーに基づいて処理を分岐させる際に役立ちます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">$(</span>whoami<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;root&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;管理者として実行中です&quot;</span>
-<span style="color: #204A87; font-weight: bold">else</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;一般ユーザーとして実行中です&quot;</span>
-<span style="color: #204A87; font-weight: bold">fi</span>
-</pre></div>
-<h3>関連コマンド</h3>
-<p><code>id</code> コマンドを使うと、ユーザー名だけでなくユーザーIDやグループ情報も表示できます。</p>
+<h3>実効ユーザーIDと実ユーザーIDの違いを理解する</h3>
+<p><code>whoami</code>は実効ユーザーIDを表示しますが、これは<code>sudo</code>などのコマンドを使用する場合、実ユーザーIDとは異なる場合があります。両方のIDを確認するには、代わりに<code>id</code>コマンドを使用してください。</p>
+<h3>代替コマンド</h3>
+<p><code>id -un</code>コマンドは<code>whoami</code>と同じ情報を提供し、すべてのUNIX系システムで利用可能なため、スクリプトではより移植性の高い代替手段となります。</p>
+<h3>セキュリティに関する考慮事項</h3>
+<p>セキュリティに敏感なスクリプトを作成する場合、<code>whoami</code>は実効ユーザーのみを表示し、必ずしもプロセスを最初に起動したユーザーを表示するわけではないことを覚えておいてください。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>whoami</code> と <code>who am i</code> の違いは何ですか？</h4>
-<p>A. <code>whoami</code> は現在の実効ユーザーを表示しますが、<code>who am i</code>（または <code>who -m</code>）はログイン時のユーザー情報を表示します。<code>su</code> などでユーザーを切り替えた場合に違いが出ます。</p>
-<h4>Q2. <code>whoami</code> と <code>id</code> の違いは何ですか？</h4>
-<p>A. <code>whoami</code> はユーザー名のみを表示しますが、<code>id</code> コマンドはユーザーID、グループIDなどより詳細な情報を表示します。</p>
-<h4>Q3. スクリプト内で <code>whoami</code> の出力を変数に格納するにはどうすればよいですか？</h4>
-<p>A. <code>USER=$(whoami)</code> のように変数に代入できます。その後、<code>$USER</code> で参照できます。</p>
-<h2>参考情報</h2>
+<h4>Q1. <code>whoami</code>と<code>who am i</code>の違いは何ですか？</h4>
+<p>A. <code>whoami</code>は現在のプロセスの実効ユーザー名を表示しますが、<code>who am i</code>（または<code>who -m</code>）は元のログイン名、端末、およびログイン時間を表示します。</p>
+<h4>Q2. <code>whoami</code>でroot権限で実行しているかどうかを確認できますか？</h4>
+<p>A. はい。<code>whoami</code>が「root」を返す場合、root権限で実行していることになります。</p>
+<h4>Q3. <code>whoami</code>はすべてのUnix/Linuxシステムで同じように動作しますか？</h4>
+<p>A. はい、基本的な機能はUnix系システム間で一貫していますが、一部のシステムでは出力形式が若干異なる場合があります。</p>
+<h4>Q4. なぜ<code>id</code>の代わりに<code>whoami</code>を使用するのですか？</h4>
+<p>A. <code>whoami</code>はよりシンプルで、ユーザー名のみを提供します。一方、<code>id</code>はユーザーID、グループID、およびグループメンバーシップを含むより包括的な情報を提供します。</p>
+<h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/whoami-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

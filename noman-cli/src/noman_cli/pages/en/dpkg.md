@@ -1,10 +1,10 @@
 # dpkg command
 
-Manage Debian package files (.deb) on Debian-based Linux distributions.
+Manage Debian package files (.deb) on Debian-based systems like Ubuntu.
 
 ## Overview
 
-`dpkg` is the package management system for Debian-based Linux distributions (including Ubuntu). It handles the installation, removal, and providing information about .deb packages. Unlike higher-level package managers like `apt`, `dpkg` works directly with .deb files and doesn't automatically resolve dependencies.
+`dpkg` is the package management system for Debian-based Linux distributions. It handles the installation, removal, and providing information about .deb packages. Unlike higher-level package managers like `apt`, `dpkg` works directly with .deb files and doesn't automatically resolve dependencies.
 
 ## Options
 
@@ -13,12 +13,13 @@ Manage Debian package files (.deb) on Debian-based Linux distributions.
 Install a package from a .deb file
 
 ```console
-$ sudo dpkg -i package.deb
-Selecting previously unselected package package.
-(Reading database ... 200000 files and directories currently installed.)
-Preparing to unpack package.deb ...
-Unpacking package (1.0-1) ...
-Setting up package (1.0-1) ...
+$ sudo dpkg -i firefox_115.0+build2-0ubuntu0.20.04.1_amd64.deb
+Selecting previously unselected package firefox.
+(Reading database ... 186342 files and directories currently installed.)
+Preparing to unpack firefox_115.0+build2-0ubuntu0.20.04.1_amd64.deb ...
+Unpacking firefox (115.0+build2-0ubuntu0.20.04.1) ...
+Setting up firefox (115.0+build2-0ubuntu0.20.04.1) ...
+Processing triggers for mime-support (3.64ubuntu1) ...
 ```
 
 ### **-r, --remove**
@@ -26,9 +27,9 @@ Setting up package (1.0-1) ...
 Remove an installed package (keeps configuration files)
 
 ```console
-$ sudo dpkg -r package
-(Reading database ... 200000 files and directories currently installed.)
-Removing package (1.0-1) ...
+$ sudo dpkg -r firefox
+(Reading database ... 186342 files and directories currently installed.)
+Removing firefox (115.0+build2-0ubuntu0.20.04.1) ...
 ```
 
 ### **-P, --purge**
@@ -36,113 +37,118 @@ Removing package (1.0-1) ...
 Remove an installed package completely (including configuration files)
 
 ```console
-$ sudo dpkg -P package
-(Reading database ... 200000 files and directories currently installed.)
-Purging configuration files for package (1.0-1) ...
+$ sudo dpkg -P firefox
+(Reading database ... 186342 files and directories currently installed.)
+Removing firefox (115.0+build2-0ubuntu0.20.04.1) ...
+Purging configuration files for firefox ...
 ```
 
-### **-l, --list**
+### **-l, --list [pattern]**
 
-List all installed packages with their status
-
-```console
-$ dpkg -l
-| Status | Name      | Version      | Architecture | Description                |
-|--------|-----------|--------------|--------------|----------------------------|
-| ii     | bash      | 5.1-6ubuntu1 | amd64        | GNU Bourne Again SHell     |
-| ii     | coreutils | 8.32-4.1     | amd64        | GNU core utilities         |
-```
-
-### **-s, --status**
-
-Display detailed status information about a specific package
+List installed packages matching an optional pattern
 
 ```console
-$ dpkg -s bash
-Package: bash
-Status: install ok installed
-Priority: required
-Section: shells
-Installed-Size: 6470
-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-Architecture: amd64
-Version: 5.1-6ubuntu1
+$ dpkg -l firefox
+| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
+|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
+||/ Name           Version      Architecture Description
++++-==============-============-============-=================================
+ii  firefox        115.0+build2 amd64        Safe and easy web browser from Mozilla
 ```
 
 ### **-L, --listfiles**
 
-List all files installed by a package
+List files installed by a package
 
 ```console
-$ dpkg -L bash
+$ dpkg -L firefox
 /.
-/etc
-/etc/bash.bashrc
-/etc/skel
-/etc/skel/.bash_logout
-/etc/skel/.bashrc
-/etc/skel/.profile
-/bin
-/bin/bash
+/usr
+/usr/bin
+/usr/bin/firefox
+/usr/lib
+/usr/lib/firefox
 ...
+```
+
+### **-s, --status**
+
+Display detailed status information about a package
+
+```console
+$ dpkg -s firefox
+Package: firefox
+Status: install ok installed
+Priority: optional
+Section: web
+Installed-Size: 256348
+Maintainer: Ubuntu Mozilla Team <ubuntu-mozillateam@lists.ubuntu.com>
+Architecture: amd64
+Version: 115.0+build2-0ubuntu0.20.04.1
+Depends: lsb-release, libatk1.0-0 (>= 1.12.4), libc6 (>= 2.28), ...
+Description: Safe and easy web browser from Mozilla
+ Firefox delivers safe, easy web browsing. A familiar user interface,
+ enhanced security features including protection from online identity theft,
+ and integrated search let you get the most out of the web.
 ```
 
 ### **-S, --search**
 
-Find which package owns a file
+Search for packages that own a specific file
 
 ```console
-$ dpkg -S /bin/bash
-bash: /bin/bash
+$ dpkg -S /usr/bin/firefox
+firefox: /usr/bin/firefox
+```
+
+### **--configure**
+
+Configure an unpacked package that needs setup
+
+```console
+$ sudo dpkg --configure firefox
+Setting up firefox (115.0+build2-0ubuntu0.20.04.1) ...
 ```
 
 ## Usage Examples
 
-### Installing a downloaded .deb package
+### Installing a package and fixing dependencies
 
 ```console
-$ sudo dpkg -i google-chrome-stable_current_amd64.deb
-[output showing installation progress]
-```
-
-### Fixing broken dependencies after installation
-
-```console
+$ sudo dpkg -i package.deb
 $ sudo apt-get install -f
-Reading package lists... Done
-Building dependency tree... Done
-Correcting dependencies... Done
-[output showing dependency resolution]
 ```
 
-### Listing all installed packages matching a pattern
+### Listing all installed packages
 
 ```console
-$ dpkg -l | grep python
-ii  python3                          3.10.4-0ubuntu2        amd64        Interactive high-level object-oriented language
-ii  python3-minimal                  3.10.4-0ubuntu2        amd64        Minimal subset of the Python language
+$ dpkg -l
+```
+
+### Finding which package a file belongs to
+
+```console
+$ dpkg -S /usr/bin/python3
+python3-minimal: /usr/bin/python3
 ```
 
 ## Tips
 
-### Handling Dependencies
+### Fix Broken Dependencies
 
-`dpkg` doesn't automatically resolve dependencies. If you encounter dependency errors, run `sudo apt-get install -f` to fix them.
+When `dpkg` fails due to missing dependencies, run `sudo apt-get install -f` to resolve them. This is a common workflow when installing .deb files directly.
 
-### Checking if a Package is Installed
+### Backup Package List
 
-Use `dpkg -l | grep package-name` to quickly check if a package is installed.
+Before major system changes, save a list of installed packages with `dpkg --get-selections > packages.list`. You can later restore with `sudo dpkg --set-selections < packages.list && sudo apt-get dselect-upgrade`.
 
-### Understanding Package Status Codes
+### Verify Package Integrity
 
-In the output of `dpkg -l`, the first column shows status codes:
-- `ii`: package is installed and configured
-- `rc`: package was removed but config files remain
-- `un`: package is unknown/not installed
+Use `dpkg-deb --info package.deb` to inspect a package before installation, and `dpkg -V packagename` to verify installed files against the package database.
 
-### Backing Up Package List
+### Reconfigure Packages
 
-Before major system changes, back up your package list with `dpkg --get-selections > packages.list` and restore with `sudo dpkg --set-selections < packages.list && sudo apt-get dselect-upgrade`.
+If you need to reconfigure a package (e.g., to change settings), use `sudo dpkg-reconfigure packagename` which runs the configuration scripts again.
 
 ## Frequently Asked Questions
 
@@ -150,22 +156,21 @@ Before major system changes, back up your package list with `dpkg --get-selectio
 A. `dpkg` works directly with .deb files and doesn't handle dependencies automatically. `apt` is a higher-level tool that resolves dependencies and can download packages from repositories.
 
 #### Q2. How do I fix "dependency problems" errors?
-A. Run `sudo apt-get install -f` to fix dependency issues after a `dpkg` installation.
+A. Run `sudo apt-get install -f` after a failed `dpkg -i` to resolve missing dependencies.
 
-#### Q3. How can I see what files a package will install before installing it?
-A. Use `dpkg-deb --contents package.deb` to view the contents of a .deb file before installation.
+#### Q3. How can I see what files a .deb package will install before installing it?
+A. Use `dpkg-deb --contents package.deb` to list the files contained in the package.
 
 #### Q4. How do I reinstall a package?
-A. Use `sudo dpkg -i --force-reinstall package.deb` to reinstall a package.
+A. Use `sudo dpkg -i --force-reinstall package.deb` or with apt: `sudo apt-get install --reinstall packagename`.
 
-#### Q5. How can I find which package provides a specific file?
-A. Use `dpkg -S /path/to/file` to find the package that owns a file.
+#### Q5. How do I prevent a package from being upgraded?
+A. Use `sudo apt-mark hold packagename` to prevent automatic upgrades.
 
 ## References
 
-https://man7.org/linux/man-pages/man1/dpkg.1.html
+https://manpages.debian.org/buster/dpkg/dpkg.1.en.html
 
 ## Revisions
 
-- 2025/04/30 Added -S option and expanded Tips and FAQs sections.
-- 2025/04/30 First revision
+- 2025/05/04 First revision

@@ -1,56 +1,79 @@
 # gzip コマンド
 
-ファイルを圧縮・展開するためのコマンドラインユーティリティです。
+ファイルをLempel-Ziv符号化（LZ77）を使用して圧縮または展開します。
 
 ## 概要
 
-gzipはファイルを圧縮または展開するためのコマンドです。圧縮されたファイルは元のファイル名に「.gz」拡張子が追加されます。デフォルトでは、圧縮後に元のファイルは削除されます。gzipは主にテキストファイルの圧縮に効果的で、多くのUNIXシステムで標準的に利用されています。
+`gzip`はLempel-Ziv圧縮を使用してファイルサイズを縮小します。デフォルトでは、元のファイルを`.gz`拡張子を持つ圧縮バージョンに置き換え、元のファイルの所有権、権限、タイムスタンプを保持します。単一ファイルの圧縮やパイプライン操作の一部としてデータストリームを圧縮するために一般的に使用されます。
 
 ## オプション
 
-### **-d (--decompress)**
+### **-d, --decompress, --uncompress**
 
-圧縮ファイルを展開します。
+ファイルを圧縮する代わりに展開します。
 
 ```console
 $ gzip -d file.gz
-# file.gzが展開されてfileが作成される
 ```
 
-### **-k (--keep)**
+### **-c, --stdout, --to-stdout**
 
-圧縮・展開時に元のファイルを保持します。
-
-```console
-$ gzip -k file.txt
-# file.txtが保持されたままfile.txt.gzが作成される
-```
-
-### **-c (--stdout)**
-
-圧縮・展開結果を標準出力に出力します。元のファイルは変更されません。
+出力を標準出力に書き込み、元のファイルを変更せずに保持します。
 
 ```console
 $ gzip -c file.txt > file.txt.gz
-# 標準出力に圧縮結果を出力し、リダイレクトでファイルに保存
 ```
 
-### **-r (--recursive)**
+### **-f, --force**
 
-ディレクトリを再帰的に処理します。
+ファイルに複数のリンクがある場合や、対応するファイルが既に存在する場合でも、強制的に圧縮または展開します。
+
+```console
+$ gzip -f already_compressed.gz
+```
+
+### **-k, --keep**
+
+圧縮または展開中に入力ファイルを保持します（削除しません）。
+
+```console
+$ gzip -k important_file.txt
+```
+
+### **-l, --list**
+
+圧縮されたファイルごとに圧縮サイズ、非圧縮サイズ、圧縮率、ファイル名を一覧表示します。
+
+```console
+$ gzip -l *.gz
+         compressed        uncompressed  ratio uncompressed_name
+                 220                 631  65.1% file1.txt
+                 143                 341  58.1% file2.txt
+```
+
+### **-r, --recursive**
+
+ディレクトリ内のファイルを再帰的に圧縮します。
 
 ```console
 $ gzip -r directory/
-# directory内のすべてのファイルを圧縮
 ```
 
-### **-[1-9] (圧縮レベル)**
+### **-v, --verbose**
 
-圧縮レベルを1（最速、圧縮率低）から9（最も遅い、圧縮率高）まで指定します。デフォルトは6です。
+圧縮または展開された各ファイルの名前と削減率を表示します。
 
 ```console
-$ gzip -9 file.txt
-# 最高圧縮率でfile.txtを圧縮
+$ gzip -v file.txt
+file.txt:       63.4% -- replaced with file.txt.gz
+```
+
+### **-[1-9], --fast, --best**
+
+指定された数字を使用して圧縮速度を調整します。-1（または--fast）は最速の圧縮方法（圧縮率は低い）を示し、-9（または--best）は最も遅い（最高の圧縮率）を示します。デフォルトの圧縮レベルは-6です。
+
+```console
+$ gzip -9 large_file.txt
 ```
 
 ## 使用例
@@ -58,9 +81,9 @@ $ gzip -9 file.txt
 ### 基本的な圧縮
 
 ```console
-$ gzip large_file.txt
+$ gzip document.txt
 $ ls
-large_file.txt.gz
+document.txt.gz
 ```
 
 ### 複数ファイルの圧縮
@@ -71,63 +94,79 @@ $ ls
 file1.txt.gz file2.txt.gz file3.txt.gz
 ```
 
-### 圧縮ファイルの展開
+### 元ファイルを保持しながらの圧縮
 
 ```console
-$ gzip -d archive.gz
+$ gzip -k important_data.txt
 $ ls
-archive
+important_data.txt important_data.txt.gz
 ```
 
-### 標準入出力を使った圧縮
+### 展開せずに圧縮ファイルの内容を表示
+
+```console
+$ gzip -c file.txt > file.txt.gz
+$ zcat file.txt.gz
+[file.txtの内容が表示される]
+```
+
+### 標準入力の圧縮
 
 ```console
 $ cat file.txt | gzip > file.txt.gz
-# file.txtの内容を圧縮してfile.txt.gzに保存
 ```
 
 ## ヒント:
 
-### パイプラインでの利用
+### tarとの組み合わせでディレクトリを圧縮
 
-gzipは標準入出力と連携できるため、パイプラインでの処理に適しています。
-
-```console
-$ tar cf - directory | gzip > directory.tar.gz
-# ディレクトリをtarでアーカイブし、gzipで圧縮
-```
-
-### 圧縮率と速度のバランス
-
-大きなファイルを扱う場合、`-1`（高速・低圧縮）から`-9`（低速・高圧縮）までのオプションを状況に応じて選択しましょう。
-
-### ファイルの中身を確認
-
-圧縮ファイルを展開せずに中身を確認するには、`zcat`、`zless`、`zgrep`などの関連コマンドが便利です。
+`gzip`は単一ファイルを圧縮しますが、ディレクトリ全体を圧縮するには`tar`と組み合わせて使用します：
 
 ```console
-$ zcat file.gz
-# 圧縮ファイルの内容を表示
+$ tar -czf archive.tar.gz directory/
 ```
+
+### 圧縮率の確認
+
+`-l`オプションを使用して、ファイルがどの程度圧縮されているかを確認してから、保持するかどうかを決定できます：
+
+```console
+$ gzip -l *.gz
+```
+
+### スクリプトでのgzipパイプの使用
+
+スクリプトやデータ処理での一時的な圧縮には、パイプを使用します：
+
+```console
+$ cat large_file | gzip | ssh remote_server "gunzip > large_file"
+```
+
+### 最適な圧縮レベル
+
+ほとんどのファイルでは、デフォルトの圧縮レベル（-6）が速度と圧縮率のバランスが良いです。ファイルサイズが重要で処理時間が問題にならない場合にのみ-9を使用してください。
 
 ## よくある質問
 
-#### Q1. gzipで圧縮したファイルを展開するには？
-A. `gzip -d ファイル名.gz` または `gunzip ファイル名.gz` を使用します。
+#### Q1. .gzファイルを展開するにはどうすればよいですか？
+A. `gzip -d filename.gz`または同等のコマンド`gunzip filename.gz`を使用します。
 
-#### Q2. 元のファイルを残したまま圧縮するには？
-A. `gzip -k ファイル名` を使用します。
+#### Q2. gzipはディレクトリを圧縮できますか？
+A. いいえ、`gzip`は個々のファイルのみを圧縮します。ディレクトリを圧縮するには、まず`tar`を使用してアーカイブを作成し、その後`gzip`で圧縮するか（または`tar`の`-z`オプションを使用する）必要があります。
 
-#### Q3. 複数のファイルを一つのgzipファイルにまとめるには？
-A. gzip単体ではできません。通常は`tar`と組み合わせて使用します：`tar czf アーカイブ名.tar.gz ファイル名...`
+#### Q3. 展開せずに.gzファイルの内容を表示するにはどうすればよいですか？
+A. 圧縮ファイルの表示用に特別に設計された`zcat`、`zless`、または`zmore`コマンドを使用します。
 
-#### Q4. 圧縮ファイルの内容を確認するには？
-A. `zcat`、`zless`、`zgrep`などのコマンドを使用します。
+#### Q4. gzipは圧縮後に元のファイルを削除しますか？
+A. はい、デフォルトでは`gzip`は元のファイルを圧縮バージョンに置き換えます。元のファイルを保持するには`-k`オプションを使用してください。
 
-## 参考資料
+#### Q5. 圧縮レベルを比較するにはどうすればよいですか？
+A. 異なる数字で`gzip -[1-9] -c file > file.gz`を使用し、`ls -l`で結果のファイルサイズを確認します。
+
+## References
 
 https://www.gnu.org/software/gzip/manual/gzip.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

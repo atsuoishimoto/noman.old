@@ -1,136 +1,125 @@
 # touch コマンド
 
-ファイルのタイムスタンプを更新したり、新しい空のファイルを作成したりします。
+ファイルのタイムスタンプを作成または更新します。
 
 ## 概要
 
-`touch`コマンドは、指定したファイルのアクセス時刻と更新時刻を現在の時刻に変更します。指定したファイルが存在しない場合は、新しい空のファイルを作成します。このコマンドは、ファイルの存在確認や、単純な空ファイルの作成によく使われます。
+`touch`コマンドは、ファイルのタイムスタンプを変更したり、存在しない場合は空のファイルを作成したりするために使用されます。既存ファイルのアクセス時間や更新時間を現在の時刻に更新したり、新しい空のファイルを作成したりする場合によく使われます。
 
 ## オプション
 
-### **-a**
+### **-a, --time=atime, --time=access, --time=use**
 
-ファイルのアクセス時刻のみを変更します。更新時刻は変更されません。
+アクセス時間のみを変更します。
 
 ```console
 $ ls -l file.txt
--rw-r--r--  1 user  staff  0 Apr 29 10:00 file.txt
+-rw-r--r-- 1 user group 0 5月 01 10:00 file.txt
 $ touch -a file.txt
 $ ls -l file.txt
--rw-r--r--  1 user  staff  0 Apr 29 10:00 file.txt  # 更新時刻は変わっていない
+-rw-r--r-- 1 user group 0 5月 01 10:00 file.txt  # 注意: アクセス時間のみが変更され、ls -lでは表示されない
 ```
 
-### **-m**
+### **-c, --no-create**
 
-ファイルの更新時刻のみを変更します。アクセス時刻は変更されません。
-
-```console
-$ ls -l file.txt
--rw-r--r--  1 user  staff  0 Apr 29 10:00 file.txt
-$ touch -m file.txt
-$ ls -l file.txt
--rw-r--r--  1 user  staff  0 Apr 30 15:30 file.txt  # 更新時刻が変更された
-```
-
-### **-c**
-
-ファイルが存在しない場合でも新しいファイルを作成しません。
+存在しないファイルを作成しません。
 
 ```console
 $ touch -c nonexistent.txt
 $ ls nonexistent.txt
-ls: nonexistent.txt: No such file or directory  # ファイルは作成されていない
+ls: 'nonexistent.txt' にアクセスできません: そのようなファイルやディレクトリはありません
 ```
 
-### **-t**
+### **-d, --date=文字列**
 
-指定した時刻にタイムスタンプを設定します。形式は「[[CC]YY]MMDDhhmm[.ss]」です。
+指定した文字列を解析し、現在時刻の代わりに使用します。
 
 ```console
-$ touch -t 202504291200 file.txt
+$ touch -d "2023-12-25 12:00" file.txt
 $ ls -l file.txt
--rw-r--r--  1 user  staff  0 Apr 29 12:00 file.txt  # 指定した時刻に設定された
+-rw-r--r-- 1 user group 0 12月 25 2023 file.txt
 ```
 
-### **-r**
+### **-m, --time=mtime, --time=modify**
 
-参照ファイルと同じタイムスタンプに設定します。
+更新時間のみを変更します。
+
+```console
+$ touch -m file.txt
+$ ls -l file.txt
+-rw-r--r-- 1 user group 0 5月 04 15:30 file.txt  # 更新時間が更新された
+```
+
+### **-r, --reference=ファイル**
+
+現在時刻の代わりに指定したファイルの時刻を使用します。
 
 ```console
 $ ls -l reference.txt
--rw-r--r--  1 user  staff  0 Apr 28 09:30 reference.txt
+-rw-r--r-- 1 user group 0 1月 15 2024 reference.txt
 $ touch -r reference.txt file.txt
 $ ls -l file.txt
--rw-r--r--  1 user  staff  0 Apr 28 09:30 file.txt  # reference.txtと同じタイムスタンプになった
+-rw-r--r-- 1 user group 0 1月 15 2024 file.txt
 ```
 
 ## 使用例
 
-### 新しいファイルの作成
-
-```console
-$ touch newfile.txt
-$ ls -l newfile.txt
--rw-r--r--  1 user  staff  0 Apr 30 15:35 newfile.txt  # 新しい空ファイルが作成された
-```
-
-### 複数ファイルの作成
+### 複数の空ファイルを作成する
 
 ```console
 $ touch file1.txt file2.txt file3.txt
 $ ls
-file1.txt  file2.txt  file3.txt  # 3つのファイルが作成された
+file1.txt  file2.txt  file3.txt
 ```
 
-### ワイルドカードを使用して複数ファイルのタイムスタンプを更新
+### 特定の時間にタイムスタンプを更新する
 
 ```console
-$ touch *.txt
-$ ls -l *.txt
--rw-r--r--  1 user  staff  0 Apr 30 15:40 file1.txt
--rw-r--r--  1 user  staff  0 Apr 30 15:40 file2.txt
--rw-r--r--  1 user  staff  0 Apr 30 15:40 file3.txt  # すべての.txtファイルのタイムスタンプが更新された
+$ touch -d "2 days ago" oldfile.txt
+$ ls -l oldfile.txt
+-rw-r--r-- 1 user group 0 5月 02 15:30 oldfile.txt
+```
+
+### 特定のパーミッションでファイルを作成する
+
+```console
+$ umask 022
+$ touch newfile.txt
+$ ls -l newfile.txt
+-rw-r--r-- 1 user group 0 5月 04 15:30 newfile.txt
 ```
 
 ## ヒント:
 
-### ディレクトリの作成と同時に空ファイルを作成
+### Makefileの依存関係に使用する
 
-```console
-$ mkdir -p new_dir && touch new_dir/empty_file.txt
-$ ls -l new_dir/
--rw-r--r--  1 user  staff  0 Apr 30 15:45 empty_file.txt  # ディレクトリと空ファイルが作成された
-```
+ソフトウェアをビルドする際、`touch`を使用してファイルのタイムスタンプを更新し、Makeのようなビルドシステムでの再ビルドをトリガーしたり回避したりできます。
 
-### ファイルの内容を変更せずにタイムスタンプだけを更新
+### テスト用に特定のタイムスタンプを持つファイルを作成する
 
-ファイルの内容を変更せずに「最終更新日時」だけを更新したい場合に`touch`は便利です。これはビルドシステムやMakefileで依存関係を制御する際に役立ちます。
+日付に依存する機能をテストする場合、`touch -d`を使用して特定のタイムスタンプを持つファイルを作成し、ソートやフィルタリングのテストに使用できます。
 
-### 複数のファイルを一度に作成
+### タイムスタンプの一括更新
 
-```console
-$ touch file{1..10}.txt
-$ ls
-file1.txt  file2.txt  file3.txt  file4.txt  file5.txt  file6.txt  file7.txt  file8.txt  file9.txt  file10.txt
-```
+ワイルドカードを使用して複数のファイルのタイムスタンプを一度に更新できます：`touch *.txt`は現在のディレクトリ内のすべてのテキストファイルを更新します。
+
+### ファイルの存在確認（変更なし）
+
+`touch -c`を使用すると、存在しない場合に作成せずにファイルの存在を確認できます。
 
 ## よくある質問
 
-#### Q1. touchコマンドの主な用途は何ですか？
-A. 空のファイルを新規作成することと、既存ファイルのタイムスタンプ（アクセス時刻・更新時刻）を更新することです。
+#### Q1. すでに存在するファイルをtouchするとどうなりますか？
+A. ファイルの内容を変更せずに、アクセス時間と更新時間を現在の時刻に更新します。
 
-#### Q2. すでに存在するファイルにtouchを使うとどうなりますか？
-A. ファイルの内容は変更されず、タイムスタンプ（アクセス時刻と更新時刻）のみが現在の時刻に更新されます。
+#### Q2. touchでディレクトリを作成できますか？
+A. いいえ、`touch`はファイルのみ作成でき、ディレクトリは作成できません。ディレクトリを作成するには`mkdir`を使用してください。
 
-#### Q3. 特定の日時にタイムスタンプを設定するにはどうすればよいですか？
-A. `-t`オプションを使用して、`touch -t YYYYMMDDhhmm.ss filename`の形式で指定できます。例えば、`touch -t 202504291200 file.txt`とします。
+#### Q3. 特定のタイムスタンプを持つファイルを作成するにはどうすればよいですか？
+A. `touch -d "YYYY-MM-DD HH:MM:SS" ファイル名`を使用して特定のタイムスタンプを設定できます。
 
-#### Q4. 既存のファイルと同じタイムスタンプを別のファイルに設定するには？
-A. `-r`オプションを使用します。例：`touch -r reference.txt target.txt`
-
-## macOSでの注意点
-
-macOSのtouchコマンドはGNU版と若干の違いがありますが、基本的な機能は同じです。ただし、一部のGNUオプション（例：`--date`）はmacOSでは使用できない場合があります。また、macOSでは`-A`オプションを使用して相対的な時間調整が可能です。
+#### Q4. touchはファイルのパーミッションを変更しますか？
+A. いいえ、`touch`はタイムスタンプのみに影響します。新しいファイルを作成する場合は、umask設定に基づいたデフォルトのパーミッションで作成されます。
 
 ## 参考資料
 
@@ -138,4 +127,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/touch-invocation.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

@@ -49,58 +49,77 @@
   <h1>chsh コマンド</h1>
 <p>ユーザーのログインシェルを変更します。</p>
 <h2>概要</h2>
-<p><code>chsh</code>（change shell）コマンドは、ユーザーのログインシェルを変更するためのコマンドです。ログインシェルとは、ユーザーがログインした際に自動的に起動されるシェルプログラムのことです。このコマンドを使用することで、bash、zsh、fishなど、システムにインストールされている別のシェルに切り替えることができます。</p>
+<p><code>chsh</code>コマンドは、ユーザーがログインシェル（ログイン時に起動するコマンドインタープリタ）を変更できるようにします。このコマンドはパスワードファイル内のユーザーエントリを修正し、システムにログインしたときに実行されるシェルプログラムを設定します。一般ユーザーは自分自身のシェルのみを変更できますが、スーパーユーザー（root）は任意のユーザーのシェルを変更できます。</p>
 <h2>オプション</h2>
-<h3><strong>-s, --shell</strong></h3>
-<p>新しいログインシェルを指定します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chsh<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/bin/zsh
-<span style="color: #000; font-style: italic">パスワード: </span>
-<span style="color: #000; font-style: italic">シェルを変更しました。</span>
+<h3><strong>-s, --shell シェル</strong></h3>
+<p>使用するログインシェルを指定します。指定するシェルは、スーパーユーザーでない限り、/etc/shellsファイルに記載されている必要があります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chsh<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/bin/bash
+<span style="color: #000; font-style: italic">Password: </span>
+<span style="color: #000; font-style: italic">Shell changed.</span>
 </pre></div>
 <h3><strong>-l, --list-shells</strong></h3>
-<p>システムで利用可能なシェルの一覧を表示します。</p>
+<p>/etc/shellsファイルに記載されているシェルの一覧を表示して終了します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chsh<span style="color: #F8F8F8"> </span>-l
+<span style="color: #000; font-style: italic">/bin/sh</span>
 <span style="color: #000; font-style: italic">/bin/bash</span>
+<span style="color: #000; font-style: italic">/bin/rbash</span>
 <span style="color: #000; font-style: italic">/bin/dash</span>
 <span style="color: #000; font-style: italic">/bin/zsh</span>
+<span style="color: #000; font-style: italic">/usr/bin/zsh</span>
 <span style="color: #000; font-style: italic">/usr/bin/fish</span>
 </pre></div>
-<h2>使用例</h2>
-<h3>自分のログインシェルを変更する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chsh<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/bin/zsh
-<span style="color: #000; font-style: italic">パスワード: </span>
-<span style="color: #000; font-style: italic">シェルを変更しました。</span>
+<h3><strong>-h, --help</strong></h3>
+<p>ヘルプメッセージを表示して終了します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chsh<span style="color: #F8F8F8"> </span>--help
+<span style="color: #000; font-style: italic">Usage: chsh [options] [LOGIN]</span>
+
+<span style="color: #000; font-style: italic">Options:</span>
+<span style="color: #000; font-style: italic">  -h, --help                    display this help message and exit</span>
+<span style="color: #000; font-style: italic">  -s, --shell SHELL             specify login shell</span>
+<span style="color: #000; font-style: italic">  -l, --list-shells             print list of shells and exit</span>
+
+<span style="color: #000; font-style: italic">For more details see chsh(1).</span>
 </pre></div>
-<h3>他のユーザーのシェルを変更する（rootユーザーのみ）</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>chsh<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/bin/bash<span style="color: #F8F8F8"> </span>username
+<h2>使用例</h2>
+<h3>自分のシェルをzshに変更する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chsh<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/usr/bin/zsh
+<span style="color: #000; font-style: italic">Password: </span>
+<span style="color: #000; font-style: italic">Shell changed.</span>
+</pre></div>
+<h3>他のユーザーのシェルを変更する（root権限が必要）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>chsh<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/bin/bash<span style="color: #F8F8F8"> </span>ユーザー名
+<span style="color: #000; font-style: italic">[sudo] password for current_user: </span>
+<span style="color: #000; font-style: italic">Shell changed.</span>
 </pre></div>
 <h3>現在のシェルを確認する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$SHELL</span>
 <span style="color: #000; font-style: italic">/bin/bash</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>システムに登録されているシェルのみ使用可能</h3>
-<p><code>chsh</code>コマンドでは、<code>/etc/shells</code>ファイルに登録されているシェルのみ使用できます。カスタムシェルを使用したい場合は、まずこのファイルに追加する必要があります。</p>
-<h3>変更の反映</h3>
-<p>シェルの変更はログアウトして再ログインした後に反映されます。現在のセッションには影響しません。</p>
-<h3>シェルのパスを正確に指定する</h3>
-<p>シェルを変更する際は、シェルの完全なパス（例：<code>/bin/zsh</code>）を指定する必要があります。シェル名だけ（例：<code>zsh</code>）では動作しません。</p>
+<h3>利用可能なシェルを事前に確認する</h3>
+<p>シェルを変更する前に、必ず<code>chsh -l</code>を使用してシステムで利用可能なシェルを確認してください。rootでない限り、<code>/etc/shells</code>に記載されているシェルのみをログインシェルとして設定できます。</p>
+<h3>シェルの変更は次回ログイン時に反映される</h3>
+<p>シェルの変更はログアウトして再度ログインするまで反映されません。現在のターミナルセッションは以前のシェルを使用し続けます。</p>
+<h3>互換性のないシェルを設定しない</h3>
+<p>システムに存在しないシェルや、使い方に慣れていないシェルを設定しないよう注意してください。無効なシェルを設定すると、ログインできなくなる可能性があります。</p>
+<h3>設定ファイルをバックアップする</h3>
+<p>シェルを変更する前に、シェル固有の設定ファイル（<code>.bashrc</code>や<code>.zshrc</code>など）をバックアップしておくと、必要に応じて設定を復元できます。</p>
 <h2>よくある質問</h2>
-<h4>Q1. シェルを変更した後、変更を反映するにはどうすればよいですか？</h4>
-<p>A. ログアウトして再ログインすると、新しいシェルが使用されます。</p>
-<h4>Q2. 利用可能なシェルの一覧はどこで確認できますか？</h4>
-<p>A. <code>chsh -l</code>コマンドを実行するか、<code>/etc/shells</code>ファイルの内容を確認してください。</p>
-<h4>Q3. シェル変更に失敗する場合はどうすればよいですか？</h4>
-<p>A. 指定したシェルが<code>/etc/shells</code>に登録されていることを確認してください。また、正しいパスワードを入力していることも確認してください。</p>
-<h4>Q4. 元のシェルに戻すにはどうすればよいですか？</h4>
-<p>A. 同じ<code>chsh</code>コマンドを使用して、元のシェルのパスを指定します（例：<code>chsh -s /bin/bash</code>）。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは、システム環境設定の「ユーザとグループ」からもログインシェルを変更できます。また、macOSのデフォルトシェルはzshになっています（Catalina以降）。Homebrewでインストールしたシェルを使用する場合は、そのパスを<code>/etc/shells</code>に追加する必要があります。</p>
-<h2>参考文献</h2>
-<p>https://linux.die.net/man/1/chsh</p>
+<h4>Q1. 現在使用しているシェルを確認するにはどうすればよいですか？</h4>
+<p>A. <code>echo $SHELL</code>を実行すると、現在のログインシェルを確認できます。これは設定されたログインシェルを表示するもので、必ずしも現在のセッションのシェルを示すわけではないことに注意してください。</p>
+<h4>Q2. どんなプログラムでもシェルとして使用できますか？</h4>
+<p>A. いいえ、セキュリティ上の理由から、スーパーユーザーでない限り、<code>/etc/shells</code>ファイルに記載されているシェルのみを使用できます。</p>
+<h4>Q3. 新しいシェルを利用可能なオプションに追加するにはどうすればよいですか？</h4>
+<p>A. シェルパッケージをインストールし、そのパスを<code>/etc/shells</code>に追加します（root権限が必要です）。</p>
+<h4>Q4. 無効なシェルを設定するとどうなりますか？</h4>
+<p>A. 存在しないか実行できないシェルを設定すると、通常の方法でログインできなくなる可能性があります。リカバリーモードから修正するか、管理者に元に戻してもらう必要があります。</p>
+<h4>Q5. シェルを変更した後、コンピュータを再起動する必要がありますか？</h4>
+<p>A. いいえ、変更を反映させるには、ログアウトして再度ログインするだけで十分です。</p>
+<h2>参考資料</h2>
+<p>https://man7.org/linux/man-pages/man1/chsh.1.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

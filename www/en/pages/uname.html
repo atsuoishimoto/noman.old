@@ -49,79 +49,89 @@
   <h1>uname command</h1>
 <p>Print system information about the operating system.</p>
 <h2>Overview</h2>
-<p>The <code>uname</code> command displays information about the system, including the operating system name, hostname, kernel version, and hardware architecture. It's commonly used in shell scripts to determine the operating system type or version for compatibility checks.</p>
+<p>The <code>uname</code> command displays system information about the operating system running on your computer. It can show details such as the kernel name, network hostname, kernel release, kernel version, machine hardware, processor type, and operating system.</p>
 <h2>Options</h2>
 <h3><strong>-a, --all</strong></h3>
-<p>Print all available system information (combination of all options)</p>
+<p>Print all information in the following order: kernel name, network hostname, kernel release, kernel version, machine hardware, processor type, and operating system.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-a
-<span style="color: #000; font-style: italic">Darwin MacBook-Pro.local 22.5.0 Darwin Kernel Version 22.5.0: Mon Apr 24 20:52:24 PDT 2023; root:xnu-8796.121.2~5/RELEASE_ARM64_T6000 arm64</span>
+<span style="color: #000; font-style: italic">Linux hostname 5.15.0-91-generic #101-Ubuntu SMP Tue Apr 16 14:15:57 UTC 2024 x86_64 x86_64 GNU/Linux</span>
 </pre></div>
 <h3><strong>-s, --kernel-name</strong></h3>
-<p>Print the kernel name (default option if none specified)</p>
+<p>Print the kernel name. This is the default if no option is specified.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-s
-<span style="color: #000; font-style: italic">Darwin</span>
+<span style="color: #000; font-style: italic">Linux</span>
 </pre></div>
 <h3><strong>-n, --nodename</strong></h3>
-<p>Print the network node hostname</p>
+<p>Print the network node hostname.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-n
-<span style="color: #000; font-style: italic">MacBook-Pro.local</span>
+<span style="color: #000; font-style: italic">hostname</span>
 </pre></div>
 <h3><strong>-r, --kernel-release</strong></h3>
-<p>Print the kernel release</p>
+<p>Print the kernel release.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-r
-<span style="color: #000; font-style: italic">22.5.0</span>
+<span style="color: #000; font-style: italic">5.15.0-91-generic</span>
 </pre></div>
 <h3><strong>-v, --kernel-version</strong></h3>
-<p>Print the kernel version</p>
+<p>Print the kernel version.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-v
-<span style="color: #000; font-style: italic">Darwin Kernel Version 22.5.0: Mon Apr 24 20:52:24 PDT 2023; root:xnu-8796.121.2~5/RELEASE_ARM64_T6000</span>
+<span style="color: #8F5902">#</span><span style="color: #0000CF; font-weight: bold">101</span>-Ubuntu<span style="color: #F8F8F8"> </span>SMP<span style="color: #F8F8F8"> </span>Tue<span style="color: #F8F8F8"> </span>Apr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">16</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">14</span>:15:57<span style="color: #F8F8F8"> </span>UTC<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2024</span>
 </pre></div>
 <h3><strong>-m, --machine</strong></h3>
-<p>Print the machine hardware name (architecture)</p>
+<p>Print the machine hardware name.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-m
-<span style="color: #000; font-style: italic">arm64</span>
+<span style="color: #000; font-style: italic">x86_64</span>
+</pre></div>
+<h3><strong>-p, --processor</strong></h3>
+<p>Print the processor type (or &quot;unknown&quot; if it cannot be determined).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-p
+<span style="color: #000; font-style: italic">x86_64</span>
+</pre></div>
+<h3><strong>-o, --operating-system</strong></h3>
+<p>Print the operating system.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-o
+<span style="color: #000; font-style: italic">GNU/Linux</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Checking OS type in a script</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">$(</span>uname<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Darwin&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;This is macOS&quot;</span>
-<span style="color: #000; font-style: italic">&gt; else</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;This is not macOS&quot;</span>
-<span style="color: #000; font-style: italic">&gt; fi</span>
-<span style="color: #000; font-style: italic">This is macOS</span>
+<h3>Checking kernel version for compatibility</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-r
+<span style="color: #000; font-style: italic">5.15.0-91-generic</span>
 </pre></div>
-<h3>Getting kernel version and architecture</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-rv
-<span style="color: #000; font-style: italic">Darwin Kernel Version 22.5.0: Mon Apr 24 20:52:24 PDT 2023; root:xnu-8796.121.2~5/RELEASE_ARM64_T6000 22.5.0</span>
+<h3>Getting complete system information</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">Linux hostname 5.15.0-91-generic #101-Ubuntu SMP Tue Apr 16 14:15:57 UTC 2024 x86_64 x86_64 GNU/Linux</span>
+</pre></div>
+<h3>Checking architecture for software installation</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-m
+<span style="color: #000; font-style: italic">x86_64</span>
 </pre></div>
 <h2>Tips</h2>
-<h3>Use in Shell Scripts for Cross-Platform Compatibility</h3>
-<p>The <code>uname</code> command is particularly useful in shell scripts that need to run on multiple platforms. You can use it to detect the operating system and execute platform-specific commands.</p>
 <h3>Combine with Other Commands</h3>
-<p>Pair <code>uname</code> with commands like <code>sw_vers</code> on macOS to get more detailed system information:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span>sw_vers
-<span style="color: #000; font-style: italic">arm64</span>
-<span style="color: #000; font-style: italic">ProductName:		macOS</span>
-<span style="color: #000; font-style: italic">ProductVersion:		13.4</span>
-<span style="color: #000; font-style: italic">BuildVersion:		22F66</span>
+<p>Combine <code>uname</code> with other commands like <code>lsb_release</code> to get more detailed distribution information:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>uname<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span>lsb_release<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">5.15.0-91-generic</span>
+<span style="color: #000; font-style: italic">No LSB modules are available.</span>
+<span style="color: #000; font-style: italic">Distributor ID: Ubuntu</span>
+<span style="color: #000; font-style: italic">Description:    Ubuntu 22.04.3 LTS</span>
+<span style="color: #000; font-style: italic">Release:        22.04</span>
+<span style="color: #000; font-style: italic">Codename:       jammy</span>
 </pre></div>
-<h3>Remember Platform Differences</h3>
-<p>Output format varies between Unix-like systems. For example, Linux systems will show &quot;Linux&quot; as the kernel name, while macOS shows &quot;Darwin&quot;.</p>
+<h3>Use in Scripts</h3>
+<p>The <code>uname</code> command is particularly useful in shell scripts to determine the operating system or architecture before performing system-specific operations.</p>
+<h3>macOS Considerations</h3>
+<p>On macOS, <code>uname -s</code> will return &quot;Darwin&quot; instead of &quot;Linux&quot;, and some options like <code>-o</code> may not be available or may behave differently.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between <code>uname -s</code> and <code>uname</code>?</h4>
-<p>A. There is no difference. When run without options, <code>uname</code> defaults to the <code>-s</code> option, displaying just the kernel name.</p>
-<h4>Q2. How can I tell if I'm on a 32-bit or 64-bit system?</h4>
-<p>A. Use <code>uname -m</code>. On 64-bit systems, you'll typically see &quot;x86_64&quot; for Intel/AMD processors or &quot;arm64&quot; for ARM processors.</p>
-<h4>Q3. Why does macOS show &quot;Darwin&quot; instead of &quot;macOS&quot;?</h4>
-<p>A. Darwin is the name of the core Unix-based operating system that underlies macOS. The <code>uname</code> command reports the kernel name, not the commercial product name.</p>
-<h4>Q4. How can I get the macOS version instead of kernel version?</h4>
-<p>A. Use the <code>sw_vers</code> command, which is specific to macOS and shows the product name, version, and build.</p>
+<h4>Q1. How do I check which Linux kernel version I'm running?</h4>
+<p>A. Use <code>uname -r</code> to display the kernel release version.</p>
+<h4>Q2. How can I tell if my system is 32-bit or 64-bit?</h4>
+<p>A. Use <code>uname -m</code> to show the machine hardware name. &quot;x86_64&quot; indicates a 64-bit system, while &quot;i686&quot; or &quot;i386&quot; indicates a 32-bit system.</p>
+<h4>Q3. What's the difference between <code>uname -r</code> and <code>uname -v</code>?</h4>
+<p>A. <code>uname -r</code> shows the kernel release (like &quot;5.15.0-91-generic&quot;), while <code>uname -v</code> shows the kernel version, which typically includes build information (like &quot;#101-Ubuntu SMP Tue Apr 16 14:15:57 UTC 2024&quot;).</p>
+<h4>Q4. Why does <code>uname -p</code> sometimes return &quot;unknown&quot;?</h4>
+<p>A. The processor type might not be determinable on some systems, in which case &quot;unknown&quot; is returned.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/uname-invocation.html</p>
 <h2>Revisions</h2>
-<ul>
-<li>2025/04/30 First revision</li>
-</ul>
+<p>2025/05/04 First revision</p>
 
 
     </main>

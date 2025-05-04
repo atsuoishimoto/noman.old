@@ -1,134 +1,169 @@
 # gunzip コマンド
 
-圧縮ファイルを展開するコマンドです。
+gzipで圧縮されたファイルを展開します。
 
 ## 概要
 
-`gunzip`は、gzipで圧縮されたファイルを元の状態に戻すコマンドです。デフォルトでは、元のファイルを展開した後に圧縮ファイルを削除します。主に`.gz`拡張子を持つファイルの展開に使用されます。
+`gunzip`は、`gzip`プログラムで以前に圧縮されたファイルを展開するユーティリティです。デフォルトでは、元のファイルを復元し、圧縮されたバージョンを削除します。`.gz`、`.z`、`.taz`、`.tgz`、`.tz`などの拡張子を持つファイルに対応しています。
 
 ## オプション
 
 ### **-c, --stdout, --to-stdout**
 
-展開したデータを標準出力に出力し、元の圧縮ファイルを保持します。
+出力を標準出力に書き込み、元のファイルを変更せずに保持します。
 
 ```console
 $ gunzip -c archive.gz > extracted_file
-# 圧縮ファイルを保持したまま内容を展開して別ファイルに保存
 ```
 
 ### **-f, --force**
 
-強制的に展開を行います。既に同名のファイルが存在する場合でも上書きします。
+ファイルに複数のリンクがある場合や、対応するファイルがすでに存在する場合でも強制的に展開します。
 
 ```console
 $ gunzip -f already_exists.gz
-# 同名ファイルが存在しても強制的に展開
 ```
 
 ### **-k, --keep**
 
-展開後も元の圧縮ファイルを保持します。
+展開中に入力ファイルを保持（削除しない）します。
 
 ```console
 $ gunzip -k archive.gz
-# archive.gzを展開し、展開後もarchive.gzを残す
+$ ls
+archive  archive.gz
 ```
 
 ### **-l, --list**
 
-圧縮ファイル内の情報を表示します。ファイルを展開せずに内容の情報を確認できます。
+展開せずに圧縮ファイルの内容を一覧表示します。
 
 ```console
 $ gunzip -l archive.gz
          compressed        uncompressed  ratio uncompressed_name
-                547                1536  64.4% archive
+                547                 1213  54.9% archive
+```
+
+### **-q, --quiet**
+
+すべての警告を抑制します。
+
+```console
+$ gunzip -q archive.gz
 ```
 
 ### **-r, --recursive**
 
-ディレクトリを再帰的に処理し、すべてのサブディレクトリ内の圧縮ファイルも展開します。
+ディレクトリ内のファイルを再帰的に展開します。
 
 ```console
-$ gunzip -r directory/
-# directory内のすべての.gzファイルを再帰的に展開
+$ gunzip -r directory_with_gz_files/
+```
+
+### **-t, --test**
+
+展開せずに圧縮ファイルの整合性をテストします。
+
+```console
+$ gunzip -t archive.gz
+```
+
+### **-v, --verbose**
+
+展開された各ファイルの名前と圧縮率を表示します。
+
+```console
+$ gunzip -v archive.gz
+archive.gz:	 54.9% -- replaced with archive
 ```
 
 ## 使用例
 
-### 基本的な使い方
+### 基本的な展開
 
 ```console
 $ gunzip archive.gz
-# archive.gzを展開してarchiveファイルを作成し、archive.gzは削除される
+$ ls
+archive
 ```
 
 ### 複数ファイルの展開
 
 ```console
 $ gunzip file1.gz file2.gz file3.gz
-# 複数のファイルを一度に展開
+$ ls
+file1 file2 file3
 ```
 
-### 圧縮ファイルを保持したまま展開
+### 元のファイルを保持しながら展開
 
 ```console
-$ gunzip -k large_file.gz
-# large_file.gzを展開し、large_fileを作成。large_file.gzも保持される
+$ gunzip -k important_backup.gz
+$ ls
+important_backup important_backup.gz
 ```
 
-### 標準出力への展開
+### アーカイブの整合性テスト
 
 ```console
-$ gunzip -c config.gz | grep "setting"
-# config.gzを展開して標準出力に送り、grepでフィルタリング
+$ gunzip -tv archive.gz
+archive.gz: OK
 ```
 
 ## ヒント:
 
-### 拡張子の自動処理
+### tarファイルとの使用
 
-`gunzip`は自動的に`.gz`拡張子を削除します。例えば、`file.txt.gz`は展開すると`file.txt`になります。
+`.tar.gz`や`.tgz`ファイルの場合、`gunzip`の後に`tar`を使用できます：
 
-### 複数の圧縮形式への対応
+```console
+$ gunzip archive.tar.gz
+$ tar xf archive.tar
+```
 
-多くのシステムでは、`gunzip`は`gzip -d`と同等です。また、`zcat`は`gunzip -c`と同等の機能を持ちます。
+あるいは、より効率的に`tar`の`z`オプションを直接使用します：
 
-### パイプラインでの使用
+```console
+$ tar xzf archive.tar.gz
+```
 
-`gunzip -c`を使うと、圧縮ファイルを展開してその内容を他のコマンドに渡すことができます。これはログファイルの分析などに便利です。
+### 他のコマンドに直接パイプする
 
-### 大きなファイルの処理
+`-c`を使用して、中間ファイルを作成せずに展開して別のコマンドにパイプできます：
 
-非常に大きなファイルを展開する場合は、十分なディスク容量があることを確認してください。圧縮ファイルは展開すると元のサイズに戻ります。
+```console
+$ gunzip -c logs.gz | grep "error"
+```
+
+### 複数の圧縮形式の処理
+
+圧縮形式が不明な場合は、複数の形式に対応する`zcat`の使用を検討してください：
+
+```console
+$ zcat file.gz > uncompressed_file
+```
 
 ## よくある質問
 
 #### Q1. `gunzip`と`gzip -d`の違いは何ですか？
-A. 機能的には同じです。`gunzip`は`gzip -d`のエイリアスとして実装されていることが多いです。
+A. 機能的には同等です。`gunzip`は基本的に`gzip -d`へのシンボリックリンクです。
 
-#### Q2. 展開したファイルと圧縮ファイルの両方を保持するにはどうすればいいですか？
-A. `gunzip -k`（または`--keep`）オプションを使用すると、展開後も元の圧縮ファイルが保持されます。
+#### Q2. 元の圧縮ファイルを削除せずにファイルを展開するにはどうすればよいですか？
+A. `-k`または`--keep`オプションを使用します：`gunzip -k file.gz`
 
-#### Q3. 圧縮ファイルの内容を確認するだけで展開したくない場合はどうすればいいですか？
-A. `gunzip -l`（または`--list`）オプションを使用すると、ファイルを展開せずに圧縮ファイルの情報を表示できます。
+#### Q3. `gunzip`は複数の圧縮形式を処理できますか？
+A. いいえ、`gunzip`は特にgzip圧縮ファイル用です。他の形式には、`bunzip2`（bzip2用）や`unxz`（xz用）などのツールを使用してください。
 
-#### Q4. 標準入力から圧縮データを受け取って展開するにはどうすればいいですか？
-A. `gunzip`に引数を指定せずに使用すると、標準入力からデータを読み取り、展開します。例：`cat file.gz | gunzip > extracted_file`
+#### Q4. 展開せずにgzipファイルの内容を確認するにはどうすればよいですか？
+A. `gunzip -l file.gz`を使用して、圧縮ファイルに関する情報を一覧表示します。
 
-## macOSでの注意点
+#### Q5. ファイルを別の名前に展開するにはどうすればよいですか？
+A. `-c`オプションを使用して出力をリダイレクトします：`gunzip -c file.gz > newname`
 
-macOSの`gunzip`はGNU版と若干の違いがあります。特に`-r`（再帰）オプションがない場合があります。代わりに`find`コマンドと組み合わせて使用することができます：
-
-```console
-$ find . -name "*.gz" -exec gunzip {} \;
-# カレントディレクトリ以下のすべての.gzファイルを再帰的に展開
-```
-
-## 参照
+## 参考文献
 
 https://www.gnu.org/software/gzip/manual/gzip.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

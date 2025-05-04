@@ -1,137 +1,178 @@
 # diff コマンド
 
-ファイル間の違いを比較して表示します。
+ファイルを行ごとに比較します。
 
 ## 概要
 
-`diff` コマンドは2つのファイルを行ごとに比較し、その違いを表示します。テキストファイルの変更点を確認したり、コードの修正箇所を特定したりする際に非常に便利です。デフォルトでは、異なる行を含むブロックと、それらがどのように変更されたかを示します。
+`diff` コマンドは2つのファイルやディレクトリを比較し、その違いを表示します。ファイルの変更内容の確認、パッチファイルの作成、設定ファイルの比較などによく使用されます。出力結果は、ファイルを同一にするために変更が必要な行を示します。
 
 ## オプション
 
-### **-u（統合形式）**
+### **-u, --unified**
 
-変更された行の前後にコンテキスト（変更されていない行）も含めて表示します。これにより変更内容を理解しやすくなります。
+統一フォーマットで差分を出力し、変更箇所の前後に文脈を表示します。これは最も読みやすく、一般的に使用されるフォーマットです。
 
 ```console
 $ diff -u file1.txt file2.txt
---- file1.txt	2025-04-30 10:00:00.000000000 +0900
-+++ file2.txt	2025-04-30 10:05:00.000000000 +0900
+--- file1.txt	2025-05-04 10:00:00.000000000 -0400
++++ file2.txt	2025-05-04 10:30:00.000000000 -0400
 @@ -1,3 +1,4 @@
- これは最初の行です。
--これは削除される行です。
-+これは変更された行です。
- これは最後の行です。
-+これは追加された行です。
+ This is a test file.
+-It has some content.
++It has some modified content.
+ The end of the file.
++A new line was added.
 ```
 
-### **-i（大文字小文字を無視）**
+### **-i, --ignore-case**
 
-大文字と小文字の違いを無視して比較します。
+ファイル比較時に大文字と小文字の違いを無視します。
 
 ```console
 $ diff -i uppercase.txt lowercase.txt
-$ # 大文字小文字のみが異なる場合は何も出力されない
+[大文字小文字のみが異なる場合は出力なし]
 ```
 
-### **-r（再帰的に比較）**
+### **-b, --ignore-space-change**
 
-ディレクトリを再帰的に比較します。サブディレクトリ内のファイルも含めて比較します。
+空白の量の変化を無視します。
+
+```console
+$ diff -b spaced.txt compact.txt
+[スペースの違いのみの場合は出力なし]
+```
+
+### **-w, --ignore-all-space**
+
+行を比較する際にすべての空白を無視します。
+
+```console
+$ diff -w file1.txt file2.txt
+[空白のみが異なる場合は出力なし]
+```
+
+### **-r, --recursive**
+
+見つかったサブディレクトリを再帰的に比較します。
 
 ```console
 $ diff -r dir1 dir2
-diff -r dir1/file.txt dir2/file.txt
-2c2
-< これは dir1 のファイルです。
+Only in dir1: unique_file1.txt
+Only in dir2: unique_file2.txt
+diff -r dir1/common.txt dir2/common.txt
+1c1
+< Original content
 ---
-> これは dir2 のファイルです。
+> Modified content
 ```
 
-### **-y（並列表示）**
+### **-q, --brief**
 
-2つのファイルを並べて表示し、違いを視覚的に確認しやすくします。
+ファイルが異なるかどうかのみを報告し、違いの詳細は表示しません。
 
 ```console
-$ diff -y file1.txt file2.txt
-これは最初の行です。                  これは最初の行です。
-これは削除される行です。             | これは変更された行です。
-これは最後の行です。                  これは最後の行です。
-                                    > これは追加された行です。
+$ diff -q file1.txt file2.txt
+Files file1.txt and file2.txt differ
 ```
 
 ## 使用例
 
-### 基本的な比較
+### 基本的なファイル比較
 
 ```console
-$ cat file1.txt
-Hello
-World
-$ cat file2.txt
-Hello
-Beautiful
-World
 $ diff file1.txt file2.txt
-1a2
-> Beautiful
+2c2
+< It has some content.
+---
+> It has some modified content.
+3a4
+> A new line was added.
 ```
 
-### 変更内容をパッチファイルとして保存
+### パッチファイルの作成
 
 ```console
 $ diff -u original.txt modified.txt > changes.patch
-$ # 変更内容がパッチファイルとして保存される
+$ patch original.txt < changes.patch
+patching file original.txt
 ```
 
 ### ディレクトリの比較
 
 ```console
 $ diff -r project_v1 project_v2
-# 2つのプロジェクトディレクトリ間の違いが表示される
+Only in project_v2: new_feature.py
+diff -r project_v1/main.py project_v2/main.py
+10c10,12
+< print("Hello World")
+---
+> print("Hello World!")
+> print("Version 2.0")
+> print("Copyright 2025")
+```
+
+### 横並び比較
+
+```console
+$ diff -y file1.txt file2.txt
+This is a test file.                 This is a test file.
+It has some content.               | It has some modified content.
+The end of the file.                 The end of the file.
+                                   > A new line was added.
 ```
 
 ## ヒント:
 
-### 出力の読み方
+### 読みやすさを向上させるためのカラー表示
 
-`diff`の基本出力では、`<`は最初のファイルの行、`>`は2番目のファイルの行を示します。`a`（追加）、`c`（変更）、`d`（削除）の記号は変更の種類を表します。
+多くのシステムには `colordiff` がインストールされており、diff出力にカラーハイライトを追加できます：
 
-### パッチの適用
-
-`diff -u`で作成したパッチファイルは、`patch`コマンドで適用できます：
 ```console
-$ patch original.txt < changes.patch
+$ colordiff -u file1.txt file2.txt
 ```
 
-### 色付き出力
+### コンテキスト制御
 
-多くのシステムでは、`diff --color`を使用すると変更箇所が色分けされて表示されます。
+`-U NUM` または `--unified=NUM` で表示されるコンテキストの量を制御できます：
 
-### バイナリファイルの比較
+```console
+$ diff -U1 file1.txt file2.txt
+```
 
-テキストファイル以外を比較する場合は、`cmp`コマンドや`hexdump`と組み合わせた方法を検討してください。
+### バージョン管理ファイルを無視する
+
+ディレクトリを比較する際に、`--exclude=PATTERN` を使用して特定のファイルを無視できます：
+
+```console
+$ diff -r --exclude=".git" dir1 dir2
+```
+
+### バージョン管理システムでの使用
+
+バージョン管理システムには独自のdiffツールがありますが、外部diffを使用することもできます：
+
+```console
+$ git diff --no-index --external-diff=diff -u file1.txt file2.txt
+```
 
 ## よくある質問
 
-#### Q1. `diff`と`git diff`の違いは何ですか？
-A. `diff`は基本的なファイル比較ツールで、`git diff`はGitリポジトリ内の変更を表示するためのGit固有のコマンドです。`git diff`はGitの追跡情報を利用して、より詳細な変更履歴を提供します。
+#### Q1. diffの出力に表示される記号の意味は何ですか？
+A. 通常の出力では、`a`は追加、`d`は削除、`c`は変更を意味します。`<`で始まる行は最初のファイルからの行、`>`は2番目のファイルからの行、`---`は変更を区切ります。
 
-#### Q2. 大きなファイルを比較する場合、パフォーマンスの問題はありますか？
-A. はい、非常に大きなファイルを比較する場合、`diff`は遅くなることがあります。そのような場合は、`comm`や`cmp`などの代替コマンドを検討するか、ファイルを分割して比較することをお勧めします。
+#### Q2. diffの出力をより読みやすくするにはどうすればよいですか？
+A. 統一フォーマット（`-u`）または横並びフォーマット（`-y`）を使用してください。カラー出力には、可能であれば`colordiff`を使用します。
 
-#### Q3. バイナリファイルを比較できますか？
-A. `diff`は主にテキストファイル用に設計されています。バイナリファイルを比較するには、`cmp`や`hexdump`と組み合わせた方法、または専用のバイナリ比較ツールを使用することをお勧めします。
+#### Q3. 後で適用できるパッチファイルを作成するにはどうすればよいですか？
+A. `diff -u 元のファイル 変更後のファイル > パッチファイル.patch`を使用し、その後`patch 元のファイル < パッチファイル.patch`で適用します。
 
-#### Q4. 3つ以上のファイルを比較できますか？
-A. 標準の`diff`は2つのファイルのみを比較します。3つ以上のファイルを比較するには、`diff3`コマンドや、より高度な比較ツール（例：`meld`、`kdiff3`）を使用してください。
+#### Q4. diffはバイナリファイルを比較できますか？
+A. デフォルトでは、diffはテキストファイル用です。バイナリファイルの場合は、`cmp`や`xxdiff`、`hexdump`とdiffを組み合わせた特殊なツールの使用を検討してください。
 
-## macOSでの注意点
-
-macOSの`diff`はGNU版と若干の違いがあります。特に`--color`オプションがない場合があります。カラー出力が必要な場合は、Homebrewで`colordiff`をインストールするか、GNU版の`diff`（`gdiff`）をインストールすることを検討してください。
-
-## 参考情報
+## 参考資料
 
 https://www.gnu.org/software/diffutils/manual/html_node/diff.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

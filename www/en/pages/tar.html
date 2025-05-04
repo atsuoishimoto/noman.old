@@ -47,97 +47,97 @@
     <main>
       
   <h1>tar command</h1>
-<p>Archive files and directories into a single file, with optional compression.</p>
+<p>Manipulate tape archives by creating, extracting, or listing the contents of archive files.</p>
 <h2>Overview</h2>
-<p>The <code>tar</code> command creates, extracts, and manipulates archive files. It can combine multiple files and directories into a single file (tarball) while preserving file permissions, ownership, and directory structures. It also supports various compression methods like gzip, bzip2, and xz to reduce archive size.</p>
+<p>The <code>tar</code> command creates, maintains, and extracts files from archive files known as tarballs. It's commonly used for bundling files together for backup, distribution, or compression. The name &quot;tar&quot; stands for &quot;tape archive,&quot; reflecting its original purpose for tape backups, though it's now primarily used with regular files.</p>
 <h2>Options</h2>
-<h3><strong>-c (create)</strong></h3>
+<h3><strong>-c, --create</strong></h3>
 <p>Create a new archive</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-cf<span style="color: #F8F8F8"> </span>archive.tar<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>directory/
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>archive.tar<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
 </pre></div>
-<h3><strong>-x (extract)</strong></h3>
+<h3><strong>-x, --extract</strong></h3>
 <p>Extract files from an archive</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-xf<span style="color: #F8F8F8"> </span>archive.tar
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-x<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>archive.tar
 </pre></div>
-<h3><strong>-t (list)</strong></h3>
-<p>List the contents of an archive without extracting</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-tf<span style="color: #F8F8F8"> </span>archive.tar
-<span style="color: #000; font-style: italic">file1</span>
-<span style="color: #000; font-style: italic">file2</span>
+<h3><strong>-t, --list</strong></h3>
+<p>List the contents of an archive</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>archive.tar
+<span style="color: #000; font-style: italic">file1.txt</span>
+<span style="color: #000; font-style: italic">file2.txt</span>
+</pre></div>
+<h3><strong>-f, --file=ARCHIVE</strong></h3>
+<p>Specify the archive file name (required for most operations)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-cf<span style="color: #F8F8F8"> </span>archive.tar<span style="color: #F8F8F8"> </span>directory/
+</pre></div>
+<h3><strong>-v, --verbose</strong></h3>
+<p>Verbosely list files processed</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-cvf<span style="color: #F8F8F8"> </span>archive.tar<span style="color: #F8F8F8"> </span>directory/
 <span style="color: #000; font-style: italic">directory/</span>
-<span style="color: #000; font-style: italic">directory/file3</span>
+<span style="color: #000; font-style: italic">directory/file1.txt</span>
+<span style="color: #000; font-style: italic">directory/file2.txt</span>
+<span style="color: #000; font-style: italic">directory/subdirectory/</span>
+<span style="color: #000; font-style: italic">directory/subdirectory/file3.txt</span>
 </pre></div>
-<h3><strong>-v (verbose)</strong></h3>
-<p>Display detailed progress information</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-cvf<span style="color: #F8F8F8"> </span>archive.tar<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2
-<span style="color: #000; font-style: italic">file1</span>
-<span style="color: #000; font-style: italic">file2</span>
-</pre></div>
-<h3><strong>-f (file)</strong></h3>
-<p>Specify the archive filename (must be used with other operations)</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-cf<span style="color: #F8F8F8"> </span>archive.tar<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2
-</pre></div>
-<h3><strong>-z (gzip)</strong></h3>
-<p>Compress the archive using gzip</p>
+<h3><strong>-z, --gzip</strong></h3>
+<p>Filter the archive through gzip (create/extract .tar.gz files)</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-czf<span style="color: #F8F8F8"> </span>archive.tar.gz<span style="color: #F8F8F8"> </span>directory/
 </pre></div>
-<h3><strong>-j (bzip2)</strong></h3>
-<p>Compress the archive using bzip2 (better compression but slower)</p>
+<h3><strong>-j, --bzip2</strong></h3>
+<p>Filter the archive through bzip2 (create/extract .tar.bz2 files)</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-cjf<span style="color: #F8F8F8"> </span>archive.tar.bz2<span style="color: #F8F8F8"> </span>directory/
 </pre></div>
-<h3><strong>-J (xz)</strong></h3>
-<p>Compress the archive using xz (best compression but slowest)</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-cJf<span style="color: #F8F8F8"> </span>archive.tar.xz<span style="color: #F8F8F8"> </span>directory/
+<h3><strong>-C, --directory=DIR</strong></h3>
+<p>Change to directory DIR before performing operations</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-xf<span style="color: #F8F8F8"> </span>archive.tar<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span>/tmp/extract/
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Creating a compressed archive of a directory</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-czf<span style="color: #F8F8F8"> </span>backup.tar.gz<span style="color: #F8F8F8"> </span>~/Documents
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-czf<span style="color: #F8F8F8"> </span>backup.tar.gz<span style="color: #F8F8F8"> </span>/home/user/documents
 </pre></div>
 <h3>Extracting a compressed archive</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-xzf<span style="color: #F8F8F8"> </span>backup.tar.gz
 </pre></div>
-<h3>Extracting specific files from an archive</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-xf<span style="color: #F8F8F8"> </span>archive.tar<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>directory/file3
-</pre></div>
-<h3>Viewing the contents of a compressed archive</h3>
+<h3>Viewing the contents of a compressed archive without extracting</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-tzf<span style="color: #F8F8F8"> </span>backup.tar.gz
-<span style="color: #000; font-style: italic">Documents/</span>
-<span style="color: #000; font-style: italic">Documents/report.pdf</span>
-<span style="color: #000; font-style: italic">Documents/notes.txt</span>
-<span style="color: #000; font-style: italic">Documents/images/</span>
-<span style="color: #000; font-style: italic">Documents/images/photo1.jpg</span>
+<span style="color: #000; font-style: italic">home/user/documents/</span>
+<span style="color: #000; font-style: italic">home/user/documents/file1.txt</span>
+<span style="color: #000; font-style: italic">home/user/documents/file2.txt</span>
+<span style="color: #000; font-style: italic">home/user/documents/projects/</span>
+<span style="color: #000; font-style: italic">home/user/documents/projects/notes.md</span>
+</pre></div>
+<h3>Extracting specific files from an archive</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-xf<span style="color: #F8F8F8"> </span>archive.tar<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+</pre></div>
+<h3>Adding files to an existing archive</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-rf<span style="color: #F8F8F8"> </span>archive.tar<span style="color: #F8F8F8"> </span>newfile.txt
 </pre></div>
 <h2>Tips</h2>
 <h3>Preserve File Permissions</h3>
-<p>The <code>-p</code> option preserves file permissions, ownership, and timestamps when extracting. This is useful for system backups:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-xpf<span style="color: #F8F8F8"> </span>backup.tar
-</pre></div>
+<p>By default, <code>tar</code> preserves file permissions, ownership, and timestamps. This is useful for backups but may cause issues when extracting as a non-root user. Use <code>--no-same-owner</code> when extracting if you want to avoid permission problems.</p>
 <h3>Extract to a Different Directory</h3>
-<p>Use the <code>-C</code> option to extract files to a specific directory:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-xf<span style="color: #F8F8F8"> </span>archive.tar<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span>/path/to/extract
-</pre></div>
+<p>Always use the <code>-C</code> option when you want to extract to a specific directory. This prevents files from being extracted to your current directory.</p>
+<h3>Use Progress Indicators</h3>
+<p>For large archives, add <code>--checkpoint=1000 --checkpoint-action=dot</code> to show progress during creation or extraction.</p>
 <h3>Exclude Files or Directories</h3>
-<p>Use <code>--exclude</code> to skip specific files or patterns:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-czf<span style="color: #F8F8F8"> </span>backup.tar.gz<span style="color: #F8F8F8"> </span>~/Documents<span style="color: #F8F8F8"> </span>--exclude<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;*.log&quot;</span><span style="color: #F8F8F8"> </span>--exclude<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;tmp&quot;</span>
-</pre></div>
-<h3>Add Files to an Existing Archive</h3>
-<p>Use the <code>-r</code> option to append files to an existing archive (doesn't work with compressed archives):</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-rf<span style="color: #F8F8F8"> </span>archive.tar<span style="color: #F8F8F8"> </span>newfile.txt
+<p>Use <code>--exclude=PATTERN</code> to exclude files or directories matching a pattern:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>tar<span style="color: #F8F8F8"> </span>-czf<span style="color: #F8F8F8"> </span>backup.tar.gz<span style="color: #F8F8F8"> </span>--exclude<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;*.log&quot;</span><span style="color: #F8F8F8"> </span>--exclude<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;temp/&quot;</span><span style="color: #F8F8F8"> </span>/home/user/documents
 </pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How do I know which compression option to use?</h4>
-<p>A. Use <code>-z</code> (gzip) for a good balance of speed and compression, <code>-j</code> (bzip2) for better compression at the cost of speed, or <code>-J</code> (xz) for maximum compression when speed isn't critical.</p>
-<h4>Q2. How can I see what's in a tar archive without extracting it?</h4>
-<p>A. Use <code>tar -tf archive.tar</code> to list contents, or add the <code>-v</code> flag (<code>tar -tvf archive.tar</code>) for more detailed information.</p>
-<h4>Q3. How do I extract a single file from a tar archive?</h4>
-<p>A. Use <code>tar -xf archive.tar path/to/file</code> specifying the exact path of the file as it appears in the archive.</p>
-<h4>Q4. Why doesn't tar show a progress bar?</h4>
-<p>A. By default, tar doesn't show progress. Use the <code>--progress</code> option or pipe through <code>pv</code> if installed: <code>pv archive.tar | tar -xf -</code></p>
+<h4>Q1. What's the difference between .tar, .tar.gz, and .tar.bz2?</h4>
+<p>A. <code>.tar</code> is an uncompressed archive, <code>.tar.gz</code> (or <code>.tgz</code>) is compressed with gzip (faster, less compression), and <code>.tar.bz2</code> is compressed with bzip2 (slower, better compression).</p>
+<h4>Q2. How do I extract a single file from a tar archive?</h4>
+<p>A. Use <code>tar -xf archive.tar path/to/specific/file</code> to extract just that file.</p>
+<h4>Q3. How can I see what's in a tar file without extracting it?</h4>
+<p>A. Use <code>tar -tf archive.tar</code> to list contents without extraction.</p>
+<h4>Q4. How do I create a tar archive that preserves file permissions?</h4>
+<p>A. <code>tar</code> preserves permissions by default. Use <code>tar -cpf archive.tar directory/</code> where <code>-p</code> explicitly preserves permissions.</p>
+<h4>Q5. How do I handle &quot;Removing leading '/' from member names&quot; warnings?</h4>
+<p>A. This is normal behavior when archiving absolute paths. <code>tar</code> removes leading slashes for security reasons. Use relative paths when possible.</p>
 <h2>References</h2>
-<p>https://www.gnu.org/software/tar/manual/</p>
+<p>https://www.gnu.org/software/tar/manual/tar.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

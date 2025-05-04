@@ -1,16 +1,16 @@
 # echo command
 
-Display a line of text or variables to the standard output.
+Display a line of text or variables to standard output.
 
 ## Overview
 
-The `echo` command prints text or variable values to the terminal. It's commonly used in shell scripts to display messages, show variable contents, or generate output that can be piped to other commands.
+The `echo` command prints text or variable values to the terminal. It's commonly used in shell scripts to display messages, show variable contents, or generate output that can be piped to other commands. Echo is one of the most fundamental Unix commands for text output.
 
 ## Options
 
 ### **-n**
 
-Suppresses the trailing newline that `echo` normally adds to output.
+Suppresses the trailing newline that echo normally adds to output.
 
 ```console
 $ echo -n "Hello"
@@ -19,7 +19,7 @@ Hello$
 
 ### **-e**
 
-Enables interpretation of backslash escape sequences like `\n` for newline and `\t` for tab.
+Enables interpretation of backslash escape sequences.
 
 ```console
 $ echo -e "Hello\nWorld"
@@ -29,7 +29,7 @@ World
 
 ### **--help**
 
-Displays help information about the echo command.
+Display help information and exit.
 
 ```console
 $ echo --help
@@ -53,7 +53,7 @@ $ echo Hello World
 Hello World
 ```
 
-### Displaying variable contents
+### Displaying variable values
 
 ```console
 $ name="John"
@@ -61,12 +61,19 @@ $ echo "My name is $name"
 My name is John
 ```
 
-### Using escape sequences
+### Using escape sequences with -e
 
 ```console
-$ echo -e "Tab:\t1\t2\t3\nNewline"
-Tab:	1	2	3
-Newline
+$ echo -e "Tab:\t| Newline:\n| Backslash:\\"
+Tab:	| Newline:
+| Backslash:\
+```
+
+### Suppressing newline with -n
+
+```console
+$ echo -n "Enter your name: "
+Enter your name: $
 ```
 
 ### Redirecting output to a file
@@ -79,9 +86,9 @@ This is a test
 
 ## Tips
 
-### Quoting Differences
+### Quoting Matters
 
-Single quotes (`'`) prevent variable expansion and escape sequence interpretation, while double quotes (`"`) allow them.
+Single quotes (`'`) prevent variable expansion and escape sequence interpretation, while double quotes (`"`) allow them:
 
 ```console
 $ name="John"
@@ -93,37 +100,35 @@ Hello $name
 
 ### Combining with Command Substitution
 
-Use `echo` with command substitution to display command results:
+Use echo with command substitution to format command output:
 
 ```console
-$ echo "Today's date is $(date)"
-Today's date is Wed Apr 30 10:15:23 PDT 2025
+$ echo "Current date: $(date)"
+Current date: Tue May 4 10:15:30 EDT 2025
 ```
 
-### Multiline Output
+### Escape Sequences with -e
 
-Create multiline output with escape sequences:
-
-```console
-$ echo -e "Line 1\nLine 2\nLine 3"
-Line 1
-Line 2
-Line 3
-```
+Common escape sequences include:
+- `\n` - newline
+- `\t` - tab
+- `\b` - backspace
+- `\\` - backslash
+- `\a` - alert (bell)
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between echo and printf?
-A. `echo` is simpler but less powerful than `printf`. `printf` offers more formatting options and better control over output formatting.
+A. `echo` is simpler but less powerful than `printf`. While `echo` is good for basic output, `printf` offers more formatting control similar to C's printf function.
 
 #### Q2. How do I echo without a newline?
 A. Use the `-n` option: `echo -n "text"`.
 
 #### Q3. How can I display special characters like tabs or newlines?
-A. Use the `-e` option with escape sequences: `echo -e "Tab:\t Newline:\n"`.
+A. Use the `-e` option with escape sequences: `echo -e "Line1\nLine2\tTabbed"`.
 
 #### Q4. Why doesn't echo -e work in some shells?
-A. Some shell implementations (like some versions of `sh`) don't support the `-e` option. In those cases, use `printf` instead.
+A. Some shell implementations (like some versions of dash) don't support the `-e` option by default. In those cases, use `printf` instead.
 
 ## References
 
@@ -131,4 +136,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/echo-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

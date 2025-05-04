@@ -1,102 +1,99 @@
 # unlink コマンド
 
-ファイルへのリンクを削除します。
+ファイルシステムから単一のファイルを削除します。
 
 ## 概要
 
-`unlink` コマンドは、指定されたファイルへのリンク（ファイル名）を削除するシンプルなコマンドです。これは `rm` コマンドの単一ファイル版と考えることができます。`unlink` は常に1つのファイルのみを処理し、ディレクトリやワイルドカードの展開はサポートしていません。
+`unlink`コマンドは、ファイルシステムからリンクを削除することで単一のファイルを削除するために使用されます。1つのファイルだけを削除する場合には、`rm`コマンドよりもシンプルな代替手段です。`rm`と異なり、`unlink`は複数のファイルやディレクトリを削除することができず、オプションも少なくなっています。
 
 ## オプション
 
-`unlink` コマンドはシンプルで、一般的に使用されるオプションはほとんどありません。
+### **-h, --help**
 
-### **--help**
-
-ヘルプメッセージを表示します。
+ヘルプ情報を表示して終了します。
 
 ```console
 $ unlink --help
-使用法: unlink ファイル
-  または:  unlink オプション
-指定したファイルへのリンクを削除します。
+Usage: unlink FILE
+  or:  unlink OPTION
+Call the unlink function to remove the specified FILE.
 
-      --help     このヘルプを表示して終了する
-      --version  バージョン情報を表示して終了する
+      --help     display this help and exit
+      --version  output version information and exit
 ```
 
 ### **--version**
 
-バージョン情報を表示します。
+バージョン情報を出力して終了します。
 
 ```console
 $ unlink --version
 unlink (GNU coreutils) 8.32
 Copyright (C) 2020 Free Software Foundation, Inc.
-ライセンス GPLv3+: GNU GPL バージョン 3 以降 <https://gnu.org/licenses/gpl.html>.
-これはフリーソフトウェアです: 自由に変更および配布できます.
-法律の許す限り、　無保証　です.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Michael Stone.
 ```
 
 ## 使用例
 
-### 通常のファイル削除
+### ファイルの削除
 
 ```console
-$ touch testfile.txt
+$ touch temp_file.txt
 $ ls
-testfile.txt
-$ unlink testfile.txt
+temp_file.txt
+$ unlink temp_file.txt
 $ ls
-# ファイルが削除されたため何も表示されない
+$
 ```
 
-### シンボリックリンクの削除
+### ディレクトリの削除を試みる（失敗します）
 
 ```console
-$ touch original.txt
-$ ln -s original.txt link.txt
-$ ls -l
-合計 0
-lrwxrwxrwx 1 user user 12 4月 30 10:00 link.txt -> original.txt
--rw-r--r-- 1 user user  0 4月 30 10:00 original.txt
-$ unlink link.txt
-$ ls -l
-合計 0
--rw-r--r-- 1 user user  0 4月 30 10:00 original.txt
+$ mkdir test_dir
+$ unlink test_dir
+unlink: cannot unlink 'test_dir': Is a directory
 ```
 
 ## ヒント:
 
-### `rm` との違い
+### 複数ファイルには`rm`を使用する
 
-`unlink` は常に1つのファイルのみを処理します。複数のファイルを削除したり、ディレクトリを削除したりする場合は `rm` コマンドを使用してください。
+複数のファイルを削除する必要がある場合は、`unlink`ではなく`rm`を使用してください。`unlink`コマンドは一度に1つのファイルしか削除できません。
 
-### エラーの理解
+### シンボリックリンク
 
-ディレクトリに対して `unlink` を使用すると、「操作は許可されていません」というエラーが表示されます。ディレクトリを削除するには `rmdir`（空のディレクトリの場合）または `rm -r`（中身があるディレクトリの場合）を使用してください。
+シンボリックリンクに対して`unlink`を使用すると、リンク先のファイルではなくリンク自体が削除されます。
 
-### ハードリンクの削除
+### 復元不可
 
-`unlink` はハードリンクを削除する場合にも使用できます。ハードリンクを削除しても、他のリンクが存在する限り、ファイルデータは保持されます。
+`unlink`で削除されたファイルはゴミ箱やリサイクルビンに送られません。完全に削除され、バックアップからしか復元できません。
+
+### 確認なし
+
+`rm`コマンドは`-i`オプションで削除前に確認を求めることができますが、`unlink`はファイル削除前の確認プロンプトを提供しません。
 
 ## よくある質問
 
-#### Q1. `unlink` と `rm` の違いは何ですか？
-A. `unlink` は1つのファイルのみを削除でき、ワイルドカードやオプションをサポートしていません。`rm` はより多機能で、複数のファイルやディレクトリを削除できます。
+#### Q1. `unlink`と`rm`の違いは何ですか？
+A. `unlink`は単一のファイルのみを削除でき、オプションも最小限ですが、`rm`は複数のファイル、ディレクトリ（`-r`オプション使用時）を削除でき、多くの追加オプションがあります。
 
-#### Q2. `unlink` でディレクトリを削除できますか？
-A. いいえ、`unlink` はディレクトリを削除できません。ディレクトリを削除するには `rmdir`（空のディレクトリの場合）または `rm -r`（中身があるディレクトリの場合）を使用してください。
+#### Q2. `unlink`でディレクトリを削除できますか？
+A. いいえ、`unlink`はディレクトリを削除できません。空のディレクトリには`rmdir`を、内容のあるディレクトリには`rm -r`を使用してください。
 
-#### Q3. `unlink` コマンドを使うべき状況はありますか？
-A. シェルスクリプトなど、単一ファイルの削除のみが必要で、余分な機能が不要な場合に適しています。また、`rm` コマンドが何らかの理由で使用できない場合のバックアップとしても役立ちます。
+#### Q3. `unlink`はファイルをゴミ箱に移動しますか？
+A. いいえ、`unlink`は永久にファイルを削除します。ゴミ箱やリサイクルビンから復元することはできません。
 
-#### Q4. `unlink` でファイルを誤って削除した場合、復元できますか？
-A. 通常のファイル削除と同様に、`unlink` で削除したファイルの復元は困難です。重要なファイルを操作する前にバックアップを取ることをお勧めします。
+#### Q4. 存在しないファイルを`unlink`しようとするとどうなりますか？
+A. `unlink`はファイルが存在しないというエラーメッセージを返します。
 
-## 参考文献
+## 参考資料
 
 https://www.gnu.org/software/coreutils/manual/html_node/unlink-invocation.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

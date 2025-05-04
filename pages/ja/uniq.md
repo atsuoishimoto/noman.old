@@ -1,160 +1,192 @@
 # uniq コマンド
 
-テキストファイル内の重複行を検出または削除します。
+隣接する重複行を入力からフィルタリングまたは報告します。
 
 ## 概要
 
-`uniq` コマンドは、連続する重複行を検出し、削除するために使用されます。デフォルトでは、入力テキストから連続する重複行を1行だけ残して削除します。通常は `sort` コマンドと組み合わせて使用され、ファイル内のすべての重複行を処理します。
+`uniq`コマンドはテキスト入力を処理し、連続して現れる重複行をフィルタリングまたは識別します。このコマンドは隣接する行のみを比較するため、正しく機能するにはソートされた入力が必要です。一般的に`sort`コマンドと組み合わせて使用され、重複を排除したり、ファイル内の各行が何回出現するかをカウントしたりするのに役立ちます。
 
 ## オプション
 
-### **-c (--count)**
+### **-c, --count**
 
-各行の出現回数を行の先頭に表示します。
+各行の前に出現回数を表示します
 
 ```console
-$ cat sample.txt
-apple
-apple
-banana
-orange
-orange
-orange
-$ uniq -c sample.txt
-      2 apple
-      1 banana
-      3 orange
+$ cat names.txt
+Alice
+Bob
+Bob
+Charlie
+Charlie
+Charlie
+$ sort names.txt | uniq -c
+      1 Alice
+      2 Bob
+      3 Charlie
 ```
 
-### **-d (--repeated)**
+### **-d, --repeated**
 
-重複する行のみを出力します（各重複グループから1行）。
+重複する行のみを表示します（各グループにつき1行）
 
 ```console
-$ cat sample.txt
-apple
-apple
-banana
-orange
-orange
-orange
-$ uniq -d sample.txt
-apple
-orange
+$ cat names.txt
+Alice
+Bob
+Bob
+Charlie
+Charlie
+Charlie
+$ sort names.txt | uniq -d
+Bob
+Charlie
 ```
 
-### **-u (--unique)**
+### **-u, --unique**
 
-重複しない行のみを出力します。
+一意の行のみを表示します（入力で重複していない行）
 
 ```console
-$ cat sample.txt
-apple
-apple
-banana
-orange
-orange
-orange
-$ uniq -u sample.txt
-banana
+$ cat names.txt
+Alice
+Bob
+Bob
+Charlie
+Charlie
+Charlie
+$ sort names.txt | uniq -u
+Alice
 ```
 
-### **-i (--ignore-case)**
+### **-i, --ignore-case**
 
-大文字と小文字を区別せずに比較します。
+行を比較する際に大文字と小文字の違いを無視します
 
 ```console
-$ cat case.txt
+$ cat mixed-case.txt
+apple
 Apple
-apple
+banana
 BANANA
-banana
-$ uniq -i case.txt
-Apple
-BANANA
-```
-
-## 使用例
-
-### sortと組み合わせた使用
-
-`uniq` は連続する重複行のみを処理するため、通常は `sort` と組み合わせて使用します。
-
-```console
-$ cat unsorted.txt
-banana
-apple
-orange
+$ sort mixed-case.txt | uniq -i
 apple
 banana
-$ sort unsorted.txt | uniq
-apple
-banana
-orange
 ```
 
-### 重複行の数をカウントして降順に並べ替え
+### **-f N, --skip-fields=N**
 
-```console
-$ cat words.txt
-dog
-cat
-fish
-dog
-cat
-dog
-$ sort words.txt | uniq -c | sort -nr
-      3 dog
-      2 cat
-      1 fish
-```
-
-### 特定のフィールドのみを比較
-
-`-f` オプションを使用して、比較する前に指定した数のフィールドをスキップします。
+最初のN個のフィールドの比較をスキップします
 
 ```console
 $ cat data.txt
 1 John Smith
+1 Jane Doe
 2 John Smith
-3 Jane Doe
 $ uniq -f 1 data.txt
 1 John Smith
-3 Jane Doe
+1 Jane Doe
+2 John Smith
+```
+
+### **-s N, --skip-chars=N**
+
+最初のN文字の比較をスキップします
+
+```console
+$ cat codes.txt
+ABC123
+ABC456
+DEF123
+$ uniq -s 3 codes.txt
+ABC123
+DEF123
+```
+
+## 使用例
+
+### ファイル内のユニークな単語をカウントする
+
+```console
+$ cat words.txt
+hello
+world
+hello
+computer
+world
+$ sort words.txt | uniq -c
+      1 computer
+      2 hello
+      2 world
+```
+
+### 一意のエントリのみを見つける
+
+```console
+$ cat log.txt
+ERROR: Connection failed
+INFO: Starting application
+ERROR: Connection failed
+INFO: Application ready
+$ sort log.txt | uniq -u
+INFO: Application ready
+INFO: Starting application
+```
+
+### パイプラインで他のコマンドと組み合わせる
+
+```console
+$ cat access.log | grep "404" | cut -d' ' -f1 | sort | uniq -c
+     15 192.168.1.5
+      3 192.168.1.7
+     22 192.168.1.10
 ```
 
 ## ヒント:
 
-### 非連続の重複行を処理するには
+### 常に先にソートする
 
-`uniq` は連続する重複行のみを処理します。ファイル全体の重複を処理するには、まず `sort` でファイルをソートしてから `uniq` を適用してください。
+`uniq`コマンドは隣接する重複行のみを検出するため、すべての重複を検出するには常に`uniq`の前に`sort`を使用してください：
 
-### 特定の列だけで比較する
+```console
+$ sort file.txt | uniq
+```
 
-`-f` オプション（フィールドをスキップ）と `-s` オプション（文字をスキップ）を使用して、行の特定の部分だけを比較できます。
+### すべての行の出現回数をカウントする
 
-### 出力のカスタマイズ
+ファイル内の各ユニークな行が何回出現するかを確認するには：
 
-`-c`（カウント）、`-d`（重複のみ）、`-u`（ユニークのみ）を組み合わせることで、様々な出力形式を得ることができます。
+```console
+$ sort file.txt | uniq -c | sort -nr
+```
+これにより頻度順（最も頻繁なものが最初）にソートされる。
+
+### 一意でない行を見つける
+
+2回以上出現する行のみを見つけるには：
+
+```console
+$ sort file.txt | uniq -d
+```
 
 ## よくある質問
 
-#### Q1. `uniq` と `sort | uniq` の違いは何ですか？
-A. `uniq` は連続する重複行のみを処理しますが、`sort | uniq` はファイル内のすべての重複行を処理します。ファイル全体から重複を削除したい場合は、まず `sort` でソートする必要があります。
+#### Q1. なぜ`uniq`がファイル内のすべての重複を削除しないのですか？
+A. `uniq`は隣接する重複行のみを削除します。最初に`sort file.txt | uniq`でファイルをソートする必要があります。
 
-#### Q2. 大文字と小文字を区別せずに重複を削除するにはどうすればよいですか？
-A. `-i` または `--ignore-case` オプションを使用します。例：`uniq -i filename`
+#### Q2. ファイル内のユニークな行数をカウントするにはどうすればよいですか？
+A. `sort file.txt | uniq | wc -l`を使用してユニークな行数をカウントします。
 
-#### Q3. 特定の列や文字数を無視して比較するにはどうすればよいですか？
-A. `-f N`（最初のN個のフィールドをスキップ）または `-s N`（最初のN文字をスキップ）オプションを使用します。
+#### Q3. 比較時に行の特定の部分を無視することは可能ですか？
+A. はい、`-f N`でN個のフィールドをスキップするか、`-s N`で各行の先頭からN文字をスキップできます。
 
-#### Q4. 重複行の数を知りたい場合はどうすればよいですか？
-A. `-c` または `--count` オプションを使用すると、各行の出現回数が表示されます。
+#### Q4. ファイル内で最も一般的な行を見つけるにはどうすればよいですか？
+A. `sort file.txt | uniq -c | sort -nr`を使用して、頻度順（最も頻繁なものが最初）に行をリストします。
 
 ## 参考資料
 
 https://www.gnu.org/software/coreutils/manual/html_node/uniq-invocation.html
 
-## Revisions
+## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

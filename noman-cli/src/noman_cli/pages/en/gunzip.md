@@ -4,22 +4,21 @@ Decompress files compressed with gzip.
 
 ## Overview
 
-`gunzip` is a utility that expands files compressed with the gzip compression algorithm. It essentially reverses what the `gzip` command does, restoring compressed files to their original state. When you run `gunzip` on a file with a `.gz` extension, it decompresses the file and removes the extension.
+`gunzip` is a utility that decompresses files previously compressed with the `gzip` program. It restores the original file, removing the compressed version by default. It works with files having extensions like `.gz`, `.z`, `.taz`, `.tgz`, or `.tz`.
 
 ## Options
 
-### **-c, --stdout**
+### **-c, --stdout, --to-stdout**
 
-Output decompressed content to standard output instead of creating a new file.
+Write output to standard output and keep original files unchanged.
 
 ```console
-$ gunzip -c archive.gz
-This is the content of the decompressed file.
+$ gunzip -c archive.gz > extracted_file
 ```
 
 ### **-f, --force**
 
-Force decompression even when the output file already exists or when the compressed file has multiple links.
+Force decompression even if the file has multiple links or the corresponding file already exists.
 
 ```console
 $ gunzip -f already_exists.gz
@@ -27,22 +26,30 @@ $ gunzip -f already_exists.gz
 
 ### **-k, --keep**
 
-Keep (don't delete) the input files during decompression.
+Keep (don't delete) input files during decompression.
 
 ```console
-$ gunzip -k important_archive.gz
+$ gunzip -k archive.gz
 $ ls
-important_archive  important_archive.gz
+archive  archive.gz
 ```
 
 ### **-l, --list**
 
-List information about the compressed file without decompressing it.
+List the contents of the compressed file without decompressing.
 
 ```console
 $ gunzip -l archive.gz
          compressed        uncompressed  ratio uncompressed_name
-                547                 1024  46.5% archive
+                547                 1213  54.9% archive
+```
+
+### **-q, --quiet**
+
+Suppress all warnings.
+
+```console
+$ gunzip -q archive.gz
 ```
 
 ### **-r, --recursive**
@@ -50,7 +57,24 @@ $ gunzip -l archive.gz
 Recursively decompress files in directories.
 
 ```console
-$ gunzip -r compressed_folder/
+$ gunzip -r directory_with_gz_files/
+```
+
+### **-t, --test**
+
+Test the compressed file integrity without decompressing.
+
+```console
+$ gunzip -t archive.gz
+```
+
+### **-v, --verbose**
+
+Display the name and percentage reduction for each file decompressed.
+
+```console
+$ gunzip -v archive.gz
+archive.gz:	 54.9% -- replaced with archive
 ```
 
 ## Usage Examples
@@ -71,52 +95,70 @@ $ ls
 file1 file2 file3
 ```
 
-### Viewing Compressed Content Without Decompressing
+### Decompressing While Preserving Original
 
 ```console
-$ gunzip -c logfile.gz | head -10
-[First 10 lines of the decompressed content]
-```
-
-### Decompressing to a Different Name
-
-```console
-$ gunzip < archive.gz > new_name
+$ gunzip -k important_backup.gz
 $ ls
-archive.gz new_name
+important_backup important_backup.gz
 ```
 
-## Tips
+### Testing Archive Integrity
 
-### Use zcat Instead of gunzip -c
+```console
+$ gunzip -tv archive.gz
+archive.gz: OK
+```
 
-The `zcat` command is equivalent to `gunzip -c` and may be more intuitive when you want to view compressed content without decompressing the file.
+## Tips:
 
-### Preserve Original Compressed Files
+### Use with tar Files
 
-When you need to keep the compressed version while accessing the contents, use the `-k` option or redirect the output with `-c`.
+For `.tar.gz` or `.tgz` files, you can use `gunzip` followed by `tar`:
 
-### Handle Multiple Compression Formats
+```console
+$ gunzip archive.tar.gz
+$ tar xf archive.tar
+```
 
-For files compressed multiple times with different algorithms (like `.tar.gz`), you'll need to use the appropriate tools in sequence (e.g., `gunzip` followed by `tar xf`).
+Or more efficiently, use `tar` with the `z` option directly:
 
-### Check Available Disk Space
+```console
+$ tar xzf archive.tar.gz
+```
 
-Decompressed files can be significantly larger than their compressed versions. Check that you have enough disk space before decompressing large files.
+### Pipe Directly to Other Commands
+
+Use `-c` to decompress and pipe to another command without creating intermediate files:
+
+```console
+$ gunzip -c logs.gz | grep "error"
+```
+
+### Handling Multiple Compression Formats
+
+If you're unsure about the compression format, consider using `zcat` which works with multiple formats:
+
+```console
+$ zcat file.gz > uncompressed_file
+```
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between gunzip and gzip -d?
-A. They are functionally equivalent. `gzip -d` and `gunzip` both decompress gzip files.
+#### Q1. What's the difference between `gunzip` and `gzip -d`?
+A. They are functionally equivalent. `gunzip` is essentially a symbolic link to `gzip -d`.
 
-#### Q2. Can gunzip handle .zip files?
-A. No, `gunzip` only works with files compressed using the gzip algorithm (typically .gz files). For .zip files, use the `unzip` command.
+#### Q2. How do I decompress a file without removing the original compressed file?
+A. Use the `-k` or `--keep` option: `gunzip -k file.gz`
 
-#### Q3. How do I decompress a file without losing the original compressed version?
-A. Use `gunzip -k filename.gz` or `gunzip -c filename.gz > newfilename`.
+#### Q3. Can `gunzip` handle multiple compression formats?
+A. No, `gunzip` is specifically for gzip-compressed files. For other formats, use tools like `bunzip2` (for bzip2) or `unxz` (for xz).
 
-#### Q4. How can I see what's in a .gz file without decompressing it?
-A. Use `gunzip -l filename.gz` to see metadata or `zcat filename.gz | less` to view the contents.
+#### Q4. How can I see what's in a gzipped file without decompressing it?
+A. Use `gunzip -l file.gz` to list information about the compressed file.
+
+#### Q5. How do I decompress a file to a different name?
+A. Use the `-c` option and redirect output: `gunzip -c file.gz > newname`
 
 ## References
 
@@ -124,4 +166,4 @@ https://www.gnu.org/software/gzip/manual/gzip.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

@@ -1,12 +1,23 @@
 # ssh-agent command
 
-Manages SSH private keys and their passphrases in memory for single sign-on access to SSH servers.
+Authentication agent that manages SSH private keys for secure connections without repeated passphrase entry.
 
 ## Overview
 
-`ssh-agent` is a background program that holds private keys used for SSH public key authentication. It eliminates the need to enter passphrases repeatedly when connecting to multiple SSH servers, as it stores the decrypted keys in memory for the duration of a session.
+`ssh-agent` is a program that holds private keys used for SSH public key authentication. It runs in the background and eliminates the need to enter your passphrase each time you use SSH to connect to a remote server. When you add a key to the agent, you enter the passphrase once, and the agent keeps the decrypted key in memory for future use.
 
 ## Options
+
+### **-a socket**
+
+Bind the agent to a specific Unix-domain socket.
+
+```console
+$ ssh-agent -a /tmp/ssh-agent.socket
+SSH_AUTH_SOCK=/tmp/ssh-agent.socket; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=1234; export SSH_AGENT_PID;
+echo Agent pid 1234;
+```
 
 ### **-c**
 
@@ -14,32 +25,19 @@ Generate C-shell commands on stdout. This is the default if SHELL looks like it'
 
 ```console
 $ ssh-agent -c
-setenv SSH_AUTH_SOCK /tmp/ssh-XXXXXX2LUbUP/agent.12345;
-setenv SSH_AGENT_PID 12345;
-echo Agent pid 12345;
-```
-
-### **-s**
-
-Generate Bourne shell commands on stdout. This is the default if SHELL does not look like it's a csh style shell.
-
-```console
-$ ssh-agent -s
-SSH_AUTH_SOCK=/tmp/ssh-XXXXXX5TbcZp/agent.12345; export SSH_AUTH_SOCK;
-SSH_AGENT_PID=12345; export SSH_AGENT_PID;
-echo Agent pid 12345;
+setenv SSH_AUTH_SOCK /tmp/ssh-XXXXXXXXXX/agent.1234;
+setenv SSH_AGENT_PID 1234;
+echo Agent pid 1234;
 ```
 
 ### **-d**
 
-Debug mode. When this option is specified, ssh-agent will not fork and will write debug information to standard error.
+Debug mode. The agent will not fork and will write debug information to standard error.
 
 ```console
 $ ssh-agent -d
-SSH_AUTH_SOCK=/tmp/ssh-XXXXXXzUqaQn/agent.12345; export SSH_AUTH_SOCK;
-SSH_AGENT_PID=12345; export SSH_AGENT_PID;
-echo Agent pid 12345;
-[debug output follows]
+debug: ssh-agent: starting
+debug: ssh-agent: listening on socket: /tmp/ssh-XXXXXXXXXX/agent.1234
 ```
 
 ### **-k**
@@ -48,9 +46,29 @@ Kill the current agent (given by the SSH_AGENT_PID environment variable).
 
 ```console
 $ ssh-agent -k
-unset SSH_AUTH_SOCK;
-unset SSH_AGENT_PID;
-echo Agent pid 12345 killed;
+Agent pid 1234 killed
+```
+
+### **-s**
+
+Generate Bourne shell commands on stdout. This is the default if SHELL does not look like it's a csh style shell.
+
+```console
+$ ssh-agent -s
+SSH_AUTH_SOCK=/tmp/ssh-XXXXXXXXXX/agent.1234; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=1234; export SSH_AGENT_PID;
+echo Agent pid 1234;
+```
+
+### **-t life**
+
+Set a default maximum lifetime for identities added to the agent. The lifetime may be specified in seconds or in a time format specified in sshd_config(5).
+
+```console
+$ ssh-agent -t 1h
+SSH_AUTH_SOCK=/tmp/ssh-XXXXXXXXXX/agent.1234; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=1234; export SSH_AGENT_PID;
+echo Agent pid 1234;
 ```
 
 ## Usage Examples
@@ -59,7 +77,7 @@ echo Agent pid 12345 killed;
 
 ```console
 $ eval $(ssh-agent)
-Agent pid 12345
+Agent pid 1234
 $ ssh-add ~/.ssh/id_rsa
 Enter passphrase for /home/user/.ssh/id_rsa: 
 Identity added: /home/user/.ssh/id_rsa
@@ -68,54 +86,62 @@ Identity added: /home/user/.ssh/id_rsa
 ### Starting ssh-agent with a specific lifetime
 
 ```console
-$ ssh-agent -t 1h
-SSH_AUTH_SOCK=/tmp/ssh-XXXXXXzUqaQn/agent.12345; export SSH_AUTH_SOCK;
-SSH_AGENT_PID=12345; export SSH_AGENT_PID;
-echo Agent pid 12345;
+$ eval $(ssh-agent -t 4h)
+Agent pid 1235
+$ ssh-add
+Enter passphrase for /home/user/.ssh/id_rsa: 
+Identity added: /home/user/.ssh/id_rsa
 ```
 
-### Listing keys managed by the agent
+### Listing keys in the agent
 
 ```console
 $ ssh-add -l
 2048 SHA256:abcdefghijklmnopqrstuvwxyz1234567890ABCD /home/user/.ssh/id_rsa (RSA)
 ```
 
-## Tips
+### Killing the ssh-agent
 
-### Use eval to Set Environment Variables
+```console
+$ eval $(ssh-agent -k)
+Agent pid 1234 killed
+```
 
-Always use `eval $(ssh-agent)` to start the agent, as this automatically sets the required environment variables.
+## Tips:
 
-### Add Keys Automatically on Login
+### Start ssh-agent Automatically
 
-Add `ssh-add` commands to your shell startup files (like `.bashrc` or `.zshrc`) to automatically load your keys when you log in.
+Add `eval $(ssh-agent)` to your shell startup file (like `.bashrc` or `.zshrc`) to automatically start the agent when you log in.
 
-### Forward Your Agent When Needed
+### Use ssh-agent with SSH Config
 
-Use `ssh -A user@host` to forward your agent connection to remote servers, allowing you to use your local keys for authentication on those servers. Be cautious with this feature as it poses security risks on untrusted servers.
+Combine ssh-agent with SSH config files (~/.ssh/config) to manage different keys for different hosts automatically.
 
-### Kill the Agent When Done
+### Forward Your SSH Agent
 
-Run `ssh-agent -k` when you're done to terminate the agent and remove the decrypted keys from memory, especially on shared systems.
+When connecting to a remote server that needs to access other servers, use `ssh -A user@host` to forward your local agent to the remote server. Be cautious with this feature as it poses security risks on untrusted servers.
+
+### Check for Running Agents
+
+Before starting a new agent, check if one is already running with `echo $SSH_AGENT_PID` to avoid having multiple agents.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between ssh-agent and ssh-add?
 A. `ssh-agent` is the background program that holds your decrypted keys, while `ssh-add` is used to add keys to the running agent.
 
-#### Q2. How do I know if ssh-agent is already running?
-A. Check if the SSH_AGENT_PID environment variable is set: `echo $SSH_AGENT_PID`.
+#### Q2. How do I make ssh-agent remember my keys after a reboot?
+A. ssh-agent doesn't persist across reboots. You need to restart it and add your keys again. Consider using tools like keychain or a startup script.
 
-#### Q3. Why do I need to use eval with ssh-agent?
-A. `ssh-agent` outputs shell commands that set environment variables. Using `eval` executes these commands in your current shell.
+#### Q3. How can I tell if ssh-agent is running?
+A. Check if the SSH_AGENT_PID environment variable is set: `echo $SSH_AGENT_PID`. If it returns a number, an agent is running.
 
-#### Q4. How can I limit how long keys are stored in the agent?
-A. Use the `-t` option with a time specification: `ssh-agent -t 1h` for one hour.
+#### Q4. How do I remove a key from ssh-agent?
+A. Use `ssh-add -d ~/.ssh/keyfile` to remove a specific key, or `ssh-add -D` to remove all keys.
 
 ## macOS Considerations
 
-On macOS, the system keychain can integrate with SSH keys. You can add `UseKeychain yes` to your `~/.ssh/config` file to store passphrases in the keychain. Additionally, macOS may start its own ssh-agent automatically, so check if one is already running before starting a new one.
+On macOS, the system keychain integration allows for automatic loading of keys. The built-in ssh-agent is managed by launchd and starts automatically. You can add keys to the macOS keychain with `ssh-add -K ~/.ssh/id_rsa` (older versions) or `ssh-add --apple-use-keychain ~/.ssh/id_rsa` (newer versions), which will make them persist across reboots.
 
 ## References
 
@@ -123,4 +149,4 @@ https://man.openbsd.org/ssh-agent
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

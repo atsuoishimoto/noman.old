@@ -49,74 +49,81 @@
   <h1>readlink command</h1>
 <p>Print the resolved symbolic links or canonical file names.</p>
 <h2>Overview</h2>
-<p>The <code>readlink</code> command displays the target of a symbolic link or the canonical path of a file. It's useful for determining where a symbolic link points to or for getting the absolute path of a file with all symbolic links resolved.</p>
+<p>The <code>readlink</code> command displays the target of a symbolic link or the canonical path of a file. It resolves symbolic links in a path, showing where they actually point to. This is useful for determining the actual location of files in a filesystem with many symbolic links.</p>
 <h2>Options</h2>
 <h3><strong>-f, --canonicalize</strong></h3>
 <p>Canonicalize by following every symlink in every component of the given path recursively</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/usr/bin<span style="color: #F8F8F8"> </span>bin_link
-<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>bin_link
-<span style="color: #000; font-style: italic">/usr/bin</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>mylink
+<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>mylink
+<span style="color: #000; font-style: italic">/etc/hosts</span>
 </pre></div>
 <h3><strong>-e, --canonicalize-existing</strong></h3>
 <p>Canonicalize by following every symlink in every component of the given path recursively, all components must exist</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>bin_link
-<span style="color: #000; font-style: italic">/usr/bin</span>
-<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>nonexistent_link
-<span style="color: #000; font-style: italic">[no output, returns error]</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>mylink
+<span style="color: #000; font-style: italic">/etc/hosts</span>
+<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>nonexistent
+<span style="color: #8F5902"># </span>No<span style="color: #F8F8F8"> </span>output,<span style="color: #F8F8F8"> </span>as<span style="color: #F8F8F8"> </span>the<span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span>doesn<span style="color: #A40000; border: 1px solid #EF2929">&#39;</span>t<span style="color: #F8F8F8"> </span>exist
+</pre></div>
+<h3><strong>-m, --canonicalize-missing</strong></h3>
+<p>Canonicalize by following every symlink in every component of the given path recursively, without requirements on components existence</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>/nonexistent/path/file.txt
+<span style="color: #000; font-style: italic">/nonexistent/path/file.txt</span>
 </pre></div>
 <h3><strong>-n, --no-newline</strong></h3>
-<p>Do not output the trailing newline</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>bin_link
-<span style="color: #000; font-style: italic">/usr/bin$ echo &quot; (this continues on same line)&quot;</span>
-<span style="color: #000; font-style: italic"> (this continues on same line)</span>
+<p>Do not output the trailing delimiter (newline)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>mylink<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot; (this continues on same line)&quot;</span>
+<span style="color: #000; font-style: italic">/etc/hosts (this continues on same line)</span>
+</pre></div>
+<h3><strong>-z, --zero</strong></h3>
+<p>End each output line with NUL, not newline</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>mylink<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hexdump<span style="color: #F8F8F8"> </span>-C
+<span style="color: #000; font-style: italic">00000000  2f 65 74 63 2f 68 6f 73  74 73 00                 |/etc/hosts.|</span>
+<span style="color: #000; font-style: italic">0000000b</span>
 </pre></div>
 <h3><strong>-v, --verbose</strong></h3>
-<p>Report errors</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>nonexistent_link
-<span style="color: #000; font-style: italic">readlink: nonexistent_link: No such file or directory</span>
+<p>Report errors (not implemented on all systems)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>nonexistent
+<span style="color: #000; font-style: italic">readlink: nonexistent: No such file or directory</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic usage to show where a symlink points</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/etc/hosts<span style="color: #F8F8F8"> </span>hosts_link
-<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>hosts_link
-<span style="color: #000; font-style: italic">/etc/hosts</span>
+<h3>Basic usage to read a symbolic link</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/usr/bin/python3<span style="color: #F8F8F8"> </span>python
+<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>python
+<span style="color: #000; font-style: italic">/usr/bin/python3</span>
 </pre></div>
-<h3>Getting the absolute path with all symlinks resolved</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">cd</span><span style="color: #F8F8F8"> </span>/usr/local/bin
-<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>python
-<span style="color: #000; font-style: italic">/usr/bin/python3.9</span>
+<h3>Finding the canonical path of a file with multiple symlinks</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span>passwd_link
+<span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>passwd_link<span style="color: #F8F8F8"> </span>passwd_link2
+<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>passwd_link2
+<span style="color: #000; font-style: italic">/etc/passwd</span>
 </pre></div>
-<h3>Checking if a path is a symlink</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>regular_file
-<span style="color: #000; font-style: italic">[no output]</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$?</span>
-<span style="color: #000; font-style: italic">1</span>
+<h3>Working with relative paths</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>dir1/dir2
+<span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>dir1/dir2<span style="color: #F8F8F8"> </span>mydir
+<span style="color: #8F5902">$ </span>readlink<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>mydir
+<span style="color: #000; font-style: italic">/home/user/dir1/dir2</span>
 </pre></div>
-<h2>Tips</h2>
-<h3>Distinguish Between Symlinks and Regular Files</h3>
-<p>If <code>readlink</code> returns no output and an exit status of 1, the file is not a symbolic link. This can be used in scripts to determine if a file is a symlink.</p>
-<h3>Use in Scripts</h3>
-<p>When writing shell scripts, <code>readlink -f</code> is useful for getting the absolute path of a script regardless of where it's called from:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #000">SCRIPT_DIR</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>dirname<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>readlink<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$0</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">))</span>
-</pre></div>
+<h2>Tips:</h2>
+<h3>Distinguish Between Direct and Full Resolution</h3>
+<p>Use plain <code>readlink</code> to see only the immediate target of a symlink, or use <code>readlink -f</code> to follow chains of symlinks to the final destination.</p>
+<h3>Check if a Path is a Symlink</h3>
+<p>If <code>readlink</code> returns nothing and exits with a non-zero status, the path is not a symlink. This can be used in scripts to test if a file is a symlink.</p>
 <h3>Combine with Other Commands</h3>
-<p>Combine <code>readlink</code> with other commands to operate on the target of a symlink:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>cat<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>readlink<span style="color: #F8F8F8"> </span>symlink_to_file<span style="color: #204A87; font-weight: bold">)</span>
-</pre></div>
+<p>Pipe the output of <code>readlink</code> to other commands when you need to operate on the actual file rather than the symlink.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between <code>readlink</code> and <code>realpath</code>?</h4>
-<p>A. Both commands can resolve symbolic links, but <code>realpath</code> always prints the absolute path while <code>readlink</code> without options only shows the immediate target of a symlink. With the <code>-f</code> option, <code>readlink</code> behaves similarly to <code>realpath</code>.</p>
-<h4>Q2. How do I get the absolute path of a file?</h4>
-<p>A. Use <code>readlink -f filename</code> to get the absolute path with all symbolic links resolved.</p>
-<h4>Q3. Why does <code>readlink</code> return nothing for a regular file?</h4>
-<p>A. <code>readlink</code> only shows information for symbolic links. For regular files without the <code>-f</code> option, it returns nothing and an exit status of 1.</p>
-<h4>Q4. How can I use <code>readlink</code> in a script to find the script's location?</h4>
-<p>A. Use <code>SCRIPT_DIR=$(dirname $(readlink -f &quot;$0&quot;))</code> to get the directory containing the script.</p>
+<p>A. While both resolve symlinks, <code>realpath</code> always provides the absolute path, whereas basic <code>readlink</code> only shows the immediate target of a symlink. <code>readlink -f</code> is similar to <code>realpath</code>.</p>
+<h4>Q2. Why does <code>readlink</code> without options sometimes return nothing?</h4>
+<p>A. Without options, <code>readlink</code> only works on symbolic links. If you try to use it on a regular file or directory, it will return nothing and exit with an error code.</p>
+<h4>Q3. How can I use <code>readlink</code> in a shell script safely?</h4>
+<p>A. Use <code>readlink -f &quot;$path&quot;</code> to get the canonical path, which handles spaces and special characters correctly when properly quoted.</p>
+<h4>Q4. What happens if a symlink points to a non-existent file?</h4>
+<p>A. Basic <code>readlink</code> will still show the target path, even if it doesn't exist. <code>readlink -e</code> will fail, while <code>readlink -f</code> and <code>readlink -m</code> will resolve as much as possible.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/readlink-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

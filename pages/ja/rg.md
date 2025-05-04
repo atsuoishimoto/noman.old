@@ -1,165 +1,174 @@
 # rg コマンド
 
-ファイル内の文字列を高速に検索するためのツール。
+正規表現を使用してファイル内のパターンを検索し、ディレクトリを再帰的に探索します。
 
 ## 概要
 
-`rg`（ripgrep）は、ファイル内のテキストパターンを検索するための高速なコマンドラインツールです。Gitリポジトリやプロジェクトディレクトリ内で特定のコードやテキストを素早く見つけることができます。デフォルトでは、バイナリファイルや隠しファイル、.gitignoreに記載されたファイルは無視されます。
+`rg`（ripgrep）は、現在のディレクトリを再帰的に検索して正規表現パターンを見つける行指向の検索ツールです。grep、ag、ackなどの他の検索ツールよりも高速に動作するように設計されており、同様の機能を合理的なデフォルト設定で提供します。デフォルトでは、ripgrepは.gitignoreルールを尊重し、隠しファイル/ディレクトリやバイナリファイルを自動的にスキップします。
 
 ## オプション
 
 ### **-i, --ignore-case**
 
-大文字と小文字を区別せずに検索します。
+検索で大文字と小文字を区別しないようにします。
 
 ```console
-$ rg -i "error" 
-src/main.rs:15:    if let Err(error) = process() {
-src/utils.rs:42:    println!("ERROR: {}", message);
+$ rg -i error
+./log.txt:10:ERROR: Connection failed
+./log.txt:15:error: timeout occurred
+./app.js:42:console.log('error handling');
 ```
 
 ### **-v, --invert-match**
 
-パターンに一致しない行を表示します。
+指定したパターンに一致しない行を表示します。
 
 ```console
-$ rg -v "success" log.txt
-2025-04-28 10:15:23 ERROR: Connection failed
-2025-04-28 10:16:45 WARNING: Retry attempt 1
-2025-04-28 10:17:12 INFO: Processing started
+$ rg -v error test.log
+./test.log:1:Starting application
+./test.log:2:Loading configuration
+./test.log:5:Application running
 ```
 
-### **-A, --after-context**
+### **-w, --word-regexp**
 
-マッチした行の後に指定した行数を表示します。
+単語境界で囲まれた一致のみを表示します。
 
 ```console
-$ rg -A 2 "error" log.txt
-2025-04-28 10:15:23 ERROR: Connection failed
-2025-04-28 10:15:24 INFO: Attempting reconnect
-2025-04-28 10:15:25 INFO: Reconnected successfully
+$ rg -w log
+./app.js:42:console.log('error handling');
+./utils.js:15:function log(message) {
 ```
 
-### **-B, --before-context**
+### **-c, --count**
 
-マッチした行の前に指定した行数を表示します。
+各ファイルの一致する行数のみを表示します。
 
 ```console
-$ rg -B 2 "error" log.txt
-2025-04-28 10:15:21 INFO: Connecting to server
-2025-04-28 10:15:22 INFO: Handshake initiated
-2025-04-28 10:15:23 ERROR: Connection failed
+$ rg -c error logs/
+logs/app.log:15
+logs/system.log:3
+logs/debug.log:0
 ```
 
-### **-C, --context**
+### **-l, --files-with-matches**
 
-マッチした行の前後に指定した行数を表示します。
+少なくとも1つの一致を含むパスのみを表示します。
 
 ```console
-$ rg -C 1 "error" log.txt
-2025-04-28 10:15:22 INFO: Handshake initiated
-2025-04-28 10:15:23 ERROR: Connection failed
-2025-04-28 10:15:24 INFO: Attempting reconnect
+$ rg -l error
+logs/app.log
+logs/system.log
+src/error_handler.js
 ```
 
 ### **--no-ignore**
 
-.gitignoreなどで指定された無視ファイルも検索対象に含めます。
+無視ファイル（.gitignore、.ignoreなど）を尊重しません。
 
 ```console
-$ rg --no-ignore "TODO"
-node_modules/some-package/README.md:10:TODO: Update documentation
-.git/COMMIT_EDITMSG:3:TODO: Fix this before merging
-src/main.rs:42:// TODO: Refactor this function
+$ rg --no-ignore password
+.git/config:3:password=secret123
+node_modules/test-lib/passwords.json:5:"default_password": "admin"
 ```
 
-### **-t, --type**
+### **-A, --after-context NUM**
 
-特定のファイルタイプのみを検索します。
+各一致の後にNUM行を表示します。
 
 ```console
-$ rg -t rust "impl"
-src/lib.rs:15:impl Database {
-src/models.rs:24:impl User {
+$ rg -A 2 error app.log
+app.log:15:error: connection failed
+app.log:16:  at line 42 in network.js
+app.log:17:  attempted reconnect
 ```
 
-### **-g, --glob**
+### **-B, --before-context NUM**
 
-指定したグロブパターンに一致するファイルのみを検索します。
+各一致の前にNUM行を表示します。
 
 ```console
-$ rg -g "*.json" "api_key"
-config.json:5:  "api_key": "abcd1234"
-settings.json:12:  "api_key": "xyz789"
+$ rg -B 2 error app.log
+app.log:13:attempting connection
+app.log:14:using default timeout
+app.log:15:error: connection failed
 ```
 
 ## 使用例
 
-### 複数のディレクトリを検索
+### 特定のファイルタイプで検索
 
 ```console
-$ rg "function" src/ lib/ tests/
-src/main.js:15:function processData(input) {
-lib/utils.js:42:function formatOutput(data) {
-tests/main.test.js:7:function testProcessing() {
+$ rg -t js console.log
+src/main.js:10:  console.log('Application started');
+src/utils.js:25:  console.log('Loading data...');
 ```
 
-### 正規表現を使用した検索
+### 複数のパターンで検索
 
 ```console
-$ rg "\d{4}-\d{2}-\d{2}" logs/
-logs/app.log:2025-04-28 10:15:23 ERROR: Connection failed
-logs/app.log:2025-04-29 09:30:45 INFO: Application started
-logs/system.log:2025-04-30 14:22:18 WARNING: Disk space low
+$ rg 'error|warning|critical' logs/app.log
+logs/app.log:15:error: connection failed
+logs/app.log:23:warning: slow response time
+logs/app.log:45:critical: database unavailable
 ```
 
-### 再帰的に検索して結果をファイルに保存
+### ファイル名パターンで検索
 
 ```console
-$ rg -r "TODO|FIXME" --json > todos.json
-# 「TODO」または「FIXME」を含む行をJSON形式で出力し、ファイルに保存する
+$ rg TODO -g '*.js'
+src/app.js:42:// TODO: Implement error handling
+src/utils.js:78:// TODO: Optimize this function
 ```
 
 ## ヒント:
 
-### 検索速度の最適化
+### スマートケースで柔軟なマッチングを使用
 
-大規模なプロジェクトでは、`-t` オプションを使って特定のファイルタイプに絞り込むことで検索速度が大幅に向上します。例えば `rg -t js "function"` とすると JavaScript ファイルのみを検索します。
+`-S`または`--smart-case`を使用すると、パターンがすべて小文字の場合は大文字と小文字を区別しない検索を行い、パターンに大文字が含まれる場合は大文字と小文字を区別する検索を行います。
 
-### 複雑な検索パターン
+### 他のコマンドと組み合わせる
 
-正規表現をサポートしているため、複雑な検索パターンを使用できます。例えば `rg "\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b" -i` でメールアドレスを検索できます。
+`rg`の出力を他のコマンドにパイプして、さらに処理することができます：
+```console
+$ rg -n 'TODO|FIXME' --no-heading | sort -k1,1
+```
 
-### 検索結果のフィルタリング
+### 圧縮ファイル内を検索
 
-`rg` の結果を `grep` や他のコマンドと組み合わせることで、さらに結果をフィルタリングできます。例えば `rg "error" | grep "critical"` とすると、"error" を含む行のうち "critical" も含む行だけを表示します。
+`--search-zip`を使用して、.gzや.zipなどの圧縮ファイル内を検索できます：
+```console
+$ rg --search-zip "error" logs/
+```
 
-### 隠しファイルの検索
+### 特定のディレクトリを除外
 
-デフォルトでは隠しファイルやディレクトリは検索されませんが、`-u` または `--unrestricted` オプションを使用すると検索対象に含めることができます。
+`--glob=!{dir}`を使用して、特定のディレクトリを除外できます：
+```console
+$ rg "function" --glob=!{node_modules,dist}
+```
 
 ## よくある質問
 
-#### Q1. `rg` と `grep` の違いは何ですか？
-A. `rg` は `grep` よりも高速で、デフォルトで再帰的に検索し、.gitignore ファイルを尊重します。また、ファイルタイプの指定やカラー出力などの機能が標準で組み込まれています。
+#### Q1. ripgrepはgrepとどう違いますか？
+A. ripgrepは一般的にgrepよりも高速で、自動的に再帰的に検索し、デフォルトで.gitignoreルールを尊重し、多くのファイルタイプやエンコーディングに対する組み込みサポートを持っています。
 
-#### Q2. 大文字と小文字を区別せずに検索するにはどうすればいいですか？
-A. `-i` または `--ignore-case` オプションを使用します。例: `rg -i "error"`
+#### Q2. スペースを含むパターンを検索するにはどうすればよいですか？
+A. パターンを引用符で囲みます：`rg "スペースを含む検索パターン"`
 
-#### Q3. バイナリファイルも検索対象に含めるにはどうすればいいですか？
-A. `-a` または `--text` オプションを使用します。ただし、バイナリファイルの検索は時間がかかる場合があります。
+#### Q3. ripgrepで隠しファイルやディレクトリを検索するにはどうすればよいですか？
+A. `--hidden`フラグを使用します：`rg --hidden パターン`
 
-#### Q4. .gitignore で無視されているファイルも検索するにはどうすればいいですか？
-A. `--no-ignore` オプションを使用します。例: `rg --no-ignore "password"`
+#### Q4. 正規表現パターンではなくリテラル文字列を検索するにはどうすればよいですか？
+A. `-F`または`--fixed-strings`オプションを使用します：`rg -F "特殊文字を含む(文字列)"`
 
-#### Q5. macOS で `rg` をインストールするにはどうすればいいですか？
-A. Homebrew を使用して `brew install ripgrep` でインストールできます。
+#### Q5. --no-ignoreオプションは何をしますか？
+A. `--no-ignore`オプションは、ripgrepにすべての無視ファイル（.gitignore、.ignoreなど）を無視するよう指示し、通常は無視パターンに基づいて除外されるファイルも含めてすべてのファイルを検索します。
 
-## 参考
+## 参考資料
 
 https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
 
-## 改訂
+## 改訂履歴
 
-- 2025/04/30 --no-ignoreオプションの説明を追加。
-- 2025/04/30 初版作成。
+- 2025/05/04 --no-ignoreオプションの説明を追加し、FAQを拡張しました。

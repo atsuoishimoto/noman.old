@@ -4,13 +4,13 @@ Translate or delete characters from standard input, writing to standard output.
 
 ## Overview
 
-The `tr` command is a text transformation utility that operates on a character-by-character basis. It reads from standard input, performs substitution or deletion of characters according to specified rules, and writes the result to standard output. It's commonly used for character-based text transformations like case conversion, whitespace removal, or character substitution.
+The `tr` command is a text transformation utility that operates on a character-by-character basis. It reads from standard input, performs character substitution, deletion, or compression operations, and writes the result to standard output. It's commonly used in shell scripts for tasks like case conversion, character removal, and basic text transformations.
 
 ## Options
 
 ### **-d, --delete**
 
-Delete characters in SET1 instead of translating them.
+Delete characters in SET1, do not translate.
 
 ```console
 $ echo "Hello, World!" | tr -d 'aeiou'
@@ -35,6 +35,15 @@ $ echo "Hello, World!" | tr -cd 'a-zA-Z'
 HelloWorld
 ```
 
+### **-t, --truncate-set1**
+
+First truncate SET1 to the length of SET2.
+
+```console
+$ echo "Hello" | tr -t 'aeiou' '12345'
+H2ll4
+```
+
 ## Usage Examples
 
 ### Converting lowercase to uppercase
@@ -44,17 +53,11 @@ $ echo "hello world" | tr 'a-z' 'A-Z'
 HELLO WORLD
 ```
 
-### Replacing specific characters
+### Removing all digits from text
 
 ```console
-$ echo "Hello, World!" | tr ',' '!'
-Hello! World!
-```
-
-### Removing all non-printable characters
-
-```console
-$ cat file.txt | tr -cd '[:print:]\n' > clean_file.txt
+$ echo "Phone: 123-456-7890" | tr -d '0-9'
+Phone: --
 ```
 
 ### Translating spaces to newlines
@@ -66,40 +69,57 @@ two
 three
 ```
 
+### Removing all non-printable characters
+
+```console
+$ cat file.txt | tr -cd '[:print:]\n'
+[outputs only printable characters and newlines]
+```
+
 ## Tips
 
 ### Character Classes
 
-Use predefined character classes like `[:alnum:]`, `[:alpha:]`, `[:digit:]`, `[:lower:]`, `[:upper:]`, and `[:space:]` for common character sets.
+Use predefined character classes like `[:alnum:]`, `[:alpha:]`, `[:digit:]`, `[:lower:]`, `[:upper:]`, and `[:space:]` for more readable and portable commands.
+
+```console
+$ echo "Hello123" | tr '[:lower:]' '[:upper:]'
+HELLO123
+```
 
 ### Combining Options
 
-Combine `-d` and `-c` to delete all characters except those specified. For example, `tr -cd '[:alnum:]'` removes everything except alphanumeric characters.
+Combine options for more complex transformations. For example, `-cd` both complements the set and deletes characters.
+
+```console
+$ echo "abc123!@#" | tr -cd '[:digit:]'
+123
+```
 
 ### Escaping Special Characters
 
-When using special characters like newlines or tabs, escape them with backslashes: `\n` for newline, `\t` for tab.
+When using special characters like newlines or tabs, escape them properly with backslashes.
 
-### Piping with Other Commands
-
-`tr` works best in pipelines with other commands. For example, `cat file.txt | tr 'a-z' 'A-Z' | grep "PATTERN"`.
+```console
+$ echo "one,two,three" | tr ',' '\n'
+one
+two
+three
+```
 
 ## Frequently Asked Questions
 
-#### Q1. How do I convert a file to uppercase?
-A. Use `cat file.txt | tr 'a-z' 'A-Z' > uppercase_file.txt`.
+#### Q1. How do I replace multiple spaces with a single space?
+A. Use `tr -s ' '` to squeeze multiple spaces into one.
 
-#### Q2. How can I remove all numbers from a file?
-A. Use `tr -d '0-9'` to delete all digits.
+#### Q2. Can tr replace words or phrases?
+A. No, `tr` operates only on individual characters, not words or patterns. For word/pattern replacement, use `sed` or `awk`.
 
-#### Q3. Can tr replace strings?
-A. No, `tr` operates on individual characters, not strings. For string replacement, use `sed` instead.
+#### Q3. How do I remove all non-alphanumeric characters?
+A. Use `tr -cd '[:alnum:]'` to keep only alphanumeric characters.
 
-#### Q4. How do I remove duplicate spaces?
-A. Use `tr -s ' '` to squeeze multiple spaces into a single space.
-
-#### Q5. How do I translate Windows line endings to Unix?
-A. Use `tr -d '\r'` to remove carriage returns.
+#### Q4. Why doesn't tr work with files directly?
+A. `tr` only reads from standard input. To process a file, you need to pipe it: `cat file.txt | tr ...` or use redirection: `tr ... < file.txt`.
 
 ## References
 
@@ -107,4 +127,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/tr-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

@@ -1,46 +1,46 @@
 # sudo command
 
-Execute a command as another user, typically with elevated privileges.
+Execute a command as another user, typically with administrative privileges.
 
 ## Overview
 
-`sudo` (superuser do) allows users to run programs with the security privileges of another user, most commonly the superuser (root). It provides a way to grant limited root access to specific users without giving them the root password, enhancing system security while allowing necessary administrative tasks.
+`sudo` (superuser do) allows authorized users to execute commands with the security privileges of another user, by default the superuser (root). This provides a way to perform administrative tasks without logging in as the root user, enhancing system security by limiting privileged access.
 
 ## Options
 
-### **-u [username]**
+### **-u, --user=USER**
 
-Execute the command as a user other than root
+Execute the command as a user other than the default target user (root)
 
 ```console
 $ sudo -u postgres psql
-psql (14.9)
+psql (14.5)
 Type "help" for help.
 
 postgres=#
 ```
 
-### **-s**
+### **-i, --login**
 
-Start a shell with elevated privileges instead of running a single command
+Run a login shell as the target user; simulates a full login
+
+```console
+$ sudo -i
+[root@hostname ~]#
+```
+
+### **-s, --shell**
+
+Run the shell specified in the password database entry of the target user
 
 ```console
 $ sudo -s
 root@hostname:/home/user#
 ```
 
-### **-i**
+### **-l, --list**
 
-Simulate a full login as the target user (loads the user's environment)
-
-```console
-$ sudo -i
-root@hostname:~#
-```
-
-### **-l**
-
-List the allowed (and forbidden) commands for the current user
+List the allowed (and forbidden) commands for the invoking user
 
 ```console
 $ sudo -l
@@ -48,38 +48,50 @@ User user may run the following commands on hostname:
     (ALL : ALL) ALL
 ```
 
-### **-v**
+### **-v, --validate**
 
-Validate and extend the user's sudo timestamp without running a command
+Update the user's cached credentials, extending the sudo timeout
 
 ```console
 $ sudo -v
-[No output means validation succeeded]
+[sudo] password for user: 
+```
+
+### **-k, --reset-timestamp**
+
+Invalidate the user's cached credentials
+
+```console
+$ sudo -k
 ```
 
 ## Usage Examples
 
-### Installing software with elevated privileges
+### Running a command with root privileges
 
 ```console
-$ sudo apt update && sudo apt install nginx
+$ sudo apt update
 [sudo] password for user: 
-[Package installation output]
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
+...
 ```
 
-### Editing system configuration files
+### Editing a system configuration file
 
 ```console
 $ sudo nano /etc/hosts
 [sudo] password for user:
-[Opens the hosts file in nano editor with write permissions]
 ```
 
 ### Running commands as a different user
 
 ```console
-$ sudo -u www-data php /var/www/html/maintenance.php
-[Output from the PHP script running as www-data user]
+$ sudo -u www-data ls -la /var/www/html
+total 16
+drwxr-xr-x 2 www-data www-data 4096 May  4 10:15 .
+drwxr-xr-x 3 root     root     4096 May  4 10:14 ..
+-rw-r--r-- 1 www-data www-data  612 May  4 10:15 index.html
 ```
 
 ## Tips
@@ -90,37 +102,32 @@ If you forget to use sudo for a command that requires it, type `sudo !!` to repe
 
 ### Configure sudo Without Password for Specific Commands
 
-Edit the sudoers file with `sudo visudo` to allow certain commands to run without a password prompt, improving efficiency for trusted users.
+Edit the sudoers file with `sudo visudo` to allow certain commands to run without a password prompt. For example:
+```
+username ALL=(ALL) NOPASSWD: /usr/bin/apt update
+```
 
-### Be Careful with sudo and Redirection
+### Use `sudo -E` to Preserve Environment Variables
 
-When using sudo with output redirection (e.g., `sudo echo "text" > /protected/file`), the redirection happens as your user, not as root. Use `sudo sh -c 'echo "text" > /protected/file'` instead.
+When you need to run a command with sudo but keep your current environment variables, use the `-E` option.
 
-### Use sudoedit for Safely Editing Protected Files
+### Always Use `visudo` to Edit the sudoers File
 
-`sudoedit` (or `sudo -e`) is safer than directly using an editor with sudo as it edits a temporary copy of the file and preserves file permissions.
+Never edit `/etc/sudoers` directly. Always use `sudo visudo` which checks for syntax errors before saving, preventing you from locking yourself out of sudo access.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between sudo and su?
-A. `sudo` executes a single command with elevated privileges and requires the user's password, while `su` switches to another user account (typically root) and requires that account's password.
+#### Q1. What's the difference between `sudo -i` and `sudo -s`?
+A. `sudo -i` simulates a full login and changes to the target user's home directory with their environment. `sudo -s` just starts a shell as the target user but keeps your current environment and working directory.
 
 #### Q2. How long does sudo authentication last?
-A. By default, sudo remembers your password for 15 minutes, after which you'll need to enter it again.
+A. By default, sudo caches your credentials for 15 minutes. You can extend this with `sudo -v` or reset it with `sudo -k`.
 
 #### Q3. How can I run multiple commands with sudo?
-A. Use `sudo sh -c "command1 && command2"` or start a root shell with `sudo -s` or `sudo -i`.
+A. Use `sudo sh -c "command1 && command2"` or start a root shell with `sudo -i` and then run your commands.
 
-#### Q4. Can I use sudo in scripts?
-A. Yes, but it's better to run the entire script with sudo rather than using sudo for individual commands within the script. For automated scripts, consider using passwordless sudo for specific commands.
-
-## macOS Considerations
-
-On macOS, sudo works similarly to Linux but with some differences:
-- The first time you use sudo, you'll see a message about responsibility
-- macOS uses a separate sudoers file at `/etc/sudoers`
-- TouchID can be configured to authenticate sudo on supported Mac models
-- The sudo timeout may behave differently depending on your macOS version
+#### Q4. How do I add a user to sudoers?
+A. Add the user to the sudo group with `usermod -aG sudo username` on Debian/Ubuntu or to the wheel group on RHEL/CentOS systems.
 
 ## References
 
@@ -128,4 +135,4 @@ https://www.sudo.ws/docs/man/sudo.man/
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

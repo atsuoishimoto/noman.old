@@ -47,41 +47,64 @@
     <main>
       
   <h1>diff3 command</h1>
-<p>Compare three files line by line and show differences between them.</p>
+<p>Compare three files line by line and show differences.</p>
 <h2>Overview</h2>
-<p><code>diff3</code> is a text comparison utility that analyzes three files and identifies the differences between them. It's particularly useful for comparing an original file with two different modified versions, making it valuable for resolving merge conflicts in version control systems or for comparing different revisions of a document.</p>
+<p><code>diff3</code> is a utility that compares three files and identifies the differences between them. It's particularly useful when merging changes from multiple versions of a file, such as in version control systems. The command shows which lines are unique to each file and which are common across files.</p>
 <h2>Options</h2>
 <h3><strong>-A, --show-all</strong></h3>
-<p>Output all changes, including conflicts, in a unified format that's easier to read</p>
+<p>Output all changes, bracketing conflicts between files.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff3<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>file3
 <span style="color: #000; font-style: italic">&lt;&lt;&lt;&lt;&lt;&lt;&lt; file1</span>
 <span style="color: #000; font-style: italic">This is in file1</span>
 <span style="color: #000; font-style: italic">||||||| file2</span>
 <span style="color: #000; font-style: italic">This is in file2</span>
-<span style="color: #000; font-style: italic">======= file3</span>
+<span style="color: #000; font-style: italic">======= </span>
 <span style="color: #000; font-style: italic">This is in file3</span>
 <span style="color: #000; font-style: italic">&gt;&gt;&gt;&gt;&gt;&gt;&gt; file3</span>
 </pre></div>
-<h3><strong>-m, --merge</strong></h3>
-<p>Produce output in a merge format suitable for further editing</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff3<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>file3
-<span style="color: #000; font-style: italic">&lt;&lt;&lt;&lt;&lt;&lt;&lt; file1</span>
-<span style="color: #000; font-style: italic">Content from file1</span>
-<span style="color: #000; font-style: italic">||||||| file2</span>
-<span style="color: #000; font-style: italic">Content from file2</span>
-<span style="color: #000; font-style: italic">======= file3</span>
-<span style="color: #000; font-style: italic">Content from file3</span>
-<span style="color: #000; font-style: italic">&gt;&gt;&gt;&gt;&gt;&gt;&gt; file3</span>
-</pre></div>
 <h3><strong>-e, --ed</strong></h3>
-<p>Create an ed script that can be used to incorporate changes from file1 to file3 into file2</p>
+<p>Create an ed script that incorporates all changes from file1 to file3 into file2.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff3<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>file3
 <span style="color: #000; font-style: italic">w</span>
 <span style="color: #000; font-style: italic">q</span>
 </pre></div>
+<h3><strong>-m, --merge</strong></h3>
+<p>Output the merged file directly instead of an ed script.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff3<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>file3
+<span style="color: #000; font-style: italic">Common text</span>
+<span style="color: #000; font-style: italic">&lt;&lt;&lt;&lt;&lt;&lt;&lt; file1</span>
+<span style="color: #000; font-style: italic">Text from file1</span>
+<span style="color: #000; font-style: italic">||||||| file2</span>
+<span style="color: #000; font-style: italic">Text from file2</span>
+<span style="color: #000; font-style: italic">=======</span>
+<span style="color: #000; font-style: italic">Text from file3</span>
+<span style="color: #000; font-style: italic">&gt;&gt;&gt;&gt;&gt;&gt;&gt; file3</span>
+<span style="color: #000; font-style: italic">More common text</span>
+</pre></div>
+<h3><strong>-T, --initial-tab</strong></h3>
+<p>Make tabs line up by prefixing a tab to output lines.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff3<span style="color: #F8F8F8"> </span>-T<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>file3
+<span style="color: #000; font-style: italic">	====1</span>
+<span style="color: #000; font-style: italic">	line from file1</span>
+<span style="color: #000; font-style: italic">	====2</span>
+<span style="color: #000; font-style: italic">	line from file2</span>
+<span style="color: #000; font-style: italic">	====3</span>
+<span style="color: #000; font-style: italic">	line from file3</span>
+</pre></div>
 <h3><strong>-x, --overlap-only</strong></h3>
-<p>Show only the overlapping changes (conflicts)</p>
+<p>Show only overlapping changes.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff3<span style="color: #F8F8F8"> </span>-x<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>file3
+<span style="color: #000; font-style: italic">====</span>
+<span style="color: #000; font-style: italic">1:1c</span>
+<span style="color: #000; font-style: italic">line in file1</span>
+<span style="color: #000; font-style: italic">2:1c</span>
+<span style="color: #000; font-style: italic">line in file2</span>
+<span style="color: #000; font-style: italic">3:1c</span>
+<span style="color: #000; font-style: italic">line in file3</span>
+</pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic Comparison</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff3<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>file3
 <span style="color: #000; font-style: italic">====</span>
 <span style="color: #000; font-style: italic">1:1c</span>
 <span style="color: #000; font-style: italic">This is file1</span>
@@ -89,52 +112,46 @@
 <span style="color: #000; font-style: italic">This is file2</span>
 <span style="color: #000; font-style: italic">3:1c</span>
 <span style="color: #000; font-style: italic">This is file3</span>
-<span style="color: #000; font-style: italic">====</span>
-</pre></div>
-<h2>Usage Examples</h2>
-<h3>Basic Comparison</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff3<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>yours.txt<span style="color: #F8F8F8"> </span>theirs.txt
-<span style="color: #000; font-style: italic">====</span>
-<span style="color: #000; font-style: italic">1:1c</span>
-<span style="color: #000; font-style: italic">This is the original file</span>
-<span style="color: #000; font-style: italic">2:1c</span>
-<span style="color: #000; font-style: italic">This is your modified version</span>
-<span style="color: #000; font-style: italic">3:1c</span>
-<span style="color: #000; font-style: italic">This is their modified version</span>
-<span style="color: #000; font-style: italic">====</span>
 </pre></div>
 <h3>Creating a Merged File</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff3<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>yours.txt<span style="color: #F8F8F8"> </span>theirs.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>merged.txt
-<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>merged.txt
-<span style="color: #000; font-style: italic">&lt;&lt;&lt;&lt;&lt;&lt;&lt; original.txt</span>
-<span style="color: #000; font-style: italic">This is the original file</span>
-<span style="color: #000; font-style: italic">||||||| yours.txt</span>
-<span style="color: #000; font-style: italic">This is your modified version</span>
-<span style="color: #000; font-style: italic">======= theirs.txt</span>
-<span style="color: #000; font-style: italic">This is their modified version</span>
-<span style="color: #000; font-style: italic">&gt;&gt;&gt;&gt;&gt;&gt;&gt; theirs.txt</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff3<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>file3<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>merged_file
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>merged_file
+<span style="color: #000; font-style: italic">Common text</span>
+<span style="color: #000; font-style: italic">&lt;&lt;&lt;&lt;&lt;&lt;&lt; file1</span>
+<span style="color: #000; font-style: italic">Text from file1</span>
+<span style="color: #000; font-style: italic">||||||| file2</span>
+<span style="color: #000; font-style: italic">Text from file2</span>
+<span style="color: #000; font-style: italic">=======</span>
+<span style="color: #000; font-style: italic">Text from file3</span>
+<span style="color: #000; font-style: italic">&gt;&gt;&gt;&gt;&gt;&gt;&gt; file3</span>
+<span style="color: #000; font-style: italic">More common text</span>
+</pre></div>
+<h3>Resolving Conflicts Automatically</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff3<span style="color: #F8F8F8"> </span>--merge<span style="color: #F8F8F8"> </span>--easy-only<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>file3<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>merged_file
 </pre></div>
 <h2>Tips</h2>
 <h3>Understanding the Output Format</h3>
-<p>The default output format shows line numbers and content from each file. The numbers before the colon indicate which file (1, 2, or 3) the content comes from, and the letter after the colon indicates the type of change (a for add, c for change, d for delete).</p>
-<h3>Using diff3 for Version Control</h3>
-<p>When resolving merge conflicts in Git or other version control systems, understanding diff3 output can help you better interpret what changes were made by different parties.</p>
-<h3>Automating Merges</h3>
-<p>Use the <code>-m</code> option to create a merged file that you can then edit manually to resolve conflicts. This is often more efficient than trying to merge files by hand.</p>
+<p>In standard output, <code>diff3</code> uses <code>====</code> to mark the beginning of a difference block, followed by line numbers and change types. For example, <code>1:1c</code> means line 1 in file1 is changed.</p>
+<h3>Merging Files Effectively</h3>
+<p>When using <code>-m</code> (merge), conflicts are marked with <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>|||||||</code>, <code>=======</code>, and <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>. You'll need to manually edit these sections to resolve conflicts.</p>
+<h3>Automating Conflict Resolution</h3>
+<p>Use <code>--easy-only</code> with <code>--merge</code> to automatically incorporate non-conflicting changes, leaving only true conflicts for manual resolution.</p>
+<h3>Working with Version Control</h3>
+<p><code>diff3</code> is often used behind the scenes in version control systems like Git when resolving merge conflicts between branches.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between diff and diff3?</h4>
-<p>A. <code>diff</code> compares two files, while <code>diff3</code> compares three files, making it useful for comparing an original file with two different modified versions.</p>
-<h4>Q2. How do I interpret the output of diff3?</h4>
-<p>A. The output shows sections where the files differ, with line numbers and content from each file. The numbers (1:, 2:, 3:) indicate which file the content comes from.</p>
-<h4>Q3. Can diff3 automatically resolve conflicts?</h4>
-<p>A. No, diff3 can identify conflicts but cannot automatically resolve them. It can produce a merged file with conflict markers that you must resolve manually.</p>
-<h4>Q4. How do I save the output to a file?</h4>
-<p>A. Use output redirection: <code>diff3 file1 file2 file3 &gt; output.txt</code> or use the <code>-m</code> option to create a merged file.</p>
+<h4>Q1. What's the difference between <code>diff</code> and <code>diff3</code>?</h4>
+<p>A. <code>diff</code> compares two files, while <code>diff3</code> compares three files, making it useful for merging changes from multiple sources.</p>
+<h4>Q2. How do I interpret the output of <code>diff3</code>?</h4>
+<p>A. The output shows line numbers and content from each file. Lines marked with <code>====</code> indicate differences, followed by line numbers and content from each file.</p>
+<h4>Q3. Can <code>diff3</code> automatically resolve conflicts?</h4>
+<p>A. Partially. Using <code>--merge --easy-only</code> will automatically resolve non-conflicting changes, but you'll still need to manually resolve true conflicts.</p>
+<h4>Q4. How do I save the merged output to a file?</h4>
+<p>A. Use redirection: <code>diff3 -m file1 file2 file3 &gt; merged_file</code></p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/diffutils/manual/html_node/Invoking-diff3.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

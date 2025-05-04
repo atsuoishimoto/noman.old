@@ -47,92 +47,88 @@
     <main>
       
   <h1>stat コマンド</h1>
-<p>ファイルやファイルシステムの詳細な情報を表示します。</p>
+<p>ファイルやファイルシステムの詳細な状態情報を表示します。</p>
 <h2>概要</h2>
-<p><code>stat</code> コマンドは、ファイルやディレクトリの詳細な情報（アクセス権、所有者、サイズ、タイムスタンプなど）を表示します。また、ファイルシステム全体の情報を確認することもできます。基本的なファイル情報だけでなく、iノード番号やブロック数など、より技術的な詳細も提供します。</p>
+<p><code>stat</code>コマンドは、ファイルやファイルシステムに関する詳細情報を表示します。アクセス権限、所有者、サイズ、タイムスタンプ、iノード情報などが含まれます。<code>ls -l</code>よりも包括的な情報を提供します。</p>
 <h2>オプション</h2>
 <h3><strong>-f, --file-system</strong></h3>
-<p>ファイルシステムの情報を表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/
-<span style="color: #000; font-style: italic">  ファイル: &quot;/&quot;</span>
-<span style="color: #000; font-style: italic">    ID: ffffffff0000000f 名前長: 255  タイプ: ext4</span>
-<span style="color: #000; font-style: italic">ブロックサイズ: 4096       基本ブロックサイズ: 4096</span>
-<span style="color: #000; font-style: italic">    ブロック: 総数: 6553600    空き: 4934630    利用可能: 4934630</span>
-<span style="color: #000; font-style: italic">   i ノード: 総数: 1638400    空き: 1499772</span>
+<p>ファイル情報の代わりにファイルシステムの情報を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/home
+<span style="color: #000; font-style: italic">  File: &quot;/home&quot;</span>
+<span style="color: #000; font-style: italic">    ID: 2f400000000000000 Namelen: 255     Type: ext4</span>
+<span style="color: #000; font-style: italic">Block size: 4096       Fundamental block size: 4096</span>
+<span style="color: #000; font-style: italic">Blocks: Total: 244033764   Free: 146937542   Available: 134209270</span>
+<span style="color: #000; font-style: italic">Inodes: Total: 62259200    Free: 60948748</span>
 </pre></div>
 <h3><strong>-c, --format=FORMAT</strong></h3>
-<p>指定したフォーマットで出力します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%n %s %U&quot;</span><span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">file.txt 1024 user</span>
+<p>デフォルトの出力形式の代わりに指定したFORMATを使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%n %s %y&quot;</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">file.txt 1024 2025-05-01 14:30:45.123456789 +0000</span>
 </pre></div>
 <h3><strong>-t, --terse</strong></h3>
-<p>簡潔な形式で出力します。</p>
+<p>情報を簡潔な形式で表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">file.txt 1024 8 81a4 1000 1000 103 1682841600 1682841600 1682841600 4096 8 0 0</span>
+<span style="color: #000; font-style: italic">file.txt 1024 8 81a4 1000 1000 fe01 1620000000 1620000000 1620000000 4096 8 0 0</span>
+</pre></div>
+<h3><strong>-L, --dereference</strong></h3>
+<p>シンボリックリンクの情報を表示する際にリンク先をたどります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>symlink.txt
+<span style="color: #000; font-style: italic">  File: &#39;symlink.txt&#39;</span>
+<span style="color: #000; font-style: italic">  Size: 1024      	Blocks: 8          IO Block: 4096   regular file</span>
+<span style="color: #000; font-style: italic">Device: fd00h/64768d	Inode: 12345      Links: 1</span>
+<span style="color: #000; font-style: italic">Access: (0644/-rw-r--r--)  Uid: (1000/username)   Gid: (1000/groupname)</span>
+<span style="color: #000; font-style: italic">Access: 2025-05-01 10:00:00.000000000 +0000</span>
+<span style="color: #000; font-style: italic">Modify: 2025-05-01 10:00:00.000000000 +0000</span>
+<span style="color: #000; font-style: italic">Change: 2025-05-01 10:00:00.000000000 +0000</span>
+<span style="color: #000; font-style: italic"> Birth: 2025-05-01 10:00:00.000000000 +0000</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的なファイル情報の表示</h3>
+<h3>基本的なファイル情報</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">  ファイル: file.txt</span>
-<span style="color: #000; font-style: italic">  サイズ: 1024      	ブロック: 8          IO ブロック: 4096   通常ファイル</span>
-<span style="color: #000; font-style: italic">デバイス: 801h/2049d	i ノード: 8193       リンク: 1</span>
-<span style="color: #000; font-style: italic">アクセス: (0644/-rw-r--r--)  Uid: ( 1000/    user)   Gid: ( 1000/    user)</span>
-<span style="color: #000; font-style: italic">アクセス: 2025-04-30 10:00:00.000000000 +0900</span>
-<span style="color: #000; font-style: italic">更新: 2025-04-30 10:00:00.000000000 +0900</span>
-<span style="color: #000; font-style: italic">変更: 2025-04-30 10:00:00.000000000 +0900</span>
-<span style="color: #000; font-style: italic">作成: -</span>
+<span style="color: #000; font-style: italic">  File: file.txt</span>
+<span style="color: #000; font-style: italic">  Size: 1024      	Blocks: 8          IO Block: 4096   regular file</span>
+<span style="color: #000; font-style: italic">Device: fd00h/64768d	Inode: 12345      Links: 1</span>
+<span style="color: #000; font-style: italic">Access: (0644/-rw-r--r--)  Uid: (1000/username)   Gid: (1000/groupname)</span>
+<span style="color: #000; font-style: italic">Access: 2025-05-01 10:00:00.000000000 +0000</span>
+<span style="color: #000; font-style: italic">Modify: 2025-05-01 10:00:00.000000000 +0000</span>
+<span style="color: #000; font-style: italic">Change: 2025-05-01 10:00:00.000000000 +0000</span>
+<span style="color: #000; font-style: italic"> Birth: 2025-05-01 10:00:00.000000000 +0000</span>
 </pre></div>
-<h3>複数ファイルの情報表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">  ファイル: file1.txt</span>
-<span style="color: #000; font-style: italic">  サイズ: 1024      	ブロック: 8          IO ブロック: 4096   通常ファイル</span>
-<span style="color: #000; font-style: italic">デバイス: 801h/2049d	i ノード: 8193       リンク: 1</span>
-<span style="color: #000; font-style: italic">アクセス: (0644/-rw-r--r--)  Uid: ( 1000/    user)   Gid: ( 1000/    user)</span>
-<span style="color: #000; font-style: italic">アクセス: 2025-04-30 10:00:00.000000000 +0900</span>
-<span style="color: #000; font-style: italic">更新: 2025-04-30 10:00:00.000000000 +0900</span>
-<span style="color: #000; font-style: italic">変更: 2025-04-30 10:00:00.000000000 +0900</span>
-<span style="color: #000; font-style: italic">作成: -</span>
-
-<span style="color: #000; font-style: italic">  ファイル: file2.txt</span>
-<span style="color: #000; font-style: italic">  サイズ: 2048      	ブロック: 8          IO ブロック: 4096   通常ファイル</span>
-<span style="color: #000; font-style: italic">デバイス: 801h/2049d	i ノード: 8194       リンク: 1</span>
-<span style="color: #000; font-style: italic">アクセス: (0644/-rw-r--r--)  Uid: ( 1000/    user)   Gid: ( 1000/    user)</span>
-<span style="color: #000; font-style: italic">アクセス: 2025-04-30 10:00:00.000000000 +0900</span>
-<span style="color: #000; font-style: italic">更新: 2025-04-30 10:00:00.000000000 +0900</span>
-<span style="color: #000; font-style: italic">変更: 2025-04-30 10:00:00.000000000 +0900</span>
-<span style="color: #000; font-style: italic">作成: -</span>
+<h3>カスタムフォーマットで特定の情報を表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ファイル: %n, サイズ: %s バイト, 更新日時: %y&quot;</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">ファイル: file.txt, サイズ: 1024 バイト, 更新日時: 2025-05-01 10:00:00.000000000 +0000</span>
 </pre></div>
-<h3>カスタムフォーマットでの出力</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ファイル名: %n, サイズ: %s バイト, 所有者: %U, グループ: %G, 更新日時: %y&quot;</span><span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">ファイル名: file.txt, サイズ: 1024 バイト, 所有者: user, グループ: user, 更新日時: 2025-04-30 10:00:00.000000000 +0900</span>
+<h3>ファイルシステム情報</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>/
+<span style="color: #000; font-style: italic">  File: &quot;/&quot;</span>
+<span style="color: #000; font-style: italic">    ID: 2f400000000000000 Namelen: 255     Type: ext4</span>
+<span style="color: #000; font-style: italic">Block size: 4096       Fundamental block size: 4096</span>
+<span style="color: #000; font-style: italic">Blocks: Total: 244033764   Free: 146937542   Available: 134209270</span>
+<span style="color: #000; font-style: italic">Inodes: Total: 62259200    Free: 60948748</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>フォーマット指定子の活用</h3>
-<p><code>-c</code> オプションで使用できる主なフォーマット指定子には、<code>%n</code>（ファイル名）、<code>%s</code>（サイズ）、<code>%U</code>（所有者）、<code>%G</code>（グループ）、<code>%y</code>（更新日時）などがあります。これらを組み合わせて必要な情報だけを抽出できます。</p>
-<h3>シンボリックリンクの情報</h3>
-<p>シンボリックリンクの実際のターゲットではなく、リンク自体の情報を表示するには、<code>-L</code> オプションを使用しないでください。</p>
-<h3>スクリプトでの利用</h3>
-<p><code>stat</code> コマンドは、シェルスクリプト内でファイルの属性を確認する際に非常に便利です。特に <code>-c</code> オプションを使用すると、必要な情報だけを抽出できます。</p>
+<h3>必要な情報だけを取得する</h3>
+<p><code>-c</code>オプションとフォーマット指定子を使用して、必要な情報だけを抽出できます。例えば、<code>stat -c &quot;%s&quot; file.txt</code>はファイルサイズのみを表示します。</p>
+<h3>ファイルのタイムスタンプを比較する</h3>
+<p><code>stat</code>を使用して、ファイルが最後にアクセスされた時間、変更された時間、またはメタデータが変更された時間を確認できます。これはトラブルシューティングやファイル操作の検証に役立ちます。</p>
+<h3>iノード情報を確認する</h3>
+<p><code>stat</code>で表示されるiノード番号は、2つのファイルが同じデータにハードリンクされているかどうかを識別するのに役立ちます（同じiノード番号を持ちます）。</p>
+<h3>macOSでの違い</h3>
+<p>macOSでは、フォーマットオプションが異なります。サイズには<code>%z</code>、更新時間には<code>%m</code>などのフォーマット指定子と共に<code>-f</code>を使用します。GNU形式の長いオプションは利用できません。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>stat</code> と <code>ls -l</code> の違いは何ですか？</h4>
-<p>A. <code>ls -l</code> は基本的なファイル情報（権限、所有者、サイズ、更新日時など）を表示しますが、<code>stat</code> はより詳細な情報（iノード番号、デバイス番号、アクセス日時、変更日時など）も表示します。</p>
-<h4>Q2. ファイルの最終アクセス日時だけを表示するにはどうすればいいですか？</h4>
-<p>A. <code>stat -c &quot;%x&quot; ファイル名</code> を使用します。</p>
-<h4>Q3. ファイルシステムの空き容量を確認するには？</h4>
-<p>A. <code>stat -f ファイルシステムのマウントポイント</code> を使用します。例えば、ルートファイルシステムの場合は <code>stat -f /</code> です。</p>
-<h4>Q4. macOSとLinuxでの <code>stat</code> コマンドの違いは何ですか？</h4>
-<p>A. macOSの <code>stat</code> コマンドはBSD由来で、Linuxの GNU coreutils の <code>stat</code> とはオプションやフォーマット指定子が異なります。macOSでは <code>-f</code> フォーマットオプションを使用し、Linuxでは <code>-c</code> を使用します。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSの <code>stat</code> コマンドはBSD系であり、GNU版とは構文が異なります。例えば、フォーマット指定には <code>-f</code> オプションを使用し、フォーマット指定子も異なります。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>stat<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%N %z %Su&quot;</span><span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">file.txt 1024 user</span>
-</pre></div>
-<p>また、macOSでは一部のタイムスタンプ（特に作成時間）が利用可能で、Linuxでは利用できない場合があります。</p>
+<h4>Q1. <code>stat</code>と<code>ls -l</code>の違いは何ですか？</h4>
+<p>A. <code>stat</code>は<code>ls -l</code>よりも詳細な情報を提供し、正確なタイムスタンプ、iノード番号、デバイスIDなどが含まれます。ファイルメタデータ分析により包括的です。</p>
+<h4>Q2. ファイルサイズだけを確認するにはどうすればよいですか？</h4>
+<p>A. Linuxでは<code>stat -c &quot;%s&quot; ファイル名</code>、macOSでは<code>stat -f &quot;%z&quot; ファイル名</code>を使用します。</p>
+<h4>Q3. ファイルが最後に変更された時間を確認するにはどうすればよいですか？</h4>
+<p>A. Linuxでは<code>stat -c &quot;%y&quot; ファイル名</code>、macOSでは<code>stat -f &quot;%m&quot; ファイル名</code>を使用します（後者はエポックからの秒数を表示します）。</p>
+<h4>Q4. <code>stat</code>をディレクトリに使用できますか？</h4>
+<p>A. はい、<code>stat</code>はファイルと同様にディレクトリでも機能し、そのメタデータを表示します。</p>
 <h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/stat-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

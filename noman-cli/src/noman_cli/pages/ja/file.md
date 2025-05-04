@@ -1,106 +1,132 @@
 # file コマンド
 
-ファイルの種類を判別します。
+ファイルの内容を調べてファイルタイプを判定します。
 
 ## 概要
 
-`file` コマンドはファイルの内容を検査し、そのファイルの種類（テキスト、実行可能ファイル、画像など）を判定します。このコマンドは、拡張子がないファイルや、拡張子が実際の内容と一致しないファイルの種類を特定するのに役立ちます。
+`file` コマンドは指定された各ファイルを調査し、そのタイプを分類します。テキスト、実行可能ファイル、データ、その他の形式かどうかを判断するために一連のテストを実行します。多くのコマンドがファイル拡張子に依存するのとは異なり、`file` はファイルの実際の内容を調べてタイプを識別します。
 
 ## オプション
 
-### **-b (--brief)**
+### **-b, --brief**
 
-ファイル名を表示せず、ファイルタイプのみを出力します。
+ファイル名の接頭辞なしで結果を表示します。
 
 ```console
-$ file -b sample.txt
+$ file -b document.txt
 ASCII text
 ```
 
-### **-i (--mime)**
+### **-i, --mime**
 
-MIMEタイプ形式でファイルの種類を表示します。
+従来の説明の代わりにMIMEタイプ文字列を表示します。
 
 ```console
-$ file -i sample.txt
-sample.txt: text/plain; charset=us-ascii
+$ file -i document.txt
+document.txt: text/plain; charset=us-ascii
 ```
 
-### **-z (--uncompress)**
+### **-z, --uncompress**
 
-圧縮ファイルの内容を検査します。
+圧縮ファイルの中身を調べます。
 
 ```console
 $ file -z archive.gz
-archive.gz: ASCII text (gzip compressed data, was "sample.txt")
+archive.gz: ASCII text (gzip compressed data, was "notes.txt", last modified: Wed Apr 28 15:30:45 2021, from Unix)
 ```
 
-### **-L (--dereference)**
+### **-L, --dereference**
 
-シンボリックリンクをたどり、リンク先のファイルの種類を表示します。
+シンボリックリンクをたどります。
 
 ```console
-$ file -L symlink.txt
-symlink.txt: ASCII text
+$ file -L symlink
+symlink: ASCII text
+```
+
+### **-s, --special-files**
+
+ブロックまたはキャラクタ特殊ファイルを読み込みます。
+
+```console
+$ file -s /dev/sda1
+/dev/sda1: Linux rev 1.0 ext4 filesystem data (extents) (large files)
 ```
 
 ## 使用例
 
-### 基本的な使用法
+### 基本的なファイル識別
 
 ```console
-$ file sample.txt
-sample.txt: ASCII text
-
-$ file /bin/bash
-/bin/bash: Mach-O 64-bit executable x86_64
+$ file document.txt image.png script.sh
+document.txt: ASCII text
+image.png:    PNG image data, 1920 x 1080, 8-bit/color RGB, non-interlaced
+script.sh:    Bourne-Again shell script, ASCII text executable
 ```
 
-### 複数ファイルの種類を確認
+### 複数ファイルの調査
 
 ```console
 $ file *
 document.txt:  ASCII text
-image.jpg:     JPEG image data, JFIF standard 1.01
-program:       Mach-O 64-bit executable x86_64
-archive.zip:   Zip archive data, at least v2.0 to extract
+image.png:     PNG image data, 1920 x 1080, 8-bit/color RGB, non-interlaced
+script.sh:     Bourne-Again shell script, ASCII text executable
+archive.tar:   POSIX tar archive (GNU)
+binary:        ELF 64-bit LSB executable, x86-64
 ```
 
-### ディレクトリの確認
+### ディレクトリの調査
 
 ```console
-$ file /etc
-/etc: directory
+$ file projects/
+projects/: directory
 ```
 
 ## ヒント:
 
-### マジックナンバーによる判定
+### パイプとの使用
 
-`file` コマンドは「マジックナンバー」と呼ばれるファイル先頭のバイトパターンを検査して種類を判定しています。そのため、拡張子に関係なく実際の内容に基づいて判定できます。
+特殊な引数 `-` を使用して、他のコマンドからの出力を `file` にパイプで渡し、標準入力から読み取ることができます：
 
-### スクリプトでの活用
+```console
+$ cat unknown_file | file -
+/dev/stdin: ASCII text
+```
 
-シェルスクリプト内で `file` コマンドを使用して、処理前にファイルの種類を確認することで、不適切なファイルタイプによるエラーを防ぐことができます。
+### 再帰的なファイルタイプ識別
 
-### バイナリファイルの識別
+`find` と組み合わせて、再帰的にファイルタイプを識別できます：
 
-テキストエディタで開く前にファイルがバイナリかテキストかを確認するのに役立ちます。バイナリファイルをテキストエディタで開くと文字化けの原因になります。
+```console
+$ find . -type f -exec file {} \;
+```
+
+### 実行可能ファイルの識別
+
+`file` コマンドは、バイナリが32ビットか64ビットか、どのアーキテクチャ用にコンパイルされているかを判断するのに役立ちます：
+
+```console
+$ file /bin/ls
+/bin/ls: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32
+```
 
 ## よくある質問
 
-#### Q1. `file` コマンドはどのようにファイルの種類を判定しますか？
-A. ファイルの先頭部分のバイトパターン（マジックナンバー）、テキスト分析、その他の特徴を調べて判定します。
+#### Q1. `file` コマンドはどのようにファイルタイプを判定しますか？
+A. `file` は「マジック」テストを使用します - ファイルの最初の数バイトを調べ、データベース（通常は `/usr/share/file/magic` にあります）の既知のパターンと比較します。
 
-#### Q2. ファイルの拡張子と `file` コマンドの結果が異なる場合はどうすればよいですか？
-A. 通常は `file` コマンドの結果が実際のファイル内容を反映しています。必要に応じて拡張子を変更するか、適切なアプリケーションで開くことを検討してください。
+#### Q2. `file` はすべてのファイルタイプを識別できますか？
+A. `file` は多くの一般的なファイルタイプを識別できますが、専門的または独自の形式は認識できない場合があります。ファイルの内容に基づいて最善の推測を提供します。
 
-#### Q3. `file` コマンドが「data」や「ASCII text」としか表示しない場合はどうすればよいですか？
-A. これはファイルの内容が特定のパターンに一致しないか、一般的なテキストデータであることを示しています。より詳細な情報を得るには、ファイルの内容を直接確認する必要があるかもしれません。
+#### Q3. なぜ `file` はテキストファイルを特定のエンコーディングとして報告することがありますか？
+A. `file` は文字パターンを分析して、UTF-8、ASCII、その他の文字セットなどのテキストエンコーディングを検出します。
 
-## macOSでの注意点
+#### Q4. ファイル名なしでMIMEタイプだけを取得するにはどうすればよいですか？
+A. `file -b -i ファイル名` を使用すると、ファイル名の接頭辞なしでMIMEタイプのみを取得できます。
 
-macOSの `file` コマンドはBSD由来であり、Linux版と若干の違いがあります。特に `-z` オプションの動作が異なる場合があります。また、macOSでは実行可能ファイルの判定結果が「Mach-O」形式で表示されます。
+## macOSに関する考慮事項
+
+macOSでは、`file` コマンドはLinuxバージョンと同様に動作しますが、出力形式や検出機能が若干異なる場合があります。マジックデータベースの場所は通常 `/usr/share/file/magic` または `/etc/magic` にあります。
 
 ## 参考資料
 
@@ -108,4 +134,4 @@ https://man7.org/linux/man-pages/man1/file.1.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

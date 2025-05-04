@@ -4,13 +4,13 @@ Apply a diff file to an original file or files.
 
 ## Overview
 
-The `patch` command applies changes (patches) to files. It reads a patch file (typically created by the `diff` command) and modifies the original files to incorporate those changes. This is commonly used for applying bug fixes, updates, or modifications to source code and text files.
+The `patch` command applies changes (patches) to files. It reads a patch file (typically created by the `diff` command) and modifies the original file(s) according to the instructions in the patch. This is commonly used for applying bug fixes, updates, or modifications to source code and text files.
 
 ## Options
 
-### **-p[num]**
+### **-p num, --strip=num**
 
-Strip the smallest prefix containing `num` leading slashes from each file name in the patch. This helps when patch paths don't match your local directory structure.
+Strip the smallest prefix containing num leading slashes from each file name found in the patch file.
 
 ```console
 $ patch -p1 < changes.patch
@@ -19,22 +19,29 @@ patching file src/main.c
 
 ### **-b, --backup**
 
-Create backup files of the originals before patching.
+Create a backup of the original file before applying the patch.
 
 ```console
-$ patch -b main.c < fix.patch
-patching file main.c
-$ ls main.c*
-main.c  main.c.orig
+$ patch -b file.txt < changes.patch
+patching file file.txt
 ```
 
 ### **-R, --reverse**
 
-Assume patches were created with old and new files swapped, effectively reversing the patch.
+Assume that the patch was created with the old and new files swapped, effectively reversing the patch.
 
 ```console
-$ patch -R < changes.patch
-patching file main.c
+$ patch -R file.txt < changes.patch
+patching file file.txt
+```
+
+### **-i patchfile, --input=patchfile**
+
+Read the patch from the specified file instead of standard input.
+
+```console
+$ patch -i changes.patch
+patching file file.txt
 ```
 
 ### **-d dir, --directory=dir**
@@ -42,17 +49,17 @@ patching file main.c
 Change to the specified directory before applying the patch.
 
 ```console
-$ patch -d src/ < changes.patch
+$ patch -d src/ -i ../changes.patch
 patching file main.c
 ```
 
-### **--dry-run**
+### **-u, --unified**
 
-Print the results of applying the patches without actually changing any files.
+Interpret the patch file as a unified diff (the most common format nowadays).
 
 ```console
-$ patch --dry-run < changes.patch
-patching file main.c
+$ patch -u file.txt < changes.patch
+patching file file.txt
 ```
 
 ## Usage Examples
@@ -61,63 +68,65 @@ patching file main.c
 
 ```console
 $ diff -u original.txt modified.txt > changes.patch
-$ patch < changes.patch
+$ patch original.txt < changes.patch
 patching file original.txt
 ```
 
-### Applying a Patch to a Different Directory
+### Applying a Patch to Multiple Files
 
 ```console
-$ patch -p0 -d project/ < changes.patch
-patching file src/main.c
-```
-
-### Creating and Applying a Patch for Multiple Files
-
-```console
-$ diff -Naur original_dir/ modified_dir/ > project.patch
-$ patch -p1 < project.patch
+$ patch -p0 < project.patch
 patching file src/main.c
 patching file include/header.h
 ```
 
-## Tips
+### Creating and Applying a Backup
 
-### Understanding Patch Formats
+```console
+$ patch -b file.txt < changes.patch
+patching file file.txt
+$ ls
+file.txt  file.txt.orig  changes.patch
+```
 
-The most common patch formats are unified (`diff -u`) and context (`diff -c`). Unified format is more compact and readable, showing a few lines of context around each change with `+` for added lines and `-` for removed lines.
+### Dry Run (Check Without Applying)
 
-### Testing Patches Before Applying
+```console
+$ patch --dry-run -p1 < changes.patch
+checking file src/main.c
+```
 
-Always use `--dry-run` to test a patch before applying it to important files. This shows what would happen without making actual changes.
+## Tips:
+
+### Understanding Patch Levels
+
+The `-p` option (strip level) is crucial when applying patches to projects. If your patch contains paths like `a/src/file.c`, using `-p1` will strip the `a/` prefix, making it look for `src/file.c`.
 
 ### Handling Failed Patches
 
-If a patch fails to apply cleanly, patch will create `.rej` files containing the rejected hunks. Examine these files to manually apply the changes that couldn't be applied automatically.
+If a patch fails to apply cleanly, patch creates `.rej` files containing the rejected hunks. Examine these files to manually apply the changes that couldn't be applied automatically.
 
-### Creating Patches
+### Testing Patches Before Applying
 
-To create a patch file, use the `diff` command with the `-u` option for unified format:
-```console
-$ diff -u original_file modified_file > changes.patch
-```
+Always use `--dry-run` to test if a patch will apply cleanly before actually applying it, especially for important files.
+
+### Patch Direction
+
+If you're unsure whether to use `-R` (reverse), try applying the patch normally first. If it fails with "reversed patch detected," then try with `-R`.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I apply a patch file?
-A. Use `patch < patchfile` to apply changes to the files mentioned in the patch file.
+#### Q1. What's the difference between a unified diff and a context diff?
+A. Unified diffs (`-u` option in diff) show changed lines with context in a single block prefixed with `+` and `-`, while context diffs show before and after blocks separately. Unified diffs are more compact and commonly used today.
 
-#### Q2. How do I reverse a patch I've applied?
-A. Use `patch -R < patchfile` to undo changes made by a patch.
+#### Q2. How do I reverse an applied patch?
+A. Use `patch -R` with the same patch file to undo changes. If you created backups with `-b`, you can also restore from those.
 
 #### Q3. What does "Hunk #1 FAILED" mean?
-A. It means that a section of the patch couldn't be applied, usually because the target file has been modified since the patch was created. Check the `.rej` file for the failed changes.
+A. It means that a section (hunk) of the patch couldn't be applied, usually because the target file has been modified since the patch was created. Check the `.rej` file for the failed changes.
 
-#### Q4. How do I handle patches with incorrect file paths?
-A. Use the `-p` option to strip path prefixes. For example, `patch -p1` removes the first directory level from paths in the patch file.
-
-#### Q5. Can I preview what a patch will do before applying it?
-A. Yes, use `patch --dry-run < patchfile` to see what would happen without making changes.
+#### Q4. How do I apply a patch to multiple files?
+A. If the patch file contains changes for multiple files, patch will automatically apply changes to all affected files when you run it.
 
 ## References
 
@@ -125,4 +134,4 @@ https://www.gnu.org/software/diffutils/manual/html_node/Invoking-patch.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

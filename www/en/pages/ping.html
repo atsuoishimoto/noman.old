@@ -49,108 +49,108 @@
   <h1>ping command</h1>
 <p>Send ICMP ECHO_REQUEST packets to network hosts to verify connectivity.</p>
 <h2>Overview</h2>
-<p><code>ping</code> is a network diagnostic tool that tests if a host is reachable on an IP network. It works by sending Internet Control Message Protocol (ICMP) echo request packets to the target host and waiting for a response. This command is commonly used to troubleshoot network connectivity issues, measure network latency, and verify if a remote system is online.</p>
+<p>The <code>ping</code> command is a network diagnostic tool that tests the reachability of a host on an IP network. It measures the round-trip time for messages sent from the originating host to a destination computer and back. Ping works by sending Internet Control Message Protocol (ICMP) Echo Request packets to the target host and waiting for an ICMP Echo Reply.</p>
 <h2>Options</h2>
-<h3><strong>-c count</strong></h3>
-<p>Limit the number of echo requests to be sent</p>
+<h3><strong>-c count</strong> / <strong>--count=count</strong></h3>
+<p>Stop after sending (and receiving) count ECHO_REQUEST packets.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8"> </span>google.com
-<span style="color: #000; font-style: italic">PING google.com (142.250.190.78): 56 data bytes</span>
-<span style="color: #000; font-style: italic">64 bytes from 142.250.190.78: icmp_seq=0 ttl=116 time=14.308 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 142.250.190.78: icmp_seq=1 ttl=116 time=14.417 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 142.250.190.78: icmp_seq=2 ttl=116 time=14.303 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 142.250.190.78: icmp_seq=3 ttl=116 time=14.264 ms</span>
+<span style="color: #000; font-style: italic">PING google.com (142.250.190.78) 56(84) bytes of data.</span>
+<span style="color: #000; font-style: italic">64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=1 ttl=116 time=15.2 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=2 ttl=116 time=14.8 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=3 ttl=116 time=15.0 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=4 ttl=116 time=14.9 ms</span>
 
 <span style="color: #000; font-style: italic">--- google.com ping statistics ---</span>
-<span style="color: #000; font-style: italic">4 packets transmitted, 4 packets received, 0.0% packet loss</span>
-<span style="color: #000; font-style: italic">round-trip min/avg/max/stddev = 14.264/14.323/14.417/0.057 ms</span>
+<span style="color: #000; font-style: italic">4 packets transmitted, 4 received, 0% packet loss, time 3005ms</span>
+<span style="color: #000; font-style: italic">rtt min/avg/max/mdev = 14.816/14.979/15.201/0.158 ms</span>
 </pre></div>
-<h3><strong>-i interval</strong></h3>
-<p>Wait the specified number of seconds between sending each packet</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>example.com
-<span style="color: #000; font-style: italic">PING example.com (93.184.216.34): 56 data bytes</span>
-<span style="color: #000; font-style: italic">64 bytes from 93.184.216.34: icmp_seq=0 ttl=56 time=11.632 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 93.184.216.34: icmp_seq=1 ttl=56 time=11.726 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 93.184.216.34: icmp_seq=2 ttl=56 time=11.978 ms</span>
+<h3><strong>-i interval</strong> / <strong>--interval=interval</strong></h3>
+<p>Wait interval seconds between sending each packet. The default is to wait for one second between each packet.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">PING example.com (93.184.216.34) 56(84) bytes of data.</span>
+<span style="color: #000; font-style: italic">64 bytes from 93.184.216.34: icmp_seq=1 ttl=56 time=11.8 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from 93.184.216.34: icmp_seq=2 ttl=56 time=12.1 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from 93.184.216.34: icmp_seq=3 ttl=56 time=11.9 ms</span>
 
 <span style="color: #000; font-style: italic">--- example.com ping statistics ---</span>
-<span style="color: #000; font-style: italic">3 packets transmitted, 3 packets received, 0.0% packet loss</span>
-<span style="color: #000; font-style: italic">round-trip min/avg/max/stddev = 11.632/11.779/11.978/0.146 ms</span>
+<span style="color: #000; font-style: italic">3 packets transmitted, 3 received, 0% packet loss, time 4005ms</span>
+<span style="color: #000; font-style: italic">rtt min/avg/max/mdev = 11.823/11.941/12.102/0.115 ms</span>
 </pre></div>
-<h3><strong>-t ttl</strong></h3>
-<p>Set the IP Time to Live (TTL) for outgoing packets</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">64</span><span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>github.com
-<span style="color: #000; font-style: italic">PING github.com (140.82.121.4): 56 data bytes</span>
-<span style="color: #000; font-style: italic">64 bytes from 140.82.121.4: icmp_seq=0 ttl=64 time=15.321 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 140.82.121.4: icmp_seq=1 ttl=64 time=15.256 ms</span>
+<h3><strong>-t ttl</strong> / <strong>--ttl=ttl</strong></h3>
+<p>Set the IP Time to Live (TTL) for outgoing packets.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">64</span><span style="color: #F8F8F8"> </span>github.com
+<span style="color: #000; font-style: italic">PING github.com (140.82.114.3) 56(84) bytes of data.</span>
+<span style="color: #000; font-style: italic">64 bytes from 140.82.114.3: icmp_seq=1 ttl=64 time=29.7 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from 140.82.114.3: icmp_seq=2 ttl=64 time=29.5 ms</span>
 
 <span style="color: #000; font-style: italic">--- github.com ping statistics ---</span>
-<span style="color: #000; font-style: italic">2 packets transmitted, 2 packets received, 0.0% packet loss</span>
-<span style="color: #000; font-style: italic">round-trip min/avg/max/stddev = 15.256/15.289/15.321/0.033 ms</span>
+<span style="color: #000; font-style: italic">2 packets transmitted, 2 received, 0% packet loss, time 1002ms</span>
+<span style="color: #000; font-style: italic">rtt min/avg/max/mdev = 29.532/29.636/29.741/0.104 ms</span>
 </pre></div>
-<h3><strong>-s packetsize</strong></h3>
-<p>Specify the number of data bytes to be sent</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>.8.8.8
-<span style="color: #000; font-style: italic">PING 8.8.8.8 (8.8.8.8): 100 data bytes</span>
-<span style="color: #000; font-style: italic">108 bytes from 8.8.8.8: icmp_seq=0 ttl=116 time=14.308 ms</span>
-<span style="color: #000; font-style: italic">108 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=14.417 ms</span>
+<h3><strong>-s packetsize</strong> / <strong>--size=packetsize</strong></h3>
+<p>Specifies the number of data bytes to be sent. The default is 56, which translates into 64 ICMP data bytes when combined with the 8 bytes of ICMP header data.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span>cloudflare.com
+<span style="color: #000; font-style: italic">PING cloudflare.com (104.16.132.229) 100(128) bytes of data.</span>
+<span style="color: #000; font-style: italic">108 bytes from 104.16.132.229: icmp_seq=1 ttl=57 time=10.3 ms</span>
+<span style="color: #000; font-style: italic">108 bytes from 104.16.132.229: icmp_seq=2 ttl=57 time=10.1 ms</span>
 
-<span style="color: #000; font-style: italic">--- 8.8.8.8 ping statistics ---</span>
-<span style="color: #000; font-style: italic">2 packets transmitted, 2 packets received, 0.0% packet loss</span>
-<span style="color: #000; font-style: italic">round-trip min/avg/max/stddev = 14.308/14.363/14.417/0.055 ms</span>
+<span style="color: #000; font-style: italic">--- cloudflare.com ping statistics ---</span>
+<span style="color: #000; font-style: italic">2 packets transmitted, 2 received, 0% packet loss, time 1001ms</span>
+<span style="color: #000; font-style: italic">rtt min/avg/max/mdev = 10.143/10.245/10.348/0.102 ms</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic connectivity test</h3>
+<h3>Basic Connectivity Test</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>google.com
-<span style="color: #000; font-style: italic">PING google.com (142.250.190.78): 56 data bytes</span>
-<span style="color: #000; font-style: italic">64 bytes from 142.250.190.78: icmp_seq=0 ttl=116 time=14.308 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 142.250.190.78: icmp_seq=1 ttl=116 time=14.417 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 142.250.190.78: icmp_seq=2 ttl=116 time=14.303 ms</span>
+<span style="color: #000; font-style: italic">PING google.com (142.250.190.78) 56(84) bytes of data.</span>
+<span style="color: #000; font-style: italic">64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=1 ttl=116 time=15.2 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=2 ttl=116 time=14.8 ms</span>
 <span style="color: #000; font-style: italic">^C</span>
 <span style="color: #000; font-style: italic">--- google.com ping statistics ---</span>
-<span style="color: #000; font-style: italic">3 packets transmitted, 3 packets received, 0.0% packet loss</span>
-<span style="color: #000; font-style: italic">round-trip min/avg/max/stddev = 14.303/14.343/14.417/0.052 ms</span>
+<span style="color: #000; font-style: italic">2 packets transmitted, 2 received, 0% packet loss, time 1002ms</span>
+<span style="color: #000; font-style: italic">rtt min/avg/max/mdev = 14.816/15.008/15.201/0.192 ms</span>
 </pre></div>
-<h3>Checking network latency</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>.8.8.8<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #000">time</span><span style="color: #CE5C00; font-weight: bold">=</span>
-<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=0 ttl=116 time=14.308 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=14.417 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=14.303 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=3 ttl=116 time=14.264 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=4 ttl=116 time=14.512 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=5 ttl=116 time=14.398 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=6 ttl=116 time=14.356 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=7 ttl=116 time=14.287 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=8 ttl=116 time=14.329 ms</span>
-<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=9 ttl=116 time=14.301 ms</span>
+<h3>Checking Network Latency</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ping<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>.8.8.8
+<span style="color: #000; font-style: italic">PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.</span>
+<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=9.82 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=9.75 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=3 ttl=116 time=9.79 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=4 ttl=116 time=9.86 ms</span>
+<span style="color: #000; font-style: italic">64 bytes from 8.8.8.8: icmp_seq=5 ttl=116 time=9.80 ms</span>
+
+<span style="color: #000; font-style: italic">--- 8.8.8.8 ping statistics ---</span>
+<span style="color: #000; font-style: italic">5 packets transmitted, 5 received, 0% packet loss, time 4006ms</span>
+<span style="color: #000; font-style: italic">rtt min/avg/max/mdev = 9.752/9.804/9.861/0.039 ms</span>
 </pre></div>
 <h2>Tips</h2>
-<h3>Stop Ping with Ctrl+C</h3>
-<p>By default, ping runs continuously until you stop it manually. Press Ctrl+C to terminate the command and see the summary statistics.</p>
-<h3>Use Hostnames or IP Addresses</h3>
-<p>You can ping using either domain names (like google.com) or IP addresses (like 8.8.8.8). Using IP addresses bypasses DNS resolution, which can help identify if a connectivity issue is related to DNS.</p>
-<h3>Interpret Packet Loss</h3>
-<p>Packet loss (shown in the statistics) indicates network congestion or connectivity issues. 0% loss means perfect connectivity, while higher percentages indicate problems.</p>
-<h3>Check for Firewall Restrictions</h3>
-<p>Many networks and servers block ICMP packets for security reasons. If ping fails, it doesn't necessarily mean the host is down—it might just be configured not to respond to ping requests.</p>
+<h3>Continuous Pinging</h3>
+<p>By default, ping continues until interrupted with Ctrl+C. Use <code>-c</code> to limit the number of packets sent.</p>
+<h3>Troubleshooting Network Issues</h3>
+<p>If ping fails, it could indicate network connectivity problems. Check your network connection, DNS settings, or if a firewall is blocking ICMP packets.</p>
+<h3>Measuring Network Quality</h3>
+<p>Use ping to measure packet loss and latency. High latency (&gt;100ms) or packet loss indicates potential network issues.</p>
+<h3>Flood Ping</h3>
+<p>The <code>-f</code> (flood) option can be used to send packets as fast as possible, but requires root privileges and should be used with caution as it can overwhelm networks.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What does ping actually measure?</h4>
-<p>A. Ping measures the round-trip time (RTT) for messages sent from the source to a destination and back. It helps determine network latency and connectivity.</p>
-<h4>Q2. How do I stop a ping command?</h4>
-<p>A. Press Ctrl+C to stop the ping command. This will display summary statistics of the packets sent and received.</p>
-<h4>Q3. Why might ping fail even when a website is accessible?</h4>
-<p>A. Some networks and servers block ICMP packets (used by ping) for security reasons. You might be able to access a website via HTTP/HTTPS even if ping is blocked.</p>
-<h4>Q4. What's a good ping time?</h4>
-<p>A. For most internet connections, ping times under 50ms are considered excellent, 50-100ms good, 100-300ms acceptable, and over 300ms may cause noticeable lag in real-time applications.</p>
-<h4>Q5. How can I ping multiple hosts at once?</h4>
-<p>A. The standard ping command doesn't support pinging multiple hosts simultaneously. You would need to use a script or a specialized tool like fping.</p>
+<h4>Q1. What does &quot;Request timeout&quot; or &quot;Destination host unreachable&quot; mean?</h4>
+<p>A. These messages indicate that the target host is not responding. This could be due to the host being offline, a network issue, or a firewall blocking ICMP packets.</p>
+<h4>Q2. How do I interpret ping results?</h4>
+<p>A. Look at the round-trip time (RTT) and packet loss percentage. Lower RTT values indicate better connectivity. Any packet loss suggests network issues.</p>
+<h4>Q3. Can ping tell me if a specific port is open?</h4>
+<p>A. No, ping only tests basic connectivity using ICMP. To test if a specific port is open, use tools like <code>telnet</code> or <code>nc</code> (netcat).</p>
+<h4>Q4. Why does ping sometimes resolve to an IP address different from what I expected?</h4>
+<p>A. This can happen due to DNS load balancing, CDNs (Content Delivery Networks), or multiple IP addresses associated with a domain name.</p>
 <h2>macOS Considerations</h2>
-<p>On macOS, ping continues indefinitely by default until stopped with Ctrl+C, unlike some Linux distributions that stop after a certain number of pings. Also, some options might have slightly different syntax compared to Linux versions.</p>
+<p>On macOS, some ping options differ from Linux:</p>
+<ul>
+<li>The <code>-i</code> option requires root privileges for intervals less than 1 second</li>
+<li>There is no <code>--count</code> long option format; use <code>-c</code> instead</li>
+<li>The flood ping (<code>-f</code>) option requires root privileges and works differently than on Linux</li>
+</ul>
 <h2>References</h2>
 <p>https://linux.die.net/man/8/ping</p>
 <h2>Revisions</h2>
-<ul>
-<li>2025/04/30 First revision</li>
-</ul>
+<p>2025/05/04 First revision</p>
 
 
     </main>

@@ -1,128 +1,150 @@
 # sftp command
 
-Securely transfer files between hosts over an encrypted SSH connection.
+Securely transfer files between hosts over an encrypted connection.
 
 ## Overview
 
-SFTP (Secure File Transfer Protocol) is a network protocol that provides file access, file transfer, and file management over a secure connection. It's built on top of SSH (Secure Shell) and offers similar security features while allowing you to upload and download files between your local machine and remote servers.
+SFTP (Secure File Transfer Protocol) is a network protocol for securely transferring files between computers. It runs over SSH, providing encryption and authentication. The `sftp` command provides an interactive file transfer program similar to FTP but with SSH encryption.
 
 ## Options
 
-### **-P port**
+### **-b** / **--batch** *batchfile*
 
-Specify a different port to connect to on the remote host
+Processes a batch file of sftp commands instead of running interactively.
 
 ```console
-$ sftp -P 2222 user@example.com
-Connected to example.com.
+$ sftp -b commands.txt user@remote.server
+Connecting to remote.server...
+Batch file commands.txt processed
+```
+
+### **-P** / **--port** *port*
+
+Specifies the port to connect to on the remote host.
+
+```console
+$ sftp -P 2222 user@remote.server
+Connecting to remote.server port 2222...
 sftp>
 ```
 
-### **-i identity_file**
+### **-i** / **--identity** *identity_file*
 
-Selects the file from which the identity (private key) for public key authentication is read
+Selects the file from which the identity (private key) for public key authentication is read.
 
 ```console
-$ sftp -i ~/.ssh/my_private_key user@example.com
-Connected to example.com.
+$ sftp -i ~/.ssh/my_key user@remote.server
+Connecting to remote.server...
 sftp>
 ```
 
-### **-b batchfile**
+### **-r** / **--recursive**
 
-Batch mode: read a series of commands from a file instead of interactive mode
-
-```console
-$ echo "get remote_file.txt" > commands.txt
-$ sftp -b commands.txt user@example.com
-```
-
-### **-r**
-
-Recursively copy entire directories when used with get or put commands
+Recursively copy entire directories when uploading or downloading.
 
 ```console
+$ sftp user@remote.server
 sftp> get -r remote_directory
 Fetching /remote_directory/ to remote_directory
+sftp>
+```
+
+### **-v** / **--verbose**
+
+Raises the logging level, providing verbose debugging output.
+
+```console
+$ sftp -v user@remote.server
+OpenSSH_8.9p1, LibreSSL 3.3.6
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: Connecting to remote.server port 22.
 ...
 sftp>
 ```
 
 ## Usage Examples
 
-### Connecting to a remote server
+### Connecting to a Remote Server
 
 ```console
-$ sftp user@example.com
-Connected to example.com.
+$ sftp user@remote.server
+Connected to remote.server.
 sftp>
 ```
 
-### Uploading a file to the remote server
+### Downloading Files
 
 ```console
-sftp> put local_file.txt
-Uploading local_file.txt to /home/user/local_file.txt
-local_file.txt                                 100%  1234     1.2KB/s   00:01
-sftp>
-```
-
-### Downloading a file from the remote server
-
-```console
+$ sftp user@remote.server
 sftp> get remote_file.txt
 Fetching /home/user/remote_file.txt to remote_file.txt
-remote_file.txt                                100%  5678     5.6KB/s   00:01
 sftp>
 ```
 
-### Navigating directories
+### Uploading Files
 
 ```console
+$ sftp user@remote.server
+sftp> put local_file.txt
+Uploading local_file.txt to /home/user/local_file.txt
+sftp>
+```
+
+### Navigating Directories
+
+```console
+$ sftp user@remote.server
 sftp> pwd
 Remote working directory: /home/user
 sftp> cd documents
 sftp> lpwd
 Local working directory: /Users/localuser
 sftp> lcd Downloads
-sftp>
 ```
 
-## Tips:
+## Tips
 
 ### Use Tab Completion
 
 SFTP supports tab completion for both local and remote files, making it easier to navigate without typing full paths.
 
-### Common SFTP Commands
+### Interactive Commands
 
 - `ls` - List remote files
 - `lls` - List local files
 - `cd` - Change remote directory
 - `lcd` - Change local directory
 - `mkdir` - Create remote directory
-- `lmkdir` - Create local directory
-- `rm` - Delete remote file
-- `rmdir` - Delete remote directory
-- `bye` or `exit` - Exit sftp
+- `rmdir` - Remove remote directory
+- `rm` - Delete remote files
+- `help` or `?` - Show available commands
 
-### Automate Transfers with Scripts
+### Batch Mode for Automation
 
-For repetitive transfers, create a batch file with SFTP commands and use the `-b` option to automate the process.
+Create a text file with sftp commands and use the `-b` option for automated transfers in scripts.
+
+### Use Wildcards for Multiple Files
+
+```console
+sftp> get *.txt
+```
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between SFTP and FTP?
-A. SFTP is secure and encrypted as it runs over SSH, while traditional FTP sends data (including passwords) in plain text. SFTP is generally preferred for security reasons.
+#### Q1. What's the difference between SFTP and SCP?
+A. SFTP is an interactive file transfer protocol that runs over SSH, while SCP is a non-interactive command for secure copying. SFTP offers more functionality like resuming transfers and directory listings.
 
 #### Q2. How do I transfer an entire directory?
 A. Use the `-r` (recursive) option with the get or put command: `get -r remote_directory` or `put -r local_directory`.
 
-#### Q3. Can I use SFTP with a password instead of keys?
-A. Yes, SFTP will prompt for a password if key authentication isn't set up or fails.
+#### Q3. Can I use SFTP in scripts?
+A. Yes, use the `-b` option with a batch file containing SFTP commands: `sftp -b commands.txt user@remote.server`.
 
-#### Q4. How do I resume a failed transfer?
-A. Use the `reget` or `reput` commands to resume interrupted downloads or uploads.
+#### Q4. How do I change permissions of remote files?
+A. Use the `chmod` command within the SFTP session: `chmod 644 remote_file.txt`.
+
+#### Q5. How can I resume an interrupted file transfer?
+A. Use the `reget` command to resume downloading a file or `reput` to resume uploading.
 
 ## References
 
@@ -130,4 +152,4 @@ https://man.openbsd.org/sftp.1
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

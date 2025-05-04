@@ -1,146 +1,138 @@
 # dmesg コマンド
 
-カーネルのリングバッファからシステムメッセージを表示します。
+カーネルメッセージバッファを表示または制御します。
 
 ## 概要
 
-`dmesg`（display message）コマンドは、Linuxカーネルが起動時や実行中に生成するメッセージを表示します。これらのメッセージには、ハードウェアの検出、ドライバの読み込み、エラー、警告などの重要な情報が含まれています。システム管理者やトラブルシューティングを行うユーザーにとって非常に役立つツールです。
+`dmesg`コマンドは、システムリングバッファからカーネルメッセージを表示します。このバッファにはハードウェア、デバイスドライバ、システム初期化に関する情報が含まれています。ハードウェアの問題のトラブルシューティング、起動メッセージの確認、カーネルイベントの監視に特に役立ちます。
 
 ## オプション
 
+### **-c, --clear**
+
+内容を表示した後にリングバッファをクリアします。
+
+```console
+$ sudo dmesg -c
+[    0.000000] Linux version 5.15.0-76-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #83-Ubuntu SMP
+[...]
+```
+
 ### **-H, --human**
 
-人間が読みやすい形式で出力を表示します。タイムスタンプの相対表示や色分けなどが含まれます。
+色付き、相対的なタイムスタンプ、適切な改行を含む人間が読みやすい出力を有効にします。
 
 ```console
 $ dmesg -H
-[Apr30 10:15] Linux version 5.10.0-8-amd64 (debian-kernel@lists.debian.org)
-[  +0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-5.10.0-8-amd64 root=UUID=...
-[  +0.000073] KERNEL supported cpus:
-[  +0.000002]   Intel GenuineIntel
-[  +0.000001]   AMD AuthenticAMD
-```
-
-### **-c, --clear**
-
-メッセージを表示した後、カーネルのリングバッファをクリアします。
-
-```console
-$ dmesg -c
-[    0.000000] Linux version 5.10.0-8-amd64 (debian-kernel@lists.debian.org)
-[    0.000073] Command line: BOOT_IMAGE=/boot/vmlinuz-5.10.0-8-amd64 root=UUID=...
-...
-# バッファがクリアされるため、再度実行すると何も表示されない
-$ dmesg
+[May 4 09:15] Linux version 5.15.0-76-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #83-Ubuntu SMP
+[...]
 ```
 
 ### **-l, --level**
 
-指定したレベルのメッセージのみを表示します。レベルには emerg, alert, crit, err, warn, notice, info, debug があります。
+指定された優先度レベル（カンマ区切りリスト）に出力を制限します。
 
 ```console
-$ dmesg --level=err,warn
-[    1.234567] WARNING: CPU: 0 PID: 42 at drivers/usb/core/urb.c:377
-[    2.345678] usb 1-1: device descriptor read/64, error -110
+$ dmesg -l err,warn
+[    5.123456] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.GFX0.DD1F], AE_NOT_FOUND
+[    7.654321] WARNING: CPU: 2 PID: 123 at drivers/gpu/drm/i915/intel_runtime_pm.c:655
 ```
 
 ### **-f, --facility**
 
-指定した機能（facility）のメッセージのみを表示します。
+指定されたファシリティ（カンマ区切りリスト）に出力を制限します。
 
 ```console
-$ dmesg -f kern
-[    0.000000] Linux version 5.10.0-8-amd64 (debian-kernel@lists.debian.org)
-[    0.000073] Command line: BOOT_IMAGE=/boot/vmlinuz-5.10.0-8-amd64 root=UUID=...
+$ dmesg -f kern,daemon
+[    0.123456] kernel: Memory: 16123456K/16777216K available
+[    1.234567] systemd[1]: Detected virtualization kvm.
 ```
 
-### **-T, --ctime**
+### **-t, --notime**
 
-タイムスタンプを人間が読める形式で表示します。
+タイムスタンプを表示しません。
 
 ```console
-$ dmesg -T
-[Wed Apr 30 10:15:30 2025] Linux version 5.10.0-8-amd64 (debian-kernel@lists.debian.org)
-[Wed Apr 30 10:15:30 2025] Command line: BOOT_IMAGE=/boot/vmlinuz-5.10.0-8-amd64 root=UUID=...
+$ dmesg -t
+Linux version 5.15.0-76-generic (buildd@lcy02-amd64-017) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #83-Ubuntu SMP
+[...]
+```
+
+### **-w, --follow**
+
+新しいメッセージを待機します（`tail -f`と同様）。
+
+```console
+$ dmesg -w
+[    0.000000] Linux version 5.15.0-76-generic
+[...]
+[  123.456789] usb 1-2: new high-speed USB device number 3 using xhci_hcd
 ```
 
 ## 使用例
 
-### 特定のキーワードでフィルタリング
+### USBに関連するメッセージのフィルタリング
 
 ```console
-$ dmesg | grep USB
-[    2.123456] usb 1-1: new high-speed USB device number 2 using ehci-pci
-[    2.234567] usb 1-1: New USB device found, idVendor=0781, idProduct=5567
+$ dmesg | grep -i usb
+[    2.123456] usb 1-1: new high-speed USB device number 2 using xhci_hcd
+[    2.234567] usb 1-1: New USB device found, idVendor=8087, idProduct=0024, bcdDevice= 0.01
+[    2.345678] usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
 ```
 
-### 最新のメッセージを監視
-
-```console
-$ dmesg -w
-[    0.000000] Linux version 5.10.0-8-amd64 (debian-kernel@lists.debian.org)
-...
-# 新しいメッセージが発生すると自動的に表示される
-[   15.678901] usb 2-1: new high-speed USB device number 3 using xhci_hcd
-```
-
-### エラーメッセージの確認
+### ハードウェアエラーの確認
 
 ```console
 $ dmesg --level=err
-[    3.456789] EXT4-fs (sda1): re-mounted. Opts: errors=remount-ro
-[    5.678901] nouveau 0000:01:00.0: DRM: failed to create kernel channel, -22
+[    5.123456] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.GFX0.DD1F], AE_NOT_FOUND
+[   10.234567] EXT4-fs error (device sda1): ext4_lookup:1809: inode #2: comm systemd-journal: deleted inode referenced: 12345
+```
+
+### リアルタイムでのカーネルメッセージの監視
+
+```console
+$ sudo dmesg --follow --human
+[May 4 09:20] Linux version 5.15.0-76-generic
+[...]
+[+0.005678] Booting paravirtualized kernel on bare hardware
+[+1.234567] usb 1-2: new high-speed USB device number 3 using xhci_hcd
 ```
 
 ## ヒント:
 
-### 起動時の問題を診断する
+### 読みやすさを向上させるために人間が読みやすい形式を使用する
 
-システムの起動に問題がある場合、`dmesg`を使用して起動プロセス中に発生したエラーや警告を確認できます。特に「error」や「fail」などのキーワードで検索すると効果的です。
+`-H`または`--human`オプションを使用すると、相対的なタイムスタンプ、色付き、適切なフォーマットで出力が読みやすくなります。
 
-```console
-$ dmesg | grep -i error
-```
+### 対象を絞ったトラブルシューティングのためにgrepと組み合わせる
 
-### ハードウェアの問題を特定する
+特定のハードウェアのトラブルシューティングを行う場合は、`dmesg`の出力を「usb」、「wifi」、「error」などの関連キーワードで`grep`にパイプすると効果的です。
 
-新しいハードウェアを接続した後に問題が発生した場合、`dmesg`を使用して認識状況やエラーメッセージを確認できます。
+### 読み取り後にバッファをクリアする
 
-### ログの保存
+`sudo dmesg -c`を使用して、読み取り後にバッファをクリアします。これは、特定のアクションの後に表示される新しいメッセージのみを監視したい場合に役立ちます。
 
-重要なシステムメッセージを保存したい場合は、出力をファイルにリダイレクトします。
+### 後で分析するために起動メッセージを保存する
 
-```console
-$ dmesg > dmesg_log.txt
-```
+起動後、`dmesg > boot_log.txt`でカーネルメッセージを保存しておくと、後で分析や比較ができます。
 
 ## よくある質問
 
-#### Q1. dmesgの出力が多すぎる場合、どうすれば必要な情報だけを見つけられますか？
-A. `grep`コマンドと組み合わせて特定のキーワードでフィルタリングするか、`--level`オプションを使用して特定の重要度のメッセージだけを表示できます。
+#### Q1. 「dmesg: read kernel buffer failed: Operation not permitted」というエラーが出るのはなぜですか？
+A. 多くのシステムでは、カーネルバッファにアクセスするには root 権限が必要です。代わりに `sudo dmesg` を使用してください。
 
-#### Q2. dmesgの出力にタイムスタンプが数字で表示されますが、これは何を意味していますか？
-A. デフォルトでは、タイムスタンプはシステム起動からの経過秒数を表示します。人間が読みやすい形式で表示するには、`-T`または`-H`オプションを使用してください。
+#### Q2. 最近のメッセージだけを見るにはどうすればいいですか？
+A. `dmesg | tail` を使用して最新のメッセージを表示するか、`dmesg -T` を使用して人間が読みやすいタイムスタンプを表示し、時間でフィルタリングします。
 
-#### Q3. rootユーザーでないとdmesgが使えないのはなぜですか？
-A. 最近のLinuxディストリビューションでは、セキュリティ上の理由からrootユーザーまたはsudo権限を持つユーザーのみがdmesgを使用できるように制限されています。
+#### Q3. dmesg 出力のタイムスタンプをどう解釈すればいいですか？
+A. デフォルトでは、タイムスタンプは起動からの秒数を示します。人間が読みやすいタイムスタンプには `-T` または `--ctime` を、相対的なタイムスタンプには `-H` を使用してください。
 
-#### Q4. dmesgの出力をリアルタイムで監視するにはどうすればよいですか？
-A. `dmesg -w`または`dmesg --follow`を使用すると、新しいメッセージが発生するたびに表示されます。
+#### Q4. tail -f のように dmesg を継続的に監視できますか？
+A. はい、`dmesg -w` または `dmesg --follow` を使用して、新しいカーネルメッセージを継続的に監視できます。
 
-## macOSでの注意点
+## macOSに関する注意点
 
-macOSでは`dmesg`コマンドの動作がLinuxとは異なります。macOSでは`syslog`システムを使用しており、システムログを表示するには代わりに以下のコマンドを使用することをお勧めします：
-
-```console
-$ sudo log show --predicate 'eventMessage contains "kernel"' --last 10m
-```
-
-または、より古いバージョンのmacOSでは：
-
-```console
-$ sudo syslog -k Sender kernel
-```
+macOSでは、`dmesg`コマンドのオプションはLinuxよりも少なくなっています。`--human`や`--follow`などのオプションはサポートされていません。macOSでより詳細なシステムログを取得するには、代わりに`log`コマンドの使用を検討してください。例えば、`log show --predicate 'eventMessage contains "kernel"'`などです。
 
 ## 参考資料
 
@@ -148,4 +140,4 @@ https://man7.org/linux/man-pages/man1/dmesg.1.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+2025/05/04 初版作成

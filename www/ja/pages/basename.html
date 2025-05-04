@@ -47,76 +47,81 @@
     <main>
       
   <h1>basename コマンド</h1>
-<p>ファイルパスからディレクトリ部分を削除し、ファイル名のみを取得します。</p>
+<p>パス名からファイル名やディレクトリ名を抽出します。</p>
 <h2>概要</h2>
-<p><code>basename</code> コマンドは、ファイルパスからディレクトリ部分を取り除き、ファイル名だけを表示します。オプションを使用すると、ファイル名から拡張子を削除することもできます。シェルスクリプトでファイル名の処理を行う際によく使用されます。</p>
+<p><code>basename</code> コマンドは、指定されたパスからディレクトリ部分や指定された接尾辞を取り除き、ファイル名や最終的なディレクトリ名だけを残します。シェルスクリプトでフルパスからファイル名を抽出したり、ファイル拡張子を削除したりする際によく使用されます。</p>
 <h2>オプション</h2>
 <h3><strong>-a, --multiple</strong></h3>
-<p>複数のパスを一度に処理します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>/usr/bin/zip<span style="color: #F8F8F8"> </span>/usr/bin/gzip
-<span style="color: #000; font-style: italic">zip</span>
-<span style="color: #000; font-style: italic">gzip</span>
+<p>複数の引数を処理し、それぞれを NAME として扱います。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>/usr/bin/sort<span style="color: #F8F8F8"> </span>/usr/bin/cut
+<span style="color: #000; font-style: italic">sort</span>
+<span style="color: #000; font-style: italic">cut</span>
 </pre></div>
-<h3><strong>-s, --suffix=接尾辞</strong></h3>
-<p>指定した接尾辞（拡張子など）をファイル名から削除します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>.txt<span style="color: #F8F8F8"> </span>/home/user/document.txt
-<span style="color: #000; font-style: italic">document</span>
+<h3><strong>-s, --suffix=SUFFIX</strong></h3>
+<p>各 NAME から末尾の SUFFIX を削除します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>.txt<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">file</span>
 </pre></div>
 <h3><strong>-z, --zero</strong></h3>
-<p>出力の区切り文字として改行ではなくNULL文字を使用します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hexdump<span style="color: #F8F8F8"> </span>-C
-<span style="color: #000; font-style: italic">00000000  66 69 6c 65 31 00 66 69  6c 65 32 00              |file1.file2.|</span>
-<span style="color: #000; font-style: italic">0000000c</span>
+<p>各出力行を改行ではなく NUL で終了します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hexdump<span style="color: #F8F8F8"> </span>-C
+<span style="color: #000; font-style: italic">00000000  66 69 6c 65 2e 74 78 74  00                       |file.txt.|</span>
+<span style="color: #000; font-style: italic">00000009</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な使用方法</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>/usr/local/bin/python3
-<span style="color: #000; font-style: italic">python3</span>
+<h3>基本的なファイル名抽出</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>/usr/local/bin/example.sh
+<span style="color: #000; font-style: italic">example.sh</span>
 </pre></div>
-<h3>拡張子の削除</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>/var/log/syslog.1.gz<span style="color: #F8F8F8"> </span>.gz
-<span style="color: #000; font-style: italic">syslog.1</span>
+<h3>ファイル拡張子の削除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>/home/user/documents/report.pdf<span style="color: #F8F8F8"> </span>.pdf
+<span style="color: #000; font-style: italic">report</span>
 </pre></div>
-<h3>シェルスクリプトでの使用例</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">filename</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$filepath</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ファイル名は </span><span style="color: #000">$filename</span><span style="color: #4E9A06"> です&quot;</span>
-<span style="color: #000; font-style: italic">ファイル名は document.txt です</span>
+<h3>シェルスクリプトでの使用</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">filename</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$path</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;The filename is: </span><span style="color: #000">$filename</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">The filename is: example.txt</span>
+</pre></div>
+<h3>複数のパスの処理</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>/var/log/syslog<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span>/usr/bin/bash
+<span style="color: #000; font-style: italic">syslog</span>
+<span style="color: #000; font-style: italic">passwd</span>
+<span style="color: #000; font-style: italic">bash</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>パスとファイル名の分離</h3>
-<p><code>dirname</code> コマンドと組み合わせると、パスとファイル名を完全に分離できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">filepath</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;/home/user/documents/report.pdf&quot;</span>
-<span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$filepath</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># パス部分を取得</span>
-<span style="color: #000; font-style: italic">/home/user/documents</span>
-<span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$filepath</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># ファイル名部分を取得</span>
-<span style="color: #000; font-style: italic">report.pdf</span>
+<h3>dirname と組み合わせる</h3>
+<p><code>basename</code> を <code>dirname</code> と組み合わせてパスをコンポーネントに分割できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">path</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;/home/user/documents/report.pdf&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">dir</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>dirname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$path</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">file</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$path</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Directory: </span><span style="color: #000">$dir</span><span style="color: #4E9A06">, File: </span><span style="color: #000">$file</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">Directory: /home/user/documents, File: report.pdf</span>
 </pre></div>
-<h3>複数の拡張子の処理</h3>
-<p>複数の拡張子（例：.tar.gz）を持つファイルを処理する場合は、<code>basename</code> を複数回使用するか、パターンマッチングを使用します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">filename</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;archive.tar.gz&quot;</span>
-<span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$filename</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span>.gz<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>basename<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>.tar
-<span style="color: #000; font-style: italic">archive</span>
+<h3>引数を引用符で囲む</h3>
+<p>スペースや特殊文字を含むファイル名を扱う場合は、常に引数を引用符で囲みましょう：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;/path/to/my file.txt&quot;</span>
+<span style="color: #000; font-style: italic">my file.txt</span>
 </pre></div>
-<h3>変数展開での代替方法</h3>
-<p>Bashでは、変数展開を使って同様の処理を行うこともできます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">filepath</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;/home/user/documents/report.pdf&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;${</span><span style="color: #000">filepath</span><span style="color: #000; font-weight: bold">##*/</span><span style="color: #4E9A06">}&quot;</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># basename と同等</span>
+<h3>パラメータ展開の使用</h3>
+<p>Bashでは、<code>basename</code> の代わりにパラメータ展開を使用できることがあります：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">path</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;/home/user/documents/report.pdf&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;${</span><span style="color: #000">path</span><span style="color: #000; font-weight: bold">##*/</span><span style="color: #4E9A06">}&quot;</span>
 <span style="color: #000; font-style: italic">report.pdf</span>
 </pre></div>
 <h2>よくある質問</h2>
 <h4>Q1. <code>basename</code> と <code>dirname</code> の違いは何ですか？</h4>
-<p>A. <code>basename</code> はパスからファイル名部分を抽出し、<code>dirname</code> はディレクトリ部分を抽出します。</p>
-<h4>Q2. 拡張子なしのファイル名を取得するにはどうすればよいですか？</h4>
-<p>A. <code>basename filename.ext .ext</code> のように、第2引数に拡張子を指定します。</p>
-<h4>Q3. シェルスクリプトで <code>basename</code> を使わずに同じ結果を得る方法はありますか？</h4>
-<p>A. Bashでは <code>${filepath##*/}</code> のような変数展開パターンを使用できます。</p>
-<h4>Q4. macOSと Linux で <code>basename</code> の動作に違いはありますか？</h4>
-<p>A. 基本的な機能は同じですが、一部のオプション（特に GNU 拡張）は macOS では利用できない場合があります。</p>
-<h2>参考資料</h2>
+<p>A. <code>basename</code> はパスから最後のコンポーネント（ファイル名またはディレクトリ名）を抽出し、<code>dirname</code> はパスからディレクトリ部分を抽出します。</p>
+<h4>Q2. 複数の拡張子（.tar.gz など）を削除するにはどうすればよいですか？</h4>
+<p>A. <code>basename</code> は一度に1つの接尾辞しか削除できません。複数の拡張子の場合は、複数回使用するかシェルのパラメータ展開を使用する必要があります。</p>
+<h4>Q3. <code>basename</code> は相対パスでも動作しますか？</h4>
+<p>A. はい、絶対パスと相対パスの両方で動作し、常に最後のコンポーネントを返します。</p>
+<h4>Q4. <code>basename</code> はスペースを含むパスを処理できますか？</h4>
+<p>A. はい、できますが、シェルがスペースを引数の区切り文字として解釈しないように、引数を引用符で囲む必要があります。</p>
+<h2>参照</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/basename-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

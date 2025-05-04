@@ -1,16 +1,16 @@
 # chmod command
 
-Change file access permissions.
+Change file mode bits (permissions) of files and directories.
 
 ## Overview
 
-The `chmod` command modifies file and directory permissions in Unix-like systems. It allows users to control who can read, write, or execute files by changing the permission bits of files and directories.
+The `chmod` command modifies the access permissions of files and directories in Unix-like operating systems. It controls who can read, write, or execute files by changing the file mode bits. This command is essential for managing file security and access control.
 
 ## Options
 
 ### **-R, --recursive**
 
-Change permissions recursively for directories and their contents
+Change permissions recursively, affecting all files and subdirectories within the specified directories.
 
 ```console
 $ chmod -R 755 projects/
@@ -18,19 +18,28 @@ $ chmod -R 755 projects/
 
 ### **-v, --verbose**
 
-Display a diagnostic message for every file processed
+Display a diagnostic message for every file processed, showing the changes being made.
 
 ```console
 $ chmod -v 644 document.txt
 mode of 'document.txt' changed from 0600 (rw-------) to 0644 (rw-r--r--)
 ```
 
-### **--reference=RFILE**
+### **-c, --changes**
 
-Use RFILE's permissions instead of specifying a mode value
+Like verbose, but only report when a change is actually made.
 
 ```console
-$ chmod --reference=reference.txt target.txt
+$ chmod -c 644 document.txt
+mode of 'document.txt' changed from 0600 (rw-------) to 0644 (rw-r--r--)
+```
+
+### **-f, --silent, --quiet**
+
+Suppress most error messages.
+
+```console
+$ chmod -f 644 nonexistent.txt
 ```
 
 ## Usage Examples
@@ -40,7 +49,7 @@ $ chmod --reference=reference.txt target.txt
 ```console
 $ chmod 755 script.sh
 $ ls -l script.sh
--rwxr-xr-x  1 user  staff  1024 Apr 30 15:30 script.sh
+-rwxr-xr-x 1 user group 1024 May 4 10:00 script.sh
 ```
 
 ### Using Symbolic Mode
@@ -48,54 +57,63 @@ $ ls -l script.sh
 ```console
 $ chmod u+x script.sh
 $ ls -l script.sh
--rwxr--r--  1 user  staff  1024 Apr 30 15:30 script.sh
+-rwxr--r-- 1 user group 1024 May 4 10:00 script.sh
 ```
 
-### Changing Multiple Files
+### Changing Permissions Recursively
 
 ```console
-$ chmod 644 *.txt
-$ ls -l *.txt
--rw-r--r--  1 user  staff  1024 Apr 30 15:30 document1.txt
--rw-r--r--  1 user  staff  2048 Apr 29 10:15 document2.txt
+$ chmod -R go-w documents/
+$ ls -l documents/
+total 8
+-rw-r--r-- 1 user group 1024 May 4 10:00 file1.txt
+-rw-r--r-- 1 user group 2048 May 4 10:00 file2.txt
+drwxr-xr-x 2 user group 4096 May 4 10:00 subfolder
 ```
 
 ## Tips:
 
-### Understanding Permission Numbers
+### Understanding Permission Notation
 
-The three digits in numeric mode (like 755) represent permissions for owner, group, and others:
-- 4 = read (r)
-- 2 = write (w)
-- 1 = execute (x)
+- Numeric (octal) mode: 
+  - First digit: owner permissions (4=read, 2=write, 1=execute)
+  - Second digit: group permissions
+  - Third digit: others permissions
+  - Example: 755 = rwxr-xr-x (owner can read/write/execute, group and others can read/execute)
 
-So 755 means rwx (4+2+1=7) for owner, r-x (4+0+1=5) for group, and r-x (4+0+1=5) for others.
+- Symbolic mode:
+  - u: user/owner, g: group, o: others, a: all
+  - +: add permission, -: remove permission, =: set exact permission
+  - r: read, w: write, x: execute
+  - Example: u+x (add execute permission for owner)
 
 ### Common Permission Patterns
 
-- 755 (rwxr-xr-x): Standard for executable files and directories
+- 755 (rwxr-xr-x): Standard for directories and executable scripts
 - 644 (rw-r--r--): Standard for regular files
-- 600 (rw-------): Private files only the owner can access
+- 600 (rw-------): Private files (only owner can read/write)
+- 777 (rwxrwxrwx): Full access for everyone (use with caution)
 
-### Symbolic Mode Shortcuts
+### Check Before You Change
 
-- `u` (user/owner), `g` (group), `o` (others), `a` (all)
-- `+` (add permission), `-` (remove permission), `=` (set exact permission)
-- Example: `chmod a+x file` adds execute permission for everyone
+Always verify the current permissions with `ls -l` before making changes, especially when using recursive options.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between numeric and symbolic modes?
-A. Numeric mode (like 755) sets all permissions at once using octal numbers. Symbolic mode (like u+x) allows adding, removing, or setting specific permissions without affecting others.
-
-#### Q2. How do I make a file executable?
+#### Q1. How do I make a file executable?
 A. Use `chmod +x filename` or `chmod u+x filename` to make it executable for the owner only.
 
-#### Q3. Why can't I change permissions on certain files?
-A. You need to be the file owner or have sudo/root privileges to change permissions.
+#### Q2. What's the difference between symbolic and numeric modes?
+A. Symbolic mode (like u+x) is more intuitive and allows for relative changes. Numeric mode (like 755) sets absolute permissions and is more concise.
 
-#### Q4. How do I set permissions recursively for a directory?
-A. Use `chmod -R mode directory/` to apply permissions to the directory and all its contents.
+#### Q3. How do I give read and write permissions to a file's owner only?
+A. Use `chmod 600 filename` or `chmod u=rw,go= filename`.
+
+#### Q4. Can chmod change ownership of a file?
+A. No, chmod only changes permissions. Use `chown` to change file ownership.
+
+#### Q5. How do I fix "Permission denied" errors?
+A. Either change the file permissions with `chmod` or run the command with elevated privileges using `sudo`.
 
 ## References
 
@@ -103,4 +121,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/chmod-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

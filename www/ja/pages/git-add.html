@@ -47,89 +47,87 @@
     <main>
       
   <h1>git add コマンド</h1>
-<p>ワーキングディレクトリの変更をステージングエリア（インデックス）に追加します。</p>
+<p>ファイルの内容をステージングエリア（インデックス）に追加し、次のコミットの準備をします。</p>
 <h2>概要</h2>
-<p><code>git add</code> は、変更したファイルをGitのステージングエリア（インデックス）に追加するコマンドです。コミットする前に、どの変更をコミットに含めるかを指定するために使用します。ファイル全体、特定のファイル、またはファイル内の特定の変更を選択的に追加することができます。</p>
+<p><code>git add</code> コマンドは、作業ディレクトリ内のファイルの現在の内容で Git インデックスを更新します。これにより、次のコミットに含める変更をマークします。これは Git のワークフローにおける重要なステップであり、コミットする変更を選択的に選ぶことができます。</p>
 <h2>オプション</h2>
 <h3><strong>-A, --all</strong></h3>
-<p>ワーキングツリー内のすべての変更をステージングエリアに追加します。</p>
+<p>追跡対象および未追跡のすべてのファイルの変更を追加します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>-A
-<span style="color: #8F5902"># </span>または
-<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>--all
-</pre></div>
-<h3><strong>-p, --patch</strong></h3>
-<p>ファイル内の変更を対話的に選択してステージングエリアに追加します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902"># </span>各変更に対して、ステージングするかどうかを選択できる
 </pre></div>
 <h3><strong>-u, --update</strong></h3>
-<p>すでにGitで追跡されているファイルの変更のみをステージングエリアに追加します。</p>
+<p>追跡対象のファイルのみを更新します（新しいファイルは追加しません）</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>-u
 </pre></div>
-<h3><strong>-f, --force</strong></h3>
-<p>通常は.gitignoreで無視されるファイルを強制的に追加します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>ignored_file.log
+<h3><strong>-p, --patch</strong></h3>
+<p>インデックスと作業ツリーの間のパッチの一部を対話的に選択します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">diff --git a/file.txt b/file.txt</span>
+<span style="color: #000; font-style: italic">index 1234567..abcdefg 100644</span>
+<span style="color: #000; font-style: italic">--- a/file.txt</span>
+<span style="color: #000; font-style: italic">+++ b/file.txt</span>
+<span style="color: #000; font-style: italic">@@ -1,5 +1,6 @@</span>
+<span style="color: #000; font-style: italic"> This is some text.</span>
+<span style="color: #000; font-style: italic">-This line will be removed.</span>
+<span style="color: #000; font-style: italic">+This line was changed.</span>
+<span style="color: #000; font-style: italic">+This is a new line.</span>
+<span style="color: #000; font-style: italic"> More text here.</span>
+<span style="color: #000; font-style: italic">Stage this hunk [y,n,q,a,d,j,J,g,/,e,?]?</span>
+</pre></div>
+<h3><strong>-i, --interactive</strong></h3>
+<p>変更された内容を対話的に追加します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>-i
+<span style="color: #000; font-style: italic">           staged     unstaged path</span>
+<span style="color: #000; font-style: italic">  1:    unchanged        +2/-1 file.txt</span>
+<span style="color: #000; font-style: italic">  2:    unchanged        +4/-0 another.txt</span>
+
+<span style="color: #000; font-style: italic">*** Commands ***</span>
+<span style="color: #000; font-style: italic">  1: status       2: update       3: revert       4: add untracked</span>
+<span style="color: #000; font-style: italic">  5: patch        6: diff         7: quit         8: help</span>
+<span style="color: #000; font-style: italic">What now&gt;</span>
+</pre></div>
+<h3><strong>-n, --dry-run</strong></h3>
+<p>実際にファイルを追加せず、何が起こるかを表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>*.txt
+<span style="color: #000; font-style: italic">add &#39;file.txt&#39;</span>
+<span style="color: #000; font-style: italic">add &#39;notes.txt&#39;</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>特定のファイルを追加</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902"># </span>file.txtの変更がステージングエリアに追加される
+<h3>特定のファイルを追加する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
 </pre></div>
-<h3>複数のファイルを追加</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt
-<span style="color: #8F5902"># </span>指定した複数のファイルがステージングエリアに追加される
-</pre></div>
-<h3>ディレクトリ内のすべてのファイルを追加</h3>
+<h3>ディレクトリ内のすべてのファイルを追加する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>src/
-<span style="color: #8F5902"># </span>srcディレクトリ内のすべての変更がステージングエリアに追加される
 </pre></div>
-<h3>特定の拡張子を持つすべてのファイルを追加</h3>
+<h3>特定の拡張子を持つすべてのファイルを追加する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>*.js
-<span style="color: #8F5902"># </span>すべての.jsファイルがステージングエリアに追加される
 </pre></div>
-<h3>変更の一部だけを選択的に追加</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>-p
-<span style="color: #8F5902"># </span>各変更に対して、y（追加する）、n（追加しない）などを選択できる
+<h3>リポジトリ内のすべての変更を追加する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>.
 </pre></div>
 <h2>ヒント:</h2>
-<h3>ステージングエリアの状態を確認</h3>
-<p><code>git add</code> の後に <code>git status</code> を実行すると、ステージングエリアに追加された変更と、まだ追加されていない変更を確認できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>add<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>status
-<span style="color: #000; font-style: italic">On branch main</span>
-<span style="color: #000; font-style: italic">Changes to be committed:</span>
-<span style="color: #000; font-style: italic">  (use &quot;git restore --staged &lt;file&gt;...&quot; to unstage)</span>
-<span style="color: #000; font-style: italic">        modified:   file.txt</span>
-</pre></div>
-<h3>間違えてステージングした変更を元に戻す</h3>
-<p>ファイルを誤ってステージングエリアに追加した場合は、<code>git restore --staged</code> を使用して元に戻すことができます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>restore<span style="color: #F8F8F8"> </span>--staged<span style="color: #F8F8F8"> </span>file.txt
-</pre></div>
-<h3>対話的な追加モードのショートカット</h3>
-<p><code>git add -p</code> の対話モードでは、以下のコマンドが使用できます：</p>
-<ul>
-<li><code>y</code>: この変更を追加</li>
-<li><code>n</code>: この変更をスキップ</li>
-<li><code>s</code>: 変更を分割して小さな単位で判断</li>
-<li><code>q</code>: 終了（残りの変更はステージングしない）</li>
-<li><code>?</code>: ヘルプを表示</li>
-</ul>
+<h3>ステージングエリアを戦略的に使用する</h3>
+<p>ステージングエリアを使うと、焦点を絞ったコミットを作成できます。<code>git add .</code> ですべてを一度に追加するのではなく、関連する変更をまとめて追加することで、より意味のあるコミット履歴を作成できます。</p>
+<h3>ステージングされた内容を確認する</h3>
+<p><code>git add</code> を使用した後、<code>git status</code> を実行して、次のコミットのためにステージングされた変更を確認しましょう。これにより、意図しない変更を誤ってコミットすることを防げます。</p>
+<h3>ステージングを取り消す</h3>
+<p>誤ってファイルをステージングした場合は、<code>git restore --staged &lt;file&gt;</code> （または古い構文 <code>git reset HEAD &lt;file&gt;</code>）でステージングを解除できます。</p>
+<h3>複雑な変更には対話モードを使用する</h3>
+<p>複数の変更があるファイルの場合、<code>git add -p</code> を使用してファイルの特定の部分をステージングできます。これは、1つのファイルに関連のない複数の変更を加えた場合に便利です。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>git add</code> と <code>git commit</code> の違いは何ですか？</h4>
-<p>A. <code>git add</code> は変更をステージングエリアに追加するだけで、リポジトリには保存されません。<code>git commit</code> はステージングエリアの変更をリポジトリに永続的に保存します。</p>
-<h4>Q2. すべての変更を一度に追加するにはどうすればよいですか？</h4>
-<p>A. <code>git add -A</code> または <code>git add .</code>（カレントディレクトリから）を使用します。</p>
-<h4>Q3. 追加したファイルをステージングエリアから削除するにはどうすればよいですか？</h4>
-<p>A. <code>git restore --staged &lt;ファイル名&gt;</code> を使用します。</p>
-<h4>Q4. <code>.gitignore</code> で無視されているファイルを追加するにはどうすればよいですか？</h4>
-<p>A. <code>git add -f &lt;ファイル名&gt;</code> を使用して強制的に追加できます。</p>
-<h4>Q5. 変更の一部だけをコミットするにはどうすればよいですか？</h4>
-<p>A. <code>git add -p</code> を使用して、変更を対話的に選択してステージングエリアに追加できます。</p>
-<h2>参考</h2>
+<h4>Q1. <code>git add .</code> と <code>git add -A</code> の違いは何ですか？</h4>
+<p>A. <code>git add .</code> は現在のディレクトリとそのサブディレクトリのすべての変更を追加しますが、<code>git add -A</code> は現在のディレクトリに関係なく、作業ツリー全体の変更を追加します。</p>
+<h4>Q2. 未追跡のファイルではなく、変更されたファイルと削除されたファイルのみを追加するにはどうすればよいですか？</h4>
+<p>A. <code>git add -u</code> または <code>git add --update</code> を使用します。</p>
+<h4>Q3. ファイルの変更の一部だけを追加できますか？</h4>
+<p>A. はい、<code>git add -p &lt;file&gt;</code> または <code>git add --patch &lt;file&gt;</code> を使用して、ステージングする変更を対話的に選択できます。</p>
+<h4>Q4. ファイルを追加した後、再び変更した場合はどうなりますか？</h4>
+<p>A. <code>git add</code> を実行した時点で存在していた変更のみがステージングされます。新しい変更は、追加するまでステージングされていない状態のままです。</p>
+<h2>参考文献</h2>
 <p>https://git-scm.com/docs/git-add</p>
-<h2>改訂</h2>
+<h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

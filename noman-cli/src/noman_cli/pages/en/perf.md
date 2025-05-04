@@ -1,144 +1,153 @@
 # perf command
 
-Performance analysis tool for Linux systems that collects and analyzes performance data.
+Performance analysis tool for Linux, providing hardware counter statistics and tracing capabilities.
 
 ## Overview
 
-`perf` is a powerful Linux profiling tool that accesses the performance monitoring hardware counters of the CPU to gather information about the behavior of user code, kernel, and hardware events. It helps identify performance bottlenecks, analyze CPU usage, track memory access patterns, and debug system performance issues.
+`perf` is a powerful Linux profiling and performance analysis tool that accesses the performance monitoring hardware counters of the CPU to gather statistics about program execution. It can monitor CPU performance events, trace system calls, and analyze application performance with minimal overhead. Part of the Linux kernel tools, `perf` helps developers identify bottlenecks and optimize code.
 
 ## Options
 
-### **stat**
+### **-e, --event**
 
-Runs a command and gathers performance counter statistics
+Specify the performance event to count or sample
 
 ```console
-$ perf stat ls
-Documents  Downloads  Pictures  Videos
+$ perf stat -e cycles,instructions ./myprogram
+ Performance counter stats for './myprogram':
 
- Performance counter stats for 'ls':
-
-              0.93 msec task-clock                #    0.076 CPUs utilized
-                 0      context-switches          #    0.000 K/sec
-                 0      cpu-migrations            #    0.000 K/sec
-                89      page-faults               #    0.096 M/sec
-           1,597,086      cycles                  #    1.723 GHz
-           1,221,363      instructions            #    0.76  insn per cycle
-             245,931      branches                #  265.249 M/sec
-              10,764      branch-misses           #    4.38% of all branches
-
-       0.012249350 seconds time elapsed
-
-       0.001349000 seconds user
-       0.000000000 seconds sys
+       1,234,567      cycles
+       2,345,678      instructions             #    1.90  insn per cycle
+       
+       0.123456789 seconds time elapsed
 ```
 
-### **record**
+### **-p, --pid**
 
-Records performance data for later analysis
+Profile events on existing process by process ID
+
+```console
+$ perf record -p 1234 -g
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.452 MB perf.data (5093 samples) ]
+```
+
+### **-a, --all-cpus**
+
+System-wide monitoring of all CPUs
+
+```console
+$ perf stat -a sleep 5
+ Performance counter stats for 'system wide':
+
+       12,345,678      cpu-cycles           
+        5,678,901      instructions              #    0.46  insn per cycle
+          123,456      cache-misses
+
+       5.000621884 seconds time elapsed
+```
+
+### **-g, --call-graph**
+
+Enable call-graph (stack chain/backtrace) recording
 
 ```console
 $ perf record -g ./myprogram
 [ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.086 MB perf.data (1093 samples) ]
-```
-
-### **report**
-
-Analyzes and displays the data collected by perf record
-
-```console
-$ perf report
-# Samples: 1K of event 'cycles:ppp'
-# Event count (approx.): 1597086
-#
-# Overhead  Command      Shared Object        Symbol
-# ........  .......  .................  ..............
-#
-    14.29%  myprogram  myprogram           [.] process_data
-    10.53%  myprogram  libc-2.31.so        [.] malloc
-     8.76%  myprogram  myprogram           [.] calculate_result
-```
-
-### **top**
-
-System profiling tool similar to top, but showing performance counter information
-
-```console
-$ perf top
-Samples: 42K of event 'cycles', 4000 Hz, Event count (approx.): 9857399138
-Overhead  Shared Object                       Symbol
-  10.95%  [kernel]                            [k] _raw_spin_unlock_irqrestore
-   3.62%  [kernel]                            [k] finish_task_switch
-   2.40%  [kernel]                            [k] __schedule
-   2.11%  libcrypto.so.1.1                    [.] 0x000000000012b8d6
+[ perf record: Captured and wrote 0.452 MB perf.data (5093 samples) ]
 ```
 
 ## Usage Examples
 
-### Profiling CPU usage of a specific command
+### Basic CPU statistics
 
 ```console
-$ perf stat -e cycles,instructions,cache-references,cache-misses ./myprogram
-[output shows CPU performance metrics for myprogram]
+$ perf stat ./myprogram
+ Performance counter stats for './myprogram':
+
+          0.086283      task-clock (msec)         #    0.733 CPUs utilized
+                 2      context-switches          #    0.023 M/sec
+                 0      cpu-migrations            #    0.000 K/sec
+               108      page-faults               #    0.001 M/sec
+           235,538      cycles                    #    2.731 GHz
+           580,716      instructions              #    2.47  insn per cycle
+           116,931      branches                  #    1.356 M/sec
+             3,468      branch-misses             #    2.97% of all branches
+
+       0.117743392 seconds time elapsed
 ```
 
-### Recording call graph information
+### Recording and analyzing performance data
 
 ```console
 $ perf record -g ./myprogram
-[perf data recorded to perf.data]
-$ perf report --sort comm,dso,symbol
-[displays hierarchical call graph with hotspots]
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.452 MB perf.data (5093 samples) ]
+
+$ perf report
+# Samples: 5K of event 'cycles'
+# Event count (approx.): 2345678901
+#
+# Overhead  Command      Shared Object        Symbol
+# ........  .......  .................  ..............
+#
+    14.59%  myprogram  myprogram           [.] process_data
+    10.21%  myprogram  myprogram           [.] calculate_result
+     8.45%  myprogram  libc-2.31.so        [.] malloc
 ```
 
-### Analyzing specific events
+### Tracing system calls
 
 ```console
-$ perf list
-[lists available events]
+$ perf trace -p 1234
+     0.000 ( 0.000 ms): myprogram/1234 write(fd: 1, buf: 0x7f9876543210, count: 16) = 16
+     0.223 ( 0.019 ms): myprogram/1234 read(fd: 0, buf: 0x7f9876543210, count: 1024) = 64
+     0.415 ( 0.021 ms): myprogram/1234 open(filename: 0x7f9876543210, flags: RDONLY) = 3
+```
+
+## Tips
+
+### Use Flame Graphs for Visualization
+
+Convert perf data to flame graphs using tools like FlameGraph to visualize call stacks and quickly identify hot spots in your code.
+
+```console
+$ perf record -g -F 99 ./myprogram
+$ perf script | ./FlameGraph/stackcollapse-perf.pl | ./FlameGraph/flamegraph.pl > profile.svg
+```
+
+### Focus on Specific Events
+
+Instead of collecting all events, focus on specific ones like cache-misses or branch-misses to diagnose particular performance issues.
+
+```console
 $ perf stat -e cache-misses,branch-misses ./myprogram
-[shows cache and branch miss statistics]
 ```
 
-## Tips:
+### Reduce Overhead with Sampling
 
-### Run with Elevated Privileges
+For production environments, use sampling to reduce overhead by specifying a frequency:
 
-Many perf features require root access. Use `sudo perf` to access hardware counters and kernel events.
-
-### Focus on Hotspots
-
-When analyzing performance reports, focus on functions with the highest overhead percentages first. These "hotspots" offer the greatest potential for optimization.
-
-### Use Flame Graphs
-
-Convert perf data to flame graphs for better visualization:
-```console
-$ perf record -g ./myprogram
-$ perf script | FlameGraph/stackcollapse-perf.pl | FlameGraph/flamegraph.pl > flamegraph.svg
-```
-
-### Limit Data Collection
-
-For long-running programs, use `-F` to reduce sampling frequency and `-g` to collect call graphs:
 ```console
 $ perf record -F 99 -g ./myprogram
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between perf stat and perf record?
-A. `perf stat` provides a summary of performance metrics after a command completes, while `perf record` captures detailed performance data that can be analyzed later with `perf report`.
+#### Q1. What's the difference between `perf stat` and `perf record`?
+A. `perf stat` provides a summary of performance counters, while `perf record` captures detailed samples for later analysis with `perf report`.
 
-#### Q2. How do I profile a running process?
-A. Use `perf record -p PID` to attach to an already running process with the specified PID.
+#### Q2. How do I profile a running application?
+A. Use `perf record -p PID` where PID is the process ID of your running application.
 
-#### Q3. Why do I get "Permission denied" errors?
-A. Many perf features require root privileges. Try running with `sudo` or adjust the `/proc/sys/kernel/perf_event_paranoid` setting.
+#### Q3. Can I use perf on a virtual machine?
+A. Yes, but with limitations. Some hardware counters may not be available or accurate in virtualized environments.
 
-#### Q4. How can I reduce the size of perf.data files?
-A. Use `-F` to lower the sampling frequency (e.g., `perf record -F 99`) or limit the events you're recording with the `-e` option.
+#### Q4. How do I see which functions are using the most CPU?
+A. Use `perf top` for real-time function monitoring or `perf record` followed by `perf report` for detailed analysis.
+
+#### Q5. Does perf work on all Linux distributions?
+A. Most modern distributions support perf, but functionality may vary based on kernel version and configuration.
 
 ## References
 
@@ -146,4 +155,4 @@ https://perf.wiki.kernel.org/index.php/Main_Page
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

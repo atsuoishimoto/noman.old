@@ -4,7 +4,7 @@ Display file contents one screen at a time.
 
 ## Overview
 
-The `more` command is a pager that allows you to view text files one screen at a time. It's particularly useful for examining large files without overwhelming your terminal with text. Unlike its more advanced counterpart `less`, `more` only allows forward navigation through a file.
+The `more` command is a pager that allows you to view text files one screen at a time. It's particularly useful for viewing large files as it displays content page by page, allowing you to navigate through the file with simple keyboard commands. Unlike its more advanced counterpart `less`, `more` only allows forward navigation through files.
 
 ## Options
 
@@ -27,7 +27,7 @@ $ more -f wide_content.txt
 
 ### **-p, --plain**
 
-Disables screen clearing and displays text without processing special characters.
+Disables screen clearing and control sequences that might interfere with some terminals.
 
 ```console
 $ more -p script.sh
@@ -35,7 +35,7 @@ $ more -p script.sh
 
 ### **-c, --clean-print**
 
-Draws each page by scrolling from the bottom of the screen, providing a cleaner display.
+Redraws the screen instead of scrolling, providing a cleaner display.
 
 ```console
 $ more -c document.txt
@@ -43,10 +43,10 @@ $ more -c document.txt
 
 ### **-s, --squeeze**
 
-Squeezes multiple blank lines into a single blank line.
+Squeezes multiple blank lines into one.
 
 ```console
-$ more -s log_with_gaps.txt
+$ more -s log_file.txt
 ```
 
 ### **-u, --plain**
@@ -100,64 +100,72 @@ $ more file1.txt file2.txt
 ::::::::::::::
 file1.txt
 ::::::::::::::
-This is the content of file1.txt
+This is file 1 content
+--More--(50%)
+```
+
+### Starting at a Specific Pattern
+
+```console
+$ more +/important document.txt
+Here is the important information you were looking for...
 --More--(75%)
 ```
 
 ### Combining Options
 
 ```console
-$ more -cs +/important document.txt
-[displays from the first occurrence of "important" with clean screen and squeezed blank lines]
+$ more -cs +10 large_log.txt
+[Displays from line 10 with clean screen redraw and squeezed blank lines]
+--More--(15%)
 ```
 
-### Using with Pipes
-
-```console
-$ ls -la | more
-total 112
-drwxr-xr-x  15 user  staff   480 May  4 10:23 .
-drwxr-xr-x   5 user  staff   160 Apr 29 09:15 ..
--rw-r--r--   1 user  staff  8196 May  3 14:22 file1.txt
---More--(42%)
-```
-
-## Tips
+## Tips:
 
 ### Navigation Commands
 
 While viewing a file with `more`, you can use these keyboard commands:
-- `Space` or `f`: Move forward one screen
-- `Enter`: Move forward one line
-- `b`: Move back one screen (may not work in all implementations)
-- `q` or `Q`: Quit
-- `/pattern`: Search for a pattern
-- `n`: Repeat the previous search
+- `Space` - Move forward one screen
+- `Enter` - Move forward one line
+- `b` - Move back one screen (may not work in all implementations)
+- `q` - Quit and exit
+- `/pattern` - Search for a pattern
+- `n` - Repeat the previous search
 
-### Using with Large Files
+### Pipe Command Output
 
-When examining very large files, `more` loads the file as you view it, making it more memory-efficient than loading the entire file at once.
+You can pipe the output of commands to `more` to view large outputs page by page:
 
-### Alternative to `more`
+```console
+$ ls -la /usr/bin | more
+```
 
-Consider using `less` instead of `more` for more advanced features like backward navigation and better search capabilities. The `less` command was designed as an improvement over `more` with the tagline "less is more".
+### Environment Variable
+
+Set the `MORE` environment variable to specify default options:
+
+```console
+$ export MORE="-d"
+$ more large_file.txt
+```
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `more` and `less`?
-A. `more` only allows forward navigation through a file, while `less` allows both forward and backward navigation and has more advanced features.
+A. `more` only allows forward navigation through a file, while `less` allows both forward and backward navigation and has more features. `less` is generally considered an improvement over `more` (hence the name).
 
-#### Q2. How do I exit from `more`?
-A. Press `q` or `Q` to exit.
+#### Q2. How do I exit `more`?
+A. Press the `q` key to quit and return to the command prompt.
 
 #### Q3. Can I search for text in `more`?
-A. Yes, press `/` followed by your search pattern, then press Enter. Use `n` to find the next occurrence.
+A. Yes, press `/` followed by your search pattern and press Enter. Use `n` to find the next occurrence.
 
 #### Q4. How can I display line numbers in `more`?
-A. Unlike `less`, `more` doesn't have a built-in option to display line numbers.
+A. Unlike `less`, `more` doesn't have a built-in option to display line numbers. Consider using `less -N` instead if you need line numbers.
 
-#### Q5. Why does `more` sometimes clear my screen?
-A. By default, `more` clears the screen before displaying each page. Use the `-p` option to prevent this behavior.
+## macOS Considerations
+
+On macOS, the `more` command is slightly different from the GNU/Linux version. Some options like `-d` might behave differently or not be available. For more consistent behavior across platforms, consider using `less` instead, which is more feature-rich and consistent across systems.
 
 ## References
 

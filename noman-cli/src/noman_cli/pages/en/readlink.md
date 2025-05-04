@@ -4,7 +4,7 @@ Print the resolved symbolic links or canonical file names.
 
 ## Overview
 
-The `readlink` command displays the target of a symbolic link or the canonical path of a file. It's useful for determining where a symbolic link points to or for getting the absolute path of a file with all symbolic links resolved.
+The `readlink` command displays the target of a symbolic link or the canonical path of a file. It resolves symbolic links in a path, showing where they actually point to. This is useful for determining the actual location of files in a filesystem with many symbolic links.
 
 ## Options
 
@@ -13,9 +13,9 @@ The `readlink` command displays the target of a symbolic link or the canonical p
 Canonicalize by following every symlink in every component of the given path recursively
 
 ```console
-$ ln -s /usr/bin bin_link
-$ readlink -f bin_link
-/usr/bin
+$ ln -s /etc/hosts mylink
+$ readlink -f mylink
+/etc/hosts
 ```
 
 ### **-e, --canonicalize-existing**
@@ -23,92 +23,104 @@ $ readlink -f bin_link
 Canonicalize by following every symlink in every component of the given path recursively, all components must exist
 
 ```console
-$ readlink -e bin_link
-/usr/bin
-$ readlink -e nonexistent_link
-[no output, returns error]
+$ readlink -e mylink
+/etc/hosts
+$ readlink -e nonexistent
+# No output, as the file doesn't exist
+```
+
+### **-m, --canonicalize-missing**
+
+Canonicalize by following every symlink in every component of the given path recursively, without requirements on components existence
+
+```console
+$ readlink -m /nonexistent/path/file.txt
+/nonexistent/path/file.txt
 ```
 
 ### **-n, --no-newline**
 
-Do not output the trailing newline
+Do not output the trailing delimiter (newline)
 
 ```console
-$ readlink -n bin_link
-/usr/bin$ echo " (this continues on same line)"
- (this continues on same line)
+$ readlink -n mylink && echo " (this continues on same line)"
+/etc/hosts (this continues on same line)
+```
+
+### **-z, --zero**
+
+End each output line with NUL, not newline
+
+```console
+$ readlink -z mylink | hexdump -C
+00000000  2f 65 74 63 2f 68 6f 73  74 73 00                 |/etc/hosts.|
+0000000b
 ```
 
 ### **-v, --verbose**
 
-Report errors
+Report errors (not implemented on all systems)
 
 ```console
-$ readlink -v nonexistent_link
-readlink: nonexistent_link: No such file or directory
+$ readlink -v nonexistent
+readlink: nonexistent: No such file or directory
 ```
 
 ## Usage Examples
 
-### Basic usage to show where a symlink points
+### Basic usage to read a symbolic link
 
 ```console
-$ ln -s /etc/hosts hosts_link
-$ readlink hosts_link
-/etc/hosts
+$ ln -s /usr/bin/python3 python
+$ readlink python
+/usr/bin/python3
 ```
 
-### Getting the absolute path with all symlinks resolved
+### Finding the canonical path of a file with multiple symlinks
 
 ```console
-$ cd /usr/local/bin
-$ readlink -f python
-/usr/bin/python3.9
+$ ln -s /etc/passwd passwd_link
+$ ln -s passwd_link passwd_link2
+$ readlink -f passwd_link2
+/etc/passwd
 ```
 
-### Checking if a path is a symlink
+### Working with relative paths
 
 ```console
-$ readlink regular_file
-[no output]
-$ echo $?
-1
+$ mkdir -p dir1/dir2
+$ ln -s dir1/dir2 mydir
+$ readlink -f mydir
+/home/user/dir1/dir2
 ```
 
-## Tips
+## Tips:
 
-### Distinguish Between Symlinks and Regular Files
+### Distinguish Between Direct and Full Resolution
 
-If `readlink` returns no output and an exit status of 1, the file is not a symbolic link. This can be used in scripts to determine if a file is a symlink.
+Use plain `readlink` to see only the immediate target of a symlink, or use `readlink -f` to follow chains of symlinks to the final destination.
 
-### Use in Scripts
+### Check if a Path is a Symlink
 
-When writing shell scripts, `readlink -f` is useful for getting the absolute path of a script regardless of where it's called from:
-
-```bash
-SCRIPT_DIR=$(dirname $(readlink -f "$0"))
-```
+If `readlink` returns nothing and exits with a non-zero status, the path is not a symlink. This can be used in scripts to test if a file is a symlink.
 
 ### Combine with Other Commands
 
-Combine `readlink` with other commands to operate on the target of a symlink:
-```bash
-cat $(readlink symlink_to_file)
-```
+Pipe the output of `readlink` to other commands when you need to operate on the actual file rather than the symlink.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `readlink` and `realpath`?
-A. Both commands can resolve symbolic links, but `realpath` always prints the absolute path while `readlink` without options only shows the immediate target of a symlink. With the `-f` option, `readlink` behaves similarly to `realpath`.
+A. While both resolve symlinks, `realpath` always provides the absolute path, whereas basic `readlink` only shows the immediate target of a symlink. `readlink -f` is similar to `realpath`.
 
-#### Q2. How do I get the absolute path of a file?
-A. Use `readlink -f filename` to get the absolute path with all symbolic links resolved.
+#### Q2. Why does `readlink` without options sometimes return nothing?
+A. Without options, `readlink` only works on symbolic links. If you try to use it on a regular file or directory, it will return nothing and exit with an error code.
 
-#### Q3. Why does `readlink` return nothing for a regular file?
-A. `readlink` only shows information for symbolic links. For regular files without the `-f` option, it returns nothing and an exit status of 1.
+#### Q3. How can I use `readlink` in a shell script safely?
+A. Use `readlink -f "$path"` to get the canonical path, which handles spaces and special characters correctly when properly quoted.
 
-#### Q4. How can I use `readlink` in a script to find the script's location?
-A. Use `SCRIPT_DIR=$(dirname $(readlink -f "$0"))` to get the directory containing the script.
+#### Q4. What happens if a symlink points to a non-existent file?
+A. Basic `readlink` will still show the target path, even if it doesn't exist. `readlink -e` will fail, while `readlink -f` and `readlink -m` will resolve as much as possible.
 
 ## References
 
@@ -116,4 +128,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/readlink-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

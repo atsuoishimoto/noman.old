@@ -1,139 +1,147 @@
 # pstree コマンド
 
-プロセスツリーを表示します。
+プロセスの親子関係を示すツリーを表示します。
 
 ## 概要
 
-`pstree`コマンドは、実行中のプロセスをツリー構造で表示します。親プロセスと子プロセスの関係が視覚的に理解しやすく表示されるため、システム上で何が実行されているかを把握するのに役立ちます。デフォルトでは、すべてのプロセスが表示されますが、特定のプロセスIDを指定して、そのプロセスから派生したツリーのみを表示することも可能です。
+`pstree` コマンドは実行中のプロセスをツリー形式で表示し、プロセス間の親子関係を簡単に確認できるようにします。どのプロセスがどのプロセスを生成したかを視覚的に表現し、プロセス間の接続関係を明確に示します。
 
 ## オプション
 
-### **-a**
+### **-a, --arguments**
 
-コマンドライン引数を表示します。
+各プロセスのコマンドライン引数を表示します。
 
 ```console
 $ pstree -a
 systemd
   ├─ModemManager
   ├─NetworkManager --no-daemon
-  │   └─2*[{NetworkManager}]
   ├─accounts-daemon
-  │   └─2*[{accounts-daemon}]
   ├─avahi-daemon --syslog
   │   └─avahi-daemon --syslog
+  └─sshd -D
+      └─sshd
+          └─sshd
+              └─bash
 ```
 
-### **-p**
+### **-p, --show-pids**
 
-各プロセスのPID（プロセスID）を表示します。
+プロセス名と一緒にPID（プロセスID）を表示します。
 
 ```console
 $ pstree -p
-systemd(1)─┬─ModemManager(852)
-           ├─NetworkManager(853)─┬─{NetworkManager}(873)
-           │                     └─{NetworkManager}(875)
-           ├─accounts-daemon(856)─┬─{accounts-daemon}(857)
-           │                      └─{accounts-daemon}(858)
+systemd(1)─┬─ModemManager(823)
+           ├─NetworkManager(824)
+           ├─accounts-daemon(825)
+           ├─avahi-daemon(826)───avahi-daemon(845)
+           └─sshd(1025)───sshd(1789)───sshd(1823)───bash(1824)
 ```
 
-### **-u**
+### **-h, --highlight-all**
 
-各プロセスのユーザー名を表示します。
-
-```console
-$ pstree -u
-systemd─┬─ModemManager(root)
-        ├─NetworkManager(root)─┬─{NetworkManager}(root)
-        │                      └─{NetworkManager}(root)
-        ├─accounts-daemon(root)─┬─{accounts-daemon}(root)
-        │                       └─{accounts-daemon}(root)
-```
-
-### **-h**
-
-現在のプロセスとその親を強調表示します。
+現在のプロセスとその祖先を強調表示します。
 
 ```console
 $ pstree -h
 systemd─┬─ModemManager
-        ├─NetworkManager─┬─{NetworkManager}
-        │                └─{NetworkManager}
-        ├─accounts-daemon─┬─{accounts-daemon}
-        │                 └─{accounts-daemon}
-        └─bash───pstree
+        ├─NetworkManager
+        ├─accounts-daemon
+        ├─avahi-daemon───avahi-daemon
+        └─sshd───sshd───sshd───bash
+```
+
+### **-u, --uid-changes**
+
+ユーザーID（uid）の変更を表示します。
+
+```console
+$ pstree -u
+systemd─┬─ModemManager
+        ├─NetworkManager
+        ├─accounts-daemon
+        ├─avahi-daemon───avahi-daemon
+        └─sshd───sshd───sshd───bash(user)
+```
+
+### **-n, --numeric-sort**
+
+同じ親を持つプロセスを名前ではなくPID順にソートします。
+
+```console
+$ pstree -n
+systemd─┬─ModemManager
+        ├─NetworkManager
+        ├─accounts-daemon
+        ├─avahi-daemon───avahi-daemon
+        └─sshd───sshd───sshd───bash
 ```
 
 ## 使用例
 
-### 特定のユーザーのプロセスを表示
+### 特定ユーザーのプロセスツリーを表示
 
 ```console
 $ pstree username
 bash───vim
 ```
 
-### 特定のプロセスIDから始まるツリーを表示
+### 特定のPIDのプロセスツリーを表示
 
 ```console
 $ pstree 1234
-bash───python3───2*[{python3}]
+bash───firefox───Web Content
 ```
 
-### PIDとコマンドライン引数を同時に表示
+### 複数のオプションを組み合わせて詳細な出力を得る
 
 ```console
-$ pstree -ap 1
-systemd --system --deserialize 21
-  ├─ModemManager
-  ├─NetworkManager --no-daemon
-  │   └─2*[{NetworkManager}]
-  ├─accounts-daemon
-  │   └─2*[{accounts-daemon}]
+$ pstree -apu
+systemd(1)
+  ├─ModemManager(823)
+  ├─NetworkManager(824) --no-daemon
+  ├─accounts-daemon(825)
+  ├─avahi-daemon(826) --syslog
+  │   └─avahi-daemon(845) --syslog
+  └─sshd(1025) -D
+      └─sshd(1789)
+          └─sshd(1823)
+              └─bash(1824)(user)
 ```
 
 ## ヒント:
 
-### 同じプロセスの複数のインスタンスを圧縮表示
+### 親子プロセス関係の特定
 
-デフォルトでは、同じ名前の複数のプロセスは「2*[プロセス名]」のように圧縮されます。`-c`オプションを使用すると、この圧縮を無効にできます。
+トラブルシューティング時に `pstree -p` を使用すると、特定の子プロセスがどの親プロセスから生成されたかを素早く特定できます。これによりプロセス階層の理解が容易になります。
 
-### プロセスツリーの深さを制限
+### リソースを多く消費するプロセスグループの特定
 
-`-n`オプションを使用すると、表示するツリーの深さを制限できます。例えば、`pstree -n 2`は2レベルまでのプロセスのみを表示します。
+`ps` コマンドと組み合わせることで、リソースを多く消費するプロセスだけでなく、そのプロセスファミリー全体を特定できます：`pstree -p $(ps -eo pid,pcpu --sort=-pcpu | head -2 | tail -1 | awk '{print $1}')`
 
-### グラフィカルな区切り文字を変更
+### 大規模システム向けのコンパクトビュー
 
-`-A`、`-U`、`-V`オプションを使用して、ツリーの表示に使用される文字を変更できます。例えば、`pstree -A`はASCII文字のみを使用します。
+多数のプロセスが実行されているシステムでは、`pstree -c` を使用すると、同一のサブツリーを圧縮せずにより簡潔な表示が得られます。
 
 ## よくある質問
 
-#### Q1. `pstree`と`ps`の違いは何ですか？
-A. `ps`はプロセスを一覧形式で表示しますが、`pstree`はプロセス間の親子関係をツリー構造で視覚的に表示します。
+#### Q1. `pstree` と `ps` の違いは何ですか？
+A. `ps` はプロセスをフラットなフォーマットでリスト表示するのに対し、`pstree` は親子関係を示す階層的なツリー構造で表示します。
 
-#### Q2. 特定のプロセスから始まるツリーを表示するにはどうすればよいですか？
-A. `pstree PID`のようにプロセスIDを指定すると、そのプロセスから始まるツリーが表示されます。
+#### Q2. `pstree` でプロセスIDを確認できますか？
+A. はい、`pstree -p` を使用するとプロセス名と一緒にPIDを表示できます。
 
-#### Q3. プロセスのコマンドライン引数を表示するにはどうすればよいですか？
-A. `pstree -a`オプションを使用すると、各プロセスのコマンドライン引数が表示されます。
+#### Q3. 特定ユーザーのプロセスツリーを確認するにはどうすればよいですか？
+A. `pstree ユーザー名` を実行すると、そのユーザーが所有するプロセスのみが表示されます。
 
-#### Q4. 同じプロセスの複数のインスタンスを個別に表示するにはどうすればよいですか？
-A. `pstree -c`オプションを使用すると、同じプロセスの複数のインスタンスが個別に表示されます。
+#### Q4. プロセスツリーでコマンドライン引数を確認できますか？
+A. はい、`pstree -a` を使用すると各プロセスのコマンドライン引数が表示されます。
 
-## macOSでの注意点
-
-macOSには標準で`pstree`コマンドが含まれていません。Homebrewを使用してインストールできます：
-
-```console
-$ brew install pstree
-```
-
-macOSでは、代わりに`ps -e -o pid,ppid,user,command`や`ps axjf`コマンドを使用してプロセス階層を確認することもできます。
-
-## 参照
+## 参考資料
 
 https://man7.org/linux/man-pages/man1/pstree.1.html
 
-## Revisions
+## 改訂履歴
 
-- 2025/04/30 First revision
+- 2025/05/04 初版作成

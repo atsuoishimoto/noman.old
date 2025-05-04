@@ -49,17 +49,21 @@
   <h1>ln command</h1>
 <p>Create links between files.</p>
 <h2>Overview</h2>
-<p>The <code>ln</code> command creates links between files. It can create hard links (the default) or symbolic links (with the <code>-s</code> option). Hard links point directly to the file's data on disk, while symbolic links are special files that point to another file path.</p>
+<p>The <code>ln</code> command creates links to files or directories. It can create hard links (the default) or symbolic links (with the <code>-s</code> option). Hard links point directly to the file's data on disk, while symbolic links are special files that point to another file or directory by name.</p>
 <h2>Options</h2>
 <h3><strong>-s, --symbolic</strong></h3>
 <p>Create a symbolic link instead of a hard link.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>target_file<span style="color: #F8F8F8"> </span>link_name
 <span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>link_name
-<span style="color: #000; font-style: italic">lrwxrwxrwx 1 user group 10 Apr 30 10:00 link_name -&gt; target_file</span>
+<span style="color: #000; font-style: italic">lrwxrwxrwx 1 user user 10 May 4 10:00 link_name -&gt; target_file</span>
 </pre></div>
 <h3><strong>-f, --force</strong></h3>
 <p>Remove existing destination files.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-sf<span style="color: #F8F8F8"> </span>target_file<span style="color: #F8F8F8"> </span>existing_link
+</pre></div>
+<h3><strong>-n, --no-dereference</strong></h3>
+<p>Treat destination that is a symbolic link to a directory as if it were a normal file.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-sfn<span style="color: #F8F8F8"> </span>new_target<span style="color: #F8F8F8"> </span>existing_link
 </pre></div>
 <h3><strong>-v, --verbose</strong></h3>
 <p>Print the name of each linked file.</p>
@@ -68,55 +72,69 @@
 </pre></div>
 <h3><strong>-r, --relative</strong></h3>
 <p>Create symbolic links relative to link location.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-sr<span style="color: #F8F8F8"> </span>../dir1/file<span style="color: #F8F8F8"> </span>dir2/link
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>dir2/link
-<span style="color: #000; font-style: italic">lrwxrwxrwx 1 user group 12 Apr 30 10:00 dir2/link -&gt; ../dir1/file</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-sr<span style="color: #F8F8F8"> </span>../dir1/file1<span style="color: #F8F8F8"> </span>link_name
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Creating a hard link</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>original.txt
-<span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>hard_link.txt
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Original content&quot;</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>original.txt
+<span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>hardlink.txt
 <span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>*txt
-<span style="color: #000; font-style: italic">-rw-r--r-- 2 user group 6 Apr 30 10:00 hard_link.txt</span>
-<span style="color: #000; font-style: italic">-rw-r--r-- 2 user group 6 Apr 30 10:00 original.txt</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 2 user user 16 May 4 10:00 hardlink.txt</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 2 user user 16 May 4 10:00 original.txt</span>
+</pre></div>
+<h3>Creating a symbolic link to a file</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/path/to/file.txt<span style="color: #F8F8F8"> </span>symlink.txt
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>symlink.txt
+<span style="color: #000; font-style: italic">lrwxrwxrwx 1 user user 15 May 4 10:00 symlink.txt -&gt; /path/to/file.txt</span>
 </pre></div>
 <h3>Creating a symbolic link to a directory</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/path/to/directory<span style="color: #F8F8F8"> </span>link_to_dir
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>link_to_dir
-<span style="color: #000; font-style: italic">lrwxrwxrwx 1 user group 16 Apr 30 10:00 link_to_dir -&gt; /path/to/directory</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/usr/local/bin<span style="color: #F8F8F8"> </span>bin_link
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>bin_link
+<span style="color: #000; font-style: italic">lrwxrwxrwx 1 user user 14 May 4 10:00 bin_link -&gt; /usr/local/bin</span>
 </pre></div>
-<h3>Creating multiple links at once</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>file1<span style="color: #F8F8F8"> </span>file2<span style="color: #F8F8F8"> </span>file3<span style="color: #F8F8F8"> </span>directory/
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>directory/
-<span style="color: #000; font-style: italic">lrwxrwxrwx 1 user group 5 Apr 30 10:00 directory/file1 -&gt; file1</span>
-<span style="color: #000; font-style: italic">lrwxrwxrwx 1 user group 5 Apr 30 10:00 directory/file2 -&gt; file2</span>
-<span style="color: #000; font-style: italic">lrwxrwxrwx 1 user group 5 Apr 30 10:00 directory/file3 -&gt; file3</span>
+<h3>Creating a relative symbolic link</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>dir1/subdir
+<span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>dir1/file.txt
+<span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-sr<span style="color: #F8F8F8"> </span>dir1/file.txt<span style="color: #F8F8F8"> </span>dir1/subdir/link.txt
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>dir1/subdir/link.txt
+<span style="color: #000; font-style: italic">lrwxrwxrwx 1 user user 9 May 4 10:00 dir1/subdir/link.txt -&gt; ../file.txt</span>
 </pre></div>
 <h2>Tips</h2>
-<h3>Understanding Hard vs. Symbolic Links</h3>
-<p>Hard links share the same inode (data location on disk) as the original file. Deleting the original file won't affect hard links. Symbolic links are just pointers to file paths and will break if the original file is moved or deleted.</p>
-<h3>Relative vs. Absolute Paths</h3>
-<p>When creating symbolic links, consider using relative paths (<code>-r</code> option) if the linked files might be moved together. Use absolute paths when the link needs to work regardless of where it's accessed from.</p>
-<h3>Checking Link Status</h3>
-<p>Use <code>ls -l</code> to see what a symbolic link points to. The number after permissions in a file listing shows how many hard links a file has.</p>
-<h3>Broken Links</h3>
-<p>Symbolic links that point to non-existent files are called &quot;broken links.&quot; Use <code>find -L . -type l -print</code> to locate broken links in a directory.</p>
+<h3>Hard Links vs. Symbolic Links</h3>
+<ul>
+<li>Hard links share the same inode as the original file, meaning they reference the same physical data on disk. Changes to either file affect both.</li>
+<li>Hard links cannot span filesystems and cannot link to directories.</li>
+<li>Symbolic links are separate files that point to another file by name and can span filesystems.</li>
+<li>If the original file of a symbolic link is deleted, the link becomes &quot;broken&quot; and points to nothing.</li>
+</ul>
+<h3>Updating Existing Symbolic Links</h3>
+<p>Use <code>-sfn</code> together to safely update existing symbolic links:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ln<span style="color: #F8F8F8"> </span>-sfn<span style="color: #F8F8F8"> </span>new_target<span style="color: #F8F8F8"> </span>existing_link
+</pre></div>
+<h3>Checking for Broken Symbolic Links</h3>
+<p>Find broken symbolic links in the current directory:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>l<span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span><span style="color: #204A87">test</span><span style="color: #F8F8F8"> </span>!<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span><span style="color: #F8F8F8"> </span>-print
+</pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between hard and symbolic links?</h4>
-<p>A. Hard links directly reference a file's data on disk and can't cross filesystems. Symbolic links are pointer files that contain the path to another file and can point to files on different filesystems.</p>
-<h4>Q2. Can I create a hard link to a directory?</h4>
-<p>A. No, most Unix systems don't allow hard links to directories to prevent filesystem loops.</p>
-<h4>Q3. What happens if I delete a file that has hard links?</h4>
-<p>A. The file's data remains available through the hard links until all links are deleted.</p>
-<h4>Q4. How do I know if a file has hard links?</h4>
-<p>A. Use <code>ls -l</code> and look at the number after the permissions. If it's greater than 1, the file has hard links.</p>
-<h4>Q5. Why do my symbolic links break when I move files?</h4>
-<p>A. Symbolic links point to file paths. If you move the target file without updating the link, the link will break. Consider using relative paths with the <code>-r</code> option.</p>
+<h4>Q1. What's the difference between hard links and symbolic links?</h4>
+<p>A. Hard links directly reference a file's inode (data on disk) and can't span filesystems or link to directories. Symbolic links are pointer files that reference another file by path and can link across filesystems and to directories.</p>
+<h4>Q2. How do I update an existing symbolic link?</h4>
+<p>A. Use <code>ln -sf new_target existing_link</code> to force the creation of a new link, replacing the existing one.</p>
+<h4>Q3. Can I create a hard link to a directory?</h4>
+<p>A. No, hard links to directories are not allowed in most Unix/Linux systems to prevent filesystem loops.</p>
+<h4>Q4. How can I tell if a file is a symbolic link?</h4>
+<p>A. Use <code>ls -l filename</code> - symbolic links will show an &quot;l&quot; at the beginning of the permissions and display the target with an arrow (-&gt;).</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, the <code>ln</code> command works similarly to Linux, but there are some differences:</p>
+<ul>
+<li>The <code>-r</code> (relative) option may not be available in older macOS versions.</li>
+<li>For compatibility across systems, use the full <code>-symbolic</code> option instead of just <code>-s</code> if you encounter issues.</li>
+</ul>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/ln-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

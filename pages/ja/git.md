@@ -1,40 +1,101 @@
-# git command
+# git コマンド
 
-バージョン管理システムで、ファイルの変更履歴を追跡し、複数の開発者との共同作業を可能にします。
+分散型バージョン管理システムで、ソフトウェア開発中のソースコードの変更を追跡します。
 
 ## 概要
 
-Git はファイルの変更履歴を追跡するための分散型バージョン管理システムです。ローカルでの作業とリモートリポジトリとの同期が可能で、複数の開発者が同じプロジェクトで並行して作業できます。ブランチ機能により、メインコードに影響を与えずに新機能開発やバグ修正が行えます。
+Gitは分散型バージョン管理システムで、複数の開発者が同時にプロジェクトで作業することを可能にします。ファイルの変更を追跡し、修正履歴を維持し、異なるソースからの変更をマージすることでコラボレーションを促進します。Gitは主にローカルリポジトリを通じて操作し、リモートリポジトリと同期する機能を持っています。
 
 ## オプション
 
-### **git init**
+### **-v, --version**
 
-新しいGitリポジトリを初期化します
+インストールされているGitのバージョンを表示します
+
+```console
+$ git --version
+git version 2.39.2
+```
+
+### **-h, --help**
+
+GitまたはGitの特定のコマンドのヘルプ情報を表示します
+
+```console
+$ git --help
+usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]
+           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
+           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]
+           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
+           [--super-prefix=<path>] [--config-env=<name>=<envvar>]
+           <command> [<args>]
+```
+
+### **-C, --work-tree=<path>**
+
+指定されたパスでgitが起動されたかのようにコマンドを実行します
+
+```console
+$ git -C /path/to/repository status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+```
+
+### **-c, --config-env=<name>=<value>**
+
+単一のコマンドに対して設定変数を設定します
+
+```console
+$ git -c user.name="Temporary User" commit -m "One-time commit with different user"
+[main 1a2b3c4] One-time commit with different user
+ 1 file changed, 5 insertions(+)
+```
+
+## 使用例
+
+### 新しいリポジトリの初期化
 
 ```console
 $ git init
 Initialized empty Git repository in /path/to/project/.git/
 ```
 
-### **git clone**
-
-既存のリポジトリをローカルにコピーします
+### 既存のリポジトリのクローン
 
 ```console
 $ git clone https://github.com/username/repository.git
 Cloning into 'repository'...
-remote: Enumerating objects: 125, done.
-remote: Counting objects: 100% (125/125), done.
-remote: Compressing objects: 100% (80/80), done.
-remote: Total 125 (delta 40), reused 120 (delta 35), pack-reused 0
-Receiving objects: 100% (125/125), 2.01 MiB | 3.50 MiB/s, done.
-Resolving deltas: 100% (40/40), done.
+remote: Enumerating objects: 1463, done.
+remote: Counting objects: 100% (1463/1463), done.
+remote: Compressing objects: 100% (750/750), done.
+remote: Total 1463 (delta 713), reused 1463 (delta 713), pack-reused 0
+Receiving objects: 100% (1463/1463), 2.56 MiB | 5.12 MiB/s, done.
+Resolving deltas: 100% (713/713), done.
 ```
 
-### **git status**
+### 基本的なワークフロー例
 
-作業ディレクトリの状態を表示します
+```console
+$ git add file.txt
+$ git commit -m "Add new file"
+[main 1a2b3c4] Add new file
+ 1 file changed, 10 insertions(+)
+ create mode 100644 file.txt
+$ git push origin main
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
+Total 3 (delta 1), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To https://github.com/username/repository.git
+   a1b2c3d..1a2b3c4  main -> main
+```
+
+### リポジトリのステータス確認
 
 ```console
 $ git status
@@ -46,185 +107,59 @@ Changes not staged for commit:
   (use "git restore <file>..." to discard changes in working directory)
         modified:   README.md
 
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-        new-file.txt
-
 no changes added to commit (use "git add" and/or "git commit -a")
-```
-
-### **git add**
-
-変更をステージングエリアに追加します
-
-```console
-$ git add README.md
-$ git status
-On branch main
-Your branch is up to date with 'origin/main'.
-
-Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
-        modified:   README.md
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-        new-file.txt
-```
-
-### **git commit**
-
-ステージングされた変更をリポジトリに記録します
-
-```console
-$ git commit -m "Update README.md with new information"
-[main 5d7e9f4] Update README.md with new information
- 1 file changed, 10 insertions(+), 2 deletions(-)
-```
-
-### **git push**
-
-ローカルの変更をリモートリポジトリに送信します
-
-```console
-$ git push origin main
-Enumerating objects: 5, done.
-Counting objects: 100% (5/5), done.
-Delta compression using up to 8 threads
-Compressing objects: 100% (3/3), done.
-Writing objects: 100% (3/3), 340 bytes | 340.00 KiB/s, done.
-Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
-To https://github.com/username/repository.git
-   a1b2c3d..5d7e9f4  main -> main
-```
-
-### **git pull**
-
-リモートリポジトリの変更をローカルに取り込みます
-
-```console
-$ git pull origin main
-remote: Enumerating objects: 5, done.
-remote: Counting objects: 100% (5/5), done.
-remote: Compressing objects: 100% (1/1), done.
-remote: Total 3 (delta 2), reused 3 (delta 2), pack-reused 0
-Unpacking objects: 100% (3/3), 285 bytes | 95.00 KiB/s, done.
-From https://github.com/username/repository
- * branch            main       -> FETCH_HEAD
-   a1b2c3d..e4f5g6h  main       -> origin/main
-Updating a1b2c3d..e4f5g6h
-Fast-forward
- README.md | 5 +++++
- 1 file changed, 5 insertions(+)
-```
-
-## 使用例
-
-### ブランチの作成と切り替え
-
-```console
-$ git branch feature-branch
-$ git checkout feature-branch
-Switched to branch 'feature-branch'
-
-# または一行で
-$ git checkout -b new-feature-branch
-Switched to a new branch 'new-feature-branch'
-```
-
-### 変更履歴の確認
-
-```console
-$ git log
-commit 5d7e9f4a7e9f4a7e9f4a7e9f4a7e9f4a7e9f4a7e
-Author: Your Name <your.email@example.com>
-Date:   Wed Apr 30 10:00:00 2025 +0900
-
-    Update README.md with new information
-
-commit a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4
-Author: Your Name <your.email@example.com>
-Date:   Tue Apr 29 15:30:00 2025 +0900
-
-    Initial commit
-```
-
-### マージの実行
-
-```console
-$ git checkout main
-Switched to branch 'main'
-$ git merge feature-branch
-Updating a1b2c3d..5d7e9f4
-Fast-forward
- feature.txt | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 feature.txt
 ```
 
 ## ヒント:
 
-### コミットメッセージの書き方
+### 個人情報の設定
 
-良いコミットメッセージは、変更内容を明確に伝えるものです。最初の行は50文字以内の要約とし、必要に応じて空行の後に詳細な説明を追加しましょう。
+コミットする前に名前とメールアドレスを設定しましょう：
 
-### .gitignoreファイルの活用
-
-`.gitignore`ファイルを作成して、バージョン管理に含めたくないファイル（ログファイル、ビルド成果物、個人設定ファイルなど）を指定できます。これにより、リポジトリを整理された状態に保てます。
-
-### ブランチ戦略の採用
-
-「Git Flow」や「GitHub Flow」などのブランチ戦略を採用すると、チーム開発がスムーズになります。プロジェクトの規模や要件に合わせて適切な戦略を選びましょう。
-
-### エイリアスの設定
-
-頻繁に使用するコマンドには、エイリアスを設定すると便利です。例えば：
+```console
+$ git config --global user.name "Your Name"
+$ git config --global user.email "your.email@example.com"
 ```
-git config --global alias.co checkout
-git config --global alias.br branch
-git config --global alias.ci commit
-git config --global alias.st status
+
+### よく使うコマンドのエイリアス作成
+
+頻繁に使用するコマンドのショートカットを作成して時間を節約できます：
+
+```console
+$ git config --global alias.co checkout
+$ git config --global alias.br branch
+$ git config --global alias.st status
 ```
+
+### .gitignoreファイルの使用
+
+リポジトリに`.gitignore`ファイルを作成して、ビルド成果物、一時ファイル、機密情報など、Gitが無視すべきファイルを指定しましょう。
+
+### アトミックなコミット
+
+複数の無関係な変更を混ぜた大きなコミットではなく、単一の論理的な変更に対応する小さな焦点を絞ったコミットを行いましょう。
 
 ## よくある質問
 
-#### Q1. Gitとは何ですか？
-A. Gitは分散型バージョン管理システムで、ソースコードの変更履歴を追跡し、複数の開発者が効率的に協力して作業できるようにするツールです。
+#### Q1. 最後のコミットを取り消すにはどうすればよいですか？
+A. 変更を保持したままコミットを取り消すには`git reset HEAD~1`を、変更を完全に破棄するには`git reset --hard HEAD~1`を使用します。
 
-#### Q2. リモートリポジトリとローカルリポジトリの違いは何ですか？
-A. ローカルリポジトリはあなたのコンピュータ上にあり、リモートリポジトリはサーバー上（GitHubなど）にあります。ローカルで作業した後、変更をリモートにプッシュして共有します。
+#### Q2. 新しいブランチを作成するにはどうすればよいですか？
+A. `git branch ブランチ名`でブランチを作成し、`git checkout ブランチ名`で切り替えます。または、`git checkout -b ブランチ名`で作成と切り替えを一度に行うこともできます。
 
-#### Q3. コミットをやり直すにはどうすればよいですか？
-A. 直前のコミットを修正するには `git commit --amend` を使用します。すでにプッシュしたコミットを変更する場合は注意が必要です。
+#### Q3. あるブランチから別のブランチに変更をマージするにはどうすればよいですか？
+A. まず`git checkout ターゲットブランチ`でターゲットブランチに切り替え、次に`git merge ソースブランチ`でマージします。
 
-#### Q4. 間違えてコミットした変更を元に戻すにはどうすればよいですか？
-A. `git revert <commit-hash>` を使用すると、特定のコミットの変更を打ち消す新しいコミットが作成されます。履歴を書き換えずに変更を元に戻せます。
+#### Q4. マージの競合を解決するにはどうすればよいですか？
+A. 競合が発生した場合、競合したファイルを編集して差異を解決し、`git add`で解決済みとマークし、最後に`git commit`でマージを完了します。
 
-#### Q5. ブランチとは何ですか？
-A. ブランチは独立した作業ラインで、メインコードに影響を与えずに新機能開発やバグ修正を行えます。作業が完了したら、メインブランチにマージできます。
-
-## macOSでの注意点
-
-macOSでは、Gitはデフォルトでインストールされていない場合があります。Xcodeコマンドラインツールをインストールするか、Homebrewを使用してインストールできます：
-
-```console
-$ xcode-select --install
-# または
-$ brew install git
-```
-
-また、macOSでは`.DS_Store`ファイルが自動生成されるため、グローバルな`.gitignore`ファイルに追加しておくと良いでしょう：
-
-```console
-$ echo ".DS_Store" >> ~/.gitignore_global
-$ git config --global core.excludesfile ~/.gitignore_global
-```
+#### Q5. ローカルリポジトリをリモートの変更で更新するにはどうすればよいですか？
+A. `git pull`を使用して変更を取得してマージするか、より制御したい場合は`git fetch`の後に`git merge`を使用します。
 
 ## 参考資料
 
-https://git-scm.com/doc
+https://git-scm.com/docs/git
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+2025/05/04 初回改訂

@@ -1,154 +1,154 @@
 # pandoc コマンド
 
-ドキュメント形式を変換するための汎用的なコンバーター。
+様々な形式の文書を相互に変換します。
 
 ## 概要
 
-pandoc は、あるマークアップ形式から別の形式へドキュメントを変換するためのコマンドラインツールです。Markdown、HTML、LaTeX、Word、PDF など、多数のフォーマット間での変換をサポートしています。学術論文、ブログ記事、技術文書など、さまざまな種類のドキュメントの変換に広く利用されています。
+Pandocは汎用的な文書変換ツールで、マークアップ形式間でファイルを変換できます。特にMarkdown、HTML、LaTeX、Word文書など多くの形式間の変換に役立ちます。Pandocは文書構造を保持し、表、脚注、参考文献などの複雑な要素も処理できます。
 
 ## オプション
 
 ### **-f, --from=FORMAT**
 
-入力ファイルのフォーマットを指定します。
+入力形式を指定します。指定しない場合、pandocは形式を推測しようとします。
 
 ```console
 $ pandoc -f markdown -t html document.md -o document.html
+# MarkdownからHTMLへ変換している
 ```
 
 ### **-t, --to=FORMAT**
 
-出力ファイルのフォーマットを指定します。
+出力形式を指定します。
 
 ```console
-$ pandoc -f docx -t markdown document.docx -o document.md
+$ pandoc -t latex document.md -o document.tex
+# 出力形式をLaTeXに指定している
 ```
 
 ### **-o, --output=FILE**
 
-出力ファイルを指定します。指定しない場合は標準出力に出力されます。
+標準出力ではなく、指定したファイルに出力します。
 
 ```console
 $ pandoc document.md -o document.pdf
+# 出力をdocument.pdfファイルに書き込んでいる
 ```
 
 ### **--pdf-engine=PROGRAM**
 
-PDF出力時に使用するエンジンを指定します（pdflatex, xelatex, lualatex など）。
+PDF出力時に使用するエンジンを指定します。
 
 ```console
 $ pandoc document.md --pdf-engine=xelatex -o document.pdf
-```
-
-### **-s, --standalone**
-
-完全なドキュメント（ヘッダーやフッターを含む）を出力します。
-
-```console
-$ pandoc -s document.md -o document.html
+# PDF生成にxelatexエンジンを使用している
 ```
 
 ### **--toc, --table-of-contents**
 
-目次を生成します。
+出力文書に自動生成された目次を含めます。
 
 ```console
-$ pandoc --toc document.md -o document.pdf
+$ pandoc --toc document.md -o document.html
+# 目次を含むHTMLを生成している
 ```
 
-## 主なフォーマットの一覧
+### **-s, --standalone**
 
-- markdown: Markdown（標準）
-- gfm: GitHub Flavored Markdown
-- html: HTML
-- latex: LaTeX
-- docx: Microsoft Word
-- odt: OpenDocument
-- epub: EPUB電子書籍
-- pdf: PDF（LaTeXエンジンを使用）
-- rst: reStructuredText
-- asciidoc: AsciiDoc
+適切なヘッダーとフッターを含む独立した文書を生成します。
+
+```console
+$ pandoc -s document.md -o document.html
+# 完全なHTMLドキュメントを生成している
+```
+
+### **-c, --css=URL**
+
+HTML出力時にCSSスタイルシートをリンクします。
+
+```console
+$ pandoc -s -c style.css document.md -o document.html
+# style.cssをリンクしたHTML文書を生成している
+```
 
 ## 使用例
 
-### Markdown から HTML への変換
+### MarkdownからHTMLへの変換
 
 ```console
 $ pandoc document.md -o document.html
-# Markdown ファイルを HTML に変換している
 ```
 
-### Markdown から PDF への変換
+### MarkdownからPDFへの変換
 
 ```console
 $ pandoc document.md -o document.pdf
-# Markdown ファイルを PDF に変換している
 ```
 
-### Word から Markdown への変換
+### HTMLからMarkdownへの変換
+
+```console
+$ pandoc -f html -t markdown https://example.com -o example.md
+```
+
+### Markdownからプレゼンテーションの作成
+
+```console
+$ pandoc -t revealjs -s presentation.md -o presentation.html
+```
+
+### WordからMarkdownへの変換
 
 ```console
 $ pandoc -f docx -t markdown document.docx -o document.md
-# Word ファイルを Markdown に変換している
-```
-
-### 目次付きの PDF 生成
-
-```console
-$ pandoc --toc --toc-depth=2 document.md -o document.pdf
-# 2階層までの目次を含む PDF を生成している
-```
-
-### スタイルシートを適用した HTML 生成
-
-```console
-$ pandoc document.md -s --css=style.css -o document.html
-# カスタム CSS を適用した HTML を生成している
 ```
 
 ## ヒント:
 
-### テンプレートの活用
+### テンプレートを使用して一貫した出力を得る
 
-`--template` オプションを使用して、出力形式に合わせたカスタムテンプレートを適用できます。これにより、一貫したスタイルのドキュメントを生成できます。
+Pandocは`--template`オプションでカスタムテンプレートをサポートしています。複数の変換で一貫した文書スタイルを得るために独自のテンプレートを作成できます。
 
-### メタデータの追加
-
-YAML形式のメタデータブロックをMarkdownファイルの先頭に追加することで、タイトル、著者、日付などの情報を設定できます。
-
-```markdown
----
-title: ドキュメントタイトル
-author: 著者名
-date: 2025年4月30日
----
+```console
+$ pandoc --template=mytemplate.tex document.md -o document.pdf
 ```
 
-### フィルターの活用
+### 引用と参考文献の処理
 
-pandocフィルターを使用すると、変換プロセスをカスタマイズできます。例えば、数式の処理や図表の番号付けなどが可能です。
+`--citeproc`と参考文献ファイルを使用して、引用を自動的に整形できます：
 
-### PDF生成時の注意点
+```console
+$ pandoc --citeproc --bibliography=refs.bib paper.md -o paper.pdf
+```
 
-PDF生成には LaTeX が必要です。macOS では MacTeX、Windows では MiKTeX などをインストールしておく必要があります。
+### 複数ファイルの一括変換
+
+シェルのループを使用して複数のファイルを一度に変換できます：
+
+```console
+$ for f in *.md; do pandoc "$f" -o "${f%.md}.html"; done
+```
 
 ## よくある質問
 
-#### Q1. pandoc で PDF を生成できない場合はどうすればよいですか？
-A. LaTeX エンジン（TeX Live や MacTeX など）がインストールされていることを確認してください。また、`--pdf-engine` オプションで別のエンジン（xelatex など）を試してみることも有効です。
+#### Q1. pandocはどのような形式をサポートしていますか？
+A. pandocはMarkdown、HTML、LaTeX、DOCX、ODT、EPUB、PDFなど多数の形式をサポートしています。`pandoc --list-input-formats`または`pandoc --list-output-formats`を実行すると、サポートされているすべての形式を確認できます。
 
-#### Q2. 日本語を含むドキュメントを PDF に変換する際の注意点は？
-A. `--pdf-engine=xelatex` または `--pdf-engine=lualatex` オプションを使用し、適切なフォントを指定することをお勧めします。また、YAML メタデータで `documentclass: bxjsarticle` などを指定すると良いでしょう。
+#### Q2. MarkdownファイルをPDFに変換するにはどうすればよいですか？
+A. `pandoc document.md -o document.pdf`を使用します。これにはLaTeXなどのPDFエンジンがシステムにインストールされている必要があります。
 
-#### Q3. 複数のファイルを一つのドキュメントに結合するには？
-A. 複数のファイルを順番に指定するだけで結合できます：`pandoc file1.md file2.md -o combined.pdf`
+#### Q3. pandocでウェブサイトをMarkdownに変換できますか？
+A. はい、URLを指定することでウェブページを変換できます：`pandoc -f html -t markdown https://example.com -o example.md`
 
-#### Q4. スタイルをカスタマイズするには？
-A. HTML 出力には `--css` オプション、PDF/LaTeX 出力には `--variable` オプションでスタイル設定が可能です。例：`pandoc --variable=geometry:margin=1in document.md -o document.pdf`
+#### Q4. 文書に画像を含めるにはどうすればよいですか？
+A. Markdownでは標準的な画像構文を使用します：`![キャプション](path/to/image.jpg)`。pandocは出力文書にこれらの画像を含めます。
 
-## macOS での注意点
+#### Q5. 出力文書の外観をカスタマイズするにはどうすればよいですか？
+A. HTML出力にはCSS（`-c style.css`）、PDF出力にはLaTeX変数（`-V variable=value`）、またはカスタムテンプレート（`--template=template.tex`）を使用できます。
 
-macOS で PDF 出力を行う場合は、MacTeX（https://www.tug.org/mactex/）をインストールしておく必要があります。Homebrew を使用している場合は `brew install --cask mactex` でインストールできます。また、日本語フォントの問題が発生することがあるため、`--pdf-engine=xelatex` オプションの使用をお勧めします。
+## macOSに関する注意点
+
+macOSでは、pandocはHomebrewを使って`brew install pandoc`でインストールできます。PDF出力には、LaTeX配布物（MacTeX）も必要です：`brew install --cask mactex`。MacTeXは大きい（4GB以上）ので、容量が気になる場合はBasicTeXを検討してください：`brew install --cask basictex`。
 
 ## 参考資料
 
@@ -156,4 +156,4 @@ https://pandoc.org/MANUAL.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

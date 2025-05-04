@@ -4,7 +4,7 @@ Query and display messages from the systemd journal.
 
 ## Overview
 
-`journalctl` is a command-line utility that allows you to view and query the logs collected by the systemd journal system. It provides access to structured, indexed system logs with powerful filtering capabilities, making it easier to troubleshoot system issues and monitor system events.
+`journalctl` is a command-line utility that allows you to view and query the systemd journal logs. The systemd journal is a centralized logging system that collects and stores logging data from various sources including the kernel, system services, and applications. It provides powerful filtering capabilities to help troubleshoot system issues.
 
 ## Options
 
@@ -14,10 +14,9 @@ Follow the journal in real-time, similar to `tail -f`
 
 ```console
 $ journalctl -f
-Apr 30 10:15:23 hostname systemd[1]: Starting Daily apt upgrade and clean activities...
-Apr 30 10:15:24 hostname systemd[1]: apt-daily-upgrade.service: Deactivated successfully.
-Apr 30 10:15:24 hostname systemd[1]: Finished Daily apt upgrade and clean activities.
--- Logs begin at Wed 2025-04-30 10:15:25 UTC. --
+May 04 14:32:15 hostname systemd[1]: Started Daily apt download activities.
+May 04 14:32:16 hostname CRON[12345]: (root) CMD (command being executed)
+May 04 14:32:20 hostname sshd[12346]: Accepted publickey for user from 192.168.1.10
 ```
 
 ### **-u, --unit=UNIT**
@@ -26,113 +25,132 @@ Show logs from a specific systemd unit (service)
 
 ```console
 $ journalctl -u ssh
-Apr 29 09:12:34 hostname sshd[1234]: Accepted publickey for user from 192.168.1.10 port 54321
-Apr 29 09:12:34 hostname sshd[1234]: pam_unix(sshd:session): session opened for user by (uid=0)
-Apr 29 15:45:12 hostname sshd[5678]: Disconnected from user 192.168.1.10 port 54321
+May 03 09:15:22 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.
+May 03 09:15:22 hostname sshd[1234]: Server listening on :: port 22.
+May 04 10:23:45 hostname sshd[5678]: Accepted password for user from 192.168.1.5
 ```
 
-### **-b, --boot**
+### **-b, --boot[=ID]**
 
-Show logs from the current boot
+Show logs from the current boot or a specific boot
 
 ```console
 $ journalctl -b
-Apr 30 08:00:12 hostname kernel: Linux version 5.15.0-25-generic (buildd@lcy02)
-Apr 30 08:00:13 hostname systemd[1]: Detected virtualization kvm.
-Apr 30 08:00:14 hostname systemd[1]: Detected architecture x86-64.
+[Shows all logs since the most recent boot]
+
+$ journalctl -b -1
+[Shows logs from the previous boot]
 ```
 
-### **-p, --priority=**
+### **-n, --lines=N**
 
-Filter logs by priority level (emerg, alert, crit, err, warning, notice, info, debug)
+Show the last N log lines
+
+```console
+$ journalctl -n 5
+May 04 14:45:10 hostname systemd[1]: Starting Daily apt upgrade and clean activities...
+May 04 14:45:11 hostname systemd[1]: Started Daily apt upgrade and clean activities.
+May 04 14:45:12 hostname CRON[12347]: (root) CMD (apt-get update)
+May 04 14:45:15 hostname kernel: [12345.678901] USB disconnect, device number 5
+May 04 14:45:20 hostname NetworkManager[789]: Connectivity established
+```
+
+### **--since=DATE, --until=DATE**
+
+Show entries newer or older than the specified date
+
+```console
+$ journalctl --since="2025-05-03 10:00:00" --until="2025-05-03 11:00:00"
+[Shows logs between 10 AM and 11 AM on May 3rd, 2025]
+```
+
+### **-p, --priority=PRIORITY**
+
+Filter output by message priority (0-7 or name like "err")
 
 ```console
 $ journalctl -p err
-Apr 29 14:23:45 hostname kernel: CPU: 2 PID: 1234 Comm: process Tainted: G        W  OE    5.15.0-25-generic
-Apr 29 14:23:45 hostname app[1234]: [ERROR] Failed to connect to database: Connection refused
-Apr 30 02:15:33 hostname kernel: EXT4-fs error: unable to read inode block
+May 02 15:30:45 hostname kernel: [12345.678901] CPU: 2 PID: 1234 Comm: process Tainted: G        W  5.15.0-91-generic
+May 03 08:12:33 hostname application[5678]: Error: Failed to connect to database
+May 04 02:45:12 hostname systemd[1]: Failed to start Apache Web Server.
 ```
 
-### **--since, --until**
+### **-o, --output=FORMAT**
 
-Show logs within a specific time range
+Control the output format (short, verbose, json, etc.)
 
 ```console
-$ journalctl --since "2025-04-29 10:00:00" --until "2025-04-29 11:00:00"
-Apr 29 10:00:12 hostname systemd[1]: Starting Daily apt download activities...
-Apr 29 10:15:45 hostname CRON[1234]: (root) CMD (/usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown)
-Apr 29 10:59:58 hostname systemd[1]: Starting Message of the Day...
+$ journalctl -o json -n 1
+{"_BOOT_ID":"abcdef123456789","_MACHINE_ID":"fedcba987654321","MESSAGE":"System startup complete","PRIORITY":"6","SYSLOG_FACILITY":"3","SYSLOG_IDENTIFIER":"systemd","_UID":"0","_GID":"0","_COMM":"systemd","_PID":"1","_SOURCE_REALTIME_TIMESTAMP":"1714896000000000"}
 ```
 
 ## Usage Examples
 
-### Viewing logs for a specific process
+### Viewing logs for a specific time period
 
 ```console
-$ journalctl _PID=1234
-Apr 30 09:12:34 hostname process[1234]: Starting application...
-Apr 30 09:12:35 hostname process[1234]: Loaded configuration from /etc/app/config.json
-Apr 30 09:12:36 hostname process[1234]: Listening on port 8080
+$ journalctl --since yesterday --until today
+[Shows all logs from yesterday up to the current time today]
+```
+
+### Filtering logs by executable
+
+```console
+$ journalctl _COMM=sshd
+May 01 08:15:22 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.
+May 01 08:15:22 hostname sshd[1234]: Server listening on :: port 22.
+May 02 14:23:45 hostname sshd[5678]: Accepted publickey for user from 192.168.1.10
+```
+
+### Combining multiple filters
+
+```console
+$ journalctl -u nginx -p err --since today
+May 04 03:15:22 hostname nginx[1234]: 2025/05/04 03:15:22 [error] 1234#0: *123 open() "/var/www/html/favicon.ico" failed (2: No such file or directory)
 ```
 
 ### Viewing kernel messages
 
 ```console
 $ journalctl -k
-Apr 30 08:00:12 hostname kernel: Linux version 5.15.0-25-generic (buildd@lcy02)
-Apr 30 08:00:12 hostname kernel: Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-25-generic
-Apr 30 08:00:12 hostname kernel: ACPI: RSDP 0x00000000000F0490 000024 (v02 VBOX  )
-```
-
-### Viewing logs with JSON output
-
-```console
-$ journalctl -u ssh -o json
-{"_HOSTNAME":"hostname","_SYSTEMD_UNIT":"ssh.service","MESSAGE":"Server listening on 0.0.0.0 port 22.","_PID":"1234","PRIORITY":"6"}
-{"_HOSTNAME":"hostname","_SYSTEMD_UNIT":"ssh.service","MESSAGE":"Accepted publickey for user from 192.168.1.10 port 54321","_PID":"1234","PRIORITY":"6"}
+May 04 00:00:01 hostname kernel: Linux version 5.15.0-91-generic (buildd@ubuntu) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0)
+May 04 00:00:01 hostname kernel: Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-91-generic root=UUID=abcdef-1234-5678 ro quiet splash
 ```
 
 ## Tips:
 
+### Use Pager Controls
+
+When viewing large logs, journalctl uses a pager (like less). Use `/pattern` to search, `n` for next match, `g` to go to beginning, `G` to go to end, and `q` to quit.
+
 ### Persistent Journal Storage
 
-By default, journal logs may be stored only in memory. To make them persistent across reboots, create the directory `/var/log/journal` with proper permissions:
+By default, journal logs may be stored only in memory. To make them persistent across reboots, ensure `/etc/systemd/journald.conf` has `Storage=persistent` and the `/var/log/journal/` directory exists.
 
-```console
-$ sudo mkdir -p /var/log/journal
-$ sudo systemctl restart systemd-journald
-```
+### Disk Space Management
 
-### Clearing Journal Logs
+Journal logs can consume significant disk space. Use `journalctl --disk-usage` to check space usage and `journalctl --vacuum-size=1G` to limit the journal size to 1GB.
 
-To free up disk space, you can clear old journal entries:
+### Export Logs for Analysis
 
-```console
-$ sudo journalctl --vacuum-time=2d  # Keep only last 2 days
-$ sudo journalctl --vacuum-size=500M  # Limit journal size to 500MB
-```
-
-### Using Grep with journalctl
-
-While journalctl has built-in filtering, you can combine it with grep for more complex pattern matching:
-
-```console
-$ journalctl | grep -i "error\|failed"
-```
+Use `journalctl -o export` to export logs in a format that can be transferred to another machine and imported with `journalctl --file=exported.journal`.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I see logs from previous boots?
-A. Use `journalctl --list-boots` to see available boot IDs, then use `journalctl -b -1` for the previous boot, `-2` for the one before that, etc.
+#### Q1. How do I see logs from the current boot only?
+A. Use `journalctl -b` to see logs from the current boot only.
 
-#### Q2. How can I see logs for a specific time period?
-A. Use `journalctl --since "YYYY-MM-DD HH:MM:SS" --until "YYYY-MM-DD HH:MM:SS"`. You can also use relative times like "yesterday" or "2 hours ago".
+#### Q2. How can I see logs from a specific service?
+A. Use `journalctl -u service-name`, for example `journalctl -u ssh` to see SSH service logs.
 
-#### Q3. How do I see logs for a specific user?
-A. Use `journalctl _UID=1000` (replace 1000 with the user's UID).
+#### Q3. How do I filter logs by severity level?
+A. Use `journalctl -p priority` where priority can be a number (0-7) or name (emerg, alert, crit, err, warning, notice, info, debug).
 
-#### Q4. How can I export journal logs to a file?
-A. Use `journalctl > logfile.txt` to save in text format, or `journalctl -o json > logfile.json` for structured JSON output.
+#### Q4. How can I clear old journal logs?
+A. Use `journalctl --vacuum-time=2d` to remove entries older than 2 days, or `journalctl --vacuum-size=500M` to limit the total size to 500MB.
+
+#### Q5. How do I follow logs in real-time?
+A. Use `journalctl -f` to follow logs as they are written, similar to `tail -f`.
 
 ## References
 
@@ -140,4 +158,4 @@ https://www.freedesktop.org/software/systemd/man/journalctl.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

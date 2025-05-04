@@ -49,87 +49,94 @@
   <h1>dig command</h1>
 <p>Query DNS name servers for domain information.</p>
 <h2>Overview</h2>
-<p><code>dig</code> (Domain Information Groper) is a flexible tool for interrogating DNS name servers. It performs DNS lookups and displays the answers returned from the queried name servers. System administrators and network troubleshooters commonly use it to verify DNS records and diagnose DNS problems.</p>
+<p><code>dig</code> (Domain Information Groper) is a flexible DNS lookup utility that allows you to query DNS servers for information about domain names, IP addresses, mail exchanges, and other DNS records. It's commonly used for troubleshooting DNS issues, verifying DNS configurations, and testing DNS changes.</p>
 <h2>Options</h2>
-<h3><strong>-t (type)</strong></h3>
-<p>Specify the type of DNS record to query (A, MX, NS, etc.)</p>
+<h3><strong>-t, --type=TYPE</strong></h3>
+<p>Specify the type of DNS record to query (e.g., A, MX, NS, ANY)</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>MX<span style="color: #F8F8F8"> </span>google.com
 <span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
-<span style="color: #000; font-style: italic">google.com.		600	IN	MX	10 smtp.google.com.</span>
+<span style="color: #000; font-style: italic">google.com.		300	IN	MX	10 smtp.google.com.</span>
 </pre></div>
-<h3><strong>-x (reverse lookup)</strong></h3>
-<p>Perform a reverse DNS lookup to find the hostname associated with an IP address</p>
+<h3><strong>-x, --reverse</strong></h3>
+<p>Perform a reverse DNS lookup (convert IP address to hostname)</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>-x<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span>.8.8.8
 <span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
 <span style="color: #000; font-style: italic">8.8.8.8.in-addr.arpa.	7200	IN	PTR	dns.google.</span>
 </pre></div>
+<h3><strong>@server</strong></h3>
+<p>Query a specific DNS server instead of the default</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>@1.1.1.1<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
+<span style="color: #000; font-style: italic">example.com.		86400	IN	A	93.184.216.34</span>
+</pre></div>
 <h3><strong>+short</strong></h3>
-<p>Display a terse answer, showing only the requested information</p>
+<p>Display a terse answer (only the result, without headers and additional information)</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>+short<span style="color: #F8F8F8"> </span>google.com
 <span style="color: #000; font-style: italic">142.250.190.78</span>
 </pre></div>
-<h3><strong>@server</strong></h3>
-<p>Query a specific DNS server instead of the default</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>@1.1.1.1<span style="color: #F8F8F8"> </span>google.com
-<span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
-<span style="color: #000; font-style: italic">google.com.		300	IN	A	142.250.190.78</span>
-</pre></div>
-<h2>Usage Examples</h2>
-<h3>Looking up A records (IP addresses)</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>google.com
-<span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
-<span style="color: #000; font-style: italic">google.com.		300	IN	A	142.250.190.78</span>
-</pre></div>
-<h3>Finding name servers for a domain</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>NS<span style="color: #F8F8F8"> </span>example.com
-<span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
-<span style="color: #000; font-style: italic">example.com.		86400	IN	NS	a.iana-servers.net.</span>
-<span style="color: #000; font-style: italic">example.com.		86400	IN	NS	b.iana-servers.net.</span>
-</pre></div>
-<h3>Tracing the entire DNS resolution path</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>+trace<span style="color: #F8F8F8"> </span>google.com
-<span style="color: #000; font-style: italic">;; Received 13 records from 198.41.0.4 in 40 ms</span>
-
-<span style="color: #000; font-style: italic">;; Received 6 records from 192.12.94.30 in 160 ms</span>
-
-<span style="color: #000; font-style: italic">;; Received 4 records from 216.239.34.10 in 40 ms</span>
-
-<span style="color: #000; font-style: italic">google.com.		300	IN	A	142.250.190.78</span>
-<span style="color: #000; font-style: italic">;; Received 1 records from 216.239.38.10 in 40 ms</span>
-</pre></div>
-<h2>Tips</h2>
-<h3>Use +noall +answer for Clean Output</h3>
-<p>The <code>+noall +answer</code> options remove all the extra information and only show the answer section, making output easier to read:</p>
+<h3><strong>+noall, +answer</strong></h3>
+<p>Control which sections of the response to display</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>+noall<span style="color: #F8F8F8"> </span>+answer<span style="color: #F8F8F8"> </span>google.com
 <span style="color: #000; font-style: italic">google.com.		300	IN	A	142.250.190.78</span>
 </pre></div>
+<h2>Usage Examples</h2>
+<h3>Basic Domain Lookup</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">;; QUESTION SECTION:</span>
+<span style="color: #000; font-style: italic">;example.com.			IN	A</span>
+
+<span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
+<span style="color: #000; font-style: italic">example.com.		86400	IN	A	93.184.216.34</span>
+</pre></div>
+<h3>Looking Up Multiple Record Types</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span>ANY
+<span style="color: #000; font-style: italic">;; ANSWER SECTION:</span>
+<span style="color: #000; font-style: italic">example.com.		86400	IN	A	93.184.216.34</span>
+<span style="color: #000; font-style: italic">example.com.		86400	IN	NS	a.iana-servers.net.</span>
+<span style="color: #000; font-style: italic">example.com.		86400	IN	NS	b.iana-servers.net.</span>
+<span style="color: #000; font-style: italic">example.com.		86400	IN	SOA	ns.icann.org. noc.dns.icann.org. 2023080794 7200 3600 1209600 3600</span>
+</pre></div>
+<h3>Tracing the DNS Resolution Path</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>+trace<span style="color: #F8F8F8"> </span>example.com
+<span style="color: #000; font-style: italic">;; Received 13 bytes from 192.168.1.1#53 in 10 ms</span>
+
+<span style="color: #000; font-style: italic">. 			518400	IN	NS	a.root-servers.net.</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">;; Received 811 bytes from 192.5.6.30#53 in 40 ms</span>
+
+<span style="color: #000; font-style: italic">com. 			172800	IN	NS	a.gtld-servers.net.</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">;; Received 1173 bytes from 192.41.162.30#53 in 160 ms</span>
+
+<span style="color: #000; font-style: italic">example.com.		86400	IN	NS	a.iana-servers.net.</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">;; Received 97 bytes from 199.43.135.53#53 in 100 ms</span>
+
+<span style="color: #000; font-style: italic">example.com.		86400	IN	A	93.184.216.34</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Use +nocomments for Cleaner Output</h3>
+<p>The <code>+nocomments</code> option removes comment lines from the output, making it easier to read when you only need the essential information.</p>
 <h3>Check DNS Propagation</h3>
-<p>When you've updated DNS records, use dig with different DNS servers to check if changes have propagated:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>@8.8.8.8<span style="color: #F8F8F8"> </span>example.com
-<span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>@1.1.1.1<span style="color: #F8F8F8"> </span>example.com
-</pre></div>
-<h3>Use +stats for Query Statistics</h3>
-<p>Add <code>+stats</code> to see how long the query took and which server responded:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dig<span style="color: #F8F8F8"> </span>+stats<span style="color: #F8F8F8"> </span>google.com
-<span style="color: #000; font-style: italic">;; Query time: 28 msec</span>
-<span style="color: #000; font-style: italic">;; SERVER: 192.168.1.1#53(192.168.1.1)</span>
-<span style="color: #000; font-style: italic">;; WHEN: Wed Apr 30 10:00:00 EDT 2025</span>
-<span style="color: #000; font-style: italic">;; MSG SIZE  rcvd: 55</span>
-</pre></div>
+<p>When you've made DNS changes, use <code>dig @server domain.com</code> with different DNS servers to check if your changes have propagated.</p>
+<h3>Specify Multiple Queries in One Command</h3>
+<p>You can query multiple domains or record types in a single command: <code>dig example.com mx google.com a</code>.</p>
+<h3>Use +stats for Performance Analysis</h3>
+<p>The <code>+stats</code> option shows query statistics including how long the query took, which is useful for diagnosing slow DNS resolution.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between <code>dig</code> and <code>nslookup</code>?</h4>
-<p>A. Both query DNS servers, but <code>dig</code> provides more detailed output and has more options for advanced DNS troubleshooting. <code>nslookup</code> is simpler but less powerful.</p>
-<h4>Q2. How do I check if my domain's DNS is properly configured?</h4>
-<p>A. Use <code>dig -t ANY yourdomain.com</code> to see all record types, or check specific records with <code>dig -t A</code>, <code>dig -t MX</code>, etc.</p>
-<h4>Q3. How can I find which DNS server is being used for a query?</h4>
-<p>A. Use <code>dig +trace domain.com</code> to see the full resolution path, or add <code>+stats</code> to see which server answered your query.</p>
-<h4>Q4. How do I check DNS propagation globally?</h4>
-<p>A. Query multiple DNS servers around the world using <code>@server</code> option with different public DNS servers.</p>
+<h4>Q1. How is <code>dig</code> different from <code>nslookup</code>?</h4>
+<p>A. <code>dig</code> provides more detailed information and has more options for DNS queries. It's generally preferred by network administrators for its comprehensive output and flexibility.</p>
+<h4>Q2. How do I check if my DNS changes have propagated?</h4>
+<p>A. Use <code>dig @different-dns-servers your-domain.com</code> to query multiple DNS servers and compare the results.</p>
+<h4>Q3. How can I find the authoritative name servers for a domain?</h4>
+<p>A. Use <code>dig NS domain.com</code> to find the name servers responsible for a domain.</p>
+<h4>Q4. How do I check the TTL (Time To Live) for a DNS record?</h4>
+<p>A. The TTL is shown in the standard output of <code>dig</code>. It's the number (in seconds) before the first IN in the answer section.</p>
 <h2>References</h2>
 <p>https://linux.die.net/man/1/dig</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/04/30 First revision</li>
+<li>2025/05/04 First revision</li>
 </ul>
 
 

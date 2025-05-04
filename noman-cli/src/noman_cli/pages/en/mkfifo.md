@@ -1,29 +1,29 @@
 # mkfifo command
 
-Create named pipes (FIFOs) with specified names.
+Creates named pipes (FIFOs) with the specified names.
 
 ## Overview
 
-The `mkfifo` command creates special files known as named pipes or FIFOs (First In, First Out). These pipes act as communication channels between processes, allowing data to flow from one process to another without using temporary files or network connections.
+The `mkfifo` command creates special files known as named pipes or FIFOs (First-In-First-Out). These pipes allow communication between processes without using temporary files. Unlike regular pipes created with the `|` symbol, named pipes persist in the filesystem until deleted, allowing unrelated processes to communicate.
 
 ## Options
 
 ### **-m, --mode=MODE**
 
-Set the permission mode for the created FIFO (default is 0666 - read/write for all)
+Set the permission mode for the created FIFO (default is 0666 minus umask)
 
 ```console
 $ mkfifo -m 0600 private_pipe
 $ ls -l private_pipe
-prw-------  1 user  staff  0 Apr 30 10:15 private_pipe
+prw-------  1 user  staff  0 May  4 10:15 private_pipe
 ```
 
 ### **-Z, --context=CTX**
 
-Set the SELinux security context of created FIFOs (only on systems with SELinux)
+Set the SELinux security context of created FIFOs to CTX
 
 ```console
-$ mkfifo -Z user_u:object_r:tmp_t:s0 selinux_pipe
+$ mkfifo -Z user_u:object_r:user_fifo_t:s0 selinux_pipe
 ```
 
 ### **--help**
@@ -37,69 +37,79 @@ Create named pipes (FIFOs) with the given NAMEs.
 ...
 ```
 
+### **--version**
+
+Output version information and exit
+
+```console
+$ mkfifo --version
+mkfifo (GNU coreutils) 8.32
+...
+```
+
 ## Usage Examples
 
-### Creating a basic named pipe
+### Basic FIFO Creation
 
 ```console
 $ mkfifo my_pipe
 $ ls -l my_pipe
-prw-r--r--  1 user  staff  0 Apr 30 10:20 my_pipe
+prw-r--r--  1 user  staff  0 May  4 10:20 my_pipe
 ```
 
-### Using a named pipe for process communication
+### Using a Named Pipe for Process Communication
 
 ```console
 # Terminal 1: Create pipe and write to it
 $ mkfifo message_pipe
 $ echo "Hello from process 1" > message_pipe
 
-# Terminal 2: Read from the pipe (blocks until data is available)
+# Terminal 2: Read from the pipe
 $ cat < message_pipe
 Hello from process 1
 ```
 
-### Creating multiple pipes at once
+### Creating Multiple FIFOs at Once
 
 ```console
 $ mkfifo pipe1 pipe2 pipe3
 $ ls -l pipe*
-prw-r--r--  1 user  staff  0 Apr 30 10:25 pipe1
-prw-r--r--  1 user  staff  0 Apr 30 10:25 pipe2
-prw-r--r--  1 user  staff  0 Apr 30 10:25 pipe3
+prw-r--r--  1 user  staff  0 May  4 10:25 pipe1
+prw-r--r--  1 user  staff  0 May  4 10:25 pipe2
+prw-r--r--  1 user  staff  0 May  4 10:25 pipe3
 ```
 
 ## Tips
 
 ### Understanding Blocking Behavior
 
-Named pipes block when opened for reading until another process opens them for writing (and vice versa). This is important to remember to avoid deadlocks in your scripts.
+When a process attempts to read from an empty FIFO, it blocks until data is available. Similarly, writing to a FIFO blocks until another process reads the data. This behavior is important to understand when designing inter-process communication.
 
-### Cleaning Up Pipes
+### Using with Redirection
 
-Unlike regular pipes created with `|`, named pipes persist in the filesystem until explicitly deleted with `rm`. Always clean up pipes when you're done with them.
+Named pipes work well with standard input/output redirection. You can redirect output from one command to a named pipe and input from the named pipe to another command.
 
-### Pipe Size Limitations
+### Cleaning Up
 
-Data written to a named pipe is buffered by the kernel up to a certain limit (typically 64KB on Linux). Writing more data will block until a reader consumes some of it.
+Named pipes persist in the filesystem until explicitly removed with `rm`. Remember to clean up pipes when they're no longer needed to avoid confusion.
 
-### Using with Command Substitution
+### Permissions Matter
 
-Be careful when using named pipes with command substitution `$(...)` as it can lead to deadlocks if not managed properly.
+Set appropriate permissions on your named pipes, especially in multi-user environments, to control which processes can read from or write to them.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between a named pipe and a regular pipe (`|`)?
-A. Regular pipes (`|`) exist only while the connected processes are running and have no presence in the filesystem. Named pipes created with `mkfifo` persist in the filesystem and can be used by unrelated processes at different times.
+#### Q1. What's the difference between a named pipe and a regular pipe?
+A. A regular pipe (using `|`) exists only while the connected processes are running. A named pipe exists as a file in the filesystem until deleted, allowing unrelated processes to communicate.
 
-#### Q2. Can multiple processes read from or write to the same named pipe?
-A. Yes, multiple processes can open a named pipe for reading or writing, but data written by one process will be read by only one reader (not duplicated to all readers).
+#### Q2. Can I use named pipes for bidirectional communication?
+A. No, named pipes are unidirectional. For bidirectional communication, you need to create two named pipes.
 
-#### Q3. How do I remove a named pipe when I'm done with it?
-A. Use the standard `rm` command: `rm my_pipe`. Named pipes are removed from the filesystem just like regular files.
+#### Q3. Why does my process hang when writing to a named pipe?
+A. Writing to a named pipe blocks until another process reads from it. Make sure you have a reader process or open the pipe in non-blocking mode.
 
-#### Q4. What happens if I try to read from an empty pipe?
-A. The reading process will block (wait) until another process writes data to the pipe or until the pipe is closed by all writers.
+#### Q4. How do I remove a named pipe?
+A. Use the `rm` command, just like with regular files: `rm my_pipe`.
 
 ## References
 
@@ -107,4 +117,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/mkfifo-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+2025/05/04 First revision

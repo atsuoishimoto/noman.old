@@ -4,100 +4,133 @@ Display the current environment variables or run a command in a modified environ
 
 ## Overview
 
-The `env` command shows all environment variables currently set in your shell session. It can also be used to run a program with a modified environment, allowing you to temporarily add, change, or remove environment variables for a specific command execution.
+The `env` command displays all environment variables or allows you to run a program in a modified environment. Environment variables are name-value pairs that affect how processes run on your system. This command is useful for viewing the current environment, temporarily changing environment variables for a single command, or clearing the environment before running a command.
 
 ## Options
 
 ### **-i, --ignore-environment**
 
-Starts with an empty environment, ignoring inherited variables
+Start with an empty environment, ignoring inherited environment variables.
 
 ```console
-$ env -i python3
-Python 3.9.6 (default, Mar 10 2023, 20:16:38) 
-[Clang 14.0.3 (clang-1403.0.22.14.1)] on darwin
-Type "help", "copyright", "credits" or "license" for more information.
->>> import os
->>> os.environ
-environ({'__CF_USER_TEXT_ENCODING': '0x1F5:0x0:0x0'})
+$ env -i bash -c 'echo $HOME'
+
 ```
 
 ### **-u, --unset=NAME**
 
-Removes the specified variable from the environment
+Remove the variable NAME from the environment.
 
 ```console
-$ env -u HOME pwd
-/Users/username/projects
+$ env -u HOME bash -c 'echo $HOME'
+
 ```
 
-### **NAME=VALUE**
+### **-0, --null**
 
-Sets an environment variable for the command execution
+End each output line with a null character instead of a newline.
 
 ```console
-$ env DEBUG=true python3 app.py
-Debug mode enabled
-Starting application...
+$ env -0 | tr '\0' '\n' | head -3
+TERM=xterm-256color
+SHELL=/bin/bash
+USER=username
+```
+
+### **--help**
+
+Display help information and exit.
+
+```console
+$ env --help
+Usage: env [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]
+Set each NAME to VALUE in the environment and run COMMAND.
+...
+```
+
+### **--version**
+
+Display version information and exit.
+
+```console
+$ env --version
+env (GNU coreutils) 8.32
+Copyright (C) 2020 Free Software Foundation, Inc.
+...
 ```
 
 ## Usage Examples
 
-### Viewing all environment variables
+### Displaying all environment variables
 
 ```console
 $ env
-TERM=xterm-256color
-SHELL=/bin/zsh
+SHELL=/bin/bash
 USER=username
-PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
-PWD=/Users/username
-HOME=/Users/username
+HOME=/home/username
+PATH=/usr/local/bin:/usr/bin:/bin
+PWD=/home/username
+LANG=en_US.UTF-8
 ...
 ```
 
-### Running a command with modified environment
+### Running a command with a modified environment
 
 ```console
-$ env LANG=fr_FR.UTF-8 date
-mer. 30 avr. 2025 14:30:45 CEST
+$ env DEBUG=true NODE_ENV=development node app.js
 ```
 
-### Combining multiple environment modifications
+### Clearing the environment before running a command
 
 ```console
-$ env -u HOME NODE_ENV=production DEBUG=false node server.js
-Server started in production mode
-Listening on port 3000
+$ env -i PATH=/bin:/usr/bin HOME=/tmp bash -c 'echo $HOME'
+/tmp
 ```
 
-## Tips:
+### Setting multiple environment variables for a command
 
-### Use for Debugging
+```console
+$ env LANG=fr_FR.UTF-8 TZ=Europe/Paris date
+lun. 04 mai 2025 12:00:00 CEST
+```
 
-When troubleshooting application issues, use `env` to check if all required environment variables are set correctly.
+## Tips
+
+### Viewing Specific Environment Variables
+
+Use `env | grep PATTERN` to filter and find specific environment variables:
+
+```console
+$ env | grep PATH
+PATH=/usr/local/bin:/usr/bin:/bin
+MANPATH=/usr/local/man:/usr/local/share/man:/usr/share/man
+```
 
 ### Temporary Environment Changes
 
-Use `env` to make temporary environment changes without modifying your shell's configuration files. This is useful for testing or one-off commands.
+The `env` command only changes the environment for the command being run, not for the current shell session. For permanent changes, modify your shell configuration files.
 
-### Isolating Command Environments
+### Debugging Environment Issues
 
-The `-i` option creates a clean environment for commands, which is useful when you want to ensure a program runs without being affected by existing environment variables.
+When troubleshooting application problems, use `env` to run the application with specific environment variables to help identify configuration issues.
+
+### Security Considerations
+
+Be careful when using `env -i` in scripts, as it removes important environment variables like PATH. Always specify the minimum required variables when using this option.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `env` and `printenv`?
-A. Both display environment variables, but `env` can also run commands with modified environments, while `printenv` is focused solely on displaying variables.
+#### Q1. What's the difference between `env` and `export`?
+A. `env` displays environment variables or runs a command with modified environment variables, but changes only affect that command. `export` makes variables available to all child processes of the current shell.
 
 #### Q2. How do I permanently set environment variables?
-A. `env` only sets variables temporarily. For permanent changes, add them to shell configuration files like `.bashrc`, `.zshrc`, or use system-wide configuration.
+A. `env` only sets variables temporarily. For permanent changes, add export commands to your shell configuration file (like ~/.bashrc or ~/.zshrc).
 
-#### Q3. Can I use `env` in shell scripts?
-A. Yes, it's useful in scripts when you need to run commands with specific environment settings without affecting the script's overall environment.
+#### Q3. Can I use `env` to unset multiple variables at once?
+A. Yes, use multiple `-u` options: `env -u VAR1 -u VAR2 command`.
 
-#### Q4. How do I clear all environment variables for a command?
-A. Use `env -i command` to run a command with an empty environment.
+#### Q4. How can I clear all environment variables before running a command?
+A. Use `env -i command` to start with an empty environment, then add only the variables you need.
 
 ## References
 
@@ -105,4 +138,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/env-invocation.html
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision

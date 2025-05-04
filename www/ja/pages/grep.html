@@ -47,106 +47,121 @@
     <main>
       
   <h1>grep コマンド</h1>
-<p>テキストファイルやストリーム内のパターンを検索します。</p>
+<p>ファイル内のパターンを検索します。</p>
 <h2>概要</h2>
-<p><code>grep</code>は、ファイルやテキストストリーム内で正規表現パターンに一致する行を検索するコマンドです。テキスト検索、ログ解析、特定のパターンを含む行の抽出など、多くの場面で活用できます。基本的な使い方は <code>grep [オプション] パターン [ファイル...]</code> です。</p>
+<p><code>grep</code>は、ファイルや標準入力から指定したパターンに一致する行を検索する強力なテキスト検索ユーティリティです。特定のテキストをファイル内で見つけたり、コマンド出力をフィルタリングしたり、大規模なデータセットを検索したりするのによく使用されます。名前は「global regular expression print（グローバル正規表現プリント）」に由来しています。</p>
 <h2>オプション</h2>
-<h3><strong>-i (--ignore-case)</strong></h3>
+<h3><strong>-i, --ignore-case</strong></h3>
 <p>大文字と小文字を区別せずに検索します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hello&quot;</span><span style="color: #F8F8F8"> </span>sample.txt
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hello&quot;</span><span style="color: #F8F8F8"> </span>file.txt
 <span style="color: #000; font-style: italic">Hello World</span>
-<span style="color: #000; font-style: italic">hello everyone</span>
-<span style="color: #000; font-style: italic">HELLO THERE</span>
+<span style="color: #000; font-style: italic">HELLO everyone</span>
+<span style="color: #000; font-style: italic">hello there</span>
 </pre></div>
-<h3><strong>-v (--invert-match)</strong></h3>
-<p>パターンに一致しない行を表示します。</p>
+<h3><strong>-v, --invert-match</strong></h3>
+<p>一致を反転させ、パターンに一致しない行を表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>log.txt
 <span style="color: #000; font-style: italic">Starting application</span>
 <span style="color: #000; font-style: italic">Loading configuration</span>
 <span style="color: #000; font-style: italic">Application running</span>
-<span style="color: #000; font-style: italic">Shutdown complete</span>
+<span style="color: #000; font-style: italic">Shutting down</span>
 </pre></div>
-<h3><strong>-r, -R (--recursive)</strong></h3>
-<p>ディレクトリ内のすべてのファイルを再帰的に検索します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;function&quot;</span><span style="color: #F8F8F8"> </span>src/
-<span style="color: #000; font-style: italic">src/main.js:function initialize() {</span>
-<span style="color: #000; font-style: italic">src/utils.js:export function formatDate(date) {</span>
-<span style="color: #000; font-style: italic">src/components/App.js:function App() {</span>
+<h3><strong>-r, --recursive</strong></h3>
+<p>ディレクトリを再帰的に検索します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;TODO&quot;</span><span style="color: #F8F8F8"> </span>./src/
+<span style="color: #000; font-style: italic">./src/main.c:// TODO: Implement error handling</span>
+<span style="color: #000; font-style: italic">./src/utils.h:/* TODO: Add documentation */</span>
+<span style="color: #000; font-style: italic">./src/config.c:// TODO: Fix configuration parsing</span>
 </pre></div>
-<h3><strong>-n (--line-number)</strong></h3>
-<p>一致した行の行番号も表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;import&quot;</span><span style="color: #F8F8F8"> </span>app.js
-<span style="color: #000; font-style: italic">3:import React from &#39;react&#39;;</span>
-<span style="color: #000; font-style: italic">4:import { useState } from &#39;react&#39;;</span>
-<span style="color: #000; font-style: italic">7:import &#39;./styles.css&#39;;</span>
+<h3><strong>-l, --files-with-matches</strong></h3>
+<p>一致を含むファイルの名前のみを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;function&quot;</span><span style="color: #F8F8F8"> </span>*.js
+<span style="color: #000; font-style: italic">utils.js</span>
+<span style="color: #000; font-style: italic">main.js</span>
+<span style="color: #000; font-style: italic">helpers.js</span>
 </pre></div>
-<h3><strong>-c (--count)</strong></h3>
-<p>一致した行数のみを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>server.log
-<span style="color: #000; font-style: italic">42</span>
+<h3><strong>-n, --line-number</strong></h3>
+<p>一致する行の行番号を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;import&quot;</span><span style="color: #F8F8F8"> </span>app.py
+<span style="color: #000; font-style: italic">3:import os</span>
+<span style="color: #000; font-style: italic">5:import sys</span>
+<span style="color: #000; font-style: italic">12:import datetime</span>
 </pre></div>
-<h3><strong>-A, -B, -C (--after-context, --before-context, --context)</strong></h3>
-<p>一致した行の前後の行も表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Exception&quot;</span><span style="color: #F8F8F8"> </span>error.log
-<span style="color: #000; font-style: italic">java.lang.NullPointerException</span>
-<span style="color: #000; font-style: italic">    at com.example.Main.process(Main.java:42)</span>
-<span style="color: #000; font-style: italic">    at com.example.Main.main(Main.java:12)</span>
+<h3><strong>-c, --count</strong></h3>
+<p>ファイルごとに一致する行数のみを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>*.log
+<span style="color: #000; font-style: italic">app.log:15</span>
+<span style="color: #000; font-style: italic">system.log:3</span>
+<span style="color: #000; font-style: italic">access.log:0</span>
+</pre></div>
+<h3><strong>-A NUM, --after-context=NUM</strong></h3>
+<p>各一致の後にNUM行を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;function main&quot;</span><span style="color: #F8F8F8"> </span>main.c
+<span style="color: #000; font-style: italic">function main() {</span>
+<span style="color: #000; font-style: italic">  int x = 5;</span>
+<span style="color: #000; font-style: italic">  printf(&quot;Starting program\n&quot;);</span>
+</pre></div>
+<h3><strong>-B NUM, --before-context=NUM</strong></h3>
+<p>各一致の前にNUM行を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-B<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Exception&quot;</span><span style="color: #F8F8F8"> </span>error.log
+<span style="color: #000; font-style: italic">2023-05-04 15:30:22 Processing request</span>
+<span style="color: #000; font-style: italic">2023-05-04 15:30:23 Exception: Invalid input</span>
+</pre></div>
+<h3><strong>-E, --extended-regexp</strong></h3>
+<p>拡張正規表現を使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-E<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;(error|warning)&quot;</span><span style="color: #F8F8F8"> </span>log.txt
+<span style="color: #000; font-style: italic">System error: disk full</span>
+<span style="color: #000; font-style: italic">Warning: connection timeout</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>複数のファイルから検索</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;config&quot;</span><span style="color: #F8F8F8"> </span>*.conf
-<span style="color: #000; font-style: italic">app.conf:config.debug=true</span>
-<span style="color: #000; font-style: italic">server.conf:config.port=8080</span>
-<span style="color: #000; font-style: italic">db.conf:config.username=admin</span>
+<h3>基本的なパターン検索</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;password&quot;</span><span style="color: #F8F8F8"> </span>config.txt
+<span style="color: #000; font-style: italic">password=mysecretpassword</span>
+<span style="color: #8F5902"># </span>default<span style="color: #F8F8F8"> </span>password<span style="color: #F8F8F8"> </span>is<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;admin&#39;</span>
 </pre></div>
-<h3>正規表現を使用した検索</h3>
+<h3>複数のオプションの組み合わせ</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;todo&quot;</span><span style="color: #F8F8F8"> </span>--color<span style="color: #F8F8F8"> </span>*.py
+<span style="color: #8F5902">utils.py:45:# </span>TODO:<span style="color: #F8F8F8"> </span>Refactor<span style="color: #F8F8F8"> </span>this<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">function</span>
+<span style="color: #8F5902">helpers.py:23:# </span>todo:<span style="color: #F8F8F8"> </span>Add<span style="color: #F8F8F8"> </span>error<span style="color: #F8F8F8"> </span>handling
+<span style="color: #8F5902">main.py:102:# </span>TODO:<span style="color: #F8F8F8"> </span>Implement<span style="color: #F8F8F8"> </span>caching
+</pre></div>
+<h3>正規表現の使用</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;^[0-9]&quot;</span><span style="color: #F8F8F8"> </span>data.txt
 <span style="color: #000; font-style: italic">123 Main St</span>
 <span style="color: #000; font-style: italic">456 Oak Ave</span>
 <span style="color: #000; font-style: italic">789 Pine Rd</span>
 </pre></div>
-<h3>パイプラインでの使用</h3>
+<h3>コマンド出力をgrepにパイプする</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>aux<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;firefox&quot;</span>
-<span style="color: #000; font-style: italic">user     12345  2.0  1.5 3521408 124800 ?      Sl   09:23   0:45 /usr/lib/firefox/firefox</span>
-</pre></div>
-<h3>複数のパターンを検索</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-E<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error|warning|critical&quot;</span><span style="color: #F8F8F8"> </span>application.log
-<span style="color: #000; font-style: italic">[2025-04-30 10:15:22] ERROR: Database connection failed</span>
-<span style="color: #000; font-style: italic">[2025-04-30 10:16:45] WARNING: Low disk space</span>
-<span style="color: #000; font-style: italic">[2025-04-30 11:30:12] CRITICAL: System shutdown initiated</span>
+<span style="color: #000; font-style: italic">user     12345  2.5  1.8 3458196 298796 ?      Sl   09:15   0:45 /usr/lib/firefox/firefox</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>色付き出力を使用する</h3>
-<p><code>--color=auto</code> オプションを使うと、マッチした部分が色付きで表示されるため、視認性が向上します。多くのLinuxディストリビューションでは、<code>grep</code> にこのオプションがエイリアスとして設定されています。</p>
-<h3>正確なワード検索</h3>
-<p>単語の一部ではなく完全な単語だけを検索したい場合は、<code>-w</code> (--word-regexp) オプションを使用します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;log&quot;</span><span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902"># </span><span style="color: #4E9A06">&quot;log&quot;</span><span style="color: #F8F8F8"> </span>という単語のみマッチし、<span style="color: #4E9A06">&quot;logical&quot;</span><span style="color: #F8F8F8"> </span>や<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;catalog&quot;</span><span style="color: #F8F8F8"> </span>などはマッチしない
-</pre></div>
-<h3>検索パターンをファイルから読み込む</h3>
-<p>多数のパターンで検索する場合は、パターンをファイルに保存して <code>-f</code> オプションで指定できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>patterns.txt<span style="color: #F8F8F8"> </span>logfile.txt
-<span style="color: #8F5902"># </span>patterns.txt<span style="color: #F8F8F8"> </span>に記載されたすべてのパターンで検索する
-</pre></div>
+<h3>コンテキストを使用して理解を深める</h3>
+<p><code>-A</code>、<code>-B</code>、または両方の前後のコンテキストを表示する<code>-C</code>を組み合わせて、一致の周囲の行を確認することで、一致の文脈をより理解しやすくなります。</p>
+<h3>一致を色付けして視認性を高める</h3>
+<p><code>--color=auto</code>を使用して一致するテキストを色付けすると、大量の出力の中で見つけやすくなります。多くのシステムではデフォルトでこのオプションを含むようにgrepにエイリアスが設定されています。</p>
+<h3>ディレクトリを除外する</h3>
+<p>再帰的に検索する際に<code>--exclude-dir=PATTERN</code>を使用してPATTERNに一致するディレクトリをスキップすると、大規模なコードベースでの検索が大幅に高速化されます。</p>
+<h3>完全一致の単語を検索する</h3>
+<p><code>-w</code>または<code>--word-regexp</code>を使用して完全な単語のみを一致させ、より大きな単語内の部分一致を防ぎます。</p>
+<h3>スクリプト用の静かなモード</h3>
+<p>スクリプトでは<code>-q</code>または<code>--quiet</code>を使用して出力を抑制し、終了ステータスのみを使用して一致が見つかったかどうかを判断します。</p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>grep</code> と <code>egrep</code> の違いは何ですか？</h4>
-<p>A. <code>egrep</code> は <code>grep -E</code> と同等で、拡張正規表現を使用できます。現代のシステムでは <code>grep -E</code> の使用が推奨されています。</p>
-<h4>Q2. 大きなファイルを効率的に検索するには？</h4>
-<p>A. 大きなファイルでは <code>grep --mmap</code> オプションを使用すると、メモリマッピングによって検索が高速化される場合があります。</p>
-<h4>Q3. バイナリファイルを検索から除外するには？</h4>
-<p>A. <code>-I</code> オプションを使用すると、バイナリファイルをテキストファイルとして扱わないようになります。</p>
-<h4>Q4. 検索結果をファイルに保存するには？</h4>
-<p>A. リダイレクト演算子 <code>&gt;</code> を使用します。例: <code>grep &quot;error&quot; log.txt &gt; errors.txt</code></p>
-<h2>macOSでの注意点</h2>
-<p>macOSの <code>grep</code> は GNU grep と若干異なる場合があります。特に、<code>--include</code> や <code>--exclude</code> などの一部のオプションが利用できないか、異なる動作をする可能性があります。macOSで GNU grep と同等の機能が必要な場合は、Homebrewを使って <code>ggrep</code> をインストールすることをお勧めします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>brew<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>grep
-<span style="color: #8F5902">$ </span>ggrep<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span>オプション<span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span>パターン<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span>ファイル...<span style="color: #CE5C00; font-weight: bold">]</span>
-</pre></div>
+<h4>Q1. 複数のファイルでパターンを検索するにはどうすればよいですか？</h4>
+<p>A. パターンの後にファイルを列挙するだけです：<code>grep &quot;pattern&quot; file1.txt file2.txt file3.txt</code>、またはワイルドカードを使用します：<code>grep &quot;pattern&quot; *.txt</code>。</p>
+<h4>Q2. スペースを含むパターンを検索するにはどうすればよいですか？</h4>
+<p>A. パターンを引用符で囲みます：<code>grep &quot;hello world&quot; file.txt</code>。</p>
+<h4>Q3. 特殊文字を含むパターンを検索するにはどうすればよいですか？</h4>
+<p>A. 特殊文字をバックスラッシュでエスケープするか、シングルクォートを使用します：<code>grep 'pattern\*' file.txt</code>または<code>grep &quot;pattern\*&quot; file.txt</code>。</p>
+<h4>Q4. grepで一度に複数のパターンを検索できますか？</h4>
+<p>A. はい、<code>-e</code>オプションを複数回使用するか、<code>-E</code>で拡張正規表現を使用します：<code>grep -e &quot;pattern1&quot; -e &quot;pattern2&quot; file.txt</code>または<code>grep -E &quot;pattern1|pattern2&quot; file.txt</code>。</p>
+<h4>Q5. grepで行の一致部分のみを表示するにはどうすればよいですか？</h4>
+<p>A. <code>-o</code>または<code>--only-matching</code>オプションを使用します：<code>grep -o &quot;pattern&quot; file.txt</code>。</p>
 <h2>参考資料</h2>
 <p>https://www.gnu.org/software/grep/manual/grep.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初回改訂</li>
 </ul>
 
 

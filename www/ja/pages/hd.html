@@ -47,73 +47,80 @@
     <main>
       
   <h1>hd コマンド</h1>
-<p>ファイルの内容を16進数形式で表示します。</p>
+<p>ファイルの内容を16進数、10進数、8進数、またはASCII形式で表示します。</p>
 <h2>概要</h2>
-<p><code>hd</code>（hexdump）コマンドは、ファイルの内容を16進数とASCII文字の両方で表示するユーティリティです。バイナリファイルの内容を確認したり、テキストファイルの非表示文字を調査したりする際に便利です。多くのシステムでは、<code>hexdump</code>コマンドの別名または同等のコマンドとして機能します。</p>
+<p><code>hd</code>コマンド（hexdump）は、ファイルの内容を様々な形式、主に16進数で表示するユーティリティです。バイナリファイルの調査、データフォーマットのデバッグ、テキストファイル内の表示できない文字の確認などに役立ちます。このコマンドはファイルや標準入力からデータを読み取り、フォーマットされた形式で出力します。</p>
 <h2>オプション</h2>
-<h3><strong>-n LENGTH</strong></h3>
-<p>指定したバイト数だけ表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hd<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">16</span><span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">00000000  48 65 6c 6c 6f 2c 20 57  6f 72 6c 64 21 0a 54 68  |Hello, World!.Th|</span>
+<h3><strong>-a, --ascii-dump</strong></h3>
+<p>16進ダンプと一緒にASCII文字を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hd<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">00000000  48 65 6c 6c 6f 0a                                 |Hello.|</span>
+<span style="color: #000; font-style: italic">00000006</span>
 </pre></div>
-<h3><strong>-s OFFSET</strong></h3>
-<p>指定したオフセット（バイト位置）から表示を開始します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hd<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">0000000a  64 21 0a 54 68 69 73 20  69 73 20 61 20 74 65 73  |d!.This is a tes|</span>
-<span style="color: #000; font-style: italic">0000001a  74 20 66 69 6c 65 2e 0a                           |t file..|</span>
+<h3><strong>-c, --canonical</strong></h3>
+<p>標準的な16進数+ASCII形式で出力を表示し、16進数値とそのASCII表現の両方を示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hd<span style="color: #F8F8F8"> </span>-c
+<span style="color: #000; font-style: italic">00000000  48 65 6c 6c 6f 0a                                 |Hello.|</span>
+<span style="color: #000; font-style: italic">00000006</span>
 </pre></div>
-<h3><strong>-v</strong></h3>
-<p>重複行を省略せずに表示します（冗長モード）。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hd<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">00000000  48 65 6c 6c 6f 2c 20 57  6f 72 6c 64 21 0a 54 68  |Hello, World!.Th|</span>
-<span style="color: #000; font-style: italic">00000010  69 73 20 69 73 20 61 20  74 65 73 74 20 66 69 6c  |is is a test fil|</span>
-<span style="color: #000; font-style: italic">00000020  65 2e 0a                                          |e..|</span>
+<h3><strong>-n, --length=N</strong></h3>
+<p>入力の最初のNバイトのみを処理します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hd<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">00000000  48 65 6c 6c 6f                                    |Hello|</span>
+<span style="color: #000; font-style: italic">00000005</span>
 </pre></div>
-<h3><strong>-C</strong></h3>
-<p>キャノニカル形式で出力します（16進数とASCII表示）。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hd<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">00000000  48 65 6c 6c 6f 2c 20 57  6f 72 6c 64 21 0a 54 68  |Hello, World!.Th|</span>
-<span style="color: #000; font-style: italic">00000010  69 73 20 69 73 20 61 20  74 65 73 74 20 66 69 6c  |is is a test fil|</span>
-<span style="color: #000; font-style: italic">00000020  65 2e 0a                                          |e..|</span>
+<h3><strong>-s, --skip=N</strong></h3>
+<p>入力の最初のNバイトをスキップします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hd<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">6</span>
+<span style="color: #000; font-style: italic">00000006  57 6f 72 6c 64 0a                                 |World.|</span>
+<span style="color: #000; font-style: italic">0000000c</span>
+</pre></div>
+<h3><strong>-v, --no-squeezing</strong></h3>
+<p>前の行と同じであっても、すべての入力データ行を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;AAAA\nAAAA&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hd<span style="color: #F8F8F8"> </span>-v
+<span style="color: #000; font-style: italic">00000000  41 41 41 41 0a 41 41 41  41 0a                    |AAAA.AAAA.|</span>
+<span style="color: #000; font-style: italic">0000000a</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>テキストファイルの内容を16進数で表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, World!&quot;</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>sample.txt
-<span style="color: #8F5902">$ </span>hd<span style="color: #F8F8F8"> </span>sample.txt
+<h3>基本的な16進ダンプ</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, World!&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hd
 <span style="color: #000; font-style: italic">00000000  48 65 6c 6c 6f 2c 20 57  6f 72 6c 64 21 0a        |Hello, World!.|</span>
 <span style="color: #000; font-style: italic">0000000e</span>
 </pre></div>
-<h3>バイナリファイルの先頭部分を確認</h3>
+<h3>バイナリファイルの調査</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hd<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">32</span><span style="color: #F8F8F8"> </span>/bin/ls
 <span style="color: #000; font-style: italic">00000000  cf fa ed fe 07 00 00 01  03 00 00 80 02 00 00 00  |................|</span>
 <span style="color: #000; font-style: italic">00000010  10 00 00 00 18 07 00 00  85 00 20 00 00 00 00 00  |.......... .....|</span>
+<span style="color: #000; font-style: italic">00000020</span>
 </pre></div>
-<h3>標準入力からの16進数ダンプ</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Testing 123&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hd
-<span style="color: #000; font-style: italic">00000000  54 65 73 74 69 6e 67 20  31 32 33 0a              |Testing 123.|</span>
-<span style="color: #000; font-style: italic">0000000c</span>
+<h3>異なる数値形式の表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ABC&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hd<span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;16/1 &quot;%02x &quot; &quot;\n&quot;&#39;</span>
+<span style="color: #000; font-style: italic">00000000  41 42 43 0a                                       </span>
+<span style="color: #000; font-style: italic">00000004</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>非表示文字の確認</h3>
-<p>テキストファイルに含まれる改行コードやタブなどの非表示文字を確認するのに役立ちます。</p>
-<h3>バイナリファイルのヘッダー解析</h3>
-<p>多くのバイナリファイル形式は特定のヘッダー構造を持っています。<code>hd</code>を使用して最初の数バイトを確認することで、ファイルタイプを識別できることがあります。</p>
-<h3>大きなファイルの部分表示</h3>
-<p><code>-n</code>と<code>-s</code>オプションを組み合わせることで、大きなファイルの特定の部分だけを効率的に調査できます。</p>
+<h3>ファイルヘッダーの調査</h3>
+<p><code>hd -n 16 ファイル名</code>を使用して、ファイルの最初の16バイトを素早く調べることができます。これはフォーマット識別情報やマジックナンバーを含むことが多いです。</p>
+<h3>バイナリファイルの比較</h3>
+<p><code>hd</code>と<code>diff</code>を組み合わせてバイナリファイルを比較できます: <code>diff &lt;(hd file1) &lt;(hd file2)</code></p>
+<h3>出力フォーマットのカスタマイズ</h3>
+<p><code>-e</code>オプションを使用すると、より専門的な表示ニーズに合わせてカスタム出力フォーマットを指定できます。</p>
+<h3>代替コマンド</h3>
+<p>一部のシステムでは、<code>hd</code>の代わりに<code>hexdump</code>や<code>xxd</code>が同様の機能で利用可能な場合があります。</p>
 <h2>よくある質問</h2>
 <h4>Q1. <code>hd</code>と<code>hexdump</code>の違いは何ですか？</h4>
-<p>A. 多くのシステムでは、<code>hd</code>は<code>hexdump</code>コマンドの別名または同等の機能を持つコマンドです。システムによっては、<code>hd</code>が<code>hexdump -C</code>のエイリアスとして設定されていることがあります。</p>
-<h4>Q2. ファイルの特定の部分だけを表示するにはどうすればいいですか？</h4>
-<p>A. <code>-s</code>オプションでオフセット（開始位置）を指定し、<code>-n</code>オプションで表示するバイト数を指定します。例：<code>hd -s 100 -n 50 file.bin</code></p>
-<h4>Q3. 出力の見方を教えてください。</h4>
-<p>A. 出力は左から順に、オフセット（16進数）、16進数でのバイト値、そして右側にASCII表現が表示されます。表示できない文字は通常ドット（.）で表されます。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは、<code>hd</code>コマンドは通常<code>hexdump</code>のエイリアスとして設定されています。もし<code>hd</code>コマンドが見つからない場合は、<code>hexdump -C</code>を使用するか、<code>alias hd='hexdump -C'</code>をシェル設定ファイルに追加してください。</p>
+<p>A. 多くのシステムでは、<code>hd</code>は実際には<code>hexdump</code>へのシンボリックリンクです。基本的に同じコマンドであり、<code>hd</code>は短い別名です。</p>
+<h4>Q2. ASCII表現だけを表示するにはどうすればよいですか？</h4>
+<p>A. <code>hd -c</code>を使用して16進数とASCIIの両方を表示するか、ASCIIのみの場合は<code>-e</code>オプションでカスタムフォーマットを使用する必要があるかもしれません。</p>
+<h4>Q3. <code>hd</code>でファイルを修正できますか？</h4>
+<p>A. いいえ、<code>hd</code>はファイルの内容を表示するだけです。直接ファイルを修正することはできません。</p>
+<h4>Q4. 出力の解釈方法は？</h4>
+<p>A. 一番左の列は16進数でのバイトオフセットを示します。中央の列は各バイトの16進値を示します。右端のセクション（<code>|</code>文字の後）はそれらのバイトのASCII表現を示します。</p>
 <h2>参考資料</h2>
-<p>https://www.freebsd.org/cgi/man.cgi?query=hexdump</p>
+<p>https://man7.org/linux/man-pages/man1/hexdump.1.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/04/30 初版作成</li>
+<li>2025/05/04 初版作成</li>
 </ul>
 
 

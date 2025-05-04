@@ -1,145 +1,143 @@
 # realpath コマンド
 
-ファイルやディレクトリの絶対パス（正規化されたフルパス）を表示します。
+ファイルの解決された絶対パスを表示します。
 
 ## 概要
 
-`realpath`コマンドは、指定されたファイルやディレクトリの絶対パスを表示します。シンボリックリンクを解決し、相対パスを絶対パスに変換することができます。これにより、ファイルの実際の場所を正確に把握することができます。
+`realpath`コマンドは、パス名をその絶対パスに解決し、すべてのシンボリックリンクをたどります。特にシンボリックリンクや相対パスを扱う際に、ファイルの実際の場所を特定するのに役立ちます。
 
 ## オプション
 
-### **-s, --strip, --no-symlinks**
-
-シンボリックリンクを解決せず、絶対パスのみを表示します。
-
-```console
-$ ln -s /etc/hosts symlink_to_hosts
-$ realpath -s symlink_to_hosts
-/home/user/symlink_to_hosts
-```
-
 ### **-e, --canonicalize-existing**
 
-パス上のすべてのコンポーネント（ディレクトリなど）が存在する必要があります。存在しない場合はエラーになります。
+パスのすべてのコンポーネントが存在する必要があります
 
 ```console
-$ realpath -e /path/to/nonexistent
-realpath: /path/to/nonexistent: No such file or directory
+$ realpath -e /etc/hosts
+/etc/hosts
+
+$ realpath -e /nonexistent/file
+realpath: /nonexistent/file: No such file or directory
 ```
 
 ### **-m, --canonicalize-missing**
 
-パス上に存在しないコンポーネントがあっても処理を続行します。
+パスコンポーネントが存在する必要はなく、ディレクトリである必要もありません
 
 ```console
-$ realpath -m /path/to/nonexistent
-/path/to/nonexistent
+$ realpath -m /nonexistent/file
+/nonexistent/file
 ```
 
 ### **-L, --logical**
 
-シンボリックリンクを解決します（デフォルトの動作）。
+シンボリックリンクの前に'..'コンポーネントを解決します（デフォルトの動作）
 
 ```console
-$ ln -s /etc/hosts symlink_to_hosts
-$ realpath -L symlink_to_hosts
-/etc/hosts
+$ ln -s /usr/bin bin_link
+$ realpath -L bin_link/../share
+/usr/share
 ```
 
 ### **-P, --physical**
 
-すべてのシンボリックリンクを解決します。
+シンボリックリンクを遭遇した時点で解決し、その後'..'コンポーネントを解決します
 
 ```console
-$ realpath -P symlink_to_hosts
-/etc/hosts
+$ ln -s /usr/bin bin_link
+$ realpath -P bin_link/../share
+/share
 ```
 
-### **--relative-to=DIR**
+### **-q, --quiet**
 
-指定したディレクトリからの相対パスを表示します。
+エラーメッセージを抑制します
 
 ```console
-$ realpath --relative-to=/etc /etc/hosts
-hosts
+$ realpath -q /nonexistent/file
+$ echo $?
+1
 ```
 
-### **--relative-base=DIR**
+### **-s, --strip, --no-symlinks**
 
-指定したディレクトリを基準として相対パスを表示します。指定したディレクトリの子ディレクトリでない場合は絶対パスを表示します。
+シンボリックリンクを展開しません
 
 ```console
-$ realpath --relative-base=/etc /etc/hosts
-hosts
-$ realpath --relative-base=/etc /var/log
-/var/log
+$ ln -s /usr/bin bin_link
+$ realpath -s bin_link
+/home/user/bin_link
+```
+
+### **-z, --zero**
+
+各出力行を改行ではなくNUL文字で終了します
+
+```console
+$ realpath -z /etc/hosts | hexdump -C
+00000000  2f 65 74 63 2f 68 6f 73  74 73 00                 |/etc/hosts.|
+0000000b
 ```
 
 ## 使用例
 
-### 基本的な使用方法
+### 相対パスの解決
 
 ```console
-$ realpath file.txt
-/home/user/documents/file.txt
+$ cd /usr/local
+$ realpath bin/../share
+/usr/local/share
 ```
 
-### シンボリックリンクの解決
+### シンボリックリンクの操作
 
 ```console
-$ ln -s /etc/hosts symlink_to_hosts
-$ realpath symlink_to_hosts
-/etc/hosts
+$ ln -s /var/log logs
+$ realpath logs
+/var/log
 ```
 
-### 相対パスの絶対パスへの変換
+### スクリプトで絶対パスを取得する
 
 ```console
-$ realpath ../projects
-/home/user/projects
-```
-
-### 複数のファイルの絶対パスを表示
-
-```console
-$ realpath file1.txt file2.txt dir1
-/home/user/file1.txt
-/home/user/file2.txt
-/home/user/dir1
+$ cat myscript.sh
+#!/bin/bash
+SCRIPT_DIR=$(realpath $(dirname "$0"))
+echo "スクリプトの場所: $SCRIPT_DIR"
 ```
 
 ## ヒント:
 
-### スクリプト内での使用
+### シェルスクリプトでの使用
 
-シェルスクリプト内で`realpath`を使用すると、スクリプトの実行場所に関係なく、ファイルの絶対パスを取得できるため、ファイル操作が安全になります。
+シェルスクリプトを書く際、`SCRIPT_DIR=$(realpath $(dirname "$0"))`を使用してスクリプトディレクトリの絶対パスを取得できます。これにより、スクリプトがどこから呼び出されても正しく動作します。
 
-### 存在しないファイルのパス
+### 他のコマンドとの組み合わせ
 
-デフォルトでは、`realpath`は存在しないファイルに対してエラーを返します。存在しないファイルのパスを取得するには`-m`オプションを使用します。
+`find`や`xargs`などのコマンドと`realpath`を組み合わせて、ファイルを絶対パスで処理できます：`find . -type f | xargs realpath`
 
-### 相対パスの活用
+### エラー処理
 
-`--relative-to`オプションを使うと、あるパスから別のパスへの相対パスを簡単に取得できます。これはファイルの移動やリンク作成時に役立ちます。
+エラーメッセージを抑制したい場合は`-q`オプションを使用し、代わりに終了ステータスをチェックします。これはエラーを適切に処理したいスクリプトで役立ちます。
 
 ## よくある質問
 
 #### Q1. `realpath`と`readlink -f`の違いは何ですか？
-A. 両方とも絶対パスを表示しますが、`realpath`はより多くのオプションを提供し、GNU coreutils の一部です。`readlink -f`は一部の古いシステムでは動作が異なる場合があります。
+A. どちらのコマンドもシンボリックリンクを解決して絶対パスを返しますが、`realpath`はパスの解決方法をより細かく制御するオプションを提供します。`readlink -f`は古いシステムでより一般的に利用可能です。
 
-#### Q2. 存在しないファイルの絶対パスを取得するにはどうすればよいですか？
-A. `realpath -m /path/to/nonexistent`を使用します。`-m`オプションは存在しないコンポーネントがあっても処理を続行します。
+#### Q2. ファイルが存在するかを確認するために`realpath`をどう使いますか？
+A. `realpath -e`を使用すると、ファイルが存在しない場合にエラーを返します。
 
-#### Q3. シンボリックリンクを解決せずに絶対パスを取得するにはどうすればよいですか？
-A. `realpath -s symlink`を使用します。これにより、シンボリックリンク自体の絶対パスが表示されます。
+#### Q3. `realpath`はファイル名の空白を処理できますか？
+A. はい、ただしスクリプトで使用する場合は、引数を引用符で囲むようにしてください：`realpath "$filename"`
 
-#### Q4. macOSでrealpathを使用するには？
-A. macOSのデフォルトインストールには`realpath`が含まれていない場合があります。Homebrewを使用して`coreutils`パッケージをインストールすることで利用できます: `brew install coreutils`
+#### Q4. `-L`と`-P`オプションの違いは何ですか？
+A. `-L`（論理的）はシンボリックリンクの前に'..'コンポーネントを解決し、`-P`（物理的）はまずシンボリックリンクを解決してから'..'コンポーネントを解決します。デフォルトは`-L`です。
 
-## 参考文献
+## 参考資料
 
 https://www.gnu.org/software/coreutils/manual/html_node/realpath-invocation.html
 
 ## 改訂履歴
 
-- 2025/04/30 初版作成
+- 2025/05/04 初版作成

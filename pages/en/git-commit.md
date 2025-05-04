@@ -1,42 +1,42 @@
 # git commit command
 
-Record changes to the repository by saving staged content as a new commit.
+Record changes to the repository by creating a new commit containing the current contents of the index.
 
 ## Overview
 
-The `git commit` command captures a snapshot of the project's currently staged changes. Committed snapshots are considered "safe" versions of a project and can be viewed, restored, or compared at any time. Commits are the core building blocks in a Git project's timeline.
+The `git commit` command captures a snapshot of the project's currently staged changes. Committed snapshots are "safe" versions of a project that Git will never change unless explicitly asked to do so. Before committing, changes must be staged using `git add`.
 
 ## Options
 
-### **-m, --message**
+### **-m, --message=\<msg\>**
 
-Add a commit message directly from the command line, avoiding the text editor prompt.
+Use the given message as the commit message instead of launching an editor.
 
 ```console
-$ git commit -m "Add new login feature"
-[main 5d7e9f4] Add new login feature
- 1 file changed, 15 insertions(+), 2 deletions(-)
+$ git commit -m "Add new feature"
+[main 5d6e7f8] Add new feature
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 ```
 
 ### **-a, --all**
 
-Automatically stage all modified and deleted files before committing (does not include new files).
+Automatically stage all modified and deleted files before committing (does not include untracked files).
 
 ```console
-$ git commit -a -m "Update documentation"
-[main 8f3d12c] Update documentation
- 2 files changed, 24 insertions(+), 5 deletions(-)
+$ git commit -a -m "Update existing files"
+[main 1a2b3c4] Update existing files
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 ```
 
 ### **--amend**
 
-Replace the most recent commit with a new one that includes current staged changes.
+Replace the tip of the current branch with a new commit, using the same log message as the previous commit or a new one.
 
 ```console
 $ git commit --amend -m "Fix typo in previous commit"
-[main 7a2e9d1] Fix typo in previous commit
- Date: Wed Apr 30 10:15:32 2025 -0700
- 1 file changed, 2 insertions(+), 1 deletion(-)
+[main 8f9g0h1] Fix typo in previous commit
+ Date: Mon May 4 10:23:45 2025 -0700
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 ```
 
 ### **-v, --verbose**
@@ -48,48 +48,58 @@ $ git commit -v
 # Opens editor with diff included in the commit message template
 ```
 
+### **--no-verify**
+
+Bypass the pre-commit and commit-msg hooks.
+
+```console
+$ git commit --no-verify -m "Emergency fix"
+[main 2c3d4e5] Emergency fix
+ 1 file changed, 3 insertions(+)
+```
+
 ## Usage Examples
 
-### Basic commit with editor for message
+### Creating a standard commit
 
 ```console
-$ git add file.txt
-$ git commit
-# Opens text editor for commit message
-[main 3a4b5c6] Add important file
- 1 file changed, 10 insertions(+)
+$ git add file1.txt file2.txt
+$ git commit -m "Add new files"
+[main 1a2b3c4] Add new files
+ 2 files changed, 15 insertions(+)
 ```
 
-### Commit with message and skip staging
+### Committing all tracked changes
 
 ```console
-$ git commit -am "Fix bug in login form"
-[main 1b2c3d4] Fix bug in login form
- 2 files changed, 7 insertions(+), 3 deletions(-)
+$ git commit -am "Update documentation"
+[main 5e6f7g8] Update documentation
+ 3 files changed, 25 insertions(+), 10 deletions(-)
 ```
 
-### Commit only specific files
+### Amending the previous commit with new changes
 
 ```console
-$ git add src/login.js src/auth.js
-$ git commit -m "Improve authentication flow"
-[main 9e8d7f6] Improve authentication flow
- 2 files changed, 32 insertions(+), 15 deletions(-)
+$ git add forgotten_file.txt
+$ git commit --amend
+[main 1a2b3c4] Add new files
+ Date: Mon May 4 09:15:32 2025 -0700
+ 3 files changed, 18 insertions(+)
 ```
 
 ## Tips
 
 ### Write Meaningful Commit Messages
 
-Use the present tense ("Add feature" not "Added feature") and keep the first line under 50 characters. Add more detailed explanations after a blank line if needed.
+Good commit messages should explain what changes were made and why. Use the present tense ("Add feature" not "Added feature") and keep the first line under 50 characters.
 
 ### Use Atomic Commits
 
-Make each commit a logical unit of change. This makes it easier to understand, review, and revert changes if necessary.
+Make each commit a logical unit of work. This makes it easier to understand, review, and revert changes if needed.
 
 ### Check What You're Committing
 
-Use `git diff --staged` before committing to review exactly what changes will be included in your commit.
+Use `git diff --staged` before committing to review exactly what will be included in your commit.
 
 ### Sign Your Commits
 
@@ -101,13 +111,16 @@ For security and verification, you can sign commits with your GPG key using `git
 A. Use `git reset HEAD~1` to undo the commit but keep the changes staged, or `git reset --hard HEAD~1` to discard the changes completely.
 
 #### Q2. How can I change my commit message after committing?
-A. Use `git commit --amend` to modify the most recent commit message.
+A. If you haven't pushed yet, use `git commit --amend` to modify the most recent commit message.
 
-#### Q3. What's the difference between `git commit` and `git push`?
-A. `git commit` records changes to your local repository, while `git push` uploads your local commits to a remote repository.
+#### Q3. What's the difference between `git commit` and `git commit -a`?
+A. `git commit` only commits changes that have been staged with `git add`, while `git commit -a` automatically stages and commits all modified tracked files.
 
-#### Q4. Can I commit directly without staging files first?
-A. Yes, using `git commit -a` will automatically stage all modified and deleted files (but not new files) before committing.
+#### Q4. Can I commit directly without staging first?
+A. Yes, using `git commit -a`, but this only works for files that are already tracked (previously added to the repository).
+
+#### Q5. How do I commit only part of a file?
+A. Use `git add -p` to interactively select which changes to stage, then commit normally.
 
 ## References
 
@@ -115,4 +128,4 @@ https://git-scm.com/docs/git-commit
 
 ## Revisions
 
-- 2025/04/30 First revision
+- 2025/05/04 First revision
