@@ -12,6 +12,7 @@ def generate_document(*prompts, max_tokens):
         message = {
             "type": "text",
             "text": prompt,
+            "cache_control": {"type": "ephemeral"}
         }
         contents.append(message)
 
@@ -19,9 +20,6 @@ def generate_document(*prompts, max_tokens):
         "role": "user",
         "content": contents
      }]
-
-    import pprint
-    pprint.pprint(messages)
 
     # check OverloadedError?
     response = client.messages.create(

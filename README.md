@@ -1,8 +1,7 @@
 # noman – AI-powered, human-friendly man pages
 
 **Noman** is a command-line tool and website that offers simplified, AI-generated documentation for Unix commands.  
-Traditional `man` pages are thorough but often hard to digest—especially for beginners or those who need quick, practical help.  
-Noman fixes that by generating concise, example-rich documentation that's easy to read, color-formatted for terminal use, and instantly available.
+Traditional `man` pages are thorough but often hard to digest. **Noman** uses AI to summarize and clarify command usage, making it easier to understand. No man behind these man pages.
 
 ---
 
@@ -35,9 +34,7 @@ Just type `noman ls` and get a clean, helpful answer instantly.
 
 ## 💡 Why AI Works Well Here
 
-Unlike open-ended queries, Unix commands are stable, well-documented, and deterministic—ideal for AI summarization.  
-By using custom prompts per command, Noman ensures clarity, consistency, and minimal hallucination.  
-The result: reliable AI-generated documentation without guesswork.
+It is widely recognized that AI-generated technical explanations often fall short in terms of clarity and accuracy. However, in the case of Unix commands—a well-established and thoroughly documented domain—AI systems have a distinct advantage: they can reference authoritative sources to produce reliable content with minimal risk of error.
 
 ---
 
@@ -46,6 +43,10 @@ The result: reliable AI-generated documentation without guesswork.
 General-purpose AIs and web search often return inconsistent, outdated, or poorly structured results depending on query phrasing.  
 Noman avoids that by pre-generating all pages with verified prompts and consistent formatting.  
 It's a safer, faster, and more beginner-friendly way to learn command-line tools.
+
+## Low maintenance cost
+
+Noman requires virtually no human intervention. Since pages are AI-generated, there's no need for manual updates or editorial work—the only cost is the AI API fee! This approach makes it incredibly easy to expand documentation by simply adding new commands or refining prompts, resulting in immediate quality improvements without the traditional overhead of documentation maintenance.
 
 ---
 
