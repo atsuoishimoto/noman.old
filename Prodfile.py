@@ -84,11 +84,47 @@ def generate_document(*prompts, max_tokens):
 
 
 @rule(
-    "pages/*/%.md",
+    "pages/en/%.md",
     uses="commands/%/.empty",
     depends=(PROMPT, command_prompt, lang_prompt, FORMAT),
 )
-def build_noman(target, *deps):
+def build_noman_en(target, *deps):
+    print("building:", target)
+    target = Path(target)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    command = target.stem
+
+    prompts = [Path(p).read_text() for p in deps]
+    prompts.append(f"""
+Command to Explain: {command}
+Write in en language.
+TODAY is {TODAY}.
+""")
+
+    if target.is_file():
+        current = target.read_text()
+        prompts.append(f"<current-documnent>{current}</current-document>")
+
+    text, stop_reason, usage = generate_document(*prompts, max_tokens=MAX_TOKENS)
+
+    target.write_text(text)
+
+    result = json.dumps(
+        {"stop_reason": str(stop_reason), "usage": str(usage)},
+        indent=2,
+        ensure_ascii=False,
+    )
+    resultsdir = target.parent / "results"
+    resultsdir.mkdir(parents=True, exist_ok=True)
+    (resultsdir / f"{target.stem}.json").write_text(result)
+
+
+@rule(
+    "pages/*/%.md",
+    uses="commands/%/.empty",
+    depends=("pages/en/%.md", PROMPT, command_prompt, lang_prompt, FORMAT),
+)
+def build_noman(target, en, *deps):
     print("building:", target)
     target = Path(target)
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -98,9 +134,12 @@ def build_noman(target, *deps):
     prompts = [Path(p).read_text() for p in deps]
     prompts.append(f"""
 Command to Explain: {command}
-Write in {lang}.
+Write in {lang} language.
 TODAY is {TODAY}.
 """)
+
+    english = Path(en).read_text()
+    prompts.append(f"<english-documnent>{english}</english-document>")
 
     if target.is_file():
         current = target.read_text()
