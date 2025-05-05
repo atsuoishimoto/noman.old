@@ -4,151 +4,158 @@ Search for files within packages in the APT package management system.
 
 ## Overview
 
-`apt-file` is a command-line utility that allows you to search for files in packages available in the APT repositories, even if they are not installed on your system. It's particularly useful for finding which package provides a specific file, or for exploring the contents of packages before installing them.
+apt-file is a command-line utility for Debian-based systems that allows users to search for files in packages, even if they are not installed. It's particularly useful for finding which package provides a specific file, or for exploring the contents of packages before installation.
 
 ## Options
 
-### **-l, --list**
+### **search**
 
-List the contents of a specified package.
-
-```console
-$ apt-file list firefox
-firefox: /etc/firefox/syspref.js
-firefox: /etc/xul-ext/ubufox.js
-firefox: /usr/bin/firefox
-firefox: /usr/lib/firefox/browser/chrome.manifest
-firefox: /usr/lib/firefox/browser/chrome/icons/default/default128.png
-[...]
-```
-
-### **-s, --search**
-
-Search for packages containing a specific file or pattern.
+Search for packages containing files matching the pattern
 
 ```console
-$ apt-file search bin/ls
-coreutils: /bin/ls
-```
-
-### **-x, --regexp**
-
-Use regular expressions for searching.
-
-```console
-$ apt-file -x search '.*bin/python3$'
+$ apt-file search /usr/bin/python3
 python3-minimal: /usr/bin/python3
+```
+
+### **list**
+
+List files in the specified package
+
+```console
+$ apt-file list python3-minimal
+python3-minimal: /usr/bin/python3
+python3-minimal: /usr/share/doc/python3-minimal/README.Debian
+python3-minimal: /usr/share/doc/python3-minimal/changelog.Debian.gz
+python3-minimal: /usr/share/doc/python3-minimal/copyright
 ```
 
 ### **-a, --architecture**
 
-Specify the architecture to search in.
+Specify the architecture to search
 
 ```console
-$ apt-file -a arm64 search bin/ls
-coreutils: /bin/ls
+$ apt-file -a amd64 search libssl.so
+libssl-dev: /usr/lib/x86_64-linux-gnu/libssl.so
 ```
 
-### **-c, --cache**
+### **-F, --fixed-string**
 
-Use a specific cache directory.
+Do not interpret pattern as a regular expression
 
 ```console
-$ apt-file -c /tmp/apt-file-cache search bin/ls
-coreutils: /bin/ls
+$ apt-file -F search "libssl.so.1.1"
+libssl1.1: /usr/lib/x86_64-linux-gnu/libssl.so.1.1
 ```
 
-### **-u, --update**
+### **-l, --package-only**
 
-Update the package lists cache.
+Display only package names, not file paths
+
+```console
+$ apt-file -l search /usr/bin/python3
+python3-minimal
+```
+
+### **-x, --regexp**
+
+Interpret pattern as a regular expression (default)
+
+```console
+$ apt-file -x search "^/usr/bin/py.*3$"
+python3-minimal: /usr/bin/python3
+```
+
+### **-v, --verbose**
+
+Display more information during operation
+
+```console
+$ apt-file -v search /usr/bin/python3
+Reading package lists... Done
+Building dependency tree... Done
+python3-minimal: /usr/bin/python3
+```
+
+### **update**
+
+Update the contents database
 
 ```console
 $ sudo apt-file update
-Processing 'main' component lists
-Processing 'universe' component lists
-Processing 'restricted' component lists
-Processing 'multiverse' component lists
+Downloading complete file https://deb.debian.org/debian/dists/bookworm/Contents-amd64.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 45.2M  100 45.2M    0     0  5215k      0  0:00:08  0:00:08 --:--:-- 6123k
 ```
 
 ## Usage Examples
 
-### Finding which package provides a specific command
+### Finding which package provides a specific file
 
 ```console
-$ apt-file search bin/grep
-grep: /bin/grep
+$ apt-file search /usr/bin/convert
+imagemagick-6.q16: /usr/bin/convert
 ```
 
 ### Listing all files in a package
 
 ```console
-$ apt-file list coreutils | head -5
-coreutils: /bin/cat
-coreutils: /bin/chgrp
-coreutils: /bin/chmod
-coreutils: /bin/chown
-coreutils: /bin/cp
+$ apt-file list wget
+wget: /etc/wgetrc
+wget: /usr/bin/wget
+wget: /usr/share/doc/wget/AUTHORS
+wget: /usr/share/doc/wget/COPYING
+wget: /usr/share/doc/wget/NEWS.gz
+wget: /usr/share/doc/wget/README
+wget: /usr/share/info/wget.info.gz
+wget: /usr/share/man/man1/wget.1.gz
 ```
 
-### Searching for a library file
+### Finding header files for development
 
 ```console
-$ apt-file search libssl.so.1.1
-libssl1.1: /usr/lib/x86_64-linux-gnu/libssl.so.1.1
+$ apt-file search "include/openssl/ssl.h"
+libssl-dev: /usr/include/openssl/ssl.h
 ```
 
-## Tips
+## Tips:
 
-### Update the Cache First
+### Update the Database First
 
-Always run `sudo apt-file update` before using apt-file for the first time or if you haven't used it in a while. This ensures you have the latest package information.
+Always run `sudo apt-file update` before using apt-file, especially after system updates or if you haven't used it recently. This ensures you have the latest package information.
 
-### Narrow Down Results with Grep
+### Use with grep for Complex Filtering
 
-When apt-file returns too many results, pipe the output through grep to filter:
-
+Combine apt-file with grep for more complex filtering:
 ```console
-$ apt-file search .so | grep ssl
+$ apt-file list python3 | grep "bin/"
 ```
 
-### Use with Package Installation
+### Find Dependencies for Compilation
 
-When you encounter a "command not found" error, use apt-file to find which package provides that command:
-
+When compiling software that reports missing header files, use apt-file to find which development packages you need to install:
 ```console
-$ apt-file search bin/missing-command
-```
-
-### Combine with Other APT Tools
-
-Use apt-file alongside apt-cache and apt to get comprehensive package information:
-
-```console
-$ apt-file search bin/python3
-$ apt-cache show python3-minimal
+$ apt-file search missing_header.h
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. How do I install apt-file?
-A. Install it using `sudo apt install apt-file`, then update the cache with `sudo apt-file update`.
+#### Q1. What's the difference between apt-file and dpkg -S?
+A. dpkg -S only searches installed packages, while apt-file can search all available packages, even those not installed.
 
-#### Q2. Why does apt-file search return no results?
-A. You may need to update the apt-file cache with `sudo apt-file update`. Also, ensure you're using the correct file path.
+#### Q2. How do I install apt-file?
+A. Run `sudo apt install apt-file` and then `sudo apt-file update` to initialize the database.
 
-#### Q3. Can apt-file search for files in packages not installed on my system?
-A. Yes, that's one of its main features. It searches all packages in the configured repositories.
+#### Q3. Why is apt-file search slow?
+A. apt-file searches through a large database of files. Using more specific search patterns or the -F option can speed up searches.
 
-#### Q4. How is apt-file different from dpkg -S?
-A. `dpkg -S` only searches for files in installed packages, while `apt-file` searches all available packages in repositories.
-
-#### Q5. How do I search for files with a specific extension?
-A. Use the regexp option: `apt-file -x search '\.so$'` to find all .so files.
+#### Q4. How often should I update the apt-file database?
+A. Update whenever you update your package lists with apt update, or at least once a month.
 
 ## References
 
-https://manpages.debian.org/stable/apt-file/apt-file.1.en.html
+https://manpages.debian.org/bookworm/apt-file/apt-file.1.en.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

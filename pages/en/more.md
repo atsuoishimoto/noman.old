@@ -4,54 +4,54 @@ Display file contents one screen at a time.
 
 ## Overview
 
-The `more` command is a pager that allows you to view text files one screen at a time. It's particularly useful for viewing large files as it displays content page by page, allowing you to navigate through the file with simple keyboard commands. Unlike its more advanced counterpart `less`, `more` only allows forward navigation through files.
+`more` is a filter for paging through text one screenful at a time. It's used to view the contents of text files in a controlled manner, allowing users to navigate forward through the file. Unlike its more advanced counterpart `less`, `more` primarily allows forward navigation.
 
 ## Options
 
-### **-d, --silent**
+### **-d**
 
-Displays helpful prompts and provides more user-friendly error messages.
+Display helpful prompts and provide more user-friendly error messages.
 
 ```console
 $ more -d large_file.txt
 --More--(50%) [Press space to continue, 'q' to quit.]
 ```
 
-### **-f, --logical**
+### **-f**
 
-Counts logical lines rather than screen lines (doesn't wrap long lines).
-
-```console
-$ more -f wide_content.txt
-```
-
-### **-p, --plain**
-
-Disables screen clearing and control sequences that might interfere with some terminals.
+Count logical lines rather than screen lines (useful with long lines that wrap).
 
 ```console
-$ more -p script.sh
+$ more -f wrapped_text.txt
 ```
 
-### **-c, --clean-print**
+### **-p**
 
-Redraws the screen instead of scrolling, providing a cleaner display.
+Clear the screen before displaying each page.
 
 ```console
-$ more -c document.txt
+$ more -p document.txt
 ```
 
-### **-s, --squeeze**
+### **-c**
 
-Squeezes multiple blank lines into one.
+Clear screen before displaying, but do so by drawing from the top line down.
 
 ```console
-$ more -s log_file.txt
+$ more -c large_file.txt
 ```
 
-### **-u, --plain**
+### **-s**
 
-Suppresses underlining and other formatting.
+Squeeze multiple blank lines into one.
+
+```console
+$ more -s file_with_blanks.txt
+```
+
+### **-u**
+
+Suppress underlining (useful for some terminal types).
 
 ```console
 $ more -u formatted_text.txt
@@ -59,7 +59,7 @@ $ more -u formatted_text.txt
 
 ### **-number**
 
-Specifies the number of lines to display on each screen.
+Set the number of lines per screenful.
 
 ```console
 $ more -10 short_file.txt
@@ -67,7 +67,7 @@ $ more -10 short_file.txt
 
 ### **+number**
 
-Starts displaying the file at the specified line number.
+Start displaying the file at line number.
 
 ```console
 $ more +100 large_file.txt
@@ -75,7 +75,7 @@ $ more +100 large_file.txt
 
 ### **+/pattern**
 
-Starts displaying at the first line containing the specified pattern.
+Start displaying at the first line containing the pattern.
 
 ```console
 $ more +/ERROR log_file.txt
@@ -100,72 +100,74 @@ $ more file1.txt file2.txt
 ::::::::::::::
 file1.txt
 ::::::::::::::
-This is file 1 content
---More--(50%)
+Contents of file1...
+--More--(75%)
+```
+
+### Piping Command Output to more
+
+```console
+$ ls -la /usr/bin | more
+total 123456
+drwxr-xr-x  2 root root   69632 Apr 18 09:23 .
+drwxr-xr-x 14 root root    4096 Jan 15 12:34 ..
+-rwxr-xr-x  1 root root   35344 Feb  7  2022 [
+--More--(2%)
 ```
 
 ### Starting at a Specific Pattern
 
 ```console
-$ more +/important document.txt
-Here is the important information you were looking for...
---More--(75%)
+$ more +/function script.js
+function calculateTotal() {
+  // Function implementation
+}
+--More--(45%)
 ```
 
-### Combining Options
-
-```console
-$ more -cs +10 large_log.txt
-[Displays from line 10 with clean screen redraw and squeezed blank lines]
---More--(15%)
-```
-
-## Tips:
+## Tips
 
 ### Navigation Commands
 
-While viewing a file with `more`, you can use these keyboard commands:
-- `Space` - Move forward one screen
+While viewing a file with `more`, you can use these commands:
+- `Space` - Move forward one screenful
 - `Enter` - Move forward one line
-- `b` - Move back one screen (may not work in all implementations)
-- `q` - Quit and exit
-- `/pattern` - Search for a pattern
-- `n` - Repeat the previous search
+- `b` - Move backward one screenful (may not work in all implementations)
+- `q` - Quit
+- `/pattern` - Search for pattern
+- `n` - Repeat previous search
 
-### Pipe Command Output
+### Using more with Large Files
 
-You can pipe the output of commands to `more` to view large outputs page by page:
+For very large files, `more` loads the file as you read it, making it more memory-efficient than loading the entire file at once.
 
-```console
-$ ls -la /usr/bin | more
-```
+### When to Use less Instead
 
-### Environment Variable
+If you need to navigate both forward and backward through a file with more flexibility, consider using `less` instead, which offers more features.
 
-Set the `MORE` environment variable to specify default options:
+### Customizing the Prompt
 
+Set the `MORE` environment variable to customize the prompt and behavior:
 ```console
 $ export MORE="-d"
-$ more large_file.txt
 ```
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `more` and `less`?
-A. `more` only allows forward navigation through a file, while `less` allows both forward and backward navigation and has more features. `less` is generally considered an improvement over `more` (hence the name).
+A. `more` is an older utility that primarily allows forward navigation through a file. `less` is more feature-rich, allowing both forward and backward navigation, and has additional search capabilities.
 
 #### Q2. How do I exit `more`?
-A. Press the `q` key to quit and return to the command prompt.
+A. Press the `q` key to quit.
 
 #### Q3. Can I search for text in `more`?
-A. Yes, press `/` followed by your search pattern and press Enter. Use `n` to find the next occurrence.
+A. Yes, press `/` followed by your search pattern, then press Enter. Use `n` to find the next occurrence.
 
 #### Q4. How can I display line numbers in `more`?
-A. Unlike `less`, `more` doesn't have a built-in option to display line numbers. Consider using `less -N` instead if you need line numbers.
+A. `more` doesn't have a built-in line numbering feature. For line numbers, consider using `less -N` or `cat -n file.txt | more`.
 
-## macOS Considerations
-
-On macOS, the `more` command is slightly different from the GNU/Linux version. Some options like `-d` might behave differently or not be available. For more consistent behavior across platforms, consider using `less` instead, which is more feature-rich and consistent across systems.
+#### Q5. How do I make `more` display a specific number of lines at a time?
+A. Use the `-number` option, e.g., `more -20 file.txt` to display 20 lines at a time.
 
 ## References
 
@@ -173,4 +175,4 @@ https://man7.org/linux/man-pages/man1/more.1.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

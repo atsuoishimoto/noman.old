@@ -1,16 +1,16 @@
 # split コマンド
 
-ファイルを複数の小さな部分に分割します。
+ファイルを複数の部分に分割します。
 
 ## 概要
 
-`split`コマンドは、ファイルを複数の小さなファイルに分割します。大きなファイルを扱いやすく、転送しやすく、または保存しやすくするために役立ちます。デフォルトでは、'xaa'、'xab'などの名前のファイルを作成し、それぞれに元のファイルから指定された行数またはバイト数が含まれます。
+`split` コマンドはファイルを複数の小さなファイルに分割します。大きなファイルを扱いやすく分割したり、サイズ制限のあるメディアで転送したり、一部ずつ処理したりする場合に便利です。デフォルトでは、元のファイルから指定された行数またはバイト数を含む「xaa」、「xab」などの名前のファイルを作成します。
 
 ## オプション
 
 ### **-b, --bytes=SIZE**
 
-行ではなくバイト単位で分割します。SIZEは数字の後に乗数を付けることができます：k (1024)、m (1024²)、g (1024³)など。
+行ではなくバイト単位で分割します。SIZEは数字の後に乗数を付けることができます：k (1024)、m (1024²)、g (1024³) など。
 
 ```console
 $ split -b 1M largefile.dat chunk_
@@ -20,7 +20,7 @@ chunk_aa  chunk_ab  chunk_ac
 
 ### **-l, --lines=NUMBER**
 
-出力ファイルごとに特定の行数で分割します（デフォルトは1000行）。
+ファイルをNUMBER行ごとに分割します（デフォルトは1000行）。
 
 ```console
 $ split -l 100 data.csv part_
@@ -30,7 +30,7 @@ part_aa  part_ab  part_ac  part_ad
 
 ### **-d, --numeric-suffixes[=FROM]**
 
-アルファベットの接尾辞ではなく、数値の接尾辞を使用します。FROMから開始します（デフォルトは0）。
+アルファベットの代わりに数字の接尾辞を使用し、FROM（デフォルトは0）から始めます。
 
 ```console
 $ split -d -l 100 data.txt section_
@@ -45,7 +45,7 @@ section_00  section_01  section_02
 ```console
 $ split -a 3 -l 100 data.txt part_
 $ ls part_*
-part_aaa  part_aab  part_aac  part_aad
+part_aaa  part_aab  part_aac
 ```
 
 ### **--additional-suffix=SUFFIX**
@@ -70,69 +70,68 @@ chunk_aa  chunk_ab  chunk_ac
 
 ## 使用例
 
-### 大きなログファイルをサイズで分割する
+### 大きなログファイルを行数で分割する
 
 ```console
-$ split -b 10M large_log.log log_chunk_
-$ ls -lh log_chunk_*
--rw-r--r-- 1 user group 10M May 4 10:15 log_chunk_aa
--rw-r--r-- 1 user group 10M May 4 10:15 log_chunk_ab
--rw-r--r-- 1 user group 5.2M May 4 10:15 log_chunk_ac
+$ split -l 1000 server.log server_log_
+$ ls server_log_*
+server_log_aa  server_log_ab  server_log_ac  server_log_ad
 ```
 
-### CSVファイルを行数で分割し、番号付き出力にする
+### 大きなファイルを等サイズのチャンクに分割する
 
 ```console
-$ split -d -l 1000 --additional-suffix=.csv large_dataset.csv dataset_
-$ ls dataset_*
-dataset_00.csv  dataset_01.csv  dataset_02.csv
+$ split -n 5 backup.tar.gz backup_part_
+$ ls backup_part_*
+backup_part_aa  backup_part_ab  backup_part_ac  backup_part_ad  backup_part_ae
 ```
 
-### ファイルを等分に分割する
+### 特定のバイトサイズで数字の接尾辞を使って分割する
 
 ```console
-$ split -n l/4 bigfile.txt equal_part_
-$ ls -lh equal_part_*
--rw-r--r-- 1 user group 2.5M May 4 10:20 equal_part_aa
--rw-r--r-- 1 user group 2.5M May 4 10:20 equal_part_ab
--rw-r--r-- 1 user group 2.5M May 4 10:20 equal_part_ac
--rw-r--r-- 1 user group 2.5M May 4 10:20 equal_part_ad
+$ split -b 10M -d large_video.mp4 video_
+$ ls video_*
+video_00  video_01  video_02  video_03
 ```
 
-## ヒント:
+## ヒント
 
 ### 分割ファイルの再結合
 
-`split`コマンドで分割したファイルを再結合するには、`cat`コマンドを正しい順序でファイルに使用します：
+分割したファイルを再結合するには、正しい順序でファイルを指定して `cat` コマンドを使用します：
 ```console
 $ cat chunk_* > original_file_restored
 ```
 
-### 適切な分割サイズの選択
+### ファイル拡張子の保持
 
-転送用（メール添付ファイルなど）にファイルを分割する場合は、宛先のサイズ制限を考慮してください。例えば、10MB未満である必要があるファイルには`-b 10M`を使用します。
-
-### 圧縮との併用
-
-より効率的にするために、圧縮後に分割します：
+拡張子のあるファイルを分割する場合、`--additional-suffix` を使用して識別しやすいように拡張子を維持します：
 ```console
-$ gzip -c largefile > largefile.gz
-$ split -b 10M largefile.gz largefile.gz.part_
+$ split -b 5M --additional-suffix=.mp4 video.mp4 video_part_
+```
+
+### ヘッダー付きCSVファイルの分割
+
+CSVファイルを分割する場合、各ファイルにヘッダーを保持したい場合があります：
+```console
+$ head -1 data.csv > header
+$ tail -n +2 data.csv | split -l 1000 - part_
+$ for f in part_*; do cat header "$f" > "${f}.csv"; rm "$f"; done
 ```
 
 ## よくある質問
 
-#### Q1. ファイルを等サイズのチャンクに分割するにはどうすればよいですか？
-A. `split -n l/N filename`を使用します。Nは希望する等分の数です。
+#### Q1. ファイルを等サイズの部分に分割するにはどうすればよいですか？
+A. `split -n NUMBER filename prefix` を使用します。NUMBERは必要な部分の数です。
 
-#### Q2. ファイルを分割して元のファイル拡張子を維持するにはどうすればよいですか？
-A. `--additional-suffix`オプションを使用します：`split -l 1000 file.csv part_ --additional-suffix=.csv`
+#### Q2. ファイルをサイズで分割するにはどうすればよいですか？
+A. `split -b SIZE filename prefix` を使用します。SIZEはバイト、KB (k)、MB (m)、GB (g) で指定できます。
 
-#### Q3. `-b`と`-n`の違いは何ですか？
-A. `-b`は正確なバイトサイズで分割しますが、`-n`は特定の数のチャンクに分割し、サイズが異なる可能性があります。
+#### Q3. 分割したファイルを元に戻すにはどうすればよいですか？
+A. `cat prefix* > original_filename` を使用して、すべての分割部分を順番に連結します。
 
-#### Q4. 実際にファイルを分割せずに、splitが何をするかをプレビューできますか？
-A. いいえ、`split`にはプレビューやドライランオプションはありません。分割を計画するために、まず`wc -l`を使用して行数を数えることができます。
+#### Q4. アルファベットの代わりに数字の接尾辞を使用できますか？
+A. はい、`-d` オプションを使用すると、アルファベットの代わりに数字の接尾辞（00、01、02など）を使用できます。
 
 ## 参考文献
 
@@ -140,4 +139,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/split-invocation.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

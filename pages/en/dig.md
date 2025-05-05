@@ -4,47 +4,33 @@ Query DNS name servers for domain information.
 
 ## Overview
 
-`dig` (Domain Information Groper) is a flexible DNS lookup utility that allows you to query DNS servers for information about domain names, IP addresses, mail exchanges, and other DNS records. It's commonly used for troubleshooting DNS issues, verifying DNS configurations, and testing DNS changes.
+`dig` (Domain Information Groper) is a flexible DNS lookup utility that queries DNS servers for information about host addresses, mail exchanges, nameservers, and related information. It's commonly used for troubleshooting DNS problems and verifying DNS records.
 
 ## Options
 
-### **-t, --type=TYPE**
-
-Specify the type of DNS record to query (e.g., A, MX, NS, ANY)
-
-```console
-$ dig -t MX google.com
-;; ANSWER SECTION:
-google.com.		300	IN	MX	10 smtp.google.com.
-```
-
-### **-x, --reverse**
-
-Perform a reverse DNS lookup (convert IP address to hostname)
-
-```console
-$ dig -x 8.8.8.8
-;; ANSWER SECTION:
-8.8.8.8.in-addr.arpa.	7200	IN	PTR	dns.google.
-```
-
 ### **@server**
 
-Query a specific DNS server instead of the default
+Specify the DNS server to query
 
 ```console
-$ dig @1.1.1.1 example.com
-;; ANSWER SECTION:
-example.com.		86400	IN	A	93.184.216.34
+$ dig @8.8.8.8 example.com
+```
+
+### **-t**
+
+Specify the type of DNS record to query (default is A)
+
+```console
+$ dig -t MX gmail.com
 ```
 
 ### **+short**
 
-Display a terse answer (only the result, without headers and additional information)
+Display a terse answer, showing only the answer section's record data
 
 ```console
-$ dig +short google.com
-142.250.190.78
+$ dig +short example.com
+93.184.216.34
 ```
 
 ### **+noall, +answer**
@@ -52,86 +38,106 @@ $ dig +short google.com
 Control which sections of the response to display
 
 ```console
-$ dig +noall +answer google.com
-google.com.		300	IN	A	142.250.190.78
+$ dig +noall +answer example.com
+example.com.		86400	IN	A	93.184.216.34
+```
+
+### **-x**
+
+Perform a reverse DNS lookup (IP to hostname)
+
+```console
+$ dig -x 8.8.8.8
+```
+
+### **+trace**
+
+Trace the delegation path from the root name servers
+
+```console
+$ dig +trace example.com
 ```
 
 ## Usage Examples
 
-### Basic Domain Lookup
+### Looking up A records (default)
 
 ```console
 $ dig example.com
+; <<>> DiG 9.16.1-Ubuntu <<>> example.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 31892
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65494
 ;; QUESTION SECTION:
 ;example.com.			IN	A
 
 ;; ANSWER SECTION:
 example.com.		86400	IN	A	93.184.216.34
+
+;; Query time: 28 msec
+;; SERVER: 127.0.0.53#53(127.0.0.53)
+;; WHEN: Mon May 05 12:00:00 UTC 2025
+;; MSG SIZE  rcvd: 56
 ```
 
-### Looking Up Multiple Record Types
+### Looking up MX records
+
+```console
+$ dig -t MX gmail.com +short
+10 alt1.gmail-smtp-in.l.google.com.
+20 alt2.gmail-smtp-in.l.google.com.
+30 alt3.gmail-smtp-in.l.google.com.
+40 alt4.gmail-smtp-in.l.google.com.
+5 gmail-smtp-in.l.google.com.
+```
+
+### Querying a specific nameserver
+
+```console
+$ dig @1.1.1.1 example.org
+```
+
+### Checking all DNS records for a domain
 
 ```console
 $ dig example.com ANY
-;; ANSWER SECTION:
-example.com.		86400	IN	A	93.184.216.34
-example.com.		86400	IN	NS	a.iana-servers.net.
-example.com.		86400	IN	NS	b.iana-servers.net.
-example.com.		86400	IN	SOA	ns.icann.org. noc.dns.icann.org. 2023080794 7200 3600 1209600 3600
 ```
 
-### Tracing the DNS Resolution Path
+## Tips:
 
-```console
-$ dig +trace example.com
-;; Received 13 bytes from 192.168.1.1#53 in 10 ms
+### Use +short for Quick Results
 
-. 			518400	IN	NS	a.root-servers.net.
-...
-;; Received 811 bytes from 192.5.6.30#53 in 40 ms
+When you just need the IP address or record value without all the extra information, use `dig +short domain.com` to get a clean, minimal output.
 
-com. 			172800	IN	NS	a.gtld-servers.net.
-...
-;; Received 1173 bytes from 192.41.162.30#53 in 160 ms
+### Combine Multiple Options
 
-example.com.		86400	IN	NS	a.iana-servers.net.
-...
-;; Received 97 bytes from 199.43.135.53#53 in 100 ms
-
-example.com.		86400	IN	A	93.184.216.34
-```
-
-## Tips
-
-### Use +nocomments for Cleaner Output
-
-The `+nocomments` option removes comment lines from the output, making it easier to read when you only need the essential information.
+You can combine multiple options like `dig +noall +answer +authority example.com` to show only specific sections of the DNS response.
 
 ### Check DNS Propagation
 
-When you've made DNS changes, use `dig @server domain.com` with different DNS servers to check if your changes have propagated.
+To check if DNS changes have propagated, query multiple DNS servers: `dig @8.8.8.8 example.com` and `dig @1.1.1.1 example.com` to compare results.
 
-### Specify Multiple Queries in One Command
+### Troubleshoot Email Delivery
 
-You can query multiple domains or record types in a single command: `dig example.com mx google.com a`.
-
-### Use +stats for Performance Analysis
-
-The `+stats` option shows query statistics including how long the query took, which is useful for diagnosing slow DNS resolution.
+Use `dig -t MX domain.com` to verify mail exchanger records when troubleshooting email delivery issues.
 
 ## Frequently Asked Questions
 
-#### Q1. How is `dig` different from `nslookup`?
-A. `dig` provides more detailed information and has more options for DNS queries. It's generally preferred by network administrators for its comprehensive output and flexibility.
+#### Q1. What's the difference between dig and nslookup?
+A. `dig` provides more detailed information and is more flexible for DNS troubleshooting, while `nslookup` is simpler but less powerful. `dig` is generally preferred by network administrators.
 
 #### Q2. How do I check if my DNS changes have propagated?
-A. Use `dig @different-dns-servers your-domain.com` to query multiple DNS servers and compare the results.
+A. Query multiple DNS servers using `dig @server domain.com` and compare the results. If they match your expected values, propagation is complete.
 
-#### Q3. How can I find the authoritative name servers for a domain?
-A. Use `dig NS domain.com` to find the name servers responsible for a domain.
+#### Q3. How can I find the authoritative nameservers for a domain?
+A. Use `dig -t NS domain.com` to find the nameservers responsible for a domain.
 
-#### Q4. How do I check the TTL (Time To Live) for a DNS record?
-A. The TTL is shown in the standard output of `dig`. It's the number (in seconds) before the first IN in the answer section.
+#### Q4. How do I perform a reverse DNS lookup?
+A. Use `dig -x IP_ADDRESS` to find the hostname associated with an IP address.
 
 ## References
 
@@ -139,4 +145,4 @@ https://linux.die.net/man/1/dig
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

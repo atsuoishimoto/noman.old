@@ -4,145 +4,149 @@ Display information about active processes.
 
 ## Overview
 
-The `ps` command shows a snapshot of currently running processes on your system. It provides details about process IDs (PIDs), CPU usage, memory consumption, and other process-related information. The command is highly customizable with numerous options to filter and format the output according to your needs.
+The `ps` command shows a snapshot of current processes running on the system. It provides details about process IDs (PIDs), CPU usage, memory consumption, and other process-related information. By default, `ps` shows only processes owned by the current user and associated with the current terminal.
 
 ## Options
 
-### **-e, --everyone**
+### **-e**
 
-Display information about all processes (equivalent to -A)
+Display information about all processes (equivalent to -A).
 
 ```console
 $ ps -e
   PID TTY          TIME CMD
     1 ?        00:00:03 systemd
-    2 ?        00:00:00 kthreadd
-   11 ?        00:00:00 rcu_sched
-  950 ?        00:00:00 sshd
- 1050 ?        00:00:01 bash
- 1234 ?        00:00:00 ps
+  546 ?        00:00:00 systemd-journal
+  578 ?        00:00:00 systemd-udevd
+  933 ?        00:00:00 sshd
+ 1028 tty1     00:00:00 bash
+ 1892 tty1     00:00:00 ps
 ```
 
-### **-f, --forest**
+### **-f**
 
-Display process hierarchy in a tree-like format
+Display full-format listing, showing UID, PID, PPID, CPU usage, and more.
 
 ```console
-$ ps -ef
+$ ps -f
 UID        PID  PPID  C STIME TTY          TIME CMD
-root         1     0  0 May01 ?        00:00:03 /sbin/init
-root         2     0  0 May01 ?        00:00:00 [kthreadd]
-user      1050   950  0 May01 pts/0    00:00:01 bash
-user      1234  1050  0 10:15 pts/0    00:00:00 ps -ef
+user      1028  1027  0 10:30 tty1     00:00:00 bash
+user      1893  1028  0 10:35 tty1     00:00:00 ps -f
 ```
 
-### **-u, --user**
+### **-l**
 
-Display processes for a specific user
+Display long format with detailed information including priority, state codes, and memory usage.
 
 ```console
-$ ps -u username
+$ ps -l
+F S   UID   PID  PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000  1028  1027  0  80   0 -  2546 wait   tty1     00:00:00 bash
+0 R  1000  1894  1028  0  80   0 -  2715 -      tty1     00:00:00 ps
+```
+
+### **-u username**
+
+Display processes belonging to the specified user.
+
+```console
+$ ps -u john
   PID TTY          TIME CMD
- 1050 pts/0    00:00:01 bash
- 1234 pts/0    00:00:00 ps
- 1500 pts/1    00:00:03 vim
+ 1028 tty1     00:00:00 bash
+ 1895 tty1     00:00:00 ps
+ 2156 ?        00:00:01 firefox
 ```
 
-### **-a, --all**
+### **-aux**
 
-Show processes of all users except session leaders and processes not associated with a terminal
-
-```console
-$ ps -a
-  PID TTY          TIME CMD
- 1234 pts/0    00:00:00 ps
- 1500 pts/1    00:00:03 vim
-```
-
-### **-x, --all**
-
-Include processes without controlling terminals
+Display detailed information about all processes (BSD style).
 
 ```console
-$ ps -ax
-  PID TTY      STAT   TIME COMMAND
-    1 ?        Ss     0:03 /sbin/init
-    2 ?        S      0:00 [kthreadd]
- 1050 pts/0    Ss     0:01 bash
- 1234 pts/0    R+     0:00 ps -ax
+$ ps aux
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.1 168940  9128 ?        Ss   May04   0:03 /sbin/init
+root       546  0.0  0.1  55492  8456 ?        Ss   May04   0:00 /lib/systemd/systemd-journald
+user      1028  0.0  0.0  21712  5312 tty1     Ss   10:30   0:00 bash
+user      1896  0.0  0.0  37364  3328 tty1     R+   10:36   0:00 ps aux
 ```
 
 ## Usage Examples
 
-### Displaying processes with full details
+### Finding processes by name
 
 ```console
 $ ps -ef | grep firefox
-user      2345  1050  2 10:20 ?        00:00:45 /usr/lib/firefox/firefox
-user      2346  2345  0 10:20 ?        00:00:02 /usr/lib/firefox/firefox-bin
+user      2156  1028  2 10:15 ?        00:01:23 /usr/lib/firefox/firefox
+user      1897  1028  0 10:36 tty1     00:00:00 grep --color=auto firefox
 ```
 
-### Showing processes sorted by memory usage
+### Displaying process tree
+
+```console
+$ ps -ejH
+  PID  PGID   SID TTY          TIME CMD
+    1     1     1 ?        00:00:03 systemd
+  546   546   546 ?        00:00:00   systemd-journal
+  578   578   578 ?        00:00:00   systemd-udevd
+  933   933   933 ?        00:00:00   sshd
+ 1027  1027  1027 tty1     00:00:00   login
+ 1028  1028  1028 tty1     00:00:00     bash
+ 1898  1898  1028 tty1     00:00:00       ps
+```
+
+### Sorting processes by memory usage
 
 ```console
 $ ps aux --sort=-%mem
 USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-user      2345  2.0  5.4 1254208 220800 ?      Sl   10:20   0:45 /usr/lib/firefox/firefox
-mysql     1234  1.2  3.2  987654 130400 ?      Ssl  May01   2:34 /usr/sbin/mysqld
+user      2156  2.0  8.5 1854036 348216 ?      Sl   10:15   1:23 /usr/lib/firefox/firefox
+user      2201  0.5  2.3 1123460 95684 ?       Sl   10:18   0:15 /usr/lib/thunderbird/thunderbird
+root       546  0.0  0.1  55492  8456 ?        Ss   May04   0:00 /lib/systemd/systemd-journald
 ```
 
-### Displaying process tree for a specific user
+## Tips:
+
+### Customize Output Fields
+
+Use the `-o` option to specify which fields to display:
 
 ```console
-$ ps -f --forest -u username
-UID        PID  PPID  C STIME TTY          TIME CMD
-user      1050   950  0 May01 pts/0    00:00:01 bash
-user      2345  1050  2 10:20 ?        00:00:45  \_ firefox
-user      2346  2345  0 10:20 ?        00:00:02      \_ firefox-bin
-user      1500  1050  0 10:15 pts/0    00:00:03  \_ vim document.txt
+$ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu
+  PID  PPID CMD                         %MEM %CPU
+ 2156  1028 /usr/lib/firefox/firefox     8.5  2.0
+ 2201  1028 /usr/lib/thunderbird/thun    2.3  0.5
+    1     0 /sbin/init                   0.1  0.0
 ```
 
-## Tips
+### Monitor Processes in Real-time
 
-### Customize Output Format
+Combine `ps` with `watch` to monitor processes in real-time:
 
-Use the `-o` option to specify exactly which columns you want to see:
 ```console
-$ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem
+$ watch -n 1 'ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head -10'
 ```
 
-### Find Resource-Intensive Processes
+### Find Parent-Child Process Relationships
 
-Combine `ps` with `sort` to identify processes consuming the most resources:
-```console
-$ ps aux | sort -nrk 3 | head -5  # Top 5 CPU-intensive processes
-```
-
-### Use with grep for Filtering
-
-Pipe `ps` output to `grep` to find specific processes:
-```console
-$ ps -ef | grep nginx
-```
-Remember to exclude the grep process itself with: `ps -ef | grep [n]ginx`
+Use `ps -f` to see the PPID (parent process ID) column, which helps understand process relationships.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I find the PID of a specific process?
-A. Use `ps -C process_name` or `ps -ef | grep process_name` to find the PID of a specific process.
+#### Q1. What's the difference between `ps aux` and `ps -ef`?
+A. Both show all processes, but `ps aux` is BSD-style output while `ps -ef` is UNIX-style output. `ps aux` shows %CPU and %MEM usage, while `ps -ef` shows PPID (parent process ID).
 
-#### Q2. How can I see all processes including those without a terminal?
-A. Use `ps aux` or `ps -ef` to see all processes on the system.
+#### Q2. How do I find processes consuming the most CPU?
+A. Use `ps aux --sort=-%cpu` to sort processes by CPU usage in descending order.
 
-#### Q3. How do I monitor processes in real-time?
-A. While `ps` provides a snapshot, use `top` or `htop` for real-time monitoring of processes.
+#### Q3. How do I find processes consuming the most memory?
+A. Use `ps aux --sort=-%mem` to sort processes by memory usage in descending order.
 
-#### Q4. What's the difference between ps aux and ps -ef?
-A. Both show all processes, but `ps aux` uses BSD syntax and includes %CPU and %MEM columns, while `ps -ef` uses UNIX syntax and shows PPID (parent process ID).
+#### Q4. How can I see only processes for a specific user?
+A. Use `ps -u username` to display only processes owned by a specific user.
 
 ## macOS Considerations
 
-On macOS, the `ps` command has slightly different options than Linux. The BSD-style options (without dashes) are more commonly used. For example, `ps aux` works on macOS, but some GNU-specific options like `--forest` may not be available.
+On macOS, some BSD-style options differ from Linux. For example, `-e` is not available, but you can use `ps -A` to show all processes. Also, the memory reporting columns may show different values than on Linux systems.
 
 ## References
 
@@ -150,4 +154,4 @@ https://man7.org/linux/man-pages/man1/ps.1.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

@@ -4,31 +4,22 @@ Suspends execution for a specified amount of time.
 
 ## Overview
 
-The `sleep` command pauses the execution of a script or command line for a specified duration. It's commonly used in shell scripts to introduce delays between commands, wait for resources to become available, or create timed operations.
+The `sleep` command pauses execution for a specified time interval. It's commonly used in shell scripts to introduce delays between commands, wait for resources to become available, or implement simple timing mechanisms. The command accepts a numeric value followed by an optional suffix indicating the time unit.
 
 ## Options
 
-### **-s, --suffix=SUFFIX**
-
-Specifies the unit of time (s for seconds, m for minutes, h for hours, d for days).
-
-```console
-$ sleep 5s
-[pauses for 5 seconds]
-```
-
 ### **--help**
 
-Displays help information and exits.
+Display help information and exit.
 
 ```console
 $ sleep --help
 Usage: sleep NUMBER[SUFFIX]...
   or:  sleep OPTION
 Pause for NUMBER seconds.  SUFFIX may be 's' for seconds (the default),
-'m' for minutes, 'h' for hours or 'd' for days.  NUMBER may be an
-arbitrary floating point number.  Given two or more arguments, pause for
-the sum of their values.
+'m' for minutes, 'h' for hours or 'd' for days.  NUMBER need not be an
+integer.  Given two or more arguments, pause for the amount of time
+specified by the sum of their values.
 
       --help     display this help and exit
       --version  output version information and exit
@@ -36,12 +27,12 @@ the sum of their values.
 
 ### **--version**
 
-Outputs version information and exits.
+Output version information and exit.
 
 ```console
 $ sleep --version
-sleep (GNU coreutils) 9.0
-Copyright (C) 2022 Free Software Foundation, Inc.
+sleep (GNU coreutils) 8.32
+Copyright (C) 2020 Free Software Foundation, Inc.
 License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -51,41 +42,21 @@ Written by Jim Meyering and Paul Eggert.
 
 ## Usage Examples
 
-### Basic usage
+### Basic sleep for seconds
 
 ```console
 $ sleep 5
-[pauses for 5 seconds]
+# Command pauses for 5 seconds, then returns to prompt
 ```
 
-### Using different time units
+### Sleep with time units
 
 ```console
 $ sleep 1m
-[pauses for 1 minute]
-
-$ sleep 2h
-[pauses for 2 hours]
-
-$ sleep 1d
-[pauses for 1 day]
+# Command pauses for 1 minute
 ```
 
-### Using decimal values
-
-```console
-$ sleep 0.5
-[pauses for half a second]
-```
-
-### Combining multiple values
-
-```console
-$ sleep 1m 30s
-[pauses for 1 minute and 30 seconds]
-```
-
-### Using in a script
+### Using sleep in a script
 
 ```console
 $ echo "Starting task..."
@@ -95,55 +66,58 @@ $ echo "Task completed after 2 seconds"
 Task completed after 2 seconds
 ```
 
-## Tips
+### Multiple time values
 
-### Interrupt a Sleep Command
-
-You can interrupt a running sleep command by pressing Ctrl+C.
-
-### Background Sleep
-
-Run sleep in the background with `&` to continue using the terminal:
 ```console
-$ sleep 60 &
+$ sleep 1m 30s
+# Command pauses for 1 minute and 30 seconds
+```
+
+## Tips:
+
+### Available Time Units
+
+- `s`: seconds (default if no unit is specified)
+- `m`: minutes
+- `h`: hours
+- `d`: days
+
+### Decimal Values
+
+Sleep accepts decimal values for more precise timing:
+
+```console
+$ sleep 0.5
+# Pauses for half a second
+```
+
+### Combining with Other Commands
+
+Use sleep with the `&` operator to run it in the background while continuing with other tasks:
+
+```console
+$ sleep 10 & echo "This prints immediately"
 [1] 12345
+This prints immediately
 ```
 
-### Combine with Other Commands
+### Interrupting Sleep
 
-Use sleep with other commands to create timed operations:
-```console
-$ (sleep 5; echo "Message after 5 seconds") &
-```
-
-### Use in Loops
-
-Sleep is useful in loops to prevent excessive resource usage:
-```console
-$ for i in {1..5}; do echo "Iteration $i"; sleep 1; done
-Iteration 1
-Iteration 2
-Iteration 3
-Iteration 4
-Iteration 5
-```
+Press Ctrl+C to interrupt a sleep command that's running in the foreground.
 
 ## Frequently Asked Questions
 
-#### Q1. What happens if I don't specify a unit?
-A. If no unit is specified, sleep uses seconds as the default unit.
+#### Q1. Can I use sleep for milliseconds?
+A. The standard sleep command doesn't directly support milliseconds, but you can use decimal values like `sleep 0.001` for 1 millisecond on systems that support it.
 
-#### Q2. Can I use decimal values with sleep?
-A. Yes, sleep accepts decimal values like `0.5` for half a second.
+#### Q2. How do I combine different time units?
+A. You can provide multiple arguments to sleep: `sleep 1h 30m 45s` will sleep for 1 hour, 30 minutes, and 45 seconds.
 
-#### Q3. How do I make a script wait for a specific time?
-A. Use sleep with the appropriate time value, e.g., `sleep 10m` to wait for 10 minutes.
+#### Q3. Why does my script continue before sleep finishes?
+A. If you used `sleep 10 &`, the ampersand runs sleep in the background. Remove the `&` to make your script wait for sleep to complete.
 
-#### Q4. Can I combine different time units?
-A. Yes, you can provide multiple arguments that will be added together, e.g., `sleep 1h 30m` for 1.5 hours.
-
-#### Q5. Does sleep consume a lot of system resources?
-A. No, sleep is very lightweight and uses minimal CPU resources while waiting.
+#### Q4. Is sleep CPU-intensive?
+A. No, sleep is very efficient. It uses system timers and doesn't consume CPU resources while waiting.
 
 ## References
 
@@ -151,4 +125,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/sleep-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

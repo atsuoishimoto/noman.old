@@ -1,16 +1,25 @@
 # sudo コマンド
 
-別のユーザー（通常は管理者権限を持つユーザー）として、コマンドを実行します。
+別のユーザー（通常は特権を持つユーザー）としてコマンドを実行します。
 
 ## 概要
 
-`sudo`（superuser do）は、認可されたユーザーが別のユーザー（デフォルトではスーパーユーザー/root）のセキュリティ権限でコマンドを実行できるようにします。これにより、rootユーザーとしてログインせずに管理タスクを実行でき、特権アクセスを制限することでシステムセキュリティを向上させます。
+`sudo`（superuser do）は、デフォルトではスーパーユーザー（root）として、別のユーザーのセキュリティ特権でプログラムを実行することをユーザーに許可します。rootパスワードを共有せずに、`/etc/sudoers`ファイルにリストされているユーザーに限定的なroot権限を付与する方法を提供します。
 
 ## オプション
 
-### **-u, --user=USER**
+### **-b, --background**
 
-デフォルトのターゲットユーザー（root）以外のユーザーとしてコマンドを実行します
+コマンドをバックグラウンドで実行します。
+
+```console
+$ sudo -b apt update
+[1] 12345
+```
+
+### **-u, --user**
+
+デフォルトのターゲットユーザー（root）以外のユーザーとしてコマンドを実行します。
 
 ```console
 $ sudo -u postgres psql
@@ -20,27 +29,45 @@ Type "help" for help.
 postgres=#
 ```
 
-### **-i, --login**
-
-ターゲットユーザーとしてログインシェルを実行します。完全なログインをシミュレートします
-
-```console
-$ sudo -i
-[root@hostname ~]#
-```
-
 ### **-s, --shell**
 
-ターゲットユーザーのパスワードデータベースエントリで指定されたシェルを実行します
+ユーザーのパスワードデータベースエントリで指定されたシェルをログインシェルとして実行します。
 
 ```console
 $ sudo -s
-root@hostname:/home/user#
+root@hostname:~#
+```
+
+### **-i, --login**
+
+ターゲットユーザーのパスワードデータベースエントリで指定されたシェルをログインシェルとして実行します。
+
+```console
+$ sudo -i
+root@hostname:~#
+```
+
+### **-k, --reset-timestamp**
+
+ユーザーのキャッシュされた認証情報を無効にします。
+
+```console
+$ sudo -k
+[sudo] password for user:
+```
+
+### **-v, --validate**
+
+ユーザーのキャッシュされた認証情報を更新し、タイムアウトを延長します。
+
+```console
+$ sudo -v
+[sudo] password for user:
 ```
 
 ### **-l, --list**
 
-呼び出しユーザーに許可された（および禁止された）コマンドを一覧表示します
+現在のユーザーに許可された（および禁止された）コマンドを一覧表示します。
 
 ```console
 $ sudo -l
@@ -48,32 +75,15 @@ User user may run the following commands on hostname:
     (ALL : ALL) ALL
 ```
 
-### **-v, --validate**
-
-ユーザーのキャッシュされた認証情報を更新し、sudoのタイムアウトを延長します
-
-```console
-$ sudo -v
-[sudo] password for user: 
-```
-
-### **-k, --reset-timestamp**
-
-ユーザーのキャッシュされた認証情報を無効にします
-
-```console
-$ sudo -k
-```
-
 ## 使用例
 
-### root権限でコマンドを実行する
+### 特権を持ってソフトウェアをインストールする
 
 ```console
-$ sudo apt update
+$ sudo apt install nginx
 [sudo] password for user: 
-Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
-Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
+Reading package lists... Done
+Building dependency tree... Done
 ...
 ```
 
@@ -87,52 +97,58 @@ $ sudo nano /etc/hosts
 ### 別のユーザーとしてコマンドを実行する
 
 ```console
-$ sudo -u www-data ls -la /var/www/html
-total 16
-drwxr-xr-x 2 www-data www-data 4096 May  4 10:15 .
-drwxr-xr-x 3 root     root     4096 May  4 10:14 ..
--rw-r--r-- 1 www-data www-data  612 May  4 10:15 index.html
+$ sudo -u www-data php /var/www/html/script.php
+[sudo] password for user:
+Script output...
+```
+
+### rootシェルを取得する
+
+```console
+$ sudo -i
+[sudo] password for user:
+root@hostname:~#
 ```
 
 ## ヒント:
 
-### `sudo !!` を使用して前のコマンドをsudoで繰り返す
+### `sudo !!`を使用して前のコマンドをsudoで繰り返す
 
-sudoが必要なコマンドを実行する際にsudoを付け忘れた場合、`sudo !!`と入力すると、前のコマンドをsudo権限で繰り返すことができます。
+sudoが必要なコマンドでsudoを使用し忘れた場合は、`sudo !!`と入力して前のコマンドをsudo特権で繰り返すことができます。
 
-### 特定のコマンドに対してパスワードなしでsudoを設定する
+### パスワードなしでsudoを設定する
 
-`sudo visudo`でsudoersファイルを編集し、特定のコマンドをパスワードプロンプトなしで実行できるようにします。例：
-```
-username ALL=(ALL) NOPASSWD: /usr/bin/apt update
-```
+`sudo visudo`でsudoersファイルを編集し、`username ALL=(ALL) NOPASSWD: ALL`のような行を追加すると、ユーザーはパスワードを入力せずにsudoコマンドを実行できます。
 
 ### `sudo -E`を使用して環境変数を保持する
 
-sudoでコマンドを実行する際に現在の環境変数を保持する必要がある場合は、`-E`オプションを使用します。
+sudoでコマンドを実行する必要があるが、現在の環境変数を保持したい場合は、`-E`フラグを使用します。
 
-### sudoersファイルの編集には常に`visudo`を使用する
+### セキュリティの影響を理解する
 
-`/etc/sudoers`を直接編集しないでください。常に`sudo visudo`を使用してください。これは保存前に構文エラーをチェックし、sudo権限へのアクセスをロックしてしまうことを防ぎます。
+信頼できるユーザーにのみsudoアクセスを許可し、実行を許可するコマンドには注意してください。無制限のsudoアクセスを持つユーザーは、実質的にシステムを完全に制御できます。
 
 ## よくある質問
 
-#### Q1. `sudo -i`と`sudo -s`の違いは何ですか？
-A. `sudo -i`は完全なログインをシミュレートし、ターゲットユーザーのホームディレクトリに移動して環境を設定します。`sudo -s`はターゲットユーザーとしてシェルを起動するだけで、現在の環境と作業ディレクトリを保持します。
+#### Q1. `sudo -s`と`sudo -i`の違いは何ですか？
+A. `sudo -s`はroot権限でシェルを起動しますが、現在の環境を維持します。`sudo -i`はrootとしての完全なログインをシミュレートし、rootの環境を使用します。
 
-#### Q2. sudo認証はどれくらいの期間有効ですか？
-A. デフォルトでは、sudoは認証情報を15分間キャッシュします。`sudo -v`で延長したり、`sudo -k`でリセットしたりできます。
+#### Q2. sudo認証はどれくらい持続しますか？
+A. デフォルトでは、sudoは認証情報を15分間キャッシュします。その後、再度パスワードを入力する必要があります。
 
-#### Q3. 複数のコマンドをsudoで実行するにはどうすればよいですか？
-A. `sudo sh -c "command1 && command2"`を使用するか、`sudo -i`でrootシェルを起動してからコマンドを実行します。
+#### Q3. sudo設定を安全に編集するにはどうすればよいですか？
+A. 常に`sudo visudo`を使用してsudoersファイルを編集してください。このコマンドは保存前に構文エラーをチェックし、自分自身をロックアウトすることを防ぎます。
 
-#### Q4. ユーザーをsudoersに追加するにはどうすればよいですか？
-A. Debian/Ubuntuでは`usermod -aG sudo username`でユーザーをsudoグループに追加します。RHEL/CentOSシステムではwheelグループに追加します。
+#### Q4. 他のユーザーがsudoで実行したコマンドを確認できますか？
+A. はい、sudoはすべてのコマンドをシステムログに記録します。通常は`/var/log/auth.log`または`/var/log/secure`に記録されます。
 
-## 参考資料
+#### Q5. パスワードの入力を求められずにrootとしてコマンドを実行するにはどうすればよいですか？
+A. 特定のコマンドまたはすべてのコマンドに対してNOPASSWDオプションでsudoersファイルを設定する必要があります。
+
+## 参考文献
 
 https://www.sudo.ws/docs/man/sudo.man/
 
-## Revisions
+## 改訂履歴
 
-- 2025/05/04 初回リビジョン
+- 2025/05/05 初版

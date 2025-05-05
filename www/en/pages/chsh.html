@@ -49,77 +49,75 @@
   <h1>chsh command</h1>
 <p>Change the login shell for a user.</p>
 <h2>Overview</h2>
-<p>The <code>chsh</code> command allows users to change their login shell - the command interpreter that starts when they log in. It modifies the user's entry in the password file to set which shell program runs when they log into the system. Regular users can only change their own shell, while the superuser (root) can change any user's shell.</p>
+<p>The <code>chsh</code> command allows users to change their login shell - the command interpreter that starts when they log in. It modifies the user's entry in the password file to set which shell program runs when they log in to the system.</p>
 <h2>Options</h2>
-<h3><strong>-s, --shell SHELL</strong></h3>
-<p>Specify the login shell to use. The shell must be listed in the /etc/shells file, unless you're the superuser.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chsh<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/bin/bash
+<h3><strong>-s, --shell</strong></h3>
+<p>Specify the login shell to use. The shell must be listed in the /etc/shells file, unless the invoking user is the superuser.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chsh<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/bin/zsh
 <span style="color: #000; font-style: italic">Password: </span>
 <span style="color: #000; font-style: italic">Shell changed.</span>
 </pre></div>
 <h3><strong>-l, --list-shells</strong></h3>
-<p>Print the list of shells listed in /etc/shells and exit.</p>
+<p>Display the list of shells listed in the /etc/shells file.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chsh<span style="color: #F8F8F8"> </span>-l
 <span style="color: #000; font-style: italic">/bin/sh</span>
 <span style="color: #000; font-style: italic">/bin/bash</span>
-<span style="color: #000; font-style: italic">/bin/rbash</span>
-<span style="color: #000; font-style: italic">/bin/dash</span>
 <span style="color: #000; font-style: italic">/bin/zsh</span>
-<span style="color: #000; font-style: italic">/usr/bin/zsh</span>
-<span style="color: #000; font-style: italic">/usr/bin/fish</span>
+<span style="color: #000; font-style: italic">/bin/fish</span>
 </pre></div>
 <h3><strong>-h, --help</strong></h3>
-<p>Display help message and exit.</p>
+<p>Display help information and exit.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chsh<span style="color: #F8F8F8"> </span>--help
 <span style="color: #000; font-style: italic">Usage: chsh [options] [LOGIN]</span>
 
 <span style="color: #000; font-style: italic">Options:</span>
-<span style="color: #000; font-style: italic">  -h, --help                    display this help message and exit</span>
-<span style="color: #000; font-style: italic">  -s, --shell SHELL             specify login shell</span>
-<span style="color: #000; font-style: italic">  -l, --list-shells             print list of shells and exit</span>
-
-<span style="color: #000; font-style: italic">For more details see chsh(1).</span>
+<span style="color: #000; font-style: italic">  -s, --shell SHELL         specify login shell</span>
+<span style="color: #000; font-style: italic">  -l, --list-shells         list shells and exit</span>
+<span style="color: #000; font-style: italic">  -h, --help                display this help and exit</span>
+<span style="color: #000; font-style: italic">  -v, --version             display version information and exit</span>
+</pre></div>
+<h3><strong>-v, --version</strong></h3>
+<p>Display version information and exit.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chsh<span style="color: #F8F8F8"> </span>--version
+<span style="color: #000; font-style: italic">chsh from util-linux 2.38.1</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Changing your shell to zsh</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chsh<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/usr/bin/zsh
+<h3>Changing your own shell</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chsh<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/bin/zsh
 <span style="color: #000; font-style: italic">Password: </span>
 <span style="color: #000; font-style: italic">Shell changed.</span>
 </pre></div>
+<h3>Viewing your current shell</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;^</span><span style="color: #204A87; font-weight: bold">$(</span>whoami<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">:&quot;</span><span style="color: #F8F8F8"> </span>/etc/passwd
+<span style="color: #000; font-style: italic">username:x:1000:1000:User Name:/home/username:/bin/zsh</span>
+</pre></div>
 <h3>Changing another user's shell (requires root privileges)</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>chsh<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/bin/bash<span style="color: #F8F8F8"> </span>username
-<span style="color: #000; font-style: italic">[sudo] password for current_user: </span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>chsh<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>/bin/bash<span style="color: #F8F8F8"> </span>otheruser
 <span style="color: #000; font-style: italic">Shell changed.</span>
 </pre></div>
-<h3>Checking your current shell</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$SHELL</span>
-<span style="color: #000; font-style: italic">/bin/bash</span>
-</pre></div>
-<h2>Tips</h2>
-<h3>Verify Available Shells First</h3>
-<p>Always use <code>chsh -l</code> to check which shells are available on your system before changing your shell. Only shells listed in <code>/etc/shells</code> can be set as login shells (unless you're root).</p>
-<h3>Shell Change Takes Effect on Next Login</h3>
-<p>The shell change doesn't take effect until you log out and log back in. Your current terminal session will continue using the previous shell.</p>
-<h3>Avoid Setting Incompatible Shells</h3>
-<p>Be careful not to set a shell that doesn't exist on your system or that you're not familiar with. If you set an invalid shell, you might have trouble logging in.</p>
-<h3>Backup Your Configuration</h3>
-<p>Before changing shells, back up any shell-specific configuration files (like <code>.bashrc</code> or <code>.zshrc</code>) so you can restore your settings if needed.</p>
+<h2>Tips:</h2>
+<h3>Check Available Shells First</h3>
+<p>Always use <code>chsh -l</code> or check <code>/etc/shells</code> to see what shells are available on your system before changing your shell.</p>
+<h3>Logout Required</h3>
+<p>Changes to your login shell won't take effect until you log out and log back in.</p>
+<h3>Shell Must Be in /etc/shells</h3>
+<p>The shell you choose must be listed in the <code>/etc/shells</code> file, unless you're the superuser. This is a security measure to prevent users from setting arbitrary programs as their login shell.</p>
+<h3>Reverting Changes</h3>
+<p>If you change to a shell that doesn't work for you, you can always change back using the same command with your previous shell.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How do I know which shell I'm currently using?</h4>
-<p>A. Run <code>echo $SHELL</code> to see your current login shell. Note that this shows your configured login shell, not necessarily the shell of your current session.</p>
-<h4>Q2. Can I use any program as my shell?</h4>
-<p>A. No, for security reasons, you can only use shells listed in the <code>/etc/shells</code> file (unless you're the superuser).</p>
-<h4>Q3. How do I add a new shell to the available options?</h4>
-<p>A. Install the shell package, then add its path to <code>/etc/shells</code> (requires root privileges).</p>
+<h4>Q1. What is the difference between login shell and current shell?</h4>
+<p>A. The login shell is the shell that starts when you log in to the system. The current shell is the shell you're currently using, which might be different if you've started another shell from your login shell.</p>
+<h4>Q2. How do I know what my current shell is?</h4>
+<p>A. Run <code>echo $SHELL</code> to see your login shell, or <code>ps -p $$</code> to see what shell you're currently using.</p>
+<h4>Q3. Can I use any program as my shell?</h4>
+<p>A. No, for security reasons, regular users can only use shells listed in <code>/etc/shells</code>. Only the superuser can set arbitrary programs as shells.</p>
 <h4>Q4. What happens if I set an invalid shell?</h4>
-<p>A. If you set a shell that doesn't exist or isn't executable, you might be unable to log in through normal means. You'd need to fix this from a recovery mode or have an administrator change it back.</p>
-<h4>Q5. Do I need to restart my computer after changing my shell?</h4>
-<p>A. No, you only need to log out and log back in for the change to take effect.</p>
+<p>A. If you set a shell that doesn't exist or doesn't work properly, you might be unable to log in normally. In such cases, you would need to use recovery methods or ask a system administrator to fix it.</p>
 <h2>References</h2>
 <p>https://man7.org/linux/man-pages/man1/chsh.1.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

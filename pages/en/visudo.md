@@ -4,13 +4,13 @@ Edit the sudoers file safely with syntax checking.
 
 ## Overview
 
-`visudo` is a command-line utility that provides a safe way to edit the `/etc/sudoers` file, which controls sudo access permissions. It locks the sudoers file to prevent multiple simultaneous edits, performs syntax checking before saving changes, and helps prevent configuration errors that could lock users out of the system.
+`visudo` is a command-line utility that provides a safe way to edit the sudoers configuration file, which controls sudo access permissions. It locks the sudoers file during editing, performs syntax checking before saving changes, and prevents multiple simultaneous edits that could corrupt the file.
 
 ## Options
 
-### **-c, --check**
+### **-c**
 
-Check the sudoers file for syntax errors only, without making any changes.
+Check the sudoers file for syntax errors without making any changes.
 
 ```console
 $ sudo visudo -c
@@ -18,31 +18,37 @@ $ sudo visudo -c
 /etc/sudoers.d/custom: parsed OK
 ```
 
-### **-f, --file=file**
+### **-f file**
 
-Specify an alternate sudoers file location instead of the default `/etc/sudoers`.
+Specify an alternate sudoers file location to edit instead of the default.
 
 ```console
 $ sudo visudo -f /etc/sudoers.d/custom
 ```
 
-### **-q, --quiet**
+### **-s**
 
-Enable quiet mode, which suppresses most warning messages.
+Enable strict checking of the sudoers file. With this option, visudo will reject sudoers files that contain unknown defaults or aliases.
 
 ```console
-$ sudo visudo -q -c
+$ sudo visudo -s
 ```
 
-### **-s, --strict**
+### **-q**
 
-Enable strict checking of the sudoers file. Will cause visudo to exit with an error if there are any parse errors.
+Enable quiet mode, suppressing the default informational messages.
 
 ```console
-$ sudo visudo -s -f /etc/sudoers.d/test
->>> /etc/sudoers.d/test: syntax error near line 2 <<<
-parse error in /etc/sudoers.d/test near line 2
-visudo: fatal error, exiting.
+$ sudo visudo -q
+```
+
+### **-V**
+
+Display version information and exit.
+
+```console
+$ sudo visudo -V
+visudo version 1.9.5p2
 ```
 
 ## Usage Examples
@@ -53,65 +59,58 @@ visudo: fatal error, exiting.
 $ sudo visudo
 ```
 
-This opens the default `/etc/sudoers` file in the editor specified by the EDITOR environment variable.
-
-### Editing a Custom Sudoers File
+### Checking Syntax of a Custom Sudoers File
 
 ```console
-$ sudo visudo -f /etc/sudoers.d/local
+$ sudo visudo -cf /etc/sudoers.d/myconfig
+/etc/sudoers.d/myconfig: parsed OK
 ```
 
-This opens a custom sudoers file located in the `/etc/sudoers.d` directory.
-
-### Checking Syntax Without Editing
+### Using a Different Editor
 
 ```console
-$ sudo visudo -c
-/etc/sudoers: parsed OK
-/etc/sudoers.d/custom: parsed OK
+$ sudo EDITOR=nano visudo
 ```
 
-## Tips
+## Tips:
 
-### Set Your Preferred Editor
+### Understanding Sudoers Syntax
 
-Before running visudo, you can set your preferred editor by setting the EDITOR or VISUAL environment variable:
+The sudoers file has a specific syntax. Common entries include:
+- `user ALL=(ALL) ALL` - Allows a user to run any command as any user
+- `%group ALL=(ALL) ALL` - Allows a group to run any command as any user
+- `user ALL=(ALL) NOPASSWD: ALL` - Allows a user to run commands without password
+
+### Create Custom Configuration Files
+
+Instead of editing the main sudoers file, create separate files in `/etc/sudoers.d/` directory. This makes configuration more modular and easier to manage.
 
 ```console
-$ export EDITOR=nano
-$ sudo visudo
+$ sudo visudo -f /etc/sudoers.d/custom_rules
 ```
 
-### Use Includes Instead of Direct Edits
+### Always Use visudo
 
-Instead of editing the main sudoers file, create separate files in `/etc/sudoers.d/` for custom configurations. This makes management easier and safer.
-
-```console
-$ sudo visudo -f /etc/sudoers.d/myusers
-```
-
-### Always Check Syntax Before Exiting
-
-When editing the sudoers file, always use visudo's built-in syntax checking before saving. If you make a syntax error, visudo will warn you and give you a chance to fix it before saving.
+Never edit the sudoers file directly with a text editor. Always use visudo to prevent syntax errors that could lock you out of sudo privileges.
 
 ## Frequently Asked Questions
 
-#### Q1. What happens if I edit the sudoers file directly without using visudo?
-A. Editing `/etc/sudoers` directly with a regular text editor is dangerous. If you introduce syntax errors, you might lose sudo access entirely, potentially locking yourself out of administrative functions.
+#### Q1. What happens if I make a syntax error in the sudoers file?
+A. visudo performs syntax checking before saving changes. If errors are found, it will warn you and give you options to re-edit the file, write it anyway, or abandon changes.
 
-#### Q2. How do I add a new user to sudoers?
-A. Run `sudo visudo` and add a line like `username ALL=(ALL:ALL) ALL` to grant full sudo privileges to a user.
+#### Q2. How do I change the default editor used by visudo?
+A. Set the EDITOR or VISUAL environment variable before running visudo: `EDITOR=nano sudo visudo`
 
-#### Q3. What's the difference between /etc/sudoers and files in /etc/sudoers.d/?
-A. The main `/etc/sudoers` file is the primary configuration file, while `/etc/sudoers.d/` is a directory for additional configuration files that are included in the main configuration. Using separate files in this directory is often cleaner and safer.
+#### Q3. Can I check a sudoers file without actually editing it?
+A. Yes, use `sudo visudo -c` to check the syntax of the current sudoers file, or `sudo visudo -cf /path/to/file` to check a specific file.
 
-#### Q4. How do I change the default editor used by visudo?
-A. Set the EDITOR or VISUAL environment variable before running visudo: `export EDITOR=nano`.
+#### Q4. What's the difference between editing /etc/sudoers directly and using visudo?
+A. visudo locks the sudoers file during editing, performs syntax validation, and prevents multiple simultaneous edits that could corrupt the file.
 
 ## References
 
-https://www.sudo.ws/docs/man/1.9.13/visudo.man/
+https://www.sudo.ws/docs/man/1.8.27/visudo.man/
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

@@ -8,22 +8,22 @@ Git is a distributed version control system that allows multiple developers to w
 
 ## Options
 
-### **-v, --version**
+### **--version**
 
-Display the version of Git installed
+Display the version of Git installed.
 
 ```console
 $ git --version
 git version 2.39.2
 ```
 
-### **-h, --help**
+### **--help**
 
-Display help information for Git or a specific Git command
+Display help information for Git or a specific Git command.
 
 ```console
 $ git --help
-usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]
+usage: git [--version] [--help] [-C <path>] [-c <name>=<value>]
            [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
            [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]
            [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
@@ -31,51 +31,49 @@ usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]
            <command> [<args>]
 ```
 
-### **-C, --work-tree=<path>**
+### **-C \<path\>**
 
-Run a command as if git was started in the specified path
+Run Git as if it was started in the specified path.
 
 ```console
-$ git -C /path/to/repository status
+$ git -C /path/to/repo status
 On branch main
 Your branch is up to date with 'origin/main'.
-
-nothing to commit, working tree clean
 ```
 
-### **-c, --config-env=<name>=<value>**
+### **-c \<name\>=\<value\>**
 
-Set a configuration variable for a single command
+Set a configuration variable for the duration of the command.
 
 ```console
-$ git -c user.name="Temporary User" commit -m "One-time commit with different user"
-[main 1a2b3c4] One-time commit with different user
- 1 file changed, 5 insertions(+)
+$ git -c user.name="Temporary User" commit -m "Temporary commit"
+[main 1a2b3c4] Temporary commit
+ 1 file changed, 2 insertions(+)
 ```
 
 ## Usage Examples
 
-### Initializing a new repository
+### Initializing a Repository
 
 ```console
 $ git init
 Initialized empty Git repository in /path/to/project/.git/
 ```
 
-### Cloning an existing repository
+### Cloning a Repository
 
 ```console
 $ git clone https://github.com/username/repository.git
 Cloning into 'repository'...
-remote: Enumerating objects: 1463, done.
-remote: Counting objects: 100% (1463/1463), done.
-remote: Compressing objects: 100% (750/750), done.
-remote: Total 1463 (delta 713), reused 1463 (delta 713), pack-reused 0
-Receiving objects: 100% (1463/1463), 2.56 MiB | 5.12 MiB/s, done.
-Resolving deltas: 100% (713/713), done.
+remote: Enumerating objects: 125, done.
+remote: Counting objects: 100% (125/125), done.
+remote: Compressing objects: 100% (80/80), done.
+remote: Total 125 (delta 40), reused 120 (delta 35), pack-reused 0
+Receiving objects: 100% (125/125), 2.01 MiB | 3.50 MiB/s, done.
+Resolving deltas: 100% (40/40), done.
 ```
 
-### Basic workflow example
+### Basic Workflow
 
 ```console
 $ git add file.txt
@@ -89,13 +87,12 @@ Counting objects: 100% (4/4), done.
 Delta compression using up to 8 threads
 Compressing objects: 100% (2/2), done.
 Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
-Total 3 (delta 1), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
 To https://github.com/username/repository.git
-   a1b2c3d..1a2b3c4  main -> main
+   7f8d922..1a2b3c4  main -> main
 ```
 
-### Checking repository status
+### Checking Status and History
 
 ```console
 $ git status
@@ -107,59 +104,82 @@ Changes not staged for commit:
   (use "git restore <file>..." to discard changes in working directory)
         modified:   README.md
 
-no changes added to commit (use "git add" and/or "git commit -a")
+$ git log
+commit 1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0 (HEAD -> main, origin/main)
+Author: User Name <user@example.com>
+Date:   Mon May 5 10:00:00 2025 -0700
+
+    Add new file
 ```
 
 ## Tips
 
-### Configure Your Identity
+### Use Aliases for Common Commands
 
-Set your name and email before making commits:
-
-```console
-$ git config --global user.name "Your Name"
-$ git config --global user.email "your.email@example.com"
-```
-
-### Create Aliases for Common Commands
-
-Save time by creating shortcuts for frequently used commands:
+Set up aliases for frequently used commands to save time:
 
 ```console
 $ git config --global alias.co checkout
 $ git config --global alias.br branch
+$ git config --global alias.ci commit
 $ git config --global alias.st status
 ```
 
-### Use .gitignore Files
+### Stash Changes Temporarily
 
-Create a `.gitignore` file in your repository to specify files that Git should ignore, such as build artifacts, temporary files, or sensitive information.
+When you need to switch branches but aren't ready to commit:
 
-### Commit Atomically
+```console
+$ git stash
+Saved working directory and index state WIP on main: 1a2b3c4 Latest commit
+$ git stash pop
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   file.txt
+```
 
-Make small, focused commits that address a single logical change rather than large commits that mix multiple unrelated changes.
+### Use Interactive Rebase for Cleaning History
+
+Combine, edit, or reorder commits before pushing:
+
+```console
+$ git rebase -i HEAD~3
+```
+
+### Create a .gitignore File
+
+Prevent unwanted files from being tracked:
+
+```console
+$ echo "node_modules/" > .gitignore
+$ echo "*.log" >> .gitignore
+$ git add .gitignore
+$ git commit -m "Add gitignore file"
+```
 
 ## Frequently Asked Questions
 
-#### Q1. How do I undo my last commit?
-A. Use `git reset HEAD~1` to undo the commit but keep the changes, or `git reset --hard HEAD~1` to discard the changes completely.
+#### Q1. How do I undo the last commit?
+A. Use `git reset HEAD~1` to undo the last commit but keep the changes, or `git reset --hard HEAD~1` to discard the changes completely.
 
 #### Q2. How do I create a new branch?
-A. Use `git branch branch-name` to create a branch, then `git checkout branch-name` to switch to it. Alternatively, use `git checkout -b branch-name` to create and switch in one command.
+A. Use `git branch branch-name` to create a branch and `git checkout branch-name` to switch to it, or use `git checkout -b branch-name` to do both in one command.
 
-#### Q3. How do I merge changes from one branch to another?
-A. First checkout the target branch with `git checkout target-branch`, then merge with `git merge source-branch`.
+#### Q3. How do I merge branches?
+A. First checkout the target branch with `git checkout main`, then use `git merge feature-branch` to merge changes from the feature branch.
 
 #### Q4. How do I resolve merge conflicts?
-A. When conflicts occur, edit the conflicted files to resolve the differences, then use `git add` to mark them as resolved, and finally `git commit` to complete the merge.
+A. When conflicts occur, edit the conflicted files to resolve the differences, then `git add` the resolved files and complete the merge with `git commit`.
 
-#### Q5. How do I update my local repository with changes from remote?
-A. Use `git pull` to fetch and merge changes, or `git fetch` followed by `git merge` for more control.
+#### Q5. How do I update my local repository with remote changes?
+A. Use `git pull` to fetch and merge remote changes, or `git fetch` followed by `git merge` for more control.
 
 ## References
 
-https://git-scm.com/docs/git
+https://git-scm.com/docs
 
 ## Revisions
 
-2025/05/04 First revision
+- 2025/05/05 First revision

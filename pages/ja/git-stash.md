@@ -1,80 +1,55 @@
-# git-stash コマンド
+# git stash コマンド
 
-作業ディレクトリの変更を一時的に保存して後で使用するためのコマンドです。
+変更を一時的に保存し、コミットせずに変更を保存するためのコマンドです。
 
 ## 概要
 
-`git stash`は、作業コピーに加えた変更を一時的に棚上げ（スタッシュ）して、別の作業に取り掛かり、後で再適用できるようにするコマンドです。スタッシュは、現在の作業をコミットする準備ができていないけれども、素早くコンテキストを切り替えて別の作業をする必要がある場合に便利です。
+`git stash`は、ローカルの変更を保存し、作業ディレクトリをHEADコミットと一致するように戻します。現在の作業をコミットする準備ができていないけれどブランチを切り替える必要がある場合や、未完成の作業をコミットせずに緊急の修正を適用する必要がある場合に便利です。
 
 ## オプション
 
-### **-u, --include-untracked**
+### **stash**
 
-未追跡ファイルもスタッシュに含めます。
+ローカルの変更を新しいスタッシュエントリに保存し、HEADに戻します
 
 ```console
-$ git stash -u
-Saved working directory and index state WIP on main: 2d4e15a Add feature X
+$ git stash
+Saved working directory and index state WIP on main: 2d4e15a Updated README
 ```
 
-### **-a, --all**
+### **save [メッセージ]**
 
-未追跡ファイルと無視されたファイルの両方をスタッシュに含めます。
-
-```console
-$ git stash -a
-Saved working directory and index state WIP on main: 2d4e15a Add feature X
-```
-
-### **-p, --patch**
-
-HEADと作業ツリーの差分から、スタッシュするハンクを対話的に選択します。
+カスタムメッセージを付けてローカルの変更を保存します
 
 ```console
-$ git stash -p
-diff --git a/file.txt b/file.txt
-index 1234567..abcdefg 100644
---- a/file.txt
-+++ b/file.txt
-@@ -1,4 +1,4 @@
--Old content
-+New content
-Stash this hunk [y,n,q,a,d,e,?]? y
-Saved working directory and index state WIP on main: 2d4e15a Add feature X
-```
-
-### **push [<message>]**
-
-ローカルの変更を新しいスタッシュエントリに保存し、HEADに戻します。
-
-```console
-$ git stash push -m "WIP: implementing feature Y"
-Saved working directory and index state On main: WIP: implementing feature Y
+$ git stash save "機能Xの作業中"
+Saved working directory and index state On main: 機能Xの作業中
 ```
 
 ### **list**
 
-スタックにあるすべてのスタッシュを一覧表示します。
+保存したすべてのスタッシュを一覧表示します
 
 ```console
 $ git stash list
-stash@{0}: WIP on main: 2d4e15a Add feature X
-stash@{1}: On main: WIP: implementing feature Y
+stash@{0}: WIP on main: 2d4e15a Updated README
+stash@{1}: On feature-branch: Implementing new login form
 ```
 
-### **show [<stash>]**
+### **show [stash]**
 
-スタッシュに記録された変更を差分として表示します。
+スタッシュに記録された変更を差分として表示します
 
 ```console
-$ git stash show stash@{0}
- file.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+$ git stash show
+ index.html | 2 +-
+ style.css  | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 ```
 
-### **pop [<stash>]**
+### **pop [stash]**
 
-スタッシュを適用し、スタックから削除します。
+スタッシュを適用し、スタッシュリストから削除します
 
 ```console
 $ git stash pop
@@ -82,137 +57,134 @@ On branch main
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
-        modified:   file.txt
-Dropped refs/stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)
+        modified:   index.html
+        modified:   style.css
+
+Dropped refs/stash@{0} (32b3aa1d185dfe6d57b3c3cc3e3f31b61a97ec2c)
 ```
 
-### **apply [<stash>]**
+### **apply [stash]**
 
-スタッシュをスタックから削除せずに適用します。
+スタッシュをスタッシュリストから削除せずに適用します
 
 ```console
-$ git stash apply stash@{1}
+$ git stash apply
 On branch main
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
-        modified:   file.txt
+        modified:   index.html
+        modified:   style.css
 ```
 
-### **drop [<stash>]**
+### **drop [stash]**
 
-スタックからスタッシュを削除します。
+スタッシュリストからスタッシュを削除します
 
 ```console
 $ git stash drop stash@{0}
-Dropped stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)
+Dropped stash@{0} (32b3aa1d185dfe6d57b3c3cc3e3f31b61a97ec2c)
 ```
 
 ### **clear**
 
-スタックからすべてのスタッシュを削除します。
+すべてのスタッシュエントリを削除します
 
 ```console
 $ git stash clear
 ```
 
-## 使用例
+### **-u, --include-untracked**
 
-### 基本的なスタッシュのワークフロー
+未追跡ファイルをスタッシュに含めます
 
 ```console
-$ git status
-On branch main
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-        modified:   file.txt
+$ git stash -u
+Saved working directory and index state WIP on main: 2d4e15a Updated README
+```
 
+### **-a, --all**
+
+未追跡ファイルと無視されたファイルの両方をスタッシュに含めます
+
+```console
+$ git stash -a
+Saved working directory and index state WIP on main: 2d4e15a Updated README
+```
+
+## 使用例
+
+### 更新をプルする前に変更をスタッシュする
+
+```console
 $ git stash
-Saved working directory and index state WIP on main: 2d4e15a Add feature X
-
-$ git status
-On branch main
-nothing to commit, working tree clean
-
-# 他の作業をした後、スタッシュした変更に戻る
+Saved working directory and index state WIP on main: 2d4e15a Updated README
+$ git pull
 $ git stash pop
-On branch main
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-        modified:   file.txt
-Dropped refs/stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)
 ```
 
 ### スタッシュからブランチを作成する
 
 ```console
+$ git stash
+Saved working directory and index state WIP on main: 2d4e15a Updated README
 $ git stash branch new-feature stash@{0}
 Switched to a new branch 'new-feature'
 On branch new-feature
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
-        modified:   file.txt
-Dropped refs/stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)
+        modified:   index.html
+        modified:   style.css
+Dropped refs/stash@{0} (32b3aa1d185dfe6d57b3c3cc3e3f31b61a97ec2c)
 ```
 
-## ヒント:
-
-### スタッシュに名前をつける
-
-後で識別しやすくするために、スタッシュに説明的なメッセージを使用しましょう：
+### 特定のファイルをスタッシュする
 
 ```console
-$ git stash push -m "認証機能のリファクタリング途中"
+$ git stash push -m "CSSファイルのみをスタッシュ" -- *.css
+Saved working directory and index state On main: CSSファイルのみをスタッシュ
 ```
 
-### 特定のファイルだけをスタッシュする
+## ヒント
 
-コマンドの後にファイルを指定することで、特定のファイルだけをスタッシュできます：
+### 説明的なメッセージを使用する
 
-```console
-$ git stash push file1.txt file2.txt
-```
+後でスタッシュを識別しやすくするために、常に`git stash save "メッセージ"`で説明的なメッセージを使用しましょう。
 
-### スタッシュの内容を詳細に表示する
+### スタッシュの内容を適用前に確認する
 
-スタッシュの内容をより詳細に表示するには：
-
-```console
-$ git stash show -p stash@{0}
-```
+`git stash show -p stash@{n}`を使用して、スタッシュを適用する前に完全な差分を確認しましょう。
 
 ### スタッシュからブランチを作成する
 
-スタッシュした変更を独自のブランチにすべきだと気づいた場合：
+スタッシュした変更を独自のブランチに含めるべきだと気づいた場合は、`git stash branch <ブランチ名> [stash]`を使用して、スタッシュした変更を適用した新しいブランチを作成できます。
 
-```console
-$ git stash branch new-feature-branch stash@{0}
-```
+### 部分的なスタッシュ
+
+`git stash -p`（または`--patch`）を使用して、スタッシュする変更を対話的に選択し、作業ディレクトリに一部の変更を残すことができます。
 
 ## よくある質問
 
-#### Q1. ブランチを切り替えると、スタッシュした変更はどうなりますか？
-A. スタッシュした変更はすべてのブランチで利用可能なままです。あるブランチで変更をスタッシュし、別のブランチで適用することができます。
+#### Q1. ブランチを切り替えるとスタッシュはどうなりますか？
+A. スタッシュはブランチとは別に保存され、どのブランチにいても引き続きアクセスできます。
 
-#### Q2. スタッシュを削除した後に復元することはできますか？
-A. はい、スタッシュのコミットハッシュ（削除時に表示される）がわかれば可能です。`git stash apply <commit-hash>`を使用して復元できますが、ガベージコレクタが実行されていない場合に限ります。
+#### Q2. スタッシュはどれくらい長く保持されますか？
+A. スタッシュは明示的に削除するか、スタッシュリストをクリアするまで無期限に保持されます。
 
-#### Q3. スタッシュはどれくらい長く保持されますか？
-A. スタッシュは、明示的に`git stash drop`や`git stash clear`で削除するか、ガベージコレクションされるまで（通常は長期間）無期限に保持されます。
+#### Q3. 削除したスタッシュを復元できますか？
+A. はい、スタッシュのコミットID（削除時に表示される）がわかっていれば、gitのreflogの有効期限内であれば`git stash apply <コミットID>`を使用して復元できます。
 
-#### Q4. `git stash pop`と`git stash apply`の違いは何ですか？
-A. `git stash pop`はスタッシュを適用した後、スタッシュリストから削除しますが、`git stash apply`はスタッシュを適用するだけで、将来の使用のためにリストに残します。
+#### Q4. 特定のファイルだけをスタッシュするにはどうすればよいですか？
+A. `git stash push [--] [<パス指定>...]`を使用して特定のファイルをスタッシュできます。例：`git stash push -- file1.txt file2.js`
 
-#### Q5. 未追跡ファイルをスタッシュできますか？
-A. デフォルトでは、`git stash`は変更のある追跡ファイルのみをスタッシュします。未追跡ファイルを含めるには`git stash -u`を、未追跡ファイルと無視されたファイルの両方を含めるには`git stash -a`を使用します。
+#### Q5. `pop`と`apply`の違いは何ですか？
+A. `pop`はスタッシュを適用してスタッシュリストから削除しますが、`apply`はスタッシュを適用するだけでスタッシュリストには残します。
 
-## 参考
+## 参考資料
 
 https://git-scm.com/docs/git-stash
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

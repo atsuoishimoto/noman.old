@@ -4,7 +4,7 @@ Search for patterns in files using regular expressions, with support for recursi
 
 ## Overview
 
-`rg` (ripgrep) is a line-oriented search tool that recursively searches the current directory for a regex pattern. It's designed to be faster than other search tools like grep, ag, or ack, while offering similar functionality with sensible defaults. By default, ripgrep respects gitignore rules and automatically skips hidden files/directories and binary files.
+`rg` (ripgrep) is a line-oriented search tool that recursively searches the current directory for a regex pattern. It respects gitignore rules by default and is designed to be faster than other search tools like grep, ag, or ack. Ripgrep automatically skips hidden files, binary files, and files listed in .gitignore unless explicitly told not to.
 
 ## Options
 
@@ -13,10 +13,9 @@ Search for patterns in files using regular expressions, with support for recursi
 Makes the search case insensitive.
 
 ```console
-$ rg -i error
-./log.txt:10:ERROR: Connection failed
-./log.txt:15:error: timeout occurred
-./app.js:42:console.log('error handling');
+$ rg -i "function"
+src/main.js:10:function calculateTotal(items) {
+src/utils.js:5:Function to handle API responses
 ```
 
 ### **-v, --invert-match**
@@ -24,10 +23,9 @@ $ rg -i error
 Show lines that don't match the given pattern.
 
 ```console
-$ rg -v error test.log
-./test.log:1:Starting application
-./test.log:2:Loading configuration
-./test.log:5:Application running
+$ rg -v "TODO" todo.txt
+These items are completed
+Remember to check email
 ```
 
 ### **-w, --word-regexp**
@@ -35,20 +33,19 @@ $ rg -v error test.log
 Only show matches surrounded by word boundaries.
 
 ```console
-$ rg -w log
-./app.js:42:console.log('error handling');
-./utils.js:15:function log(message) {
+$ rg -w "log"
+logger.js:15:  log("User logged in");
+logger.js:20:  log("Error occurred");
 ```
 
 ### **-c, --count**
 
-Only show the count of matching lines for each file.
+Only show the count of matching lines per file.
 
 ```console
-$ rg -c error logs/
-logs/app.log:15
-logs/system.log:3
-logs/debug.log:0
+$ rg -c "error" *.log
+app.log:15
+system.log:3
 ```
 
 ### **-l, --files-with-matches**
@@ -56,10 +53,19 @@ logs/debug.log:0
 Only show the paths with at least one match.
 
 ```console
-$ rg -l error
-logs/app.log
-logs/system.log
-src/error_handler.js
+$ rg -l "TODO"
+src/main.js
+docs/roadmap.md
+```
+
+### **-n, --line-number**
+
+Show line numbers (enabled by default).
+
+```console
+$ rg -n "function"
+src/main.js:10:function calculateTotal(items) {
+src/utils.js:15:function formatDate(date) {
 ```
 
 ### **--no-ignore**
@@ -67,9 +73,9 @@ src/error_handler.js
 Don't respect ignore files (.gitignore, .ignore, etc.).
 
 ```console
-$ rg --no-ignore password
-.git/config:3:password=secret123
-node_modules/test-lib/passwords.json:5:"default_password": "admin"
+$ rg --no-ignore "password"
+node_modules/config.js:5:  password: "dummy_password",
+.git/config:10:  password = hunter2
 ```
 
 ### **-A, --after-context NUM**
@@ -77,10 +83,10 @@ node_modules/test-lib/passwords.json:5:"default_password": "admin"
 Show NUM lines after each match.
 
 ```console
-$ rg -A 2 error app.log
-app.log:15:error: connection failed
-app.log:16:  at line 42 in network.js
-app.log:17:  attempted reconnect
+$ rg -A 2 "class User"
+src/models.js:10:class User {
+src/models.js:11:  constructor(name, email) {
+src/models.js:12:    this.name = name;
 ```
 
 ### **-B, --before-context NUM**
@@ -88,82 +94,105 @@ app.log:17:  attempted reconnect
 Show NUM lines before each match.
 
 ```console
-$ rg -B 2 error app.log
-app.log:13:attempting connection
-app.log:14:using default timeout
-app.log:15:error: connection failed
+$ rg -B 1 "throw new Error"
+src/api.js:24:  if (!response.ok) {
+src/api.js:25:    throw new Error('API request failed');
+```
+
+### **-C, --context NUM**
+
+Show NUM lines before and after each match.
+
+```console
+$ rg -C 1 "TODO"
+src/main.js:19:function processData(data) {
+src/main.js:20:  // TODO: Implement validation
+src/main.js:21:  return transform(data);
 ```
 
 ## Usage Examples
 
-### Searching in specific file types
+### Search in specific file types
 
 ```console
-$ rg -t js console.log
-src/main.js:10:  console.log('Application started');
-src/utils.js:25:  console.log('Loading data...');
+$ rg -t js "useState"
+src/components/Form.js:3:import { useState } from 'react';
+src/components/Counter.js:5:  const [count, setCount] = useState(0);
 ```
 
-### Searching with multiple patterns
+### Search and replace with ripgrep and sed
 
 ```console
-$ rg 'error|warning|critical' logs/app.log
-logs/app.log:15:error: connection failed
-logs/app.log:23:warning: slow response time
-logs/app.log:45:critical: database unavailable
+$ rg -l "oldFunction" | xargs sed -i 's/oldFunction/newFunction/g'
 ```
 
-### Searching with file name pattern
+### Search with glob patterns
 
 ```console
-$ rg TODO -g '*.js'
-src/app.js:42:// TODO: Implement error handling
-src/utils.js:78:// TODO: Optimize this function
+$ rg "error" --glob "*.{js,ts}"
+src/utils.js:25:  console.error("Connection failed");
+src/api.ts:42:  throw new Error("Invalid response");
+```
+
+### Exclude directories from search
+
+```console
+$ rg "TODO" --glob "!node_modules"
+src/main.js:20:  // TODO: Implement validation
+docs/roadmap.md:15:TODO: Add authentication
 ```
 
 ## Tips:
 
-### Use Smart Case for Flexible Matching
+### Use Fixed Strings for Faster Searches
 
-Use `-S` or `--smart-case` to perform case-insensitive searches when the pattern is all lowercase, but case-sensitive searches when the pattern contains uppercase letters.
+When searching for literal text rather than regex patterns, use `-F` or `--fixed-strings` for better performance:
 
-### Combine with Other Commands
-
-Pipe `rg` output to other commands for further processing:
 ```console
-$ rg -n 'TODO|FIXME' --no-heading | sort -k1,1
+$ rg -F "React.useState" src/
 ```
 
-### Search in Compressed Files
+### Combine with Other Tools
 
-Use `--search-zip` to search in compressed files like .gz or .zip:
+Pipe ripgrep results to other commands for additional processing:
+
 ```console
-$ rg --search-zip "error" logs/
+$ rg -n "TODO" | sort -k1,1 | less
 ```
 
-### Exclude Specific Directories
+### Search Hidden Files
 
-Use `--glob=!{dir}` to exclude specific directories:
+By default, ripgrep ignores hidden files and directories. Use `-. or --hidden` to include them:
+
 ```console
-$ rg "function" --glob=!{node_modules,dist}
+$ rg --hidden "password" ~/
+```
+
+### Use Smart Case
+
+The `-S` or `--smart-case` option makes searches case-insensitive if the pattern is all lowercase, but case-sensitive otherwise:
+
+```console
+$ rg -S "function" # Case-insensitive
+$ rg -S "Function" # Case-sensitive
 ```
 
 ## Frequently Asked Questions
 
 #### Q1. How is ripgrep different from grep?
-A. Ripgrep is generally faster than grep, automatically recursive, respects .gitignore rules by default, and has built-in support for many file types and encodings.
+A. Ripgrep is generally faster than grep, respects .gitignore files by default, automatically skips binary files, and has better Unicode support.
 
-#### Q2. How do I search for a pattern with spaces?
-A. Enclose the pattern in quotes: `rg "search pattern with spaces"`.
+#### Q2. How do I search for a pattern that includes special regex characters?
+A. Use `-F` or `--fixed-strings` to search for literal text, or escape the special characters with backslashes.
 
-#### Q3. How can I make ripgrep search hidden files and directories?
-A. Use the `--hidden` flag: `rg --hidden pattern`.
+#### Q3. How can I search for files that don't contain a pattern?
+A. Use `-L` or `--files-without-match` to find files that don't contain the pattern.
 
-#### Q4. How do I search for a literal string instead of a regex pattern?
-A. Use the `-F` or `--fixed-strings` option: `rg -F "string with (special) characters"`.
+#### Q4. How do I make ripgrep follow symbolic links?
+A. Use `-L` or `--follow` to follow symbolic links when searching.
 
 #### Q5. What does the --no-ignore option do?
-A. The `--no-ignore` option tells ripgrep to ignore all ignore files (.gitignore, .ignore, etc.) and search all files, including those that would normally be excluded based on ignore patterns.
+A. The `--no-ignore` option tells ripgrep to search files and directories that would normally be ignored due to .gitignore, .ignore, or similar files. This is useful when you need to search in directories like node_modules or other typically ignored locations.
 
 ## References
 
@@ -171,4 +200,4 @@ https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
 
 ## Revisions
 
-- 2025/05/04 Added explanation for --no-ignore option and expanded FAQs.
+- 2025/05/05 Added explanation for --no-ignore option and expanded FAQs.

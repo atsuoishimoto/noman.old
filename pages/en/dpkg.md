@@ -1,10 +1,10 @@
 # dpkg command
 
-Manage Debian package files (.deb) on Debian-based systems like Ubuntu.
+Package management tool for Debian-based systems that handles installation, removal, and information about .deb packages.
 
 ## Overview
 
-`dpkg` is the package management system for Debian-based Linux distributions. It handles the installation, removal, and providing information about .deb packages. Unlike higher-level package managers like `apt`, `dpkg` works directly with .deb files and doesn't automatically resolve dependencies.
+`dpkg` (Debian Package) is the core package management utility in Debian-based Linux distributions like Ubuntu. It directly handles .deb package files, allowing users to install, remove, configure, and query information about packages. Unlike higher-level tools like `apt`, `dpkg` works directly with package files and doesn't handle dependencies automatically.
 
 ## Options
 
@@ -13,47 +13,44 @@ Manage Debian package files (.deb) on Debian-based systems like Ubuntu.
 Install a package from a .deb file
 
 ```console
-$ sudo dpkg -i firefox_115.0+build2-0ubuntu0.20.04.1_amd64.deb
-Selecting previously unselected package firefox.
-(Reading database ... 186342 files and directories currently installed.)
-Preparing to unpack firefox_115.0+build2-0ubuntu0.20.04.1_amd64.deb ...
-Unpacking firefox (115.0+build2-0ubuntu0.20.04.1) ...
-Setting up firefox (115.0+build2-0ubuntu0.20.04.1) ...
-Processing triggers for mime-support (3.64ubuntu1) ...
+$ sudo dpkg -i package.deb
+(Reading database ... 200000 files and directories currently installed.)
+Preparing to unpack package.deb ...
+Unpacking package (1.0-1) ...
+Setting up package (1.0-1) ...
 ```
 
 ### **-r, --remove**
 
-Remove an installed package (keeps configuration files)
+Remove an installed package, keeping configuration files
 
 ```console
-$ sudo dpkg -r firefox
-(Reading database ... 186342 files and directories currently installed.)
-Removing firefox (115.0+build2-0ubuntu0.20.04.1) ...
+$ sudo dpkg -r package
+(Reading database ... 200000 files and directories currently installed.)
+Removing package (1.0-1) ...
 ```
 
 ### **-P, --purge**
 
-Remove an installed package completely (including configuration files)
+Remove an installed package including configuration files
 
 ```console
-$ sudo dpkg -P firefox
-(Reading database ... 186342 files and directories currently installed.)
-Removing firefox (115.0+build2-0ubuntu0.20.04.1) ...
-Purging configuration files for firefox ...
+$ sudo dpkg -P package
+(Reading database ... 200000 files and directories currently installed.)
+Purging configuration files for package (1.0-1) ...
 ```
 
-### **-l, --list [pattern]**
+### **-l, --list**
 
-List installed packages matching an optional pattern
+List all installed packages matching a pattern
 
 ```console
-$ dpkg -l firefox
+$ dpkg -l firefox*
 | Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
 |/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
 ||/ Name           Version      Architecture Description
 +++-==============-============-============-=================================
-ii  firefox        115.0+build2 amd64        Safe and easy web browser from Mozilla
+ii  firefox        115.0.2      amd64        Safe and easy web browser from Mozilla
 ```
 
 ### **-L, --listfiles**
@@ -62,18 +59,16 @@ List files installed by a package
 
 ```console
 $ dpkg -L firefox
-/.
-/usr
-/usr/bin
-/usr/bin/firefox
-/usr/lib
 /usr/lib/firefox
+/usr/lib/firefox/browser
+/usr/lib/firefox/browser/chrome
+/usr/lib/firefox/browser/chrome.manifest
 ...
 ```
 
 ### **-s, --status**
 
-Display detailed status information about a package
+Display package status details
 
 ```console
 $ dpkg -s firefox
@@ -81,20 +76,16 @@ Package: firefox
 Status: install ok installed
 Priority: optional
 Section: web
-Installed-Size: 256348
+Installed-Size: 256000
 Maintainer: Ubuntu Mozilla Team <ubuntu-mozillateam@lists.ubuntu.com>
 Architecture: amd64
-Version: 115.0+build2-0ubuntu0.20.04.1
-Depends: lsb-release, libatk1.0-0 (>= 1.12.4), libc6 (>= 2.28), ...
-Description: Safe and easy web browser from Mozilla
- Firefox delivers safe, easy web browsing. A familiar user interface,
- enhanced security features including protection from online identity theft,
- and integrated search let you get the most out of the web.
+Version: 115.0.2
+...
 ```
 
 ### **-S, --search**
 
-Search for packages that own a specific file
+Search for packages that own a file
 
 ```console
 $ dpkg -S /usr/bin/firefox
@@ -103,74 +94,121 @@ firefox: /usr/bin/firefox
 
 ### **--configure**
 
-Configure an unpacked package that needs setup
+Configure an unpacked package
 
 ```console
-$ sudo dpkg --configure firefox
-Setting up firefox (115.0+build2-0ubuntu0.20.04.1) ...
+$ sudo dpkg --configure package
+Setting up package (1.0-1) ...
+```
+
+### **--unpack**
+
+Unpack a package without configuring it
+
+```console
+$ sudo dpkg --unpack package.deb
+(Reading database ... 200000 files and directories currently installed.)
+Preparing to unpack package.deb ...
+Unpacking package (1.0-1) over (1.0-0) ...
 ```
 
 ## Usage Examples
 
-### Installing a package and fixing dependencies
+### Installing multiple packages at once
 
 ```console
-$ sudo dpkg -i package.deb
-$ sudo apt-get install -f
+$ sudo dpkg -i package1.deb package2.deb package3.deb
+(Reading database ... 200000 files and directories currently installed.)
+Preparing to unpack package1.deb ...
+Unpacking package1 (1.0-1) ...
+Preparing to unpack package2.deb ...
+Unpacking package2 (2.0-1) ...
+Preparing to unpack package3.deb ...
+Unpacking package3 (3.0-1) ...
+Setting up package1 (1.0-1) ...
+Setting up package2 (2.0-1) ...
+Setting up package3 (3.0-1) ...
 ```
 
 ### Listing all installed packages
 
 ```console
 $ dpkg -l
+| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
+|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
+||/ Name           Version      Architecture Description
++++-==============-============-============-=================================
+ii  accountsservice 0.6.55-0ubuntu12 amd64    query and manipulate user account information
+ii  acl            2.2.53-6      amd64        access control list - utilities
+ii  adduser        3.118ubuntu2  all          add and remove users and groups
+...
 ```
 
-### Finding which package a file belongs to
+### Fixing broken package installations
 
 ```console
-$ dpkg -S /usr/bin/python3
-python3-minimal: /usr/bin/python3
+$ sudo dpkg --configure -a
+Setting up package1 (1.0-1) ...
+Setting up package2 (2.0-1) ...
 ```
 
 ## Tips
 
-### Fix Broken Dependencies
+### Handling Dependencies
 
-When `dpkg` fails due to missing dependencies, run `sudo apt-get install -f` to resolve them. This is a common workflow when installing .deb files directly.
+`dpkg` doesn't resolve dependencies automatically. If you encounter dependency errors, use:
+```console
+$ sudo apt-get -f install
+```
+This will attempt to fix broken dependencies after a `dpkg` installation.
 
-### Backup Package List
+### Preventing Configuration During Installation
 
-Before major system changes, save a list of installed packages with `dpkg --get-selections > packages.list`. You can later restore with `sudo dpkg --set-selections < packages.list && sudo apt-get dselect-upgrade`.
+Use `--unpack` instead of `-i` to unpack a package without configuring it, which is useful when you need to modify files before configuration:
+```console
+$ sudo dpkg --unpack package.deb
+$ # make changes to files
+$ sudo dpkg --configure package
+```
 
-### Verify Package Integrity
+### Finding Which Package Owns a Command
 
-Use `dpkg-deb --info package.deb` to inspect a package before installation, and `dpkg -V packagename` to verify installed files against the package database.
+When you want to know which package provides a specific command:
+```console
+$ which command
+/usr/bin/command
+$ dpkg -S /usr/bin/command
+package: /usr/bin/command
+```
 
-### Reconfigure Packages
+### Understanding Package Status Codes
 
-If you need to reconfigure a package (e.g., to change settings), use `sudo dpkg-reconfigure packagename` which runs the configuration scripts again.
+In `dpkg -l` output, the first two characters indicate package status:
+- `ii`: package is installed and configured
+- `rc`: package was removed but config files remain
+- `un`: package is unknown/not installed
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `dpkg` and `apt`?
-A. `dpkg` works directly with .deb files and doesn't handle dependencies automatically. `apt` is a higher-level tool that resolves dependencies and can download packages from repositories.
+#### Q1. How is dpkg different from apt?
+A. `dpkg` is a low-level package manager that works directly with .deb files and doesn't handle dependencies automatically. `apt` is a higher-level tool that resolves dependencies and can download packages from repositories.
 
 #### Q2. How do I fix "dependency problems" errors?
-A. Run `sudo apt-get install -f` after a failed `dpkg -i` to resolve missing dependencies.
+A. Run `sudo apt-get -f install` to attempt to resolve dependency issues after a `dpkg` installation.
 
-#### Q3. How can I see what files a .deb package will install before installing it?
-A. Use `dpkg-deb --contents package.deb` to list the files contained in the package.
+#### Q3. How can I see what files a package will install before installing it?
+A. Use `dpkg-deb --contents package.deb` to list the files contained in a package without installing it.
 
-#### Q4. How do I reinstall a package?
-A. Use `sudo dpkg -i --force-reinstall package.deb` or with apt: `sudo apt-get install --reinstall packagename`.
+#### Q4. How do I reinstall a package with dpkg?
+A. Use `sudo dpkg -i --force-reinstall package.deb` to reinstall a package even if it's already installed.
 
 #### Q5. How do I prevent a package from being upgraded?
-A. Use `sudo apt-mark hold packagename` to prevent automatic upgrades.
+A. Use `sudo apt-mark hold package` to prevent a package from being automatically upgraded.
 
 ## References
 
-https://manpages.debian.org/buster/dpkg/dpkg.1.en.html
+https://man7.org/linux/man-pages/man1/dpkg.1.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

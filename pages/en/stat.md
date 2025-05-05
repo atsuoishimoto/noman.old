@@ -4,30 +4,46 @@ Display file or file system status information.
 
 ## Overview
 
-The `stat` command displays detailed information about files or file systems, including access permissions, ownership, size, timestamps, and inode details. It provides more comprehensive information than what you get from `ls -l`.
+The `stat` command displays detailed information about files, directories, or file systems. It shows metadata such as file size, permissions, access times, inode information, and more. This command is useful for system administrators and users who need to examine file attributes beyond what basic commands like `ls` provide.
 
 ## Options
 
+### **-c, --format=FORMAT**
+
+Output information using a specified format string.
+
+```console
+$ stat -c "%n %s %U" file.txt
+file.txt 1024 user
+```
+
 ### **-f, --file-system**
 
-Display file system information instead of file information.
+Display file system status instead of file status.
 
 ```console
 $ stat -f /home
   File: "/home"
-    ID: 2f400000000000000 Namelen: 255     Type: ext4
+    ID: 2f5b04742a3bfad9 Namelen: 255     Type: ext4
 Block size: 4096       Fundamental block size: 4096
-Blocks: Total: 244033764   Free: 146937542   Available: 134209270
-Inodes: Total: 62259200    Free: 60948748
+Blocks: Total: 121211648  Free: 62303156   Available: 56073252
+Inodes: Total: 30539776   Free: 29752540
 ```
 
-### **-c, --format=FORMAT**
+### **-L, --dereference**
 
-Use the specified FORMAT instead of the default output format.
+Follow links (show information about the file the link references rather than the link itself).
 
 ```console
-$ stat -c "%n %s %y" file.txt
-file.txt 1024 2025-05-01 14:30:45.123456789 +0000
+$ stat -L symlink.txt
+  File: 'symlink.txt'
+  Size: 1024      	Blocks: 8          IO Block: 4096   regular file
+Device: 801h/2049d	Inode: 1234567     Links: 1
+Access: (0644/-rw-r--r--)  Uid: ( 1000/    user)   Gid: ( 1000/    user)
+Access: 2025-05-01 10:15:30.000000000 +0000
+Modify: 2025-05-01 10:15:30.000000000 +0000
+Change: 2025-05-01 10:15:30.000000000 +0000
+ Birth: 2025-05-01 10:15:30.000000000 +0000
 ```
 
 ### **-t, --terse**
@@ -36,23 +52,16 @@ Print the information in terse form.
 
 ```console
 $ stat -t file.txt
-file.txt 1024 8 81a4 1000 1000 fe01 1620000000 1620000000 1620000000 4096 8 0 0
+file.txt 1024 8 81a4 1000 1000 801 1234567 1 0 0 1619875530 1619875530 1619875530 1619875530
 ```
 
-### **-L, --dereference**
+### **--printf=FORMAT**
 
-Follow links when displaying information for a symbolic link.
+Like --format, but interpret backslash escapes and do not output a mandatory trailing newline.
 
 ```console
-$ stat -L symlink.txt
-  File: 'symlink.txt'
-  Size: 1024      	Blocks: 8          IO Block: 4096   regular file
-Device: fd00h/64768d	Inode: 12345      Links: 1
-Access: (0644/-rw-r--r--)  Uid: (1000/username)   Gid: (1000/groupname)
-Access: 2025-05-01 10:00:00.000000000 +0000
-Modify: 2025-05-01 10:00:00.000000000 +0000
-Change: 2025-05-01 10:00:00.000000000 +0000
- Birth: 2025-05-01 10:00:00.000000000 +0000
+$ stat --printf="%n has %s bytes\n" file.txt
+file.txt has 1024 bytes
 ```
 
 ## Usage Examples
@@ -60,22 +69,24 @@ Change: 2025-05-01 10:00:00.000000000 +0000
 ### Basic file information
 
 ```console
-$ stat file.txt
-  File: file.txt
+$ stat document.txt
+  File: document.txt
   Size: 1024      	Blocks: 8          IO Block: 4096   regular file
-Device: fd00h/64768d	Inode: 12345      Links: 1
-Access: (0644/-rw-r--r--)  Uid: (1000/username)   Gid: (1000/groupname)
-Access: 2025-05-01 10:00:00.000000000 +0000
-Modify: 2025-05-01 10:00:00.000000000 +0000
-Change: 2025-05-01 10:00:00.000000000 +0000
- Birth: 2025-05-01 10:00:00.000000000 +0000
+Device: 801h/2049d	Inode: 1234567     Links: 1
+Access: (0644/-rw-r--r--)  Uid: ( 1000/    user)   Gid: ( 1000/    user)
+Access: 2025-05-01 10:15:30.000000000 +0000
+Modify: 2025-05-01 10:15:30.000000000 +0000
+Change: 2025-05-01 10:15:30.000000000 +0000
+ Birth: 2025-05-01 10:15:30.000000000 +0000
 ```
 
-### Custom format to show specific information
+### Custom format for multiple files
 
 ```console
-$ stat -c "File: %n, Size: %s bytes, Modified: %y" file.txt
-File: file.txt, Size: 1024 bytes, Modified: 2025-05-01 10:00:00.000000000 +0000
+$ stat -c "Name: %n, Size: %s bytes, Owner: %U" *.txt
+Name: document.txt, Size: 1024 bytes, Owner: user
+Name: notes.txt, Size: 512 bytes, Owner: user
+Name: readme.txt, Size: 256 bytes, Owner: user
 ```
 
 ### File system information
@@ -83,15 +94,15 @@ File: file.txt, Size: 1024 bytes, Modified: 2025-05-01 10:00:00.000000000 +0000
 ```console
 $ stat -f /
   File: "/"
-    ID: 2f400000000000000 Namelen: 255     Type: ext4
+    ID: 2f5b04742a3bfad9 Namelen: 255     Type: ext4
 Block size: 4096       Fundamental block size: 4096
-Blocks: Total: 244033764   Free: 146937542   Available: 134209270
-Inodes: Total: 62259200    Free: 60948748
+Blocks: Total: 121211648  Free: 62303156   Available: 56073252
+Inodes: Total: 30539776   Free: 29752540
 ```
 
-## Tips
+## Tips:
 
-### Get Only the Information You Need
+### Get Only Specific Information
 
 Use the `-c` option with format specifiers to extract only the information you need. For example, `stat -c "%s" file.txt` will show only the file size.
 
@@ -101,25 +112,52 @@ Use `stat` to check when a file was last accessed, modified, or had its metadata
 
 ### Check Inode Information
 
-The inode number displayed by `stat` can help identify if two files are hard-linked to the same data (they'll have the same inode number).
+The inode number shown by `stat` can help identify if two files are hard-linked to each other (they would share the same inode number).
 
-### macOS Differences
+### Format Specifiers
 
-On macOS, the format options are different. Use `-f` with format specifiers like `%z` for size, `%m` for modification time, etc. The GNU-style long options are not available.
+Learn common format specifiers for `-c` option:
+- `%n`: file name
+- `%s`: total size in bytes
+- `%U`: user name of owner
+- `%G`: group name of owner
+- `%a`: access rights in octal
+- `%x`: time of last access
+- `%y`: time of last modification
+- `%z`: time of last change
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `stat` and `ls -l`?
-A. `stat` provides more detailed information than `ls -l`, including precise timestamps, inode numbers, and device IDs. It's more comprehensive for file metadata analysis.
+#### Q1. What's the difference between Modify and Change times?
+A. Modify time (`%y`) is when the file's content was last modified. Change time (`%z`) is when the file's metadata (permissions, ownership, etc.) was last changed.
 
 #### Q2. How can I see only the file size?
-A. Use `stat -c "%s" filename` on Linux or `stat -f "%z" filename` on macOS.
+A. Use `stat -c "%s" filename` to display only the file size in bytes.
 
-#### Q3. How do I check when a file was last modified?
-A. Use `stat -c "%y" filename` on Linux or `stat -f "%m" filename` on macOS (the latter shows seconds since epoch).
+#### Q3. How do I check disk space with stat?
+A. Use `stat -f /path/to/filesystem` to see filesystem information including total, free, and available space.
 
-#### Q4. Can I use `stat` on directories?
-A. Yes, `stat` works on directories just like it does on files, showing their metadata.
+#### Q4. What's the difference between stat and ls -l?
+A. `stat` provides more detailed metadata about files, including exact timestamps and inode information, while `ls -l` gives a more concise summary of file attributes.
+
+## macOS Considerations
+
+On macOS, the `stat` command has different syntax and options compared to GNU/Linux. The format option uses `-f` instead of `-c`, and the format specifiers are different:
+
+```console
+$ stat -f "Name: %N, Size: %z bytes, Owner: %Su" file.txt
+Name: file.txt, Size: 1024 bytes, Owner: user
+```
+
+Common macOS format specifiers:
+- `%N`: file name
+- `%z`: size in bytes
+- `%Su`: user name of owner
+- `%Sg`: group name of owner
+- `%Sp`: file permissions
+- `%a`: last access time
+- `%m`: last modification time
+- `%c`: last status change time
 
 ## References
 
@@ -127,4 +165,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/stat-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

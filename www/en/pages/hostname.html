@@ -47,12 +47,12 @@
     <main>
       
   <h1>hostname command</h1>
-<p>Display or set the system's host name.</p>
+<p>Display or set the system's hostname.</p>
 <h2>Overview</h2>
-<p>The <code>hostname</code> command displays or sets the current host name of the system. The host name is the name by which a network device is known on a network. This command is useful for identifying the current machine in scripts or when working across multiple systems.</p>
+<p>The <code>hostname</code> command displays or sets the current host, domain, or node name of the system. Without arguments, it prints the current hostname. With appropriate privileges, it can be used to set a new hostname.</p>
 <h2>Options</h2>
 <h3><strong>-s, --short</strong></h3>
-<p>Display the short host name, cutting off any domain information.</p>
+<p>Display the short hostname (the portion before the first dot) without the domain information.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname<span style="color: #F8F8F8"> </span>-s
 <span style="color: #000; font-style: italic">mycomputer</span>
 </pre></div>
@@ -62,7 +62,7 @@
 <span style="color: #000; font-style: italic">mycomputer.example.com</span>
 </pre></div>
 <h3><strong>-d, --domain</strong></h3>
-<p>Display the DNS domain name.</p>
+<p>Display the domain name the system belongs to.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname<span style="color: #F8F8F8"> </span>-d
 <span style="color: #000; font-style: italic">example.com</span>
 </pre></div>
@@ -70,11 +70,6 @@
 <p>Display the IP address(es) of the host.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname<span style="color: #F8F8F8"> </span>-i
 <span style="color: #000; font-style: italic">192.168.1.100</span>
-</pre></div>
-<h3><strong>-I, --all-ip-addresses</strong></h3>
-<p>Display all network addresses of the host.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname<span style="color: #F8F8F8"> </span>-I
-<span style="color: #000; font-style: italic">192.168.1.100 10.0.0.1 172.16.0.1</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Displaying the current hostname</h3>
@@ -86,42 +81,46 @@
 <span style="color: #8F5902">$ </span>hostname
 <span style="color: #000; font-style: italic">newname</span>
 </pre></div>
-<h3>Using hostname in a script to identify the current machine</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Running backup script on </span><span style="color: #204A87; font-weight: bold">$(</span>hostname<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span>
-<span style="color: #000; font-style: italic">Running backup script on mycomputer.example.com</span>
+<h3>Displaying all network addresses of the host</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname<span style="color: #F8F8F8"> </span>--all-ip-addresses
+<span style="color: #000; font-style: italic">192.168.1.100 10.0.0.1 127.0.0.1</span>
 </pre></div>
-<h2>Tips</h2>
+<h2>Tips:</h2>
 <h3>Permanent Hostname Changes</h3>
-<p>The <code>hostname</code> command only changes the hostname temporarily until the next reboot. For permanent changes:</p>
+<p>The <code>hostname</code> command only changes the hostname temporarily until the next reboot. To make permanent changes:</p>
 <ul>
-<li>On systemd-based systems: Use <code>hostnamectl set-hostname newname</code></li>
-<li>On Debian/Ubuntu: Edit <code>/etc/hostname</code></li>
-<li>On RHEL/CentOS: Edit <code>/etc/sysconfig/network</code></li>
+<li>On Linux: Edit <code>/etc/hostname</code> or use <code>hostnamectl set-hostname newname</code></li>
+<li>On macOS: Use System Preferences &gt; Sharing &gt; Computer Name or <code>scutil --set HostName newname</code></li>
 </ul>
-<h3>Network Configuration</h3>
-<p>Changing your hostname might require updating other files like <code>/etc/hosts</code> to ensure proper name resolution.</p>
-<h3>Hostname Restrictions</h3>
-<p>Hostnames should follow RFC 1178 guidelines: use only letters, digits, and hyphens, and should not exceed 63 characters.</p>
+<h3>Hostname vs. FQDN</h3>
+<p>The hostname is just the computer name (e.g., &quot;mycomputer&quot;), while the FQDN includes the domain (e.g., &quot;mycomputer.example.com&quot;). Use <code>-f</code> when you need the complete network identity.</p>
+<h3>Hostname Resolution</h3>
+<p>The hostname command doesn't update DNS or <code>/etc/hosts</code>. After changing a hostname, you may need to update these separately for proper network resolution.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between hostname and FQDN?</h4>
-<p>A. A hostname is just the name of the machine (e.g., &quot;mycomputer&quot;), while the FQDN includes the domain (e.g., &quot;mycomputer.example.com&quot;).</p>
-<h4>Q2. Why does my hostname reset after reboot?</h4>
-<p>A. The <code>hostname</code> command only makes temporary changes. For permanent changes, you need to modify system configuration files or use tools like <code>hostnamectl</code>.</p>
-<h4>Q3. Can I use special characters in my hostname?</h4>
-<p>A. It's recommended to use only letters, numbers, and hyphens in hostnames to ensure compatibility with all network services.</p>
-<h4>Q4. How do I find my hostname in a script?</h4>
-<p>A. Simply use the command <code>$(hostname)</code> in your script to get the current hostname.</p>
+<h4>Q1. What's the difference between hostname and hostnamectl?</h4>
+<p>A. <code>hostname</code> is a simple utility to display or temporarily set the system hostname, while <code>hostnamectl</code> (on systemd-based Linux systems) can permanently set various hostname parameters and is the preferred method on modern Linux distributions.</p>
+<h4>Q2. Why does hostname -i sometimes return 127.0.1.1 instead of my actual IP?</h4>
+<p>A. This happens when the hostname is mapped to 127.0.1.1 in <code>/etc/hosts</code>, which is common in some distributions. Use <code>hostname --all-ip-addresses</code> or <code>ip addr</code> for more accurate network information.</p>
+<h4>Q3. How can I make hostname changes permanent?</h4>
+<p>A. Edit <code>/etc/hostname</code> on Linux or use <code>hostnamectl set-hostname newname</code>. On macOS, use <code>scutil --set HostName newname</code>.</p>
 <h2>macOS Considerations</h2>
-<p>On macOS, the hostname command works similarly, but permanent changes should be made using:</p>
+<p>On macOS, there are three different hostname settings that can be configured:</p>
 <ul>
-<li><code>sudo scutil --set HostName newname</code> for the hostname</li>
-<li><code>sudo scutil --set LocalHostName newname</code> for the Bonjour hostname</li>
-<li><code>sudo scutil --set ComputerName &quot;New Name&quot;</code> for the user-friendly computer name</li>
+<li>HostName: The network hostname (FQDN)</li>
+<li>LocalHostName: The Bonjour hostname (used for local network discovery)</li>
+<li>ComputerName: The user-friendly name shown in the UI</li>
 </ul>
+<p>To set these values, use:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>scutil<span style="color: #F8F8F8"> </span>--set<span style="color: #F8F8F8"> </span>HostName<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hostname.domain.com&quot;</span>
+<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>scutil<span style="color: #F8F8F8"> </span>--set<span style="color: #F8F8F8"> </span>LocalHostName<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hostname&quot;</span>
+<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>scutil<span style="color: #F8F8F8"> </span>--set<span style="color: #F8F8F8"> </span>ComputerName<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;My Computer&quot;</span>
+</pre></div>
 <h2>References</h2>
 <p>https://man7.org/linux/man-pages/man1/hostname.1.html</p>
 <h2>Revisions</h2>
-<p>2025/05/04 First revision</p>
+<ul>
+<li>2025/05/05 First revision</li>
+</ul>
 
 
     </main>

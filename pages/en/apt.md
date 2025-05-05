@@ -1,108 +1,30 @@
 # apt command
 
-Package management utility for Debian-based Linux distributions like Ubuntu.
+Package management tool for Debian-based Linux distributions.
 
 ## Overview
 
-`apt` (Advanced Package Tool) is a command-line utility for installing, updating, removing, and managing software packages on Debian-based Linux distributions. It simplifies package management by handling dependencies automatically and providing a user-friendly interface compared to lower-level tools like `dpkg`.
+`apt` (Advanced Package Tool) is a command-line utility for installing, updating, removing, and managing software packages on Debian-based Linux distributions like Ubuntu. It simplifies package management by handling dependencies, configuration, and installation processes automatically.
 
 ## Options
 
-### **-y, --yes, --assume-yes**
+### **update**
 
-Automatically answer "yes" to prompts, allowing for non-interactive use
-
-```console
-$ sudo apt install firefox -y
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-firefox is already the newest version (115.0+build2-0ubuntu0.22.04.1).
-0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
-```
-
-### **-q, --quiet**
-
-Produces output suitable for logging, omitting progress indicators
-
-```console
-$ sudo apt update -q
-Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
-Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
-Fetched 110 kB in 1s (110 kB/s)
-Reading package lists...
-Building dependency tree...
-Reading state information...
-All packages are up to date.
-```
-
-### **--no-install-recommends**
-
-Skip installation of recommended packages, installing only required dependencies
-
-```console
-$ sudo apt install gimp --no-install-recommends
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-The following packages will be installed:
-  gimp gimp-data libbabl-0.1-0 libgegl-0.4-0 [...]
-```
-
-### **-s, --simulate, --just-print, --dry-run, --recon, --no-act**
-
-Simulate actions but don't actually change the system
-
-```console
-$ sudo apt remove firefox -s
-NOTE: This is only a simulation!
-      apt needs root privileges for real execution.
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-The following packages will be REMOVED:
-  firefox
-0 upgraded, 0 newly installed, 1 to remove and 0 not upgraded.
-Remv firefox [115.0+build2-0ubuntu0.22.04.1]
-```
-
-## Usage Examples
-
-### Installing a package
-
-```console
-$ sudo apt install vlc
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-The following additional packages will be installed:
-  libvlc-bin libvlc5 libvlccore9 vlc-bin vlc-data vlc-plugin-base
-Suggested packages:
-  vlc-plugin-access-extra vlc-plugin-video-output vlc-plugin-video-splitter
-  vlc-plugin-visualization
-The following NEW packages will be installed:
-  libvlc-bin libvlc5 libvlccore9 vlc vlc-bin vlc-data vlc-plugin-base
-0 upgraded, 7 newly installed, 0 to remove and 0 not upgraded.
-Need to get 7,192 kB of archives.
-After this operation, 32.8 MB of additional disk space will be used.
-Do you want to continue? [Y/n] y
-```
-
-### Updating package lists
+Updates the package lists from repositories
 
 ```console
 $ sudo apt update
 Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
 Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
-Get:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [119 kB]
-Fetched 229 kB in 2s (114 kB/s)
 Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
 All packages are up to date.
 ```
 
-### Upgrading installed packages
+### **upgrade**
+
+Upgrades installed packages to their latest versions
 
 ```console
 $ sudo apt upgrade
@@ -110,82 +32,183 @@ Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
 Calculating upgrade... Done
-The following packages will be upgraded:
-  firefox libnss3 python3-software-properties software-properties-common
-4 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
-Need to get 75.8 MB of archives.
-After this operation, 1,024 B of additional disk space will be used.
-Do you want to continue? [Y/n] y
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
 ```
 
-### Removing a package
+### **install**
+
+Installs new packages
 
 ```console
-$ sudo apt remove gimp
+$ sudo apt install nginx
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  nginx-common nginx-core
+Suggested packages:
+  fcgiwrap nginx-doc
+The following NEW packages will be installed:
+  nginx nginx-common nginx-core
+0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
+```
+
+### **remove**
+
+Removes packages but keeps configuration files
+
+```console
+$ sudo apt remove nginx
 Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
 The following packages will be REMOVED:
-  gimp
-0 upgraded, 0 newly installed, 1 to remove and 0 not upgraded.
-After this operation, 20.5 MB disk space will be freed.
-Do you want to continue? [Y/n] y
+  nginx nginx-core
+0 upgraded, 0 newly installed, 2 to remove and 0 not upgraded.
 ```
 
-### Searching for packages
+### **purge**
+
+Removes packages along with their configuration files
 
 ```console
-$ apt search text-editor
+$ sudo apt purge nginx
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following packages will be REMOVED:
+  nginx* nginx-common* nginx-core*
+0 upgraded, 0 newly installed, 3 to remove and 0 not upgraded.
+```
+
+### **autoremove**
+
+Removes packages that were automatically installed to satisfy dependencies and are no longer needed
+
+```console
+$ sudo apt autoremove
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+```
+
+### **search**
+
+Searches for packages by name or description
+
+```console
+$ apt search nginx
 Sorting... Done
 Full Text Search... Done
-gedit/jammy,now 41.0-3 amd64 [installed]
-  GNU text editor for the GNOME desktop environment
+nginx/jammy-updates,jammy-security 1.18.0-6ubuntu14.4 all
+  small, powerful, scalable web/proxy server
+```
 
-mousepad/jammy 0.5.8-1 amd64
-  simple Xfce oriented text editor
+### **show**
 
-nano/jammy,now 6.2-1 amd64 [installed]
-  small, friendly text editor inspired by Pico
+Shows detailed information about a package
+
+```console
+$ apt show nginx
+Package: nginx
+Version: 1.18.0-6ubuntu14.4
+Priority: optional
+Section: web
+Origin: Ubuntu
+...
+```
+
+### **list --installed**
+
+Lists all installed packages
+
+```console
+$ apt list --installed
+Listing... Done
+accountsservice/jammy,now 22.07.5-2ubuntu1.4 amd64 [installed]
+acl/jammy,now 2.3.1-1 amd64 [installed]
+acpi-support/jammy,now 0.144 amd64 [installed]
+...
+```
+
+## Usage Examples
+
+### Installing multiple packages at once
+
+```console
+$ sudo apt install git curl wget
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+curl is already the newest version (7.81.0-1ubuntu1.14).
+The following NEW packages will be installed:
+  git wget
+0 upgraded, 2 newly installed, 0 to remove and 0 not upgraded.
+```
+
+### Upgrading the entire system
+
+```console
+$ sudo apt update && sudo apt upgrade -y
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Calculating upgrade... Done
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+```
+
+### Installing a specific version of a package
+
+```console
+$ sudo apt install nginx=1.18.0-6ubuntu14.3
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  nginx-common nginx-core
+The following NEW packages will be installed:
+  nginx nginx-common nginx-core
+0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
 ```
 
 ## Tips
 
 ### Use apt instead of apt-get
 
-`apt` provides a more user-friendly interface with progress bars and colored output compared to the older `apt-get` command, while offering the most commonly used functionality.
+`apt` provides a more user-friendly interface with progress bars and color output compared to the older `apt-get` command.
 
-### Clean up unused packages
+### Clean up your system regularly
 
-Run `sudo apt autoremove` periodically to remove packages that were automatically installed as dependencies but are no longer needed.
+Run `sudo apt autoremove` and `sudo apt clean` periodically to free up disk space by removing unnecessary packages and clearing the local repository of retrieved package files.
 
-### Fix broken packages
+### Hold package versions
 
-If you encounter package installation issues, try `sudo apt --fix-broken install` to resolve dependency problems.
+If you want to prevent a package from being upgraded, use `sudo apt-mark hold package_name`. To allow upgrades again, use `sudo apt-mark unhold package_name`.
 
-### Check available disk space
+### Check for broken dependencies
 
-Before large installations or upgrades, check available disk space with `df -h`. Package operations can fail if you run out of space.
-
-### Use apt-mark to protect packages
-
-Use `sudo apt-mark hold package_name` to prevent a package from being automatically upgraded, removed, or installed.
+Use `sudo apt --fix-broken install` to fix broken dependencies that might occur after failed installations.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between apt and apt-get?
 A. `apt` is a newer, more user-friendly command that combines the most commonly used features of `apt-get` and `apt-cache` with improved output formatting and progress information.
 
-#### Q2. How do I completely remove a package including configuration files?
-A. Use `sudo apt purge package_name` instead of `remove`. To also remove dependencies that are no longer needed, add `autoremove`: `sudo apt purge package_name && sudo apt autoremove`.
+#### Q2. How do I fix "Could not get lock" errors?
+A. This usually means another package manager is running. Wait for it to finish or check for stuck processes with `ps aux | grep apt` and kill them if necessary with `sudo kill <process_id>`.
 
-#### Q3. How can I install a specific version of a package?
-A. Use `sudo apt install package_name=version`. For example: `sudo apt install nginx=1.18.0-0ubuntu1`.
+#### Q3. How can I install a package without being prompted?
+A. Use the `-y` flag: `sudo apt install -y package_name` to automatically answer "yes" to prompts.
 
-#### Q4. How do I fix "Unable to lock the administration directory" errors?
-A. This usually means another package manager is running. Wait for it to finish or check for stuck processes with `ps aux | grep apt` and kill them if necessary. You might also need to remove lock files with `sudo rm /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/lib/dpkg/lock*`.
+#### Q4. How do I update only security packages?
+A. Use `sudo apt update && sudo apt upgrade -s` to simulate an upgrade, then `sudo apt install package_name` for specific security packages you want to update.
 
-#### Q5. How do I update a single package?
-A. Use `sudo apt install --only-upgrade package_name`.
+#### Q5. How do I downgrade a package?
+A. Use `sudo apt install package_name=version_number` to install a specific older version.
 
 ## References
 
@@ -193,4 +216,4 @@ https://manpages.ubuntu.com/manpages/jammy/man8/apt.8.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

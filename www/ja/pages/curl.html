@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -46,130 +46,146 @@
   <div class="content">
     <main>
       
-  <h1>curl コマンド</h1>
-<p>URLを使用してサーバーとの間でデータを転送するツールで、HTTP、HTTPS、FTP、SFTPなど多数のプロトコルをサポートします。</p>
+  <h1>curlコマンド</h1>
+<p>様々なプロトコルを使用してサーバーとの間でデータを転送するコマンドです。</p>
 <h2>概要</h2>
-<p><code>curl</code>はURLを使ってデータを転送するためのコマンドラインツールです。HTTP、HTTPS、FTP、FTPS、SCP、SFTP、LDAPなど、多くのプロトコルをサポートしています。ファイルのダウンロード、APIのテスト、HTTPリクエストの送信、ネットワーク問題のデバッグなどによく使用されます。<code>curl</code>は非対話式で、ユーザーの介入なしに動作するように設計されているため、スクリプトや自動化に最適です。</p>
+<p><code>curl</code>は、様々なプロトコル（HTTP、HTTPS、FTP、SFTP、SCPなど）を使用してURLでデータを転送するためのコマンドラインツールです。ユーザーの対話なしで動作するように設計されており、ファイルのダウンロード、APIリクエスト、エンドポイントのテストなどに使用できます。<code>curl</code>はリクエストのカスタマイズ、認証の処理、データ転送の制御のための多数のオプションをサポートしています。</p>
 <h2>オプション</h2>
 <h3><strong>-o, --output &lt;file&gt;</strong></h3>
-<p>出力を画面に表示せずにファイルに保存します</p>
+<p>出力を標準出力ではなくファイルに書き込みます。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>example.html<span style="color: #F8F8F8"> </span>https://example.com
 <span style="color: #8F5902">  % </span>Total<span style="color: #F8F8F8">    </span>%<span style="color: #F8F8F8"> </span>Received<span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span>Xferd<span style="color: #F8F8F8">  </span>Average<span style="color: #F8F8F8"> </span>Speed<span style="color: #F8F8F8">   </span>Time<span style="color: #F8F8F8">    </span>Time<span style="color: #F8F8F8">     </span>Time<span style="color: #F8F8F8">  </span>Current
 <span style="color: #000; font-style: italic">                                 Dload  Upload   Total   Spent    Left  Speed</span>
-<span style="color: #000; font-style: italic">100  1256  100  1256    0     0   9664      0 --:--:-- --:--:-- --:--:--  9663</span>
+<span style="color: #000; font-style: italic">100  1256  100  1256    0     0   7503      0 --:--:-- --:--:-- --:--:--  7503</span>
 </pre></div>
 <h3><strong>-O, --remote-name</strong></h3>
-<p>URLからリモートファイル名を使用して出力を保存します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>https://example.com/sample.zip
+<p>リモートファイルと同じ名前のローカルファイルに出力を書き込みます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>https://example.com/file.zip
 <span style="color: #8F5902">  % </span>Total<span style="color: #F8F8F8">    </span>%<span style="color: #F8F8F8"> </span>Received<span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span>Xferd<span style="color: #F8F8F8">  </span>Average<span style="color: #F8F8F8"> </span>Speed<span style="color: #F8F8F8">   </span>Time<span style="color: #F8F8F8">    </span>Time<span style="color: #F8F8F8">     </span>Time<span style="color: #F8F8F8">  </span>Current
 <span style="color: #000; font-style: italic">                                 Dload  Upload   Total   Spent    Left  Speed</span>
-<span style="color: #000; font-style: italic">100 10.2M  100 10.2M    0     0  5.1MB/s      0 --:--:-- 0:00:02 --:--:-- 5.1MB</span>
-</pre></div>
-<h3><strong>-L, --location</strong></h3>
-<p>HTTPリダイレクト（3XXレスポンス）に従います</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>http://github.com
-<span style="color: #8F5902">  % </span>Total<span style="color: #F8F8F8">    </span>%<span style="color: #F8F8F8"> </span>Received<span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span>Xferd<span style="color: #F8F8F8">  </span>Average<span style="color: #F8F8F8"> </span>Speed<span style="color: #F8F8F8">   </span>Time<span style="color: #F8F8F8">    </span>Time<span style="color: #F8F8F8">     </span>Time<span style="color: #F8F8F8">  </span>Current
-<span style="color: #000; font-style: italic">                                 Dload  Upload   Total   Spent    Left  Speed</span>
-<span style="color: #000; font-style: italic">100   142  100   142    0     0    573      0 --:--:-- --:--:-- --:--:--   573</span>
-<span style="color: #000; font-style: italic">100  5891    0  5891    0     0  13090      0 --:--:-- --:--:-- --:--:-- 13090</span>
+<span style="color: #000; font-style: italic">100 10.2M  100 10.2M    0     0  5.1M      0  0:00:02  0:00:02 --:--:-- 5.1M</span>
 </pre></div>
 <h3><strong>-s, --silent</strong></h3>
-<p>サイレントモード；進行状況メーターやエラーメッセージを表示しません</p>
+<p>サイレントまたは静かなモードで、進行状況メーターやエラーメッセージを表示しません。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>https://example.com<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>example.html
 </pre></div>
 <h3><strong>-I, --head</strong></h3>
-<p>HTTPヘッダーのみを取得します（HEADリクエスト）</p>
+<p>HTTPヘッダーのみを取得します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-I<span style="color: #F8F8F8"> </span>https://example.com
 <span style="color: #000; font-style: italic">HTTP/2 200 </span>
 <span style="color: #000; font-style: italic">content-type: text/html; charset=UTF-8</span>
-<span style="color: #000; font-style: italic">date: Tue, 04 May 2025 12:00:00 GMT</span>
-<span style="color: #000; font-style: italic">expires: Tue, 11 May 2025 12:00:00 GMT</span>
+<span style="color: #000; font-style: italic">date: Mon, 05 May 2025 12:00:00 GMT</span>
+<span style="color: #000; font-style: italic">expires: Mon, 12 May 2025 12:00:00 GMT</span>
 <span style="color: #000; font-style: italic">cache-control: public, max-age=604800</span>
 <span style="color: #000; font-style: italic">server: ECS (dcb/7F84)</span>
 <span style="color: #000; font-style: italic">content-length: 1256</span>
 </pre></div>
+<h3><strong>-L, --location</strong></h3>
+<p>サーバーが要求されたページが移動したと報告した場合、リダイレクトに従います。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>http://github.com
+</pre></div>
 <h3><strong>-X, --request &lt;command&gt;</strong></h3>
-<p>使用するHTTPリクエストメソッドを指定します（GET、POST、PUT、DELETEなど）</p>
+<p>使用するリクエストメソッドを指定します（GET、POST、PUT、DELETEなど）。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-X<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>https://api.example.com/data
 </pre></div>
 <h3><strong>-H, --header &lt;header&gt;</strong></h3>
-<p>リクエストにカスタムヘッダーを追加します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-H<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Content-Type: application/json&quot;</span><span style="color: #F8F8F8"> </span>https://api.example.com
+<p>カスタムヘッダーをサーバーに渡します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-H<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Content-Type: application/json&quot;</span><span style="color: #F8F8F8"> </span>-H<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Authorization: Bearer token123&quot;</span><span style="color: #F8F8F8"> </span>https://api.example.com
 </pre></div>
 <h3><strong>-d, --data &lt;data&gt;</strong></h3>
-<p>リクエストボディにデータを送信します（通常POSTで使用）</p>
+<p>POSTリクエストで指定されたデータを送信します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-X<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;name=John&amp;age=30&quot;</span><span style="color: #F8F8F8"> </span>https://api.example.com/users
 </pre></div>
-<h3><strong>-A, --user-agent &lt;agent string&gt;</strong></h3>
-<p>サーバーに送信するUser-Agent文字列を指定します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64)&quot;</span><span style="color: #F8F8F8"> </span>https://example.com
+<h3><strong>--data-binary &lt;data&gt;</strong></h3>
+<p>追加処理なしで指定されたデータをそのまま送信します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>--data-binary<span style="color: #F8F8F8"> </span>@filename.json<span style="color: #F8F8F8"> </span>https://api.example.com/upload
+</pre></div>
+<h3><strong>-F, --form &lt;name=content&gt;</strong></h3>
+<p>multipart/form-dataアップロード（ファイルアップロードなど）用です。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-F<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;profile=@photo.jpg&quot;</span><span style="color: #F8F8F8"> </span>https://api.example.com/upload
+</pre></div>
+<h3><strong>-u, --user &lt;user:password&gt;</strong></h3>
+<p>サーバー認証のためのユーザーとパスワードを指定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>username:password<span style="color: #F8F8F8"> </span>https://api.example.com/secure
+</pre></div>
+<h3><strong>-k, --insecure</strong></h3>
+<p>SSL使用時に安全でないサーバー接続を許可します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>https://self-signed-certificate.com
 </pre></div>
 <h2>使用例</h2>
-<h3>ファイルをダウンロードして特定の名前で保存する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>linux-distro.iso<span style="color: #F8F8F8"> </span>https://example.com/downloads/linux.iso
+<h3>ファイルのダウンロード</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>output.html<span style="color: #F8F8F8"> </span>https://example.com
 <span style="color: #8F5902">  % </span>Total<span style="color: #F8F8F8">    </span>%<span style="color: #F8F8F8"> </span>Received<span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span>Xferd<span style="color: #F8F8F8">  </span>Average<span style="color: #F8F8F8"> </span>Speed<span style="color: #F8F8F8">   </span>Time<span style="color: #F8F8F8">    </span>Time<span style="color: #F8F8F8">     </span>Time<span style="color: #F8F8F8">  </span>Current
 <span style="color: #000; font-style: italic">                                 Dload  Upload   Total   Spent    Left  Speed</span>
-<span style="color: #000; font-style: italic">100 1500M  100 1500M    0     0  10.2M/s      0  0:02:27  0:02:27 --:--:-- 10.5M</span>
+<span style="color: #000; font-style: italic">100  1256  100  1256    0     0  12560      0 --:--:-- --:--:-- --:--:-- 12560</span>
 </pre></div>
 <h3>JSONデータを使用したPOSTリクエストの作成</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-X<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>-H<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Content-Type: application/json&quot;</span><span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{&quot;name&quot;:&quot;John&quot;,&quot;age&quot;:30}&#39;</span><span style="color: #F8F8F8"> </span>https://api.example.com/users
 <span style="color: #000; font-style: italic">{&quot;id&quot;: 123, &quot;status&quot;: &quot;created&quot;}</span>
 </pre></div>
-<h3>認証を使用した複数ファイルのダウンロード</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>username:password<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>https://example.com/file1.txt<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>https://example.com/file2.txt
+<h3>ファイルのアップロード</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-F<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;file=@document.pdf&quot;</span><span style="color: #F8F8F8"> </span>https://api.example.com/upload
+<span style="color: #000; font-style: italic">{&quot;status&quot;: &quot;success&quot;, &quot;fileId&quot;: &quot;abc123&quot;}</span>
+</pre></div>
+<h3>リダイレクトに従い、出力を保存</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>result.html<span style="color: #F8F8F8"> </span>https://website-with-redirect.com
 <span style="color: #8F5902">  % </span>Total<span style="color: #F8F8F8">    </span>%<span style="color: #F8F8F8"> </span>Received<span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span>Xferd<span style="color: #F8F8F8">  </span>Average<span style="color: #F8F8F8"> </span>Speed<span style="color: #F8F8F8">   </span>Time<span style="color: #F8F8F8">    </span>Time<span style="color: #F8F8F8">     </span>Time<span style="color: #F8F8F8">  </span>Current
 <span style="color: #000; font-style: italic">                                 Dload  Upload   Total   Spent    Left  Speed</span>
-<span style="color: #000; font-style: italic">100  1256  100  1256    0     0  12560      0 --:--:-- --:--:-- --:--:-- 12560</span>
-<span style="color: #000; font-style: italic">100  2048  100  2048    0     0  20480      0 --:--:-- --:--:-- --:--:-- 20480</span>
+<span style="color: #000; font-style: italic">100   256  100   256    0     0   1024      0 --:--:-- --:--:-- --:--:--  1024</span>
+<span style="color: #000; font-style: italic">100  5120  100  5120    0     0  10240      0 --:--:-- --:--:-- --:--:-- 10240</span>
 </pre></div>
-<h3>ファイルのアップロード</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-F<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;file=@localfile.jpg&quot;</span><span style="color: #F8F8F8"> </span>https://example.com/upload
-<span style="color: #000; font-style: italic">{&quot;status&quot;: &quot;success&quot;, &quot;url&quot;: &quot;https://example.com/uploads/image123.jpg&quot;}</span>
-</pre></div>
-<h2>ヒント:</h2>
-<h3>デバッグ用の詳細モードを使用する</h3>
-<p>トラブルシューティングの際は、<code>-v</code>（詳細）または<code>-vv</code>（非常に詳細）を使用して、リクエストとレスポンスに関する詳細情報を確認できます：</p>
+<h2>ヒント</h2>
+<h3>デバッグには詳細モードを使用する</h3>
+<p>トラブルシューティング時には、<code>-v</code>（詳細）または<code>-vv</code>（より詳細）を使用して、リクエストとレスポンスの完全な詳細を確認できます：</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>https://example.com
 </pre></div>
 <h3>Cookieを保存して後で使用する</h3>
-<p>Cookieが必要なセッションを処理するには：</p>
+<p>Cookieが必要なセッションの場合：</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>cookies.txt<span style="color: #F8F8F8"> </span>https://example.com/login<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;user=name&amp;password=secret&quot;</span>
 <span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>cookies.txt<span style="color: #F8F8F8"> </span>https://example.com/protected-area
 </pre></div>
-<h3>ダウンロード速度を制限する</h3>
-<p>利用可能な帯域幅をすべて消費しないようにするには：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>--limit-rate<span style="color: #F8F8F8"> </span>1M<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>https://example.com/large-file.zip
+<h3>転送速度を制限する</h3>
+<p>すべての帯域幅を消費しないようにするには：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>--limit-rate<span style="color: #F8F8F8"> </span>100K<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>https://example.com/large-file.zip
 </pre></div>
 <h3>中断されたダウンロードを再開する</h3>
-<p>ダウンロードが中断された場合、再開できます：</p>
+<p>ダウンロードが中断された場合、<code>-C -</code>で再開できます：</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-C<span style="color: #F8F8F8"> </span>-<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>https://example.com/large-file.zip
 </pre></div>
 <h3>APIエンドポイントを素早くテストする</h3>
-<p>素早いAPIテストのために、<code>jq</code>などのツールと組み合わせてJSONレスポンスをフォーマットできます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>https://api.example.com/users<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq
+<p>スクリプトを書かずに素早くAPIをテストするには：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>https://api.example.com/data<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq
 </pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. curlでファイルをダウンロードするにはどうすればよいですか？</h4>
-<p>A. 元のファイル名で保存するには<code>curl -O URL</code>を使用し、異なるファイル名を指定するには<code>curl -o ファイル名 URL</code>を使用します。</p>
-<h4>Q2. curlでPOSTリクエストを作成するにはどうすればよいですか？</h4>
-<p>A. フォームデータの場合は<code>curl -X POST -d &quot;key=value&quot; URL</code>を、JSONデータの場合は<code>curl -X POST -H &quot;Content-Type: application/json&quot; -d '{&quot;key&quot;:&quot;value&quot;}' URL</code>を使用します。</p>
-<h4>Q3. curlでリダイレクトに従うにはどうすればよいですか？</h4>
-<p>A. HTTPリダイレクトに従うには、<code>-L</code>または<code>--location</code>オプションを使用します。</p>
-<h4>Q4. レスポンスのHTTPヘッダーを確認するにはどうすればよいですか？</h4>
-<p>A. ヘッダーのみを表示するには<code>curl -I URL</code>を、ヘッダーと本文の両方を表示するには<code>curl -v URL</code>を使用します。</p>
-<h4>Q5. curlで認証するにはどうすればよいですか？</h4>
-<p>A. 基本認証には<code>curl -u ユーザー名:パスワード URL</code>を使用します。OAuthやトークンベースの認証には<code>curl -H &quot;Authorization: Bearer あなたのトークン&quot; URL</code>を使用します。</p>
-<h2>macOSに関する考慮事項</h2>
-<p>macOSでは、デフォルトの<code>curl</code>はLinuxディストリビューションよりも古いバージョンであることが一般的です。新しい機能の一部が利用できない場合があります。また、macOSの<code>curl</code>はOpenSSLではなくSecure Transport（AppleのSSL/TLS実装）でビルドされているため、特にSSL証明書に関して、動作に微妙な違いが生じることがあります。</p>
-<p>すべての機能を備えた最新バージョンが必要な場合は、Homebrewを通じて<code>curl</code>をインストールすることを検討してください：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>brew<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>curl
+<h4>Q1. curlで複数のファイルをダウンロードするにはどうすればよいですか？</h4>
+<p>A. 複数の<code>-O</code>オプションを使用するか、bashループを使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>https://example.com/file1.txt<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span>https://example.com/file2.txt
 </pre></div>
-<p>インストール後、システムバージョンではなくHomebrewバージョンを使用するために、<code>/usr/local/opt/curl/bin/curl</code>を使用するか、PATHに追加する必要があるかもしれません。</p>
-<h2>参考資料</h2>
+<p>または：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>url<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>https://example.com/file<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span>..5<span style="color: #CE5C00; font-weight: bold">}</span>.txt<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span>curl<span style="color: #F8F8F8"> </span>-O<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$url</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+</pre></div>
+<h4>Q2. HTTPレスポンスコードのみを確認するにはどうすればよいですか？</h4>
+<p>A. <code>-s</code>と<code>-o /dev/null</code>オプションを<code>-w</code>と組み合わせて出力をフォーマットします：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>/dev/null<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%{http_code}&quot;</span><span style="color: #F8F8F8"> </span>https://example.com
+<span style="color: #000; font-style: italic">200</span>
+</pre></div>
+<h4>Q3. 特定のタイムアウトでリクエストを送信するにはどうすればよいですか？</h4>
+<p>A. <code>--connect-timeout</code>と<code>--max-time</code>オプションを使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>--connect-timeout<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>--max-time<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>https://example.com
+</pre></div>
+<h4>Q4. curlでSSL証明書エラーを無視するにはどうすればよいですか？</h4>
+<p>A. <code>-k</code>または<code>--insecure</code>オプションを使用しますが、セキュリティへの影響に注意してください：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-k<span style="color: #F8F8F8"> </span>https://self-signed-certificate.com
+</pre></div>
+<h4>Q5. curlをプロキシで使用するにはどうすればよいですか？</h4>
+<p>A. <code>-x</code>または<code>--proxy</code>オプションを使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>-x<span style="color: #F8F8F8"> </span>http://proxy-server:8080<span style="color: #F8F8F8"> </span>https://example.com
+</pre></div>
+<h2>参考文献</h2>
 <p>https://curl.se/docs/manpage.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初版作成</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

@@ -1,23 +1,12 @@
 # ssh-agent コマンド
 
-SSH秘密鍵を管理する認証エージェントで、接続時にパスフレーズの再入力が不要になります。
+SSH秘密鍵の認証エージェントで、パスフレーズの繰り返し入力を避けるために鍵をメモリに保持します。
 
 ## 概要
 
-`ssh-agent` はSSH公開鍵認証に使用される秘密鍵を保持するプログラムです。バックグラウンドで動作し、リモートサーバーにSSH接続するたびにパスフレーズを入力する必要がなくなります。エージェントに鍵を追加すると、パスフレーズを一度入力するだけで、エージェントは復号化された鍵をメモリに保持し、以降の接続で使用します。
+ssh-agentは、SSH公開鍵認証に使用される秘密鍵を保持するプログラムです。バックグラウンドで実行され、SSHでサーバーに接続するたびにパスフレーズを入力する必要がなくなります。エージェントに鍵を追加すると、パスフレーズを一度入力するだけで、エージェントは復号化された鍵を将来の使用のためにメモリに保持します。
 
 ## オプション
-
-### **-a socket**
-
-エージェントを特定のUnixドメインソケットにバインドします。
-
-```console
-$ ssh-agent -a /tmp/ssh-agent.socket
-SSH_AUTH_SOCK=/tmp/ssh-agent.socket; export SSH_AUTH_SOCK;
-SSH_AGENT_PID=1234; export SSH_AGENT_PID;
-echo Agent pid 1234;
-```
 
 ### **-c**
 
@@ -25,19 +14,44 @@ echo Agent pid 1234;
 
 ```console
 $ ssh-agent -c
-setenv SSH_AUTH_SOCK /tmp/ssh-XXXXXXXXXX/agent.1234;
-setenv SSH_AGENT_PID 1234;
-echo Agent pid 1234;
+setenv SSH_AUTH_SOCK /tmp/ssh-XXXXXXXX/agent.12345;
+setenv SSH_AGENT_PID 12345;
+echo Agent pid 12345;
+```
+
+### **-s**
+
+標準出力にBourneシェルコマンドを生成します。SHELLがcshスタイルのシェルのように見えない場合、これがデフォルトになります。
+
+```console
+$ ssh-agent -s
+SSH_AUTH_SOCK=/tmp/ssh-XXXXXXXX/agent.12345; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=12345; export SSH_AGENT_PID;
+echo Agent pid 12345;
 ```
 
 ### **-d**
 
-デバッグモード。エージェントはフォークせず、デバッグ情報を標準エラーに書き込みます。
+デバッグモード。このオプションが指定されると、ssh-agentはフォークせず、デバッグ情報を標準エラーに書き込みます。
 
 ```console
 $ ssh-agent -d
-debug: ssh-agent: starting
-debug: ssh-agent: listening on socket: /tmp/ssh-XXXXXXXXXX/agent.1234
+```
+
+### **-a** *bind_address*
+
+エージェントをUnixドメインソケットbind_addressにバインドします。
+
+```console
+$ ssh-agent -a /tmp/custom-ssh-agent.socket
+```
+
+### **-t** *life*
+
+エージェントに追加されるIDの最大寿命のデフォルト値を設定します。寿命は秒単位で指定するか、sshd_config(5)で指定された時間形式で指定できます。
+
+```console
+$ ssh-agent -t 1h
 ```
 
 ### **-k**
@@ -46,107 +60,73 @@ debug: ssh-agent: listening on socket: /tmp/ssh-XXXXXXXXXX/agent.1234
 
 ```console
 $ ssh-agent -k
-Agent pid 1234 killed
-```
-
-### **-s**
-
-標準出力にBourne shellコマンドを生成します。SHELLがcshスタイルのシェルのように見えない場合、これがデフォルトになります。
-
-```console
-$ ssh-agent -s
-SSH_AUTH_SOCK=/tmp/ssh-XXXXXXXXXX/agent.1234; export SSH_AUTH_SOCK;
-SSH_AGENT_PID=1234; export SSH_AGENT_PID;
-echo Agent pid 1234;
-```
-
-### **-t life**
-
-エージェントに追加されるIDのデフォルトの最大有効期間を設定します。有効期間は秒単位または sshd_config(5) で指定された時間形式で指定できます。
-
-```console
-$ ssh-agent -t 1h
-SSH_AUTH_SOCK=/tmp/ssh-XXXXXXXXXX/agent.1234; export SSH_AUTH_SOCK;
-SSH_AGENT_PID=1234; export SSH_AGENT_PID;
-echo Agent pid 1234;
 ```
 
 ## 使用例
 
-### ssh-agentを起動して鍵を追加する
+### ssh-agentを起動して鍵を読み込む
 
 ```console
 $ eval $(ssh-agent)
-Agent pid 1234
-$ ssh-add ~/.ssh/id_rsa
-Enter passphrase for /home/user/.ssh/id_rsa: 
-Identity added: /home/user/.ssh/id_rsa
-```
-
-### 特定の有効期間でssh-agentを起動する
-
-```console
-$ eval $(ssh-agent -t 4h)
-Agent pid 1235
+Agent pid 12345
 $ ssh-add
 Enter passphrase for /home/user/.ssh/id_rsa: 
 Identity added: /home/user/.ssh/id_rsa
 ```
 
-### エージェント内の鍵を一覧表示する
+### 特定の有効期限でssh-agentを起動する
 
 ```console
-$ ssh-add -l
-2048 SHA256:abcdefghijklmnopqrstuvwxyz1234567890ABCD /home/user/.ssh/id_rsa (RSA)
+$ eval $(ssh-agent -t 4h)
+Agent pid 12345
+$ ssh-add
+Enter passphrase for /home/user/.ssh/id_rsa: 
+Identity added: /home/user/.ssh/id_rsa (will expire in 4 hours)
 ```
 
-### ssh-agentを終了する
+### ssh-agentプロセスを終了する
 
 ```console
 $ eval $(ssh-agent -k)
-Agent pid 1234 killed
+Agent pid 12345 killed
 ```
 
 ## ヒント:
 
-### ssh-agentを自動的に起動する
+### ssh-agentをシェルの起動ファイルに追加する
 
-シェルの起動ファイル（`.bashrc`や`.zshrc`など）に`eval $(ssh-agent)`を追加すると、ログイン時に自動的にエージェントが起動します。
+`eval $(ssh-agent)`をシェルの起動ファイル（~/.bashrcや~/.zshrcなど）に追加して、ターミナルを開いたときに自動的にssh-agentを起動するようにします。
 
-### ssh-agentとSSH設定ファイルを組み合わせる
+### ssh-add -lで鍵を一覧表示する
 
-ssh-agentとSSH設定ファイル（~/.ssh/config）を組み合わせることで、異なるホストに対して異なる鍵を自動的に管理できます。
+`ssh-add -l`を実行して、現在エージェントに読み込まれている鍵を確認します。
 
-### SSHエージェント転送を使用する
+### SSHエージェントを転送する
 
-他のサーバーにアクセスする必要があるリモートサーバーに接続する場合、`ssh -A user@host`を使用してローカルのエージェントをリモートサーバーに転送できます。信頼できないサーバーではセキュリティリスクがあるため、この機能の使用には注意が必要です。
+リモートサーバーに接続する際に`ssh -A user@host`を使用して、ローカルのSSHエージェントをリモートサーバーに転送し、そのサーバーでの認証にローカルの鍵を使用できるようにします。
 
-### 実行中のエージェントを確認する
+### セキュリティに関する考慮事項
 
-新しいエージェントを起動する前に、`echo $SSH_AGENT_PID`で既に実行中のエージェントがあるかどうかを確認し、複数のエージェントが実行されるのを避けましょう。
+エージェント転送（`ssh -A`）は、特に信頼できないサーバーでは注意して使用してください。リモートサーバー上のroot権限を持つ人が、あなたの鍵を使用する可能性があります。
 
 ## よくある質問
 
 #### Q1. ssh-agentとssh-addの違いは何ですか？
-A. `ssh-agent`は復号化された鍵を保持するバックグラウンドプログラムであり、`ssh-add`は実行中のエージェントに鍵を追加するために使用されます。
+A. ssh-agentは復号化された鍵を保持するバックグラウンドサービスであり、ssh-addは実行中のエージェントに鍵を追加するために使用されるコマンドです。
 
-#### Q2. 再起動後もssh-agentに鍵を記憶させるにはどうすればよいですか？
-A. ssh-agentは再起動後も持続しません。再起動後にエージェントを再起動し、鍵を再度追加する必要があります。keychainなどのツールや起動スクリプトの使用を検討してください。
+#### Q2. ssh-agentが実行中かどうかを確認するにはどうすればよいですか？
+A. `echo $SSH_AGENT_PID`を実行します - 数字が返ってくれば、エージェントは実行中です。
 
-#### Q3. ssh-agentが実行中かどうかを確認するにはどうすればよいですか？
-A. SSH_AGENT_PID環境変数が設定されているかどうかを確認します：`echo $SSH_AGENT_PID`。数値が返される場合、エージェントが実行中です。
+#### Q3. ssh-agentを起動したときに自動的に鍵を読み込むにはどうすればよいですか？
+A. `ssh-add -c ~/.ssh/id_rsa`を使用して確認付きで鍵を追加するか、IdentityFileディレクティブを含む~/.ssh/configファイルを作成します。
 
-#### Q4. ssh-agentから鍵を削除するにはどうすればよいですか？
-A. 特定の鍵を削除するには`ssh-add -d ~/.ssh/keyfile`を使用し、すべての鍵を削除するには`ssh-add -D`を使用します。
+#### Q4. ssh-agentの実行を停止するにはどうすればよいですか？
+A. `eval $(ssh-agent -k)`を実行して、現在のエージェントプロセスを終了します。
 
-## macOSに関する考慮事項
+## 参考文献
 
-macOSでは、システムキーチェーン統合により鍵の自動ロードが可能です。組み込みのssh-agentはlaunchdによって管理され、自動的に起動します。macOSキーチェーンに鍵を追加するには、`ssh-add -K ~/.ssh/id_rsa`（古いバージョン）または`ssh-add --apple-use-keychain ~/.ssh/id_rsa`（新しいバージョン）を使用します。これにより、再起動後も鍵が保持されます。
-
-## 参考資料
-
-https://man.openbsd.org/ssh-agent
+https://man.openbsd.org/ssh-agent.1
 
 ## 改訂履歴
 
-- 2025/05/04 初回改訂
+- 2025/05/05 初版

@@ -49,115 +49,127 @@
   <h1>diff command</h1>
 <p>Compare files line by line.</p>
 <h2>Overview</h2>
-<p>The <code>diff</code> command compares two files or directories and displays the differences between them. It's commonly used to see what changes have been made to files, create patch files, or compare configurations. The output shows which lines need to be changed to make the files identical.</p>
+<p>The <code>diff</code> command compares two files or directories and displays the differences between them. It's commonly used to identify changes between file versions, create patches, or check what has been modified in a file.</p>
 <h2>Options</h2>
 <h3><strong>-u, --unified</strong></h3>
-<p>Output differences in the unified format, showing context around the differences. This is the most readable and commonly used format.</p>
+<p>Output differences in unified format, showing context around the changes.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">--- file1.txt	2025-05-04 10:00:00.000000000 -0400</span>
-<span style="color: #000; font-style: italic">+++ file2.txt	2025-05-04 10:30:00.000000000 -0400</span>
+<span style="color: #000; font-style: italic">--- file1.txt	2025-05-05 10:00:00.000000000 -0400</span>
+<span style="color: #000; font-style: italic">+++ file2.txt	2025-05-05 10:30:00.000000000 -0400</span>
 <span style="color: #000; font-style: italic">@@ -1,3 +1,4 @@</span>
 <span style="color: #000; font-style: italic"> This is a test file.</span>
 <span style="color: #000; font-style: italic">-It has some content.</span>
 <span style="color: #000; font-style: italic">+It has some modified content.</span>
 <span style="color: #000; font-style: italic"> The end of the file.</span>
-<span style="color: #000; font-style: italic">+A new line was added.</span>
-</pre></div>
-<h3><strong>-i, --ignore-case</strong></h3>
-<p>Ignore case differences when comparing files.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>uppercase.txt<span style="color: #F8F8F8"> </span>lowercase.txt
-<span style="color: #000; font-style: italic">[No output if files differ only in case]</span>
+<span style="color: #000; font-style: italic">+A new line added.</span>
 </pre></div>
 <h3><strong>-b, --ignore-space-change</strong></h3>
 <p>Ignore changes in the amount of white space.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>spaced.txt<span style="color: #F8F8F8"> </span>compact.txt
-<span style="color: #000; font-style: italic">[No output if files differ only in spacing]</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">2c2</span>
+<span style="color: #000; font-style: italic">&lt; It has some content.</span>
+<span style="color: #000; font-style: italic">---</span>
+<span style="color: #000; font-style: italic">&gt; It has some   modified content.</span>
 </pre></div>
-<h3><strong>-w, --ignore-all-space</strong></h3>
-<p>Ignore all white space when comparing lines.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">[No output if files differ only in whitespace]</span>
+<h3><strong>-i, --ignore-case</strong></h3>
+<p>Ignore case differences in file contents.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>uppercase.txt<span style="color: #F8F8F8"> </span>lowercase.txt
+<span style="color: #000; font-style: italic">[No output if files differ only in case]</span>
 </pre></div>
 <h3><strong>-r, --recursive</strong></h3>
 <p>Recursively compare any subdirectories found.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>dir1<span style="color: #F8F8F8"> </span>dir2
-<span style="color: #000; font-style: italic">Only in dir1: unique_file1.txt</span>
-<span style="color: #000; font-style: italic">Only in dir2: unique_file2.txt</span>
-<span style="color: #000; font-style: italic">diff -r dir1/common.txt dir2/common.txt</span>
-<span style="color: #000; font-style: italic">1c1</span>
-<span style="color: #000; font-style: italic">&lt; Original content</span>
+<span style="color: #000; font-style: italic">diff -r dir1/file.txt dir2/file.txt</span>
+<span style="color: #000; font-style: italic">2c2</span>
+<span style="color: #000; font-style: italic">&lt; This is in dir1</span>
 <span style="color: #000; font-style: italic">---</span>
-<span style="color: #000; font-style: italic">&gt; Modified content</span>
+<span style="color: #000; font-style: italic">&gt; This is in dir2</span>
+<span style="color: #000; font-style: italic">Only in dir2: newfile.txt</span>
 </pre></div>
-<h3><strong>-q, --brief</strong></h3>
-<p>Report only whether files differ, not the details of the differences.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-q<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">Files file1.txt and file2.txt differ</span>
+<h3><strong>-N, --new-file</strong></h3>
+<p>Treat absent files as empty.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-N<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>nonexistent.txt
+<span style="color: #000; font-style: italic">1,3d0</span>
+<span style="color: #000; font-style: italic">&lt; This is a test file.</span>
+<span style="color: #000; font-style: italic">&lt; It has some content.</span>
+<span style="color: #000; font-style: italic">&lt; The end of the file.</span>
+</pre></div>
+<h3><strong>-c, --context</strong></h3>
+<p>Output differences in context format with 3 lines of context.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">*** file1.txt	2025-05-05 10:00:00.000000000 -0400</span>
+<span style="color: #000; font-style: italic">--- file2.txt	2025-05-05 10:30:00.000000000 -0400</span>
+<span style="color: #000; font-style: italic">***************</span>
+<span style="color: #000; font-style: italic">*** 1,3 ****</span>
+<span style="color: #000; font-style: italic">  This is a test file.</span>
+<span style="color: #000; font-style: italic">- It has some content.</span>
+<span style="color: #000; font-style: italic">  The end of the file.</span>
+<span style="color: #000; font-style: italic">--- 1,4 ----</span>
+<span style="color: #000; font-style: italic">  This is a test file.</span>
+<span style="color: #000; font-style: italic">+ It has some modified content.</span>
+<span style="color: #000; font-style: italic">  The end of the file.</span>
+<span style="color: #000; font-style: italic">+ A new line added.</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic File Comparison</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<h3>Comparing two files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>modified.txt
 <span style="color: #000; font-style: italic">2c2</span>
-<span style="color: #000; font-style: italic">&lt; It has some content.</span>
+<span style="color: #000; font-style: italic">&lt; This is the original line.</span>
 <span style="color: #000; font-style: italic">---</span>
-<span style="color: #000; font-style: italic">&gt; It has some modified content.</span>
-<span style="color: #000; font-style: italic">3a4</span>
-<span style="color: #000; font-style: italic">&gt; A new line was added.</span>
+<span style="color: #000; font-style: italic">&gt; This is the modified line.</span>
+<span style="color: #000; font-style: italic">4d3</span>
+<span style="color: #000; font-style: italic">&lt; This line will be deleted.</span>
 </pre></div>
-<h3>Creating a Patch File</h3>
+<h3>Creating a patch file</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>modified.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>changes.patch
-<span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
-<span style="color: #000; font-style: italic">patching file original.txt</span>
+<span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">--- original.txt	2025-05-05 10:00:00.000000000 -0400</span>
+<span style="color: #000; font-style: italic">+++ modified.txt	2025-05-05 10:30:00.000000000 -0400</span>
+<span style="color: #000; font-style: italic">@@ -1,4 +1,3 @@</span>
+<span style="color: #000; font-style: italic"> First line is unchanged.</span>
+<span style="color: #000; font-style: italic">-This is the original line.</span>
+<span style="color: #000; font-style: italic">+This is the modified line.</span>
+<span style="color: #000; font-style: italic"> Third line is unchanged.</span>
+<span style="color: #000; font-style: italic">-This line will be deleted.</span>
 </pre></div>
-<h3>Comparing Directories</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>project_v1<span style="color: #F8F8F8"> </span>project_v2
-<span style="color: #000; font-style: italic">Only in project_v2: new_feature.py</span>
-<span style="color: #000; font-style: italic">diff -r project_v1/main.py project_v2/main.py</span>
-<span style="color: #000; font-style: italic">10c10,12</span>
-<span style="color: #000; font-style: italic">&lt; print(&quot;Hello World&quot;)</span>
+<h3>Comparing directories</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>dir1<span style="color: #F8F8F8"> </span>dir2
+<span style="color: #000; font-style: italic">Only in dir1: uniquefile1.txt</span>
+<span style="color: #000; font-style: italic">Only in dir2: uniquefile2.txt</span>
+<span style="color: #000; font-style: italic">diff -r dir1/common.txt dir2/common.txt</span>
+<span style="color: #000; font-style: italic">1c1</span>
+<span style="color: #000; font-style: italic">&lt; This is in dir1</span>
 <span style="color: #000; font-style: italic">---</span>
-<span style="color: #000; font-style: italic">&gt; print(&quot;Hello World!&quot;)</span>
-<span style="color: #000; font-style: italic">&gt; print(&quot;Version 2.0&quot;)</span>
-<span style="color: #000; font-style: italic">&gt; print(&quot;Copyright 2025&quot;)</span>
+<span style="color: #000; font-style: italic">&gt; This is in dir2</span>
 </pre></div>
-<h3>Side-by-Side Comparison</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-y<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">This is a test file.                 This is a test file.</span>
-<span style="color: #000; font-style: italic">It has some content.               | It has some modified content.</span>
-<span style="color: #000; font-style: italic">The end of the file.                 The end of the file.</span>
-<span style="color: #000; font-style: italic">                                   &gt; A new line was added.</span>
-</pre></div>
-<h2>Tips</h2>
-<h3>Use Color for Better Readability</h3>
-<p>Many systems have <code>colordiff</code> installed, which adds color highlighting to diff output:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>colordiff<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-</pre></div>
-<h3>Context Control</h3>
-<p>Control the amount of context shown with <code>-U NUM</code> or <code>--unified=NUM</code>:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-U1<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-</pre></div>
-<h3>Ignore Version Control Files</h3>
-<p>When comparing directories, use <code>--exclude=PATTERN</code> to ignore certain files:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>--exclude<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;.git&quot;</span><span style="color: #F8F8F8"> </span>dir1<span style="color: #F8F8F8"> </span>dir2
-</pre></div>
-<h3>Use with Version Control</h3>
-<p>While version control systems have their own diff tools, you can use external diff:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>diff<span style="color: #F8F8F8"> </span>--no-index<span style="color: #F8F8F8"> </span>--external-diff<span style="color: #CE5C00; font-weight: bold">=</span>diff<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-</pre></div>
+<h2>Tips:</h2>
+<h3>Understanding diff output</h3>
+<p>The standard diff output format uses line numbers and commands:</p>
+<ul>
+<li><code>a</code> (add): Lines added to the second file</li>
+<li><code>d</code> (delete): Lines deleted from the first file</li>
+<li><code>c</code> (change): Lines changed between files</li>
+</ul>
+<h3>Use color for better readability</h3>
+<p>Many systems support colored diff output with <code>diff --color=auto</code> which makes changes easier to spot.</p>
+<h3>Combine with grep for specific changes</h3>
+<p>Use <code>diff file1 file2 | grep pattern</code> to find only differences containing specific text.</p>
+<h3>Side-by-side comparison</h3>
+<p>Use <code>diff -y</code> or <code>diff --side-by-side</code> to see differences in a two-column format, which can be easier to read for some changes.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What do the symbols in diff output mean?</h4>
-<p>A. In normal output: <code>a</code> means add, <code>d</code> means delete, <code>c</code> means change. Lines with <code>&lt;</code> are from the first file, <code>&gt;</code> are from the second file, and <code>---</code> separates the changes.</p>
-<h4>Q2. How can I make diff output more readable?</h4>
-<p>A. Use the unified format (<code>-u</code>) or side-by-side format (<code>-y</code>). For colored output, use <code>colordiff</code> if available.</p>
-<h4>Q3. How do I create a patch file that can be applied later?</h4>
-<p>A. Use <code>diff -u original_file modified_file &gt; patch_file.patch</code> and then apply it with <code>patch original_file &lt; patch_file.patch</code>.</p>
-<h4>Q4. Can diff compare binary files?</h4>
-<p>A. By default, diff works with text files. For binary files, consider using <code>cmp</code> or specialized tools like <code>xxdiff</code> or <code>hexdump</code> combined with diff.</p>
+<p>A. In standard output, <code>&lt;</code> indicates lines from the first file, <code>&gt;</code> indicates lines from the second file, and <code>---</code> separates changed sections.</p>
+<h4>Q2. How do I create a patch file?</h4>
+<p>A. Use <code>diff -u original.txt modified.txt &gt; changes.patch</code> to create a unified format patch file.</p>
+<h4>Q3. How can I ignore whitespace differences?</h4>
+<p>A. Use <code>diff -b</code> to ignore changes in whitespace, or <code>diff -w</code> to ignore all whitespace.</p>
+<h4>Q4. How do I apply a diff patch?</h4>
+<p>A. Use the <code>patch</code> command: <code>patch original.txt &lt; changes.patch</code></p>
 <h2>References</h2>
-<p>https://www.gnu.org/software/diffutils/manual/html_node/diff.html</p>
+<p>https://www.gnu.org/software/diffutils/manual/html_node/diff-Options.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

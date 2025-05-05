@@ -1,102 +1,98 @@
 # continue command
 
-Resume a suspended job by bringing it to the foreground or sending it to the background.
+Resume a suspended job by bringing it to the foreground.
 
 ## Overview
 
-The `continue` command is a shell built-in that resumes the execution of a job that has been suspended (typically with Ctrl+Z). It allows you to bring a suspended process back to either the foreground (where it can interact with the terminal) or the background (where it runs without requiring terminal input).
+The `continue` command is a shell built-in that resumes execution of a loop (for, while, until) at the beginning of the next iteration, skipping any remaining commands in the current iteration. It's used within shell scripts to control loop flow by immediately starting the next iteration when certain conditions are met.
 
 ## Options
 
-### **fg** - Foreground
+The `continue` command doesn't have options in the traditional sense, but it can accept an optional numeric argument.
 
-Brings a suspended job to the foreground, allowing it to continue execution and interact with the terminal.
+### **n** (numeric argument)
 
-```console
-$ fg [job_spec]
-```
-
-### **bg** - Background
-
-Continues a suspended job in the background, allowing it to run without occupying the terminal.
+Specifies which enclosing loop to continue. By default (no argument), `continue` affects the innermost loop.
 
 ```console
-$ bg [job_spec]
+$ for i in 1 2 3; do
+>   for j in a b c; do
+>     if [ $j = "b" ]; then
+>       continue 2  # Skip to next iteration of outer loop
+>     fi
+>     echo "$i $j"
+>   done
+> done
+1 a
+2 a
+3 a
 ```
 
 ## Usage Examples
 
-### Resuming the most recently suspended job in the foreground
+### Basic Usage in a Loop
 
 ```console
-$ fg
-[1]+ Running     vim document.txt
+$ for i in 1 2 3 4 5; do
+>   if [ $i -eq 3 ]; then
+>     continue
+>   fi
+>   echo "Processing item $i"
+> done
+Processing item 1
+Processing item 2
+Processing item 4
+Processing item 5
 ```
 
-### Resuming a specific job in the foreground
+### Skipping Iterations Based on Conditions
 
 ```console
-$ fg %2
-[2]+ Running     nano notes.txt
-```
-
-### Continuing a suspended job in the background
-
-```console
-$ bg
-[1]+ Running     find / -name "*.log" &
-```
-
-### Continuing a specific job in the background
-
-```console
-$ bg %3
-[3]+ Running     tar -czf archive.tar.gz directory/ &
+$ i=0
+$ while [ $i -lt 5 ]; do
+>   i=$((i+1))
+>   if [ $((i % 2)) -eq 0 ]; then
+>     continue
+>   fi
+>   echo "Odd number: $i"
+> done
+Odd number: 1
+Odd number: 3
+Odd number: 5
 ```
 
 ## Tips:
 
-### View All Jobs
+### Use with Caution in Complex Loops
 
-Before using `continue` commands, you can view all suspended and background jobs with the `jobs` command to identify which job you want to resume.
+When using `continue` in nested loops, be careful about which loop you're affecting. Without a numeric argument, it only affects the innermost loop.
 
-```console
-$ jobs
-[1]  Stopped    vim document.txt
-[2]- Running    find / -name "*.log" &
-[3]+ Stopped    nano notes.txt
-```
+### Combine with Conditional Logic
 
-### Job Specification
+`continue` is most useful when combined with conditional statements to skip iterations that meet specific criteria, making your scripts more efficient.
 
-You can specify jobs by:
-- `%n` - job number (e.g., `%1`)
-- `%+` or `%%` - current job (most recently suspended)
-- `%-` - previous job
+### Consider Readability
 
-### Suspend Running Process
-
-To suspend a running foreground process, press Ctrl+Z. This allows you to use `fg` or `bg` to resume it later.
+While `continue` can make scripts more efficient, excessive use can make code harder to follow. Use it judiciously to maintain readability.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `fg` and `bg`?
-A. `fg` brings a job to the foreground where it can interact with the terminal, while `bg` runs the job in the background without requiring terminal interaction.
+#### Q1. What's the difference between `continue` and `break`?
+A. `continue` skips to the next iteration of a loop, while `break` exits the loop entirely.
 
-#### Q2. How do I know which jobs are available to continue?
-A. Use the `jobs` command to list all suspended and background jobs.
+#### Q2. Can I use `continue` outside of a loop?
+A. No, using `continue` outside a loop will result in an error as it only has meaning within loops.
 
-#### Q3. Can I continue a job that's already running in the background?
-A. No, `continue` commands are for suspended jobs. A job already running in the background is already continuing execution.
+#### Q3. How do I continue a specific outer loop in nested loops?
+A. Use `continue n` where n is the level of the loop you want to continue (1 for the innermost loop, 2 for the next level out, etc.).
 
-#### Q4. What happens if I don't specify a job number?
-A. Without a job specification, `fg` and `bg` operate on the current job (marked with `+` in the `jobs` output).
+#### Q4. Does `continue` work the same in all shell types?
+A. The basic functionality is consistent across bash, zsh, and other common shells, but there might be subtle differences in behavior with complex scripts.
 
 ## References
 
-These commands are shell built-ins, documented in the Bash manual:
-https://www.gnu.org/software/bash/manual/html_node/Job-Control-Builtins.html
+https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

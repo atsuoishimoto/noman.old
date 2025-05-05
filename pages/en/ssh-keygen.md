@@ -10,32 +10,45 @@ Generate, manage, and convert authentication keys for SSH.
 
 ### **-t type**
 
-Specifies the type of key to create. Common types include rsa, ed25519, dsa, and ecdsa.
+Specifies the type of key to create (rsa, ed25519, dsa, ecdsa).
 
 ```console
 $ ssh-keygen -t ed25519
 Generating public/private ed25519 key pair.
 Enter file in which to save the key (/home/user/.ssh/id_ed25519): 
-```
-
-### **-f filename**
-
-Specifies the filename of the key file to create or manage.
-
-```console
-$ ssh-keygen -t rsa -f ~/.ssh/my_custom_key
-Generating public/private rsa key pair.
 Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/user/.ssh/id_ed25519
+Your public key has been saved in /home/user/.ssh/id_ed25519.pub
 ```
 
 ### **-b bits**
 
-Specifies the number of bits in the key. Higher values provide stronger security but may be slower.
+Specifies the number of bits in the key (default depends on key type).
 
 ```console
 $ ssh-keygen -t rsa -b 4096
 Generating public/private rsa key pair.
 Enter file in which to save the key (/home/user/.ssh/id_rsa): 
+```
+
+### **-f filename**
+
+Specifies the filename of the key file.
+
+```console
+$ ssh-keygen -t rsa -f ~/.ssh/github_key
+Generating public/private rsa key pair.
+Enter passphrase (empty for no passphrase): 
+```
+
+### **-C comment**
+
+Provides a comment for the key, typically an email address or description.
+
+```console
+$ ssh-keygen -t ed25519 -C "user@example.com"
+Generating public/private ed25519 key pair.
 ```
 
 ### **-p**
@@ -50,14 +63,22 @@ Enter same passphrase again:
 Your identification has been saved with the new passphrase.
 ```
 
-### **-C comment**
+### **-l**
 
-Adds a comment to the key, typically used to identify the key's purpose or owner.
+Shows the fingerprint of a specified public or private key file.
 
 ```console
-$ ssh-keygen -t ed25519 -C "work laptop"
-Generating public/private ed25519 key pair.
-Enter file in which to save the key (/home/user/.ssh/id_ed25519): 
+$ ssh-keygen -l -f ~/.ssh/id_ed25519
+256 SHA256:AbCdEfGhIjKlMnOpQrStUvWxYz1234567890abcdef user@example.com (ED25519)
+```
+
+### **-y**
+
+Reads a private key file and outputs the public key.
+
+```console
+$ ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
+Enter passphrase: 
 ```
 
 ## Usage Examples
@@ -74,73 +95,57 @@ Your identification has been saved in /home/user/.ssh/id_rsa
 Your public key has been saved in /home/user/.ssh/id_rsa.pub
 ```
 
-### Generating a key with custom settings
+### Creating a key with custom settings
 
 ```console
-$ ssh-keygen -t ed25519 -b 256 -f ~/.ssh/github_key -C "github access"
+$ ssh-keygen -t ed25519 -C "work laptop" -f ~/.ssh/work_key
 Generating public/private ed25519 key pair.
 Enter passphrase (empty for no passphrase): 
 Enter same passphrase again: 
-Your identification has been saved in /home/user/.ssh/github_key
-Your public key has been saved in /home/user/.ssh/github_key.pub
+Your identification has been saved in /home/user/.ssh/work_key
+Your public key has been saved in /home/user/.ssh/work_key.pub
 ```
 
-### Viewing a public key's fingerprint
+### Converting a key to a different format
 
 ```console
-$ ssh-keygen -lf ~/.ssh/id_rsa.pub
-3072 SHA256:abcdef1234567890abcdef1234567890 user@hostname (RSA)
+$ ssh-keygen -e -f ~/.ssh/id_rsa.pub > ~/.ssh/id_rsa_openssh.pub
 ```
 
 ## Tips
 
 ### Choose the Right Key Type
 
-Ed25519 keys are recommended for most modern systems as they offer strong security with smaller key sizes. RSA keys (minimum 2048 bits) are more widely compatible with older systems.
+Ed25519 keys are recommended for most users as they provide strong security with smaller key sizes. RSA keys with at least 3072 bits are also secure but larger.
 
 ### Use a Strong Passphrase
 
-Adding a passphrase to your private key provides an extra layer of security. If someone obtains your private key file, they'll still need the passphrase to use it.
+Adding a passphrase to your key provides an extra layer of security. If your private key is stolen, the passphrase prevents immediate use.
 
 ### Back Up Your Keys
 
-Store a secure backup of your private keys. If you lose them, you'll lose access to any systems that use those keys for authentication.
+Always keep backups of your private keys in a secure location. If you lose your private key, you'll need to generate a new key pair and update all servers.
 
-### Key Permissions Matter
+### Key Location Matters
 
-SSH is sensitive to file permissions. Private keys should have permissions set to 600 (readable and writable only by the owner).
-
-```console
-$ chmod 600 ~/.ssh/id_rsa
-```
+By default, SSH looks for keys in the ~/.ssh directory. Using non-standard locations requires specifying the key path with `-i` when using ssh.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I copy my public key to a remote server?
-A. Use `ssh-copy-id username@remote-server` to copy and install your key. Alternatively, manually append your public key to the remote server's `~/.ssh/authorized_keys` file.
+#### Q1. How do I copy my public key to a server?
+A. Use `ssh-copy-id user@hostname` to copy your public key to a remote server's authorized_keys file.
 
-#### Q2. What's the difference between key types?
-A. RSA is widely compatible but requires longer keys. Ed25519 is newer, more secure, and uses shorter keys but may not work with older systems. ECDSA and DSA are less commonly used today.
+#### Q2. What's the difference between RSA and Ed25519 keys?
+A. Ed25519 keys are newer, smaller, and generally faster than RSA keys while providing equivalent or better security.
 
-#### Q3. How do I remove a passphrase from my key?
-A. Use `ssh-keygen -p -f ~/.ssh/id_rsa` and enter an empty passphrase when prompted for the new passphrase.
+#### Q3. How do I generate a key without a passphrase?
+A. Simply press Enter when prompted for a passphrase during key generation.
 
-#### Q4. How often should I rotate my SSH keys?
-A. Best practice is to rotate keys annually or when there's a security concern, such as a team member leaving or a potential compromise.
+#### Q4. How can I change my key's passphrase?
+A. Use `ssh-keygen -p -f ~/.ssh/id_rsa` to change the passphrase of an existing key.
 
-## macOS Considerations
-
-On macOS, keys are stored in the same location (`~/.ssh/`), but you may need to add your key to the SSH agent with:
-
-```console
-$ ssh-add -K ~/.ssh/id_rsa
-```
-
-For macOS Monterey (12) and later, use:
-
-```console
-$ ssh-add --apple-use-keychain ~/.ssh/id_rsa
-```
+#### Q5. What should I do if I forgot my key's passphrase?
+A. Unfortunately, there's no way to recover a lost passphrase. You'll need to generate a new key pair.
 
 ## References
 
@@ -148,4 +153,4 @@ https://man.openbsd.org/ssh-keygen.1
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

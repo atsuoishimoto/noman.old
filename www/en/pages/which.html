@@ -47,9 +47,9 @@
     <main>
       
   <h1>which command</h1>
-<p>Locate a command by searching through the PATH environment variable.</p>
+<p>Locate a command's executable file in the user's PATH.</p>
 <h2>Overview</h2>
-<p>The <code>which</code> command finds the location of executable files in your PATH. It helps you determine which version of a program would run if you typed its name at the command line, showing the full path to the executable.</p>
+<p>The <code>which</code> command searches through the directories listed in the PATH environment variable to find the location of executable programs. It helps determine which version of a program would be executed if run from the command line.</p>
 <h2>Options</h2>
 <h3><strong>-a, --all</strong></h3>
 <p>Display all matching executables in PATH, not just the first one.</p>
@@ -57,60 +57,55 @@
 <span style="color: #000; font-style: italic">/usr/bin/python</span>
 <span style="color: #000; font-style: italic">/usr/local/bin/python</span>
 </pre></div>
-<h3><strong>-s, --silent, --quiet</strong></h3>
-<p>Suppress normal output; return exit status 0 if any executable is found, 1 if not.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>python
+<h3><strong>-s</strong></h3>
+<p>Silent mode - return exit status (0 if found, 1 if not found) without output.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>git
 <span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$?</span>
 <span style="color: #000; font-style: italic">0</span>
 </pre></div>
-<h3><strong>-v, --version</strong></h3>
-<p>Display version information and exit.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>--version
-<span style="color: #000; font-style: italic">GNU which v2.21, Copyright (C) 1999 - 2015 Carlo Wood.</span>
-</pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic usage</h3>
+<h3>Finding a command's location</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>ls
 <span style="color: #000; font-style: italic">/bin/ls</span>
 </pre></div>
-<h3>Finding multiple commands at once</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>bash<span style="color: #F8F8F8"> </span>python<span style="color: #F8F8F8"> </span>grep
+<h3>Checking if a command exists</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>nonexistentcommand
+<span style="color: #000; font-style: italic">which: no nonexistentcommand in (/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin)</span>
+</pre></div>
+<h3>Using with multiple commands</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span>bash<span style="color: #F8F8F8"> </span>python<span style="color: #F8F8F8"> </span>perl
 <span style="color: #000; font-style: italic">/bin/bash</span>
 <span style="color: #000; font-style: italic">/usr/bin/python</span>
-<span style="color: #000; font-style: italic">/bin/grep</span>
+<span style="color: #000; font-style: italic">/usr/bin/perl</span>
 </pre></div>
-<h3>Using with other commands</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>file<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>which<span style="color: #F8F8F8"> </span>python<span style="color: #204A87; font-weight: bold">)</span>
-<span style="color: #000; font-style: italic">/usr/bin/python: symbolic link to python3</span>
+<h2>Tips:</h2>
+<h3>Use with command substitution</h3>
+<p>You can use <code>which</code> with command substitution to execute the full path of a command:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">$(</span>which<span style="color: #F8F8F8"> </span>python<span style="color: #204A87; font-weight: bold">)</span><span style="color: #F8F8F8"> </span>--version
+<span style="color: #000; font-style: italic">Python 3.9.6</span>
 </pre></div>
-<h2>Tips</h2>
-<h3>Check if a Command Exists</h3>
-<p>Use <code>which</code> with a conditional to check if a command is available before using it:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span>which<span style="color: #F8F8F8"> </span>git<span style="color: #F8F8F8"> </span>&gt;/dev/null<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Git is installed&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">else</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Git is not installed&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">fi</span>
-<span style="color: #000; font-style: italic">Git is installed</span>
+<h3>Check for multiple versions</h3>
+<p>Use <code>which -a</code> to find all instances of a command in your PATH, which is helpful when troubleshooting version conflicts.</p>
+<h3>Combine with other commands</h3>
+<p>Combine with other commands for more information:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>which<span style="color: #F8F8F8"> </span>python<span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #000; font-style: italic">-rwxr-xr-x 1 root wheel 31488 Jan 1 2023 /usr/bin/python</span>
 </pre></div>
-<h3>Combine with <code>type</code> for More Information</h3>
-<p>The <code>type</code> command provides more details about a command (builtin, alias, or executable):</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">type</span><span style="color: #F8F8F8"> </span>ls
-<span style="color: #000; font-style: italic">ls is aliased to `ls --color=auto&#39;</span>
-</pre></div>
-<h3>Remember PATH Order Matters</h3>
-<p>The first matching executable in your PATH is the one that will be executed. Use <code>which -a</code> to see all possible matches.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between <code>which</code> and <code>whereis</code>?</h4>
-<p>A. <code>which</code> only shows executable locations in your PATH, while <code>whereis</code> also finds manual pages and source files.</p>
-<h4>Q2. Why does <code>which</code> not find shell builtins or aliases?</h4>
-<p>A. <code>which</code> only finds executable files in your PATH. For shell builtins, aliases, or functions, use the <code>type</code> command instead.</p>
-<h4>Q3. How can I find all instances of a command in my PATH?</h4>
-<p>A. Use <code>which -a command</code> to show all matching executables, not just the first one.</p>
-<h4>Q4. Why does <code>which</code> sometimes return nothing?</h4>
-<p>A. If <code>which</code> returns nothing, the command either doesn't exist in your PATH or might be a shell builtin/alias.</p>
-<h2>macOS Considerations</h2>
-<p>On macOS, the <code>which</code> command may behave differently than on Linux systems. The macOS version doesn't support all the GNU options like <code>--all</code> (though <code>-a</code> works). For more consistent behavior across systems, consider using <code>command -v</code> which is a POSIX-compliant alternative.</p>
+<p>A. <code>which</code> only shows the executable's location in your PATH, while <code>whereis</code> also finds the command's source code, man pages, and related files.</p>
+<h4>Q2. Why does <code>which</code> sometimes not find a command that exists?</h4>
+<p>A. The command might be a shell builtin (like <code>cd</code>), an alias, or not in your PATH environment variable.</p>
+<h4>Q3. How can I use <code>which</code> to check if a command is installed?</h4>
+<p>A. Use <code>which -s command &amp;&amp; echo &quot;Installed&quot; || echo &quot;Not installed&quot;</code> to check if a command exists in your PATH.</p>
+<h4>Q4. Does <code>which</code> work for shell builtins?</h4>
+<p>A. No, <code>which</code> only finds executable files in your PATH, not shell builtins like <code>cd</code> or <code>echo</code>.</p>
 <h2>References</h2>
-<p>https://man7.org/linux/man-pages/man1/which.1.html</p>
+<p>https://pubs.opengroup.org/onlinepubs/9699919799/utilities/which.html</p>
 <h2>Revisions</h2>
-<p>2025/05/04 First revision</p>
+<ul>
+<li>2025/05/05 First revision</li>
+</ul>
 
 
     </main>

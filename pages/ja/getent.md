@@ -1,64 +1,89 @@
 # getent コマンド
 
-管理データベース（ホスト、ユーザー、グループなど）からエントリを取得します。
+管理データベースからエントリを取得します。
 
 ## 概要
 
-`getent` は、Name Service Switch (NSS) ライブラリによってサポートされている様々な管理データベースからエントリを取得します。ユーザー、グループ、ホスト、ネットワーク、サービス、プロトコルなどの情報をローカルまたはリモートに保存されているかに関わらず、システムデータベースから検索するために一般的に使用されます。
+`getent` は、アプリケーションが使用するのと同じライブラリ関数を使用して、管理データベース（`/etc/passwd`、`/etc/group` など）からエントリを表示する Unix コマンドです。情報がローカルファイル、NIS、LDAP、その他のソースから来るかどうかに関わらず、標準化された方法でシステムデータベースを照会するのに役立ちます。
 
 ## オプション
 
+### **database**
+
+照会するデータベース（passwd、group、hosts、services、protocols、networks など）を指定します
+
+```console
+$ getent passwd root
+root:x:0:0:root:/root:/bin/bash
+```
+
 ### **-s, --service=CONFIG**
 
-使用するサービスプロバイダを指定します
+使用するサービス設定を指定します
 
 ```console
 $ getent -s files passwd root
 root:x:0:0:root:/root:/bin/bash
 ```
 
-### **-i, --no-idn**
-
-hostsデータベースに対するIDNエンコーディングを無効にします
-
-```console
-$ getent -i hosts example.com
-93.184.216.34    example.com
-```
-
 ### **-h, --help**
 
-ヘルプ情報を表示して終了します
+ヘルプ情報を表示します
 
 ```console
 $ getent --help
 Usage: getent [OPTION...] database [key ...]
 Get entries from administrative database.
 
-  -i, --no-idn               Disable IDN encoding
+  -i, --no-idn               disable IDN encoding
   -s, --service=CONFIG       Service configuration to be used
   -?, --help                 Give this help list
       --usage                Give a short usage message
   -V, --version              Print program version
+
+Mandatory or optional arguments to long options are also mandatory or optional
+for any corresponding short options.
+
+Supported databases:
+ahosts ahostsv4 ahostsv6 aliases ethers group gshadow hosts netgroup networks
+passwd protocols rpc services shadow
+```
+
+### **-V, --version**
+
+バージョン情報を表示します
+
+```console
+$ getent --version
+getent (GNU libc) 2.31
+```
+
+### **-i, --no-idn**
+
+IDN（国際化ドメイン名）エンコーディングを無効にします
+
+```console
+$ getent -i hosts example.com
+93.184.216.34   example.com
 ```
 
 ## 使用例
 
-### ユーザー情報の検索
+### ユーザー名でユーザーを検索する
 
 ```console
 $ getent passwd username
-username:x:1000:1000:John Doe:/home/username:/bin/bash
+username:x:1000:1000:Full Name:/home/username:/bin/bash
 ```
 
-### ホストのIPアドレスを検索
+### ホスト名でホストを検索する
 
 ```console
-$ getent hosts github.com
-140.82.121.4     github.com
+$ getent hosts google.com
+142.250.190.78  google.com
 ```
 
-### すべてのグループを一覧表示
+### すべてのグループを一覧表示する
 
 ```console
 $ getent group
@@ -66,11 +91,10 @@ root:x:0:
 daemon:x:1:
 bin:x:2:
 sys:x:3:
-adm:x:4:syslog,username
-[追加のグループ...]
+[additional groups...]
 ```
 
-### サービスポートの検索
+### サービスポートを検索する
 
 ```console
 $ getent services ssh
@@ -79,35 +103,44 @@ ssh                  22/tcp
 
 ## ヒント:
 
-### ユーザーの存在確認
+### grepと組み合わせてフィルタリングする
 
-`getent passwd username` を使用して、システム内にユーザーが存在するかどうかを確認できます。コマンドが出力を返せばユーザーは存在し、何も返さなければ存在しません。
+`getent` と `grep` を組み合わせて、大きなデータベースから結果をフィルタリングします：
+
+```console
+$ getent passwd | grep username
+```
+
+### ユーザーが存在するかチェックする
+
+終了コードを使用して、ユーザーがシステムに存在するかどうかを確認します：
+
+```console
+$ getent passwd username > /dev/null && echo "User exists" || echo "User does not exist"
+```
 
 ### グループのすべてのメンバーを見つける
 
-`getent group groupname` を使用して、特定のグループに所属するすべてのユーザーを確認できます。
+グループデータベースを使用して、特定のグループのすべてのメンバーを確認します：
 
-### 名前解決のテスト
-
-`getent hosts hostname` を使用して、ホスト名が解決できるかテストできます。これはDNSからでもローカルのhostsファイルからでも解決元に関わらず機能します。
-
-### 利用可能なデータベース
-
-クエリできる一般的なデータベースには、`passwd`、`group`、`hosts`、`services`、`protocols`、`networks`、`netgroup` などがあります。正確なリストはシステム構成によって異なります。
+```console
+$ getent group sudo
+sudo:x:27:user1,user2,user3
+```
 
 ## よくある質問
 
-#### Q1. `getent hosts` と `ping` の違いは何ですか？
-A. `getent hosts` はパケットを送信せずに名前解決のみを実行しますが、`ping` は実際にICMPパケットをホストに送信します。`getent` はホスト名がIPアドレスに解決できるかどうかを確認するだけに便利です。
+#### Q1. getentで照会できるデータベースは何ですか？
+A. 一般的なデータベースには、passwd、group、hosts、services、protocols、networks、shadow、aliasesなどがあります。利用可能なデータベースはシステムによって異なる場合があります。
 
-#### Q2. `getent` をスクリプトで使用できますか？
-A. はい、`getent` はユーザー、グループ、ホストが存在するかどうかを確認してから操作を実行するために、シェルスクリプトでよく使用されます。
+#### Q2. ホスト名が解決されるかどうかを確認するにはどうすればよいですか？
+A. `getent hosts ホスト名` を使用します。ホスト名が解決される場合、IPアドレスとホスト名が返されます。
 
-#### Q3. なぜ `getent passwd username` が `/etc/passwd` を見るのと異なる結果を示すことがありますか？
-A. `getent` は設定されたすべてのNSSソースをクエリするため、ローカルの `/etc/passwd` ファイルだけでなく、LDAP、NIS、その他のネットワーク認証システムも含まれる可能性があります。
+#### Q3. getentはLDAPやその他のディレクトリサービスを照会できますか？
+A. はい、getentはネームサービススイッチ（NSS）設定を使用するため、システムの `/etc/nsswitch.conf` ファイルで設定されているLDAP、NIS、DNS、ローカルファイルなど、あらゆるソースを照会できます。
 
-#### Q4. 利用可能なすべてのデータベースを確認するにはどうすればよいですか？
-A. 利用可能なデータベースはシステム構成によって異なります。一般的なものには passwd、group、hosts、services、protocols、networks、netgroup などがあります。
+#### Q4. getentと/etc/passwdなどのファイルを直接読み込むことの違いは何ですか？
+A. getentはシステムのNSS設定を尊重するため、ローカルファイルだけでなく、設定されたすべてのソース（ローカルファイル、LDAP、NISなど）から情報を取得します。
 
 ## 参考資料
 
@@ -115,4 +148,4 @@ https://man7.org/linux/man-pages/man1/getent.1.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

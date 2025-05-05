@@ -1,84 +1,72 @@
-# openssl コマンド
+# opensslコマンド
 
-暗号化通信、証明書管理、および様々な暗号操作のための暗号機能を提供します。
+暗号化機能の管理（証明書の作成、暗号化、安全な接続など）を行います。
 
 ## 概要
 
-OpenSSLは、Secure Sockets Layer (SSL)およびTransport Layer Security (TLS)プロトコルを実装する強力なツールキットで、汎用の高強度暗号化ライブラリも備えています。コマンドラインから証明書の作成、鍵の管理、ファイルの暗号化/復号化、メッセージダイジェストの生成など、多くの暗号操作を実行できます。
+OpenSSLは、SSL/TLSプロトコルとさまざまな暗号化機能を扱うための堅牢なコマンドラインツールです。証明書の作成、鍵の生成、ファイルの暗号化/復号化、データのハッシュ化、安全な接続のテストなどが可能です。このコマンドは、ネットワーク通信のセキュリティ実装やデジタル証明書の管理のための幅広い機能を提供します。
 
 ## オプション
 
-OpenSSLはコマンドベースの構造を使用しており、メインコマンドの後にサブコマンドとそのオプションが続きます。
+### **req**
 
-### **s_client** - SSL/TLSクライアント
-
-SSL/TLSを使用してリモートホストに接続する汎用SSL/TLSクライアントを実装します。
+証明書リクエストの作成と処理
 
 ```console
-$ openssl s_client -connect example.com:443
-CONNECTED(00000003)
-depth=2 C = US, O = Internet Security Research Group, CN = ISRG Root X1
-verify return:1
-depth=1 C = US, O = Let's Encrypt, CN = R3
-verify return:1
-depth=0 CN = example.com
-verify return:1
----
-Certificate chain
- 0 s:CN = example.com
-   i:C = US, O = Let's Encrypt, CN = R3
+$ openssl req -new -key private.key -out request.csr
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
 ...
 ```
 
-### **x509** - 証明書表示と署名ユーティリティ
+### **x509**
 
-証明書情報の表示、様々な形式への証明書の変換、証明書リクエストの署名を行います。
+証明書の表示と署名ユーティリティ
 
 ```console
 $ openssl x509 -in certificate.crt -text -noout
 Certificate:
     Data:
         Version: 3 (0x2)
-        Serial Number:
-            04:e5:7b:d2:1d:d5:e5:2c:...
-        Signature Algorithm: sha256WithRSAEncryption
-        Issuer: C=US, O=Let's Encrypt, CN=R3
+        Serial Number: 12345 (0x3039)
 ...
 ```
 
-### **genrsa** - RSA秘密鍵の生成
+### **genrsa**
 
-RSA秘密鍵を生成します。
+RSA秘密鍵の生成
 
 ```console
 $ openssl genrsa -out private.key 2048
-Generating RSA private key, 2048 bit long modulus (2 primes)
-.....+++++
-.....+++++
-e is 65537 (0x010001)
+Generating RSA private key, 2048 bit long modulus
+.....+++
+.............+++
+e is 65537 (0x10001)
 ```
 
-### **req** - PKCS#10証明書リクエストと証明書生成ユーティリティ
+### **rsa**
 
-PKCS#10形式の証明書リクエストを作成および処理します。
+RSA鍵の処理
 
 ```console
-$ openssl req -new -key private.key -out certificate.csr
-You are about to be asked to enter information that will be incorporated
-into your certificate request.
-What you are about to enter is what is called a Distinguished Name or a DN.
-There are quite a few fields but you can leave some blank
-For some fields there will be a default value,
-If you enter '.', the field will be left blank.
------
-Country Name (2 letter code) [AU]:US
-State or Province Name (full name) [Some-State]:California
+$ openssl rsa -in private.key -pubout -out public.key
+writing RSA key
+```
+
+### **s_client**
+
+接続テスト用のSSL/TLSクライアントプログラム
+
+```console
+$ openssl s_client -connect example.com:443
+CONNECTED(00000003)
+depth=2 O = Digital Signature Trust Co., CN = DST Root CA X3
 ...
 ```
 
-### **enc** - 暗号を使用したエンコーディング
+### **enc**
 
-様々な暗号アルゴリズムを使用して暗号化または復号化します。
+さまざまな暗号アルゴリズムを使用した暗号化または復号化
 
 ```console
 $ openssl enc -aes-256-cbc -salt -in plaintext.txt -out encrypted.txt
@@ -86,25 +74,24 @@ enter aes-256-cbc encryption password:
 Verifying - enter aes-256-cbc encryption password:
 ```
 
-## 使用例
+### **dgst**
 
-### リモートSSL/TLSサーバーの確認
+メッセージダイジェスト（ハッシュ）の計算
 
 ```console
-$ openssl s_client -connect example.com:443 -servername example.com
-CONNECTED(00000003)
-depth=2 C = US, O = Internet Security Research Group, CN = ISRG Root X1
-verify return:1
-...
+$ openssl dgst -sha256 file.txt
+SHA256(file.txt)= 3a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b
 ```
+
+## 使用例
 
 ### 自己署名証明書の作成
 
 ```console
 $ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
-Generating a RSA private key
-.....++++
-.....++++
+Generating a 4096 bit RSA private key
+.......................++
+.......................++
 writing new private key to 'key.pem'
 -----
 You are about to be asked to enter information that will be incorporated
@@ -119,64 +106,55 @@ $ openssl verify -CAfile ca-bundle.crt certificate.crt
 certificate.crt: OK
 ```
 
-### ランダムパスワードの生成
+### 証明書フォーマットの変換
 
 ```console
-$ openssl rand -base64 12
-Ew6Y9RzYxAQeFA==
+$ openssl x509 -in certificate.crt -inform PEM -out certificate.der -outform DER
+```
+
+### SSL/TLS接続の詳細確認
+
+```console
+$ openssl s_client -connect example.com:443 -showcerts
+CONNECTED(00000003)
+depth=2 O = Digital Signature Trust Co., CN = DST Root CA X3
+...
 ```
 
 ## ヒント:
 
-### 適切な鍵のパーミッションを設定する
+### 証明書の有効期限の確認
 
-秘密鍵には常に制限的なパーミッションを設定して、不正アクセスを防止しましょう：
+`openssl x509 -enddate -noout -in certificate.crt`を使用すると、証明書の詳細をすべて表示せずに、証明書の有効期限をすぐに確認できます。
 
-```console
-$ chmod 600 private.key
-```
+### 強力なランダムパスワードの生成
 
-### 証明書の有効期限を確認する
+`openssl rand -base64 16`を使用して、16バイトの安全なランダムパスワード（base64でエンコードされて表示）を生成できます。
 
-予期しないサービス中断を避けるため、証明書の有効期限を確認しましょう：
+### ブラウザでの証明書情報の表示
 
-```console
-$ openssl x509 -enddate -noout -in certificate.crt
-notAfter=May 15 12:00:00 2026 GMT
-```
+ウェブサイトに接続せずに証明書の詳細を確認するには、証明書をローカルに保存した後、`openssl x509 -in certificate.crt -text -noout`を使用します。
 
-### 証明書フォーマットの変換
+### SSL/TLS接続のトラブルシューティング
 
-OpenSSLは異なる証明書フォーマット（PEM、DER、PKCS#12）間の変換ができます：
-
-```console
-$ openssl x509 -in cert.pem -inform PEM -out cert.der -outform DER
-```
-
-### 自動化には -passin と -passout を使用する
-
-スクリプト作成時には、これらのオプションを使用して非対話的にパスワードを提供できます：
-
-```console
-$ openssl rsa -in encrypted.key -out decrypted.key -passin file:password.txt
-```
+接続の問題が発生した場合は、`openssl s_client -connect hostname:port -debug`を使用して、ハンドシェイクプロセスに関する詳細情報を確認できます。
 
 ## よくある質問
 
-#### Q1. CSR（証明書署名リクエスト）はどのように作成しますか？
-A. `openssl req -new -key private.key -out request.csr` を使用します。証明書情報の入力を求められます。
+#### Q1. CSR（証明書署名リクエスト）を作成するにはどうすればよいですか？
+A. `openssl req -new -key private.key -out request.csr`を使用します。組織名や共通名などの証明書情報の入力を求められます。
 
 #### Q2. 証明書の内容を確認するにはどうすればよいですか？
-A. `openssl x509 -in certificate.crt -text -noout` を使用して証明書の詳細を表示します。
+A. `openssl x509 -in certificate.crt -text -noout`を使用すると、人間が読める形式で証明書の詳細が表示されます。
 
 #### Q3. 証明書をPEM形式からPKCS#12形式に変換するにはどうすればよいですか？
-A. `openssl pkcs12 -export -out certificate.pfx -inkey private.key -in certificate.crt -certfile ca-chain.crt` を使用します。
+A. `openssl pkcs12 -export -out certificate.pfx -inkey private.key -in certificate.crt`を使用して、証明書と秘密鍵の両方を含むPKCS#12ファイルを作成します。
 
-#### Q4. ウェブサイトへのセキュア接続をテストするにはどうすればよいですか？
-A. `openssl s_client -connect example.com:443 -servername example.com` を使用して接続を確立し、証明書の詳細を表示します。
+#### Q4. サーバーへのSSL/TLS接続をテストするにはどうすればよいですか？
+A. `openssl s_client -connect hostname:port`を使用して接続を確立し、証明書情報を表示します。
 
-#### Q5. 強力なランダムパスワードを生成するにはどうすればよいですか？
-A. `openssl rand -base64 16` を使用して、base64でエンコードされた16バイトのランダム文字列を生成します。
+#### Q5. 鍵やパスワードとして使用するランダムな文字列を生成するにはどうすればよいですか？
+A. `openssl rand -base64 32`を使用して、base64でエンコードされた32バイトのランダムな文字列を生成します。
 
 ## 参考資料
 
@@ -184,4 +162,4 @@ https://www.openssl.org/docs/man1.1.1/man1/
 
 ## 改訂履歴
 
-- 2025/05/04 初回改訂
+- 2025/05/05 初版

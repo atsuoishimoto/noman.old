@@ -1,114 +1,132 @@
-# lsof コマンド
+# lsofコマンド
 
-システム上で開いているファイルとそれを開いているプロセスを一覧表示します。
+開いているファイルとそれを開いたプロセスを一覧表示します。
 
 ## 概要
 
-`lsof`（List Open Files）は、システム上で実行中のプロセスによって現在開かれているファイルに関する情報を表示します。特定のファイルを開いているプロセスや、特定のプロセスが開いているファイル、その他のファイル使用状況の詳細を表示できます。このコマンドは、システム管理者や開発者がトラブルシューティングやシステムリソースの監視を行う際に特に役立ちます。
+`lsof`（list open filesの略）は、システム上で実行中のプロセスによって現在開かれているファイルに関する情報を表示します。特定のファイルを開いているプロセス、特定のプロセスが開いているファイル、ネットワーク接続などを表示できます。このコマンドは、システムのトラブルシューティング、セキュリティ監視、システムリソースの使用状況の理解に非常に役立ちます。
 
 ## オプション
 
 ### **-p PID**
 
-指定したプロセスIDが開いているファイルを一覧表示します
+指定したプロセスIDによって開かれたすべてのファイルを一覧表示します。
 
 ```console
 $ lsof -p 1234
 COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
-bash     1234   user  cwd    DIR    8,1     4096 131073 /home/user
-bash     1234   user  rtd    DIR    8,1     4096      2 /
-bash     1234   user  txt    REG    8,1  1113504 917562 /bin/bash
+bash     1234   user  cwd    DIR    8,1     4096 123456 /home/user
+bash     1234   user  txt    REG    8,1   940336 789012 /usr/bin/bash
 ```
 
-### **-i [プロトコル][@ホスト名|ホストアドレス][:サービス|ポート]**
+### **-i**
 
-インターネット接続用に開かれたファイルを一覧表示します（プロトコル、ホスト、ポートの指定は任意）
+インターネット接続（ネットワークファイル）に関連するファイルを一覧表示します。
 
 ```console
-$ lsof -i TCP:22
-COMMAND  PID    USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
-sshd    1234    root    3u  IPv4  12345      0t0  TCP *:ssh (LISTEN)
-sshd    5678    root    4u  IPv6  23456      0t0  TCP *:ssh (LISTEN)
+$ lsof -i
+COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+chrome   1234   user   52u  IPv4  12345      0t0  TCP localhost:49152->localhost:http (ESTABLISHED)
+sshd     5678   root    3u  IPv4  23456      0t0  TCP *:ssh (LISTEN)
 ```
 
-### **-u ユーザー名**
+### **-i:[port]**
 
-特定のユーザーが開いているファイルを一覧表示します
+指定したポートに関連するファイルを一覧表示します。
+
+```console
+$ lsof -i:22
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+sshd    1234 root    3u  IPv4  12345      0t0  TCP *:ssh (LISTEN)
+```
+
+### **-u username**
+
+特定のユーザーによって開かれたファイルを一覧表示します。
 
 ```console
 $ lsof -u john
-COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
-bash     1234   john  cwd    DIR    8,1     4096 131073 /home/john
-chrome   2345   john   10u   REG    8,1    12345 262144 /tmp/file.tmp
+COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
+bash    1234   john  cwd    DIR    8,1     4096 123456 /home/john
+chrome  2345   john   10r   REG    8,1    12345 234567 /home/john/Downloads/file.pdf
 ```
 
-### **-c コマンド**
+### **-c command**
 
-指定したコマンド名を持つプロセスが開いているファイルを一覧表示します
+指定したコマンド名を持つプロセスによって開かれたファイルを一覧表示します。
 
 ```console
-$ lsof -c nginx
-COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
-nginx   1234 root  cwd    DIR    8,1     4096      2 /
-nginx   1234 root  txt    REG    8,1  1234567 917562 /usr/sbin/nginx
-nginx   1235 www   cwd    DIR    8,1     4096      2 /
+$ lsof -c chrome
+COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
+chrome   1234   user  cwd    DIR    8,1     4096 123456 /home/user
+chrome   1234   user  txt    REG    8,1 12345678 234567 /opt/google/chrome/chrome
 ```
 
 ### **-t**
 
-プロセスIDのみを表示します（スクリプト作成に便利）
+プロセスIDのみを表示します。スクリプト作成に便利です。
 
 ```console
-$ lsof -t -i TCP:80
+$ lsof -t -i:80
 1234
 5678
 ```
 
+### **+D directory**
+
+指定したディレクトリとそのサブディレクトリ内のすべての開いているファイルを一覧表示します。
+
+```console
+$ lsof +D /var/log
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
+rsyslogd 123 root    5w   REG    8,1    12345 123456 /var/log/syslog
+nginx   1234 www     3w   REG    8,1     5678 234567 /var/log/nginx/access.log
+```
+
 ## 使用例
 
-### 特定のファイルを開いているプロセスを見つける
+### 特定のファイルを使用しているプロセスを見つける
 
 ```console
 $ lsof /var/log/syslog
-COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
-rsyslogd 854 syslog    7w   REG    8,1   256789 131074 /var/log/syslog
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
+rsyslogd 123 root    5w   REG    8,1    12345 123456 /var/log/syslog
 ```
 
-### ネットワークポートをリッスンしているプロセスを確認する
+### 特定のポートをリッスンしているプロセスを見つける
 
 ```console
-$ lsof -i -P -n | grep LISTEN
-sshd      1234    root    3u  IPv4  12345      0t0  TCP *:22 (LISTEN)
-nginx     2345    root    6u  IPv4  23456      0t0  TCP *:80 (LISTEN)
-mysqld    3456   mysql   10u  IPv4  34567      0t0  TCP 127.0.0.1:3306 (LISTEN)
+$ lsof -i TCP:80
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+nginx   1234 root    6u  IPv4  12345      0t0  TCP *:http (LISTEN)
 ```
 
-### 特定のユーザーがディレクトリ内で開いているすべてのファイルを見つける
+### 複数のオプションを組み合わせる
 
 ```console
-$ lsof -u john /home/john
-COMMAND  PID  USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
-bash    1234  john  cwd    DIR    8,1     4096 131073 /home/john
-vim     2345  john    4u   REG    8,1    12345 262144 /home/john/document.txt
+$ lsof -u john -c chrome -i TCP
+COMMAND  PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+chrome  1234  john   52u  IPv4  12345      0t0  TCP localhost:49152->server:https (ESTABLISHED)
+chrome  1234  john   60u  IPv4  23456      0t0  TCP localhost:49153->cdn:https (ESTABLISHED)
 ```
 
-## ヒント:
+## ヒント
 
-### 複数のフィルターを組み合わせる
+### 削除されたファイルを使用しているプロセスを見つける
 
-複数のオプションを組み合わせて結果を絞り込むことができます。例えば、`lsof -u ユーザー名 -i TCP`は特定のユーザーのTCP接続を表示します。
-
-### 使用中の削除されたファイルを見つける
-
-`lsof +L1`を使用して、プロセスによってまだ開かれている削除済みファイルを見つけることができます。これはディスク容量の解放を妨げているプロセスを特定するのに役立ちます。
+プロセスが削除されたファイルを開いている場合、`lsof | grep deleted`で見つけることができます。これは、削除されたファイルを保持しているプロセスを再起動してディスク容量を解放するのに役立ちます。
 
 ### ネットワーク接続の監視
 
-`lsof -i`を定期的に使用して、ネットワーク接続を監視し、セキュリティ問題を示す可能性がある予期しないネットワークアクティビティを特定します。
+`lsof -i -P -n`を使用して、数値ポートとIPアドレスを持つすべてのネットワーク接続を表示します。`-P`はポート番号からサービス名への変換を防ぎ、`-n`はホスト名の検索を防ぎます。
 
-### grepと組み合わせて対象を絞った結果を得る
+### メモリマップされたファイルを見つける
 
-`lsof`の出力を`grep`にパイプして特定の情報をフィルタリングできます。例えば、`lsof | grep "/var/log"`でログファイルにアクセスしているプロセスを見つけることができます。
+`lsof -a -p PID -d mem`を使用して、特定のプロセスのメモリマップされたファイルを確認します。これはメモリ使用パターンを理解するのに役立ちます。
+
+### 継続的な監視
+
+`lsof -r 2`を使用して、2秒ごとに一覧を繰り返し表示します。これは変化するファイル使用パターンを監視するのに役立ちます。
 
 ## よくある質問
 
@@ -116,18 +134,28 @@ vim     2345  john    4u   REG    8,1    12345 262144 /home/john/document.txt
 A. `lsof -i:ポート番号`を使用します（例：HTTPポートの場合は`lsof -i:80`）。
 
 #### Q2. すべてのネットワーク接続を確認するにはどうすればよいですか？
-A. `lsof -i`を使用してすべてのネットワーク接続を表示します。`-P`を追加するとサービス名ではなくポート番号が表示されます。
+A. すべてのネットワーク接続を見るには`lsof -i`を使用するか、TCPのみの接続を見るには`lsof -i TCP`を使用します。
 
-#### Q3. 特定のファイルにアクセスしているプロセスを見つけるにはどうすればよいですか？
-A. 単に`lsof /path/to/file`を実行すると、そのファイルを開いているすべてのプロセスが表示されます。
+#### Q3. 特定のユーザーによって開かれたすべてのファイルを見つけるにはどうすればよいですか？
+A. `lsof -u ユーザー名`を使用して、特定のユーザーによって開かれたすべてのファイルを一覧表示します。
 
-#### Q4. 特定のプロセスが開いているすべてのファイルを見つけるにはどうすればよいですか？
-A. `lsof -p PID`を使用します。PIDは対象のプロセスIDです。
+#### Q4. 特定のディレクトリにアクセスしているプロセスを見つけるにはどうすればよいですか？
+A. `lsof +D /path/to/directory`を使用して、そのディレクトリ内のファイルにアクセスしているすべてのプロセスを一覧表示します。
 
-## References
+#### Q5. 特定のファイルを使用しているプロセスを見つけるにはどうすればよいですか？
+A. 単に`lsof /path/to/file`を実行して、そのファイルを開いているプロセスを確認します。
 
-https://man7.org/linux/man-pages/man8/lsof.8.html
+## macOSに関する考慮事項
 
-## Revisions
+macOSでは、`lsof`の動作がLinuxバージョンと若干異なる場合があります：
+- 出力形式に若干の違いがある場合があります
+- `+D`などの一部のオプションは、ファイルシステムの違いによりmacOSでは遅くなる場合があります
+- ネットワーク接続の場合、macOSはデフォルトでサービス名を解決する傾向があるため、`lsof -i -P`の使用を検討してください
 
-- 2025/05/04 初回リビジョン
+## 参考文献
+
+https://www.freebsd.org/cgi/man.cgi?query=lsof
+
+## 改訂履歴
+
+- 2025/05/05 初版

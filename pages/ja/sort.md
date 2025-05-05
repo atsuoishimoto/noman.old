@@ -1,198 +1,200 @@
 # sort コマンド
 
-テキストファイルの行をアルファベット順または数値順に並べ替えます。
+テキストファイルの行を並べ替えます。
 
 ## 概要
 
-`sort` コマンドは、テキストファイルや標準入力からの行をアルファベット順、数値順、またはカスタム定義された順序で並べ替えます。複数のソート済みファイルを結合したり、重複行を削除したり、その他の様々な並べ替え操作を実行できます。このユーティリティは、データ処理パイプラインやテキストベースの情報を整理するために一般的に使用されます。
+`sort` コマンドは、テキストファイルや標準入力の行をアルファベット順、数値順、または逆順に並べ替えます。複数のソート済みファイルを結合したり、重複行を削除したり、各行内の特定のフィールドや文字に基づいてさまざまな並べ替え操作を実行したりすることができます。
 
 ## オプション
 
 ### **-n, --numeric-sort**
 
-アルファベット順ではなく数値順に並べ替えます。フィールドの先頭にある数字を認識します。
+アルファベット順ではなく数値順（数値の大きさ）で並べ替えます
 
 ```console
-$ cat numbers.txt
-10
-2
-1
 $ sort -n numbers.txt
 1
 2
 10
+20
+100
 ```
 
 ### **-r, --reverse**
 
-比較結果を反転させ、降順に並べ替えます。
+比較結果を逆順にします
 
 ```console
-$ sort -r fruits.txt
-watermelon
-orange
-banana
+$ sort -r names.txt
+Zack
+Victor
+Susan
+Alice
+```
+
+### **-f, --ignore-case**
+
+並べ替え時に大文字と小文字を区別しません
+
+```console
+$ sort -f mixed_case.txt
+Alice
 apple
+Banana
+cat
+Dog
 ```
 
 ### **-k, --key=POS1[,POS2]**
 
-入力の特定のフィールド（列）に基づいて並べ替えます。
+POS1から始まりPOS2で終わるキーで並べ替えます
 
 ```console
-$ cat employees.txt
-John 35 Developer
-Alice 28 Designer
-Bob 42 Manager
-$ sort -k2 -n employees.txt
-Alice 28 Designer
-John 35 Developer
-Bob 42 Manager
+$ sort -k 2 employees.txt
+101 Adams 5000
+103 Brown 4500
+102 Clark 5500
 ```
 
 ### **-t, --field-separator=SEP**
 
-フィールド区切り文字を指定します（デフォルトは空白）。
+非空白から空白への遷移の代わりに、SEPをフィールド区切り文字として使用します
 
 ```console
-$ cat data.csv
-name,age,role
-John,35,Developer
-Alice,28,Designer
-Bob,42,Manager
-$ sort -t, -k2 -n data.csv
-name,age,role
-Alice,28,Designer
-John,35,Developer
-Bob,42,Manager
+$ sort -t: -k3,3n /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
 ```
 
 ### **-u, --unique**
 
-等しい行の最初のもののみを出力します（重複を削除）。
+等しい行の最初のもののみを出力します（重複を削除）
 
 ```console
-$ cat duplicates.txt
-apple
-banana
-apple
-orange
-banana
 $ sort -u duplicates.txt
 apple
 banana
 orange
 ```
 
-### **-f, --ignore-case**
+### **-M, --month-sort**
 
-アルファベット順に並べ替える際に大文字と小文字を区別しません。
+月として比較します（JAN < FEB < ... < DEC）
 
 ```console
-$ cat mixed-case.txt
-Apple
-banana
-Carrot
-apple
-$ sort -f mixed-case.txt
-Apple
-apple
-banana
-Carrot
+$ sort -M months.txt
+Jan
+Feb
+Mar
+Apr
+Dec
 ```
 
 ### **-h, --human-numeric-sort**
 
-人間が読みやすい数値（例：2K、1M）を比較します。
+人間が読みやすい数値（例：2K、1G）を比較します
 
 ```console
-$ cat sizes.txt
-1K
-5M
-10G
-2K
 $ sort -h sizes.txt
-1K
-2K
-5M
-10G
+10K
+1M
+2M
+1G
+```
+
+### **-R, --random-sort**
+
+キーのランダムハッシュで並べ替えます
+
+```console
+$ sort -R names.txt
+Victor
+Alice
+Susan
+Zack
 ```
 
 ## 使用例
 
-### ファイルを並べ替えて出力を保存する
+### ファイルを数値順に並べ替える
 
 ```console
-$ sort names.txt > sorted_names.txt
+$ cat numbers.txt
+10
+2
+100
+1
+20
+$ sort -n numbers.txt
+1
+2
+10
+20
+100
+```
+
+### カスタム区切り文字を使用して特定の列で並べ替える
+
+```console
+$ cat data.csv
+John,25,Engineer
+Alice,30,Doctor
+Bob,22,Student
+$ sort -t, -k2,2n data.csv
+Bob,22,Student
+John,25,Engineer
+Alice,30,Doctor
 ```
 
 ### 複数のソート済みファイルを結合する
 
 ```console
-$ sort -m sorted1.txt sorted2.txt > merged.txt
+$ sort -m file1.txt file2.txt > merged.txt
 ```
 
-### 複数のフィールドで並べ替える
+### 重複を削除して新しいファイルに保存する
 
 ```console
-$ cat data.txt
-John Smith 35 Developer
-Alice Johnson 28 Designer
-Bob Williams 42 Manager
-$ sort -k4,4 -k1,1 data.txt
-Alice Johnson 28 Designer
-John Smith 35 Developer
-Bob Williams 42 Manager
+$ sort -u input.txt > output.txt
 ```
 
-### 列内の一意の値を見つける
+## ヒント
 
-```console
-$ cat logs.txt | cut -d' ' -f3 | sort -u
-ERROR
-INFO
-WARNING
-```
+### 一度に並べ替えと重複削除を行う
+`sort -u` を使用すると、ファイルの並べ替えと重複行の削除を一度の操作で行うことができます。これは `sort | uniq` を使用するよりも効率的です。
 
-## ヒント:
+### ファイルが既に並べ替えられているかを確認する
+`sort -c filename` を使用すると、実際に何も出力せずにファイルが既に並べ替えられているかを確認できます。ファイルが並べ替えられていない場合はエラーメッセージが返されます。
+
+### 大きなファイルのメモリ考慮事項
+非常に大きなファイルの場合、`sort -T /tmp` を使用して十分な容量のある一時ディレクトリを指定するか、`sort -S 1G` を使用して並べ替えにより多くのメモリを割り当てます。
 
 ### 安定ソート
-
-`sort -s` を使用すると安定ソートが行われ、等しいソートキーを持つ行の元の順序が保持されます。これは、複数の基準で順番にソートする場合に便利である。
-
-### メモリ使用量
-
-非常に大きなファイルの場合、`sort -S` でメモリバッファサイズを指定するか、`sort -T` でより多くの空き容量がある一時ディレクトリを指定します。例：`sort -S 1G -T /tmp bigfile.txt`
-
-### すでにソートされているかチェック
-
-`sort -c` を使用すると、出力を生成せずにファイルがすでにソートされているかどうかをチェックできます。終了ステータスは、ファイルがソートされている場合（0）またはそうでない場合（1）を示します。
-
-### ランダムソート
-
-`sort -R` を使用すると行の順序をランダム化できます。これはデータからランダムサンプルを選択する際に便利です。
+`sort -s` を使用すると安定ソートが行われ、等しいキーを持つ行の元の順序が保持されます。これは、同等のアイテムの元の順序を維持したい場合に便利です。
 
 ## よくある質問
 
-#### Q1. ファイルを数値順にソートするにはどうすればよいですか？
-A. `sort -n ファイル名` を使用して、アルファベット順ではなく数値順にソートします。
+#### Q1. ファイルを逆順に並べ替えるにはどうすればよいですか？
+A. `sort -r filename` を使用して、逆順（降順）で並べ替えます。
 
-#### Q2. 特定の列でソートするにはどうすればよいですか？
-A. `sort -k 列番号 ファイル名` を使用します。例えば、`sort -k 2 ファイル名` は2列目でソートします。
+#### Q2. CSVファイルを特定の列で並べ替えるにはどうすればよいですか？
+A. `sort -t, -k2,2 filename.csv` を使用して2列目で並べ替えます。ここで `-t,` はカンマをフィールド区切り文字として指定します。
 
-#### Q3. ソート中に重複行を削除するにはどうすればよいですか？
-A. `sort -u ファイル名` を使用して、一意の行のみを出力します。
+#### Q3. IPアドレスを正しく並べ替えるにはどうすればよいですか？
+A. バージョン並べ替えには `sort -V` を使用します。これはIPアドレスに適しています：`sort -V ip_addresses.txt`
 
-#### Q4. 逆順にソートするにはどうすればよいですか？
-A. `sort -r ファイル名` を使用して、降順にソートします。
+#### Q4. 複数のフィールドで並べ替えるにはどうすればよいですか？
+A. 複数のキーを指定します：`sort -k1,1 -k2,2n filename` は最初にフィールド1をアルファベット順に、次にフィールド2を数値順に並べ替えます。
 
-#### Q5. CSVファイルを特定の列でソートするにはどうすればよいですか？
-A. `sort -t, -k 列番号 ファイル名.csv` を使用します。ここで `-t,` はカンマをフィールド区切り文字として指定します。
+#### Q5. ヘッダーのあるファイルを並べ替え、ヘッダーを先頭に保持するにはどうすればよいですか？
+A. 次のように使用します：`(head -1 file.txt; tail -n +2 file.txt | sort) > sorted_file.txt`
 
-## 参考資料
+## 参考文献
 
 https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

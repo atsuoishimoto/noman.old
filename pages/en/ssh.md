@@ -1,37 +1,37 @@
 # ssh command
 
-Securely connect to remote machines over an encrypted network connection.
+Securely connect to remote systems over an encrypted network connection.
 
 ## Overview
 
-SSH (Secure Shell) is a protocol for securely accessing remote computers. The `ssh` command establishes encrypted connections to remote servers, allowing secure terminal access, file transfers, and port forwarding. It's the standard method for administering remote systems and replacing older, insecure protocols like telnet.
+SSH (Secure Shell) is a protocol for securely accessing remote computers and executing commands remotely. It provides encrypted communications between two untrusted hosts over an insecure network, replacing older protocols like telnet and rsh. SSH is commonly used for remote login, command execution, file transfers, and tunneling other applications.
 
 ## Options
 
-### **-p, --port PORT**
+### **-p port**
 
 Specifies the port to connect to on the remote host (default is 22)
 
 ```console
 $ ssh -p 2222 user@example.com
 user@example.com's password: 
-Last login: Mon May 4 09:15:22 2025 from 192.168.1.5
+Last login: Mon May 5 10:23:45 2025 from 192.168.1.100
 user@example.com:~$ 
 ```
 
-### **-i, --identity_file KEYFILE**
+### **-i identity_file**
 
 Selects a file from which the identity (private key) for public key authentication is read
 
 ```console
 $ ssh -i ~/.ssh/my_private_key user@example.com
-Last login: Mon May 4 10:30:15 2025 from 192.168.1.5
+Last login: Mon May 5 09:15:30 2025 from 192.168.1.100
 user@example.com:~$ 
 ```
 
-### **-v, --verbose**
+### **-v**
 
-Enables verbose mode, showing detailed connection information (use -vv or -vvv for more detail)
+Verbose mode, useful for debugging connection issues
 
 ```console
 $ ssh -v user@example.com
@@ -42,89 +42,101 @@ debug1: Connection established.
 ...
 ```
 
-### **-L PORT:HOST:HOSTPORT**
+### **-L local_port:remote_host:remote_port**
 
-Sets up local port forwarding, connecting a local port to a remote host and port
+Forwards a local port to a port on the remote host
 
 ```console
 $ ssh -L 8080:localhost:80 user@example.com
 user@example.com's password: 
-Last login: Mon May 4 11:45:33 2025 from 192.168.1.5
+Last login: Mon May 5 11:30:22 2025 from 192.168.1.100
 ```
 
-### **-X, --enable X11 forwarding**
+### **-X**
 
-Enables X11 forwarding for running graphical applications remotely
+Enables X11 forwarding, allowing graphical applications to be displayed locally
 
 ```console
 $ ssh -X user@example.com
 user@example.com's password: 
-Last login: Mon May 4 12:20:10 2025 from 192.168.1.5
-user@example.com:~$ firefox &
-[1] 12345
+Last login: Mon May 5 14:45:10 2025 from 192.168.1.100
+user@example.com:~$ firefox
+```
+
+### **-t**
+
+Force pseudo-terminal allocation, useful for executing interactive programs on the remote system
+
+```console
+$ ssh -t user@example.com "sudo apt update"
+user@example.com's password: 
+[sudo] password for user: 
+Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
+...
 ```
 
 ## Usage Examples
 
-### Basic Connection
+### Basic SSH Connection
 
 ```console
-$ ssh username@hostname
-username@hostname's password: 
-Last login: Mon May 4 08:30:45 2025 from 192.168.1.5
-username@hostname:~$ 
-```
-
-### Running a Command on Remote Server
-
-```console
-$ ssh user@example.com "ls -la /var/log"
-total 1024
-drwxr-xr-x 10 root root   4096 May  4 08:15 .
-drwxr-xr-x 14 root root   4096 Apr 30 09:22 ..
--rw-r-----  1 root adm  125376 May  4 08:10 auth.log
--rw-r-----  1 root adm   15233 May  4 08:12 syslog
-```
-
-### Secure File Copy Using SSH
-
-```console
-$ scp -P 2222 localfile.txt user@example.com:/home/user/
+$ ssh user@example.com
 user@example.com's password: 
-localfile.txt                                 100%  156KB  2.5MB/s  00:00
+Last login: Mon May 5 08:30:15 2025 from 192.168.1.100
+user@example.com:~$ 
 ```
 
-### Port Forwarding to Access a Remote Web Server
+### Running a Command on Remote Host
+
+```console
+$ ssh user@example.com "ls -la"
+total 32
+drwxr-xr-x 5 user user 4096 May  5 08:30 .
+drwxr-xr-x 3 root root 4096 Jan  1 00:00 ..
+-rw-r--r-- 1 user user  220 Jan  1 00:00 .bash_logout
+-rw-r--r-- 1 user user 3771 Jan  1 00:00 .bashrc
+drwx------ 2 user user 4096 May  5 08:30 .ssh
+```
+
+### SSH with Key-Based Authentication
+
+```console
+$ ssh -i ~/.ssh/id_rsa user@example.com
+Last login: Mon May 5 12:15:30 2025 from 192.168.1.100
+user@example.com:~$ 
+```
+
+### Port Forwarding (Local to Remote)
 
 ```console
 $ ssh -L 8080:localhost:80 user@example.com
 user@example.com's password: 
-Last login: Mon May 4 14:30:22 2025 from 192.168.1.5
+Last login: Mon May 5 15:20:45 2025 from 192.168.1.100
 ```
 
-## Tips
+## Tips:
+
+### Set Up SSH Keys for Password-less Login
+
+Generate an SSH key pair with `ssh-keygen` and copy the public key to the remote server with `ssh-copy-id user@example.com`. This eliminates the need to enter passwords for each connection.
 
 ### Use SSH Config File
 
-Create a `~/.ssh/config` file to store connection settings for different hosts:
+Create a `~/.ssh/config` file to store connection settings for frequently accessed servers:
 
 ```
 Host myserver
     HostName example.com
     User username
     Port 2222
-    IdentityFile ~/.ssh/id_rsa_example
+    IdentityFile ~/.ssh/special_key
 ```
 
 Then simply use `ssh myserver` to connect.
 
-### Set Up SSH Keys for Password-less Login
-
-Generate keys with `ssh-keygen` and copy to remote server with `ssh-copy-id user@hostname` to avoid typing passwords.
-
 ### Keep SSH Connections Alive
 
-Add these lines to `~/.ssh/config` to prevent timeouts:
+Add these lines to your `~/.ssh/config` file to prevent timeouts:
 
 ```
 Host *
@@ -132,36 +144,26 @@ Host *
     ServerAliveCountMax 3
 ```
 
-### Use Agent Forwarding for Multi-hop Connections
+### Use SSH Agent for Key Management
 
-Use `ssh -A user@server1` to forward your authentication agent, allowing you to connect from server1 to other servers without copying your keys.
+Start `ssh-agent` and add your keys with `ssh-add` to avoid typing passphrases repeatedly during a session.
 
 ## Frequently Asked Questions
 
 #### Q1. How do I generate SSH keys?
-A. Use `ssh-keygen -t rsa -b 4096` to generate a strong RSA key pair. The public key (.pub) is shared with servers, while the private key remains secret.
+A. Use the `ssh-keygen` command. The default is `ssh-keygen -t rsa -b 4096`, which creates a 4096-bit RSA key pair.
 
-#### Q2. How can I make SSH connections faster?
-A. Use `ssh -o ControlMaster=auto -o ControlPath=~/.ssh/control-%h-%p-%r -o ControlPersist=yes user@host` to enable connection sharing, or add these settings to your SSH config file.
+#### Q2. How can I copy my SSH public key to a server?
+A. Use `ssh-copy-id user@example.com` to copy your public key to the remote server's authorized_keys file.
 
-#### Q3. How do I troubleshoot SSH connection issues?
-A. Use `ssh -v user@host` (or `-vv` or `-vvv` for more detail) to see verbose connection information that can help identify problems.
+#### Q3. How do I transfer files using SSH?
+A. Use the related `scp` (secure copy) or `sftp` (secure file transfer protocol) commands, which use the SSH protocol.
 
-#### Q4. How can I securely copy files between servers?
-A. Use `scp` for individual files or `rsync -e ssh` for directories and efficient transfers with resume capability.
+#### Q4. How can I keep my SSH connection from timing out?
+A. Configure `ServerAliveInterval` and `ServerAliveCountMax` in your SSH config file, or use the `-o` option: `ssh -o ServerAliveInterval=60 user@example.com`.
 
-## macOS Precautions
-
-On macOS, the SSH agent behavior differs slightly from Linux. To ensure your SSH keys are properly loaded:
-
-1. Use `ssh-add -K ~/.ssh/your_key` to store keys in the macOS keychain
-2. For macOS Monterey (12) and later, add this to `~/.ssh/config`:
-   ```
-   Host *
-     UseKeychain yes
-     AddKeysToAgent yes
-   ```
-3. macOS may prompt for keychain access when using SSH keys
+#### Q5. How do I troubleshoot SSH connection issues?
+A. Use the `-v` (verbose) option, with additional v's for more detail (`-vv` or `-vvv`).
 
 ## References
 
@@ -169,4 +171,4 @@ https://man.openbsd.org/ssh.1
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

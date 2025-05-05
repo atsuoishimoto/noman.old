@@ -47,83 +47,98 @@
     <main>
       
   <h1>awk command</h1>
-<p>Pattern scanning and processing language for text files.</p>
+<p>Pattern scanning and text processing language for manipulating structured data.</p>
 <h2>Overview</h2>
-<p><code>awk</code> is a powerful text processing tool that scans files line by line, splits each line into fields, and performs operations on those fields based on patterns and actions. It's particularly useful for extracting specific columns from structured text, generating reports, and transforming data. <code>awk</code> treats each line as a record and each word as a field, making it ideal for working with CSV files, logs, and other structured text data.</p>
+<p><code>awk</code> is a powerful text processing tool that treats each line of input as a record and each word as a field. It excels at extracting and manipulating data from structured text files like CSV, logs, and tables. The command follows the pattern: <code>awk 'pattern {action}' file</code>.</p>
 <h2>Options</h2>
-<h3><strong>-F fs, --field-separator fs</strong></h3>
-<p>Specify the field separator (default is whitespace)</p>
+<h3><strong>-F, --field-separator</strong></h3>
+<p>Specify the field separator character (default is whitespace)</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;apple,orange,banana&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>awk<span style="color: #F8F8F8"> </span>-F,<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{print $2}&#39;</span>
 <span style="color: #000; font-style: italic">orange</span>
 </pre></div>
-<h3><strong>-f file, --file file</strong></h3>
+<h3><strong>-f, --file</strong></h3>
 <p>Read the AWK program from a file instead of the command line</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>script.awk
 <span style="color: #000; font-style: italic">{print $1}</span>
 <span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>script.awk<span style="color: #F8F8F8"> </span>data.txt
-<span style="color: #000; font-style: italic">[first field of each line in data.txt]</span>
+<span style="color: #000; font-style: italic">First</span>
+<span style="color: #000; font-style: italic">Second</span>
+<span style="color: #000; font-style: italic">Third</span>
 </pre></div>
-<h3><strong>-v var=val, --assign var=val</strong></h3>
-<p>Assign a value to a variable before program execution begins</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;John&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{print &quot;Hello, &quot; name &quot;!&quot;}&#39;</span>
-<span style="color: #000; font-style: italic">Hello, John!</span>
+<h3><strong>-v, --assign</strong></h3>
+<p>Assign a value to a variable before program execution</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;John&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{print &quot;Hello, &quot; name}&#39;</span><span style="color: #F8F8F8"> </span>/dev/null
+<span style="color: #000; font-style: italic">Hello, John</span>
 </pre></div>
-<h3><strong>-W version, --version</strong></h3>
-<p>Display version information and exit</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span>--version
-<span style="color: #000; font-style: italic">GNU Awk 5.1.0, API: 3.0 (GNU MPFR 4.1.0, GNU MP 6.2.1)</span>
+<h3><strong>-W, --compat, --posix</strong></h3>
+<p>Run in POSIX compatibility mode</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span>-W<span style="color: #F8F8F8"> </span>posix<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{print $1}&#39;</span><span style="color: #F8F8F8"> </span>data.txt
+<span style="color: #000; font-style: italic">First</span>
+<span style="color: #000; font-style: italic">Second</span>
+<span style="color: #000; font-style: italic">Third</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Basic Field Printing</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;John Smith 42&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>awk<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{print $1, $2}&#39;</span>
-<span style="color: #000; font-style: italic">John Smith</span>
-</pre></div>
-<h3>Filtering Lines with Pattern Matching</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>awk<span style="color: #F8F8F8"> </span>-F:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;/root/ {print $1, $6}&#39;</span>
-<span style="color: #000; font-style: italic">root /root</span>
-</pre></div>
-<h3>Calculating Sums</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>numbers.txt
-<span style="color: #000; font-style: italic">10</span>
-<span style="color: #000; font-style: italic">20</span>
-<span style="color: #000; font-style: italic">30</span>
-<span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{sum += $1} END {print &quot;Sum:&quot;, sum}&#39;</span><span style="color: #F8F8F8"> </span>numbers.txt
-<span style="color: #000; font-style: italic">Sum: 60</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>awk<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{print $1}&#39;</span>
+<span style="color: #000; font-style: italic">Hello</span>
 </pre></div>
 <h3>Processing CSV Data</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.csv
-<span style="color: #000; font-style: italic">Name,Age,City</span>
-<span style="color: #000; font-style: italic">John,25,New York</span>
-<span style="color: #000; font-style: italic">Mary,30,Boston</span>
-<span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span>-F,<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;NR&gt;1 {print &quot;Name: &quot; $1 &quot;, Age: &quot; $2}&#39;</span><span style="color: #F8F8F8"> </span>data.csv
-<span style="color: #000; font-style: italic">Name: John, Age: 25</span>
-<span style="color: #000; font-style: italic">Name: Mary, Age: 30</span>
+<span style="color: #000; font-style: italic">John,25,Engineer</span>
+<span style="color: #000; font-style: italic">Mary,30,Doctor</span>
+<span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span>-F,<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{print &quot;Name: &quot; $1 &quot;, Job: &quot; $3}&#39;</span><span style="color: #F8F8F8"> </span>data.csv
+<span style="color: #000; font-style: italic">Name: John, Job: Engineer</span>
+<span style="color: #000; font-style: italic">Name: Mary, Job: Doctor</span>
 </pre></div>
-<h2>Tips</h2>
+<h3>Filtering Lines with Pattern Matching</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>awk<span style="color: #F8F8F8"> </span>-F:<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;/root/ {print $1 &quot; has home directory &quot; $6}&#39;</span>
+<span style="color: #000; font-style: italic">root has home directory /root</span>
+</pre></div>
+<h3>Calculating Sums</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>numbers.txt
+<span style="color: #000; font-style: italic">10 20</span>
+<span style="color: #000; font-style: italic">30 40</span>
+<span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{sum += $1} END {print &quot;Sum:&quot;, sum}&#39;</span><span style="color: #F8F8F8"> </span>numbers.txt
+<span style="color: #000; font-style: italic">Sum: 40</span>
+</pre></div>
+<h2>Tips:</h2>
 <h3>Built-in Variables</h3>
-<p><code>awk</code> has several built-in variables: <code>NR</code> (current record number), <code>NF</code> (number of fields in current record), <code>FS</code> (field separator), and <code>OFS</code> (output field separator). Use them to simplify your scripts.</p>
+<p>AWK has useful built-in variables like <code>NR</code> (current record number), <code>NF</code> (number of fields in current record), and <code>FS</code> (field separator).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span>-e<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;a b c\nd e f&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>awk<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{print &quot;Line&quot;, NR, &quot;has&quot;, NF, &quot;fields&quot;}&#39;</span>
+<span style="color: #000; font-style: italic">Line 1 has 3 fields</span>
+<span style="color: #000; font-style: italic">Line 2 has 3 fields</span>
+</pre></div>
+<h3>Conditional Processing</h3>
+<p>Use if-else statements for conditional processing:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>ages.txt
+<span style="color: #000; font-style: italic">John 25</span>
+<span style="color: #000; font-style: italic">Mary 17</span>
+<span style="color: #000; font-style: italic">Bob 32</span>
+<span style="color: #8F5902">$ </span>awk<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{if ($2 &gt;= 18) print $1, &quot;is an adult&quot;; else print $1, &quot;is a minor&quot;}&#39;</span><span style="color: #F8F8F8"> </span>ages.txt
+<span style="color: #000; font-style: italic">John is an adult</span>
+<span style="color: #000; font-style: italic">Mary is a minor</span>
+<span style="color: #000; font-style: italic">Bob is an adult</span>
+</pre></div>
 <h3>Multiple Commands</h3>
-<p>Separate multiple commands with semicolons: <code>awk '{count++; sum+=$1} END {print &quot;Average:&quot;, sum/count}'</code></p>
-<h3>Regular Expressions</h3>
-<p><code>awk</code> supports powerful regular expressions for pattern matching: <code>awk '/^[0-9]+$/ {print &quot;Number:&quot;, $0}'</code> matches lines containing only numbers.</p>
-<h3>BEGIN and END Blocks</h3>
-<p>Use <code>BEGIN</code> for initialization and <code>END</code> for final processing: <code>awk 'BEGIN {print &quot;Start&quot;} {print $1} END {print &quot;Done&quot;}'</code></p>
+<p>Separate multiple commands with semicolons:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>awk<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;{count=split($0,arr,&quot; &quot;); print &quot;Words:&quot;, count; print &quot;First word:&quot;, arr[1]}&#39;</span>
+<span style="color: #000; font-style: italic">Words: 2</span>
+<span style="color: #000; font-style: italic">First word: Hello</span>
+</pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How do I print specific columns from a file?</h4>
-<p>A. Use <code>awk '{print $n}'</code> where n is the column number. For example, <code>awk '{print $1, $3}'</code> prints the first and third columns.</p>
-<h4>Q2. How can I change the field separator?</h4>
-<p>A. Use the <code>-F</code> option: <code>awk -F, '{print $1}'</code> uses a comma as the field separator.</p>
-<h4>Q3. How do I perform calculations on numeric fields?</h4>
-<p>A. Use arithmetic operators: <code>awk '{sum+=$1} END {print sum}'</code> calculates the sum of the first column.</p>
-<h4>Q4. Can I use if-else statements in awk?</h4>
-<p>A. Yes, <code>awk</code> supports conditional statements: <code>awk '{if ($1 &gt; 10) print &quot;Large&quot;; else print &quot;Small&quot;}'</code></p>
-<h4>Q5. How do I process only certain lines?</h4>
-<p>A. Use patterns: <code>awk 'NR &gt; 1 {print}'</code> skips the first line, or <code>awk '/pattern/ {print}'</code> processes only lines matching a pattern.</p>
+<h4>Q1. What's the difference between awk, sed, and grep?</h4>
+<p>A. While grep searches for patterns, and sed performs text transformations, awk is designed for structured data processing with more programming capabilities including variables, functions, and arithmetic operations.</p>
+<h4>Q2. How do I process multiple files with awk?</h4>
+<p>A. Simply list the files after the awk command: <code>awk '{print $1}' file1.txt file2.txt</code></p>
+<h4>Q3. Can awk handle multi-line processing?</h4>
+<p>A. Yes, using the <code>RS</code> (record separator) variable: <code>awk 'BEGIN{RS=&quot;&quot;;FS=&quot;\n&quot;}{print $1}' file.txt</code> processes paragraph-separated text.</p>
+<h4>Q4. How do I use regular expressions in awk?</h4>
+<p>A. Regular expressions are placed between slashes: <code>awk '/pattern/ {print}' file.txt</code></p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/gawk/manual/gawk.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

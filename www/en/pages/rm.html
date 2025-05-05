@@ -49,7 +49,7 @@
   <h1>rm command</h1>
 <p>Remove files or directories from the filesystem.</p>
 <h2>Overview</h2>
-<p>The <code>rm</code> command deletes files and directories from your filesystem. By default, it removes files but not directories. Once files are deleted with <code>rm</code>, they cannot be easily recovered, so use this command with caution.</p>
+<p>The <code>rm</code> command deletes files and directories from the filesystem. By default, it doesn't remove directories and doesn't prompt for confirmation before removing files. Once files are deleted with <code>rm</code>, they cannot be easily recovered, so use this command with caution.</p>
 <h2>Options</h2>
 <h3><strong>-f, --force</strong></h3>
 <p>Ignore nonexistent files and arguments, never prompt for confirmation</p>
@@ -95,35 +95,37 @@
 </pre></div>
 <h3>Removing files with verbose output</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rm<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>*.log
-<span style="color: #000; font-style: italic">removed &#39;app.log&#39;</span>
 <span style="color: #000; font-style: italic">removed &#39;error.log&#39;</span>
+<span style="color: #000; font-style: italic">removed &#39;access.log&#39;</span>
 <span style="color: #000; font-style: italic">removed &#39;system.log&#39;</span>
 <span style="color: #8F5902">$</span>
 </pre></div>
 <h2>Tips:</h2>
-<h3>Use the -i Flag for Safety</h3>
-<p>When deleting important files, use <code>rm -i</code> to get a confirmation prompt before each deletion. This helps prevent accidental file removal.</p>
-<h3>Be Extremely Careful with rm -rf</h3>
-<p>The combination of <code>-r</code> (recursive) and <code>-f</code> (force) is powerful and dangerous. Never use <code>rm -rf /</code> or <code>rm -rf /*</code> as these can destroy your entire system.</p>
-<h3>Use Wildcards with Caution</h3>
-<p>Before using wildcards like <code>*.txt</code>, consider running <code>ls *.txt</code> first to see which files will be affected.</p>
-<h3>Create Aliases for Safety</h3>
-<p>Consider creating an alias in your shell configuration: <code>alias rm='rm -i'</code> to always prompt for confirmation.</p>
+<h3>Use with Caution</h3>
+<p>The <code>rm</code> command permanently deletes files without moving them to a trash or recycle bin. Always double-check what you're deleting, especially when using wildcards.</p>
+<h3>Safer Deletion with Interactive Mode</h3>
+<p>When deleting multiple files, use <code>rm -i</code> to confirm each deletion. This helps prevent accidental removal of important files.</p>
+<h3>Avoid <code>rm -rf /</code></h3>
+<p>Never run <code>rm -rf /</code> or <code>rm -rf /*</code> as these commands will attempt to delete everything on your system, potentially rendering it unusable.</p>
+<h3>Use Aliases for Safety</h3>
+<p>Consider creating an alias in your shell configuration: <code>alias rm='rm -i'</code> to always use interactive mode by default.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. Can I recover files deleted with rm?</h4>
-<p>A. Generally no. Unlike moving files to a &quot;trash&quot; or &quot;recycle bin&quot;, <code>rm</code> permanently deletes files. Recovery might be possible with specialized tools, but it's not guaranteed.</p>
-<h4>Q2. How do I remove a directory?</h4>
-<p>A. Use <code>rm -r directory/</code> to remove a directory and all its contents. For empty directories, you can also use <code>rmdir directory/</code>.</p>
-<h4>Q3. How can I safely delete files?</h4>
-<p>A. Use <code>rm -i</code> for interactive prompts or consider using <code>trash-cli</code> utilities that move files to a recoverable trash location instead of deleting them permanently.</p>
-<h4>Q4. What does &quot;Operation not permitted&quot; mean?</h4>
-<p>A. This usually indicates you don't have sufficient permissions to delete the file. Try using <code>sudo rm</code> if you have administrator privileges.</p>
-<h2>macOS Precautions</h2>
-<p>On macOS, the default <code>rm</code> command doesn't move files to the Trash. Once deleted, files are permanently removed. Consider using <code>mv file ~/.Trash/</code> to move files to the Trash instead, or install tools like <code>trash</code> that provide this functionality.</p>
+<h4>Q1. Can I recover files deleted with <code>rm</code>?</h4>
+<p>A. Generally no. Unlike graphical file managers, <code>rm</code> doesn't move files to a trash folder. Recovery requires specialized tools and isn't guaranteed.</p>
+<h4>Q2. How do I remove files with special characters in their names?</h4>
+<p>A. Use quotes around the filename or escape the special characters with a backslash. For example: <code>rm &quot;file with spaces.txt&quot;</code> or <code>rm file\ with\ spaces.txt</code>.</p>
+<h4>Q3. How can I safely remove a directory and all its contents?</h4>
+<p>A. Use <code>rm -r directory/</code> to recursively remove a directory and its contents. Add <code>-i</code> for confirmation prompts.</p>
+<h4>Q4. What's the difference between <code>rm -r</code> and <code>rmdir</code>?</h4>
+<p>A. <code>rmdir</code> only removes empty directories, while <code>rm -r</code> removes directories and all their contents recursively.</p>
+<h2>macOS Considerations</h2>
+<p>On macOS, the default <code>rm</code> command doesn't support the <code>--one-file-system</code> option available in GNU rm. Also, to completely bypass the macOS Trash when deleting files from external drives, you must use <code>rm</code> rather than the Finder's delete function.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/rm-invocation.html</p>
 <h2>Revisions</h2>
-<p>2025/05/04 First revision</p>
+<ul>
+<li>2025/05/05 First revision</li>
+</ul>
 
 
     </main>

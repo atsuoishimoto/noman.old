@@ -1,51 +1,51 @@
 # strace command
 
-Trace system calls and signals made by a process.
+Trace system calls and signals for a process.
 
 ## Overview
 
-`strace` is a diagnostic and debugging tool for Linux that monitors the system calls and signals of a specified program. It intercepts and records the system calls made by a process and the signals received by the process. This tool is invaluable for troubleshooting issues, understanding how programs interact with the operating system, and analyzing performance problems.
+`strace` is a diagnostic and debugging utility for Linux that traces the system calls and signals of a specified program. It intercepts and records the system calls made by a process and the signals received by it, making it an invaluable tool for troubleshooting, understanding program behavior, and diagnosing issues with applications.
 
 ## Options
 
-### **-f, --follow-forks**
+### **-f**
 
 Trace child processes as they are created by currently traced processes.
 
 ```console
 $ strace -f ./my_program
-[pid 12345] execve("./my_program", ["./my_program"], 0x7ffc123456) = 0
-[pid 12345] brk(NULL)                  = 0x55555555
-[pid 12345] clone(...)                 = 12346
-[pid 12346] open("file.txt", O_RDONLY) = 3
+execve("./my_program", ["./my_program"], 0x7ffc8e5bb4a0 /* 58 vars */) = 0
+brk(NULL)                               = 0x55a8a9899000
+[pid 12345] clone(child_stack=NULL, flags=CLONE_CHILD|SIGCHLD, ...) = 12346
+[pid 12346] execve("/bin/ls", ["ls"], 0x7ffc8e5bb4a0 /* 58 vars */) = 0
 ```
 
-### **-o, --output=FILE**
-
-Write the trace output to FILE instead of stderr.
-
-```console
-$ strace -o trace.log ls
-$ cat trace.log
-execve("/bin/ls", ["ls"], 0x7ffc123456) = 0
-brk(NULL)                               = 0x55555555
-access("/etc/ld.so.preload", R_OK)      = -1 ENOENT
-```
-
-### **-p, --attach=PID**
+### **-p PID**
 
 Attach to the process with the specified PID and begin tracing.
 
 ```console
 $ strace -p 1234
-Process 1234 attached
-read(3, "Hello World", 1024)            = 11
-write(1, "Hello World", 11)             = 11
+strace: Process 1234 attached
+read(3, "Hello, world!\n", 4096)        = 14
+write(1, "Hello, world!\n", 14)         = 14
 ```
 
-### **-e, --expr=EXPR**
+### **-o FILENAME**
 
-A qualifier to specify which events to trace or how to trace them.
+Write the trace output to a file instead of stderr.
+
+```console
+$ strace -o trace.log ls
+$ cat trace.log
+execve("/bin/ls", ["ls"], 0x7ffc8e5bb4a0 /* 58 vars */) = 0
+brk(NULL)                               = 0x55a8a9899000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+```
+
+### **-e EXPR**
+
+A qualifying expression that modifies which events to trace or how to trace them.
 
 ```console
 $ strace -e open,close ls
@@ -55,7 +55,7 @@ open("/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
 close(3)                                = 0
 ```
 
-### **-c, --summary-only**
+### **-c**
 
 Count time, calls, and errors for each system call and report a summary.
 
@@ -63,25 +63,23 @@ Count time, calls, and errors for each system call and report a summary.
 $ strace -c ls
 % time     seconds  usecs/call     calls    errors syscall
 ------ ----------- ----------- --------- --------- ----------------
- 25.91    0.000091          5        18           mmap
- 17.66    0.000062          6        10           openat
- 11.08    0.000039          3        12           close
-  9.12    0.000032          5         6           read
-  8.83    0.000031          5         6           fstat
-  ...
+ 25.00    0.000125          21         6           mmap
+ 20.00    0.000100          25         4           open
+ 15.00    0.000075          25         3           read
+ 10.00    0.000050          17         3           close
 ------ ----------- ----------- --------- --------- ----------------
-100.00    0.000351                   98         5 total
+100.00    0.000500                    45         5 total
 ```
 
-### **-t, --relative-timestamps**
+### **-t**
 
-Prefix each line of output with the time of day.
+Prefix each line of the trace with the time of day.
 
 ```console
 $ strace -t ls
-14:15:32 execve("/bin/ls", ["ls"], 0x7ffc123456) = 0
-14:15:32 brk(NULL)                      = 0x55555555
-14:15:32 access("/etc/ld.so.preload", R_OK) = -1 ENOENT
+14:15:23 execve("/bin/ls", ["ls"], 0x7ffc8e5bb4a0 /* 58 vars */) = 0
+14:15:23 brk(NULL)                      = 0x55a8a9899000
+14:15:23 access("/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
 ```
 
 ## Usage Examples
@@ -90,74 +88,71 @@ $ strace -t ls
 
 ```console
 $ strace ls -l
-execve("/bin/ls", ["ls", "-l"], 0x7ffc123456) = 0
-brk(NULL)                               = 0x55555555
-access("/etc/ld.so.preload", R_OK)      = -1 ENOENT
+execve("/bin/ls", ["ls", "-l"], 0x7ffc8e5bb4a0 /* 58 vars */) = 0
+brk(NULL)                               = 0x55a8a9899000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
 ...
-write(1, "total 20\n-rw-r--r-- 1 user user...", 612) = 612
-exit_group(0)                           = ?
-+++ exited with 0 +++
 ```
 
 ### Tracing specific system calls
 
 ```console
-$ strace -e trace=open,read,write echo "Hello World"
-execve("/bin/echo", ["echo", "Hello World"], 0x7ffc123456) = 0
-write(1, "Hello World\n", 12)           = 12
-+++ exited with 0 +++
+$ strace -e trace=open,read,write ls
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\360\23\2\0\0\0\0\0"..., 832) = 832
+write(1, "file1.txt  file2.txt  file3.txt\n", 32) = 32
 ```
 
-### Analyzing file access patterns
+### Attaching to a running process and saving output to a file
 
 ```console
-$ strace -e trace=file ls
-execve("/bin/ls", ["ls"], 0x7ffc123456) = 0
-access("/etc/ld.so.preload", R_OK)      = -1 ENOENT
-openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
-stat(".", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-+++ exited with 0 +++
+$ strace -p 1234 -o process_trace.log
+strace: Process 1234 attached
+^C
+$ cat process_trace.log
+read(4, "data from socket", 1024)       = 16
+write(1, "data from socket", 16)        = 16
 ```
 
-## Tips
+## Tips:
 
-### Filter Noise with Specific Syscalls
+### Filter System Calls
 
-When debugging, focus on relevant system calls using `-e trace=` followed by the syscall names. For example, use `strace -e trace=open,read,write` to only see file operations.
+Use `-e trace=` to focus on specific system calls. For example, `-e trace=network` shows only network-related calls, making it easier to debug connection issues.
 
-### Redirect Output to a File
+### Understand Performance Issues
 
-For long-running processes, redirect output to a file with `-o filename.log` to avoid cluttering your terminal and to allow for later analysis.
+Use `-c` to get a summary of time spent in each system call. This helps identify which system calls are taking the most time in your application.
 
-### Trace Running Processes
+### Trace Child Processes
 
-You can attach to an already running process using `-p PID`. This is useful when a program is already experiencing issues and you don't want to restart it.
+Always use `-f` when tracing programs that fork child processes. Without it, you'll only see the parent process activity.
 
-### Measure System Call Time
+### Reduce Output Verbosity
 
-Use `-T` to show the time spent in each system call, which helps identify performance bottlenecks.
+For large files or buffers, use `-s` followed by a number to limit string output length. For example, `-s 100` limits strings to 100 characters.
 
-### Trace Network Activity
+### Timestamp Your Traces
 
-Use `-e trace=network` to focus on network-related system calls, which is useful for debugging connectivity issues.
+Add `-t` or `-tt` (for microsecond precision) to include timestamps in your trace, which helps correlate events with other logs.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between strace and ltrace?
 A. `strace` traces system calls (interactions between programs and the kernel), while `ltrace` traces library calls (interactions between programs and libraries).
 
-#### Q2. How can I reduce the verbosity of strace output?
-A. Use `-e trace=` to specify only the system calls you're interested in, or use `-c` to get a summary count instead of detailed output.
+#### Q2. How do I trace a program that requires root privileges?
+A. Run strace with sudo: `sudo strace command`. To attach to a running process owned by root, use `sudo strace -p PID`.
 
-#### Q3. Can strace slow down the traced program?
-A. Yes, `strace` adds significant overhead as it intercepts every system call. For performance-sensitive applications, use it sparingly or with specific filters.
+#### Q3. Why is my program running much slower when traced with strace?
+A. Tracing adds significant overhead because it intercepts every system call. This is normal behavior and should be considered when interpreting timing results.
 
-#### Q4. How do I trace a program that creates child processes?
-A. Use the `-f` option to follow forks and trace child processes as well.
+#### Q4. How can I see only file-related operations?
+A. Use `strace -e trace=file command` to see only file-related system calls.
 
-#### Q5. Can I use strace on macOS?
-A. No, `strace` is specific to Linux. On macOS, you can use `dtruss` or `dtrace` for similar functionality, though they require root privileges.
+#### Q5. Can strace trace multithreaded applications?
+A. Yes, use `strace -f` to follow threads (which are implemented as processes in Linux).
 
 ## References
 
@@ -165,4 +160,4 @@ https://man7.org/linux/man-pages/man1/strace.1.html
 
 ## Revisions
 
-2025/05/04 First revision
+- 2025/05/05 First revision

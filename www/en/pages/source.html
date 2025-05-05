@@ -49,74 +49,61 @@
   <h1>source command</h1>
 <p>Execute commands from a file or script in the current shell environment.</p>
 <h2>Overview</h2>
-<p>The <code>source</code> command (also available as the <code>.</code> command) reads and executes commands from a specified file in the current shell environment. Unlike running a script directly, which creates a new shell process, <code>source</code> runs the commands in your current shell, allowing environment variables and functions defined in the sourced file to persist in your current session.</p>
+<p>The <code>source</code> command (also accessible via the <code>.</code> alias) reads and executes commands from a specified file in the current shell context. Unlike executing a script directly, which runs in a subshell, <code>source</code> runs commands in the current shell, allowing variables and functions defined in the sourced file to persist in the current session.</p>
 <h2>Options</h2>
-<p>The <code>source</code> command has very few options as it's a shell builtin command.</p>
-<h3><strong>-h (--help)</strong></h3>
-<p>Display help information about the <code>source</code> command.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>--help
-<span style="color: #000; font-style: italic">source: source filename [arguments]</span>
-<span style="color: #000; font-style: italic">    Execute commands from a file in the current shell.</span>
-<span style="color: #000; font-style: italic">    </span>
-<span style="color: #000; font-style: italic">    Read and execute commands from FILENAME in the current shell.  The</span>
-<span style="color: #000; font-style: italic">    entries in $PATH are used to find the directory containing FILENAME.</span>
-<span style="color: #000; font-style: italic">    If any ARGUMENTS are supplied, they become the positional parameters</span>
-<span style="color: #000; font-style: italic">    when FILENAME is executed.</span>
-<span style="color: #000; font-style: italic">    </span>
-<span style="color: #000; font-style: italic">    Exit Status:</span>
-<span style="color: #000; font-style: italic">    Returns the status of the last command executed in FILENAME; fails if</span>
-<span style="color: #000; font-style: italic">    FILENAME cannot be read.</span>
+<p>The <code>source</code> command has minimal options as it's a shell builtin:</p>
+<h3><strong>-h</strong></h3>
+<p>Display help information (in some shells)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>-h
+<span style="color: #000; font-style: italic">.: usage: . filename [arguments]</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Sourcing a configuration file</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>~/.bashrc
 </pre></div>
-<p>This reloads your bash configuration without requiring you to start a new terminal session.</p>
-<h3>Sourcing a script with variables</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>setup_env.sh
-<span style="color: #8F5902">#</span>!/bin/bash
-<span style="color: #000; font-style: italic">export PROJECT_ROOT=&quot;/home/user/projects&quot;</span>
-<span style="color: #000; font-style: italic">export DEBUG_MODE=&quot;true&quot;</span>
-
-<span style="color: #8F5902">$ </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>setup_env.sh
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$PROJECT_ROOT</span>
-<span style="color: #000; font-style: italic">/home/user/projects</span>
+<h3>Using the dot (.) alias</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>.<span style="color: #F8F8F8"> </span>~/.bash_profile
 </pre></div>
-<h3>Passing arguments to a sourced file</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>greet.sh
-<span style="color: #000; font-style: italic">echo &quot;Hello, $1!&quot;</span>
+<h3>Sourcing with arguments</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>script.sh<span style="color: #F8F8F8"> </span>arg1<span style="color: #F8F8F8"> </span>arg2
+</pre></div>
+<h3>Sourcing environment variables</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>env.sh
+<span style="color: #000; font-style: italic">export PROJECT_ROOT=&quot;/path/to/project&quot;</span>
+<span style="color: #000; font-style: italic">export API_KEY=&quot;abc123&quot;</span>
 
-<span style="color: #8F5902">$ </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>greet.sh<span style="color: #F8F8F8"> </span>World
-<span style="color: #000; font-style: italic">Hello, World!</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>env.sh
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$PROJECT_ROOT</span>
+<span style="color: #000; font-style: italic">/path/to/project</span>
 </pre></div>
 <h2>Tips</h2>
-<h3>Use source to activate virtual environments</h3>
-<p>When working with Python, you can use <code>source</code> to activate virtual environments:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>venv/bin/activate
-<span style="color: #8F5902">(venv)</span> <span style="color: #8F5902">$</span>
+<h3>Use source for environment setup</h3>
+<p>Source is ideal for loading environment variables, functions, and aliases that you want available in your current shell session.</p>
+<h3>Debugging scripts</h3>
+<p>You can use <code>source</code> with the <code>-x</code> option in bash to debug scripts by showing each command as it executes:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>-x<span style="color: #F8F8F8"> </span>script.sh
 </pre></div>
-<h3>Dot command as an alternative</h3>
-<p>The <code>.</code> command is a shorter alternative to <code>source</code> and works identically:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>.<span style="color: #F8F8F8"> </span>~/.bashrc
-</pre></div>
-<h3>Check if a file exists before sourcing</h3>
-<p>To avoid errors, check if a file exists before sourcing it:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>~/.env_vars<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">source</span><span style="color: #F8F8F8"> </span>~/.env_vars
-</pre></div>
+<h3>Reload configuration without logging out</h3>
+<p>When you modify shell configuration files like <code>.bashrc</code> or <code>.zshrc</code>, use <code>source</code> to apply changes without restarting your terminal.</p>
+<h3>Script path considerations</h3>
+<p>When using <code>source</code>, the script path is relative to your current directory, not the location of the calling script.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between <code>source</code> and executing a script directly?</h4>
-<p>A. When you <code>source</code> a script, it runs in your current shell environment, allowing variables and functions to persist. When you execute a script directly (e.g., <code>./script.sh</code>), it runs in a new subshell, and any variables or functions defined in it are lost when the script completes.</p>
+<p>A. When you execute a script directly (e.g., <code>./script.sh</code>), it runs in a subshell. Any variables or functions defined in that script are lost when the script finishes. Using <code>source</code> executes the commands in your current shell, so variables and functions persist after the script completes.</p>
 <h4>Q2. Can I use <code>source</code> with any type of file?</h4>
-<p>A. <code>source</code> is designed to work with shell script files. It reads and executes the commands in the file as if you had typed them at the command line. It's typically used with bash, zsh, or other shell script files.</p>
-<h4>Q3. Does <code>source</code> work the same in all shells?</h4>
-<p>A. While the basic functionality is similar across shells, there may be subtle differences. In bash and zsh, both <code>source</code> and <code>.</code> work, but some shells like sh only support the <code>.</code> command.</p>
-<h4>Q4. How can I debug a sourced file?</h4>
-<p>A. You can add <code>set -x</code> at the beginning of the file to enable debug mode, which will print each command before executing it.</p>
+<p>A. You can source any text file containing valid shell commands. Typically, it's used with shell scripts (<code>.sh</code>), configuration files, and environment setup files.</p>
+<h4>Q3. Is there a difference between <code>source</code> and the dot (<code>.</code>) command?</h4>
+<p>A. No functional difference. The dot (<code>.</code>) is the POSIX standard command, while <code>source</code> is a more readable alias available in bash and some other shells. Both do the same thing.</p>
+<h4>Q4. What happens if the sourced file doesn't exist?</h4>
+<p>A. You'll get an error message like &quot;No such file or directory&quot; and the command will return a non-zero exit status.</p>
 <h2>References</h2>
-<p>Bash manual: https://www.gnu.org/software/bash/manual/bash.html</p>
+<ul>
+<li>Bash Reference Manual: https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html</li>
+<li>POSIX specification: https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#dot</li>
+</ul>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

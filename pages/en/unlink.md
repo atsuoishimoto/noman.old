@@ -1,14 +1,16 @@
 # unlink command
 
-Remove a single file from the filesystem.
+Remove a single file.
 
 ## Overview
 
-The `unlink` command is used to delete a single file by removing its link from the filesystem. It's a simpler alternative to `rm` when you only need to delete one file. Unlike `rm`, `unlink` cannot remove multiple files or directories and has fewer options.
+The `unlink` command removes a single file by deleting its name from the filesystem. Unlike `rm`, it can only operate on one file at a time and doesn't accept options for recursive deletion or interactive prompting. It's a simple, focused command that performs the basic file deletion operation.
 
 ## Options
 
-### **-h, --help**
+`unlink` is a simple command with minimal options:
+
+### **--help**
 
 Display help information and exit.
 
@@ -42,10 +44,10 @@ Written by Michael Stone.
 ### Removing a file
 
 ```console
-$ touch temp_file.txt
+$ touch testfile.txt
 $ ls
-temp_file.txt
-$ unlink temp_file.txt
+testfile.txt
+$ unlink testfile.txt
 $ ls
 $
 ```
@@ -53,42 +55,38 @@ $
 ### Attempting to remove a directory (will fail)
 
 ```console
-$ mkdir test_dir
-$ unlink test_dir
-unlink: cannot unlink 'test_dir': Is a directory
+$ mkdir testdir
+$ unlink testdir
+unlink: cannot unlink 'testdir': Is a directory
 ```
 
-## Tips
+## Tips:
 
-### Use `rm` for Multiple Files
+### Use `rm` for More Flexibility
 
-If you need to delete multiple files, use `rm` instead of `unlink`. The `unlink` command can only remove one file at a time.
+While `unlink` is useful for simple file deletion, `rm` provides more options like recursive deletion (`-r`), force deletion (`-f`), and interactive prompting (`-i`).
 
 ### Symbolic Links
 
 When using `unlink` on a symbolic link, it removes the link itself, not the file it points to.
 
-### No Recovery
+### Error Handling
 
-Files deleted with `unlink` are not sent to a trash or recycle bin. They are permanently deleted and can only be recovered from backups.
-
-### No Confirmation
-
-Unlike `rm`, which can prompt for confirmation with the `-i` option, `unlink` provides no confirmation prompt before deleting a file.
+`unlink` will fail with an error message if the file doesn't exist, is a directory, or if you don't have permission to remove it.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `unlink` and `rm`?
-A. `unlink` can only remove a single file and has minimal options, while `rm` can remove multiple files, directories (with `-r`), and has many additional options.
+A. `unlink` can only remove a single file and has no options for modifying its behavior. `rm` can remove multiple files, directories (with `-r`), and has various options for controlling how deletion works.
 
 #### Q2. Can `unlink` remove directories?
 A. No, `unlink` cannot remove directories. Use `rmdir` for empty directories or `rm -r` for directories with contents.
 
-#### Q3. Does `unlink` move files to trash?
-A. No, `unlink` permanently deletes files. They cannot be recovered from a trash or recycle bin.
+#### Q3. What happens if I try to `unlink` a file that doesn't exist?
+A. `unlink` will display an error message stating that the file doesn't exist.
 
-#### Q4. What happens if I try to unlink a file that doesn't exist?
-A. `unlink` will return an error message stating that the file doesn't exist.
+#### Q4. Is there any way to recover a file after using `unlink`?
+A. Generally no. Once a file is unlinked, it's removed from the filesystem. Recovery might be possible with specialized tools, but it's not guaranteed.
 
 ## References
 
@@ -96,4 +94,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/unlink-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

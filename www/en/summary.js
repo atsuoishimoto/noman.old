@@ -1,24 +1,24 @@
 pages = {
   "apt": {
-    "summary": "Package management utility for Debian-based Linux distributions like Ubuntu."
+    "summary": "Package management tool for Debian-based Linux distributions."
   },
   "apt-file": {
     "summary": "Search for files within packages in the APT package management system."
   },
   "awk": {
-    "summary": "Pattern scanning and processing language for text files."
+    "summary": "Pattern scanning and text processing language for manipulating structured data."
   },
   "basename": {
     "summary": "Extract the filename or directory name from a pathname."
   },
   "cat": {
-    "summary": "Display the contents of files or concatenate files."
+    "summary": "Concatenate and display file contents to standard output."
   },
   "chgrp": {
-    "summary": "Change the group ownership of files or directories."
+    "summary": "Change the group ownership of files and directories."
   },
   "chmod": {
-    "summary": "Change file mode bits (permissions) of files and directories."
+    "summary": "Change file mode bits (permissions) for files and directories."
   },
   "chsh": {
     "summary": "Change the login shell for a user."
@@ -27,16 +27,16 @@ pages = {
     "summary": "Compare two files byte by byte."
   },
   "continue": {
-    "summary": "Resume a suspended job by bringing it to the foreground or sending it to the background."
+    "summary": "Resume a suspended job by bringing it to the foreground."
   },
   "cp": {
     "summary": "Copy files and directories from source to destination."
   },
   "curl": {
-    "summary": "Transfer data from or to a server using various protocols including HTTP, HTTPS, FTP, and more."
+    "summary": "Transfer data from or to a server using various protocols."
   },
   "cut": {
-    "summary": "Extract selected parts of lines from each FILE to standard output."
+    "summary": "Extract selected portions of each line from files."
   },
   "date": {
     "summary": "Display or set the system date and time."
@@ -45,13 +45,13 @@ pages = {
     "summary": "Convert and copy files with block-level operations."
   },
   "df": {
-    "summary": "Display information about disk space usage on mounted filesystems."
+    "summary": "Display disk space usage for file systems."
   },
   "diff": {
     "summary": "Compare files line by line."
   },
   "diff3": {
-    "summary": "Compare three files line by line and show differences."
+    "summary": "Compare three files line by line."
   },
   "dig": {
     "summary": "Query DNS name servers for domain information."
@@ -60,10 +60,10 @@ pages = {
     "summary": "Output the directory portion of a pathname."
   },
   "dmesg": {
-    "summary": "Display or control the kernel message buffer."
+    "summary": "Display or control the kernel ring buffer, showing system messages and hardware information."
   },
   "docker": {
-    "summary": "Manage Docker containers, images, networks, and other Docker objects."
+    "summary": "Manage Docker containers, images, networks, and volumes."
   },
   "docker-build": {
     "summary": "Build an image from a Dockerfile."
@@ -72,31 +72,31 @@ pages = {
     "summary": "Define and run multi-container Docker applications."
   },
   "docker-run": {
-    "summary": "Create and start a new container from a specified image."
+    "summary": "Creates and starts a new container from an image."
   },
   "dpkg": {
-    "summary": "Manage Debian package files (.deb) on Debian-based systems like Ubuntu."
+    "summary": "Package management tool for Debian-based systems that handles installation, removal, and information about .deb packages."
   },
   "du": {
-    "summary": "Estimate file space usage for files and directories."
+    "summary": "Estimate file space usage for directories and files."
   },
   "echo": {
     "summary": "Display a line of text or variables to standard output."
   },
   "egrep": {
-    "summary": "Search for patterns in text using extended regular expressions."
+    "summary": "Search for patterns using extended regular expressions."
   },
   "env": {
     "summary": "Display the current environment variables or run a command in a modified environment."
   },
   "eval": {
-    "summary": "Construct and execute commands from arguments."
+    "summary": "Evaluate and execute arguments as shell commands."
   },
   "expr": {
     "summary": "Evaluate expressions and output the result."
   },
   "false": {
-    "summary": "Returns a failure status regardless of any arguments."
+    "summary": "Return a successful exit status (0) regardless of input."
   },
   "file": {
     "summary": "Determine file type by examining file contents."
@@ -105,19 +105,19 @@ pages = {
     "summary": "Search for files in a directory hierarchy."
   },
   "for": {
-    "summary": "Executes a command or set of commands for each item in a list."
+    "summary": "Execute a command for each item in a list."
   },
   "free": {
     "summary": "Display amount of free and used memory in the system."
   },
   "gdb": {
-    "summary": "Debug and analyze programs at the source code level with the GNU Debugger."
+    "summary": "Debug programs interactively with the GNU Debugger."
   },
   "getent": {
-    "summary": "Retrieve entries from administrative databases (hosts, users, groups, etc.)."
+    "summary": "Retrieves entries from administrative databases."
   },
   "getopt": {
-    "summary": "Parse command-line options in a standardized way."
+    "summary": "Parse command-line options in shell scripts."
   },
   "git": {
     "summary": "Distributed version control system for tracking changes in source code during software development.",
@@ -134,34 +134,34 @@ pages = {
     ]
   },
   "git-add": {
-    "summary": "Add file contents to the staging area (index) in preparation for the next commit."
+    "summary": "Add file contents to the index (staging area) for the next commit."
   },
   "git-branch": {
-    "summary": "Lists, creates, or deletes branches in a Git repository.",
+    "summary": "List, create, or delete branches in a Git repository.",
     "seealso": [
       "git"
     ]
   },
   "git-commit": {
-    "summary": "Record changes to the repository by creating a new commit containing the current contents of the index."
+    "summary": "Record changes to the repository by saving staged content as a new commit."
   },
   "git-merge": {
-    "summary": "Join two or more development histories together."
+    "summary": "Combines changes from different branches into the current branch."
   },
   "git-pull": {
     "summary": "Fetch from and integrate with another repository or a local branch."
   },
   "git-push": {
-    "summary": "Update remote references along with associated objects."
+    "summary": "Update remote refs along with associated objects."
   },
   "git-rebase": {
-    "summary": "Reapply commits on top of another base tip."
+    "summary": "Reapply commits on top of another base tip, rewriting the commit history."
   },
   "git-reset": {
     "summary": "Reset current HEAD to the specified state."
   },
   "git-stash": {
-    "summary": "Stash changes in a dirty working directory for later use.",
+    "summary": "Temporarily stores modified, tracked files to save changes without committing.",
     "seealso": [
       "git"
     ]
@@ -170,7 +170,7 @@ pages = {
     "summary": "Switch branches or restore working tree files."
   },
   "gpasswd": {
-    "summary": "Administers group membership and authentication information in the /etc/group and /etc/gshadow files."
+    "summary": "Administers /etc/group and /etc/gshadow by modifying group memberships and properties."
   },
   "grep": {
     "summary": "Search for patterns in files."
@@ -191,7 +191,7 @@ pages = {
     "summary": "Decompress files compressed with gzip."
   },
   "gzip": {
-    "summary": "Compress or expand files using the Lempel-Ziv coding (LZ77)."
+    "summary": "Compress or expand files using the gzip algorithm."
   },
   "hd": {
     "summary": "Display file contents in hexadecimal, decimal, octal, or ASCII format."
@@ -203,47 +203,47 @@ pages = {
     "summary": "DNS lookup utility for querying domain name servers."
   },
   "hostname": {
-    "summary": "Display or set the system’s host name."
+    "summary": "Display or set the system’s hostname."
   },
   "http": {
-    "summary": "Send arbitrary HTTP requests and display responses from the command line."
+    "summary": "Send arbitrary HTTP requests and display responses."
   },
   "install": {
     "summary": "Copy files and set attributes."
   },
   "iostat": {
-    "summary": "Display CPU and input/output statistics for devices and partitions."
+    "summary": "Display CPU and I/O statistics for devices and partitions."
   },
   "iotop": {
     "summary": "Monitor I/O usage by processes on the system."
   },
   "ip": {
-    "summary": "Display and manipulate network interfaces, routing, and tunnels on Linux systems."
+    "summary": "Network configuration tool for managing interfaces, routing, and addresses."
   },
   "ipcs": {
-    "summary": "Display information about active IPC facilities (shared memory, message queues, and semaphores)."
+    "summary": "Display information about active IPC facilities (shared memory segments, message queues, and semaphores)."
   },
   "journalctl": {
     "summary": "Query and display messages from the systemd journal."
   },
   "jq": {
-    "summary": "Process and transform JSON data with a lightweight and flexible command-line processor."
+    "summary": "Process and transform JSON data with a lightweight command-line processor."
   },
   "kill": {
-    "summary": "Send a signal to a process, usually to terminate it."
+    "summary": "Terminate or send signals to processes."
   },
   "killall": {
-    "summary": "Kill processes by name rather than by process ID."
+    "summary": "Terminates processes by name rather than by process ID."
   },
   "leftbracket": {
-    "summary": "Evaluates conditional expressions and returns a status based on the evaluation result.",
+    "summary": "Evaluates conditional expressions and returns a status based on the evaluation.",
     "command": "[",
     "alias": [
       "test"
     ]
   },
   "less": {
-    "summary": "Display text files in a scrollable interface, allowing forward and backward navigation."
+    "summary": "Display text files in a scrollable interface with search capabilities."
   },
   "ln": {
     "summary": "Create links between files."
@@ -252,7 +252,7 @@ pages = {
     "summary": "List directory contents."
   },
   "lsof": {
-    "summary": "List open files and the processes that opened them."
+    "summary": "Lists open files and the processes that opened them."
   },
   "ltrace": {
     "summary": "Trace library calls of a program."
@@ -261,25 +261,25 @@ pages = {
     "summary": "Create directories with specified names."
   },
   "mkfifo": {
-    "summary": "Creates named pipes (FIFOs) with the specified names."
+    "summary": "Create named pipes (FIFOs) with specified names."
   },
   "more": {
     "summary": "Display file contents one screen at a time."
   },
   "mv": {
-    "summary": "Move or rename files and directories."
+    "summary": "Move (rename) files and directories."
   },
   "nc": {
     "summary": "Create and manage network connections for data transfer, port scanning, and network debugging."
   },
   "od": {
-    "summary": "Display file contents in various formats, primarily octal, hexadecimal, or other numeric representations."
+    "summary": "Display file contents in various formats, primarily octal, decimal, or hexadecimal."
   },
   "openssl": {
-    "summary": "Provides cryptographic functionality for secure communications, certificate management, and various cryptographic operations."
+    "summary": "Manage cryptographic functions including certificate creation, encryption, and secure connections."
   },
   "pandoc": {
-    "summary": "Convert documents between various formats."
+    "summary": "Universal document converter that transforms files between markup formats."
   },
   "passwd": {
     "summary": "Change user password."
@@ -303,7 +303,7 @@ pages = {
     "summary": "Print a stack trace of running processes."
   },
   "pstree": {
-    "summary": "Display a tree of processes showing parent-child relationships."
+    "summary": "Display running processes as a tree."
   },
   "pwd": {
     "summary": "Print the full pathname of the current working directory."
@@ -324,34 +324,34 @@ pages = {
     "summary": "Remove empty directories from the filesystem."
   },
   "rsync": {
-    "summary": "Synchronize files and directories between locations, locally or remotely."
+    "summary": "Synchronize files and directories between local and remote systems or between local directories."
   },
   "scp": {
     "summary": "Securely copy files between hosts on a network using SSH for data transfer."
   },
   "script": {
-    "summary": "Makes a typescript of a terminal session, recording all terminal activity."
+    "summary": "Make a typescript of a terminal session."
   },
   "sed": {
     "summary": "Stream editor for filtering and transforming text."
   },
   "seq": {
-    "summary": "Print a sequence of numbers from FIRST to LAST by INCREMENT steps."
+    "summary": "Print a sequence of numbers."
   },
   "set": {
     "summary": "Display or set shell options and positional parameters."
   },
   "sftp": {
-    "summary": "Securely transfer files between hosts over an encrypted connection."
+    "summary": "Securely transfer files between hosts over an encrypted SSH connection."
   },
   "shift": {
-    "summary": "Shifts positional parameters in a shell script, removing the first parameter and moving all others down by one position."
+    "summary": "Shifts positional parameters in shell scripts, removing the first parameter and renumbering the remaining ones."
   },
   "sleep": {
     "summary": "Suspends execution for a specified amount of time."
   },
   "sort": {
-    "summary": "Sort lines of text files alphabetically or numerically."
+    "summary": "Sort lines of text files."
   },
   "source": {
     "summary": "Execute commands from a file or script in the current shell environment.",
@@ -369,16 +369,16 @@ pages = {
     "summary": "Display socket statistics, providing information about network connections."
   },
   "ssh": {
-    "summary": "Securely connect to remote machines over an encrypted network connection."
+    "summary": "Securely connect to remote systems over an encrypted network connection."
   },
   "ssh-add": {
-    "summary": "Add private keys to the SSH authentication agent for connection authentication."
+    "summary": "Adds private key identities to the OpenSSH authentication agent."
   },
   "ssh-agent": {
-    "summary": "Authentication agent that manages SSH private keys for secure connections without repeated passphrase entry."
+    "summary": "Authentication agent for SSH private keys that holds keys in memory to avoid repeated passphrase entry."
   },
   "ssh-copy-id": {
-    "summary": "Installs your public key in a remote machine’s authorized keys file."
+    "summary": "Installs your public key in a remote machine’s authorized_keys file to enable passwordless SSH authentication."
   },
   "ssh-keygen": {
     "summary": "Generate, manage, and convert authentication keys for SSH."
@@ -387,16 +387,16 @@ pages = {
     "summary": "Display file or file system status information."
   },
   "strace": {
-    "summary": "Trace system calls and signals made by a process."
+    "summary": "Trace system calls and signals for a process."
   },
   "su": {
-    "summary": "Switch user identity or become another user temporarily."
+    "summary": "Switch user identity or become another user."
   },
   "sudo": {
-    "summary": "Execute a command as another user, typically with administrative privileges."
+    "summary": "Execute a command as another user, typically with elevated privileges."
   },
   "sudoedit": {
-    "summary": "Edit files securely as a privileged user while maintaining file ownership and permissions."
+    "summary": "Edit files securely as another user, typically root."
   },
   "systemctl": {
     "summary": "Control the systemd system and service manager."
@@ -405,7 +405,7 @@ pages = {
     "summary": "Display the last part of files."
   },
   "tar": {
-    "summary": "Manipulate tape archives by creating, extracting, or listing the contents of archive files."
+    "summary": "Manipulate tape archives by creating, extracting, listing, or updating files in archive format."
   },
   "tcpdump": {
     "summary": "Capture and analyze network traffic on a system."
@@ -423,10 +423,10 @@ pages = {
     "summary": "Translate or delete characters from standard input, writing to standard output."
   },
   "tree": {
-    "summary": "Display directory contents in a tree-like format, showing the hierarchical structure of directories and files."
+    "summary": "Display directory contents in a hierarchical tree structure."
   },
   "true": {
-    "summary": "Returns a successful exit status (0) regardless of its input."
+    "summary": "Return a successful exit status (0)."
   },
   "truncate": {
     "summary": "Shrink or extend the size of a file to a specified size."
@@ -435,60 +435,60 @@ pages = {
     "summary": "Print system information about the operating system."
   },
   "uniq": {
-    "summary": "Filter out or report adjacent duplicate lines from input."
+    "summary": "Filter adjacent matching lines from input, or report unique lines."
   },
   "unlink": {
-    "summary": "Remove a single file from the filesystem."
+    "summary": "Remove a single file."
   },
   "until": {
     "summary": "Execute a command repeatedly until a condition is met."
   },
   "unzip": {
-    "summary": "Extract files from a ZIP archive."
+    "summary": "Extract files from ZIP archives."
   },
   "update-alternatives": {
     "summary": "Manages symbolic links determining default commands in the alternatives system."
   },
   "update-locale": {
-    "summary": "Configure system-wide locale settings by updating the /etc/default/locale file."
+    "summary": "Configure system locale settings by updating /etc/default/locale."
   },
   "visudo": {
     "summary": "Edit the sudoers file safely with syntax checking."
   },
   "vmstat": {
-    "summary": "Report virtual memory statistics, providing information about system processes, memory, paging, block I/O, traps, and CPU activity."
+    "summary": "Report virtual memory statistics."
   },
   "w": {
-    "summary": "Show who is logged in and what they are doing."
+    "summary": "Display information about users currently logged in and their processes."
   },
   "wc": {
     "summary": "Count lines, words, and bytes in files."
   },
   "wget": {
-    "summary": "Download files from the web using HTTP, HTTPS, or FTP protocols."
+    "summary": "Download files from the web via HTTP, HTTPS, and FTP protocols."
   },
   "which": {
-    "summary": "Locate a command by searching through the PATH environment variable."
+    "summary": "Locate a command’s executable file in the user’s PATH."
   },
   "while": {
     "summary": "Execute commands repeatedly as long as a condition is true."
   },
   "whoami": {
-    "summary": "Display the effective username of the current user."
+    "summary": "Display the effective user ID of the current user."
   },
   "xargs": {
-    "summary": "Executes commands using arguments from standard input."
+    "summary": "Execute commands using arguments from standard input."
   },
   "xdg-mime": {
-    "summary": "Query and set file type associations in desktop environments."
+    "summary": "Query or set file type associations in desktop environments."
   },
   "xdg-open": {
     "summary": "Opens a file or URL in the user’s preferred application."
   },
   "yes": {
-    "summary": "Repeatedly outputs a string until interrupted."
+    "summary": "Output a string repeatedly until killed."
   },
   "zip": {
-    "summary": "Package files into a compressed archive."
+    "summary": "Create or update ZIP archives by compressing files and directories."
   }
 };

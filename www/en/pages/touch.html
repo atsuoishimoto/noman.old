@@ -49,82 +49,82 @@
   <h1>touch command</h1>
 <p>Create or update file timestamps.</p>
 <h2>Overview</h2>
-<p>The <code>touch</code> command is used to change file timestamps or create empty files if they don't exist. It's commonly used to create new empty files or update the access and modification times of existing files to the current time.</p>
+<p>The <code>touch</code> command creates empty files if they don't exist or updates the access and modification timestamps of existing files to the current time. It's commonly used to create empty files or update file timestamps without changing content.</p>
 <h2>Options</h2>
-<h3><strong>-a, --time=atime, --time=access, --time=use</strong></h3>
+<h3><strong>-a</strong></h3>
 <p>Change only the access time.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 0 May 01 10:00 file.txt</span>
-<span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 0 May 01 10:00 file.txt  # Note: Only access time changed, not visible with ls -l</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>file.txt
 </pre></div>
 <h3><strong>-c, --no-create</strong></h3>
-<p>Do not create files that do not exist.</p>
+<p>Do not create files that don't exist.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>nonexistent.txt
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>nonexistent.txt
-<span style="color: #000; font-style: italic">ls: cannot access &#39;nonexistent.txt&#39;: No such file or directory</span>
+</pre></div>
+<h3><strong>-m</strong></h3>
+<p>Change only the modification time.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>file.txt
+</pre></div>
+<h3><strong>-r, --reference=FILE</strong></h3>
+<p>Use the timestamp of the reference FILE instead of the current time.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>reference.txt<span style="color: #F8F8F8"> </span>target.txt
+</pre></div>
+<h3><strong>-t STAMP</strong></h3>
+<p>Use the specified time instead of the current time. Format: [[CC]YY]MMDDhhmm[.ss]</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">202505051200</span><span style="color: #F8F8F8"> </span>file.txt
 </pre></div>
 <h3><strong>-d, --date=STRING</strong></h3>
 <p>Parse STRING and use it instead of current time.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2023-12-25 12:00&quot;</span><span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 0 Dec 25  2023 file.txt</span>
-</pre></div>
-<h3><strong>-m, --time=mtime, --time=modify</strong></h3>
-<p>Change only the modification time.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 0 May 04 15:30 file.txt  # Modification time updated</span>
-</pre></div>
-<h3><strong>-r, --reference=FILE</strong></h3>
-<p>Use this file's times instead of the current time.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>reference.txt
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 0 Jan 15  2024 reference.txt</span>
-<span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>reference.txt<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 0 Jan 15  2024 file.txt</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2025-05-05 12:00:00&quot;</span><span style="color: #F8F8F8"> </span>file.txt
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Creating multiple empty files</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt
-<span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">file1.txt  file2.txt  file3.txt</span>
 </pre></div>
-<h3>Updating timestamp to a specific time</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2 days ago&quot;</span><span style="color: #F8F8F8"> </span>oldfile.txt
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>oldfile.txt
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 0 May 02 15:30 oldfile.txt</span>
+<h3>Updating timestamp to current time</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>existing_file.txt
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>existing_file.txt
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 0 May  5 10:30 existing_file.txt</span>
 </pre></div>
-<h3>Creating files with specific permissions</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">umask</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">022</span>
-<span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>newfile.txt
-<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>newfile.txt
-<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 0 May 04 15:30 newfile.txt</span>
+<h3>Setting a specific timestamp</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;yesterday&quot;</span><span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 0 May  4 10:30 file.txt</span>
+</pre></div>
+<h3>Using another file's timestamp</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>source.txt<span style="color: #F8F8F8"> </span>destination.txt
+<span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>source.txt<span style="color: #F8F8F8"> </span>destination.txt
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 0 May  5 09:15 source.txt</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 0 May  5 09:15 destination.txt</span>
 </pre></div>
 <h2>Tips:</h2>
-<h3>Use touch for Makefile dependencies</h3>
-<p>When building software, you can use <code>touch</code> to update timestamps of files to trigger or avoid rebuilds in build systems like Make.</p>
-<h3>Create files with specific timestamps for testing</h3>
-<p>When testing date-dependent functionality, use <code>touch -d</code> to create files with specific timestamps for testing sorting or filtering.</p>
-<h3>Batch update timestamps</h3>
-<p>You can use wildcards to update timestamps of multiple files at once: <code>touch *.txt</code> will update all text files in the current directory.</p>
-<h3>Check if a file exists without modifying it</h3>
-<p>Use <code>touch -c</code> with a file to check if it exists without creating it if it doesn't.</p>
+<h3>Create Files with Directory Path</h3>
+<p>If you need to create a file in a directory that doesn't exist yet, use <code>mkdir -p</code> first:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>path/to/directory
+<span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>path/to/directory/file.txt
+</pre></div>
+<h3>Batch Create Files with Patterns</h3>
+<p>Use brace expansion to create multiple files with a pattern:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>file<span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span>..5<span style="color: #CE5C00; font-weight: bold">}</span>.txt
+<span style="color: #8F5902">$ </span>ls
+<span style="color: #000; font-style: italic">file1.txt file2.txt file3.txt file4.txt file5.txt</span>
+</pre></div>
+<h3>Update Timestamps Without Creating Files</h3>
+<p>When you want to update timestamps only for existing files, use the <code>-c</code> option to prevent creating new files:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>*.txt
+</pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What happens if I touch a file that already exists?</h4>
-<p>A. It updates the file's access and modification timestamps to the current time without changing the file's content.</p>
-<h4>Q2. Can touch create directories?</h4>
-<p>A. No, <code>touch</code> can only create files, not directories. Use <code>mkdir</code> to create directories.</p>
-<h4>Q3. How can I create a file with a specific timestamp?</h4>
-<p>A. Use <code>touch -d &quot;YYYY-MM-DD HH:MM:SS&quot; filename</code> to set a specific timestamp.</p>
-<h4>Q4. Does touch change file permissions?</h4>
-<p>A. No, <code>touch</code> only affects timestamps. It creates new files with default permissions based on your umask setting.</p>
+<h4>Q1. What happens if I touch a file that doesn't exist?</h4>
+<p>A. By default, <code>touch</code> creates an empty file with that name.</p>
+<h4>Q2. How can I update only the modification time without changing the access time?</h4>
+<p>A. Use <code>touch -m filename</code> to update only the modification time.</p>
+<h4>Q3. Can I set a file's timestamp to a specific date and time?</h4>
+<p>A. Yes, use <code>touch -d &quot;YYYY-MM-DD HH:MM:SS&quot; filename</code> or <code>touch -t YYYYMMDDhhmm.ss filename</code>.</p>
+<h4>Q4. Does touch change file content?</h4>
+<p>A. No, <code>touch</code> only creates empty files or updates timestamps; it never modifies existing file content.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/touch-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

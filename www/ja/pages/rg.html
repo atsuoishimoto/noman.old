@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -47,112 +47,107 @@
     <main>
       
   <h1>rg コマンド</h1>
-<p>正規表現を使用してファイル内のパターンを検索し、ディレクトリを再帰的に探索します。</p>
+<p>正規表現を使用してファイル内のパターンを検索し、ディレクトリの再帰的な走査をサポートします。</p>
 <h2>概要</h2>
-<p><code>rg</code>（ripgrep）は、現在のディレクトリを再帰的に検索して正規表現パターンを見つける行指向の検索ツールです。grep、ag、ackなどの他の検索ツールよりも高速に動作するように設計されており、同様の機能を合理的なデフォルト設定で提供します。デフォルトでは、ripgrepは.gitignoreルールを尊重し、隠しファイル/ディレクトリやバイナリファイルを自動的にスキップします。</p>
+<p><code>rg</code>（ripgrep）は、現在のディレクトリを再帰的に検索して正規表現パターンを見つける行指向の検索ツールです。デフォルトで.gitignoreルールを尊重し、grep、ag、ackなどの他の検索ツールよりも高速に動作するように設計されています。Ripgrepは明示的に指示されない限り、隠しファイル、バイナリファイル、.gitignoreにリストされているファイルを自動的にスキップします。</p>
 <h2>オプション</h2>
 <h3><strong>-i, --ignore-case</strong></h3>
-<p>検索で大文字と小文字を区別しないようにします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>error
-<span style="color: #000; font-style: italic">./log.txt:10:ERROR: Connection failed</span>
-<span style="color: #000; font-style: italic">./log.txt:15:error: timeout occurred</span>
-<span style="color: #000; font-style: italic">./app.js:42:console.log(&#39;error handling&#39;);</span>
-</pre></div>
-<h3><strong>-v, --invert-match</strong></h3>
+<p>検索で大文字と小文字を区別しなくなります。</p>
+<pre><code>$ rg -i &quot;function&quot;
+src/main.js:10:function calculateTotal(items) {
+src/utils.js:5:Function to handle API responses
+</code></pre><h3><strong>-v, --invert-match</strong></h3>
 <p>指定したパターンに一致しない行を表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>error<span style="color: #F8F8F8"> </span>test.log
-<span style="color: #000; font-style: italic">./test.log:1:Starting application</span>
-<span style="color: #000; font-style: italic">./test.log:2:Loading configuration</span>
-<span style="color: #000; font-style: italic">./test.log:5:Application running</span>
-</pre></div>
-<h3><strong>-w, --word-regexp</strong></h3>
-<p>単語境界で囲まれた一致のみを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span>log
-<span style="color: #000; font-style: italic">./app.js:42:console.log(&#39;error handling&#39;);</span>
-<span style="color: #000; font-style: italic">./utils.js:15:function log(message) {</span>
-</pre></div>
-<h3><strong>-c, --count</strong></h3>
-<p>各ファイルの一致する行数のみを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>error<span style="color: #F8F8F8"> </span>logs/
-<span style="color: #000; font-style: italic">logs/app.log:15</span>
-<span style="color: #000; font-style: italic">logs/system.log:3</span>
-<span style="color: #000; font-style: italic">logs/debug.log:0</span>
-</pre></div>
-<h3><strong>-l, --files-with-matches</strong></h3>
-<p>少なくとも1つの一致を含むパスのみを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>error
-<span style="color: #000; font-style: italic">logs/app.log</span>
-<span style="color: #000; font-style: italic">logs/system.log</span>
-<span style="color: #000; font-style: italic">src/error_handler.js</span>
-</pre></div>
-<h3><strong>--no-ignore</strong></h3>
+<pre><code>$ rg -v &quot;TODO&quot; todo.txt
+These items are completed
+Remember to check email
+</code></pre><h3><strong>-w, --word-regexp</strong></h3>
+<p>単語の境界で囲まれた一致のみを表示します。</p>
+<pre><code>$ rg -w &quot;log&quot;
+logger.js:15:  log(&quot;User logged in&quot;);
+logger.js:20:  log(&quot;Error occurred&quot;);
+</code></pre><h3><strong>-c, --count</strong></h3>
+<p>ファイルごとの一致する行数のみを表示します。</p>
+<pre><code>$ rg -c &quot;error&quot; *.log
+app.log:15
+system.log:3
+</code></pre><h3><strong>-l, --files-with-matches</strong></h3>
+<p>少なくとも1つの一致があるパスのみを表示します。</p>
+<pre><code>$ rg -l &quot;TODO&quot;
+src/main.js
+docs/roadmap.md
+</code></pre><h3><strong>-n, --line-number</strong></h3>
+<p>行番号を表示します（デフォルトで有効）。</p>
+<pre><code>$ rg -n &quot;function&quot;
+src/main.js:10:function calculateTotal(items) {
+src/utils.js:15:function formatDate(date) {
+</code></pre><h3><strong>--no-ignore</strong></h3>
 <p>無視ファイル（.gitignore、.ignoreなど）を尊重しません。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>--no-ignore<span style="color: #F8F8F8"> </span>password
-<span style="color: #000; font-style: italic">.git/config:3:password=secret123</span>
-<span style="color: #000; font-style: italic">node_modules/test-lib/passwords.json:5:&quot;default_password&quot;: &quot;admin&quot;</span>
-</pre></div>
-<h3><strong>-A, --after-context NUM</strong></h3>
+<pre><code>$ rg --no-ignore &quot;password&quot;
+node_modules/config.js:5:  password: &quot;dummy_password&quot;,
+.git/config:10:  password = hunter2
+</code></pre><h3><strong>-A, --after-context NUM</strong></h3>
 <p>各一致の後にNUM行を表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-A<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>error<span style="color: #F8F8F8"> </span>app.log
-<span style="color: #000; font-style: italic">app.log:15:error: connection failed</span>
-<span style="color: #000; font-style: italic">app.log:16:  at line 42 in network.js</span>
-<span style="color: #000; font-style: italic">app.log:17:  attempted reconnect</span>
-</pre></div>
-<h3><strong>-B, --before-context NUM</strong></h3>
+<pre><code>$ rg -A 2 &quot;class User&quot;
+src/models.js:10:class User {
+src/models.js:11:  constructor(name, email) {
+src/models.js:12:    this.name = name;
+</code></pre><h3><strong>-B, --before-context NUM</strong></h3>
 <p>各一致の前にNUM行を表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-B<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span>error<span style="color: #F8F8F8"> </span>app.log
-<span style="color: #000; font-style: italic">app.log:13:attempting connection</span>
-<span style="color: #000; font-style: italic">app.log:14:using default timeout</span>
-<span style="color: #000; font-style: italic">app.log:15:error: connection failed</span>
-</pre></div>
-<h2>使用例</h2>
+<pre><code>$ rg -B 1 &quot;throw new Error&quot;
+src/api.js:24:  if (!response.ok) {
+src/api.js:25:    throw new Error('API request failed');
+</code></pre><h3><strong>-C, --context NUM</strong></h3>
+<p>各一致の前後にNUM行を表示します。</p>
+<pre><code>$ rg -C 1 &quot;TODO&quot;
+src/main.js:19:function processData(data) {
+src/main.js:20:  // TODO: Implement validation
+src/main.js:21:  return transform(data);
+</code></pre><h2>使用例</h2>
 <h3>特定のファイルタイプで検索</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>js<span style="color: #F8F8F8"> </span>console.log
-<span style="color: #000; font-style: italic">src/main.js:10:  console.log(&#39;Application started&#39;);</span>
-<span style="color: #000; font-style: italic">src/utils.js:25:  console.log(&#39;Loading data...&#39;);</span>
-</pre></div>
-<h3>複数のパターンで検索</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;error|warning|critical&#39;</span><span style="color: #F8F8F8"> </span>logs/app.log
-<span style="color: #000; font-style: italic">logs/app.log:15:error: connection failed</span>
-<span style="color: #000; font-style: italic">logs/app.log:23:warning: slow response time</span>
-<span style="color: #000; font-style: italic">logs/app.log:45:critical: database unavailable</span>
-</pre></div>
-<h3>ファイル名パターンで検索</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>TODO<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;*.js&#39;</span>
-<span style="color: #000; font-style: italic">src/app.js:42:// TODO: Implement error handling</span>
-<span style="color: #000; font-style: italic">src/utils.js:78:// TODO: Optimize this function</span>
-</pre></div>
-<h2>ヒント:</h2>
-<h3>スマートケースで柔軟なマッチングを使用</h3>
-<p><code>-S</code>または<code>--smart-case</code>を使用すると、パターンがすべて小文字の場合は大文字と小文字を区別しない検索を行い、パターンに大文字が含まれる場合は大文字と小文字を区別する検索を行います。</p>
-<h3>他のコマンドと組み合わせる</h3>
-<p><code>rg</code>の出力を他のコマンドにパイプして、さらに処理することができます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;TODO|FIXME&#39;</span><span style="color: #F8F8F8"> </span>--no-heading<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>sort<span style="color: #F8F8F8"> </span>-k1,1
-</pre></div>
-<h3>圧縮ファイル内を検索</h3>
-<p><code>--search-zip</code>を使用して、.gzや.zipなどの圧縮ファイル内を検索できます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>--search-zip<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>logs/
-</pre></div>
-<h3>特定のディレクトリを除外</h3>
-<p><code>--glob=!{dir}</code>を使用して、特定のディレクトリを除外できます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;function&quot;</span><span style="color: #F8F8F8"> </span>--glob<span style="color: #CE5C00; font-weight: bold">=</span>!<span style="color: #CE5C00; font-weight: bold">{</span>node_modules,dist<span style="color: #CE5C00; font-weight: bold">}</span>
-</pre></div>
-<h2>よくある質問</h2>
+<pre><code>$ rg -t js &quot;useState&quot;
+src/components/Form.js:3:import { useState } from 'react';
+src/components/Counter.js:5:  const [count, setCount] = useState(0);
+</code></pre><h3>ripgrepとsedを使用した検索と置換</h3>
+<pre><code>$ rg -l &quot;oldFunction&quot; | xargs sed -i 's/oldFunction/newFunction/g'
+</code></pre><h3>グロブパターンでの検索</h3>
+<pre><code>$ rg &quot;error&quot; --glob &quot;*.{js,ts}&quot;
+src/utils.js:25:  console.error(&quot;Connection failed&quot;);
+src/api.ts:42:  throw new Error(&quot;Invalid response&quot;);
+</code></pre><h3>検索からディレクトリを除外</h3>
+<pre><code>$ rg &quot;TODO&quot; --glob &quot;!node_modules&quot;
+src/main.js:20:  // TODO: Implement validation
+docs/roadmap.md:15:TODO: Add authentication
+</code></pre><h2>ヒント:</h2>
+<h3>より高速な検索には固定文字列を使用</h3>
+<p>正規表現パターンではなく文字通りのテキストを検索する場合は、パフォーマンス向上のために <code>-F</code> または <code>--fixed-strings</code> を使用します：</p>
+<pre><code>$ rg -F &quot;React.useState&quot; src/
+</code></pre><h3>他のツールと組み合わせる</h3>
+<p>ripgrepの結果を他のコマンドにパイプして追加処理を行います：</p>
+<pre><code>$ rg -n &quot;TODO&quot; | sort -k1,1 | less
+</code></pre><h3>隠しファイルを検索</h3>
+<p>デフォルトでは、ripgrepは隠しファイルとディレクトリを無視します。それらを含めるには <code>-. または --hidden</code> を使用します：</p>
+<pre><code>$ rg --hidden &quot;password&quot; ~/
+</code></pre><h3>スマートケースを使用</h3>
+<p><code>-S</code> または <code>--smart-case</code> オプションを使用すると、パターンがすべて小文字の場合は大文字と小文字を区別しない検索になり、それ以外の場合は大文字と小文字を区別する検索になります：</p>
+<pre><code>$ rg -S &quot;function&quot; # 大文字小文字を区別しない
+$ rg -S &quot;Function&quot; # 大文字小文字を区別する
+</code></pre><h2>よくある質問</h2>
 <h4>Q1. ripgrepはgrepとどう違いますか？</h4>
-<p>A. ripgrepは一般的にgrepよりも高速で、自動的に再帰的に検索し、デフォルトで.gitignoreルールを尊重し、多くのファイルタイプやエンコーディングに対する組み込みサポートを持っています。</p>
-<h4>Q2. スペースを含むパターンを検索するにはどうすればよいですか？</h4>
-<p>A. パターンを引用符で囲みます：<code>rg &quot;スペースを含む検索パターン&quot;</code></p>
-<h4>Q3. ripgrepで隠しファイルやディレクトリを検索するにはどうすればよいですか？</h4>
-<p>A. <code>--hidden</code>フラグを使用します：<code>rg --hidden パターン</code></p>
-<h4>Q4. 正規表現パターンではなくリテラル文字列を検索するにはどうすればよいですか？</h4>
-<p>A. <code>-F</code>または<code>--fixed-strings</code>オプションを使用します：<code>rg -F &quot;特殊文字を含む(文字列)&quot;</code></p>
+<p>A. ripgrepは一般的にgrepよりも高速で、デフォルトで.gitignoreファイルを尊重し、バイナリファイルを自動的にスキップし、より優れたUnicodeサポートを持っています。</p>
+<h4>Q2. 特殊な正規表現文字を含むパターンを検索するにはどうすればよいですか？</h4>
+<p>A. <code>-F</code> または <code>--fixed-strings</code> を使用して文字通りのテキストを検索するか、特殊文字をバックスラッシュでエスケープします。</p>
+<h4>Q3. パターンを含まないファイルを検索するにはどうすればよいですか？</h4>
+<p>A. <code>-L</code> または <code>--files-without-match</code> を使用して、パターンを含まないファイルを見つけます。</p>
+<h4>Q4. ripgrepでシンボリックリンクをたどるにはどうすればよいですか？</h4>
+<p>A. <code>-L</code> または <code>--follow</code> を使用して、検索時にシンボリックリンクをたどります。</p>
 <h4>Q5. --no-ignoreオプションは何をしますか？</h4>
-<p>A. <code>--no-ignore</code>オプションは、ripgrepにすべての無視ファイル（.gitignore、.ignoreなど）を無視するよう指示し、通常は無視パターンに基づいて除外されるファイルも含めてすべてのファイルを検索します。</p>
-<h2>参考資料</h2>
+<p>A. <code>--no-ignore</code> オプションは、.gitignore、.ignore、または同様のファイルによって通常無視されるファイルやディレクトリも検索するようripgrepに指示します。これは、node_modulesや他の通常無視される場所で検索する必要がある場合に便利です。</p>
+<h2>参考文献</h2>
 <p>https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 --no-ignoreオプションの説明を追加し、FAQを拡張しました。</li>
+<li>2025/05/05 --no-ignoreオプションの説明を追加し、FAQを拡充しました。</li>
 </ul>
 
 

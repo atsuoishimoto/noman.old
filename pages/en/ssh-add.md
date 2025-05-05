@@ -1,14 +1,14 @@
 # ssh-add command
 
-Add private keys to the SSH authentication agent for connection authentication.
+Adds private key identities to the OpenSSH authentication agent.
 
 ## Overview
 
-`ssh-add` manages private keys used for SSH authentication. It adds keys to the SSH agent (ssh-agent), which securely stores your decrypted private keys in memory, allowing you to connect to remote servers without re-entering passphrases for each connection.
+`ssh-add` manages the private keys used for SSH authentication. It adds keys to the SSH agent, which holds private keys in memory so you don't need to type passphrases repeatedly when connecting to remote servers. The SSH agent must be running before using ssh-add.
 
 ## Options
 
-### **-l** / **--list**
+### **-l**
 
 Lists fingerprints of all identities currently represented by the agent.
 
@@ -17,7 +17,25 @@ $ ssh-add -l
 2048 SHA256:abcdefghijklmnopqrstuvwxyz1234567890ABCD user@hostname (RSA)
 ```
 
-### **-D** / **--delete-all**
+### **-L**
+
+Lists public key parameters of all identities currently represented by the agent.
+
+```console
+$ ssh-add -L
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC... user@hostname
+```
+
+### **-d**
+
+Removes the specified private key identity from the agent.
+
+```console
+$ ssh-add -d ~/.ssh/id_rsa
+Identity removed: /home/user/.ssh/id_rsa (user@hostname)
+```
+
+### **-D**
 
 Deletes all identities from the agent.
 
@@ -26,18 +44,9 @@ $ ssh-add -D
 All identities removed.
 ```
 
-### **-d** / **--delete**
+### **-t life**
 
-Removes the specified identity from the agent.
-
-```console
-$ ssh-add -d ~/.ssh/id_rsa
-Identity removed: /home/user/.ssh/id_rsa (user@hostname)
-```
-
-### **-t** / **--lifetime seconds**
-
-Sets a maximum lifetime when adding identities to the agent. After this time, the identity will be automatically removed.
+Sets a maximum lifetime when adding identities to an agent. The lifetime may be specified in seconds or in a time format specified in sshd_config(5).
 
 ```console
 $ ssh-add -t 3600 ~/.ssh/id_rsa
@@ -45,20 +54,9 @@ Identity added: /home/user/.ssh/id_rsa (user@hostname)
 Lifetime set to 3600 seconds
 ```
 
-### **-k** / **--lock-agent**
+### **-x**
 
 Locks the agent with a password.
-
-```console
-$ ssh-add -k
-Enter lock password: 
-Again: 
-Agent locked.
-```
-
-### **-x** / **--lock**
-
-Locks the agent with a password (alternative to -k).
 
 ```console
 $ ssh-add -x
@@ -67,7 +65,7 @@ Again:
 Agent locked.
 ```
 
-### **-X** / **--unlock**
+### **-X**
 
 Unlocks the agent.
 
@@ -79,77 +77,72 @@ Agent unlocked.
 
 ## Usage Examples
 
-### Adding a key without specifying a file
+### Adding a key to the agent
 
 ```console
-$ ssh-add
+$ ssh-add ~/.ssh/id_rsa
 Enter passphrase for /home/user/.ssh/id_rsa: 
 Identity added: /home/user/.ssh/id_rsa (user@hostname)
 ```
 
-### Adding a specific key file
+### Adding multiple keys at once
 
 ```console
-$ ssh-add ~/.ssh/github_key
-Enter passphrase for /home/user/.ssh/github_key: 
-Identity added: /home/user/.ssh/github_key (user@github)
+$ ssh-add ~/.ssh/id_rsa ~/.ssh/id_ed25519
+Enter passphrase for /home/user/.ssh/id_rsa: 
+Identity added: /home/user/.ssh/id_rsa (user@hostname)
+Enter passphrase for /home/user/.ssh/id_ed25519: 
+Identity added: /home/user/.ssh/id_ed25519 (user@hostname)
 ```
 
-### Checking if the agent has any keys
+### Adding all default keys
 
 ```console
-$ ssh-add -l
-The agent has no identities.
+$ ssh-add
+Identity added: /home/user/.ssh/id_rsa (user@hostname)
+Identity added: /home/user/.ssh/id_ed25519 (user@hostname)
 ```
 
 ## Tips:
 
-### Start ssh-agent Before Using ssh-add
+### Start SSH Agent Automatically
 
-The SSH agent must be running before you can add keys. On most systems, you can start it with:
-
-```console
-$ eval $(ssh-agent)
-Agent pid 12345
-```
-
-### Add Keys Automatically on Login
-
-Add this to your shell startup file (like `.bashrc` or `.zshrc`) to automatically add your keys when you log in:
-
+On most systems, you can ensure the SSH agent starts automatically by adding these lines to your `~/.bashrc` or `~/.bash_profile`:
 ```bash
 if [ -z "$SSH_AUTH_SOCK" ]; then
    eval $(ssh-agent -s)
-   ssh-add
 fi
 ```
 
 ### Use SSH Config for Key Management
 
-Instead of manually adding keys, you can specify which key to use for specific hosts in `~/.ssh/config`:
+Instead of manually adding keys, you can specify which key to use for specific hosts in your `~/.ssh/config` file:
+```
+Host example.com
+    IdentityFile ~/.ssh/special_key
+```
 
-```
-Host github.com
-  IdentityFile ~/.ssh/github_key
-```
+### Check If Keys Are Already Added
+
+Before adding keys, check if they're already loaded with `ssh-add -l` to avoid duplicate entries.
 
 ## Frequently Asked Questions
 
 #### Q1. Why do I need to use ssh-add?
-A. `ssh-add` lets you decrypt your private key once and store it in memory, so you don't need to enter your passphrase every time you connect to a server.
+A. `ssh-add` lets you store your private key passphrases in the SSH agent, so you don't need to type them each time you connect to a server.
 
-#### Q2. How do I know if my key is already added?
-A. Run `ssh-add -l` to list all keys currently loaded in the agent.
+#### Q2. How do I make ssh-add remember my keys after reboot?
+A. SSH agent doesn't persist across reboots by default. You can use tools like `keychain` or configure your login manager to start the SSH agent and add keys automatically.
 
-#### Q3. My ssh-add command says "Could not open a connection to your authentication agent"
-A. This means the SSH agent isn't running. Start it with `eval $(ssh-agent)` first.
+#### Q3. What's the difference between ssh-add -l and ssh-add -L?
+A. `-l` shows fingerprints of loaded keys (shorter output), while `-L` shows the complete public key data (longer, more detailed output).
 
-#### Q4. How do I make ssh-add remember my keys after reboot?
-A. SSH agent doesn't persist across reboots. Use tools like `keychain` or add the keys to your login scripts.
+#### Q4. How can I limit how long a key stays in the agent?
+A. Use `ssh-add -t <seconds>` to set a time limit, after which the key will be automatically removed.
 
-## macOS Considerations
+## macOS Specifics
 
-On macOS, the SSH agent is integrated with Keychain, so keys added with `ssh-add -K` (capital K) will be stored in Keychain and loaded automatically on login. In newer macOS versions (Monterey and later), use `--apple-use-keychain` instead of `-K`.
+On macOS, the SSH agent is integrated with Keychain, so keys added with `ssh-add -K` are stored persistently across reboots. In newer macOS versions (Monterey and later), use `ssh-add --apple-use-keychain` instead of the deprecated `-K` option.
 
 ## References
 
@@ -157,4 +150,4 @@ https://man.openbsd.org/ssh-add.1
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

@@ -49,25 +49,25 @@
   <h1>patch command</h1>
 <p>Apply a diff file to an original file or files.</p>
 <h2>Overview</h2>
-<p>The <code>patch</code> command applies changes (patches) to files. It reads a patch file (typically created by the <code>diff</code> command) and modifies the original file(s) according to the instructions in the patch. This is commonly used for applying bug fixes, updates, or modifications to source code and text files.</p>
+<p>The <code>patch</code> command applies changes (patches) to files. It reads a patch file (typically created by the <code>diff</code> command) and modifies the target files to incorporate those changes. This is commonly used for applying bug fixes, updates, or modifications to source code and text files.</p>
 <h2>Options</h2>
-<h3><strong>-p num, --strip=num</strong></h3>
-<p>Strip the smallest prefix containing num leading slashes from each file name found in the patch file.</p>
+<h3><strong>-p[num], --strip=[num]</strong></h3>
+<p>Strip the smallest prefix containing <code>num</code> leading slashes from each file name in the patch. Default is 1.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-p1<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
 <span style="color: #000; font-style: italic">patching file src/main.c</span>
 </pre></div>
 <h3><strong>-b, --backup</strong></h3>
-<p>Create a backup of the original file before applying the patch.</p>
+<p>Create a backup of each file before modifying it.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
 <span style="color: #000; font-style: italic">patching file file.txt</span>
 </pre></div>
 <h3><strong>-R, --reverse</strong></h3>
-<p>Assume that the patch was created with the old and new files swapped, effectively reversing the patch.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<p>Assume patches were created with old and new files swapped, effectively reversing the patch.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
 <span style="color: #000; font-style: italic">patching file file.txt</span>
 </pre></div>
-<h3><strong>-i patchfile, --input=patchfile</strong></h3>
-<p>Read the patch from the specified file instead of standard input.</p>
+<h3><strong>-i file, --input=file</strong></h3>
+<p>Read patch from specified file instead of stdin.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>changes.patch
 <span style="color: #000; font-style: italic">patching file file.txt</span>
 </pre></div>
@@ -76,55 +76,71 @@
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>src/<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>../changes.patch
 <span style="color: #000; font-style: italic">patching file main.c</span>
 </pre></div>
-<h3><strong>-u, --unified</strong></h3>
-<p>Interpret the patch file as a unified diff (the most common format nowadays).</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<h3><strong>-E, --remove-empty-files</strong></h3>
+<p>Remove output files that become empty after applying the patch.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-E<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">patching file empty.txt</span>
+<span style="color: #000; font-style: italic">removed empty file empty.txt</span>
+</pre></div>
+<h3><strong>-N, --forward</strong></h3>
+<p>Ignore patches that appear to be reversed or already applied.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-N<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">patching file file.txt</span>
+</pre></div>
+<h3><strong>-f, --force</strong></h3>
+<p>Force patching even when the patch appears to be incorrect.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<span style="color: #000; font-style: italic">patching file file.txt</span>
+<span style="color: #000; font-style: italic">Hunk #1 FAILED at 10.</span>
+<span style="color: #000; font-style: italic">1 out of 1 hunk FAILED -- saving rejects to file file.txt.rej</span>
+</pre></div>
+<h3><strong>-t, --batch</strong></h3>
+<p>Skip user interaction; assume &quot;yes&quot; to all questions.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
 <span style="color: #000; font-style: italic">patching file file.txt</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic Patch Application</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>diff<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>modified.txt<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>changes.patch
-<span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<h3>Applying a patch file to a single file</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>original.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
 <span style="color: #000; font-style: italic">patching file original.txt</span>
 </pre></div>
-<h3>Applying a Patch to Multiple Files</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-p0<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>project.patch
+<h3>Applying a patch with backup files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>program.c<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>bugfix.patch
+<span style="color: #000; font-style: italic">patching file program.c</span>
+</pre></div>
+<h3>Applying a patch to a directory</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">cd</span><span style="color: #F8F8F8"> </span>project/
+<span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-p1<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>../feature.patch
 <span style="color: #000; font-style: italic">patching file src/main.c</span>
 <span style="color: #000; font-style: italic">patching file include/header.h</span>
 </pre></div>
-<h3>Creating and Applying a Backup</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
+<h3>Reversing a patch</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
 <span style="color: #000; font-style: italic">patching file file.txt</span>
-<span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">file.txt  file.txt.orig  changes.patch</span>
-</pre></div>
-<h3>Dry Run (Check Without Applying)</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>patch<span style="color: #F8F8F8"> </span>--dry-run<span style="color: #F8F8F8"> </span>-p1<span style="color: #F8F8F8"> </span>&lt;<span style="color: #F8F8F8"> </span>changes.patch
-<span style="color: #000; font-style: italic">checking file src/main.c</span>
 </pre></div>
 <h2>Tips:</h2>
-<h3>Understanding Patch Levels</h3>
-<p>The <code>-p</code> option (strip level) is crucial when applying patches to projects. If your patch contains paths like <code>a/src/file.c</code>, using <code>-p1</code> will strip the <code>a/</code> prefix, making it look for <code>src/file.c</code>.</p>
-<h3>Handling Failed Patches</h3>
-<p>If a patch fails to apply cleanly, patch creates <code>.rej</code> files containing the rejected hunks. Examine these files to manually apply the changes that couldn't be applied automatically.</p>
-<h3>Testing Patches Before Applying</h3>
-<p>Always use <code>--dry-run</code> to test if a patch will apply cleanly before actually applying it, especially for important files.</p>
-<h3>Patch Direction</h3>
-<p>If you're unsure whether to use <code>-R</code> (reverse), try applying the patch normally first. If it fails with &quot;reversed patch detected,&quot; then try with <code>-R</code>.</p>
+<h3>Examine a Patch Before Applying</h3>
+<p>Use <code>patch --dry-run</code> to see what would happen without actually changing any files. This helps prevent unexpected modifications.</p>
+<h3>Handle Rejected Patches</h3>
+<p>When a patch fails to apply cleanly, <code>patch</code> creates <code>.rej</code> files containing the rejected hunks. Examine these files to manually apply the changes.</p>
+<h3>Create Context-Aware Patches</h3>
+<p>When creating patches with <code>diff</code>, use the <code>-u</code> option (unified format) to include context lines. This helps <code>patch</code> apply changes more accurately, especially when the target files have been modified.</p>
+<h3>Apply Patches to the Right Directory</h3>
+<p>Use the <code>-p</code> option to strip path prefixes when applying patches to a different directory structure than where they were created.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between a unified diff and a context diff?</h4>
-<p>A. Unified diffs (<code>-u</code> option in diff) show changed lines with context in a single block prefixed with <code>+</code> and <code>-</code>, while context diffs show before and after blocks separately. Unified diffs are more compact and commonly used today.</p>
-<h4>Q2. How do I reverse an applied patch?</h4>
-<p>A. Use <code>patch -R</code> with the same patch file to undo changes. If you created backups with <code>-b</code>, you can also restore from those.</p>
-<h4>Q3. What does &quot;Hunk #1 FAILED&quot; mean?</h4>
-<p>A. It means that a section (hunk) of the patch couldn't be applied, usually because the target file has been modified since the patch was created. Check the <code>.rej</code> file for the failed changes.</p>
-<h4>Q4. How do I apply a patch to multiple files?</h4>
-<p>A. If the patch file contains changes for multiple files, patch will automatically apply changes to all affected files when you run it.</p>
+<h4>Q1. What's the difference between a unified and context diff?</h4>
+<p>A. Unified diffs (<code>diff -u</code>) show changed lines with context in a single block prefixed with <code>+</code> and <code>-</code>, while context diffs (<code>diff -c</code>) show before and after blocks separately. Unified diffs are more compact and commonly used.</p>
+<h4>Q2. How do I apply a patch that was created in a different directory?</h4>
+<p>A. Use the <code>-p</code> option to strip directory levels from filenames in the patch. For example, <code>patch -p1</code> removes the first directory component.</p>
+<h4>Q3. How can I reverse a patch I've applied?</h4>
+<p>A. Use <code>patch -R</code> with the same patch file to undo the changes.</p>
+<h4>Q4. What do I do if a patch fails to apply?</h4>
+<p>A. Examine the <code>.rej</code> files created by patch, which contain the hunks that couldn't be applied. You may need to manually apply these changes or update the patch file.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/diffutils/manual/html_node/Invoking-patch.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

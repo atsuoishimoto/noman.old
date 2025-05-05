@@ -47,103 +47,128 @@
     <main>
       
   <h1>pstree command</h1>
-<p>Display a tree of processes showing parent-child relationships.</p>
+<p>Display running processes as a tree.</p>
 <h2>Overview</h2>
-<p>The <code>pstree</code> command displays the running processes as a tree, which makes it easy to see the parent-child relationships between processes. It provides a visual representation of how processes are connected, showing which process spawned which other processes.</p>
+<p>The <code>pstree</code> command shows the running processes on a system in a tree-like diagram, illustrating the parent-child relationships between processes. This visualization makes it easy to understand process hierarchies and see which processes spawned others.</p>
 <h2>Options</h2>
-<h3><strong>-a, --arguments</strong></h3>
-<p>Show command line arguments for each process.</p>
+<h3><strong>-a</strong></h3>
+<p>Show command line arguments.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-a
 <span style="color: #000; font-style: italic">systemd</span>
-<span style="color: #000; font-style: italic">  ├─ModemManager</span>
 <span style="color: #000; font-style: italic">  ├─NetworkManager --no-daemon</span>
 <span style="color: #000; font-style: italic">  ├─accounts-daemon</span>
-<span style="color: #000; font-style: italic">  ├─avahi-daemon --syslog</span>
-<span style="color: #000; font-style: italic">  │   └─avahi-daemon --syslog</span>
-<span style="color: #000; font-style: italic">  └─sshd -D</span>
+<span style="color: #000; font-style: italic">  ├─avahi-daemon</span>
+<span style="color: #000; font-style: italic">  │   └─avahi-daemon</span>
+<span style="color: #000; font-style: italic">  └─sshd</span>
 <span style="color: #000; font-style: italic">      └─sshd</span>
 <span style="color: #000; font-style: italic">          └─sshd</span>
 <span style="color: #000; font-style: italic">              └─bash</span>
 </pre></div>
-<h3><strong>-p, --show-pids</strong></h3>
-<p>Show PIDs (Process IDs) alongside process names.</p>
+<h3><strong>-p</strong></h3>
+<p>Show PIDs (process IDs).</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-p
-<span style="color: #000; font-style: italic">systemd(1)─┬─ModemManager(823)</span>
-<span style="color: #000; font-style: italic">           ├─NetworkManager(824)</span>
-<span style="color: #000; font-style: italic">           ├─accounts-daemon(825)</span>
-<span style="color: #000; font-style: italic">           ├─avahi-daemon(826)───avahi-daemon(845)</span>
-<span style="color: #000; font-style: italic">           └─sshd(1025)───sshd(1789)───sshd(1823)───bash(1824)</span>
+<span style="color: #000; font-style: italic">systemd(1)</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager(623)</span>
+<span style="color: #000; font-style: italic">  ├─accounts-daemon(645)</span>
+<span style="color: #000; font-style: italic">  ├─avahi-daemon(647)</span>
+<span style="color: #000; font-style: italic">  │   └─avahi-daemon(648)</span>
+<span style="color: #000; font-style: italic">  └─sshd(1025)</span>
+<span style="color: #000; font-style: italic">      └─sshd(2156)</span>
+<span style="color: #000; font-style: italic">          └─sshd(2158)</span>
+<span style="color: #000; font-style: italic">              └─bash(2159)</span>
 </pre></div>
-<h3><strong>-h, --highlight-all</strong></h3>
+<h3><strong>-n</strong></h3>
+<p>Sort processes by PID instead of by name.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-n
+<span style="color: #000; font-style: italic">systemd</span>
+<span style="color: #000; font-style: italic">  ├─systemd-journald</span>
+<span style="color: #000; font-style: italic">  ├─systemd-udevd</span>
+<span style="color: #000; font-style: italic">  ├─systemd-resolved</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager</span>
+<span style="color: #000; font-style: italic">  ├─accounts-daemon</span>
+<span style="color: #000; font-style: italic">  └─sshd</span>
+</pre></div>
+<h3><strong>-u</strong></h3>
+<p>Show uid transitions (user IDs).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-u
+<span style="color: #000; font-style: italic">systemd</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager</span>
+<span style="color: #000; font-style: italic">  ├─accounts-daemon(root)</span>
+<span style="color: #000; font-style: italic">  ├─avahi-daemon(avahi)</span>
+<span style="color: #000; font-style: italic">  │   └─avahi-daemon(avahi)</span>
+<span style="color: #000; font-style: italic">  └─sshd</span>
+<span style="color: #000; font-style: italic">      └─sshd(john)</span>
+<span style="color: #000; font-style: italic">          └─bash(john)</span>
+</pre></div>
+<h3><strong>-h</strong></h3>
 <p>Highlight the current process and its ancestors.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-h
-<span style="color: #000; font-style: italic">systemd─┬─ModemManager</span>
-<span style="color: #000; font-style: italic">        ├─NetworkManager</span>
-<span style="color: #000; font-style: italic">        ├─accounts-daemon</span>
-<span style="color: #000; font-style: italic">        ├─avahi-daemon───avahi-daemon</span>
-<span style="color: #000; font-style: italic">        └─sshd───sshd───sshd───bash</span>
+<span style="color: #000; font-style: italic">systemd</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager</span>
+<span style="color: #000; font-style: italic">  ├─accounts-daemon</span>
+<span style="color: #000; font-style: italic">  └─sshd</span>
+<span style="color: #000; font-style: italic">      └─sshd</span>
+<span style="color: #000; font-style: italic">          └─sshd</span>
+<span style="color: #000; font-style: italic">              └─bash───pstree</span>
 </pre></div>
-<h3><strong>-u, --uid-changes</strong></h3>
-<p>Show uid transitions (changes in user ID).</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-u
-<span style="color: #000; font-style: italic">systemd─┬─ModemManager</span>
-<span style="color: #000; font-style: italic">        ├─NetworkManager</span>
-<span style="color: #000; font-style: italic">        ├─accounts-daemon</span>
-<span style="color: #000; font-style: italic">        ├─avahi-daemon───avahi-daemon</span>
-<span style="color: #000; font-style: italic">        └─sshd───sshd───sshd───bash(user)</span>
-</pre></div>
-<h3><strong>-n, --numeric-sort</strong></h3>
-<p>Sort processes with the same parent by PID instead of by name.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-n
-<span style="color: #000; font-style: italic">systemd─┬─ModemManager</span>
-<span style="color: #000; font-style: italic">        ├─NetworkManager</span>
-<span style="color: #000; font-style: italic">        ├─accounts-daemon</span>
-<span style="color: #000; font-style: italic">        ├─avahi-daemon───avahi-daemon</span>
-<span style="color: #000; font-style: italic">        └─sshd───sshd───sshd───bash</span>
+<h3><strong>-g</strong></h3>
+<p>Show PGID (process group IDs).</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-g
+<span style="color: #000; font-style: italic">systemd(1)</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager(623,623)</span>
+<span style="color: #000; font-style: italic">  ├─accounts-daemon(645,645)</span>
+<span style="color: #000; font-style: italic">  └─sshd(1025,1025)</span>
+<span style="color: #000; font-style: italic">      └─sshd(2156,2156)</span>
+<span style="color: #000; font-style: italic">          └─bash(2159,2159)</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Display the process tree for a specific user</h3>
+<h3>Displaying a specific user's processes</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>username
-<span style="color: #000; font-style: italic">bash───vim</span>
+<span style="color: #000; font-style: italic">sshd───bash───vim</span>
 </pre></div>
-<h3>Display the process tree for a specific PID</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
-<span style="color: #000; font-style: italic">bash───firefox───Web Content</span>
-</pre></div>
-<h3>Combine multiple options for detailed output</h3>
+<h3>Combining options for detailed output</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-apu
 <span style="color: #000; font-style: italic">systemd(1)</span>
-<span style="color: #000; font-style: italic">  ├─ModemManager(823)</span>
-<span style="color: #000; font-style: italic">  ├─NetworkManager(824) --no-daemon</span>
-<span style="color: #000; font-style: italic">  ├─accounts-daemon(825)</span>
-<span style="color: #000; font-style: italic">  ├─avahi-daemon(826) --syslog</span>
-<span style="color: #000; font-style: italic">  │   └─avahi-daemon(845) --syslog</span>
-<span style="color: #000; font-style: italic">  └─sshd(1025) -D</span>
-<span style="color: #000; font-style: italic">      └─sshd(1789)</span>
-<span style="color: #000; font-style: italic">          └─sshd(1823)</span>
-<span style="color: #000; font-style: italic">              └─bash(1824)(user)</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager(623) --no-daemon</span>
+<span style="color: #000; font-style: italic">  ├─accounts-daemon(645)</span>
+<span style="color: #000; font-style: italic">  ├─avahi-daemon(647)(avahi)</span>
+<span style="color: #000; font-style: italic">  │   └─avahi-daemon(648)(avahi)</span>
+<span style="color: #000; font-style: italic">  └─sshd(1025)</span>
+<span style="color: #000; font-style: italic">      └─sshd(2156)(john)</span>
+<span style="color: #000; font-style: italic">          └─bash(2159)(john)</span>
 </pre></div>
-<h2>Tips:</h2>
-<h3>Find Parent-Child Process Relationships</h3>
-<p>When troubleshooting, use <code>pstree -p</code> to quickly identify which parent process spawned a particular child process. This helps in understanding process hierarchies.</p>
-<h3>Identify Resource-Intensive Process Groups</h3>
-<p>Combine with <code>ps</code> to identify not just a resource-intensive process but its entire process family: <code>pstree -p $(ps -eo pid,pcpu --sort=-pcpu | head -2 | tail -1 | awk '{print $1}')</code></p>
-<h3>Compact View for Large Systems</h3>
-<p>For systems with many processes, use <code>pstree -c</code> to get a more compact view that doesn't compress identical subtrees.</p>
+<h3>Finding a specific process and its children</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>firefox
+<span style="color: #000; font-style: italic">        │           ├─firefox(2345)───{firefox}(2346)</span>
+<span style="color: #000; font-style: italic">        │           │                 ├─{firefox}(2347)</span>
+<span style="color: #000; font-style: italic">        │           │                 ├─{firefox}(2348)</span>
+<span style="color: #000; font-style: italic">        │           │                 └─{firefox}(2349)</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Compact Display</h3>
+<p>By default, identical branches of the tree are compacted to save space. Use <code>-c</code> to disable this behavior and see all processes individually.</p>
+<h3>ASCII Characters</h3>
+<p>If the tree structure displays incorrectly in your terminal, use the <code>-A</code> option to use ASCII characters instead of the default UTF-8 characters.</p>
+<h3>Tracing Process Ancestry</h3>
+<p>When debugging, use <code>pstree -p</code> to quickly identify the parent-child relationships of processes, which can help understand how applications are structured.</p>
+<h3>Combine with grep</h3>
+<p>Pipe the output to grep to find specific processes: <code>pstree -p | grep firefox</code></p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How is <code>pstree</code> different from <code>ps</code>?</h4>
-<p>A. While <code>ps</code> lists processes in a flat format, <code>pstree</code> displays them in a hierarchical tree structure showing parent-child relationships.</p>
-<h4>Q2. Can I see process IDs with <code>pstree</code>?</h4>
-<p>A. Yes, use <code>pstree -p</code> to display PIDs alongside process names.</p>
-<h4>Q3. How do I see the process tree for a specific user?</h4>
-<p>A. Run <code>pstree username</code> to see only processes owned by that user.</p>
-<h4>Q4. Can I see command line arguments in the process tree?</h4>
-<p>A. Yes, use <code>pstree -a</code> to display command line arguments for each process.</p>
+<h4>Q1. How is pstree different from ps?</h4>
+<p>A. While <code>ps</code> shows a flat list of processes, <code>pstree</code> displays processes in a hierarchical tree structure that shows parent-child relationships.</p>
+<h4>Q2. Can I see process IDs with pstree?</h4>
+<p>A. Yes, use the <code>-p</code> option to display process IDs alongside the process names.</p>
+<h4>Q3. How do I see command line arguments?</h4>
+<p>A. Use the <code>-a</code> option to display the command line arguments for each process.</p>
+<h4>Q4. Can I see only processes for a specific user?</h4>
+<p>A. Yes, specify the username as an argument: <code>pstree username</code></p>
+<h4>Q5. How do I make the output more readable in text-only terminals?</h4>
+<p>A. Use the <code>-A</code> option to use ASCII characters instead of UTF-8 for the tree structure.</p>
 <h2>References</h2>
 <p>https://man7.org/linux/man-pages/man1/pstree.1.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

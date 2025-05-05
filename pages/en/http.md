@@ -1,16 +1,16 @@
 # http command
 
-Send arbitrary HTTP requests and display responses from the command line.
+Send arbitrary HTTP requests and display responses.
 
 ## Overview
 
-The `http` command is part of HTTPie, a user-friendly command-line HTTP client designed to make CLI interaction with web services as human-friendly as possible. It provides a simple interface for sending HTTP requests with various methods (GET, POST, PUT, etc.) and displays colorized output for better readability.
+The `http` command is a user-friendly command-line HTTP client for making HTTP requests. It's part of the HTTPie tool, designed to be more intuitive than curl with colorized output, JSON support, and simpler syntax. It allows testing APIs, debugging web services, and downloading content with minimal typing.
 
 ## Options
 
 ### **-j, --json**
 
-Send JSON data in the request body.
+Submit data as JSON. Sets the Content-Type header to application/json.
 
 ```console
 $ http -j POST example.com name=John age:=30
@@ -18,7 +18,7 @@ $ http -j POST example.com name=John age:=30
 
 ### **-f, --form**
 
-Send form-encoded data in the request body.
+Submit data as form-encoded. Sets the Content-Type header to application/x-www-form-urlencoded.
 
 ```console
 $ http -f POST example.com name=John age=30
@@ -26,7 +26,7 @@ $ http -f POST example.com name=John age=30
 
 ### **-a, --auth**
 
-Specify authentication credentials.
+Specify username and password for authentication.
 
 ```console
 $ http -a username:password example.com
@@ -40,7 +40,7 @@ Print only the response headers.
 $ http -h example.com
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=UTF-8
-Date: Sat, 04 May 2025 12:00:00 GMT
+Date: Mon, 05 May 2025 12:00:00 GMT
 Server: nginx
 Content-Length: 1256
 ```
@@ -51,39 +51,22 @@ Print the whole HTTP exchange (request and response).
 
 ```console
 $ http -v example.com
-GET / HTTP/1.1
-Host: example.com
-User-Agent: HTTPie/3.2.1
-Accept-Encoding: gzip, deflate
-Accept: */*
-Connection: keep-alive
-
-HTTP/1.1 200 OK
-Content-Type: text/html; charset=UTF-8
-Date: Sat, 04 May 2025 12:00:00 GMT
-Server: nginx
-Content-Length: 1256
-
-<!doctype html>
-<html>
-...
 ```
 
-### **--verify**
+### **-d, --download**
 
-Control SSL verification. Can be set to `no` to disable verification.
+Download the response body to a file.
 
 ```console
-$ http --verify=no https://example.com
+$ http -d example.com/file.pdf
 ```
 
-### **--session**
+### **--offline**
 
-Create or reuse a session for multiple requests.
+Build the request and print it but don't send it.
 
 ```console
-$ http --session=mysession -a username:password example.com
-$ http --session=mysession example.com/api/resource
+$ http --offline POST example.com name=John
 ```
 
 ## Usage Examples
@@ -94,13 +77,12 @@ $ http --session=mysession example.com/api/resource
 $ http example.com
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=UTF-8
-Date: Sat, 04 May 2025 12:00:00 GMT
-Server: nginx
-Content-Length: 1256
+...
 
 <!doctype html>
 <html>
 ...
+</html>
 ```
 
 ### POST with JSON data
@@ -109,8 +91,6 @@ Content-Length: 1256
 $ http POST api.example.com/users name=John age:=30 is_active:=true
 HTTP/1.1 201 Created
 Content-Type: application/json
-Location: /users/123
-Content-Length: 42
 
 {
     "id": 123,
@@ -120,63 +100,49 @@ Content-Length: 42
 }
 ```
 
-### Download a file
+### Using request headers
 
 ```console
-$ http --download https://example.com/file.zip
-Downloading to "file.zip"
-Done. 15.43 MB in 2.32s (6.65 MB/s)
+$ http example.com User-Agent:MyApp X-API-Token:abc123
 ```
 
-### Custom headers
+### File upload
 
 ```console
-$ http example.com X-API-Token:abc123 User-Agent:MyApp/1.0
+$ http POST example.com/upload file@/path/to/file.jpg
 ```
 
-## Tips
+## Tips:
 
-### Use Shortcuts for Common HTTP Methods
+### Use `:=` for Non-String JSON Values
 
-HTTPie provides shortcuts for common HTTP methods, so you can use `http example.com` instead of `http GET example.com`.
+When sending JSON data, use `:=` for numbers, booleans, and null: `count:=42 active:=true data:=null`
 
-### JSON Data Syntax
+### Redirect Output to Files
 
-When sending JSON data, use `:=` for numbers and booleans, and `=` for strings:
-- `name=John` becomes `{"name": "John"}`
-- `age:=30` becomes `{"age": 30}`
-- `active:=true` becomes `{"active": true}`
+Use standard shell redirection to save responses: `http example.com > response.html`
 
-### Pipe Output to Other Tools
+### Use Sessions for Persistent Cookies
 
-You can pipe the output to tools like `jq` for JSON processing:
-```console
-$ http api.example.com/users | jq '.[] | select(.active==true)'
-```
+Use `--session=name` to maintain cookies between requests: `http --session=logged-in -a user:pass example.com`
 
-### Use Output Redirection
+### Pretty-Print JSON by Default
 
-Save response bodies to files using standard output redirection:
-```console
-$ http example.com/image.jpg > image.jpg
-```
+HTTPie automatically formats JSON responses for readability with syntax highlighting in the terminal.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I send a POST request with form data?
-A. Use `http -f POST example.com name=value` to send form-encoded data.
+#### Q1. How is `http` different from `curl`?
+A. `http` (HTTPie) offers a more intuitive syntax, automatic colorized output, JSON support by default, and generally requires less typing for common operations.
 
-#### Q2. How do I include authentication in my request?
-A. Use the `-a` or `--auth` option: `http -a username:password example.com`.
+#### Q2. How do I send query parameters?
+A. Add them to the URL with `?` and `&`: `http example.com/search?q=term&page=2` or use the `==` syntax: `http example.com q==term page==2`
 
-#### Q3. How can I see the full HTTP exchange?
-A. Use the `-v` or `--verbose` option to see both request and response details.
+#### Q3. How do I send a custom HTTP method?
+A. Simply specify the method before the URL: `http PUT example.com`
 
-#### Q4. How do I send a file in my request?
-A. Use `@filename` to include file contents: `http POST example.com file@/path/to/file.txt`.
-
-#### Q5. How do I set cookies for my request?
-A. Use the `--session` option to maintain cookies between requests, or manually set the Cookie header.
+#### Q4. How do I follow redirects?
+A. Use the `--follow` option: `http --follow example.com/redirecting-url`
 
 ## References
 
@@ -184,4 +150,4 @@ https://httpie.io/docs/cli
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

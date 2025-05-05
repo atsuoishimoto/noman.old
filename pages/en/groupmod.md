@@ -4,7 +4,7 @@ Modify a group definition on the system.
 
 ## Overview
 
-The `groupmod` command is used to modify the attributes of an existing group on a Linux or Unix system. It can change a group's name (GID) or numeric group ID. This command is typically used by system administrators when managing user and group accounts.
+The `groupmod` command is used to modify the attributes of an existing group on a Unix/Linux system. It can change a group's name (GID) or numeric ID (GID), allowing administrators to manage group accounts efficiently.
 
 ## Options
 
@@ -13,23 +13,23 @@ The `groupmod` command is used to modify the attributes of an existing group on 
 Change the group ID to the specified value.
 
 ```console
-$ sudo groupmod -g 1005 developers
+$ sudo groupmod -g 1001 developers
 ```
 
 ### **-n, --new-name NEW_GROUP**
 
-Change the name of the group to NEW_GROUP.
+Change the name of the group from GROUP to NEW_GROUP.
 
 ```console
-$ sudo groupmod -n programmers developers
+$ sudo groupmod -n engineering developers
 ```
 
 ### **-o, --non-unique**
 
-Allow the use of a non-unique GID (normally GIDs must be unique).
+Allow using a non-unique GID (normally GIDs must be unique).
 
 ```console
-$ sudo groupmod -g 1005 -o testers
+$ sudo groupmod -g 1001 -o marketing
 ```
 
 ### **-p, --password PASSWORD**
@@ -45,7 +45,7 @@ $ sudo groupmod -p encrypted_password developers
 Apply changes in the CHROOT_DIR directory and use the configuration files from the CHROOT_DIR directory.
 
 ```console
-$ sudo groupmod -R /mnt/system -n programmers developers
+$ sudo groupmod -R /mnt/system -n engineering developers
 ```
 
 ## Usage Examples
@@ -53,63 +53,65 @@ $ sudo groupmod -R /mnt/system -n programmers developers
 ### Changing a group's name
 
 ```console
-$ sudo groupmod -n engineering developers
+$ sudo groupmod -n developers programmers
 ```
-
-This changes the group name from "developers" to "engineering" while keeping the same GID.
 
 ### Changing a group's GID
 
 ```console
-$ sudo groupmod -g 2000 engineering
+$ sudo groupmod -g 2000 developers
 ```
-
-This changes the GID of the "engineering" group to 2000.
 
 ### Changing both name and GID
 
 ```console
-$ sudo groupmod -n tech-team -g 2500 engineering
+$ sudo groupmod -g 2000 -n engineering developers
 ```
-
-This changes the group name from "engineering" to "tech-team" and changes its GID to 2500.
 
 ## Tips:
 
-### Check Group Information Before Modifying
+### Verify Group Changes
 
-Always verify the current group information using `getent group groupname` before making changes to ensure you have the correct information.
+After modifying a group, use the `getent group` command to verify the changes:
 
-### Update File Ownership After GID Changes
+```console
+$ getent group engineering
+```
 
-After changing a group's GID, you may need to update file ownership with `find /path -group old_gid -exec chgrp new_gid {} \;` to maintain proper access to files.
+### Consider File Ownership
 
-### Backup Before Making Changes
+When changing a group's GID, files owned by the old GID won't automatically be updated. Use `find` and `chgrp` to update file ownerships:
 
-For critical systems, consider backing up the `/etc/group` and `/etc/gshadow` files before making changes with `groupmod`.
+```console
+$ find /path/to/directory -group old_gid -exec chgrp new_gid {} \;
+```
 
-### Use with caution
+### Check for Running Processes
 
-Changing group IDs can affect file permissions and access rights across the system. Make changes during maintenance windows when possible.
+Before modifying a group that's used by running processes, check if any processes are using it:
+
+```console
+$ ps -eo group | grep groupname
+```
 
 ## Frequently Asked Questions
 
-#### Q1. What happens to files owned by a group if I change its GID?
-A. Files will still reference the old GID number, not the new one. You'll need to manually update file ownership using the `chgrp` command.
-
-#### Q2. Can I change a group's name and GID at the same time?
+#### Q1. Can I change a group's name and GID at the same time?
 A. Yes, you can use both the `-n` and `-g` options together in a single command.
 
-#### Q3. How do I know if a group is in use by any users?
-A. Use `grep groupname /etc/group /etc/passwd` to see if the group is listed as a primary or secondary group for any users.
+#### Q2. What happens to files owned by a group if I change its GID?
+A. Files will still reference the old GID number. You'll need to manually update file ownerships using `chgrp` or similar commands.
 
-#### Q4. What happens if I try to rename a group to a name that already exists?
-A. The command will fail with an error message indicating that the group already exists.
+#### Q3. Can I make a group's GID the same as another group's?
+A. Yes, but only if you use the `-o` (non-unique) option. However, this is generally not recommended as it can cause confusion.
+
+#### Q4. Will changing a group's name affect users who are members of that group?
+A. No, changing a group's name doesn't affect its membership. Users who were members of the old group name will automatically be members of the new group name.
 
 ## References
 
-https://www.man7.org/linux/man-pages/man8/groupmod.8.html
+https://man7.org/linux/man-pages/man8/groupmod.8.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -47,117 +47,150 @@
     <main>
       
   <h1>dpkg コマンド</h1>
-<p>Debian ベースのシステム（Ubuntu など）で Debian パッケージファイル（.deb）を管理する。</p>
+<p>Debian ベースのシステム向けのパッケージ管理ツールで、.deb パッケージのインストール、削除、情報表示などを扱います。</p>
 <h2>概要</h2>
-<p><code>dpkg</code> は Debian ベースの Linux ディストリビューション向けのパッケージ管理システムです。.deb パッケージのインストール、削除、情報表示などを処理します。<code>apt</code> のような高レベルのパッケージマネージャとは異なり、<code>dpkg</code> は .deb ファイルを直接扱い、依存関係を自動的に解決しません。</p>
+<p><code>dpkg</code>（Debian Package）は、Ubuntu などの Debian ベースの Linux ディストリビューションにおける中核的なパッケージ管理ユーティリティです。.deb パッケージファイルを直接扱い、ユーザーがパッケージのインストール、削除、設定、情報照会を行うことができます。<code>apt</code> のような高レベルツールとは異なり、<code>dpkg</code> はパッケージファイルを直接操作し、依存関係を自動的に処理しません。</p>
 <h2>オプション</h2>
 <h3><strong>-i, --install</strong></h3>
 <p>.deb ファイルからパッケージをインストールします</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>firefox_115.0+build2-0ubuntu0.20.04.1_amd64.deb
-<span style="color: #000; font-style: italic">Selecting previously unselected package firefox.</span>
-<span style="color: #8F5902">(Reading database ... 186342 files and directories currently installed.)</span>
-<span style="color: #000; font-style: italic">Preparing to unpack firefox_115.0+build2-0ubuntu0.20.04.1_amd64.deb ...</span>
-<span style="color: #000; font-style: italic">Unpacking firefox (115.0+build2-0ubuntu0.20.04.1) ...</span>
-<span style="color: #000; font-style: italic">Setting up firefox (115.0+build2-0ubuntu0.20.04.1) ...</span>
-<span style="color: #000; font-style: italic">Processing triggers for mime-support (3.64ubuntu1) ...</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>package.deb
+<span style="color: #8F5902">(Reading database ... 200000 files and directories currently installed.)</span>
+<span style="color: #000; font-style: italic">Preparing to unpack package.deb ...</span>
+<span style="color: #000; font-style: italic">Unpacking package (1.0-1) ...</span>
+<span style="color: #000; font-style: italic">Setting up package (1.0-1) ...</span>
 </pre></div>
 <h3><strong>-r, --remove</strong></h3>
-<p>インストール済みのパッケージを削除します（設定ファイルは保持）</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #8F5902">(Reading database ... 186342 files and directories currently installed.)</span>
-<span style="color: #000; font-style: italic">Removing firefox (115.0+build2-0ubuntu0.20.04.1) ...</span>
+<p>設定ファイルを残してインストール済みパッケージを削除します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>package
+<span style="color: #8F5902">(Reading database ... 200000 files and directories currently installed.)</span>
+<span style="color: #000; font-style: italic">Removing package (1.0-1) ...</span>
 </pre></div>
 <h3><strong>-P, --purge</strong></h3>
-<p>インストール済みのパッケージを完全に削除します（設定ファイルも含む）</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #8F5902">(Reading database ... 186342 files and directories currently installed.)</span>
-<span style="color: #000; font-style: italic">Removing firefox (115.0+build2-0ubuntu0.20.04.1) ...</span>
-<span style="color: #000; font-style: italic">Purging configuration files for firefox ...</span>
+<p>設定ファイルを含めてインストール済みパッケージを削除します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span>package
+<span style="color: #8F5902">(Reading database ... 200000 files and directories currently installed.)</span>
+<span style="color: #000; font-style: italic">Purging configuration files for package (1.0-1) ...</span>
 </pre></div>
-<h3><strong>-l, --list [パターン]</strong></h3>
-<p>オプションのパターンに一致するインストール済みパッケージを一覧表示します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dpkg<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>firefox
+<h3><strong>-l, --list</strong></h3>
+<p>パターンに一致するすべてのインストール済みパッケージを一覧表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dpkg<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>firefox*
 <span style="color: #000; font-style: italic">| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend</span>
 <span style="color: #000; font-style: italic">|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)</span>
 <span style="color: #000; font-style: italic">||/ Name           Version      Architecture Description</span>
 <span style="color: #000; font-style: italic">+++-==============-============-============-=================================</span>
-<span style="color: #000; font-style: italic">ii  firefox        115.0+build2 amd64        Safe and easy web browser from Mozilla</span>
+<span style="color: #000; font-style: italic">ii  firefox        115.0.2      amd64        Safe and easy web browser from Mozilla</span>
 </pre></div>
 <h3><strong>-L, --listfiles</strong></h3>
 <p>パッケージによってインストールされたファイルを一覧表示します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dpkg<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #000; font-style: italic">/.</span>
-<span style="color: #000; font-style: italic">/usr</span>
-<span style="color: #000; font-style: italic">/usr/bin</span>
-<span style="color: #000; font-style: italic">/usr/bin/firefox</span>
-<span style="color: #000; font-style: italic">/usr/lib</span>
 <span style="color: #000; font-style: italic">/usr/lib/firefox</span>
+<span style="color: #000; font-style: italic">/usr/lib/firefox/browser</span>
+<span style="color: #000; font-style: italic">/usr/lib/firefox/browser/chrome</span>
+<span style="color: #000; font-style: italic">/usr/lib/firefox/browser/chrome.manifest</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3><strong>-S, --search</strong></h3>
-<p>特定のファイルを所有するパッケージを検索します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dpkg<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>/usr/bin/firefox
-<span style="color: #000; font-style: italic">firefox: /usr/bin/firefox</span>
-</pre></div>
 <h3><strong>-s, --status</strong></h3>
-<p>パッケージの詳細なステータス情報を表示します</p>
+<p>パッケージのステータス詳細を表示します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dpkg<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>firefox
 <span style="color: #000; font-style: italic">Package: firefox</span>
 <span style="color: #000; font-style: italic">Status: install ok installed</span>
 <span style="color: #000; font-style: italic">Priority: optional</span>
 <span style="color: #000; font-style: italic">Section: web</span>
-<span style="color: #000; font-style: italic">Installed-Size: 256348</span>
+<span style="color: #000; font-style: italic">Installed-Size: 256000</span>
 <span style="color: #000; font-style: italic">Maintainer: Ubuntu Mozilla Team &lt;ubuntu-mozillateam@lists.ubuntu.com&gt;</span>
 <span style="color: #000; font-style: italic">Architecture: amd64</span>
-<span style="color: #000; font-style: italic">Version: 115.0+build2-0ubuntu0.20.04.1</span>
-<span style="color: #000; font-style: italic">Depends: lsb-release, libatk1.0-0 (&gt;= 1.12.4), libc6 (&gt;= 2.28), ...</span>
-<span style="color: #000; font-style: italic">Description: Safe and easy web browser from Mozilla</span>
-<span style="color: #000; font-style: italic"> Firefox delivers safe, easy web browsing. A familiar user interface,</span>
-<span style="color: #000; font-style: italic"> enhanced security features including protection from online identity theft,</span>
-<span style="color: #000; font-style: italic"> and integrated search let you get the most out of the web.</span>
+<span style="color: #000; font-style: italic">Version: 115.0.2</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>-S, --search</strong></h3>
+<p>ファイルを所有するパッケージを検索します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dpkg<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>/usr/bin/firefox
+<span style="color: #000; font-style: italic">firefox: /usr/bin/firefox</span>
 </pre></div>
 <h3><strong>--configure</strong></h3>
-<p>セットアップが必要な展開済みパッケージを設定します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>--configure<span style="color: #F8F8F8"> </span>firefox
-<span style="color: #000; font-style: italic">Setting up firefox (115.0+build2-0ubuntu0.20.04.1) ...</span>
+<p>展開済みのパッケージを設定します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>--configure<span style="color: #F8F8F8"> </span>package
+<span style="color: #000; font-style: italic">Setting up package (1.0-1) ...</span>
+</pre></div>
+<h3><strong>--unpack</strong></h3>
+<p>パッケージを設定せずに展開します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>--unpack<span style="color: #F8F8F8"> </span>package.deb
+<span style="color: #8F5902">(Reading database ... 200000 files and directories currently installed.)</span>
+<span style="color: #000; font-style: italic">Preparing to unpack package.deb ...</span>
+<span style="color: #000; font-style: italic">Unpacking package (1.0-1) over (1.0-0) ...</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>パッケージをインストールして依存関係を修正する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>package.deb
-<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt-get<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>-f
+<h3>複数のパッケージを一度にインストールする</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>package1.deb<span style="color: #F8F8F8"> </span>package2.deb<span style="color: #F8F8F8"> </span>package3.deb
+<span style="color: #8F5902">(Reading database ... 200000 files and directories currently installed.)</span>
+<span style="color: #000; font-style: italic">Preparing to unpack package1.deb ...</span>
+<span style="color: #000; font-style: italic">Unpacking package1 (1.0-1) ...</span>
+<span style="color: #000; font-style: italic">Preparing to unpack package2.deb ...</span>
+<span style="color: #000; font-style: italic">Unpacking package2 (2.0-1) ...</span>
+<span style="color: #000; font-style: italic">Preparing to unpack package3.deb ...</span>
+<span style="color: #000; font-style: italic">Unpacking package3 (3.0-1) ...</span>
+<span style="color: #000; font-style: italic">Setting up package1 (1.0-1) ...</span>
+<span style="color: #000; font-style: italic">Setting up package2 (2.0-1) ...</span>
+<span style="color: #000; font-style: italic">Setting up package3 (3.0-1) ...</span>
 </pre></div>
 <h3>インストール済みのすべてのパッケージを一覧表示する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dpkg<span style="color: #F8F8F8"> </span>-l
+<span style="color: #000; font-style: italic">| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend</span>
+<span style="color: #000; font-style: italic">|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)</span>
+<span style="color: #000; font-style: italic">||/ Name           Version      Architecture Description</span>
+<span style="color: #000; font-style: italic">+++-==============-============-============-=================================</span>
+<span style="color: #000; font-style: italic">ii  accountsservice 0.6.55-0ubuntu12 amd64    query and manipulate user account information</span>
+<span style="color: #000; font-style: italic">ii  acl            2.2.53-6      amd64        access control list - utilities</span>
+<span style="color: #000; font-style: italic">ii  adduser        3.118ubuntu2  all          add and remove users and groups</span>
+<span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3>ファイルがどのパッケージに属しているかを調べる</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>dpkg<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>/usr/bin/python3
-<span style="color: #000; font-style: italic">python3-minimal: /usr/bin/python3</span>
+<h3>壊れたパッケージのインストールを修復する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>--configure<span style="color: #F8F8F8"> </span>-a
+<span style="color: #000; font-style: italic">Setting up package1 (1.0-1) ...</span>
+<span style="color: #000; font-style: italic">Setting up package2 (2.0-1) ...</span>
 </pre></div>
-<h2>ヒント:</h2>
-<h3>壊れた依存関係を修正する</h3>
-<p><code>dpkg</code> が依存関係の不足により失敗した場合は、<code>sudo apt-get install -f</code> を実行して解決します。これは .deb ファイルを直接インストールする際の一般的なワークフローです。</p>
-<h3>パッケージリストのバックアップ</h3>
-<p>システムの大きな変更を行う前に、<code>dpkg --get-selections &gt; packages.list</code> でインストール済みパッケージのリストを保存しておきましょう。後で <code>sudo dpkg --set-selections &lt; packages.list &amp;&amp; sudo apt-get dselect-upgrade</code> で復元できます。</p>
-<h3>パッケージの整合性を検証する</h3>
-<p>インストール前に <code>dpkg-deb --info package.deb</code> でパッケージを検査し、<code>dpkg -V パッケージ名</code> でインストール済みファイルをパッケージデータベースと照合して検証できます。</p>
-<h3>パッケージの再設定</h3>
-<p>パッケージを再設定する必要がある場合（設定を変更するなど）、<code>sudo dpkg-reconfigure パッケージ名</code> を使用すると設定スクリプトを再実行できます。</p>
+<h2>ヒント</h2>
+<h3>依存関係の処理</h3>
+<p><code>dpkg</code> は依存関係を自動的に解決しません。依存関係エラーが発生した場合は、次のコマンドを使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>apt-get<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>install
+</pre></div>
+<p>これにより、<code>dpkg</code> インストール後の壊れた依存関係を修復しようとします。</p>
+<h3>インストール中の設定を防ぐ</h3>
+<p>パッケージを設定せずに展開するには、<code>-i</code> の代わりに <code>--unpack</code> を使用します。これは、設定前にファイルを変更する必要がある場合に便利です：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>--unpack<span style="color: #F8F8F8"> </span>package.deb
+<span style="color: #8F5902">$ </span><span style="color: #8F5902; font-style: italic"># ファイルに変更を加える</span>
+<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>dpkg<span style="color: #F8F8F8"> </span>--configure<span style="color: #F8F8F8"> </span>package
+</pre></div>
+<h3>コマンドを提供するパッケージを見つける</h3>
+<p>特定のコマンドを提供するパッケージを知りたい場合：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>which<span style="color: #F8F8F8"> </span><span style="color: #204A87">command</span>
+<span style="color: #000; font-style: italic">/usr/bin/command</span>
+<span style="color: #8F5902">$ </span>dpkg<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>/usr/bin/command
+<span style="color: #000; font-style: italic">package: /usr/bin/command</span>
+</pre></div>
+<h3>パッケージステータスコードを理解する</h3>
+<p><code>dpkg -l</code> 出力の最初の2文字はパッケージのステータスを示します：</p>
+<ul>
+<li><code>ii</code>: パッケージがインストールされ設定済み</li>
+<li><code>rc</code>: パッケージは削除されたが設定ファイルは残っている</li>
+<li><code>un</code>: パッケージは不明/インストールされていない</li>
+</ul>
 <h2>よくある質問</h2>
-<h4>Q1. <code>dpkg</code> と <code>apt</code> の違いは何ですか？</h4>
-<p>A. <code>dpkg</code> は .deb ファイルを直接扱い、依存関係を自動的に処理しません。<code>apt</code> はより高レベルのツールで、依存関係を解決し、リポジトリからパッケージをダウンロードできます。</p>
+<h4>Q1. dpkg と apt の違いは何ですか？</h4>
+<p>A. <code>dpkg</code> は .deb ファイルを直接扱い、依存関係を自動的に処理しない低レベルのパッケージマネージャです。<code>apt</code> は依存関係を解決し、リポジトリからパッケージをダウンロードできる高レベルのツールです。</p>
 <h4>Q2. 「依存関係の問題」エラーを修正するにはどうすればよいですか？</h4>
-<p>A. <code>dpkg -i</code> が失敗した後に <code>sudo apt-get install -f</code> を実行して、不足している依存関係を解決します。</p>
-<h4>Q3. インストール前に .deb パッケージがどのファイルをインストールするか確認するにはどうすればよいですか？</h4>
-<p>A. <code>dpkg-deb --contents package.deb</code> を使用して、パッケージに含まれるファイルを一覧表示します。</p>
-<h4>Q4. パッケージを再インストールするにはどうすればよいですか？</h4>
-<p>A. <code>sudo dpkg -i --force-reinstall package.deb</code> または apt を使用して <code>sudo apt-get install --reinstall パッケージ名</code> を実行します。</p>
+<p>A. <code>dpkg</code> インストール後に依存関係の問題を解決するには、<code>sudo apt-get -f install</code> を実行してください。</p>
+<h4>Q3. インストール前にパッケージがインストールするファイルを確認するにはどうすればよいですか？</h4>
+<p>A. パッケージをインストールせずに含まれるファイルを一覧表示するには、<code>dpkg-deb --contents package.deb</code> を使用します。</p>
+<h4>Q4. dpkg でパッケージを再インストールするにはどうすればよいですか？</h4>
+<p>A. すでにインストールされているパッケージを再インストールするには、<code>sudo dpkg -i --force-reinstall package.deb</code> を使用します。</p>
 <h4>Q5. パッケージが自動的にアップグレードされないようにするにはどうすればよいですか？</h4>
-<p>A. <code>sudo apt-mark hold パッケージ名</code> を使用して、自動アップグレードを防止します。</p>
-<h2>参考資料</h2>
-<p>https://manpages.debian.org/buster/dpkg/dpkg.1.en.html</p>
+<p>A. パッケージが自動的にアップグレードされないようにするには、<code>sudo apt-mark hold package</code> を使用します。</p>
+<h2>参考文献</h2>
+<p>https://man7.org/linux/man-pages/man1/dpkg.1.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初版作成</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

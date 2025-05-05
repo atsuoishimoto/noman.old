@@ -1,158 +1,118 @@
 # ipcs command
 
-Display information about active IPC facilities (shared memory, message queues, and semaphores).
+Display information about active IPC facilities (shared memory segments, message queues, and semaphores).
 
 ## Overview
 
-The `ipcs` command shows information about Inter-Process Communication (IPC) resources currently active in the system. It displays details about shared memory segments, message queues, and semaphore arrays that processes use to communicate with each other. This command is particularly useful for system administrators and developers debugging IPC-related issues.
+The `ipcs` command shows information about System V inter-process communication (IPC) resources currently active in the system. It displays details about shared memory segments, message queues, and semaphore arrays, including their IDs, owners, permissions, and usage statistics.
 
 ## Options
 
-### **-a, --all**
+### **-a**
 
-Show information about all IPC facilities (default behavior)
+Show all information for all three resources (default behavior).
 
 ```console
 $ ipcs -a
 ------ Message Queues --------
 key        msqid      owner      perms      used-bytes   messages    
+0x00000000 0          root       644        0            0           
 
 ------ Shared Memory Segments --------
 key        shmid      owner      perms      bytes      nattch     status      
-0x00000000 0          root       644        80         2                       
-0x00000000 32769      root       644        16384      2                       
+0x00000000 0          root       644        80         2          dest         
 
 ------ Semaphore Arrays --------
 key        semid      owner      perms      nsems     
+0x00000000 0          root       644        1
 ```
 
-### **-q, --queues**
+### **-q**
 
-Show information about active message queues
+Show information about active message queues.
 
 ```console
 $ ipcs -q
 ------ Message Queues --------
 key        msqid      owner      perms      used-bytes   messages    
+0x00000000 0          root       644        0            0
 ```
 
-### **-m, --shmems**
+### **-m**
 
-Show information about active shared memory segments
+Show information about active shared memory segments.
 
 ```console
 $ ipcs -m
 ------ Shared Memory Segments --------
 key        shmid      owner      perms      bytes      nattch     status      
-0x00000000 0          root       644        80         2                       
-0x00000000 32769      root       644        16384      2                       
+0x00000000 0          root       644        80         2          dest
 ```
 
-### **-s, --semaphores**
+### **-s**
 
-Show information about active semaphore arrays
+Show information about active semaphore arrays.
 
 ```console
 $ ipcs -s
 ------ Semaphore Arrays --------
 key        semid      owner      perms      nsems     
+0x00000000 0          root       644        1
 ```
 
-### **-t, --time**
+### **-t**
 
-Show last operation times for IPC facilities
+Show time information for IPC facilities.
 
 ```console
 $ ipcs -t -m
 ------ Shared Memory Operation/Change Times --------
 shmid      last-op                    last-changed              
-0          Thu Jan  1 00:00:00 1970   Thu Jan  1 00:00:00 1970  
-32769      Thu Jan  1 00:00:00 1970   Thu Jan  1 00:00:00 1970  
+0          Wed May  5 10:15:35 2025   Wed May  5 10:15:35 2025
 ```
 
-### **-p, --pid**
+### **-p**
 
-Show creator and last operator's PIDs
+Show process IDs using or creating the IPC facilities.
 
 ```console
 $ ipcs -p -m
 ------ Shared Memory Creator/Last-op PIDs --------
 shmid      owner      cpid       lpid      
-0          root       0          0         
-32769      root       0          0         
+0          root       1234       5678
 ```
 
-### **-c, --creator**
+### **-c**
 
-Show creator and owner
+Show creator and owner information.
 
 ```console
 $ ipcs -c -m
 ------ Shared Memory Segment Creators/Owners --------
-shmid      perms      cpid       lpid      uid       gid      
-0          644        0          0         0         0        
-32769      644        0          0         0         0        
-```
-
-### **-l, --limits**
-
-Show system resource limits
-
-```console
-$ ipcs -l
------- Messages Limits --------
-max queues system wide = 32000
-max size of message (bytes) = 8192
-default max size of queue (bytes) = 16384
-
------- Shared Memory Limits --------
-max number of segments = 4096
-max seg size (kbytes) = 18014398509465599
-max total shared memory (kbytes) = 18014398509481980
-min seg size (bytes) = 1
-
------- Semaphore Limits --------
-max number of arrays = 32000
-max semaphores per array = 32000
-max semaphores system wide = 1024000000
-max ops per semop call = 500
-semaphore max value = 32767
+shmid      perms      cuid       cgid       uid        gid       
+0          644        0          0          0          0
 ```
 
 ## Usage Examples
 
-### Viewing all IPC resources with detailed information
+### Display all IPC resources with detailed information
 
 ```console
 $ ipcs -a
 ------ Message Queues --------
 key        msqid      owner      perms      used-bytes   messages    
+0x00000000 0          root       644        0            0           
 
 ------ Shared Memory Segments --------
 key        shmid      owner      perms      bytes      nattch     status      
-0x00000000 0          root       644        80         2                       
-0x00000000 32769      root       644        16384      2                       
+0x00000000 0          root       644        80         2          dest         
 
 ------ Semaphore Arrays --------
 key        semid      owner      perms      nsems     
+0x00000000 0          root       644        1
 ```
 
-### Checking shared memory segments with timestamps
-
-```console
-$ ipcs -mt
------- Shared Memory Segments --------
-key        shmid      owner      perms      bytes      nattch     status      
-0x00000000 0          root       644        80         2                       
-0x00000000 32769      root       644        16384      2                       
-
------- Shared Memory Operation/Change Times --------
-shmid      last-op                    last-changed              
-0          Thu Jan  1 00:00:00 1970   Thu Jan  1 00:00:00 1970  
-32769      Thu Jan  1 00:00:00 1970   Thu Jan  1 00:00:00 1970  
-```
-
-### Viewing system-wide IPC limits
+### Show limits for IPC resources
 
 ```console
 $ ipcs -l
@@ -175,37 +135,33 @@ max ops per semop call = 500
 semaphore max value = 32767
 ```
 
-## Tips
+## Tips:
 
-### Understanding IPC Resources
+### Identify Resource Leaks
 
-IPC resources (shared memory, message queues, and semaphores) persist even after the creating process terminates. Use `ipcrm` to remove unused IPC resources that might be consuming system resources.
+Use `ipcs` regularly to monitor IPC resources. If you notice resources that persist after applications terminate, it could indicate a resource leak that needs to be cleaned up.
 
-### Identifying Resource Leaks
+### Clean Up Stale IPC Resources
 
-If you see a large number of IPC resources owned by a specific user or process, it might indicate a resource leak in an application. Regular monitoring with `ipcs` can help identify such issues.
+Use `ipcrm` command to remove unused IPC resources identified by `ipcs`. For example, `ipcrm -m <shmid>` removes a shared memory segment.
 
-### Permissions Column
+### Check Resource Limits
 
-The "perms" column shows the octal permissions for the IPC resource, similar to file permissions. For example, "644" means the owner can read and write, while group and others can only read.
-
-### Key Values
-
-The "key" column shows the IPC key used to identify the resource. A key of "0x00000000" often indicates a private IPC resource that was created with IPC_PRIVATE.
+Use `ipcs -l` to view system-wide limits for IPC resources. This helps in troubleshooting applications that might be hitting resource constraints.
 
 ## Frequently Asked Questions
 
-#### Q1. What does the "nattch" column mean in shared memory output?
-A. "nattch" shows the number of processes currently attached to the shared memory segment. A value of 0 means no process is using it, and it might be a candidate for cleanup.
+#### Q1. What is the difference between the three IPC facilities?
+A. Shared memory segments allow processes to share memory directly, message queues enable processes to exchange messages, and semaphores provide synchronization mechanisms between processes.
 
-#### Q2. How do I remove an IPC resource shown by ipcs?
-A. Use the `ipcrm` command with the appropriate option and ID. For example, `ipcrm -m 12345` removes the shared memory segment with ID 12345.
+#### Q2. How do I remove an IPC resource?
+A. Use the `ipcrm` command with the appropriate option and ID. For example, `ipcrm -m <shmid>` removes a shared memory segment, `ipcrm -q <msqid>` removes a message queue, and `ipcrm -s <semid>` removes a semaphore array.
 
-#### Q3. What does it mean when ipcs shows no output?
-A. It means there are no active IPC resources of the requested type in the system. This is normal on systems that don't heavily use IPC mechanisms.
+#### Q3. Why do I see IPC resources that don't belong to any running process?
+A. These are likely orphaned resources from processes that terminated without properly cleaning up. Use `ipcrm` to remove them if they're no longer needed.
 
-#### Q4. How can I see who is using a specific IPC resource?
-A. Use `ipcs -p` to see the creator and last operator PIDs for IPC resources.
+#### Q4. How can I see which processes are using a specific IPC resource?
+A. Use `ipcs -p` to show the process IDs (PIDs) of creators and last operators of IPC resources.
 
 ## References
 
@@ -213,4 +169,4 @@ https://man7.org/linux/man-pages/man1/ipcs.1.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

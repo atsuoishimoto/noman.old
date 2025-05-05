@@ -1,14 +1,14 @@
 # vmstat command
 
-Report virtual memory statistics, providing information about system processes, memory, paging, block I/O, traps, and CPU activity.
+Report virtual memory statistics.
 
 ## Overview
 
-`vmstat` (virtual memory statistics) displays information about system memory, processes, interrupts, paging, block I/O, and CPU utilization. It's particularly useful for monitoring system performance and identifying bottlenecks. The command can provide a snapshot of current system state or continuous monitoring with specified intervals.
+`vmstat` displays information about system memory, processes, paging, block I/O, traps, and CPU activity. It provides a snapshot of system resource usage and is particularly useful for identifying performance bottlenecks related to memory, CPU, or I/O.
 
 ## Options
 
-### **-a, --active**
+### **-a**
 
 Display active and inactive memory
 
@@ -16,162 +16,147 @@ Display active and inactive memory
 $ vmstat -a
 procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
  r  b   swpd   free  inact active   si   so    bi    bo   in   cs us sy id wa st
- 1  0      0 6291456 1048576 2097152    0    0     0     2    9   10  1  1 98  0  0
+ 1  0      0 7123456 2345678 1234567    0    0     0     2   51   92  1  1 98  0  0
 ```
 
-### **-d, --disk**
+### **-d**
 
-Report disk statistics
+Display disk statistics
 
 ```console
 $ vmstat -d
 disk- ------------reads------------ ------------writes----------- -----IO------
        total merged sectors      ms  total merged sectors      ms    cur    sec
-sda    12687   2713  972490   13002  15748  23182  313544   62692      0     19
-sdb     1044      0   33512     708   2106      0   16848     308      0      0
+sda    12687   2713  972258   13364  10347   9944 1766952   23694      0     11
 ```
 
-### **-s, --stats**
+### **-s**
 
-Display a table of various event counters and memory statistics
+Display table of various event counters and memory statistics
 
 ```console
 $ vmstat -s
-      8167848 K total memory
-      1872016 K used memory
-      1224268 K active memory
-       525148 K inactive memory
-      6295832 K free memory
-       226748 K buffer memory
-      1654304 K swap cache
+      8169348 K total memory
+       986168 K used memory
+      1247848 K active memory
+      2345678 K inactive memory
+      7183180 K free memory
+        16384 K buffer memory
+      1983616 K swap cache
       8388604 K total swap
             0 K used swap
       8388604 K free swap
-        24818 non-nice user cpu ticks
-          226 nice user cpu ticks
-        18911 system cpu ticks
-      2137707 idle cpu ticks
-         2660 IO-wait cpu ticks
+       123456 non-nice user cpu ticks
+          234 nice user cpu ticks
+        56789 system cpu ticks
+     12345678 idle cpu ticks
+         1234 IO-wait cpu ticks
             0 IRQ cpu ticks
-         1367 softirq cpu ticks
+          123 softirq cpu ticks
             0 stolen cpu ticks
-       772844 pages paged in
-      1492454 pages paged out
+       567890 pages paged in
+      1234567 pages paged out
             0 pages swapped in
             0 pages swapped out
-      2838484 interrupts
-      6547301 CPU context switches
-   1588876743 boot time
-        16793 forks
+      5678901 interrupts
+     12345678 CPU context switches
+   1234567890 boot time
+        12345 forks
 ```
 
-### **-t, --timestamp**
+### **-S**
 
-Append timestamp to each line
-
-```console
-$ vmstat -t 1 3
-procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu----- -----timestamp-----
- r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st                 EDT
- 0  0      0 6295832 226748 1654304    0    0     0     2    9   10  1  1 98  0  0 2025-05-04 10:15:01
- 0  0      0 6295832 226748 1654304    0    0     0     0  104  168  0  0 100  0  0 2025-05-04 10:15:02
- 0  0      0 6295832 226748 1654304    0    0     0     0  104  167  0  0 100  0  0 2025-05-04 10:15:03
-```
-
-### **-S, --unit [k|K|m|M]**
-
-Switch output between 1000 (k), 1024 (K), 1000000 (m), or 1048576 (M) bytes
+Specify unit size (k, K, m, M) for displaying memory values
 
 ```console
 $ vmstat -S M
 procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
- 0  0      0   6002    216   1578    0    0     0     2    9   10  1  1 98  0  0
+ 1  0      0   6953      0   1937    0    0     0     2   51   92  1  1 98  0  0
 ```
 
-## Usage Examples
+### **interval [count]**
 
-### Basic usage with interval and count
+Continuously display statistics at specified intervals (in seconds)
 
 ```console
 $ vmstat 2 5
 procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
- 1  0      0 6295832 226748 1654304    0    0     0     2    9   10  1  1 98  0  0
- 0  0      0 6295832 226748 1654304    0    0     0     0  104  168  0  0 100  0  0
- 0  0      0 6295832 226748 1654304    0    0     0     0  103  166  0  0 100  0  0
- 0  0      0 6295832 226748 1654304    0    0     0     0  105  169  0  0 100  0  0
- 0  0      0 6295832 226748 1654304    0    0     0    12  106  171  0  0 100  0  0
+ 1  0      0 7123456  16384 1983616    0    0     0     2   51   92  1  1 98  0  0
+ 0  0      0 7123456  16384 1983616    0    0     0     0   45   89  0  0 100  0  0
+ 0  0      0 7123456  16384 1983616    0    0     0     0   46   88  0  0 100  0  0
+ 0  0      0 7123456  16384 1983616    0    0     0     0   45   87  0  0 100  0  0
+ 0  0      0 7123456  16384 1983616    0    0     0    12   48   90  0  0 99  1  0
 ```
 
-### Monitoring disk activity
+## Usage Examples
+
+### Basic memory and CPU statistics
 
 ```console
-$ vmstat -d 1 3
-disk- ------------reads------------ ------------writes----------- -----IO------
-       total merged sectors      ms  total merged sectors      ms    cur    sec
-sda    12687   2713  972490   13002  15748  23182  313544   62692      0     19
-sdb     1044      0   33512     708   2106      0   16848     308      0      0
-
-disk- ------------reads------------ ------------writes----------- -----IO------
-       total merged sectors      ms  total merged sectors      ms    cur    sec
-sda    12687   2713  972490   13002  15748  23182  313544   62692      0     19
-sdb     1044      0   33512     708   2106      0   16848     308      0      0
-
-disk- ------------reads------------ ------------writes----------- -----IO------
-       total merged sectors      ms  total merged sectors      ms    cur    sec
-sda    12687   2713  972490   13002  15749  23182  313552   62692      0     19
-sdb     1044      0   33512     708   2106      0   16848     308      0      0
+$ vmstat
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 1  0      0 7123456  16384 1983616    0    0     0     2   51   92  1  1 98  0  0
 ```
 
-### Displaying memory statistics
+### Monitoring system performance every 5 seconds for 10 iterations
 
 ```console
-$ vmstat -s | grep memory
-      8167848 K total memory
-      1872016 K used memory
-      1224268 K active memory
-       525148 K inactive memory
-      6295832 K free memory
-       226748 K buffer memory
+$ vmstat 5 10
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 1  0      0 7123456  16384 1983616    0    0     0     2   51   92  1  1 98  0  0
+ 0  0      0 7123456  16384 1983616    0    0     0     0   45   89  0  0 100  0  0
+[output continues for 8 more iterations]
+```
+
+### Displaying disk statistics with timestamps
+
+```console
+$ vmstat -d -t
+disk- ------------reads------------ ------------writes----------- -----IO------   ----timestamp----
+       total merged sectors      ms  total merged sectors      ms    cur    sec
+sda    12687   2713  972258   13364  10347   9944 1766952   23694      0     11   2025-05-05 10:15:30
 ```
 
 ## Tips
 
-### Understanding the Output Fields
+### Understanding the Output Columns
 
-- **procs**: 'r' shows runnable processes (running or waiting for run time), 'b' shows processes in uninterruptible sleep
-- **memory**: 'swpd' is virtual memory used, 'free' is idle memory, 'buff' is memory used as buffers, 'cache' is memory used as cache
-- **swap**: 'si' is memory swapped in from disk, 'so' is memory swapped to disk
-- **io**: 'bi' is blocks received from a block device, 'bo' is blocks sent to a block device
-- **system**: 'in' is the number of interrupts per second, 'cs' is the number of context switches per second
-- **cpu**: percentages of total CPU time in user mode ('us'), system mode ('sy'), idle ('id'), waiting for I/O ('wa'), and stolen from a virtual machine ('st')
+- **procs**: `r` shows runnable processes, `b` shows blocked processes
+- **memory**: `swpd` is virtual memory used, `free` is idle memory
+- **swap**: `si` is memory swapped in, `so` is memory swapped out
+- **io**: `bi` is blocks received from block devices, `bo` is blocks sent
+- **system**: `in` is interrupts per second, `cs` is context switches
+- **cpu**: percentages of CPU time in user mode (`us`), system mode (`sy`), idle (`id`), waiting for I/O (`wa`), and stolen by hypervisor (`st`)
 
 ### First Line vs. Subsequent Lines
 
-The first line of output shows averages since the last reboot, while subsequent lines show information for the sampling period. Always look at the second line onward for current statistics.
+The first line of `vmstat` output shows averages since the last reboot, while subsequent lines show activity during the specified interval. For real-time analysis, focus on the lines after the first one.
 
-### Identifying Memory Bottlenecks
+### Identifying Memory Pressure
 
-High 'si' and 'so' values indicate excessive swapping, which suggests your system needs more RAM or memory usage optimization.
+High values in the `si` and `so` columns indicate the system is swapping memory to disk, which can severely impact performance. This suggests you may need more RAM or need to optimize memory usage.
 
-### Detecting I/O Problems
+### Detecting I/O Bottlenecks
 
-High 'wa' (I/O wait) percentages in the CPU section indicate that your system is spending too much time waiting for disk operations to complete.
+High values in the `wa` column of CPU statistics indicate processes are waiting for I/O operations to complete. This could point to disk bottlenecks.
 
 ## Frequently Asked Questions
 
-#### Q1. What does the 'r' column in vmstat output mean?
-A. The 'r' column shows the number of processes waiting for run time. High numbers (greater than the number of CPU cores) indicate CPU contention.
+#### Q1. What does a high value in the 'r' column indicate?
+A. A high number in the 'r' column indicates many processes are waiting for CPU time, suggesting CPU contention or insufficient CPU resources.
 
-#### Q2. How can I monitor memory usage with vmstat?
-A. Use `vmstat -s` to see detailed memory statistics or `vmstat -a` to see active/inactive memory. For continuous monitoring, add an interval: `vmstat 5`.
+#### Q2. How can I interpret swap activity in vmstat?
+A. The 'si' and 'so' columns show swap-in and swap-out activity. Any non-zero values indicate the system is using swap space, which may slow performance. Consistent high values suggest memory shortage.
 
-#### Q3. What's the difference between buffer and cache memory?
-A. Buffer memory ('buff') is used for disk block operations, while cache memory ('cache') is used for file system data. Both can be reclaimed when applications need memory.
+#### Q3. What's the difference between 'buff' and 'cache' in the memory section?
+A. 'buff' (buffer) is memory used for file system metadata and 'cache' is memory used for file contents. Both are used to improve file system performance and can be reclaimed when applications need memory.
 
-#### Q4. How do I interpret high 'wa' (I/O wait) values?
-A. High I/O wait percentages (over 10%) indicate that your CPU is waiting for disk operations to complete. This suggests disk I/O bottlenecks that might be resolved with faster storage or I/O optimization.
+#### Q4. How do I monitor disk I/O with vmstat?
+A. Use `vmstat -d` to display detailed disk statistics including reads, writes, and I/O times.
 
 ## References
 
@@ -179,4 +164,4 @@ https://man7.org/linux/man-pages/man8/vmstat.8.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

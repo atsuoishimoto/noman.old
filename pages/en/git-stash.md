@@ -1,80 +1,55 @@
-# git-stash command
+# git stash command
 
-Stash changes in a dirty working directory for later use.
+Temporarily stores modified, tracked files to save changes without committing.
 
 ## Overview
 
-`git stash` temporarily shelves (or stashes) changes you've made to your working copy so you can work on something else, and then come back and re-apply them later. Stashing is handy when you need to quickly switch contexts and work on something else, but you're not ready to commit your current work.
+`git stash` saves your local modifications away and reverts the working directory to match the HEAD commit. It's useful when you need to switch branches but aren't ready to commit your current work, or when you need to apply a quick fix without committing incomplete work.
 
 ## Options
 
-### **-u, --include-untracked**
+### **stash**
 
-Include untracked files in the stash.
+Save your local modifications to a new stash entry and roll them back to HEAD
 
 ```console
-$ git stash -u
-Saved working directory and index state WIP on main: 2d4e15a Add feature X
+$ git stash
+Saved working directory and index state WIP on main: 2d4e15a Updated README
 ```
 
-### **-a, --all**
+### **save [message]**
 
-Include both untracked and ignored files in the stash.
-
-```console
-$ git stash -a
-Saved working directory and index state WIP on main: 2d4e15a Add feature X
-```
-
-### **-p, --patch**
-
-Interactively select hunks from the diff between HEAD and the working tree to be stashed.
+Save your local modifications with a custom message
 
 ```console
-$ git stash -p
-diff --git a/file.txt b/file.txt
-index 1234567..abcdefg 100644
---- a/file.txt
-+++ b/file.txt
-@@ -1,4 +1,4 @@
--Old content
-+New content
-Stash this hunk [y,n,q,a,d,e,?]? y
-Saved working directory and index state WIP on main: 2d4e15a Add feature X
-```
-
-### **push [<message>]**
-
-Save your local modifications to a new stash entry and roll them back to HEAD.
-
-```console
-$ git stash push -m "WIP: implementing feature Y"
-Saved working directory and index state On main: WIP: implementing feature Y
+$ git stash save "Work in progress for feature X"
+Saved working directory and index state On main: Work in progress for feature X
 ```
 
 ### **list**
 
-List all stashes in the stack.
+List all stashes you have stored
 
 ```console
 $ git stash list
-stash@{0}: WIP on main: 2d4e15a Add feature X
-stash@{1}: On main: WIP: implementing feature Y
+stash@{0}: WIP on main: 2d4e15a Updated README
+stash@{1}: On feature-branch: Implementing new login form
 ```
 
-### **show [<stash>]**
+### **show [stash]**
 
-Show the changes recorded in the stash as a diff.
+Show the changes recorded in the stash as a diff
 
 ```console
-$ git stash show stash@{0}
- file.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+$ git stash show
+ index.html | 2 +-
+ style.css  | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 ```
 
-### **pop [<stash>]**
+### **pop [stash]**
 
-Apply a stash and remove it from the stack.
+Apply a stash and remove it from the stash list
 
 ```console
 $ git stash pop
@@ -82,132 +57,129 @@ On branch main
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
-        modified:   file.txt
-Dropped refs/stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)
+        modified:   index.html
+        modified:   style.css
+
+Dropped refs/stash@{0} (32b3aa1d185dfe6d57b3c3cc3e3f31b61a97ec2c)
 ```
 
-### **apply [<stash>]**
+### **apply [stash]**
 
-Apply a stash without removing it from the stack.
+Apply a stash without removing it from the stash list
 
 ```console
-$ git stash apply stash@{1}
+$ git stash apply
 On branch main
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
-        modified:   file.txt
+        modified:   index.html
+        modified:   style.css
 ```
 
-### **drop [<stash>]**
+### **drop [stash]**
 
-Remove a stash from the stack.
+Remove a stash from the stash list
 
 ```console
 $ git stash drop stash@{0}
-Dropped stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)
+Dropped stash@{0} (32b3aa1d185dfe6d57b3c3cc3e3f31b61a97ec2c)
 ```
 
 ### **clear**
 
-Remove all stashes from the stack.
+Remove all stash entries
 
 ```console
 $ git stash clear
 ```
 
-## Usage Examples
+### **-u, --include-untracked**
 
-### Basic stash workflow
+Include untracked files in the stash
 
 ```console
-$ git status
-On branch main
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-        modified:   file.txt
+$ git stash -u
+Saved working directory and index state WIP on main: 2d4e15a Updated README
+```
 
+### **-a, --all**
+
+Include both untracked and ignored files in the stash
+
+```console
+$ git stash -a
+Saved working directory and index state WIP on main: 2d4e15a Updated README
+```
+
+## Usage Examples
+
+### Stashing changes before pulling updates
+
+```console
 $ git stash
-Saved working directory and index state WIP on main: 2d4e15a Add feature X
-
-$ git status
-On branch main
-nothing to commit, working tree clean
-
-# Do some other work, then come back to your stashed changes
+Saved working directory and index state WIP on main: 2d4e15a Updated README
+$ git pull
 $ git stash pop
-On branch main
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-        modified:   file.txt
-Dropped refs/stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)
 ```
 
 ### Creating a branch from a stash
 
 ```console
+$ git stash
+Saved working directory and index state WIP on main: 2d4e15a Updated README
 $ git stash branch new-feature stash@{0}
 Switched to a new branch 'new-feature'
 On branch new-feature
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
-        modified:   file.txt
-Dropped refs/stash@{0} (a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9)
+        modified:   index.html
+        modified:   style.css
+Dropped refs/stash@{0} (32b3aa1d185dfe6d57b3c3cc3e3f31b61a97ec2c)
 ```
 
-## Tips:
-
-### Name Your Stashes
-
-Use descriptive messages with your stashes to make them easier to identify later:
+### Stashing specific files
 
 ```console
-$ git stash push -m "halfway through refactoring authentication"
+$ git stash push -m "Stashing only CSS files" -- *.css
+Saved working directory and index state On main: Stashing only CSS files
 ```
 
-### Stash Only Specific Files
+## Tips
 
-You can stash only specific files by listing them after the command:
+### Use Descriptive Messages
 
-```console
-$ git stash push file1.txt file2.txt
-```
+Always use descriptive messages with `git stash save "message"` to make it easier to identify stashes later.
 
-### View Stash Contents in Detail
+### Check Stash Contents Before Applying
 
-For a more detailed view of a stash's contents:
-
-```console
-$ git stash show -p stash@{0}
-```
+Use `git stash show -p stash@{n}` to view the full diff of a stash before applying it.
 
 ### Create a Branch from a Stash
 
-If you realize your stashed changes should be in their own branch:
+If you realize your stashed changes should be in their own branch, use `git stash branch <branchname> [stash]` to create a new branch with the stashed changes applied.
 
-```console
-$ git stash branch new-feature-branch stash@{0}
-```
+### Partial Stashing
+
+Use `git stash -p` (or `--patch`) to interactively select which changes to stash, allowing you to keep some changes in your working directory.
 
 ## Frequently Asked Questions
 
-#### Q1. What happens to my stashed changes if I switch branches?
-A. Stashed changes remain available across all branches. You can stash changes on one branch and apply them on another.
+#### Q1. What happens to my stashes when I switch branches?
+A. Stashes are stored separately from branches and remain accessible regardless of which branch you're on.
 
-#### Q2. Can I recover a stash after I've dropped it?
-A. Yes, if you know the commit hash of the stash (shown when dropping). Use `git stash apply <commit-hash>` to recover it, but only if the garbage collector hasn't run.
+#### Q2. How long do stashes persist?
+A. Stashes persist indefinitely until you explicitly drop them or clear the stash list.
 
-#### Q3. How long do stashes persist?
-A. Stashes persist indefinitely until you explicitly remove them with `git stash drop` or `git stash clear`, or until they're garbage collected (which typically doesn't happen for a long time).
+#### Q3. Can I recover a dropped stash?
+A. Yes, if you know the stash's commit ID (shown when dropping), you can recover it using `git stash apply <commit-id>` within the git reflog expiration period.
 
-#### Q4. What's the difference between `git stash pop` and `git stash apply`?
-A. `git stash pop` applies the stash and then removes it from the stash list, while `git stash apply` only applies the stash but keeps it in the list for potential future use.
+#### Q4. How do I stash only certain files?
+A. Use `git stash push [--] [<pathspec>...]` to stash specific files, e.g., `git stash push -- file1.txt file2.js`.
 
-#### Q5. Can I stash untracked files?
-A. By default, `git stash` only stashes tracked files with changes. Use `git stash -u` to include untracked files or `git stash -a` to include both untracked and ignored files.
+#### Q5. What's the difference between `pop` and `apply`?
+A. `pop` applies the stash and removes it from the stash list, while `apply` only applies the stash but keeps it in the stash list.
 
 ## References
 
@@ -215,4 +187,4 @@ https://git-scm.com/docs/git-stash
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

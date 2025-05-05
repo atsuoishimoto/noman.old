@@ -47,14 +47,14 @@
     <main>
       
   <h1>iostat command</h1>
-<p>Display CPU and input/output statistics for devices and partitions.</p>
+<p>Display CPU and I/O statistics for devices and partitions.</p>
 <h2>Overview</h2>
-<p><code>iostat</code> reports CPU statistics and input/output statistics for devices, partitions, and network filesystems. It's particularly useful for monitoring system performance, identifying bottlenecks, and analyzing disk I/O patterns. The command shows how busy your CPU and disks are, helping system administrators diagnose performance issues.</p>
+<p><code>iostat</code> reports CPU statistics and input/output statistics for devices, partitions, and network filesystems. It's primarily used for monitoring system input/output device loading by observing the time devices are active in relation to their average transfer rates.</p>
 <h2>Options</h2>
 <h3><strong>-c</strong></h3>
 <p>Display only CPU statistics.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-c
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
 <span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
@@ -62,161 +62,157 @@
 <h3><strong>-d</strong></h3>
 <p>Display only device statistics.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-d
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               5.73       141.02       124.53    1250432    1104567</span>
-<span style="color: #000; font-style: italic">sdb               0.12         3.45         0.00      30567          0</span>
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda               5.73       141.61        45.28         0.00    1250432     399764          0</span>
+<span style="color: #000; font-style: italic">sdb               0.02         0.63         0.00         0.00       5548          0          0</span>
 </pre></div>
-<h3><strong>-h, --human</strong></h3>
-<p>Display sizes in human-readable format (e.g., 1.0k, 234M, 2G).</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-h
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<h3><strong>-x</strong></h3>
+<p>Display extended statistics for devices.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-x
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
 <span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda              5.73       141.0k       124.5k      1.2G      1.1G</span>
-<span style="color: #000; font-style: italic">sdb              0.12         3.5k         0.0k     30.6M      0.0k</span>
+<span style="color: #000; font-style: italic">Device            r/s     w/s     rkB/s     wkB/s   rrqm/s   wrqm/s  %rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util</span>
+<span style="color: #000; font-style: italic">sda              4.21    1.52    141.61     45.28     0.10     0.57   2.33  27.29    0.63    2.38   0.01    33.63    29.72   0.28   0.16</span>
+<span style="color: #000; font-style: italic">sdb              0.02    0.00      0.63      0.00     0.00     0.00   0.00   0.00    0.71    0.00   0.00    31.53     0.00   0.57   0.00</span>
 </pre></div>
 <h3><strong>-k</strong></h3>
 <p>Display statistics in kilobytes per second.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-k
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
 <span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               5.73       141.02       124.53    1250432    1104567</span>
-<span style="color: #000; font-style: italic">sdb               0.12         3.45         0.00      30567          0</span>
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda               5.73       141.61        45.28         0.00    1250432     399764          0</span>
+<span style="color: #000; font-style: italic">sdb               0.02         0.63         0.00         0.00       5548          0          0</span>
 </pre></div>
 <h3><strong>-m</strong></h3>
 <p>Display statistics in megabytes per second.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-m
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
 <span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
 
-<span style="color: #000; font-style: italic">Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               5.73         0.14         0.12      1221.1    1078.7</span>
-<span style="color: #000; font-style: italic">sdb               0.12         0.00         0.00        29.8       0.0</span>
-</pre></div>
-<h3><strong>-x</strong></h3>
-<p>Display extended statistics, providing more detailed information about device usage.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-x
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
-
-<span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
-<span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
-
-<span style="color: #000; font-style: italic">Device            r/s     w/s     rkB/s     wkB/s   rrqm/s   wrqm/s  %rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util</span>
-<span style="color: #000; font-style: italic">sda              3.45    2.28    141.02    124.53     0.12     1.35   3.36  37.25    0.42    2.53   0.01    40.88    54.62   0.25   1.43</span>
-<span style="color: #000; font-style: italic">sdb              0.12    0.00      3.45      0.00     0.00     0.00   0.00   0.00    0.35    0.00   0.00    28.75     0.00   0.22   0.03</span>
+<span style="color: #000; font-style: italic">Device             tps    MB_read/s    MB_wrtn/s    MB_dscd/s    MB_read    MB_wrtn    MB_dscd</span>
+<span style="color: #000; font-style: italic">sda               5.73         0.14         0.04         0.00       1221        390          0</span>
+<span style="color: #000; font-style: italic">sdb               0.02         0.00         0.00         0.00          5          0          0</span>
 </pre></div>
 <h3><strong>-p [device]</strong></h3>
-<p>Display statistics for block devices and all their partitions that are used by the system.</p>
+<p>Display statistics for block devices and all their partitions.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>sda
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
 <span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               5.73       141.02       124.53    1250432    1104567</span>
-<span style="color: #000; font-style: italic">sda1              0.25         4.32        12.45      38291     110456</span>
-<span style="color: #000; font-style: italic">sda2              5.48       136.70       112.08    1212141     994111</span>
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda               5.73       141.61        45.28         0.00    1250432     399764          0</span>
+<span style="color: #000; font-style: italic">sda1              0.01         0.32         0.00         0.00       2832          0          0</span>
+<span style="color: #000; font-style: italic">sda2              5.71       141.29        45.28         0.00    1247600     399764          0</span>
+</pre></div>
+<h3><strong>-t</strong></h3>
+<p>Print the time for each report displayed.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-t
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
+
+<span style="color: #000; font-style: italic">05/05/2025 10:15:30 AM</span>
+<span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
+<span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
+
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda               5.73       141.61        45.28         0.00    1250432     399764          0</span>
+<span style="color: #000; font-style: italic">sdb               0.02         0.63         0.00         0.00       5548          0          0</span>
 </pre></div>
 <h3><strong>interval [count]</strong></h3>
-<p>Specify the interval between reports in seconds and the number of reports to generate.</p>
+<p>Specify the reporting interval in seconds and the number of reports.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
 <span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               5.73       141.02       124.53    1250432    1104567</span>
-<span style="color: #000; font-style: italic">sdb               0.12         3.45         0.00      30567          0</span>
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda               5.73       141.61        45.28         0.00    1250432     399764          0</span>
+<span style="color: #000; font-style: italic">sdb               0.02         0.63         0.00         0.00       5548          0          0</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
-<span style="color: #000; font-style: italic">           3.42    0.00    1.56    0.28    0.00   94.74</span>
+<span style="color: #000; font-style: italic">           3.50    0.00    1.75    0.25    0.00   94.50</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               6.50       152.50       138.00         305         276</span>
-<span style="color: #000; font-style: italic">sdb               0.00         0.00         0.00           0           0</span>
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda              10.50       320.00       112.00         0.00        640        224          0</span>
+<span style="color: #000; font-style: italic">sdb               0.00         0.00         0.00         0.00          0          0          0</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
-<span style="color: #000; font-style: italic">           3.36    0.00    1.48    0.32    0.00   94.84</span>
+<span style="color: #000; font-style: italic">           3.38    0.00    1.50    0.12    0.00   95.00</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               5.50       132.00       118.50         264         237</span>
-<span style="color: #000; font-style: italic">sdb               0.50         8.00         0.00          16           0</span>
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda               8.00       256.00        64.00         0.00        512        128          0</span>
+<span style="color: #000; font-style: italic">sdb               0.00         0.00         0.00         0.00          0          0          0</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Monitoring disk I/O with extended statistics</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-xd<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-xd<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">Device            r/s     w/s     rkB/s     wkB/s   rrqm/s   wrqm/s  %rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util</span>
-<span style="color: #000; font-style: italic">sda              3.45    2.28    141.02    124.53     0.12     1.35   3.36  37.25    0.42    2.53   0.01    40.88    54.62   0.25   1.43</span>
-<span style="color: #000; font-style: italic">sdb              0.12    0.00      3.45      0.00     0.00     0.00   0.00   0.00    0.35    0.00   0.00    28.75     0.00   0.22   0.03</span>
+<span style="color: #000; font-style: italic">sda              4.21    1.52    141.61     45.28     0.10     0.57   2.33  27.29    0.63    2.38   0.01    33.63    29.72   0.28   0.16</span>
+<span style="color: #000; font-style: italic">sdb              0.02    0.00      0.63      0.00     0.00     0.00   0.00   0.00    0.71    0.00   0.00    31.53     0.00   0.57   0.00</span>
 
-<span style="color: #000; font-style: italic">Device            r/s     w/s     rkB/s     wkB/s   rrqm/s   wrqm/s  %rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util</span>
-<span style="color: #000; font-style: italic">sda              4.00    3.50    164.00    156.00     0.00     2.00   0.00  36.36    0.38    2.43   0.01    41.00    44.57   0.27   2.01</span>
-<span style="color: #000; font-style: italic">sdb              0.00    0.00      0.00      0.00     0.00     0.00   0.00   0.00    0.00    0.00   0.00     0.00     0.00   0.00   0.00</span>
-</pre></div>
-<h3>Displaying human-readable disk statistics</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-dh
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
-
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda              5.73       141.0k       124.5k      1.2G      1.1G</span>
-<span style="color: #000; font-style: italic">sdb              0.12         3.5k         0.0k     30.6M      0.0k</span>
+<span style="color: #000; font-style: italic">[Output repeats every 5 seconds]</span>
 </pre></div>
 <h3>Monitoring specific partitions</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>sda<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>sda<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
 <span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               5.73       141.02       124.53    1250432    1104567</span>
-<span style="color: #000; font-style: italic">sda1              0.25         4.32        12.45      38291     110456</span>
-<span style="color: #000; font-style: italic">sda2              5.48       136.70       112.08    1212141     994111</span>
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda               5.73       141.61        45.28         0.00    1250432     399764          0</span>
+<span style="color: #000; font-style: italic">sda1              0.01         0.32         0.00         0.00       2832          0          0</span>
+<span style="color: #000; font-style: italic">sda2              5.71       141.29        45.28         0.00    1247600     399764          0</span>
 
-<span style="color: #8F5902"># </span>Output<span style="color: #F8F8F8"> </span>will<span style="color: #F8F8F8"> </span>repeat<span style="color: #F8F8F8"> </span>every<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>seconds<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">until</span><span style="color: #F8F8F8"> </span>interrupted
+<span style="color: #000; font-style: italic">[Output repeats every 2 seconds]</span>
+</pre></div>
+<h3>Displaying CPU and disk statistics in megabytes</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-cm<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
+
+<span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
+<span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
+
+<span style="color: #000; font-style: italic">[Output repeats 3 times at 1-second intervals]</span>
 </pre></div>
 <h2>Tips</h2>
-<h3>Identify I/O Bottlenecks</h3>
-<p>Look at the <code>%util</code> column in the extended statistics (<code>-x</code> option) to identify disks that are approaching 100% utilization, which indicates potential bottlenecks.</p>
-<h3>Monitor I/O Wait Time</h3>
-<p>High values in the <code>r_await</code> and <code>w_await</code> columns indicate that processes are waiting for I/O operations to complete, which could be slowing down your system.</p>
+<h3>Understanding %util</h3>
+<p>The %util metric shows the percentage of CPU time during which I/O requests were issued to the device. A value close to 100% indicates saturation, meaning the device is working at its maximum capacity.</p>
+<h3>Identifying I/O Bottlenecks</h3>
+<p>Look for high values in the await column (average time for I/O requests to be served). High await times combined with high %util values indicate potential I/O bottlenecks.</p>
 <h3>Continuous Monitoring</h3>
-<p>Use the interval parameter to continuously monitor disk activity. For example, <code>iostat 5</code> will refresh the statistics every 5 seconds.</p>
-<h3>Combine with Other Tools</h3>
-<p>Use <code>iostat</code> in conjunction with other monitoring tools like <code>top</code>, <code>vmstat</code>, and <code>sar</code> for a comprehensive view of system performance.</p>
-<h3>Focus on Active Devices</h3>
-<p>When troubleshooting performance issues, focus on devices with high transaction rates (tps) and high utilization percentages.</p>
+<p>For real-time monitoring, use <code>iostat</code> with an interval (e.g., <code>iostat -x 2</code>). This will continuously update the statistics every 2 seconds until interrupted with Ctrl+C.</p>
+<h3>Combining with Other Tools</h3>
+<p>Use <code>iostat</code> in conjunction with tools like <code>top</code>, <code>vmstat</code>, and <code>sar</code> for a comprehensive system performance analysis.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What does the %iowait value in CPU statistics mean?</h4>
-<p>A. %iowait represents the percentage of time that the CPU(s) were idle during which the system had pending disk I/O requests. High iowait values indicate that the system is bottlenecked by disk operations.</p>
-<h4>Q2. How do I interpret the extended statistics from iostat -x?</h4>
-<p>A. Key metrics include: %util (device utilization), r_await/w_await (read/write response times), and aqu-sz (average queue length). High utilization (&gt;80%), long wait times, or large queue sizes indicate potential I/O problems.</p>
-<h4>Q3. What's the difference between tps, r/s, and w/s?</h4>
-<p>A. tps (transfers per second) is the total number of I/O requests per second. r/s and w/s break this down into read requests and write requests per second, respectively.</p>
-<h4>Q4. How can I monitor NVMe drives with iostat?</h4>
-<p>A. NVMe drives appear as nvme0n1, nvme1n1, etc. You can use the same iostat commands, for example: <code>iostat -x nvme0n1</code>.</p>
-<h4>Q5. Why are my iostat values different between runs?</h4>
-<p>A. The first report from iostat shows statistics since system boot, while subsequent reports (when using intervals) show statistics for the specified time interval only.</p>
+<p>A. %iowait represents the percentage of time that the CPU was idle during which the system had pending disk I/O requests. High iowait values indicate that the system is bottlenecked by disk operations.</p>
+<h4>Q2. How do I interpret the r_await and w_await columns?</h4>
+<p>A. r_await and w_await show the average time (in milliseconds) for read and write requests to be served, including the time spent in the queue and the service time. Higher values indicate slower I/O operations.</p>
+<h4>Q3. What's the difference between tps and IOPS?</h4>
+<p>A. tps (transfers per second) represents the number of I/O requests completed per second, regardless of the size. IOPS (I/O operations per second) is essentially the same metric but is often used in storage performance discussions.</p>
+<h4>Q4. How can I see statistics for a specific device only?</h4>
+<p>A. Use <code>iostat -d device_name</code> to show statistics only for the specified device.</p>
 <h2>References</h2>
 <p>https://man7.org/linux/man-pages/man1/iostat.1.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

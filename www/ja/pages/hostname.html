@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -49,10 +49,10 @@
   <h1>hostname コマンド</h1>
 <p>システムのホスト名を表示または設定します。</p>
 <h2>概要</h2>
-<p><code>hostname</code> コマンドは、システムの現在のホスト名を表示または設定します。ホスト名とは、ネットワーク上でデバイスが認識される名前のことです。このコマンドは、スクリプト内で現在のマシンを識別する場合や、複数のシステムで作業する際に役立ちます。</p>
+<p><code>hostname</code> コマンドは、システムの現在のホスト名、ドメイン名、またはノード名を表示または設定します。引数なしで実行すると、現在のホスト名を表示します。適切な権限があれば、新しいホスト名を設定することもできます。</p>
 <h2>オプション</h2>
 <h3><strong>-s, --short</strong></h3>
-<p>ドメイン情報を除いた短いホスト名を表示します。</p>
+<p>ドメイン情報なしの短いホスト名（最初のドットより前の部分）を表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname<span style="color: #F8F8F8"> </span>-s
 <span style="color: #000; font-style: italic">mycomputer</span>
 </pre></div>
@@ -62,7 +62,7 @@
 <span style="color: #000; font-style: italic">mycomputer.example.com</span>
 </pre></div>
 <h3><strong>-d, --domain</strong></h3>
-<p>DNSドメイン名を表示します。</p>
+<p>システムが所属するドメイン名を表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname<span style="color: #F8F8F8"> </span>-d
 <span style="color: #000; font-style: italic">example.com</span>
 </pre></div>
@@ -71,57 +71,56 @@
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname<span style="color: #F8F8F8"> </span>-i
 <span style="color: #000; font-style: italic">192.168.1.100</span>
 </pre></div>
-<h3><strong>-I, --all-ip-addresses</strong></h3>
-<p>ホストのすべてのネットワークアドレスを表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname<span style="color: #F8F8F8"> </span>-I
-<span style="color: #000; font-style: italic">192.168.1.100 10.0.0.1 172.16.0.1</span>
-</pre></div>
 <h2>使用例</h2>
-<h3>現在のホスト名の表示</h3>
+<h3>現在のホスト名を表示する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname
 <span style="color: #000; font-style: italic">mycomputer.example.com</span>
 </pre></div>
-<h3>新しいホスト名の設定（root権限が必要）</h3>
+<h3>新しいホスト名を設定する（root権限が必要）</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>hostname<span style="color: #F8F8F8"> </span>newname
 <span style="color: #8F5902">$ </span>hostname
 <span style="color: #000; font-style: italic">newname</span>
 </pre></div>
-<h3>スクリプト内で現在のマシンを識別するためにホスト名を使用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;バックアップスクリプトを </span><span style="color: #204A87; font-weight: bold">$(</span>hostname<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06"> で実行中&quot;</span>
-<span style="color: #000; font-style: italic">バックアップスクリプトを mycomputer.example.com で実行中</span>
+<h3>ホストのすべてのネットワークアドレスを表示する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>hostname<span style="color: #F8F8F8"> </span>--all-ip-addresses
+<span style="color: #000; font-style: italic">192.168.1.100 10.0.0.1 127.0.0.1</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>永続的なホスト名の変更</h3>
-<p><code>hostname</code> コマンドは次の再起動までホスト名を一時的に変更するだけです。永続的な変更には：</p>
+<h3>ホスト名の永続的な変更</h3>
+<p><code>hostname</code> コマンドは次の再起動までホスト名を一時的に変更するだけです。永続的な変更を行うには：</p>
 <ul>
-<li>systemdベースのシステム：<code>hostnamectl set-hostname newname</code> を使用</li>
-<li>Debian/Ubuntu：<code>/etc/hostname</code> を編集</li>
-<li>RHEL/CentOS：<code>/etc/sysconfig/network</code> を編集</li>
+<li>Linux の場合：<code>/etc/hostname</code> を編集するか、<code>hostnamectl set-hostname newname</code> を使用します</li>
+<li>macOS の場合：システム環境設定 &gt; 共有 &gt; コンピュータ名を使用するか、<code>scutil --set HostName newname</code> を使用します</li>
 </ul>
-<h3>ネットワーク設定</h3>
-<p>ホスト名を変更する場合、適切な名前解決を確保するために <code>/etc/hosts</code> などの他のファイルも更新する必要があるかもしれません。</p>
-<h3>ホスト名の制限</h3>
-<p>ホスト名はRFC 1178のガイドラインに従うべきです：文字、数字、ハイフンのみを使用し、63文字を超えないようにしましょう。</p>
+<h3>ホスト名 vs. FQDN</h3>
+<p>ホスト名はコンピュータ名のみ（例：「mycomputer」）であるのに対し、FQDNはドメインを含みます（例：「mycomputer.example.com」）。完全なネットワーク識別子が必要な場合は <code>-f</code> を使用してください。</p>
+<h3>ホスト名の解決</h3>
+<p>hostname コマンドは DNS や <code>/etc/hosts</code> を更新しません。ホスト名を変更した後、適切なネットワーク解決のためにこれらを別途更新する必要があるかもしれません。</p>
 <h2>よくある質問</h2>
-<h4>Q1. ホスト名とFQDNの違いは何ですか？</h4>
-<p>A. ホスト名はマシンの名前だけ（例：「mycomputer」）であるのに対し、FQDNはドメインを含みます（例：「mycomputer.example.com」）。</p>
-<h4>Q2. 再起動後にホスト名がリセットされるのはなぜですか？</h4>
-<p>A. <code>hostname</code> コマンドは一時的な変更のみを行います。永続的な変更を行うには、システム設定ファイルを変更するか、<code>hostnamectl</code> などのツールを使用する必要があります。</p>
-<h4>Q3. ホスト名に特殊文字を使用できますか？</h4>
-<p>A. すべてのネットワークサービスとの互換性を確保するために、ホスト名には文字、数字、ハイフンのみを使用することが推奨されています。</p>
-<h4>Q4. スクリプト内でホスト名を取得するにはどうすればよいですか？</h4>
-<p>A. スクリプト内で <code>$(hostname)</code> を使用するだけで、現在のホスト名を取得できます。</p>
-<h2>macOSに関する注意点</h2>
-<p>macOSでは、hostname コマンドは同様に機能しますが、永続的な変更は以下を使用して行うべきです：</p>
+<h4>Q1. hostname と hostnamectl の違いは何ですか？</h4>
+<p>A. <code>hostname</code> はシステムのホスト名を表示または一時的に設定するシンプルなユーティリティであるのに対し、<code>hostnamectl</code>（systemdベースのLinuxシステムで）は様々なホスト名パラメータを永続的に設定でき、最新のLinuxディストリビューションでは推奨される方法です。</p>
+<h4>Q2. なぜ hostname -i が実際のIPではなく 127.0.1.1 を返すことがあるのですか？</h4>
+<p>A. これは、ホスト名が <code>/etc/hosts</code> で 127.0.1.1 にマッピングされている場合に発生します。これは一部のディストリビューションでは一般的です。より正確なネットワーク情報を得るには、<code>hostname --all-ip-addresses</code> または <code>ip addr</code> を使用してください。</p>
+<h4>Q3. ホスト名の変更を永続的にするにはどうすればよいですか？</h4>
+<p>A. Linux では <code>/etc/hostname</code> を編集するか、<code>hostnamectl set-hostname newname</code> を使用します。macOS では、<code>scutil --set HostName newname</code> を使用します。</p>
+<h2>macOSに関する考慮事項</h2>
+<p>macOSでは、設定可能な3つの異なるホスト名設定があります：</p>
 <ul>
-<li>ホスト名の場合は <code>sudo scutil --set HostName newname</code></li>
-<li>Bonjourホスト名の場合は <code>sudo scutil --set LocalHostName newname</code></li>
-<li>ユーザーフレンドリーなコンピュータ名の場合は <code>sudo scutil --set ComputerName &quot;新しい名前&quot;</code></li>
+<li>HostName：ネットワークホスト名（FQDN）</li>
+<li>LocalHostName：Bonjourホスト名（ローカルネットワーク検出に使用）</li>
+<li>ComputerName：UIに表示されるユーザーフレンドリーな名前</li>
 </ul>
-<h2>参考資料</h2>
+<p>これらの値を設定するには：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>scutil<span style="color: #F8F8F8"> </span>--set<span style="color: #F8F8F8"> </span>HostName<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hostname.domain.com&quot;</span>
+<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>scutil<span style="color: #F8F8F8"> </span>--set<span style="color: #F8F8F8"> </span>LocalHostName<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;hostname&quot;</span>
+<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>scutil<span style="color: #F8F8F8"> </span>--set<span style="color: #F8F8F8"> </span>ComputerName<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;My Computer&quot;</span>
+</pre></div>
+<h2>参考文献</h2>
 <p>https://man7.org/linux/man-pages/man1/hostname.1.html</p>
 <h2>改訂履歴</h2>
-<p>2025/05/04 初版作成</p>
+<ul>
+<li>2025/05/05 初版</li>
+</ul>
 
 
     </main>

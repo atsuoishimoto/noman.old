@@ -47,116 +47,83 @@
     <main>
       
   <h1>ipcs command</h1>
-<p>Display information about active IPC facilities (shared memory, message queues, and semaphores).</p>
+<p>Display information about active IPC facilities (shared memory segments, message queues, and semaphores).</p>
 <h2>Overview</h2>
-<p>The <code>ipcs</code> command shows information about Inter-Process Communication (IPC) resources currently active in the system. It displays details about shared memory segments, message queues, and semaphore arrays that processes use to communicate with each other. This command is particularly useful for system administrators and developers debugging IPC-related issues.</p>
+<p>The <code>ipcs</code> command shows information about System V inter-process communication (IPC) resources currently active in the system. It displays details about shared memory segments, message queues, and semaphore arrays, including their IDs, owners, permissions, and usage statistics.</p>
 <h2>Options</h2>
-<h3><strong>-a, --all</strong></h3>
-<p>Show information about all IPC facilities (default behavior)</p>
+<h3><strong>-a</strong></h3>
+<p>Show all information for all three resources (default behavior).</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ipcs<span style="color: #F8F8F8"> </span>-a
 <span style="color: #000; font-style: italic">------ Message Queues --------</span>
 <span style="color: #000; font-style: italic">key        msqid      owner      perms      used-bytes   messages    </span>
+<span style="color: #000; font-style: italic">0x00000000 0          root       644        0            0           </span>
 
 <span style="color: #000; font-style: italic">------ Shared Memory Segments --------</span>
 <span style="color: #000; font-style: italic">key        shmid      owner      perms      bytes      nattch     status      </span>
-<span style="color: #000; font-style: italic">0x00000000 0          root       644        80         2                       </span>
-<span style="color: #000; font-style: italic">0x00000000 32769      root       644        16384      2                       </span>
+<span style="color: #000; font-style: italic">0x00000000 0          root       644        80         2          dest         </span>
 
 <span style="color: #000; font-style: italic">------ Semaphore Arrays --------</span>
-<span style="color: #000; font-style: italic">key        semid      owner      perms      nsems</span>
+<span style="color: #000; font-style: italic">key        semid      owner      perms      nsems     </span>
+<span style="color: #000; font-style: italic">0x00000000 0          root       644        1</span>
 </pre></div>
-<h3><strong>-q, --queues</strong></h3>
-<p>Show information about active message queues</p>
+<h3><strong>-q</strong></h3>
+<p>Show information about active message queues.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ipcs<span style="color: #F8F8F8"> </span>-q
 <span style="color: #000; font-style: italic">------ Message Queues --------</span>
-<span style="color: #000; font-style: italic">key        msqid      owner      perms      used-bytes   messages</span>
+<span style="color: #000; font-style: italic">key        msqid      owner      perms      used-bytes   messages    </span>
+<span style="color: #000; font-style: italic">0x00000000 0          root       644        0            0</span>
 </pre></div>
-<h3><strong>-m, --shmems</strong></h3>
-<p>Show information about active shared memory segments</p>
+<h3><strong>-m</strong></h3>
+<p>Show information about active shared memory segments.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ipcs<span style="color: #F8F8F8"> </span>-m
 <span style="color: #000; font-style: italic">------ Shared Memory Segments --------</span>
 <span style="color: #000; font-style: italic">key        shmid      owner      perms      bytes      nattch     status      </span>
-<span style="color: #000; font-style: italic">0x00000000 0          root       644        80         2                       </span>
-<span style="color: #000; font-style: italic">0x00000000 32769      root       644        16384      2</span>
+<span style="color: #000; font-style: italic">0x00000000 0          root       644        80         2          dest</span>
 </pre></div>
-<h3><strong>-s, --semaphores</strong></h3>
-<p>Show information about active semaphore arrays</p>
+<h3><strong>-s</strong></h3>
+<p>Show information about active semaphore arrays.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ipcs<span style="color: #F8F8F8"> </span>-s
 <span style="color: #000; font-style: italic">------ Semaphore Arrays --------</span>
-<span style="color: #000; font-style: italic">key        semid      owner      perms      nsems</span>
+<span style="color: #000; font-style: italic">key        semid      owner      perms      nsems     </span>
+<span style="color: #000; font-style: italic">0x00000000 0          root       644        1</span>
 </pre></div>
-<h3><strong>-t, --time</strong></h3>
-<p>Show last operation times for IPC facilities</p>
+<h3><strong>-t</strong></h3>
+<p>Show time information for IPC facilities.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ipcs<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>-m
 <span style="color: #000; font-style: italic">------ Shared Memory Operation/Change Times --------</span>
 <span style="color: #000; font-style: italic">shmid      last-op                    last-changed              </span>
-<span style="color: #000; font-style: italic">0          Thu Jan  1 00:00:00 1970   Thu Jan  1 00:00:00 1970  </span>
-<span style="color: #000; font-style: italic">32769      Thu Jan  1 00:00:00 1970   Thu Jan  1 00:00:00 1970</span>
+<span style="color: #000; font-style: italic">0          Wed May  5 10:15:35 2025   Wed May  5 10:15:35 2025</span>
 </pre></div>
-<h3><strong>-p, --pid</strong></h3>
-<p>Show creator and last operator's PIDs</p>
+<h3><strong>-p</strong></h3>
+<p>Show process IDs using or creating the IPC facilities.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ipcs<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>-m
 <span style="color: #000; font-style: italic">------ Shared Memory Creator/Last-op PIDs --------</span>
 <span style="color: #000; font-style: italic">shmid      owner      cpid       lpid      </span>
-<span style="color: #000; font-style: italic">0          root       0          0         </span>
-<span style="color: #000; font-style: italic">32769      root       0          0</span>
+<span style="color: #000; font-style: italic">0          root       1234       5678</span>
 </pre></div>
-<h3><strong>-c, --creator</strong></h3>
-<p>Show creator and owner</p>
+<h3><strong>-c</strong></h3>
+<p>Show creator and owner information.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ipcs<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>-m
 <span style="color: #000; font-style: italic">------ Shared Memory Segment Creators/Owners --------</span>
-<span style="color: #000; font-style: italic">shmid      perms      cpid       lpid      uid       gid      </span>
-<span style="color: #000; font-style: italic">0          644        0          0         0         0        </span>
-<span style="color: #000; font-style: italic">32769      644        0          0         0         0</span>
-</pre></div>
-<h3><strong>-l, --limits</strong></h3>
-<p>Show system resource limits</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ipcs<span style="color: #F8F8F8"> </span>-l
-<span style="color: #000; font-style: italic">------ Messages Limits --------</span>
-<span style="color: #000; font-style: italic">max queues system wide = 32000</span>
-<span style="color: #000; font-style: italic">max size of message (bytes) = 8192</span>
-<span style="color: #000; font-style: italic">default max size of queue (bytes) = 16384</span>
-
-<span style="color: #000; font-style: italic">------ Shared Memory Limits --------</span>
-<span style="color: #000; font-style: italic">max number of segments = 4096</span>
-<span style="color: #000; font-style: italic">max seg size (kbytes) = 18014398509465599</span>
-<span style="color: #000; font-style: italic">max total shared memory (kbytes) = 18014398509481980</span>
-<span style="color: #000; font-style: italic">min seg size (bytes) = 1</span>
-
-<span style="color: #000; font-style: italic">------ Semaphore Limits --------</span>
-<span style="color: #000; font-style: italic">max number of arrays = 32000</span>
-<span style="color: #000; font-style: italic">max semaphores per array = 32000</span>
-<span style="color: #000; font-style: italic">max semaphores system wide = 1024000000</span>
-<span style="color: #000; font-style: italic">max ops per semop call = 500</span>
-<span style="color: #000; font-style: italic">semaphore max value = 32767</span>
+<span style="color: #000; font-style: italic">shmid      perms      cuid       cgid       uid        gid       </span>
+<span style="color: #000; font-style: italic">0          644        0          0          0          0</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Viewing all IPC resources with detailed information</h3>
+<h3>Display all IPC resources with detailed information</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ipcs<span style="color: #F8F8F8"> </span>-a
 <span style="color: #000; font-style: italic">------ Message Queues --------</span>
 <span style="color: #000; font-style: italic">key        msqid      owner      perms      used-bytes   messages    </span>
+<span style="color: #000; font-style: italic">0x00000000 0          root       644        0            0           </span>
 
 <span style="color: #000; font-style: italic">------ Shared Memory Segments --------</span>
 <span style="color: #000; font-style: italic">key        shmid      owner      perms      bytes      nattch     status      </span>
-<span style="color: #000; font-style: italic">0x00000000 0          root       644        80         2                       </span>
-<span style="color: #000; font-style: italic">0x00000000 32769      root       644        16384      2                       </span>
+<span style="color: #000; font-style: italic">0x00000000 0          root       644        80         2          dest         </span>
 
 <span style="color: #000; font-style: italic">------ Semaphore Arrays --------</span>
-<span style="color: #000; font-style: italic">key        semid      owner      perms      nsems</span>
+<span style="color: #000; font-style: italic">key        semid      owner      perms      nsems     </span>
+<span style="color: #000; font-style: italic">0x00000000 0          root       644        1</span>
 </pre></div>
-<h3>Checking shared memory segments with timestamps</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ipcs<span style="color: #F8F8F8"> </span>-mt
-<span style="color: #000; font-style: italic">------ Shared Memory Segments --------</span>
-<span style="color: #000; font-style: italic">key        shmid      owner      perms      bytes      nattch     status      </span>
-<span style="color: #000; font-style: italic">0x00000000 0          root       644        80         2                       </span>
-<span style="color: #000; font-style: italic">0x00000000 32769      root       644        16384      2                       </span>
-
-<span style="color: #000; font-style: italic">------ Shared Memory Operation/Change Times --------</span>
-<span style="color: #000; font-style: italic">shmid      last-op                    last-changed              </span>
-<span style="color: #000; font-style: italic">0          Thu Jan  1 00:00:00 1970   Thu Jan  1 00:00:00 1970  </span>
-<span style="color: #000; font-style: italic">32769      Thu Jan  1 00:00:00 1970   Thu Jan  1 00:00:00 1970</span>
-</pre></div>
-<h3>Viewing system-wide IPC limits</h3>
+<h3>Show limits for IPC resources</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ipcs<span style="color: #F8F8F8"> </span>-l
 <span style="color: #000; font-style: italic">------ Messages Limits --------</span>
 <span style="color: #000; font-style: italic">max queues system wide = 32000</span>
@@ -176,29 +143,27 @@
 <span style="color: #000; font-style: italic">max ops per semop call = 500</span>
 <span style="color: #000; font-style: italic">semaphore max value = 32767</span>
 </pre></div>
-<h2>Tips</h2>
-<h3>Understanding IPC Resources</h3>
-<p>IPC resources (shared memory, message queues, and semaphores) persist even after the creating process terminates. Use <code>ipcrm</code> to remove unused IPC resources that might be consuming system resources.</p>
-<h3>Identifying Resource Leaks</h3>
-<p>If you see a large number of IPC resources owned by a specific user or process, it might indicate a resource leak in an application. Regular monitoring with <code>ipcs</code> can help identify such issues.</p>
-<h3>Permissions Column</h3>
-<p>The &quot;perms&quot; column shows the octal permissions for the IPC resource, similar to file permissions. For example, &quot;644&quot; means the owner can read and write, while group and others can only read.</p>
-<h3>Key Values</h3>
-<p>The &quot;key&quot; column shows the IPC key used to identify the resource. A key of &quot;0x00000000&quot; often indicates a private IPC resource that was created with IPC_PRIVATE.</p>
+<h2>Tips:</h2>
+<h3>Identify Resource Leaks</h3>
+<p>Use <code>ipcs</code> regularly to monitor IPC resources. If you notice resources that persist after applications terminate, it could indicate a resource leak that needs to be cleaned up.</p>
+<h3>Clean Up Stale IPC Resources</h3>
+<p>Use <code>ipcrm</code> command to remove unused IPC resources identified by <code>ipcs</code>. For example, <code>ipcrm -m &lt;shmid&gt;</code> removes a shared memory segment.</p>
+<h3>Check Resource Limits</h3>
+<p>Use <code>ipcs -l</code> to view system-wide limits for IPC resources. This helps in troubleshooting applications that might be hitting resource constraints.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What does the &quot;nattch&quot; column mean in shared memory output?</h4>
-<p>A. &quot;nattch&quot; shows the number of processes currently attached to the shared memory segment. A value of 0 means no process is using it, and it might be a candidate for cleanup.</p>
-<h4>Q2. How do I remove an IPC resource shown by ipcs?</h4>
-<p>A. Use the <code>ipcrm</code> command with the appropriate option and ID. For example, <code>ipcrm -m 12345</code> removes the shared memory segment with ID 12345.</p>
-<h4>Q3. What does it mean when ipcs shows no output?</h4>
-<p>A. It means there are no active IPC resources of the requested type in the system. This is normal on systems that don't heavily use IPC mechanisms.</p>
-<h4>Q4. How can I see who is using a specific IPC resource?</h4>
-<p>A. Use <code>ipcs -p</code> to see the creator and last operator PIDs for IPC resources.</p>
+<h4>Q1. What is the difference between the three IPC facilities?</h4>
+<p>A. Shared memory segments allow processes to share memory directly, message queues enable processes to exchange messages, and semaphores provide synchronization mechanisms between processes.</p>
+<h4>Q2. How do I remove an IPC resource?</h4>
+<p>A. Use the <code>ipcrm</code> command with the appropriate option and ID. For example, <code>ipcrm -m &lt;shmid&gt;</code> removes a shared memory segment, <code>ipcrm -q &lt;msqid&gt;</code> removes a message queue, and <code>ipcrm -s &lt;semid&gt;</code> removes a semaphore array.</p>
+<h4>Q3. Why do I see IPC resources that don't belong to any running process?</h4>
+<p>A. These are likely orphaned resources from processes that terminated without properly cleaning up. Use <code>ipcrm</code> to remove them if they're no longer needed.</p>
+<h4>Q4. How can I see which processes are using a specific IPC resource?</h4>
+<p>A. Use <code>ipcs -p</code> to show the process IDs (PIDs) of creators and last operators of IPC resources.</p>
 <h2>References</h2>
 <p>https://man7.org/linux/man-pages/man1/ipcs.1.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

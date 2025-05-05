@@ -1,21 +1,12 @@
-# sleep コマンド
+# sleepコマンド
 
-指定した時間だけ実行を一時停止します。
+指定された時間だけ実行を一時停止します。
 
 ## 概要
 
-`sleep` コマンドは、スクリプトやコマンドラインの実行を指定した時間だけ一時停止させます。シェルスクリプト内でコマンド間に遅延を導入したり、リソースが利用可能になるのを待ったり、時間指定の操作を作成したりするのによく使用されます。
+`sleep`コマンドは、指定された時間間隔だけ実行を一時停止します。シェルスクリプトでコマンド間に遅延を導入したり、リソースが利用可能になるのを待ったり、簡単なタイミングメカニズムを実装したりするために一般的に使用されます。このコマンドは数値と、時間単位を示すオプションのサフィックスを受け付けます。
 
 ## オプション
-
-### **-s, --suffix=SUFFIX**
-
-時間の単位を指定します（s は秒、m は分、h は時間、d は日）。
-
-```console
-$ sleep 5s
-[5秒間一時停止する]
-```
 
 ### **--help**
 
@@ -26,9 +17,9 @@ $ sleep --help
 Usage: sleep NUMBER[SUFFIX]...
   or:  sleep OPTION
 Pause for NUMBER seconds.  SUFFIX may be 's' for seconds (the default),
-'m' for minutes, 'h' for hours or 'd' for days.  NUMBER may be an
-arbitrary floating point number.  Given two or more arguments, pause for
-the sum of their values.
+'m' for minutes, 'h' for hours or 'd' for days.  NUMBER need not be an
+integer.  Given two or more arguments, pause for the amount of time
+specified by the sum of their values.
 
       --help     display this help and exit
       --version  output version information and exit
@@ -40,8 +31,8 @@ the sum of their values.
 
 ```console
 $ sleep --version
-sleep (GNU coreutils) 9.0
-Copyright (C) 2022 Free Software Foundation, Inc.
+sleep (GNU coreutils) 8.32
+Copyright (C) 2020 Free Software Foundation, Inc.
 License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -51,104 +42,87 @@ Written by Jim Meyering and Paul Eggert.
 
 ## 使用例
 
-### 基本的な使い方
+### 基本的な秒単位のスリープ
 
 ```console
 $ sleep 5
-[5秒間一時停止する]
+# コマンドは5秒間一時停止し、その後プロンプトに戻る
 ```
 
-### 異なる時間単位の使用
+### 時間単位を指定したスリープ
 
 ```console
 $ sleep 1m
-[1分間一時停止する]
-
-$ sleep 2h
-[2時間一時停止する]
-
-$ sleep 1d
-[1日間一時停止する]
+# コマンドは1分間一時停止する
 ```
 
-### 小数値の使用
+### スクリプト内でのsleepの使用
 
 ```console
-$ sleep 0.5
-[0.5秒間一時停止する]
+$ echo "Starting task..."
+Starting task...
+$ sleep 2
+$ echo "Task completed after 2 seconds"
+Task completed after 2 seconds
 ```
 
-### 複数の値の組み合わせ
+### 複数の時間値
 
 ```console
 $ sleep 1m 30s
-[1分30秒間一時停止する]
-```
-
-### スクリプト内での使用
-
-```console
-$ echo "タスクを開始します..."
-タスクを開始します...
-$ sleep 2
-$ echo "2秒後にタスクが完了しました"
-2秒後にタスクが完了しました
+# コマンドは1分30秒間一時停止する
 ```
 
 ## ヒント:
 
-### スリープコマンドの中断
+### 利用可能な時間単位
 
-実行中のsleepコマンドはCtrl+Cで中断できます。
+- `s`: 秒（単位が指定されない場合のデフォルト）
+- `m`: 分
+- `h`: 時間
+- `d`: 日
 
-### バックグラウンドでのスリープ
+### 小数値
 
-`&`を使ってsleepをバックグラウンドで実行すると、ターミナルを引き続き使用できます：
+より正確なタイミングのために、sleepは小数値を受け付けます：
+
 ```console
-$ sleep 60 &
-[1] 12345
+$ sleep 0.5
+# 0.5秒間一時停止する
 ```
 
 ### 他のコマンドとの組み合わせ
 
-sleepを他のコマンドと組み合わせて、時間指定の操作を作成できます：
+`&`演算子を使用してsleepをバックグラウンドで実行し、他のタスクを続行できます：
+
 ```console
-$ (sleep 5; echo "5秒後のメッセージ") &
+$ sleep 10 & echo "This prints immediately"
+[1] 12345
+This prints immediately
 ```
 
-### ループ内での使用
+### sleepの中断
 
-sleepはループ内で過度のリソース使用を防ぐのに役立ちます：
-```console
-$ for i in {1..5}; do echo "繰り返し $i"; sleep 1; done
-繰り返し 1
-繰り返し 2
-繰り返し 3
-繰り返し 4
-繰り返し 5
-```
+フォアグラウンドで実行中のsleepコマンドを中断するには、Ctrl+Cを押します。
 
 ## よくある質問
 
-#### Q1. 単位を指定しない場合はどうなりますか？
-A. 単位が指定されていない場合、sleepはデフォルトで秒を単位として使用します。
+#### Q1. sleepをミリ秒単位で使用できますか？
+A. 標準のsleepコマンドはミリ秒を直接サポートしていませんが、対応システムでは`sleep 0.001`のような小数値を使用して1ミリ秒を表現できます。
 
-#### Q2. sleepで小数値を使用できますか？
-A. はい、`0.5`のような小数値を使用して0.5秒などの時間を指定できます。
+#### Q2. 異なる時間単位を組み合わせるにはどうすればよいですか？
+A. sleepに複数の引数を提供できます：`sleep 1h 30m 45s`は1時間30分45秒間スリープします。
 
-#### Q3. スクリプトを特定の時間待機させるにはどうすればよいですか？
-A. 適切な時間値でsleepを使用します。例えば、`sleep 10m`で10分間待機します。
+#### Q3. なぜスクリプトがsleepが終了する前に続行するのですか？
+A. `sleep 10 &`を使用した場合、アンパサンド（&）はsleepをバックグラウンドで実行します。スクリプトがsleepの完了を待つようにするには、`&`を削除してください。
 
-#### Q4. 異なる時間単位を組み合わせることはできますか？
-A. はい、複数の引数を提供すると、それらが合計されます。例えば、`sleep 1h 30m`で1.5時間待機します。
+#### Q4. sleepはCPUを多く使用しますか？
+A. いいえ、sleepは非常に効率的です。システムタイマーを使用し、待機中にCPUリソースを消費しません。
 
-#### Q5. sleepはシステムリソースを多く消費しますか？
-A. いいえ、sleepは非常に軽量で、待機中のCPUリソース使用は最小限です。
-
-## 参考資料
+## 参考文献
 
 https://www.gnu.org/software/coreutils/manual/html_node/sleep-invocation.html
 
 ## 改訂履歴
 
-- 2025/05/04 初回改訂
+- 2025/05/05 初版

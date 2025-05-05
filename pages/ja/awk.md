@@ -1,14 +1,14 @@
 # awk コマンド
 
-テキストファイルのパターンスキャンと処理を行う言語です。
+構造化されたデータを操作するためのパターンスキャンとテキスト処理言語です。
 
 ## 概要
 
-`awk` は強力なテキスト処理ツールで、ファイルを1行ずつスキャンし、各行をフィールドに分割して、パターンとアクションに基づいてそれらのフィールドに対して操作を実行します。構造化されたテキストから特定の列を抽出したり、レポートを生成したり、データを変換したりするのに特に便利です。`awk` は各行をレコードとして、各単語をフィールドとして扱うため、CSVファイル、ログ、その他の構造化されたテキストデータの処理に最適です。
+`awk` は強力なテキスト処理ツールで、入力の各行をレコードとして、各単語をフィールドとして扱います。CSV、ログ、テーブルなどの構造化されたテキストファイルからデータを抽出・操作するのに優れています。コマンドは次のパターンに従います: `awk 'パターン {アクション}' ファイル`。
 
 ## オプション
 
-### **-F fs, --field-separator fs**
+### **-F, --field-separator**
 
 フィールド区切り文字を指定します（デフォルトは空白）
 
@@ -17,7 +17,7 @@ $ echo "apple,orange,banana" | awk -F, '{print $2}'
 orange
 ```
 
-### **-f file, --file file**
+### **-f, --file**
 
 コマンドラインではなくファイルからAWKプログラムを読み込みます
 
@@ -25,25 +25,29 @@ orange
 $ cat script.awk
 {print $1}
 $ awk -f script.awk data.txt
-[data.txtの各行の最初のフィールドが表示される]
+First
+Second
+Third
 ```
 
-### **-v var=val, --assign var=val**
+### **-v, --assign**
 
 プログラム実行前に変数に値を割り当てます
 
 ```console
-$ awk -v name="John" '{print "Hello, " name "!"}'
-Hello, John!
+$ awk -v name="John" '{print "Hello, " name}' /dev/null
+Hello, John
 ```
 
-### **-W version, --version**
+### **-W, --compat, --posix**
 
-バージョン情報を表示して終了します
+POSIX互換モードで実行します
 
 ```console
-$ awk --version
-GNU Awk 5.1.0, API: 3.0 (GNU MPFR 4.1.0, GNU MP 6.2.1)
+$ awk -W posix '{print $1}' data.txt
+First
+Second
+Third
 ```
 
 ## 使用例
@@ -51,79 +55,93 @@ GNU Awk 5.1.0, API: 3.0 (GNU MPFR 4.1.0, GNU MP 6.2.1)
 ### 基本的なフィールド表示
 
 ```console
-$ echo "John Smith 42" | awk '{print $1, $2}'
-John Smith
-```
-
-### パターンマッチングによる行のフィルタリング
-
-```console
-$ cat /etc/passwd | awk -F: '/root/ {print $1, $6}'
-root /root
-```
-
-### 合計の計算
-
-```console
-$ cat numbers.txt
-10
-20
-30
-$ awk '{sum += $1} END {print "Sum:", sum}' numbers.txt
-Sum: 60
+$ echo "Hello World" | awk '{print $1}'
+Hello
 ```
 
 ### CSVデータの処理
 
 ```console
 $ cat data.csv
-Name,Age,City
-John,25,New York
-Mary,30,Boston
-$ awk -F, 'NR>1 {print "Name: " $1 ", Age: " $2}' data.csv
-Name: John, Age: 25
-Name: Mary, Age: 30
+John,25,Engineer
+Mary,30,Doctor
+$ awk -F, '{print "Name: " $1 ", Job: " $3}' data.csv
+Name: John, Job: Engineer
+Name: Mary, Job: Doctor
+```
+
+### パターンマッチングによる行のフィルタリング
+
+```console
+$ cat /etc/passwd | awk -F: '/root/ {print $1 " has home directory " $6}'
+root has home directory /root
+```
+
+### 合計の計算
+
+```console
+$ cat numbers.txt
+10 20
+30 40
+$ awk '{sum += $1} END {print "Sum:", sum}' numbers.txt
+Sum: 40
 ```
 
 ## ヒント:
 
 ### 組み込み変数
 
-`awk` にはいくつかの組み込み変数があります：`NR`（現在のレコード番号）、`NF`（現在のレコードのフィールド数）、`FS`（フィールド区切り文字）、`OFS`（出力フィールド区切り文字）。これらを使用してスクリプトを簡素化できます。
+AWKには、`NR`（現在のレコード番号）、`NF`（現在のレコードのフィールド数）、`FS`（フィールド区切り文字）などの便利な組み込み変数があります。
+
+```console
+$ echo -e "a b c\nd e f" | awk '{print "Line", NR, "has", NF, "fields"}'
+Line 1 has 3 fields
+Line 2 has 3 fields
+```
+
+### 条件付き処理
+
+if-else文を使用して条件付き処理を行います：
+
+```console
+$ cat ages.txt
+John 25
+Mary 17
+Bob 32
+$ awk '{if ($2 >= 18) print $1, "is an adult"; else print $1, "is a minor"}' ages.txt
+John is an adult
+Mary is a minor
+Bob is an adult
+```
 
 ### 複数のコマンド
 
-セミコロンで複数のコマンドを区切ります：`awk '{count++; sum+=$1} END {print "Average:", sum/count}'`
+セミコロンで複数のコマンドを区切ります：
 
-### 正規表現
-
-`awk` はパターンマッチングのための強力な正規表現をサポートしています：`awk '/^[0-9]+$/ {print "Number:", $0}'` は数字のみを含む行にマッチします。
-
-### BEGIN と END ブロック
-
-初期化には `BEGIN` を、最終処理には `END` を使用します：`awk 'BEGIN {print "Start"} {print $1} END {print "Done"}'`
+```console
+$ echo "Hello World" | awk '{count=split($0,arr," "); print "Words:", count; print "First word:", arr[1]}'
+Words: 2
+First word: Hello
+```
 
 ## よくある質問
 
-#### Q1. ファイルから特定の列を表示するにはどうすればよいですか？
-A. `awk '{print $n}'` を使用します。ここで n は列番号です。例えば、`awk '{print $1, $3}'` は1列目と3列目を表示します。
+#### Q1. awk、sed、grepの違いは何ですか？
+A. grepがパターンを検索し、sedがテキスト変換を実行するのに対し、awkは変数、関数、算術演算などのプログラミング機能を含む構造化データ処理用に設計されています。
 
-#### Q2. フィールド区切り文字を変更するにはどうすればよいですか？
-A. `-F` オプションを使用します：`awk -F, '{print $1}'` はカンマをフィールド区切り文字として使用します。
+#### Q2. awkで複数のファイルを処理するにはどうすればよいですか？
+A. awkコマンドの後にファイルを列挙するだけです：`awk '{print $1}' file1.txt file2.txt`
 
-#### Q3. 数値フィールドで計算を実行するにはどうすればよいですか？
-A. 算術演算子を使用します：`awk '{sum+=$1} END {print sum}'` は1列目の合計を計算します。
+#### Q3. awkは複数行処理を扱えますか？
+A. はい、`RS`（レコード区切り文字）変数を使用します：`awk 'BEGIN{RS="";FS="\n"}{print $1}' file.txt` は段落で区切られたテキストを処理します。
 
-#### Q4. awkでif-else文を使用できますか？
-A. はい、`awk` は条件文をサポートしています：`awk '{if ($1 > 10) print "Large"; else print "Small"}'`
+#### Q4. awkで正規表現を使用するにはどうすればよいですか？
+A. 正規表現はスラッシュの間に配置します：`awk '/pattern/ {print}' file.txt`
 
-#### Q5. 特定の行だけを処理するにはどうすればよいですか？
-A. パターンを使用します：`awk 'NR > 1 {print}'` は最初の行をスキップし、`awk '/pattern/ {print}'` はパターンに一致する行のみを処理します。
-
-## 参考資料
+## 参考文献
 
 https://www.gnu.org/software/gawk/manual/gawk.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

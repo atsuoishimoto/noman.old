@@ -1,62 +1,95 @@
 # ip command
 
-Display and manipulate network interfaces, routing, and tunnels on Linux systems.
+Network configuration tool for managing interfaces, routing, and addresses.
 
 ## Overview
 
-The `ip` command is a powerful utility for configuring network interfaces, routing tables, and tunnels in Linux. It's part of the iproute2 package and provides more functionality than older networking commands like `ifconfig` and `route`. The command uses a hierarchical structure where objects (like link, address, route) are followed by commands and options.
+The `ip` command is a powerful utility for configuring and monitoring network interfaces, routing tables, and addresses in Linux systems. It's part of the iproute2 package and provides more functionality than older networking commands like ifconfig, route, and netstat. The command follows a structured syntax where objects (link, address, route, etc.) are followed by commands and options.
 
 ## Options
 
+### **help**
+
+Display help information for a specific object
+
+```console
+$ ip help
+Usage: ip [ OPTIONS ] OBJECT { COMMAND | help }
+       ip [ -force ] -batch filename
+where  OBJECT := { link | address | addrlabel | route | rule | neigh | ntable |
+                   tunnel | tuntap | maddress | mroute | mrule | monitor | xfrm |
+                   netns | l2tp | fou | macsec | tcp_metrics | token | netconf | ila |
+                   vrf | sr | nexthop | mptcp }
+       OPTIONS := { -V[ersion] | -s[tatistics] | -d[etails] | -r[esolve] |
+                    -h[uman-readable] | -iec | -j[son] | -p[retty] |
+                    -f[amily] { inet | inet6 | mpls | bridge | link } |
+                    -4 | -6 | -I | -D | -M | -B | -0 |
+                    -l[oops] { maximum-addr-flush-attempts } | -br[ief] |
+                    -o[neline] | -t[imestamp] | -ts[hort] | -b[atch] [filename] |
+                    -rc[vbuf] [size] | -n[etns] name | -N[umeric] | -a[ll] |
+                    -c[olor]}
+```
+
 ### **-s, --stats, --statistics**
 
-Display more information or statistics
+Display more information/statistics
 
 ```console
 $ ip -s link show
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     RX: bytes  packets  errors  dropped overrun mcast   
-    3500       35       0       0       0       0      
+    3800       38       0       0       0       0       
     TX: bytes  packets  errors  dropped carrier collsns 
-    3500       35       0       0       0       0      
+    3800       38       0       0       0       0       
 ```
 
-### **-c, --color**
+### **-d, --details**
 
-Use color output for better readability
+Display detailed information
 
 ```console
-$ ip -c addr show
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+$ ip -d link show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00 promiscuity 0 minmtu 0 maxmtu 0 
     inet 127.0.0.1/8 scope host lo
        valid_lft forever preferred_lft forever
     inet6 ::1/128 scope host 
        valid_lft forever preferred_lft forever
 ```
 
-### **-br, --brief**
+### **-h, --human, --human-readable**
 
-Display brief output (one line per object)
+Display statistics in human-readable format
 
 ```console
-$ ip -br addr show
-lo               UNKNOWN        127.0.0.1/8 ::1/128 
-eth0             UP             192.168.1.10/24 fe80::1234:5678:abcd:ef01/64
+$ ip -h -s link show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    RX: bytes  packets  errors  dropped overrun mcast   
+    3.8K       38       0       0       0       0       
+    TX: bytes  packets  errors  dropped carrier collsns 
+    3.8K       38       0       0       0       0       
 ```
 
-### **-d, --details**
+### **-br, --brief**
 
-Show detailed information
+Display brief output
 
 ```console
-$ ip -d link show dev eth0
-2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
-    link/ether 00:11:22:33:44:55 brd ff:ff:ff:ff:ff:ff promiscuity 0 
-    altname enp0s3
-    vlan protocol 802.1Q
-    vlan id 1 <REORDER_HDR> 
+$ ip -br address show
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+eth0             UP             192.168.1.100/24 fe80::a00:27ff:fe74:ddaa/64
+```
+
+### **-c, --color**
+
+Use color output
+
+```console
+$ ip -c link show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
 ```
 
 ## Usage Examples
@@ -68,13 +101,13 @@ $ ip link show
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
 2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
-    link/ether 00:11:22:33:44:55 brd ff:ff:ff:ff:ff:ff
+    link/ether 08:00:27:74:dd:aa brd ff:ff:ff:ff:ff:ff
 ```
 
-### Showing IP addresses
+### Displaying IP addresses
 
 ```console
-$ ip addr show
+$ ip address show
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     inet 127.0.0.1/8 scope host lo
@@ -82,17 +115,17 @@ $ ip addr show
     inet6 ::1/128 scope host 
        valid_lft forever preferred_lft forever
 2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
-    link/ether 00:11:22:33:44:55 brd ff:ff:ff:ff:ff:ff
-    inet 192.168.1.10/24 brd 192.168.1.255 scope global eth0
-       valid_lft forever preferred_lft forever
-    inet6 fe80::1234:5678:abcd:ef01/64 scope link 
+    link/ether 08:00:27:74:dd:aa brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.100/24 brd 192.168.1.255 scope global dynamic eth0
+       valid_lft 86389sec preferred_lft 86389sec
+    inet6 fe80::a00:27ff:fe74:ddaa/64 scope link 
        valid_lft forever preferred_lft forever
 ```
 
-### Configuring an IP address
+### Adding an IP address to an interface
 
 ```console
-$ sudo ip addr add 192.168.1.100/24 dev eth0
+$ sudo ip address add 192.168.1.200/24 dev eth0
 ```
 
 ### Bringing an interface up or down
@@ -106,8 +139,8 @@ $ sudo ip link set eth0 down
 
 ```console
 $ ip route show
-default via 192.168.1.1 dev eth0 proto static 
-192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.10
+default via 192.168.1.1 dev eth0 proto dhcp metric 100 
+192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.100 metric 100 
 ```
 
 ### Adding a static route
@@ -116,27 +149,34 @@ default via 192.168.1.1 dev eth0 proto static
 $ sudo ip route add 10.0.0.0/24 via 192.168.1.254
 ```
 
-## Tips
+## Tips:
 
-### Use Shortcuts for Common Commands
+### Use Brief Output for Quick Overview
 
-The `ip` command allows shortened versions of its subcommands:
-- `ip a` instead of `ip addr show`
-- `ip l` instead of `ip link show`
-- `ip r` instead of `ip route show`
+The `-br` option provides a concise, tabular view of network information, making it easier to scan multiple interfaces quickly.
 
-### Save and Restore Configuration
+```console
+$ ip -br link
+lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> 
+eth0             UP             08:00:27:74:dd:aa <BROADCAST,MULTICAST,UP,LOWER_UP>
+```
 
-You can save your current IP configuration and restore it later:
+### Save and Restore IP Configuration
+
+You can save your current IP configuration to a file and restore it later:
 
 ```console
 $ ip addr save > ip-config.txt
 $ ip addr restore < ip-config.txt
 ```
 
-### Temporary vs. Permanent Changes
+### Monitor Network Changes
 
-Changes made with the `ip` command are not persistent across reboots. To make permanent changes, modify your distribution's network configuration files.
+Use the `ip monitor` command to watch for network changes in real-time:
+
+```console
+$ ip monitor
+```
 
 ### Use Namespaces for Network Isolation
 
@@ -144,25 +184,25 @@ Network namespaces allow you to create isolated network environments:
 
 ```console
 $ sudo ip netns add mynetwork
-$ sudo ip netns exec mynetwork ip addr
+$ sudo ip netns exec mynetwork ip link list
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. How is `ip` different from `ifconfig`?
-A. `ip` is newer, more powerful, and provides more functionality than `ifconfig`. It can manage routing, tunneling, and policy-based routing, while `ifconfig` is limited to basic interface configuration.
+#### Q1. What's the difference between `ip` and `ifconfig`?
+A. `ip` is newer, more powerful, and provides more functionality than `ifconfig`. It can manage routing tables, network interfaces, and IP addresses with a consistent syntax. `ifconfig` is considered deprecated in many Linux distributions.
 
 #### Q2. How do I check my IP address?
-A. Use `ip addr show` or the shorter `ip a` to display all IP addresses on your system.
+A. Use `ip address show` or the shorter `ip a` to display all IP addresses. For a specific interface, use `ip address show dev eth0`.
 
 #### Q3. How do I add a temporary IP address?
-A. Use `sudo ip addr add IP_ADDRESS/NETMASK dev INTERFACE`, for example: `sudo ip addr add 192.168.1.100/24 dev eth0`.
+A. Use `sudo ip address add 192.168.1.200/24 dev eth0` to add an IP address to interface eth0. This address will be lost after reboot unless configured in network configuration files.
 
-#### Q4. How do I check my routing table?
-A. Use `ip route show` or the shorter `ip r` to display your routing table.
+#### Q4. How do I flush all IP addresses from an interface?
+A. Use `sudo ip address flush dev eth0` to remove all IP addresses from the eth0 interface.
 
-#### Q5. How do I flush an IP address from an interface?
-A. Use `sudo ip addr flush dev INTERFACE`, for example: `sudo ip addr flush dev eth0`.
+#### Q5. How do I view my routing table?
+A. Use `ip route show` or the shorter `ip r` to display the routing table.
 
 ## References
 
@@ -170,4 +210,4 @@ https://man7.org/linux/man-pages/man8/ip.8.html
 
 ## Revisions
 
-2025/05/04 First revision
+- 2025/05/05 First revision

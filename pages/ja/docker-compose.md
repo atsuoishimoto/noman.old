@@ -1,69 +1,36 @@
 # docker-compose コマンド
 
-複数のDockerコンテナを定義して実行するためのツールです。
+複数コンテナのDockerアプリケーションを定義して実行します。
 
 ## 概要
 
-Docker Composeは、複数のDockerコンテナで構成されるアプリケーションを定義・実行するためのツールです。YAMLファイルを使用してサービス、ネットワーク、ボリュームを設定し、単一のコマンドですべてのサービスを起動できます。アプリケーションの一部として連携する複数のコンテナを管理するプロセスを簡素化します。
+Docker Composeは、複数コンテナのDockerアプリケーションを定義・実行するためのツールです。YAMLファイルを使用してアプリケーションのサービス、ネットワーク、ボリュームを設定し、単一のコマンドですべてのサービスを作成・起動できます。複数の相互接続されたコンテナを必要とする複雑なアプリケーションの管理プロセスを簡素化します。
 
 ## オプション
 
-### **-f, --file FILE**
-
-別のComposeファイルを指定します（デフォルト: docker-compose.yml）
-
-```console
-$ docker-compose -f custom-compose.yml up
-Creating network "myapp_default" with the default driver
-Creating myapp_web_1 ... done
-Creating myapp_db_1  ... done
-```
-
-### **-p, --project-name NAME**
-
-別のプロジェクト名を指定します（デフォルト: ディレクトリ名）
-
-```console
-$ docker-compose -p myproject up
-Creating network "myproject_default" with the default driver
-Creating myproject_web_1 ... done
-Creating myproject_db_1  ... done
-```
-
-### **--verbose**
-
-より詳細な出力を表示します
-
-```console
-$ docker-compose --verbose up
-compose.config.config.find: Using configuration files: ./docker-compose.yml
-docker.auth.find_config_file: Trying paths: ['/home/user/.docker/config.json', '/home/user/.dockercfg']
-docker.auth.find_config_file: Found file at path: /home/user/.docker/config.json
-...
-```
-
-### **--log-level LEVEL**
-
-ログレベルを設定します（DEBUG, INFO, WARNING, ERROR, CRITICAL）
-
-```console
-$ docker-compose --log-level INFO up
-Creating network "myapp_default" with the default driver
-Creating myapp_web_1 ... done
-Creating myapp_db_1  ... done
-```
-
-## 一般的なコマンド
-
 ### **up**
 
-コンテナを作成して起動します
+Composeファイルで定義されたコンテナを作成して起動します
+
+```console
+$ docker-compose up
+Creating network "myapp_default" with the default driver
+Creating myapp_db_1    ... done
+Creating myapp_redis_1 ... done
+Creating myapp_web_1   ... done
+Attaching to myapp_db_1, myapp_redis_1, myapp_web_1
+```
+
+### **-d, --detach**
+
+コンテナをバックグラウンドで実行します
 
 ```console
 $ docker-compose up -d
 Creating network "myapp_default" with the default driver
-Creating myapp_web_1 ... done
-Creating myapp_db_1  ... done
+Creating myapp_db_1    ... done
+Creating myapp_redis_1 ... done
+Creating myapp_web_1   ... done
 ```
 
 ### **down**
@@ -72,10 +39,12 @@ Creating myapp_db_1  ... done
 
 ```console
 $ docker-compose down
-Stopping myapp_web_1 ... done
-Stopping myapp_db_1  ... done
-Removing myapp_web_1 ... done
-Removing myapp_db_1  ... done
+Stopping myapp_web_1   ... done
+Stopping myapp_redis_1 ... done
+Stopping myapp_db_1    ... done
+Removing myapp_web_1   ... done
+Removing myapp_redis_1 ... done
+Removing myapp_db_1    ... done
 Removing network myapp_default
 ```
 
@@ -85,10 +54,11 @@ Removing network myapp_default
 
 ```console
 $ docker-compose ps
-    Name                  Command               State           Ports
------------------------------------------------------------------------------
-myapp_db_1    docker-entrypoint.sh mysqld      Up      3306/tcp, 33060/tcp
-myapp_web_1   docker-php-entrypoint php-fpm    Up      9000/tcp
+     Name                    Command               State           Ports         
+--------------------------------------------------------------------------------
+myapp_db_1      docker-entrypoint.sh mysqld      Up      3306/tcp, 33060/tcp
+myapp_redis_1   docker-entrypoint.sh redis ...   Up      6379/tcp              
+myapp_web_1     docker-entrypoint.sh npm start   Up      0.0.0.0:3000->3000/tcp
 ```
 
 ### **logs**
@@ -97,20 +67,23 @@ myapp_web_1   docker-php-entrypoint php-fpm    Up      9000/tcp
 
 ```console
 $ docker-compose logs
-Attaching to myapp_web_1, myapp_db_1
-db_1   | 2025-05-04T10:15:30.123456Z 0 [Note] mysqld: ready for connections.
-web_1  | [04-May-2025 10:15:32] NOTICE: fpm is running, pid 1
+Attaching to myapp_web_1, myapp_redis_1, myapp_db_1
+web_1    | > myapp@1.0.0 start
+web_1    | > node server.js
+web_1    | Server listening on port 3000
+db_1     | 2023-05-05T12:34:56.789Z 0 [Note] mysqld: ready for connections.
 ```
 
-### **exec**
+### **-f, --follow**
 
-実行中のコンテナでコマンドを実行します
+ログ出力をフォローします（logsコマンドと共に使用）
 
 ```console
-$ docker-compose exec web php -v
-PHP 8.2.0 (cli) (built: Dec 6 2024) (NTS)
-Copyright (c) The PHP Group
-Zend Engine v4.2.0, Copyright (c) Zend Technologies
+$ docker-compose logs -f
+Attaching to myapp_web_1, myapp_redis_1, myapp_db_1
+web_1    | > myapp@1.0.0 start
+web_1    | > node server.js
+web_1    | Server listening on port 3000
 ```
 
 ### **build**
@@ -120,134 +93,146 @@ Zend Engine v4.2.0, Copyright (c) Zend Technologies
 ```console
 $ docker-compose build
 Building web
-Step 1/10 : FROM php:8.2-fpm
- ---> 123456789abc
-Step 2/10 : WORKDIR /var/www/html
+Step 1/10 : FROM node:14
+ ---> 1234567890ab
+Step 2/10 : WORKDIR /app
  ---> Using cache
  ---> abcdef123456
 ...
-Successfully built 987654321fed
+Successfully built 0123456789ab
 Successfully tagged myapp_web:latest
+```
+
+### **exec**
+
+実行中のコンテナでコマンドを実行します
+
+```console
+$ docker-compose exec web npm test
+> myapp@1.0.0 test
+> jest
+
+PASS  ./app.test.js
+  ✓ should return 200 (32ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+```
+
+### **-f, --file**
+
+別のComposeファイルを指定します
+
+```console
+$ docker-compose -f docker-compose.prod.yml up -d
+Creating network "myapp_default" with the default driver
+Creating myapp_db_1    ... done
+Creating myapp_redis_1 ... done
+Creating myapp_web_1   ... done
 ```
 
 ## 使用例
 
-### データベース付きの基本的なWebアプリケーション
+### 開発環境の起動
 
 ```console
-$ cat docker-compose.yml
-version: '3'
-services:
-  web:
-    image: nginx:latest
-    ports:
-      - "8080:80"
-    volumes:
-      - ./html:/usr/share/nginx/html
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: myapp
-
-$ docker-compose up -d
+$ docker-compose up
 Creating network "myapp_default" with the default driver
-Creating myapp_web_1 ... done
-Creating myapp_db_1  ... done
+Creating myapp_db_1    ... done
+Creating myapp_redis_1 ... done
+Creating myapp_web_1   ... done
+Attaching to myapp_db_1, myapp_redis_1, myapp_web_1
+```
+
+### サービスの再ビルドと起動
+
+```console
+$ docker-compose up --build
+Building web
+Step 1/10 : FROM node:14
+...
+Successfully built 0123456789ab
+Successfully tagged myapp_web:latest
+Creating network "myapp_default" with the default driver
+Creating myapp_db_1    ... done
+Creating myapp_redis_1 ... done
+Creating myapp_web_1   ... done
+```
+
+### サービスコンテナでの一回限りのコマンド実行
+
+```console
+$ docker-compose run web npm install express
+Creating myapp_web_run ... done
++ express@4.18.2
+added 57 packages in 2.5s
 ```
 
 ### サービスのスケーリング
 
 ```console
 $ docker-compose up -d --scale web=3
-Creating network "myapp_default" with the default driver
 Creating myapp_web_1 ... done
 Creating myapp_web_2 ... done
 Creating myapp_web_3 ... done
-Creating myapp_db_1  ... done
 ```
 
 ## ヒント:
 
 ### 環境変数を使用する
 
-パスワードなどの機密情報は、docker-compose.ymlファイルにハードコーディングするのではなく、`.env`ファイルに保存しましょう。
+パスワードやAPIキーなどの機密情報は、Composeファイルにハードコーディングする代わりに`.env`ファイルに保存しましょう。
 
 ```console
 $ cat .env
 DB_PASSWORD=secretpassword
-
-$ cat docker-compose.yml
-version: '3'
-services:
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+API_KEY=1234567890abcdef
 ```
 
-### プロファイルを使用して選択的にサービスを起動する
+### デフォルトのComposeファイルをオーバーライドする
 
-プロファイルを使用すると、必要なサービスのみを起動できます。
+開発固有の設定のために`docker-compose.override.yml`ファイルを作成すると、基本の`docker-compose.yml`ファイルと一緒に自動的に使用されます。
 
-```console
-$ cat docker-compose.yml
-version: '3.9'
+### 永続化のために名前付きボリュームを使用する
+
+名前付きボリュームはコンテナの再起動や再ビルド間でデータを保持します：
+
+```yaml
+volumes:
+  db_data:
+
 services:
-  app:
-    image: myapp
   db:
-    image: mysql
-  test:
-    image: myapp-test
-    profiles:
-      - testing
-
-$ docker-compose --profile testing up
-```
-
-### Docker Compose オーバーライドファイルを使用する
-
-メインのComposeファイルを変更せずに設定を上書きするには、`docker-compose.override.yml`ファイルを作成します。
-
-```console
-$ cat docker-compose.yml
-version: '3'
-services:
-  web:
-    image: nginx
-
-$ cat docker-compose.override.yml
-version: '3'
-services:
-  web:
-    ports:
-      - "8080:80"
+    image: postgres
     volumes:
-      - ./html:/usr/share/nginx/html
+      - db_data:/var/lib/postgresql/data
 ```
+
+### Composeファイルにバージョン管理を使用する
+
+変更を追跡し、チームメンバーとコラボレーションするために、Composeファイルをバージョン管理下に置きましょう。
 
 ## よくある質問
 
-#### Q1. `docker-compose up`と`docker-compose up -d`の違いは何ですか？
-A. `docker-compose up`はコンテナを起動し、その出力をターミナルに表示します。`-d`フラグ（デタッチドモード）を使用すると、コンテナをバックグラウンドで実行します。
+#### Q1. `docker-compose up`と`docker-compose run`の違いは何ですか？
+A. `up`はComposeファイルで定義されたすべてのサービスを起動しますが、`run`は特定のサービスを起動して一回限りのコマンドを実行します。
 
-#### Q2. 他のサービスに影響を与えずに単一のサービスを更新するにはどうすればよいですか？
-A. `docker-compose up -d --no-deps --build service_name`を使用すると、依存サービスを再起動せずに特定のサービスを再ビルドして更新できます。
+#### Q2. 単一のサービスを更新するにはどうすればよいですか？
+A. `docker-compose up --build <サービス名>`を使用して、特定のサービスを再ビルドして更新します。
 
 #### Q3. 特定のサービスのログを表示するにはどうすればよいですか？
-A. `docker-compose logs service_name`を使用して特定のサービスのログを表示できます。リアルタイムでログを追跡するには`-f`を追加します。
+A. `docker-compose logs <サービス名>`を使用して、特定のサービスのログを表示します。
 
-#### Q4. Docker Composeを本番環境で使用できますか？
-A. Docker Composeは本番環境でも使用できますが、追加のオーケストレーション機能があるDocker SwarmやKubernetesが本番デプロイメントには好まれることが多いです。
+#### Q4. コンテナを削除せずにサービスを停止するにはどうすればよいですか？
+A. `docker-compose stop`を使用して、コンテナ、ネットワーク、ボリュームを削除せずにサービスを停止します。
 
-#### Q5. 未使用のボリュームをクリーンアップするにはどうすればよいですか？
-A. `docker-compose down -v`を使用すると、Composeファイルで定義されたコンテナ、ネットワーク、ボリュームを削除できます。
+#### Q5. 本番環境でdocker-composeを実行するにはどうすればよいですか？
+A. docker-composeは本番環境でも使用できますが、本番デプロイメントにはDocker SwarmやKubernetesがより適している場合が多いです。Composeを使用する場合は、適切な設定を持つ本番環境専用のComposeファイルを作成してください。
 
-## 参考資料
+## 参考文献
 
 https://docs.docker.com/compose/reference/
 
 ## 改訂履歴
 
-2025/05/04 初版作成
+- 2025/05/05 初版

@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -49,70 +49,71 @@
   <h1>rmdir コマンド</h1>
 <p>ファイルシステムから空のディレクトリを削除します。</p>
 <h2>概要</h2>
-<p><code>rmdir</code>コマンドはファイルシステムから空のディレクトリを削除します。ファイルやサブディレクトリが含まれていないディレクトリのみを削除できます。内容物があるディレクトリを削除するには、<code>rm</code>コマンドと特定のオプションを使用する必要があります。</p>
+<p><code>rmdir</code> コマンドはファイルシステムから空のディレクトリを削除します。ディレクトリとその内容を削除できる <code>rm -r</code> とは異なり、<code>rmdir</code> は指定されたディレクトリが完全に空である場合にのみ成功します。</p>
 <h2>オプション</h2>
 <h3><strong>-p, --parents</strong></h3>
-<p>ディレクトリとその親ディレクトリを削除します。例えば、<code>rmdir -p a/b/c</code>は<code>rmdir a/b/c a/b a</code>と同様の動作をします。</p>
+<p>ディレクトリとその祖先を削除します。例えば、<code>rmdir -p a/b/c</code> は <code>rmdir a/b/c a/b a</code> と同様です。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>test/nested/dir
 <span style="color: #8F5902">$ </span>rmdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>test/nested/dir
 <span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span><span style="color: #204A87">test</span>
-<span style="color: #000; font-style: italic">ls: &#39;test&#39; にアクセスできません: そのようなファイルやディレクトリはありません</span>
+<span style="color: #000; font-style: italic">ls: cannot access &#39;test&#39;: No such file or directory</span>
 </pre></div>
 <h3><strong>-v, --verbose</strong></h3>
-<p>処理されるディレクトリごとに診断メッセージを出力します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>empty1<span style="color: #F8F8F8"> </span>empty2
-<span style="color: #8F5902">$ </span>rmdir<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>empty1<span style="color: #F8F8F8"> </span>empty2
-<span style="color: #000; font-style: italic">rmdir: ディレクトリ &#39;empty1&#39; を削除しています</span>
-<span style="color: #000; font-style: italic">rmdir: ディレクトリ &#39;empty2&#39; を削除しています</span>
+<p>処理されるすべてのディレクトリに対して診断メッセージを出力します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>empty_dir
+<span style="color: #8F5902">$ </span>rmdir<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>empty_dir
+<span style="color: #000; font-style: italic">rmdir: removing directory, &#39;empty_dir&#39;</span>
 </pre></div>
 <h3><strong>--ignore-fail-on-non-empty</strong></h3>
 <p>ディレクトリが空でないことだけが原因で発生する失敗を無視します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>nonempty
-<span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>nonempty/file
-<span style="color: #8F5902">$ </span>rmdir<span style="color: #F8F8F8"> </span>--ignore-fail-on-non-empty<span style="color: #F8F8F8"> </span>nonempty
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>dir_with_file
+<span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>dir_with_file/file.txt
+<span style="color: #8F5902">$ </span>rmdir<span style="color: #F8F8F8"> </span>--ignore-fail-on-non-empty<span style="color: #F8F8F8"> </span>dir_with_file
 <span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">nonempty</span>
+<span style="color: #000; font-style: italic">dir_with_file</span>
 </pre></div>
 <h2>使用例</h2>
 <h3>単一の空ディレクトリの削除</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>emptydir
-<span style="color: #8F5902">$ </span>rmdir<span style="color: #F8F8F8"> </span>emptydir
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>empty_dir
+<span style="color: #8F5902">$ </span>rmdir<span style="color: #F8F8F8"> </span>empty_dir
 <span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">[emptydir はリストに表示されなくなる]</span>
+<span style="color: #000; font-style: italic">[empty_dirはリストに表示されなくなる]</span>
 </pre></div>
-<h3>複数の空ディレクトリを一度に削除</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>dir1<span style="color: #F8F8F8"> </span>dir2<span style="color: #F8F8F8"> </span>dir3
-<span style="color: #8F5902">$ </span>rmdir<span style="color: #F8F8F8"> </span>dir1<span style="color: #F8F8F8"> </span>dir2<span style="color: #F8F8F8"> </span>dir3
+<h3>入れ子になった空ディレクトリの削除</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>parent/child/grandchild
+<span style="color: #8F5902">$ </span>rmdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>parent/child/grandchild
 <span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">[どのディレクトリもリストに表示されない]</span>
+<span style="color: #000; font-style: italic">[parentディレクトリとそのサブディレクトリが削除される]</span>
 </pre></div>
 <h3>空でないディレクトリの削除を試みる</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>nonempty
-<span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>nonempty/file
-<span style="color: #8F5902">$ </span>rmdir<span style="color: #F8F8F8"> </span>nonempty
-<span style="color: #000; font-style: italic">rmdir: &#39;nonempty&#39; を削除できません: ディレクトリが空ではありません</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>mkdir<span style="color: #F8F8F8"> </span>non_empty
+<span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>non_empty/file.txt
+<span style="color: #8F5902">$ </span>rmdir<span style="color: #F8F8F8"> </span>non_empty
+<span style="color: #000; font-style: italic">rmdir: failed to remove &#39;non_empty&#39;: Directory not empty</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>先にディレクトリが空かどうかを確認する</h3>
-<p><code>rmdir</code>を使用する前に、<code>ls -A ディレクトリ名</code>でディレクトリが空かどうかを確認できます。何も表示されなければ、そのディレクトリは空です。</p>
-<h3>findコマンドと組み合わせて使用する</h3>
-<p><code>find</code>と組み合わせて複数の空ディレクトリを削除できます: <code>find /path -type d -empty -exec rmdir {} \;</code></p>
-<h3>ディレクトリツリーの削除</h3>
-<p>ディレクトリツリー全体（空でないディレクトリを含む）を削除するには、<code>rmdir</code>ではなく<code>rm -r</code>を使用します。これはすべての内容を確認なしで削除するため、注意が必要です。</p>
+<h3>空でないディレクトリには rm -r を使用する</h3>
+<p>ファイルを含むディレクトリを削除する必要がある場合は、<code>rmdir</code> の代わりに <code>rm -r directory_name</code> を使用します。このコマンドはディレクトリ内のすべてを再帰的に削除するため、注意して使用してください。</p>
+<h3>find と組み合わせて複数の空ディレクトリを削除する</h3>
+<p><code>find</code> と <code>rmdir</code> を使用して、一度に複数の空ディレクトリを削除できます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-type<span style="color: #F8F8F8"> </span>d<span style="color: #F8F8F8"> </span>-empty<span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>rmdir<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span>
+</pre></div>
+<h3>削除前に確認する</h3>
+<p>ディレクトリが空かどうか不明な場合は、削除を試みる前に <code>ls -la directory_name</code> を使用して内容を確認してください。</p>
 <h2>よくある質問</h2>
-<h4>Q1. rmdirが「ディレクトリが空ではありません」というエラーで失敗するのはなぜですか？</h4>
-<p>A. <code>rmdir</code>は空のディレクトリのみを削除します。ディレクトリにファイルやサブディレクトリが含まれている場合は、代わりに<code>rm -r ディレクトリ名</code>を使用してください。</p>
-<h4>Q2. rmdirとrm -dはどう違いますか？</h4>
-<p>A. 空のディレクトリに対しては機能的に同等です。どちらのコマンドも空のディレクトリのみを削除できます。</p>
-<h4>Q3. rmdirで複数のディレクトリを一度に削除できますか？</h4>
-<p>A. はい、複数のディレクトリを指定できます: <code>rmdir dir1 dir2 dir3</code></p>
-<h4>Q4. 入れ子になった空のディレクトリを削除するにはどうすればよいですか？</h4>
-<p>A. <code>-p</code>オプションを使用します: <code>rmdir -p 親/子/孫</code>は、すべてのディレクトリが空であれば3つすべてを削除します。</p>
-<h2>参考資料</h2>
+<h4>Q1. <code>rmdir</code> と <code>rm -r</code> の違いは何ですか？</h4>
+<p>A. <code>rmdir</code> は空のディレクトリのみを削除しますが、<code>rm -r</code> はディレクトリとその内容をすべて再帰的に削除します。</p>
+<h4>Q2. ファイルを含むディレクトリを削除するにはどうすればよいですか？</h4>
+<p>A. この目的には <code>rmdir</code> を使用できません。代わりに <code>rm -r directory_name</code> を使用してください。</p>
+<h4>Q3. <code>rmdir</code> で複数のディレクトリを一度に削除できますか？</h4>
+<p>A. はい、引数として複数のディレクトリ名を指定できます：<code>rmdir dir1 dir2 dir3</code>。</p>
+<h4>Q4. 存在しないディレクトリを削除しようとするとどうなりますか？</h4>
+<p>A. <code>rmdir</code> はディレクトリが存在しないことを示すエラーメッセージを表示します。</p>
+<h2>参考文献</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/rmdir-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初版作成</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

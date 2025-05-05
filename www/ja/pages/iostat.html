@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -46,15 +46,15 @@
   <div class="content">
     <main>
       
-  <h1>iostat コマンド</h1>
-<p>CPUおよびデバイスとパーティションの入出力統計情報を表示します。</p>
+  <h1>iostatコマンド</h1>
+<p>CPUとデバイスおよびパーティションのI/O統計情報を表示します。</p>
 <h2>概要</h2>
-<p><code>iostat</code> はCPU統計情報とデバイス、パーティション、ネットワークファイルシステムの入出力統計情報を報告します。システムパフォーマンスの監視、ボトルネックの特定、ディスクI/Oパターンの分析に特に役立ちます。このコマンドはCPUとディスクの使用状況を示し、システム管理者がパフォーマンスの問題を診断するのに役立ちます。</p>
+<p><code>iostat</code>はCPU統計情報とデバイス、パーティション、ネットワークファイルシステムの入出力統計情報を報告します。主にシステムの入出力デバイスの負荷を、デバイスがアクティブな時間と平均転送速度の関係を観察することによって監視するために使用されます。</p>
 <h2>オプション</h2>
 <h3><strong>-c</strong></h3>
 <p>CPU統計情報のみを表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-c
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
 <span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
@@ -62,161 +62,157 @@
 <h3><strong>-d</strong></h3>
 <p>デバイス統計情報のみを表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-d
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               5.73       141.02       124.53    1250432    1104567</span>
-<span style="color: #000; font-style: italic">sdb               0.12         3.45         0.00      30567          0</span>
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda               5.73       141.61        45.28         0.00    1250432     399764          0</span>
+<span style="color: #000; font-style: italic">sdb               0.02         0.63         0.00         0.00       5548          0          0</span>
 </pre></div>
-<h3><strong>-h, --human</strong></h3>
-<p>サイズを人間が読みやすい形式で表示します（例：1.0k、234M、2G）。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-h
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<h3><strong>-x</strong></h3>
+<p>デバイスの拡張統計情報を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-x
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
 <span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda              5.73       141.0k       124.5k      1.2G      1.1G</span>
-<span style="color: #000; font-style: italic">sdb              0.12         3.5k         0.0k     30.6M      0.0k</span>
+<span style="color: #000; font-style: italic">Device            r/s     w/s     rkB/s     wkB/s   rrqm/s   wrqm/s  %rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util</span>
+<span style="color: #000; font-style: italic">sda              4.21    1.52    141.61     45.28     0.10     0.57   2.33  27.29    0.63    2.38   0.01    33.63    29.72   0.28   0.16</span>
+<span style="color: #000; font-style: italic">sdb              0.02    0.00      0.63      0.00     0.00     0.00   0.00   0.00    0.71    0.00   0.00    31.53     0.00   0.57   0.00</span>
 </pre></div>
 <h3><strong>-k</strong></h3>
 <p>統計情報を1秒あたりのキロバイト単位で表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-k
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
 <span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               5.73       141.02       124.53    1250432    1104567</span>
-<span style="color: #000; font-style: italic">sdb               0.12         3.45         0.00      30567          0</span>
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda               5.73       141.61        45.28         0.00    1250432     399764          0</span>
+<span style="color: #000; font-style: italic">sdb               0.02         0.63         0.00         0.00       5548          0          0</span>
 </pre></div>
 <h3><strong>-m</strong></h3>
 <p>統計情報を1秒あたりのメガバイト単位で表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-m
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
 <span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
 
-<span style="color: #000; font-style: italic">Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               5.73         0.14         0.12      1221.1    1078.7</span>
-<span style="color: #000; font-style: italic">sdb               0.12         0.00         0.00        29.8       0.0</span>
-</pre></div>
-<h3><strong>-x</strong></h3>
-<p>拡張統計情報を表示し、デバイス使用状況についてより詳細な情報を提供します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-x
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
-
-<span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
-<span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
-
-<span style="color: #000; font-style: italic">Device            r/s     w/s     rkB/s     wkB/s   rrqm/s   wrqm/s  %rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util</span>
-<span style="color: #000; font-style: italic">sda              3.45    2.28    141.02    124.53     0.12     1.35   3.36  37.25    0.42    2.53   0.01    40.88    54.62   0.25   1.43</span>
-<span style="color: #000; font-style: italic">sdb              0.12    0.00      3.45      0.00     0.00     0.00   0.00   0.00    0.35    0.00   0.00    28.75     0.00   0.22   0.03</span>
+<span style="color: #000; font-style: italic">Device             tps    MB_read/s    MB_wrtn/s    MB_dscd/s    MB_read    MB_wrtn    MB_dscd</span>
+<span style="color: #000; font-style: italic">sda               5.73         0.14         0.04         0.00       1221        390          0</span>
+<span style="color: #000; font-style: italic">sdb               0.02         0.00         0.00         0.00          5          0          0</span>
 </pre></div>
 <h3><strong>-p [device]</strong></h3>
-<p>システムで使用されているブロックデバイスとそのすべてのパーティションの統計情報を表示します。</p>
+<p>ブロックデバイスとそのすべてのパーティションの統計情報を表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>sda
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
 <span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               5.73       141.02       124.53    1250432    1104567</span>
-<span style="color: #000; font-style: italic">sda1              0.25         4.32        12.45      38291     110456</span>
-<span style="color: #000; font-style: italic">sda2              5.48       136.70       112.08    1212141     994111</span>
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda               5.73       141.61        45.28         0.00    1250432     399764          0</span>
+<span style="color: #000; font-style: italic">sda1              0.01         0.32         0.00         0.00       2832          0          0</span>
+<span style="color: #000; font-style: italic">sda2              5.71       141.29        45.28         0.00    1247600     399764          0</span>
+</pre></div>
+<h3><strong>-t</strong></h3>
+<p>各レポートの時間を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-t
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
+
+<span style="color: #000; font-style: italic">05/05/2025 10:15:30 AM</span>
+<span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
+<span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
+
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda               5.73       141.61        45.28         0.00    1250432     399764          0</span>
+<span style="color: #000; font-style: italic">sdb               0.02         0.63         0.00         0.00       5548          0          0</span>
 </pre></div>
 <h3><strong>interval [count]</strong></h3>
-<p>レポート間の間隔（秒単位）と生成するレポートの数を指定します。</p>
+<p>レポートの間隔（秒単位）とレポート数を指定します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
 <span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               5.73       141.02       124.53    1250432    1104567</span>
-<span style="color: #000; font-style: italic">sdb               0.12         3.45         0.00      30567          0</span>
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda               5.73       141.61        45.28         0.00    1250432     399764          0</span>
+<span style="color: #000; font-style: italic">sdb               0.02         0.63         0.00         0.00       5548          0          0</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
-<span style="color: #000; font-style: italic">           3.42    0.00    1.56    0.28    0.00   94.74</span>
+<span style="color: #000; font-style: italic">           3.50    0.00    1.75    0.25    0.00   94.50</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               6.50       152.50       138.00         305         276</span>
-<span style="color: #000; font-style: italic">sdb               0.00         0.00         0.00           0           0</span>
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda              10.50       320.00       112.00         0.00        640        224          0</span>
+<span style="color: #000; font-style: italic">sdb               0.00         0.00         0.00         0.00          0          0          0</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
-<span style="color: #000; font-style: italic">           3.36    0.00    1.48    0.32    0.00   94.84</span>
+<span style="color: #000; font-style: italic">           3.38    0.00    1.50    0.12    0.00   95.00</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               5.50       132.00       118.50         264         237</span>
-<span style="color: #000; font-style: italic">sdb               0.50         8.00         0.00          16           0</span>
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda               8.00       256.00        64.00         0.00        512        128          0</span>
+<span style="color: #000; font-style: italic">sdb               0.00         0.00         0.00         0.00          0          0          0</span>
 </pre></div>
 <h2>使用例</h2>
 <h3>拡張統計情報によるディスクI/Oの監視</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-xd<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-xd<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">Device            r/s     w/s     rkB/s     wkB/s   rrqm/s   wrqm/s  %rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util</span>
-<span style="color: #000; font-style: italic">sda              3.45    2.28    141.02    124.53     0.12     1.35   3.36  37.25    0.42    2.53   0.01    40.88    54.62   0.25   1.43</span>
-<span style="color: #000; font-style: italic">sdb              0.12    0.00      3.45      0.00     0.00     0.00   0.00   0.00    0.35    0.00   0.00    28.75     0.00   0.22   0.03</span>
+<span style="color: #000; font-style: italic">sda              4.21    1.52    141.61     45.28     0.10     0.57   2.33  27.29    0.63    2.38   0.01    33.63    29.72   0.28   0.16</span>
+<span style="color: #000; font-style: italic">sdb              0.02    0.00      0.63      0.00     0.00     0.00   0.00   0.00    0.71    0.00   0.00    31.53     0.00   0.57   0.00</span>
 
-<span style="color: #000; font-style: italic">Device            r/s     w/s     rkB/s     wkB/s   rrqm/s   wrqm/s  %rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util</span>
-<span style="color: #000; font-style: italic">sda              4.00    3.50    164.00    156.00     0.00     2.00   0.00  36.36    0.38    2.43   0.01    41.00    44.57   0.27   2.01</span>
-<span style="color: #000; font-style: italic">sdb              0.00    0.00      0.00      0.00     0.00     0.00   0.00   0.00    0.00    0.00   0.00     0.00     0.00   0.00   0.00</span>
-</pre></div>
-<h3>人間が読みやすい形式でのディスク統計情報の表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-dh
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
-
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda              5.73       141.0k       124.5k      1.2G      1.1G</span>
-<span style="color: #000; font-style: italic">sdb              0.12         3.5k         0.0k     30.6M      0.0k</span>
+<span style="color: #000; font-style: italic">[5秒ごとに出力が繰り返されます]</span>
 </pre></div>
 <h3>特定のパーティションの監視</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>sda<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/04/2025  _x86_64_  (8 CPU)</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>sda<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
 
 <span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
 <span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
 
-<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span>
-<span style="color: #000; font-style: italic">sda               5.73       141.02       124.53    1250432    1104567</span>
-<span style="color: #000; font-style: italic">sda1              0.25         4.32        12.45      38291     110456</span>
-<span style="color: #000; font-style: italic">sda2              5.48       136.70       112.08    1212141     994111</span>
+<span style="color: #000; font-style: italic">Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd</span>
+<span style="color: #000; font-style: italic">sda               5.73       141.61        45.28         0.00    1250432     399764          0</span>
+<span style="color: #000; font-style: italic">sda1              0.01         0.32         0.00         0.00       2832          0          0</span>
+<span style="color: #000; font-style: italic">sda2              5.71       141.29        45.28         0.00    1247600     399764          0</span>
 
-<span style="color: #8F5902"># </span>出力は中断されるまで5秒ごとに繰り返されます
+<span style="color: #000; font-style: italic">[2秒ごとに出力が繰り返されます]</span>
 </pre></div>
-<h2>ヒント:</h2>
+<h3>CPUとディスク統計情報をメガバイト単位で表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>iostat<span style="color: #F8F8F8"> </span>-cm<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #000; font-style: italic">Linux 5.15.0-91-generic (hostname)  05/05/2025  _x86_64_  (8 CPU)</span>
+
+<span style="color: #000; font-style: italic">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span>
+<span style="color: #000; font-style: italic">           3.25    0.00    1.42    0.35    0.00   94.98</span>
+
+<span style="color: #000; font-style: italic">[1秒間隔で3回出力が繰り返されます]</span>
+</pre></div>
+<h2>ヒント</h2>
+<h3>%utilの理解</h3>
+<p>%utilメトリックは、デバイスにI/Oリクエストが発行されている間のCPU時間の割合を示します。100%に近い値は飽和状態を示し、デバイスが最大容量で動作していることを意味します。</p>
 <h3>I/Oボトルネックの特定</h3>
-<p>拡張統計情報（<code>-x</code>オプション）の<code>%util</code>列を確認して、使用率が100%に近づいているディスクを特定します。これはボトルネックの可能性を示しています。</p>
-<h3>I/O待ち時間の監視</h3>
-<p><code>r_await</code>と<code>w_await</code>列の値が高い場合、プロセスがI/O操作の完了を待っていることを示し、システムの速度低下の原因となっている可能性があります。</p>
+<p>awaitカラム（I/Oリクエストが処理されるまでの平均時間）の高い値に注目してください。高いawait時間と高い%util値の組み合わせは、潜在的なI/Oボトルネックを示しています。</p>
 <h3>継続的な監視</h3>
-<p>間隔パラメータを使用してディスクアクティビティを継続的に監視します。例えば、<code>iostat 5</code>は5秒ごとに統計情報を更新します。</p>
+<p>リアルタイム監視には、間隔を指定して<code>iostat</code>を使用します（例：<code>iostat -x 2</code>）。これにより、Ctrl+Cで中断されるまで、2秒ごとに統計情報が継続的に更新されます。</p>
 <h3>他のツールとの組み合わせ</h3>
-<p>システムパフォーマンスの包括的な視点を得るために、<code>iostat</code>を<code>top</code>、<code>vmstat</code>、<code>sar</code>などの他の監視ツールと組み合わせて使用します。</p>
-<h3>アクティブなデバイスに焦点を当てる</h3>
-<p>パフォーマンスの問題をトラブルシューティングする際は、トランザクション率（tps）が高く、使用率の割合が高いデバイスに焦点を当てます。</p>
+<p>包括的なシステムパフォーマンス分析のために、<code>iostat</code>を<code>top</code>、<code>vmstat</code>、<code>sar</code>などのツールと組み合わせて使用してください。</p>
 <h2>よくある質問</h2>
-<h4>Q1. CPU統計情報の%iowaitの値は何を意味しますか？</h4>
-<p>A. %iowaitは、システムにディスクI/O要求が保留中であった間にCPUがアイドル状態だった時間の割合を表します。iowait値が高いことは、システムがディスク操作によってボトルネックになっていることを示しています。</p>
-<h4>Q2. iostat -xからの拡張統計情報をどのように解釈すればよいですか？</h4>
-<p>A. 重要な指標には、%util（デバイス使用率）、r_await/w_await（読み取り/書き込み応答時間）、aqu-sz（平均キュー長）があります。高い使用率（&gt;80%）、長い待ち時間、または大きなキューサイズは、潜在的なI/O問題を示しています。</p>
-<h4>Q3. tps、r/s、w/sの違いは何ですか？</h4>
-<p>A. tps（1秒あたりの転送数）は1秒あたりのI/O要求の総数です。r/sとw/sはこれを読み取り要求と書き込み要求に分解したものです。</p>
-<h4>Q4. iostatでNVMeドライブを監視するにはどうすればよいですか？</h4>
-<p>A. NVMeドライブはnvme0n1、nvme1n1などとして表示されます。同じiostatコマンドを使用できます。例：<code>iostat -x nvme0n1</code></p>
-<h4>Q5. なぜiostatの値が実行ごとに異なるのですか？</h4>
-<p>A. iostatの最初のレポートはシステム起動以降の統計情報を示しますが、その後のレポート（間隔を使用する場合）は指定された時間間隔のみの統計情報を示します。</p>
-<h2>参考資料</h2>
+<h4>Q1. CPU統計情報の%iowait値は何を意味しますか？</h4>
+<p>A. %iowaitは、システムがディスクI/Oリクエストを保留している間にCPUがアイドル状態だった時間の割合を表します。高いiowait値は、システムがディスク操作によってボトルネックになっていることを示します。</p>
+<h4>Q2. r_awaitとw_awaitカラムはどのように解釈すればよいですか？</h4>
+<p>A. r_awaitとw_awaitは、読み取りおよび書き込みリクエストが処理されるまでの平均時間（ミリ秒単位）を示し、キュー内の待機時間とサービス時間が含まれます。値が高いほど、I/O操作が遅いことを示します。</p>
+<h4>Q3. tpsとIOPSの違いは何ですか？</h4>
+<p>A. tps（1秒あたりの転送数）は、サイズに関係なく1秒あたりに完了したI/Oリクエストの数を表します。IOPS（1秒あたりのI/O操作数）は本質的に同じメトリックですが、ストレージパフォーマンスの議論でよく使用されます。</p>
+<h4>Q4. 特定のデバイスの統計情報だけを見るにはどうすればよいですか？</h4>
+<p>A. <code>iostat -d デバイス名</code>を使用して、指定したデバイスの統計情報のみを表示します。</p>
+<h2>参考文献</h2>
 <p>https://man7.org/linux/man-pages/man1/iostat.1.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初回改訂</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

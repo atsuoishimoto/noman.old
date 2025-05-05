@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -46,139 +46,124 @@
   <div class="content">
     <main>
       
-  <h1>vmstat コマンド</h1>
-<p>仮想メモリの統計情報を表示し、システムのプロセス、メモリ、ページング、ブロックI/O、トラップ、およびCPUアクティビティに関する情報を提供します。</p>
+  <h1>vmstatコマンド</h1>
+<p>仮想メモリの統計情報を報告します。</p>
 <h2>概要</h2>
-<p><code>vmstat</code>（仮想メモリ統計）は、システムメモリ、プロセス、割り込み、ページング、ブロックI/O、およびCPU使用率に関する情報を表示します。システムパフォーマンスの監視やボトルネックの特定に特に役立ちます。このコマンドは、現在のシステム状態のスナップショットを提供したり、指定した間隔で継続的な監視を行ったりすることができます。</p>
+<p><code>vmstat</code>はシステムメモリ、プロセス、ページング、ブロックI/O、トラップ、CPUアクティビティに関する情報を表示します。システムリソースの使用状況のスナップショットを提供し、特にメモリ、CPU、またはI/Oに関連するパフォーマンスのボトルネックを特定するのに役立ちます。</p>
 <h2>オプション</h2>
-<h3><strong>-a, --active</strong></h3>
+<h3><strong>-a</strong></h3>
 <p>アクティブおよび非アクティブメモリを表示します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-a
 <span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
 <span style="color: #000; font-style: italic"> r  b   swpd   free  inact active   si   so    bi    bo   in   cs us sy id wa st</span>
-<span style="color: #000; font-style: italic"> 1  0      0 6291456 1048576 2097152    0    0     0     2    9   10  1  1 98  0  0</span>
+<span style="color: #000; font-style: italic"> 1  0      0 7123456 2345678 1234567    0    0     0     2   51   92  1  1 98  0  0</span>
 </pre></div>
-<h3><strong>-d, --disk</strong></h3>
-<p>ディスク統計情報を報告します</p>
+<h3><strong>-d</strong></h3>
+<p>ディスク統計情報を表示します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-d
 <span style="color: #000; font-style: italic">disk- ------------reads------------ ------------writes----------- -----IO------</span>
 <span style="color: #000; font-style: italic">       total merged sectors      ms  total merged sectors      ms    cur    sec</span>
-<span style="color: #000; font-style: italic">sda    12687   2713  972490   13002  15748  23182  313544   62692      0     19</span>
-<span style="color: #000; font-style: italic">sdb     1044      0   33512     708   2106      0   16848     308      0      0</span>
+<span style="color: #000; font-style: italic">sda    12687   2713  972258   13364  10347   9944 1766952   23694      0     11</span>
 </pre></div>
-<h3><strong>-s, --stats</strong></h3>
-<p>様々なイベントカウンターとメモリ統計の表を表示します</p>
+<h3><strong>-s</strong></h3>
+<p>様々なイベントカウンターとメモリ統計情報のテーブルを表示します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-s
-<span style="color: #000; font-style: italic">      8167848 K total memory</span>
-<span style="color: #000; font-style: italic">      1872016 K used memory</span>
-<span style="color: #000; font-style: italic">      1224268 K active memory</span>
-<span style="color: #000; font-style: italic">       525148 K inactive memory</span>
-<span style="color: #000; font-style: italic">      6295832 K free memory</span>
-<span style="color: #000; font-style: italic">       226748 K buffer memory</span>
-<span style="color: #000; font-style: italic">      1654304 K swap cache</span>
+<span style="color: #000; font-style: italic">      8169348 K total memory</span>
+<span style="color: #000; font-style: italic">       986168 K used memory</span>
+<span style="color: #000; font-style: italic">      1247848 K active memory</span>
+<span style="color: #000; font-style: italic">      2345678 K inactive memory</span>
+<span style="color: #000; font-style: italic">      7183180 K free memory</span>
+<span style="color: #000; font-style: italic">        16384 K buffer memory</span>
+<span style="color: #000; font-style: italic">      1983616 K swap cache</span>
 <span style="color: #000; font-style: italic">      8388604 K total swap</span>
 <span style="color: #000; font-style: italic">            0 K used swap</span>
 <span style="color: #000; font-style: italic">      8388604 K free swap</span>
-<span style="color: #000; font-style: italic">        24818 non-nice user cpu ticks</span>
-<span style="color: #000; font-style: italic">          226 nice user cpu ticks</span>
-<span style="color: #000; font-style: italic">        18911 system cpu ticks</span>
-<span style="color: #000; font-style: italic">      2137707 idle cpu ticks</span>
-<span style="color: #000; font-style: italic">         2660 IO-wait cpu ticks</span>
+<span style="color: #000; font-style: italic">       123456 non-nice user cpu ticks</span>
+<span style="color: #000; font-style: italic">          234 nice user cpu ticks</span>
+<span style="color: #000; font-style: italic">        56789 system cpu ticks</span>
+<span style="color: #000; font-style: italic">     12345678 idle cpu ticks</span>
+<span style="color: #000; font-style: italic">         1234 IO-wait cpu ticks</span>
 <span style="color: #000; font-style: italic">            0 IRQ cpu ticks</span>
-<span style="color: #000; font-style: italic">         1367 softirq cpu ticks</span>
+<span style="color: #000; font-style: italic">          123 softirq cpu ticks</span>
 <span style="color: #000; font-style: italic">            0 stolen cpu ticks</span>
-<span style="color: #000; font-style: italic">       772844 pages paged in</span>
-<span style="color: #000; font-style: italic">      1492454 pages paged out</span>
+<span style="color: #000; font-style: italic">       567890 pages paged in</span>
+<span style="color: #000; font-style: italic">      1234567 pages paged out</span>
 <span style="color: #000; font-style: italic">            0 pages swapped in</span>
 <span style="color: #000; font-style: italic">            0 pages swapped out</span>
-<span style="color: #000; font-style: italic">      2838484 interrupts</span>
-<span style="color: #000; font-style: italic">      6547301 CPU context switches</span>
-<span style="color: #000; font-style: italic">   1588876743 boot time</span>
-<span style="color: #000; font-style: italic">        16793 forks</span>
+<span style="color: #000; font-style: italic">      5678901 interrupts</span>
+<span style="color: #000; font-style: italic">     12345678 CPU context switches</span>
+<span style="color: #000; font-style: italic">   1234567890 boot time</span>
+<span style="color: #000; font-style: italic">        12345 forks</span>
 </pre></div>
-<h3><strong>-t, --timestamp</strong></h3>
-<p>各行にタイムスタンプを追加します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu----- -----timestamp-----</span>
-<span style="color: #000; font-style: italic"> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st                 EDT</span>
-<span style="color: #000; font-style: italic"> 0  0      0 6295832 226748 1654304    0    0     0     2    9   10  1  1 98  0  0 2025-05-04 10:15:01</span>
-<span style="color: #000; font-style: italic"> 0  0      0 6295832 226748 1654304    0    0     0     0  104  168  0  0 100  0  0 2025-05-04 10:15:02</span>
-<span style="color: #000; font-style: italic"> 0  0      0 6295832 226748 1654304    0    0     0     0  104  167  0  0 100  0  0 2025-05-04 10:15:03</span>
-</pre></div>
-<h3><strong>-S, --unit [k|K|m|M]</strong></h3>
-<p>出力を1000（k）、1024（K）、1000000（m）、または1048576（M）バイト間で切り替えます</p>
+<h3><strong>-S</strong></h3>
+<p>メモリ値を表示する単位サイズ（k、K、m、M）を指定します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-S<span style="color: #F8F8F8"> </span>M
 <span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
 <span style="color: #000; font-style: italic"> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st</span>
-<span style="color: #000; font-style: italic"> 0  0      0   6002    216   1578    0    0     0     2    9   10  1  1 98  0  0</span>
+<span style="color: #000; font-style: italic"> 1  0      0   6953      0   1937    0    0     0     2   51   92  1  1 98  0  0</span>
 </pre></div>
-<h2>使用例</h2>
-<h3>間隔とカウントを指定した基本的な使用法</h3>
+<h3><strong>interval [count]</strong></h3>
+<p>指定した間隔（秒単位）で統計情報を継続的に表示します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
 <span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
 <span style="color: #000; font-style: italic"> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st</span>
-<span style="color: #000; font-style: italic"> 1  0      0 6295832 226748 1654304    0    0     0     2    9   10  1  1 98  0  0</span>
-<span style="color: #000; font-style: italic"> 0  0      0 6295832 226748 1654304    0    0     0     0  104  168  0  0 100  0  0</span>
-<span style="color: #000; font-style: italic"> 0  0      0 6295832 226748 1654304    0    0     0     0  103  166  0  0 100  0  0</span>
-<span style="color: #000; font-style: italic"> 0  0      0 6295832 226748 1654304    0    0     0     0  105  169  0  0 100  0  0</span>
-<span style="color: #000; font-style: italic"> 0  0      0 6295832 226748 1654304    0    0     0    12  106  171  0  0 100  0  0</span>
+<span style="color: #000; font-style: italic"> 1  0      0 7123456  16384 1983616    0    0     0     2   51   92  1  1 98  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 7123456  16384 1983616    0    0     0     0   45   89  0  0 100  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 7123456  16384 1983616    0    0     0     0   46   88  0  0 100  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 7123456  16384 1983616    0    0     0     0   45   87  0  0 100  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 7123456  16384 1983616    0    0     0    12   48   90  0  0 99  1  0</span>
 </pre></div>
-<h3>ディスクアクティビティの監視</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #000; font-style: italic">disk- ------------reads------------ ------------writes----------- -----IO------</span>
-<span style="color: #000; font-style: italic">       total merged sectors      ms  total merged sectors      ms    cur    sec</span>
-<span style="color: #000; font-style: italic">sda    12687   2713  972490   13002  15748  23182  313544   62692      0     19</span>
-<span style="color: #000; font-style: italic">sdb     1044      0   33512     708   2106      0   16848     308      0      0</span>
-
-<span style="color: #000; font-style: italic">disk- ------------reads------------ ------------writes----------- -----IO------</span>
-<span style="color: #000; font-style: italic">       total merged sectors      ms  total merged sectors      ms    cur    sec</span>
-<span style="color: #000; font-style: italic">sda    12687   2713  972490   13002  15748  23182  313544   62692      0     19</span>
-<span style="color: #000; font-style: italic">sdb     1044      0   33512     708   2106      0   16848     308      0      0</span>
-
-<span style="color: #000; font-style: italic">disk- ------------reads------------ ------------writes----------- -----IO------</span>
-<span style="color: #000; font-style: italic">       total merged sectors      ms  total merged sectors      ms    cur    sec</span>
-<span style="color: #000; font-style: italic">sda    12687   2713  972490   13002  15749  23182  313552   62692      0     19</span>
-<span style="color: #000; font-style: italic">sdb     1044      0   33512     708   2106      0   16848     308      0      0</span>
+<h2>使用例</h2>
+<h3>基本的なメモリとCPU統計情報</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat
+<span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
+<span style="color: #000; font-style: italic"> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st</span>
+<span style="color: #000; font-style: italic"> 1  0      0 7123456  16384 1983616    0    0     0     2   51   92  1  1 98  0  0</span>
 </pre></div>
-<h3>メモリ統計の表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>memory
-<span style="color: #000; font-style: italic">      8167848 K total memory</span>
-<span style="color: #000; font-style: italic">      1872016 K used memory</span>
-<span style="color: #000; font-style: italic">      1224268 K active memory</span>
-<span style="color: #000; font-style: italic">       525148 K inactive memory</span>
-<span style="color: #000; font-style: italic">      6295832 K free memory</span>
-<span style="color: #000; font-style: italic">       226748 K buffer memory</span>
+<h3>5秒ごとに10回繰り返してシステムパフォーマンスを監視</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>
+<span style="color: #000; font-style: italic">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span>
+<span style="color: #000; font-style: italic"> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st</span>
+<span style="color: #000; font-style: italic"> 1  0      0 7123456  16384 1983616    0    0     0     2   51   92  1  1 98  0  0</span>
+<span style="color: #000; font-style: italic"> 0  0      0 7123456  16384 1983616    0    0     0     0   45   89  0  0 100  0  0</span>
+<span style="color: #000; font-style: italic">[さらに8回の出力が続きます]</span>
 </pre></div>
-<h2>ヒント:</h2>
-<h3>出力フィールドの理解</h3>
+<h3>タイムスタンプ付きでディスク統計情報を表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>vmstat<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>-t
+<span style="color: #000; font-style: italic">disk- ------------reads------------ ------------writes----------- -----IO------   ----timestamp----</span>
+<span style="color: #000; font-style: italic">       total merged sectors      ms  total merged sectors      ms    cur    sec</span>
+<span style="color: #000; font-style: italic">sda    12687   2713  972258   13364  10347   9944 1766952   23694      0     11   2025-05-05 10:15:30</span>
+</pre></div>
+<h2>ヒント</h2>
+<h3>出力列の理解</h3>
 <ul>
-<li><strong>procs</strong>: 'r'は実行可能なプロセス（実行中または実行時間待ち）、'b'は割り込み不可能なスリープ状態のプロセスを示します</li>
-<li><strong>memory</strong>: 'swpd'は使用中の仮想メモリ、'free'はアイドル状態のメモリ、'buff'はバッファとして使用されるメモリ、'cache'はキャッシュとして使用されるメモリです</li>
-<li><strong>swap</strong>: 'si'はディスクからスワップインされたメモリ、'so'はディスクにスワップアウトされたメモリです</li>
-<li><strong>io</strong>: 'bi'はブロックデバイスから受信したブロック、'bo'はブロックデバイスに送信したブロックです</li>
-<li><strong>system</strong>: 'in'は1秒あたりの割り込み数、'cs'は1秒あたりのコンテキストスイッチ数です</li>
-<li><strong>cpu</strong>: ユーザーモード('us')、システムモード('sy')、アイドル('id')、I/O待ち('wa')、仮想マシンから盗まれた('st')の合計CPU時間の割合です</li>
+<li><strong>procs</strong>: <code>r</code>は実行可能なプロセス、<code>b</code>はブロックされたプロセスを示します</li>
+<li><strong>memory</strong>: <code>swpd</code>は使用された仮想メモリ、<code>free</code>はアイドル状態のメモリです</li>
+<li><strong>swap</strong>: <code>si</code>はスワップインされたメモリ、<code>so</code>はスワップアウトされたメモリです</li>
+<li><strong>io</strong>: <code>bi</code>はブロックデバイスから受信したブロック、<code>bo</code>は送信したブロックです</li>
+<li><strong>system</strong>: <code>in</code>は1秒あたりの割り込み、<code>cs</code>はコンテキストスイッチです</li>
+<li><strong>cpu</strong>: CPUタイムの割合（ユーザーモード<code>us</code>、システムモード<code>sy</code>、アイドル<code>id</code>、I/O待ち<code>wa</code>、ハイパーバイザーに奪われた<code>st</code>）</li>
 </ul>
 <h3>最初の行と後続の行の違い</h3>
-<p>出力の最初の行は前回の再起動以降の平均値を示し、後続の行はサンプリング期間の情報を示します。現在の統計情報については、常に2行目以降を見るようにしましょう。</p>
-<h3>メモリのボトルネックの特定</h3>
-<p>'si'と'so'の値が高い場合は、過剰なスワッピングを示しており、システムにより多くのRAMが必要か、メモリ使用量の最適化が必要であることを示唆しています。</p>
-<h3>I/O問題の検出</h3>
-<p>CPU部分の'wa'（I/O待ち）の割合が高い場合は、システムがディスク操作の完了を待つのに多くの時間を費やしていることを示しています。</p>
+<p><code>vmstat</code>出力の最初の行は前回の再起動からの平均値を示し、後続の行は指定された間隔中のアクティビティを示します。リアルタイム分析では、最初の行の後の行に注目してください。</p>
+<h3>メモリ圧迫の識別</h3>
+<p><code>si</code>と<code>so</code>列の高い値は、システムがメモリをディスクにスワップしていることを示し、パフォーマンスに深刻な影響を与える可能性があります。これは、より多くのRAMが必要か、メモリ使用量を最適化する必要があることを示唆しています。</p>
+<h3>I/Oボトルネックの検出</h3>
+<p>CPU統計の<code>wa</code>列の高い値は、プロセスがI/O操作の完了を待っていることを示します。これはディスクのボトルネックを示している可能性があります。</p>
 <h2>よくある質問</h2>
-<h4>Q1. vmstat出力の'r'列は何を意味していますか？</h4>
-<p>A. 'r'列は実行時間を待っているプロセスの数を示します。高い数値（CPUコア数より大きい）はCPUの競合を示しています。</p>
-<h4>Q2. vmstatでメモリ使用量を監視するにはどうすればよいですか？</h4>
-<p>A. 詳細なメモリ統計を見るには<code>vmstat -s</code>を使用するか、アクティブ/非アクティブメモリを見るには<code>vmstat -a</code>を使用します。継続的な監視には、間隔を追加します：<code>vmstat 5</code>。</p>
-<h4>Q3. バッファメモリとキャッシュメモリの違いは何ですか？</h4>
-<p>A. バッファメモリ（'buff'）はディスクブロック操作に使用され、キャッシュメモリ（'cache'）はファイルシステムデータに使用されます。どちらもアプリケーションがメモリを必要とするときに再利用できます。</p>
-<h4>Q4. 高い'wa'（I/O待ち）値をどう解釈すればよいですか？</h4>
-<p>A. I/O待ち時間の割合が高い（10％以上）場合、CPUがディスク操作の完了を待っていることを示します。これは、より高速なストレージやI/Oの最適化で解決できるディスクI/Oのボトルネックを示唆しています。</p>
+<h4>Q1. 'r'列の高い値は何を示しますか？</h4>
+<p>A. 'r'列の高い数値は、多くのプロセスがCPU時間を待っていることを示し、CPUの競合または不十分なCPUリソースを示唆しています。</p>
+<h4>Q2. vmstatでのスワップアクティビティをどのように解釈すればよいですか？</h4>
+<p>A. 'si'と'so'列はスワップインとスワップアウトのアクティビティを示します。ゼロ以外の値はシステムがスワップスペースを使用していることを示し、パフォーマンスが低下する可能性があります。一貫して高い値はメモリ不足を示唆しています。</p>
+<h4>Q3. メモリセクションの'buff'と'cache'の違いは何ですか？</h4>
+<p>A. 'buff'（バッファ）はファイルシステムのメタデータに使用されるメモリで、'cache'はファイルの内容に使用されるメモリです。どちらもファイルシステムのパフォーマンスを向上させるために使用され、アプリケーションがメモリを必要とするときに再利用できます。</p>
+<h4>Q4. vmstatでディスクI/Oを監視するにはどうすればよいですか？</h4>
+<p>A. <code>vmstat -d</code>を使用して、読み取り、書き込み、I/O時間を含む詳細なディスク統計情報を表示します。</p>
 <h2>参考文献</h2>
 <p>https://man7.org/linux/man-pages/man8/vmstat.8.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初回改訂</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

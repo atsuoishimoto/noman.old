@@ -4,13 +4,13 @@ Print the full pathname of the current working directory.
 
 ## Overview
 
-The `pwd` command displays the absolute path of the current directory you're in. This helps you understand your location within the filesystem hierarchy, which is especially useful when navigating between directories or writing scripts that need to reference file locations.
+The `pwd` command displays the absolute path of the directory you are currently in. This helps you understand your location within the filesystem hierarchy, which is especially useful when navigating between directories or writing scripts that need to reference the current location.
 
 ## Options
 
 ### **-L, --logical**
 
-Print the logical current working directory, using the environment variable PWD. This follows symbolic links, showing the path as you navigated to it.
+Print the logical current working directory, with symbolic links in the path resolved as encountered (default behavior).
 
 ```console
 $ pwd -L
@@ -19,15 +19,11 @@ $ pwd -L
 
 ### **-P, --physical**
 
-Print the physical current working directory, with all symbolic links resolved. This shows the actual location in the filesystem.
+Print the physical current working directory, with all symbolic links resolved.
 
 ```console
-$ ln -s /var/www/html webroot
-$ cd webroot
-$ pwd -L
-/home/user/webroot
 $ pwd -P
-/var/www/html
+/var/www/html/projects
 ```
 
 ## Usage Examples
@@ -42,44 +38,50 @@ $ pwd
 ### Using pwd in scripts
 
 ```console
-$ echo "Current directory is $(pwd)"
-Current directory is /home/user/documents
+$ echo "Current directory: $(pwd)"
+Current directory: /home/user/documents
 ```
 
-## Tips
+### Comparing logical vs physical paths
+
+```console
+$ cd /home/user/symlink_to_projects
+$ pwd -L
+/home/user/symlink_to_projects
+$ pwd -P
+/home/user/actual/projects
+```
+
+## Tips:
 
 ### Use in Shell Scripts
 
-Store the current directory in a variable before changing directories, so you can return later:
-
-```console
-$ original_dir=$(pwd)
-$ cd /tmp
-$ # Do some work...
-$ cd "$original_dir"  # Return to where you started
+Store the current directory in a variable to reference it later in your script:
+```bash
+CURRENT_DIR=$(pwd)
+cd /some/other/directory
+# Do some work
+cd "$CURRENT_DIR"  # Return to original directory
 ```
 
-### Avoid Trailing Newlines
+### Avoid Hardcoding Paths
 
-When using `pwd` in scripts or command substitution, you might want to use `$(pwd)` rather than backticks to avoid potential issues with trailing newlines.
+Instead of hardcoding paths in scripts, use `pwd` to make scripts more portable across different systems.
 
-### Resolving Symlink Confusion
+### Troubleshooting Symbolic Links
 
-If you're working with symbolic links and getting confused about your actual location, use `pwd -P` to see the physical path.
+When working with symbolic links, use `pwd -P` to see where files are actually stored on disk, which can help troubleshoot permission issues.
 
 ## Frequently Asked Questions
 
-#### Q1. What does "pwd" stand for?
-A. "pwd" stands for "print working directory."
+#### Q1. What is the difference between `pwd` and `echo $PWD`?
+A. They typically show the same result, but `$PWD` is an environment variable that stores the current directory path. `pwd` is a command that actively determines the current directory.
 
-#### Q2. What's the difference between -L and -P options?
-A. `-L` follows symbolic links and shows the path as you navigated to it, while `-P` resolves all symbolic links and shows the actual physical path.
+#### Q2. Why might `pwd -P` and `pwd -L` show different results?
+A. They differ when your current directory contains symbolic links. `-L` shows the path with symbolic links intact, while `-P` resolves all symbolic links to show the actual physical path.
 
-#### Q3. How can I use pwd in a bash script?
-A. You can use `current_dir=$(pwd)` to store the current directory in a variable, or use it directly in commands like `echo "I am in $(pwd)"`.
-
-#### Q4. Does pwd work the same on all Unix/Linux systems?
-A. The basic functionality is the same across systems, but some options might vary between different implementations (GNU, BSD, etc.).
+#### Q3. Does `pwd` work the same on all Unix-like systems?
+A. The basic functionality is the same, but there might be slight differences in available options between GNU/Linux, macOS, and other Unix variants.
 
 ## References
 
@@ -87,4 +89,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/pwd-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

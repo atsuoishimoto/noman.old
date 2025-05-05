@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -49,64 +49,65 @@
   <h1>groupmod コマンド</h1>
 <p>システム上のグループ定義を変更します。</p>
 <h2>概要</h2>
-<p><code>groupmod</code> コマンドは、Linux や Unix システム上の既存のグループの属性を変更するために使用されます。グループ名（GID）や数値グループ ID を変更することができます。このコマンドは、通常、システム管理者がユーザーとグループアカウントを管理する際に使用されます。</p>
+<p><code>groupmod</code> コマンドは、Unix/Linuxシステム上の既存のグループの属性を変更するために使用されます。グループ名（GID）や数値ID（GID）を変更でき、管理者がグループアカウントを効率的に管理できるようにします。</p>
 <h2>オプション</h2>
 <h3><strong>-g, --gid GID</strong></h3>
-<p>グループ ID を指定された値に変更します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1005</span><span style="color: #F8F8F8"> </span>developers
+<p>グループIDを指定した値に変更します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1001</span><span style="color: #F8F8F8"> </span>developers
 </pre></div>
-<h3><strong>-n, --new-name 新グループ名</strong></h3>
-<p>グループの名前を新しい名前に変更します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>programmers<span style="color: #F8F8F8"> </span>developers
+<h3><strong>-n, --new-name NEW_GROUP</strong></h3>
+<p>グループの名前をGROUPからNEW_GROUPに変更します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>engineering<span style="color: #F8F8F8"> </span>developers
 </pre></div>
 <h3><strong>-o, --non-unique</strong></h3>
-<p>重複するGIDの使用を許可します（通常、GIDは一意である必要があります）。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1005</span><span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>testers
+<p>一意でないGIDの使用を許可します（通常、GIDは一意である必要があります）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1001</span><span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>marketing
 </pre></div>
-<h3><strong>-p, --password パスワード</strong></h3>
-<p>グループのパスワードを暗号化されたパスワードに変更します。</p>
+<h3><strong>-p, --password PASSWORD</strong></h3>
+<p>グループのパスワードを暗号化されたPASSWORDに変更します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>encrypted_password<span style="color: #F8F8F8"> </span>developers
 </pre></div>
 <h3><strong>-R, --root CHROOT_DIR</strong></h3>
-<p>CHROOT_DIR ディレクトリ内で変更を適用し、CHROOT_DIR ディレクトリから設定ファイルを使用します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span>/mnt/system<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>programmers<span style="color: #F8F8F8"> </span>developers
+<p>CHROOT_DIRディレクトリ内で変更を適用し、CHROOT_DIRディレクトリから設定ファイルを使用します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-R<span style="color: #F8F8F8"> </span>/mnt/system<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>engineering<span style="color: #F8F8F8"> </span>developers
 </pre></div>
 <h2>使用例</h2>
 <h3>グループ名の変更</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>engineering<span style="color: #F8F8F8"> </span>developers
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>developers<span style="color: #F8F8F8"> </span>programmers
 </pre></div>
-<p>これにより、グループ名が「developers」から「engineering」に変更されますが、同じ GID が維持されます。</p>
-<h3>グループの GID の変更</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2000</span><span style="color: #F8F8F8"> </span>engineering
+<h3>グループのGIDの変更</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2000</span><span style="color: #F8F8F8"> </span>developers
 </pre></div>
-<p>これにより、「engineering」グループの GID が 2000 に変更されます。</p>
-<h3>名前と GID の両方を変更</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>tech-team<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2500</span><span style="color: #F8F8F8"> </span>engineering
+<h3>名前とGIDの両方を変更</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>groupmod<span style="color: #F8F8F8"> </span>-g<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2000</span><span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span>engineering<span style="color: #F8F8F8"> </span>developers
 </pre></div>
-<p>これにより、グループ名が「engineering」から「tech-team」に変更され、GID が 2500 に変更されます。</p>
 <h2>ヒント:</h2>
-<h3>変更前にグループ情報を確認する</h3>
-<p>変更を行う前に、<code>getent group グループ名</code>を使用して現在のグループ情報を確認し、正しい情報を持っていることを確認しましょう。</p>
-<h3>GID 変更後にファイル所有権を更新する</h3>
-<p>グループの GID を変更した後、<code>find /path -group 古いgid -exec chgrp 新しいgid {} \;</code>を使用してファイル所有権を更新し、ファイルへの適切なアクセスを維持する必要があるかもしれません。</p>
-<h3>変更前にバックアップを取る</h3>
-<p>重要なシステムでは、<code>groupmod</code>で変更を行う前に、<code>/etc/group</code>と<code>/etc/gshadow</code>ファイルをバックアップすることを検討してください。</p>
-<h3>注意して使用する</h3>
-<p>グループ ID の変更は、システム全体のファイルのアクセス権と権限に影響を与える可能性があります。可能であれば、メンテナンス時間中に変更を行いましょう。</p>
+<h3>グループの変更を確認する</h3>
+<p>グループを変更した後、<code>getent group</code>コマンドを使用して変更を確認します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>getent<span style="color: #F8F8F8"> </span>group<span style="color: #F8F8F8"> </span>engineering
+</pre></div>
+<h3>ファイルの所有権を考慮する</h3>
+<p>グループのGIDを変更する場合、古いGIDが所有するファイルは自動的に更新されません。<code>find</code>と<code>chgrp</code>を使用してファイルの所有権を更新します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>/path/to/directory<span style="color: #F8F8F8"> </span>-group<span style="color: #F8F8F8"> </span>old_gid<span style="color: #F8F8F8"> </span>-exec<span style="color: #F8F8F8"> </span>chgrp<span style="color: #F8F8F8"> </span>new_gid<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\;</span>
+</pre></div>
+<h3>実行中のプロセスを確認する</h3>
+<p>実行中のプロセスが使用しているグループを変更する前に、そのグループを使用しているプロセスがあるかどうかを確認します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>-eo<span style="color: #F8F8F8"> </span>group<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>groupname
+</pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. GID を変更すると、そのグループが所有するファイルはどうなりますか？</h4>
-<p>A. ファイルは新しい GID ではなく、古い GID 番号を参照し続けます。<code>chgrp</code>コマンドを使用して手動でファイルの所有権を更新する必要があります。</p>
-<h4>Q2. グループ名と GID を同時に変更できますか？</h4>
+<h4>Q1. グループの名前とGIDを同時に変更できますか？</h4>
 <p>A. はい、<code>-n</code>と<code>-g</code>オプションを1つのコマンドで一緒に使用できます。</p>
-<h4>Q3. グループがユーザーによって使用されているかどうかを確認するにはどうすればよいですか？</h4>
-<p>A. <code>grep グループ名 /etc/group /etc/passwd</code>を使用して、グループが任意のユーザーの主要または二次グループとしてリストされているかどうかを確認できます。</p>
-<h4>Q4. 既に存在する名前にグループの名前を変更しようとするとどうなりますか？</h4>
-<p>A. コマンドは失敗し、グループがすでに存在することを示すエラーメッセージが表示されます。</p>
-<h2>参考資料</h2>
-<p>https://www.man7.org/linux/man-pages/man8/groupmod.8.html</p>
+<h4>Q2. GIDを変更した場合、そのグループが所有するファイルはどうなりますか？</h4>
+<p>A. ファイルは引き続き古いGID番号を参照します。<code>chgrp</code>などのコマンドを使用して、ファイルの所有権を手動で更新する必要があります。</p>
+<h4>Q3. グループのGIDを別のグループと同じにすることはできますか？</h4>
+<p>A. はい、<code>-o</code>（非一意）オプションを使用する場合のみ可能です。ただし、混乱を招く可能性があるため、一般的には推奨されません。</p>
+<h4>Q4. グループ名を変更すると、そのグループのメンバーであるユーザーに影響しますか？</h4>
+<p>A. いいえ、グループ名の変更はそのメンバーシップには影響しません。古いグループ名のメンバーだったユーザーは、自動的に新しいグループ名のメンバーになります。</p>
+<h2>参考文献</h2>
+<p>https://man7.org/linux/man-pages/man8/groupmod.8.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初回改訂</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -46,76 +46,68 @@
   <div class="content">
     <main>
       
-  <h1>eval コマンド</h1>
-<p>引数からコマンドを構築して実行します。</p>
+  <h1>evalコマンド</h1>
+<p>引数をシェルコマンドとして評価し実行します。</p>
 <h2>概要</h2>
-<p><code>eval</code> コマンドは、引数をシェルコマンドとして評価・実行します。引数を単一の文字列に結合し、その文字列を現在のシェル環境でコマンドとして実行します。これは、動的にコマンドを構築したり、変数に格納されたコマンドを実行したりする場合に特に便利です。</p>
+<p><code>eval</code>コマンドは、その引数を連結してコマンドを構築し、結果として得られるコマンドを現在のシェル環境で実行します。変数に格納されたコマンドや動的に生成されたコマンドを実行するのに役立ち、動的なコマンド構築と実行を可能にします。</p>
 <h2>オプション</h2>
-<p><code>eval</code> コマンド自体には特定のオプションはありません。単に引数を受け取り、それらをシェルコマンドとして実行するだけです。提供されるオプションはすべて、評価されるコマンドに渡されます。</p>
+<p><code>eval</code>には特定のコマンドラインオプションはありません。単に引数の文字列を受け取り、それをシェルコマンドとして実行します。</p>
 <h2>使用例</h2>
 <h3>基本的な使い方</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;echo Hello, World!&quot;</span>
 <span style="color: #000; font-style: italic">Hello, World!</span>
 </pre></div>
-<h3>変数を使ったコマンド</h3>
+<h3>コマンドでの変数の使用</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">command</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;ls -la&quot;</span>
 <span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #000">$command</span>
 <span style="color: #000; font-style: italic">total 32</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  5 user  staff   160 May  4 10:23 .</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff    96 May  4 10:20 ..</span>
-<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1024 May  4 10:22 file1.txt</span>
-<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  2048 May  4 10:23 file2.txt</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  2 user  staff    64 May  4 10:21 directory</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  5 user  staff   160 May  5 10:30 .</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff    96 May  4 09:15 ..</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  2048 May  5 10:25 file1.txt</span>
+<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1024 May  4 15:30 file2.txt</span>
 </pre></div>
 <h3>動的なコマンド構築</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">file</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;document.txt&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #000">action</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;cat&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$action</span><span style="color: #4E9A06"> </span><span style="color: #000">$file</span><span style="color: #4E9A06">&quot;</span>
-<span style="color: #000; font-style: italic">This is the content of document.txt</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">action</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;echo&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">target</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;Current date:&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">value</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">$(</span>date<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$action</span><span style="color: #4E9A06"> </span><span style="color: #000">$target</span><span style="color: #4E9A06"> </span><span style="color: #000">$value</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">Current date: Mon May 5 10:35:22 EDT 2025</span>
 </pre></div>
-<h3>複数の引数を持つコマンド</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">options</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;-l -a&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #000">directory</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;/tmp&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ls </span><span style="color: #000">$options</span><span style="color: #4E9A06"> </span><span style="color: #000">$directory</span><span style="color: #4E9A06">&quot;</span>
-<span style="color: #000; font-style: italic">total 16</span>
-<span style="color: #000; font-style: italic">drwxrwxrwt  5 root  wheel   160 May  4 10:30 .</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x 20 root  wheel   640 May  4 09:15 ..</span>
-<span style="color: #000; font-style: italic">-rw-r--r--  1 user  wheel  1024 May  4 10:25 temp1.txt</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  2 user  wheel    64 May  4 10:28 tempdir</span>
+<h3>変数の動的な設定</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">var_name</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;my_variable&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #000">var_value</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;Hello from eval&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$var_name</span><span style="color: #4E9A06">=&#39;</span><span style="color: #000">$var_value</span><span style="color: #4E9A06">&#39;&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$my_variable</span>
+<span style="color: #000; font-style: italic">Hello from eval</span>
 </pre></div>
 <h2>ヒント:</h2>
 <h3>引用符を慎重に使用する</h3>
-<p><code>eval</code> で変数を使用する場合は、単語分割や予期しない動作を防ぐために、常に変数を引用符で囲みましょう：</p>
+<p><code>eval</code>への引数は常に引用符で囲み、予期しない単語分割やグロブを防ぐようにしましょう。これは、コマンドに変数や特殊文字が含まれている場合に特に重要です。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">filename</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;my file.txt&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;echo </span><span style="color: #000">$filename</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 不適切: &quot;my&quot;と&quot;file.txt&quot;として解釈される</span>
-<span style="color: #000; font-style: italic">my file.txt</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;echo \&quot;</span><span style="color: #000">$filename</span><span style="color: #4E9A06">\&quot;&quot;</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># 適切: スペースが保持される</span>
-<span style="color: #000; font-style: italic">my file.txt</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;touch \&quot;</span><span style="color: #000">$filename</span><span style="color: #4E9A06">\&quot;&quot;</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># 正しい方法: &quot;my file.txt&quot;という名前のファイルを作成する</span>
 </pre></div>
-<h3>セキュリティ上の考慮事項</h3>
-<p>ユーザー入力や信頼できないデータと一緒に <code>eval</code> を使用する場合は、コマンドインジェクションの脆弱性につながる可能性があるため、非常に注意が必要です。より単純な代替手段がある場合は、<code>eval</code> の使用を避けましょう。</p>
+<h3>セキュリティに関する考慮事項</h3>
+<p>ユーザー入力や信頼できないデータで<code>eval</code>を使用する場合は、任意のコマンドを実行する可能性があるため、細心の注意を払ってください。<code>eval</code>に渡す前に、必ず入力を検証およびサニタイズしてください。</p>
 <h3>evalコマンドのデバッグ</h3>
-<p><code>eval</code> が実際に実行せずにどのようなコマンドを実行するかを確認するには、まず <code>echo</code> を使用します：</p>
+<p><code>eval</code>が実際に実行せずにどのようなコマンドを実行するかを確認するには、まず<code>echo</code>を使用します：</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">cmd</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;ls -la /tmp&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$cmd</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$cmd</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># 実行されるコマンドをプレビュー</span>
 <span style="color: #000; font-style: italic">ls -la /tmp</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">eval</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$cmd</span><span style="color: #4E9A06">&quot;</span>
-<span style="color: #000; font-style: italic">[ls -la /tmpの出力]</span>
 </pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. <code>eval</code> はいつ使うべきですか？</h4>
-<p>A. コマンドを動的に構築して実行する必要がある場合、特にコマンド構造が変数に格納されているか、実行時に生成される場合に <code>eval</code> を使用します。</p>
-<h4>Q2. なぜ <code>eval</code> は危険と考えられているのですか？</h4>
-<p>A. <code>eval</code> は引数をシェルコマンドとして実行するため、それらの引数に信頼できない入力が含まれている場合、セキュリティ脆弱性につながる可能性があります。これにより、コマンドインジェクション攻撃が可能になる恐れがあります。</p>
-<h4>Q3. <code>eval</code> の代替手段はありますか？</h4>
-<p>A. はい、ユースケースによります。単純な変数展開の場合、パラメータ置換で十分なことが多いです。より複雑なケースでは、関数、配列、コマンド置換の使用を検討してください。</p>
-<h4>Q4. <code>eval</code> はエラーをどのように処理しますか？</h4>
-<p>A. <code>eval</code> は実行された最後のコマンドの終了ステータスを返します。コマンド文字列が構文的に正しくない場合、ゼロ以外の終了ステータスを返します。</p>
+<h4>Q1. いつ<code>eval</code>を使用すべきですか？</h4>
+<p>A. コマンド構造が変数に格納されている場合や実行時に生成される場合など、動的にコマンドを構築して実行する必要がある場合に<code>eval</code>を使用します。</p>
+<h4>Q2. <code>eval</code>の使用は危険ですか？</h4>
+<p>A. はい、<code>eval</code>は信頼できない入力と共に使用すると危険です。渡されたコマンドを何でも実行するためです。<code>eval</code>で使用する前に、常に入力を検証してください。</p>
+<h4>Q3. <code>eval</code>と単純にコマンドを実行することの違いは何ですか？</h4>
+<p>A. <code>eval</code>は実行前にシェル展開の追加ラウンドを実行し、変数内の変数を展開したり、複雑なコマンド構造を動的に構築したりすることができます。</p>
+<h4>Q4. ユーザー入力で<code>eval</code>を安全に使用するにはどうすればよいですか？</h4>
+<p>A. 一般的に、ユーザー入力で<code>eval</code>を使用することは避けるのが最善です。必要な場合は、入力を厳密に検証およびサニタイズし、事前に定義された安全な操作のセットに制限してください。</p>
 <h2>参考文献</h2>
 <p>https://pubs.opengroup.org/onlinepubs/9699919799/utilities/eval.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初版作成</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

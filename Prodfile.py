@@ -31,7 +31,6 @@ COMMANDDIR = Path("./commands")
 COMMANDS = [p for p in COMMANDDIR.glob("*") if p.is_dir()]
 PROMPT = Path("./prompts/prompt")
 FORMAT = Path("./prompts/format")
-MAX_TOKENS = 10000
 WWW = Path("./www")
 
 def lang_prompt(target, stem):
@@ -52,7 +51,7 @@ def build_command_dir(target):
     p.write_text("")
 
 
-def generate_document(*prompts, max_tokens):
+def generate_document(*prompts):
     contents = []
     for prompt in prompts:
         if not prompt.strip():
@@ -68,19 +67,23 @@ def generate_document(*prompts, max_tokens):
     # check OverloadedError?
     response = client.messages.create(
         model="claude-3-7-sonnet-20250219",
-        max_tokens=max_tokens,
+        max_tokens=10000,
+        #temperature=1,
         temperature=0.2,
         messages=messages,
+        #thinking={
+        #  "type": "enabled",
+        #  "budget_tokens": 5000
+        #}
     )
+
     if str(response.stop_reason) != "end_turn":
         raise ValueError(
             f"generate_document failed: "
             f"stop_reason: {response.stop_reason!s} "
-            f"usage: {response.usage}\n"
-            f"{response.content[0].text}"
         )
 
-    return response.content[0].text, response.stop_reason, response.usage
+    return response.content[-1].text, response.to_dict()
 
 
 @rule(
@@ -105,19 +108,18 @@ TODAY is {TODAY}.
         current = target.read_text()
         prompts.append(f"<current-documnent>{current}</current-document>")
 
-    text, stop_reason, usage = generate_document(*prompts, max_tokens=MAX_TOKENS)
+    text, resp = generate_document(*prompts)
 
     target.write_text(text)
 
     result = json.dumps(
-        {"stop_reason": str(stop_reason), "usage": str(usage)},
+        resp,
         indent=2,
         ensure_ascii=False,
     )
     resultsdir = target.parent / "results"
     resultsdir.mkdir(parents=True, exist_ok=True)
     (resultsdir / f"{target.stem}.json").write_text(result)
-
 
 @rule(
     "pages/*/%.md",
@@ -145,12 +147,12 @@ TODAY is {TODAY}.
         current = target.read_text()
         prompts.append(f"<current-documnent>{current}</current-document>")
 
-    text, stop_reason, usage = generate_document(*prompts, max_tokens=MAX_TOKENS)
+    text, resp = generate_document(*prompts)
 
     target.write_text(text)
 
     result = json.dumps(
-        {"stop_reason": str(stop_reason), "usage": str(usage)},
+        resp,
         indent=2,
         ensure_ascii=False,
     )
@@ -285,6 +287,6 @@ def build_www():
 @task
 def build_cli():
     for lang in ["ja", "en"]:
-        run("cp", f"pages/{lang}/*.md", f"noman-cli/src/noman_cli/pages/{lang}")
-        run("cp", f"pages/{lang}/*.md", f"noman-cli/src/noman_cli/pages/{lang}")
+        run("cp", f"pages/{lang}/*.md", f"noman-cli/src/noman/pages/{lang}")
+        run("cp", f"pages/{lang}/*.md", f"noman-cli/src/noman/pages/{lang}")
     run("uv build", cwd="noman-cli")

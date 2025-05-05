@@ -1,16 +1,16 @@
 # git add command
 
-Add file contents to the staging area (index) in preparation for the next commit.
+Add file contents to the index (staging area) for the next commit.
 
 ## Overview
 
-The `git add` command updates the Git index with the current content of files in your working directory. It marks changes to be included in the next commit. This is a crucial step in Git's workflow, as it allows you to selectively choose which changes to commit.
+`git add` updates the Git index (staging area) with the current content of files in the working directory. It marks modified files to be included in the next commit. This command is essential for the Git workflow as it allows you to selectively choose which changes to commit.
 
 ## Options
 
 ### **-A, --all**
 
-Add changes from all tracked and untracked files
+Add changes from all tracked and untracked files.
 
 ```console
 $ git add -A
@@ -18,7 +18,7 @@ $ git add -A
 
 ### **-u, --update**
 
-Update only tracked files (doesn't add new files)
+Update the index just for files that are already tracked.
 
 ```console
 $ git add -u
@@ -26,32 +26,32 @@ $ git add -u
 
 ### **-p, --patch**
 
-Interactively choose hunks of patch between the index and the work tree
+Interactively choose hunks of patch between the index and the work tree and add them to the index.
 
 ```console
-$ git add -p file.txt
+$ git add -p
 diff --git a/file.txt b/file.txt
 index 1234567..abcdefg 100644
 --- a/file.txt
 +++ b/file.txt
-@@ -1,5 +1,6 @@
- This is some text.
--This line will be removed.
-+This line was changed.
-+This is a new line.
- More text here.
+@@ -1,4 +1,5 @@
+ Line 1
+ Line 2
++New line added
+ Line 3
+ Line 4
 Stage this hunk [y,n,q,a,d,j,J,g,/,e,?]? 
 ```
 
 ### **-i, --interactive**
 
-Add modified contents interactively
+Add modified contents interactively.
 
 ```console
 $ git add -i
            staged     unstaged path
-  1:    unchanged        +2/-1 file.txt
-  2:    unchanged        +4/-0 another.txt
+  1:    unchanged        +2/-0 file1.txt
+  2:    unchanged        +1/-1 file2.txt
 
 *** Commands ***
   1: status       2: update       3: revert       4: add untracked
@@ -61,12 +61,30 @@ What now>
 
 ### **-n, --dry-run**
 
-Don't actually add files, just show what would happen
+Don't actually add the files, just show what would happen.
 
 ```console
 $ git add -n *.txt
-add 'file.txt'
+add 'document.txt'
 add 'notes.txt'
+```
+
+### **-f, --force**
+
+Allow adding otherwise ignored files.
+
+```console
+$ git add -f build/generated.js
+```
+
+### **-v, --verbose**
+
+Be verbose.
+
+```console
+$ git add -v *.js
+add 'app.js'
+add 'utils.js'
 ```
 
 ## Usage Examples
@@ -89,7 +107,7 @@ $ git add src/
 $ git add *.js
 ```
 
-### Adding all changes in the repository
+### Adding all changes in the working directory
 
 ```console
 $ git add .
@@ -97,21 +115,21 @@ $ git add .
 
 ## Tips:
 
-### Use the Staging Area Strategically
+### Use Patch Mode for Precise Control
 
-The staging area allows you to create focused commits. Instead of adding everything at once with `git add .`, consider adding related changes together for more meaningful commit history.
+The `-p` (patch) option allows you to review and selectively stage parts of a file. This is useful when you've made multiple changes to a file but want to commit them separately.
 
-### Check What's Staged
+### Verify What's Being Added
 
-After using `git add`, run `git status` to verify what changes are staged for the next commit. This helps prevent accidentally committing unwanted changes.
+Before committing, use `git status` to verify what changes are staged. This helps prevent accidentally committing unwanted changes.
 
-### Undo Staging
+### Undo Staging with Reset
 
-If you accidentally stage a file, you can unstage it with `git restore --staged <file>` (or the older `git reset HEAD <file>` syntax).
+If you accidentally stage a file, you can unstage it with `git reset HEAD <file>`.
 
-### Interactive Mode for Complex Changes
+### Use Interactive Mode for Complex Changes
 
-For files with multiple changes, use `git add -p` to stage specific parts of the file. This is useful when you've made several unrelated changes to a single file.
+For repositories with many changed files, `-i` (interactive) mode provides a menu-driven interface to selectively stage changes.
 
 ## Frequently Asked Questions
 
@@ -121,11 +139,11 @@ A. `git add .` adds all changes in the current directory and its subdirectories,
 #### Q2. How do I add only modified and deleted files but not untracked files?
 A. Use `git add -u` or `git add --update`.
 
-#### Q3. Can I add part of a file's changes?
-A. Yes, use `git add -p <file>` or `git add --patch <file>` to interactively select which changes to stage.
+#### Q3. How can I see what changes I'm about to add?
+A. Use `git add -n` (dry run) to see what would be added without actually adding anything, or `git diff` to see the changes in detail.
 
 #### Q4. What happens if I add a file and then modify it again?
-A. Only the changes that were present when you ran `git add` will be staged. The newer changes will remain unstaged until you add them.
+A. Only the changes that were present when you ran `git add` will be staged. The newer changes will need to be added with another `git add` command.
 
 ## References
 
@@ -133,4 +151,4 @@ https://git-scm.com/docs/git-add
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

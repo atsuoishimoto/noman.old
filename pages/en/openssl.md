@@ -1,84 +1,72 @@
 # openssl command
 
-Provides cryptographic functionality for secure communications, certificate management, and various cryptographic operations.
+Manage cryptographic functions including certificate creation, encryption, and secure connections.
 
 ## Overview
 
-OpenSSL is a robust toolkit implementing the Secure Sockets Layer (SSL) and Transport Layer Security (TLS) protocols along with a full-strength general purpose cryptography library. It allows users to create certificates, manage keys, encrypt/decrypt files, generate message digests, and perform many other cryptographic operations from the command line.
+OpenSSL is a robust command-line tool for working with SSL/TLS protocols and various cryptographic functions. It allows users to create certificates, generate keys, encrypt/decrypt files, hash data, and test secure connections. The command provides extensive functionality for implementing security in network communications and managing digital certificates.
 
 ## Options
 
-OpenSSL uses a command-based structure where the main command is followed by a subcommand and its options.
+### **req**
 
-### **s_client** - SSL/TLS client
-
-Implements a generic SSL/TLS client which connects to a remote host using SSL/TLS.
+Create and process certificate requests
 
 ```console
-$ openssl s_client -connect example.com:443
-CONNECTED(00000003)
-depth=2 C = US, O = Internet Security Research Group, CN = ISRG Root X1
-verify return:1
-depth=1 C = US, O = Let's Encrypt, CN = R3
-verify return:1
-depth=0 CN = example.com
-verify return:1
----
-Certificate chain
- 0 s:CN = example.com
-   i:C = US, O = Let's Encrypt, CN = R3
+$ openssl req -new -key private.key -out request.csr
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
 ...
 ```
 
-### **x509** - Certificate display and signing utility
+### **x509**
 
-Displays certificate information, converts certificates to various formats, and signs certificate requests.
+Certificate display and signing utility
 
 ```console
 $ openssl x509 -in certificate.crt -text -noout
 Certificate:
     Data:
         Version: 3 (0x2)
-        Serial Number:
-            04:e5:7b:d2:1d:d5:e5:2c:...
-        Signature Algorithm: sha256WithRSAEncryption
-        Issuer: C=US, O=Let's Encrypt, CN=R3
+        Serial Number: 12345 (0x3039)
 ...
 ```
 
-### **genrsa** - Generate RSA private key
+### **genrsa**
 
-Generates an RSA private key.
+Generate RSA private key
 
 ```console
 $ openssl genrsa -out private.key 2048
-Generating RSA private key, 2048 bit long modulus (2 primes)
-.....+++++
-.....+++++
-e is 65537 (0x010001)
+Generating RSA private key, 2048 bit long modulus
+.....+++
+.............+++
+e is 65537 (0x10001)
 ```
 
-### **req** - PKCS#10 certificate request and certificate generating utility
+### **rsa**
 
-Creates and processes certificate requests in PKCS#10 format.
+Process RSA keys
 
 ```console
-$ openssl req -new -key private.key -out certificate.csr
-You are about to be asked to enter information that will be incorporated
-into your certificate request.
-What you are about to enter is what is called a Distinguished Name or a DN.
-There are quite a few fields but you can leave some blank
-For some fields there will be a default value,
-If you enter '.', the field will be left blank.
------
-Country Name (2 letter code) [AU]:US
-State or Province Name (full name) [Some-State]:California
+$ openssl rsa -in private.key -pubout -out public.key
+writing RSA key
+```
+
+### **s_client**
+
+SSL/TLS client program for testing connections
+
+```console
+$ openssl s_client -connect example.com:443
+CONNECTED(00000003)
+depth=2 O = Digital Signature Trust Co., CN = DST Root CA X3
 ...
 ```
 
-### **enc** - Encoding with ciphers
+### **enc**
 
-Encrypts or decrypts using various cipher algorithms.
+Encrypt or decrypt using various cipher algorithms
 
 ```console
 $ openssl enc -aes-256-cbc -salt -in plaintext.txt -out encrypted.txt
@@ -86,25 +74,24 @@ enter aes-256-cbc encryption password:
 Verifying - enter aes-256-cbc encryption password:
 ```
 
-## Usage Examples
+### **dgst**
 
-### Checking a remote SSL/TLS server
+Compute message digests (hashes)
 
 ```console
-$ openssl s_client -connect example.com:443 -servername example.com
-CONNECTED(00000003)
-depth=2 C = US, O = Internet Security Research Group, CN = ISRG Root X1
-verify return:1
-...
+$ openssl dgst -sha256 file.txt
+SHA256(file.txt)= 3a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b
 ```
 
-### Creating a self-signed certificate
+## Usage Examples
+
+### Creating a Self-Signed Certificate
 
 ```console
 $ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
-Generating a RSA private key
-.....++++
-.....++++
+Generating a 4096 bit RSA private key
+.......................++
+.......................++
 writing new private key to 'key.pem'
 -----
 You are about to be asked to enter information that will be incorporated
@@ -112,71 +99,62 @@ into your certificate request.
 ...
 ```
 
-### Verifying certificate chain
+### Verifying a Certificate Chain
 
 ```console
 $ openssl verify -CAfile ca-bundle.crt certificate.crt
 certificate.crt: OK
 ```
 
-### Generating a random password
+### Converting Certificate Formats
 
 ```console
-$ openssl rand -base64 12
-Ew6Y9RzYxAQeFA==
+$ openssl x509 -in certificate.crt -inform PEM -out certificate.der -outform DER
 ```
 
-## Tips
-
-### Use Proper Key Permissions
-
-Always set restrictive permissions on private keys to prevent unauthorized access:
+### Checking SSL/TLS Connection Details
 
 ```console
-$ chmod 600 private.key
+$ openssl s_client -connect example.com:443 -showcerts
+CONNECTED(00000003)
+depth=2 O = Digital Signature Trust Co., CN = DST Root CA X3
+...
 ```
 
-### Verify Certificate Expiration
+## Tips:
 
-Check when a certificate expires to avoid unexpected service disruptions:
+### Check Certificate Expiration
 
-```console
-$ openssl x509 -enddate -noout -in certificate.crt
-notAfter=May 15 12:00:00 2026 GMT
-```
+Use `openssl x509 -enddate -noout -in certificate.crt` to quickly check when a certificate expires without displaying all certificate details.
 
-### Convert Certificate Formats
+### Generate Strong Random Passwords
 
-OpenSSL can convert between different certificate formats (PEM, DER, PKCS#12):
+Use `openssl rand -base64 16` to generate a secure random password of 16 bytes (displayed as base64).
 
-```console
-$ openssl x509 -in cert.pem -inform PEM -out cert.der -outform DER
-```
+### View Certificate Information in a Browser
 
-### Use -passin and -passout for Automation
+To check certificate details for a website without connecting to it, use `openssl x509 -in certificate.crt -text -noout` after saving the certificate locally.
 
-When scripting, use these options to provide passwords non-interactively:
+### Troubleshoot SSL/TLS Connections
 
-```console
-$ openssl rsa -in encrypted.key -out decrypted.key -passin file:password.txt
-```
+When facing connection issues, use `openssl s_client -connect hostname:port -debug` to see detailed information about the handshake process.
 
 ## Frequently Asked Questions
 
 #### Q1. How do I create a CSR (Certificate Signing Request)?
-A. Use `openssl req -new -key private.key -out request.csr`. You'll be prompted for certificate information.
+A. Use `openssl req -new -key private.key -out request.csr`. You'll be prompted for certificate information like organization name and common name.
 
 #### Q2. How can I check the contents of a certificate?
-A. Use `openssl x509 -in certificate.crt -text -noout` to display the certificate details.
+A. Use `openssl x509 -in certificate.crt -text -noout` to display the certificate details in human-readable format.
 
 #### Q3. How do I convert a certificate from PEM to PKCS#12 format?
-A. Use `openssl pkcs12 -export -out certificate.pfx -inkey private.key -in certificate.crt -certfile ca-chain.crt`.
+A. Use `openssl pkcs12 -export -out certificate.pfx -inkey private.key -in certificate.crt` to create a PKCS#12 file containing both the certificate and private key.
 
-#### Q4. How can I test a secure connection to a website?
-A. Use `openssl s_client -connect example.com:443 -servername example.com` to establish a connection and view certificate details.
+#### Q4. How can I test an SSL/TLS connection to a server?
+A. Use `openssl s_client -connect hostname:port` to establish a connection and view the certificate information.
 
-#### Q5. How do I generate a strong random password?
-A. Use `openssl rand -base64 16` to generate a 16-byte random string encoded in base64.
+#### Q5. How do I generate a random string for use as a key or password?
+A. Use `openssl rand -base64 32` to generate a 32-byte random string encoded in base64.
 
 ## References
 
@@ -184,4 +162,4 @@ https://www.openssl.org/docs/man1.1.1/man1/
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

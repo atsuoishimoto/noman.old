@@ -47,20 +47,20 @@
     <main>
       
   <h1>http command</h1>
-<p>Send arbitrary HTTP requests and display responses from the command line.</p>
+<p>Send arbitrary HTTP requests and display responses.</p>
 <h2>Overview</h2>
-<p>The <code>http</code> command is part of HTTPie, a user-friendly command-line HTTP client designed to make CLI interaction with web services as human-friendly as possible. It provides a simple interface for sending HTTP requests with various methods (GET, POST, PUT, etc.) and displays colorized output for better readability.</p>
+<p>The <code>http</code> command is a user-friendly command-line HTTP client for making HTTP requests. It's part of the HTTPie tool, designed to be more intuitive than curl with colorized output, JSON support, and simpler syntax. It allows testing APIs, debugging web services, and downloading content with minimal typing.</p>
 <h2>Options</h2>
 <h3><strong>-j, --json</strong></h3>
-<p>Send JSON data in the request body.</p>
+<p>Submit data as JSON. Sets the Content-Type header to application/json.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-j<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span>John<span style="color: #F8F8F8"> </span>age:<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">30</span>
 </pre></div>
 <h3><strong>-f, --form</strong></h3>
-<p>Send form-encoded data in the request body.</p>
+<p>Submit data as form-encoded. Sets the Content-Type header to application/x-www-form-urlencoded.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span>John<span style="color: #F8F8F8"> </span><span style="color: #000">age</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">30</span>
 </pre></div>
 <h3><strong>-a, --auth</strong></h3>
-<p>Specify authentication credentials.</p>
+<p>Specify username and password for authentication.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>username:password<span style="color: #F8F8F8"> </span>example.com
 </pre></div>
 <h3><strong>-h, --headers</strong></h3>
@@ -68,58 +68,38 @@
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-h<span style="color: #F8F8F8"> </span>example.com
 <span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
 <span style="color: #000; font-style: italic">Content-Type: text/html; charset=UTF-8</span>
-<span style="color: #000; font-style: italic">Date: Sat, 04 May 2025 12:00:00 GMT</span>
+<span style="color: #000; font-style: italic">Date: Mon, 05 May 2025 12:00:00 GMT</span>
 <span style="color: #000; font-style: italic">Server: nginx</span>
 <span style="color: #000; font-style: italic">Content-Length: 1256</span>
 </pre></div>
 <h3><strong>-v, --verbose</strong></h3>
 <p>Print the whole HTTP exchange (request and response).</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>example.com
-<span style="color: #000; font-style: italic">GET / HTTP/1.1</span>
-<span style="color: #000; font-style: italic">Host: example.com</span>
-<span style="color: #000; font-style: italic">User-Agent: HTTPie/3.2.1</span>
-<span style="color: #000; font-style: italic">Accept-Encoding: gzip, deflate</span>
-<span style="color: #000; font-style: italic">Accept: */*</span>
-<span style="color: #000; font-style: italic">Connection: keep-alive</span>
-
-<span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
-<span style="color: #000; font-style: italic">Content-Type: text/html; charset=UTF-8</span>
-<span style="color: #000; font-style: italic">Date: Sat, 04 May 2025 12:00:00 GMT</span>
-<span style="color: #000; font-style: italic">Server: nginx</span>
-<span style="color: #000; font-style: italic">Content-Length: 1256</span>
-
-<span style="color: #000; font-style: italic">&lt;!doctype html&gt;</span>
-<span style="color: #000; font-style: italic">&lt;html&gt;</span>
-<span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3><strong>--verify</strong></h3>
-<p>Control SSL verification. Can be set to <code>no</code> to disable verification.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>--verify<span style="color: #CE5C00; font-weight: bold">=</span>no<span style="color: #F8F8F8"> </span>https://example.com
+<h3><strong>-d, --download</strong></h3>
+<p>Download the response body to a file.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>example.com/file.pdf
 </pre></div>
-<h3><strong>--session</strong></h3>
-<p>Create or reuse a session for multiple requests.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>--session<span style="color: #CE5C00; font-weight: bold">=</span>mysession<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>username:password<span style="color: #F8F8F8"> </span>example.com
-<span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>--session<span style="color: #CE5C00; font-weight: bold">=</span>mysession<span style="color: #F8F8F8"> </span>example.com/api/resource
+<h3><strong>--offline</strong></h3>
+<p>Build the request and print it but don't send it.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>--offline<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span>John
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Basic GET request</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>example.com
 <span style="color: #000; font-style: italic">HTTP/1.1 200 OK</span>
 <span style="color: #000; font-style: italic">Content-Type: text/html; charset=UTF-8</span>
-<span style="color: #000; font-style: italic">Date: Sat, 04 May 2025 12:00:00 GMT</span>
-<span style="color: #000; font-style: italic">Server: nginx</span>
-<span style="color: #000; font-style: italic">Content-Length: 1256</span>
+<span style="color: #000; font-style: italic">...</span>
 
 <span style="color: #000; font-style: italic">&lt;!doctype html&gt;</span>
 <span style="color: #000; font-style: italic">&lt;html&gt;</span>
 <span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">&lt;/html&gt;</span>
 </pre></div>
 <h3>POST with JSON data</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>api.example.com/users<span style="color: #F8F8F8"> </span><span style="color: #000">name</span><span style="color: #CE5C00; font-weight: bold">=</span>John<span style="color: #F8F8F8"> </span>age:<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">30</span><span style="color: #F8F8F8"> </span>is_active:<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87">true</span>
 <span style="color: #000; font-style: italic">HTTP/1.1 201 Created</span>
 <span style="color: #000; font-style: italic">Content-Type: application/json</span>
-<span style="color: #000; font-style: italic">Location: /users/123</span>
-<span style="color: #000; font-style: italic">Content-Length: 42</span>
 
 <span style="color: #000; font-style: italic">{</span>
 <span style="color: #000; font-style: italic">    &quot;id&quot;: 123,</span>
@@ -128,48 +108,35 @@
 <span style="color: #000; font-style: italic">    &quot;is_active&quot;: true</span>
 <span style="color: #000; font-style: italic">}</span>
 </pre></div>
-<h3>Download a file</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>--download<span style="color: #F8F8F8"> </span>https://example.com/file.zip
-<span style="color: #000; font-style: italic">Downloading to &quot;file.zip&quot;</span>
-<span style="color: #000; font-style: italic">Done. 15.43 MB in 2.32s (6.65 MB/s)</span>
+<h3>Using request headers</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span>User-Agent:MyApp<span style="color: #F8F8F8"> </span>X-API-Token:abc123
 </pre></div>
-<h3>Custom headers</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>example.com<span style="color: #F8F8F8"> </span>X-API-Token:abc123<span style="color: #F8F8F8"> </span>User-Agent:MyApp/1.0
+<h3>File upload</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>POST<span style="color: #F8F8F8"> </span>example.com/upload<span style="color: #F8F8F8"> </span>file@/path/to/file.jpg
 </pre></div>
-<h2>Tips</h2>
-<h3>Use Shortcuts for Common HTTP Methods</h3>
-<p>HTTPie provides shortcuts for common HTTP methods, so you can use <code>http example.com</code> instead of <code>http GET example.com</code>.</p>
-<h3>JSON Data Syntax</h3>
-<p>When sending JSON data, use <code>:=</code> for numbers and booleans, and <code>=</code> for strings:</p>
-<ul>
-<li><code>name=John</code> becomes <code>{&quot;name&quot;: &quot;John&quot;}</code></li>
-<li><code>age:=30</code> becomes <code>{&quot;age&quot;: 30}</code></li>
-<li><code>active:=true</code> becomes <code>{&quot;active&quot;: true}</code></li>
-</ul>
-<h3>Pipe Output to Other Tools</h3>
-<p>You can pipe the output to tools like <code>jq</code> for JSON processing:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>api.example.com/users<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>jq<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;.[] | select(.active==true)&#39;</span>
-</pre></div>
-<h3>Use Output Redirection</h3>
-<p>Save response bodies to files using standard output redirection:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>http<span style="color: #F8F8F8"> </span>example.com/image.jpg<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>image.jpg
-</pre></div>
+<h2>Tips:</h2>
+<h3>Use <code>:=</code> for Non-String JSON Values</h3>
+<p>When sending JSON data, use <code>:=</code> for numbers, booleans, and null: <code>count:=42 active:=true data:=null</code></p>
+<h3>Redirect Output to Files</h3>
+<p>Use standard shell redirection to save responses: <code>http example.com &gt; response.html</code></p>
+<h3>Use Sessions for Persistent Cookies</h3>
+<p>Use <code>--session=name</code> to maintain cookies between requests: <code>http --session=logged-in -a user:pass example.com</code></p>
+<h3>Pretty-Print JSON by Default</h3>
+<p>HTTPie automatically formats JSON responses for readability with syntax highlighting in the terminal.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How do I send a POST request with form data?</h4>
-<p>A. Use <code>http -f POST example.com name=value</code> to send form-encoded data.</p>
-<h4>Q2. How do I include authentication in my request?</h4>
-<p>A. Use the <code>-a</code> or <code>--auth</code> option: <code>http -a username:password example.com</code>.</p>
-<h4>Q3. How can I see the full HTTP exchange?</h4>
-<p>A. Use the <code>-v</code> or <code>--verbose</code> option to see both request and response details.</p>
-<h4>Q4. How do I send a file in my request?</h4>
-<p>A. Use <code>@filename</code> to include file contents: <code>http POST example.com file@/path/to/file.txt</code>.</p>
-<h4>Q5. How do I set cookies for my request?</h4>
-<p>A. Use the <code>--session</code> option to maintain cookies between requests, or manually set the Cookie header.</p>
+<h4>Q1. How is <code>http</code> different from <code>curl</code>?</h4>
+<p>A. <code>http</code> (HTTPie) offers a more intuitive syntax, automatic colorized output, JSON support by default, and generally requires less typing for common operations.</p>
+<h4>Q2. How do I send query parameters?</h4>
+<p>A. Add them to the URL with <code>?</code> and <code>&amp;</code>: <code>http example.com/search?q=term&amp;page=2</code> or use the <code>==</code> syntax: <code>http example.com q==term page==2</code></p>
+<h4>Q3. How do I send a custom HTTP method?</h4>
+<p>A. Simply specify the method before the URL: <code>http PUT example.com</code></p>
+<h4>Q4. How do I follow redirects?</h4>
+<p>A. Use the <code>--follow</code> option: <code>http --follow example.com/redirecting-url</code></p>
 <h2>References</h2>
 <p>https://httpie.io/docs/cli</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

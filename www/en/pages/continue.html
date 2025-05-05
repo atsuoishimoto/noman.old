@@ -47,67 +47,72 @@
     <main>
       
   <h1>continue command</h1>
-<p>Resume a suspended job by bringing it to the foreground or sending it to the background.</p>
+<p>Resume a suspended job by bringing it to the foreground.</p>
 <h2>Overview</h2>
-<p>The <code>continue</code> command is a shell built-in that resumes the execution of a job that has been suspended (typically with Ctrl+Z). It allows you to bring a suspended process back to either the foreground (where it can interact with the terminal) or the background (where it runs without requiring terminal input).</p>
+<p>The <code>continue</code> command is a shell built-in that resumes execution of a loop (for, while, until) at the beginning of the next iteration, skipping any remaining commands in the current iteration. It's used within shell scripts to control loop flow by immediately starting the next iteration when certain conditions are met.</p>
 <h2>Options</h2>
-<h3><strong>fg</strong> - Foreground</h3>
-<p>Brings a suspended job to the foreground, allowing it to continue execution and interact with the terminal.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">fg</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span>job_spec<span style="color: #CE5C00; font-weight: bold">]</span>
-</pre></div>
-<h3><strong>bg</strong> - Background</h3>
-<p>Continues a suspended job in the background, allowing it to run without occupying the terminal.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">bg</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span>job_spec<span style="color: #CE5C00; font-weight: bold">]</span>
+<p>The <code>continue</code> command doesn't have options in the traditional sense, but it can accept an optional numeric argument.</p>
+<h3><strong>n</strong> (numeric argument)</h3>
+<p>Specifies which enclosing loop to continue. By default (no argument), <code>continue</code> affects the innermost loop.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #000; font-style: italic">&gt;   for j in a b c; do</span>
+<span style="color: #000; font-style: italic">&gt;     if [ $j = &quot;b&quot; ]; then</span>
+<span style="color: #000; font-style: italic">&gt;       continue 2  # Skip to next iteration of outer loop</span>
+<span style="color: #000; font-style: italic">&gt;     fi</span>
+<span style="color: #000; font-style: italic">&gt;     echo &quot;$i $j&quot;</span>
+<span style="color: #000; font-style: italic">&gt;   done</span>
+<span style="color: #000; font-style: italic">&gt; done</span>
+<span style="color: #000; font-style: italic">1 a</span>
+<span style="color: #000; font-style: italic">2 a</span>
+<span style="color: #000; font-style: italic">3 a</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Resuming the most recently suspended job in the foreground</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">fg</span>
-<span style="color: #000; font-style: italic">[1]+ Running     vim document.txt</span>
+<h3>Basic Usage in a Loop</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #000; font-style: italic">&gt;   if [ $i -eq 3 ]; then</span>
+<span style="color: #000; font-style: italic">&gt;     continue</span>
+<span style="color: #000; font-style: italic">&gt;   fi</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;Processing item $i&quot;</span>
+<span style="color: #000; font-style: italic">&gt; done</span>
+<span style="color: #000; font-style: italic">Processing item 1</span>
+<span style="color: #000; font-style: italic">Processing item 2</span>
+<span style="color: #000; font-style: italic">Processing item 4</span>
+<span style="color: #000; font-style: italic">Processing item 5</span>
 </pre></div>
-<h3>Resuming a specific job in the foreground</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">fg</span><span style="color: #F8F8F8"> </span>%2
-<span style="color: #000; font-style: italic">[2]+ Running     nano notes.txt</span>
-</pre></div>
-<h3>Continuing a suspended job in the background</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">bg</span>
-<span style="color: #000; font-style: italic">[1]+ Running     find / -name &quot;*.log&quot; &amp;</span>
-</pre></div>
-<h3>Continuing a specific job in the background</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">bg</span><span style="color: #F8F8F8"> </span>%3
-<span style="color: #000; font-style: italic">[3]+ Running     tar -czf archive.tar.gz directory/ &amp;</span>
+<h3>Skipping Iterations Based on Conditions</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">i</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">0</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">while</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #000">$i</span><span style="color: #F8F8F8"> </span>-lt<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #000; font-style: italic">&gt;   i=$((i+1))</span>
+<span style="color: #000; font-style: italic">&gt;   if [ $((i % 2)) -eq 0 ]; then</span>
+<span style="color: #000; font-style: italic">&gt;     continue</span>
+<span style="color: #000; font-style: italic">&gt;   fi</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;Odd number: $i&quot;</span>
+<span style="color: #000; font-style: italic">&gt; done</span>
+<span style="color: #000; font-style: italic">Odd number: 1</span>
+<span style="color: #000; font-style: italic">Odd number: 3</span>
+<span style="color: #000; font-style: italic">Odd number: 5</span>
 </pre></div>
 <h2>Tips:</h2>
-<h3>View All Jobs</h3>
-<p>Before using <code>continue</code> commands, you can view all suspended and background jobs with the <code>jobs</code> command to identify which job you want to resume.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">jobs</span>
-<span style="color: #000; font-style: italic">[1]  Stopped    vim document.txt</span>
-<span style="color: #000; font-style: italic">[2]- Running    find / -name &quot;*.log&quot; &amp;</span>
-<span style="color: #000; font-style: italic">[3]+ Stopped    nano notes.txt</span>
-</pre></div>
-<h3>Job Specification</h3>
-<p>You can specify jobs by:</p>
-<ul>
-<li><code>%n</code> - job number (e.g., <code>%1</code>)</li>
-<li><code>%+</code> or <code>%%</code> - current job (most recently suspended)</li>
-<li><code>%-</code> - previous job</li>
-</ul>
-<h3>Suspend Running Process</h3>
-<p>To suspend a running foreground process, press Ctrl+Z. This allows you to use <code>fg</code> or <code>bg</code> to resume it later.</p>
+<h3>Use with Caution in Complex Loops</h3>
+<p>When using <code>continue</code> in nested loops, be careful about which loop you're affecting. Without a numeric argument, it only affects the innermost loop.</p>
+<h3>Combine with Conditional Logic</h3>
+<p><code>continue</code> is most useful when combined with conditional statements to skip iterations that meet specific criteria, making your scripts more efficient.</p>
+<h3>Consider Readability</h3>
+<p>While <code>continue</code> can make scripts more efficient, excessive use can make code harder to follow. Use it judiciously to maintain readability.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between <code>fg</code> and <code>bg</code>?</h4>
-<p>A. <code>fg</code> brings a job to the foreground where it can interact with the terminal, while <code>bg</code> runs the job in the background without requiring terminal interaction.</p>
-<h4>Q2. How do I know which jobs are available to continue?</h4>
-<p>A. Use the <code>jobs</code> command to list all suspended and background jobs.</p>
-<h4>Q3. Can I continue a job that's already running in the background?</h4>
-<p>A. No, <code>continue</code> commands are for suspended jobs. A job already running in the background is already continuing execution.</p>
-<h4>Q4. What happens if I don't specify a job number?</h4>
-<p>A. Without a job specification, <code>fg</code> and <code>bg</code> operate on the current job (marked with <code>+</code> in the <code>jobs</code> output).</p>
+<h4>Q1. What's the difference between <code>continue</code> and <code>break</code>?</h4>
+<p>A. <code>continue</code> skips to the next iteration of a loop, while <code>break</code> exits the loop entirely.</p>
+<h4>Q2. Can I use <code>continue</code> outside of a loop?</h4>
+<p>A. No, using <code>continue</code> outside a loop will result in an error as it only has meaning within loops.</p>
+<h4>Q3. How do I continue a specific outer loop in nested loops?</h4>
+<p>A. Use <code>continue n</code> where n is the level of the loop you want to continue (1 for the innermost loop, 2 for the next level out, etc.).</p>
+<h4>Q4. Does <code>continue</code> work the same in all shell types?</h4>
+<p>A. The basic functionality is consistent across bash, zsh, and other common shells, but there might be subtle differences in behavior with complex scripts.</p>
 <h2>References</h2>
-<p>These commands are shell built-ins, documented in the Bash manual:
-https://www.gnu.org/software/bash/manual/html_node/Job-Control-Builtins.html</p>
+<p>https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

@@ -4,42 +4,41 @@ Display the last part of files.
 
 ## Overview
 
-The `tail` command outputs the last part (tail) of files. By default, it prints the last 10 lines of each specified file to standard output. It's commonly used to view recent entries in log files, monitor file changes in real-time, or check the end of any text file.
+The `tail` command outputs the last part (by default, 10 lines) of one or more files. It's commonly used to view recent entries in log files, monitor file changes in real-time, or check the end of any text file without opening the entire file.
 
 ## Options
 
 ### **-n, --lines=NUM**
 
-Output the last NUM lines, instead of the default 10
+Output the last NUM lines (default is 10)
 
 ```console
 $ tail -n 5 /var/log/syslog
-May  3 21:45:12 hostname systemd[1]: Started Daily apt download activities.
-May  3 21:45:12 hostname systemd[1]: apt-daily.service: Succeeded.
-May  3 22:17:01 hostname CRON[12345]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
-May  3 23:17:01 hostname CRON[12346]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
-May  4 00:17:01 hostname CRON[12347]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+May  5 10:15:22 hostname service[1234]: Processing request
+May  5 10:15:23 hostname service[1234]: Request completed
+May  5 10:15:25 hostname service[1234]: New connection from 192.168.1.5
+May  5 10:15:26 hostname service[1234]: Processing request
+May  5 10:15:27 hostname service[1234]: Request completed
 ```
 
 ### **-f, --follow**
 
-Output appended data as the file grows; follow the file's end
+Output appended data as the file grows; useful for monitoring log files
 
 ```console
-$ tail -f /var/log/syslog
-May  4 00:17:01 hostname CRON[12347]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
-May  4 01:17:01 hostname CRON[12348]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
-May  4 02:17:01 hostname CRON[12349]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
-[new entries appear in real-time as they're added to the file]
+$ tail -f /var/log/apache2/access.log
+192.168.1.5 - - [05/May/2025:10:15:22 +0000] "GET /index.html HTTP/1.1" 200 2326
+192.168.1.6 - - [05/May/2025:10:15:25 +0000] "GET /images/logo.png HTTP/1.1" 200 4589
+192.168.1.7 - - [05/May/2025:10:15:27 +0000] "POST /login HTTP/1.1" 302 -
 ```
 
 ### **-c, --bytes=NUM**
 
-Output the last NUM bytes, instead of the last 10 lines
+Output the last NUM bytes
 
 ```console
-$ tail -c 50 file.txt
-last 50 bytes of the file will be displayed here.
+$ tail -c 20 file.txt
+end of the file.
 ```
 
 ### **-q, --quiet, --silent**
@@ -48,82 +47,81 @@ Never output headers giving file names
 
 ```console
 $ tail -q file1.txt file2.txt
-[displays last 10 lines of each file without headers]
+Last line of file1
+Last line of file2
+```
+
+### **--pid=PID**
+
+With -f, terminate after process ID, PID dies
+
+```console
+$ tail -f --pid=1234 logfile.txt
 ```
 
 ## Usage Examples
 
-### Monitoring a log file in real-time
-
-```console
-$ tail -f /var/log/apache2/access.log
-192.168.1.1 - - [04/May/2025:10:15:32 +0000] "GET /index.html HTTP/1.1" 200 1234
-192.168.1.2 - - [04/May/2025:10:15:45 +0000] "GET /images/logo.png HTTP/1.1" 200 5678
-[continues to show new entries as they appear]
-```
-
-### Viewing the last 20 lines of multiple files
-
-```console
-$ tail -n 20 file1.txt file2.txt
-==> file1.txt <==
-[last 20 lines of file1.txt]
-
-==> file2.txt <==
-[last 20 lines of file2.txt]
-```
-
-### Following multiple files simultaneously
+### Monitoring multiple log files simultaneously
 
 ```console
 $ tail -f /var/log/syslog /var/log/auth.log
 ==> /var/log/syslog <==
-[last 10 lines of syslog]
+May  5 10:20:22 hostname service[1234]: Processing request
 
 ==> /var/log/auth.log <==
-[last 10 lines of auth.log]
-[continues to show new entries from both files]
+May  5 10:20:25 hostname sshd[5678]: Accepted publickey for user from 192.168.1.10
 ```
 
-## Tips
-
-### Use with grep for filtering
-
-Combine `tail` with `grep` to filter specific entries from log files:
+### Viewing the last 20 lines with line numbers
 
 ```console
-$ tail -f /var/log/syslog | grep ERROR
+$ tail -n 20 file.txt | nl
+     1  Line content here
+     2  More content here
+     ...
+     20 Last line here
 ```
 
-### Follow files even if they're rotated
-
-Use `tail -F` (capital F) instead of `-f` to continue following a file even if it gets rotated or recreated:
+### Following a log file but stopping when a process ends
 
 ```console
-$ tail -F /var/log/application.log
+$ tail -f --pid=$(pgrep apache2) /var/log/apache2/access.log
 ```
 
-### Specify number of lines with a shorthand
+## Tips:
 
-You can use `-n` with a number without a space:
+### Combine with grep for filtering
 
-```console
-$ tail -n50 file.txt
-```
+Use `tail -f logfile.txt | grep ERROR` to monitor a log file in real-time but only show lines containing "ERROR".
+
+### Use with head for middle sections
+
+Extract the middle of a file with `head -n 20 file.txt | tail -n 10` to get lines 11-20.
+
+### Follow multiple files efficiently
+
+When following multiple log files with `tail -f`, use `--retry` to keep trying if a file becomes inaccessible and reappears later.
+
+### Terminate follow mode gracefully
+
+Press Ctrl+C to exit from tail's follow mode when you're done monitoring.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `tail -f` and `tail -F`?
-A. `tail -f` follows the file descriptor, which means it may stop if the file is renamed. `tail -F` follows the filename, continuing to display content even if the file is rotated or recreated.
+#### Q1. How do I view the last 10 lines of a file?
+A. Simply use `tail filename` or `tail -n 10 filename`.
 
-#### Q2. How do I exit from `tail -f`?
-A. Press Ctrl+C to terminate the command and return to the prompt.
+#### Q2. How can I continuously monitor a log file for changes?
+A. Use `tail -f logfile.txt` to follow the file in real-time as new content is added.
 
-#### Q3. Can I see both the beginning and end of a file?
-A. No, `tail` only shows the end. Use `head` for the beginning or combine them with a pipe: `head -n 5 file.txt && tail -n 5 file.txt`.
+#### Q3. Can I monitor multiple files at once?
+A. Yes, use `tail -f file1.txt file2.txt` to monitor multiple files simultaneously.
 
-#### Q4. How can I monitor multiple log files at once?
-A. Simply list all files after the `tail -f` command: `tail -f file1.log file2.log file3.log`.
+#### Q4. How do I show a specific number of lines from the end?
+A. Use `tail -n NUMBER filename` where NUMBER is the count of lines you want to see.
+
+#### Q5. How can I exit from tail's follow mode?
+A. Press Ctrl+C to terminate the tail command when in follow mode.
 
 ## References
 
@@ -131,4 +129,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/tail-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

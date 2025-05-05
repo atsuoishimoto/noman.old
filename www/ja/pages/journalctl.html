@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -49,101 +49,135 @@
   <h1>journalctl コマンド</h1>
 <p>systemdジャーナルからメッセージを検索して表示します。</p>
 <h2>概要</h2>
-<p><code>journalctl</code>は、systemdジャーナルログを表示・検索するためのコマンドラインユーティリティです。systemdジャーナルは、カーネル、システムサービス、アプリケーションなど様々なソースからログデータを収集・保存する集中型ログシステムです。システムの問題をトラブルシューティングするための強力なフィルタリング機能を提供しています。</p>
+<p><code>journalctl</code>は、systemdジャーナルシステムによって収集されたログを検索・表示するためのコマンドラインユーティリティです。システムログの閲覧、様々な条件によるエントリのフィルタリング、リアルタイムでのログの追跡などが可能です。systemdジャーナルは、構造化されたインデックス付きの形式でログデータを保存するため、特定の情報を効率的に検索・取得できます。</p>
 <h2>オプション</h2>
 <h3><strong>-f, --follow</strong></h3>
-<p>リアルタイムでジャーナルを追跡します（<code>tail -f</code>と同様）</p>
+<p>ジャーナルをフォローし、新しいエントリが追加されるたびに表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-f
-<span style="color: #000; font-style: italic">May 04 14:32:15 hostname systemd[1]: Started Daily apt download activities.</span>
-<span style="color: #000; font-style: italic">May 04 14:32:16 hostname CRON[12345]: (root) CMD (command being executed)</span>
-<span style="color: #000; font-style: italic">May 04 14:32:20 hostname sshd[12346]: Accepted publickey for user from 192.168.1.10</span>
+<span style="color: #000; font-style: italic">May 05 14:32:10 hostname systemd[1]: Started Daily apt download activities.</span>
+<span style="color: #000; font-style: italic">May 05 14:32:15 hostname CRON[12345]: (root) CMD (command_from_crontab)</span>
+<span style="color: #000; font-style: italic">-- Logs begin at Mon 2025-05-05 14:32:10 UTC. --</span>
 </pre></div>
-<h3><strong>-u, --unit=UNIT</strong></h3>
-<p>特定のsystemdユニット（サービス）のログを表示します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>ssh
-<span style="color: #000; font-style: italic">May 03 09:15:22 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.</span>
-<span style="color: #000; font-style: italic">May 03 09:15:22 hostname sshd[1234]: Server listening on :: port 22.</span>
-<span style="color: #000; font-style: italic">May 04 10:23:45 hostname sshd[5678]: Accepted password for user from 192.168.1.5</span>
-</pre></div>
-<h3><strong>-b, --boot[=ID]</strong></h3>
-<p>現在の起動時または特定の起動時のログを表示します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-b
-<span style="color: #000; font-style: italic">[最新の起動以降のすべてのログを表示]</span>
-
-<span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>-1
-<span style="color: #000; font-style: italic">[前回の起動時のログを表示]</span>
-</pre></div>
-<h3><strong>-n, --lines=N</strong></h3>
-<p>最新のN行のログを表示します</p>
+<h3><strong>-n, --lines=</strong></h3>
+<p>指定した数の最新ジャーナルエントリを表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #000; font-style: italic">May 04 14:45:10 hostname systemd[1]: Starting Daily apt upgrade and clean activities...</span>
-<span style="color: #000; font-style: italic">May 04 14:45:11 hostname systemd[1]: Started Daily apt upgrade and clean activities.</span>
-<span style="color: #000; font-style: italic">May 04 14:45:12 hostname CRON[12347]: (root) CMD (apt-get update)</span>
-<span style="color: #000; font-style: italic">May 04 14:45:15 hostname kernel: [12345.678901] USB disconnect, device number 5</span>
-<span style="color: #000; font-style: italic">May 04 14:45:20 hostname NetworkManager[789]: Connectivity established</span>
+<span style="color: #000; font-style: italic">May 05 14:30:10 hostname systemd[1]: Started Session 42 of user username.</span>
+<span style="color: #000; font-style: italic">May 05 14:30:15 hostname sshd[12345]: Accepted publickey for username from 192.168.1.10</span>
+<span style="color: #000; font-style: italic">May 05 14:31:20 hostname sudo[12346]: username : TTY=pts/0 ; PWD=/home/username ; USER=root ; COMMAND=/usr/bin/apt update</span>
+<span style="color: #000; font-style: italic">May 05 14:31:45 hostname systemd[1]: Starting Daily apt upgrade and clean activities...</span>
+<span style="color: #000; font-style: italic">May 05 14:32:10 hostname systemd[1]: Started Daily apt download activities.</span>
 </pre></div>
-<h3><strong>--since=DATE, --until=DATE</strong></h3>
-<p>指定した日時より新しいまたは古いエントリを表示します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>--since<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;2025-05-03 10:00:00&quot;</span><span style="color: #F8F8F8"> </span>--until<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;2025-05-03 11:00:00&quot;</span>
-<span style="color: #000; font-style: italic">[2025年5月3日の午前10時から11時までのログを表示]</span>
+<h3><strong>-u, --unit=</strong></h3>
+<p>指定したsystemdユニットからのログを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>ssh
+<span style="color: #000; font-style: italic">May 05 08:15:20 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.</span>
+<span style="color: #000; font-style: italic">May 05 08:15:20 hostname sshd[1234]: Server listening on :: port 22.</span>
+<span style="color: #000; font-style: italic">May 05 14:30:15 hostname sshd[12345]: Accepted publickey for username from 192.168.1.10</span>
 </pre></div>
-<h3><strong>-p, --priority=PRIORITY</strong></h3>
-<p>メッセージの優先度でフィルタリングします（0-7または「err」などの名前）</p>
+<h3><strong>-b, --boot</strong></h3>
+<p>現在の起動からのログを表示します。前回の起動は -b -1、その前の起動は -b -2 などと指定します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-b
+<span style="color: #000; font-style: italic">May 05 08:00:01 hostname kernel: Linux version 5.15.0-generic</span>
+<span style="color: #000; font-style: italic">May 05 08:00:05 hostname systemd[1]: System Initialization.</span>
+<span style="color: #000; font-style: italic">May 05 08:00:10 hostname systemd[1]: Started Journal Service.</span>
+<span style="color: #000; font-style: italic">...</span>
+</pre></div>
+<h3><strong>--since=, --until=</strong></h3>
+<p>指定した日時より新しい、または古いエントリを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>--since<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;2025-05-05 10:00:00&quot;</span><span style="color: #F8F8F8"> </span>--until<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;2025-05-05 11:00:00&quot;</span>
+<span style="color: #000; font-style: italic">May 05 10:00:05 hostname systemd[1]: Started Scheduled task.</span>
+<span style="color: #000; font-style: italic">May 05 10:15:30 hostname nginx[1234]: 192.168.1.100 - - [05/May/2025:10:15:30 +0000] &quot;GET / HTTP/1.1&quot; 200 612</span>
+<span style="color: #000; font-style: italic">May 05 10:45:22 hostname kernel: [UFW BLOCK] IN=eth0 OUT= MAC=00:11:22:33:44:55 SRC=203.0.113.1</span>
+</pre></div>
+<h3><strong>-p, --priority=</strong></h3>
+<p>メッセージの優先度でフィルタリングします（0-7またはdebug、info、notice、warning、err、crit、alert、emerg）。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>err
-<span style="color: #000; font-style: italic">May 02 15:30:45 hostname kernel: [12345.678901] CPU: 2 PID: 1234 Comm: process Tainted: G        W  5.15.0-91-generic</span>
-<span style="color: #000; font-style: italic">May 03 08:12:33 hostname application[5678]: Error: Failed to connect to database</span>
-<span style="color: #000; font-style: italic">May 04 02:45:12 hostname systemd[1]: Failed to start Apache Web Server.</span>
+<span style="color: #000; font-style: italic">May 05 09:12:34 hostname application[1234]: Failed to connect to database: Connection refused</span>
+<span style="color: #000; font-style: italic">May 05 11:23:45 hostname kernel: CPU: 2 PID: 1234 Comm: process Tainted: G        W  O 5.15.0-generic</span>
 </pre></div>
-<h3><strong>-o, --output=FORMAT</strong></h3>
-<p>出力形式を制御します（short、verbose、jsonなど）</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>json<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>
-<span style="color: #000; font-style: italic">{&quot;_BOOT_ID&quot;:&quot;abcdef123456789&quot;,&quot;_MACHINE_ID&quot;:&quot;fedcba987654321&quot;,&quot;MESSAGE&quot;:&quot;System startup complete&quot;,&quot;PRIORITY&quot;:&quot;6&quot;,&quot;SYSLOG_FACILITY&quot;:&quot;3&quot;,&quot;SYSLOG_IDENTIFIER&quot;:&quot;systemd&quot;,&quot;_UID&quot;:&quot;0&quot;,&quot;_GID&quot;:&quot;0&quot;,&quot;_COMM&quot;:&quot;systemd&quot;,&quot;_PID&quot;:&quot;1&quot;,&quot;_SOURCE_REALTIME_TIMESTAMP&quot;:&quot;1714896000000000&quot;}</span>
+<h3><strong>-k, --dmesg</strong></h3>
+<p><code>dmesg</code>コマンドの出力と同様に、カーネルメッセージのみを表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-k
+<span style="color: #000; font-style: italic">May 05 08:00:01 hostname kernel: Linux version 5.15.0-generic</span>
+<span style="color: #000; font-style: italic">May 05 08:00:02 hostname kernel: Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-generic</span>
+<span style="color: #000; font-style: italic">May 05 08:00:03 hostname kernel: Memory: 16384MB available</span>
+</pre></div>
+<h3><strong>-o, --output=</strong></h3>
+<p>出力形式を制御します（short、short-precise、verbose、json、json-prettyなど）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>json-pretty
+<span style="color: #000; font-style: italic">{</span>
+<span style="color: #000; font-style: italic">    &quot;__CURSOR&quot; : &quot;s=6c081a8b9c4b4f91a4a5f5c9d8e7f6a5;i=1234;b=5a4b3c2d1e0f;m=9876543210;t=5e4d3c2b1a09;x=abcdef0123456789&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;__REALTIME_TIMESTAMP&quot; : &quot;1714924330000000&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;__MONOTONIC_TIMESTAMP&quot; : &quot;9876543210&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;_BOOT_ID&quot; : &quot;5a4b3c2d1e0f&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;PRIORITY&quot; : &quot;6&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;_MACHINE_ID&quot; : &quot;0123456789abcdef0123456789abcdef&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;_HOSTNAME&quot; : &quot;hostname&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;MESSAGE&quot; : &quot;Started Daily apt download activities.&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;_PID&quot; : &quot;1&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;_COMM&quot; : &quot;systemd&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;_EXE&quot; : &quot;/usr/lib/systemd/systemd&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;_SYSTEMD_CGROUP&quot; : &quot;/init.scope&quot;,</span>
+<span style="color: #000; font-style: italic">    &quot;_SYSTEMD_UNIT&quot; : &quot;init.scope&quot;</span>
+<span style="color: #000; font-style: italic">}</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>特定の期間のログを表示する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>--since<span style="color: #F8F8F8"> </span>yesterday<span style="color: #F8F8F8"> </span>--until<span style="color: #F8F8F8"> </span>today
-<span style="color: #000; font-style: italic">[昨日から今日の現在時刻までのすべてのログを表示]</span>
+<h3>特定のサービスのログを表示する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>nginx.service
+<span style="color: #000; font-style: italic">May 05 08:10:15 hostname systemd[1]: Started A high performance web server and a reverse proxy server.</span>
+<span style="color: #000; font-style: italic">May 05 08:10:16 hostname nginx[1234]: nginx: the configuration file /etc/nginx/nginx.conf syntax is ok</span>
+<span style="color: #000; font-style: italic">May 05 08:10:16 hostname nginx[1234]: nginx: configuration file /etc/nginx/nginx.conf test is successful</span>
 </pre></div>
-<h3>実行ファイルでログをフィルタリングする</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span><span style="color: #000">_COMM</span><span style="color: #CE5C00; font-weight: bold">=</span>sshd
-<span style="color: #000; font-style: italic">May 01 08:15:22 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.</span>
-<span style="color: #000; font-style: italic">May 01 08:15:22 hostname sshd[1234]: Server listening on :: port 22.</span>
-<span style="color: #000; font-style: italic">May 02 14:23:45 hostname sshd[5678]: Accepted publickey for user from 192.168.1.10</span>
+<h3>時間範囲でログをフィルタリングする</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>--since<span style="color: #F8F8F8"> </span>yesterday<span style="color: #F8F8F8"> </span>--until<span style="color: #F8F8F8"> </span>today
+<span style="color: #000; font-style: italic">May 04 00:00:10 hostname systemd[1]: Starting Daily Cleanup of Temporary Directories...</span>
+<span style="color: #000; font-style: italic">May 04 00:01:15 hostname systemd[1]: Finished Daily Cleanup of Temporary Directories.</span>
+<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">May 04 23:59:45 hostname systemd[1]: Starting Daily apt upgrade and clean activities...</span>
+</pre></div>
+<h3>特定の実行ファイルからのログを表示する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>/usr/bin/sshd
+<span style="color: #000; font-style: italic">May 05 08:15:20 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.</span>
+<span style="color: #000; font-style: italic">May 05 08:15:20 hostname sshd[1234]: Server listening on :: port 22.</span>
+<span style="color: #000; font-style: italic">May 05 14:30:15 hostname sshd[12345]: Accepted publickey for username from 192.168.1.10</span>
 </pre></div>
 <h3>複数のフィルターを組み合わせる</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>nginx<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>err<span style="color: #F8F8F8"> </span>--since<span style="color: #F8F8F8"> </span>today
-<span style="color: #000; font-style: italic">May 04 03:15:22 hostname nginx[1234]: 2025/05/04 03:15:22 [error] 1234#0: *123 open() &quot;/var/www/html/favicon.ico&quot; failed (2: No such file or directory)</span>
-</pre></div>
-<h3>カーネルメッセージを表示する</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-k
-<span style="color: #000; font-style: italic">May 04 00:00:01 hostname kernel: Linux version 5.15.0-91-generic (buildd@ubuntu) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0)</span>
-<span style="color: #000; font-style: italic">May 04 00:00:01 hostname kernel: Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-91-generic root=UUID=abcdef-1234-5678 ro quiet splash</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>apache2.service<span style="color: #F8F8F8"> </span>--since<span style="color: #F8F8F8"> </span>today<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>err
+<span style="color: #000; font-style: italic">May 05 09:45:12 hostname apache2[2345]: [error] [client 192.168.1.50] File does not exist: /var/www/html/favicon.ico</span>
+<span style="color: #000; font-style: italic">May 05 13:22:30 hostname apache2[2345]: [error] [client 192.168.1.60] PHP Fatal error: Uncaught Error: Call to undefined function in /var/www/html/index.php:42</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>ページャーコントロールを使用する</h3>
-<p>大量のログを表示する際、journalctlはページャー（lessのような）を使用します。<code>/パターン</code>で検索、<code>n</code>で次の一致、<code>g</code>で先頭へ移動、<code>G</code>で末尾へ移動、<code>q</code>で終了できます。</p>
-<h3>永続的なジャーナルストレージ</h3>
-<p>デフォルトでは、ジャーナルログはメモリにのみ保存される場合があります。再起動後もログを保持するには、<code>/etc/systemd/journald.conf</code>に<code>Storage=persistent</code>が設定されていることと、<code>/var/log/journal/</code>ディレクトリが存在することを確認してください。</p>
-<h3>ディスク容量の管理</h3>
-<p>ジャーナルログは大量のディスク容量を消費する可能性があります。<code>journalctl --disk-usage</code>で使用容量を確認し、<code>journalctl --vacuum-size=1G</code>でジャーナルサイズを1GBに制限できます。</p>
+<h3>永続的なストレージを使用する</h3>
+<p>デフォルトでは、ジャーナルログは再起動後に失われる可能性があります。再起動後もログを永続化するには、<code>/var/log/journal</code>ディレクトリを作成します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>mkdir<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>/var/log/journal
+<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>systemd-tmpfiles<span style="color: #F8F8F8"> </span>--create<span style="color: #F8F8F8"> </span>--prefix<span style="color: #F8F8F8"> </span>/var/log/journal
+</pre></div>
+<h3>ジャーナルサイズを制限する</h3>
+<p><code>journalctl --vacuum-size=1G</code>でストレージを1GBに制限したり、<code>journalctl --vacuum-time=1month</code>で1ヶ月より古いエントリを削除したりして、ジャーナルサイズを制御できます。</p>
+<h3>フィールドフィルタリングによる高速検索</h3>
+<p>パフォーマンス向上のためにフィールド固有の検索を使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span><span style="color: #000">_SYSTEMD_UNIT</span><span style="color: #CE5C00; font-weight: bold">=</span>ssh.service<span style="color: #F8F8F8"> </span><span style="color: #000">_PID</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1234</span>
+</pre></div>
 <h3>分析用にログをエクスポートする</h3>
-<p><code>journalctl -o export</code>を使用してログをエクスポートし、別のマシンに転送して<code>journalctl --file=exported.journal</code>でインポートすることができます。</p>
+<p>さらなる分析や共有のためにログをファイルにエクスポートします：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>journalctl<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>nginx<span style="color: #F8F8F8"> </span>--since<span style="color: #F8F8F8"> </span>today<span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>nginx-logs.txt
+</pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. 現在の起動時のログだけを見るにはどうすればよいですか？</h4>
-<p>A. <code>journalctl -b</code>を使用すると、現在の起動時のログのみを表示できます。</p>
-<h4>Q2. 特定のサービスのログを見るにはどうすればよいですか？</h4>
-<p>A. <code>journalctl -u サービス名</code>を使用します。例えば、SSHサービスのログを見るには<code>journalctl -u ssh</code>を使用します。</p>
-<h4>Q3. 重要度レベルでログをフィルタリングするにはどうすればよいですか？</h4>
-<p>A. <code>journalctl -p 優先度</code>を使用します。優先度は数字（0-7）または名前（emerg、alert、crit、err、warning、notice、info、debug）で指定できます。</p>
-<h4>Q4. 古いジャーナルログをクリアするにはどうすればよいですか？</h4>
-<p>A. <code>journalctl --vacuum-time=2d</code>で2日より古いエントリを削除するか、<code>journalctl --vacuum-size=500M</code>で合計サイズを500MBに制限できます。</p>
-<h4>Q5. リアルタイムでログを追跡するにはどうすればよいですか？</h4>
-<p>A. <code>journalctl -f</code>を使用すると、<code>tail -f</code>と同様に、書き込まれるログをリアルタイムで追跡できます。</p>
-<h2>参考資料</h2>
+<h4>Q1. 現在の起動からのログのみを表示するにはどうすればよいですか？</h4>
+<p>A. <code>journalctl -b</code>を使用して、現在の起動からのログを表示します。</p>
+<h4>Q2. リアルタイムでログを表示するには（tail -fのように）？</h4>
+<p>A. <code>journalctl -f</code>を使用してジャーナルをフォローし、新しいエントリが到着したときに表示します。</p>
+<h4>Q3. 古いジャーナルエントリを消去するにはどうすればよいですか？</h4>
+<p>A. <code>journalctl --vacuum-time=2d</code>を使用して2日より古いエントリを削除するか、<code>journalctl --vacuum-size=500M</code>でジャーナルサイズを500MBに制限します。</p>
+<h4>Q4. 特定のアプリケーションからのログを表示するにはどうすればよいですか？</h4>
+<p>A. systemdサービスの場合は<code>journalctl -u サービス名.service</code>を、特定のバイナリの場合は<code>journalctl /実行ファイルへのパス</code>を使用します。</p>
+<h4>Q5. カーネルメッセージのみを表示するにはどうすればよいですか？</h4>
+<p>A. <code>journalctl -k</code>または<code>journalctl --dmesg</code>を使用して、カーネルメッセージのみを表示します。</p>
+<h2>参考文献</h2>
 <p>https://www.freedesktop.org/software/systemd/man/journalctl.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初版作成</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

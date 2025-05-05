@@ -1,162 +1,141 @@
 # script command
 
-Makes a typescript of a terminal session, recording all terminal activity.
+Make a typescript of a terminal session.
 
 ## Overview
 
-The `script` command creates a record of everything displayed in your terminal during a session. It captures all input and output, saving it to a file (by default named "typescript"). This is useful for documenting procedures, creating tutorials, or keeping logs of terminal sessions.
+The `script` command creates a record (typescript) of everything displayed in your terminal session. It captures all input and output, allowing you to save terminal interactions to a file for documentation, sharing, or review purposes.
 
 ## Options
 
 ### **-a, --append**
 
-Append the output to the specified file or to typescript, rather than overwriting it.
+Append the output to the specified file or typescript, rather than overwriting it.
 
 ```console
-$ script -a session_log.txt
-Script started, output file is session_log.txt
-$ ls
-Documents Downloads Pictures
+$ script -a session.log
+Script started, file is session.log
+$ echo "This will be appended to the existing file"
+This will be appended to the existing file
 $ exit
-Script done, output file is session_log.txt
+Script done, file is session.log
 ```
 
 ### **-f, --flush**
 
-Flush output after each write to ensure real-time recording, useful when monitoring the typescript file while recording.
+Flush output after each write to ensure real-time recording, useful when monitoring the typescript file while the session is active.
 
 ```console
-$ script -f realtime_log.txt
-Script started, output file is realtime_log.txt
-$ echo "This will be flushed immediately"
-This will be flushed immediately
+$ script -f realtime.log
+Script started, file is realtime.log
+$ echo "This output is flushed immediately"
+This output is flushed immediately
 $ exit
-Script done, output file is realtime_log.txt
+Script done, file is realtime.log
 ```
 
 ### **-q, --quiet**
 
-Runs in quiet mode, suppressing the start and done messages.
+Run in quiet mode, suppressing the start and done messages.
 
 ```console
-$ script -q quiet_log.txt
-$ echo "No start message was displayed"
-No start message was displayed
+$ script -q quiet.log
+$ echo "No start/end messages displayed"
+No start/end messages displayed
 $ exit
 ```
 
-### **-t, --timing[=FILE]**
+### **-t, --timing=FILE**
 
-Output timing data to FILE or to standard error if FILE is not specified. This can be used with scriptreplay to replay the session.
+Output timing data to FILE, which can be used with the scriptreplay command to replay the session at the original speed.
 
 ```console
-$ script -t timing.log session.log
-Script started, output file is session.log
-$ echo "This session is being timed"
-This session is being timed
+$ script -t timing.log typescript.log
+Script started, file is typescript.log
+$ echo "This session can be replayed later"
+This session can be replayed later
 $ exit
-Script done, output file is session.log
-```
-
-### **-c, --command COMMAND**
-
-Run the specified command instead of an interactive shell.
-
-```console
-$ script -c "ls -la" command_output.txt
-Script started, output file is command_output.txt
-total 32
-drwxr-xr-x  5 user  staff   160 May  4 10:15 .
-drwxr-xr-x  3 user  staff    96 May  4 10:10 ..
--rw-r--r--  1 user  staff  1024 May  4 10:12 file1.txt
--rw-r--r--  1 user  staff  2048 May  4 10:14 file2.txt
-Script done, output file is command_output.txt
+Script done, file is typescript.log
 ```
 
 ## Usage Examples
 
-### Basic Session Recording
+### Basic Usage
 
 ```console
-$ script my_session.txt
-Script started, output file is my_session.txt
+$ script my_session.log
+Script started, file is my_session.log
 $ ls
-Documents Downloads Pictures
-$ pwd
-/home/user
+Documents  Downloads  Pictures
+$ echo "Hello, world!"
+Hello, world!
 $ exit
-Script done, output file is my_session.txt
+Script done, file is my_session.log
 ```
 
-### Viewing the Recorded Session
+### Recording a Session for Later Replay
 
 ```console
-$ cat my_session.txt
-Script started on Sun May  4 10:20:00 2025
-$ ls
-Documents Downloads Pictures
-$ pwd
-/home/user
+$ script --timing=timing.log typescript.log
+Script started, file is typescript.log
+$ echo "This is a demonstration"
+This is a demonstration
+$ ls -la
+total 20
+drwxr-xr-x  2 user user 4096 May  5 10:00 .
+drwxr-xr-x 20 user user 4096 May  5 09:55 ..
+-rw-r--r--  1 user user  220 May  5 09:55 .bash_logout
 $ exit
-
-Script done on Sun May  4 10:21:30 2025
-```
-
-### Recording and Replaying a Session
-
-```console
-$ script --timing=timing.log session.log
-Script started, output file is session.log
-$ echo "Hello, this is a demo"
-Hello, this is a demo
-$ ls
-Documents Downloads Pictures
-$ exit
-Script done, output file is session.log
-
-$ scriptreplay timing.log session.log
-# The session will be replayed with the original timing
+Script done, file is typescript.log
+$ scriptreplay timing.log typescript.log
 ```
 
 ## Tips
 
-### Use with scriptreplay
+### Replay a Recorded Session
 
-When using the `-t` option to record timing information, you can later replay the session with the `scriptreplay` command, which will show the output at the same pace as it was originally typed.
-
-### Cleaning Up Control Characters
-
-The typescript file may contain control characters that make it difficult to read. You can use tools like `col -b` to clean it up:
-
+Use `scriptreplay` with the timing file to replay a recorded session at its original speed:
 ```console
-$ col -b < my_session.txt > clean_session.txt
+$ scriptreplay timing.log typescript.log
 ```
 
-### Documenting Complex Procedures
+### Avoid Capturing Sensitive Information
 
-Use `script` when documenting complex system administration tasks or software installations to create a complete record that can be referenced later or shared with colleagues.
+Be cautious when using `script` for sessions where sensitive information (like passwords) might be entered. The typescript will contain everything displayed on the terminal.
+
+### Use with SSH Sessions
+
+Record remote SSH sessions by starting `script` before connecting:
+```console
+$ script ssh_session.log
+$ ssh user@remote-server
+```
+
+### Terminate Properly
+
+Always end your script session with `exit` or Ctrl+D to ensure the typescript file is properly closed and saved.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I stop recording a script session?
-A. Type `exit` or press Ctrl+D to end the session and stop recording.
+#### Q1. What is the default filename if none is specified?
+A. If no filename is specified, `script` uses "typescript" as the default output file.
 
-#### Q2. Can I record a session without showing the start and end messages?
-A. Yes, use the `-q` or `--quiet` option to suppress these messages.
+#### Q2. Can I record a session and share it with others?
+A. Yes, the typescript file contains all terminal output and can be shared. For a more interactive experience, use the `-t` option to create a timing file and share both files for replay with `scriptreplay`.
 
-#### Q3. How can I replay a recorded session?
-A. If you recorded with timing information using `-t`, you can replay the session using the `scriptreplay` command.
+#### Q3. How do I view the contents of a typescript file?
+A. You can view it with any text editor or terminal pager like `less` or `more`:
+```console
+$ less typescript
+```
 
-#### Q4. Does script record passwords I type?
-A. No, properly designed password prompts don't echo characters to the terminal, so passwords typically won't appear in the typescript file.
-
-#### Q5. Can I append to an existing typescript file?
-A. Yes, use the `-a` or `--append` option to add to an existing file rather than overwriting it.
+#### Q4. Does script record commands that aren't displayed?
+A. No, `script` only records what is displayed on the terminal. Commands entered with no echo (like passwords) won't appear in the typescript.
 
 ## References
 
-https://man7.org/linux/man-pages/man1/script.1.html
+https://www.man7.org/linux/man-pages/man1/script.1.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

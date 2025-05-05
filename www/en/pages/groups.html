@@ -49,46 +49,57 @@
   <h1>groups command</h1>
 <p>Display the groups a user belongs to.</p>
 <h2>Overview</h2>
-<p>The <code>groups</code> command shows all the groups that a specified user is a member of. If no user is specified, it displays the groups for the current user. This command is useful for checking user permissions and access rights in Unix/Linux systems.</p>
+<p>The <code>groups</code> command shows all the groups that a specified user is a member of. If no user is specified, it displays the groups for the current user. This command is useful for checking group memberships for permission-related issues.</p>
 <h2>Options</h2>
-<p>The <code>groups</code> command has very few options as it's a simple utility:</p>
-<h3><strong>username</strong></h3>
-<p>Displays the groups for the specified username</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups<span style="color: #F8F8F8"> </span>john
-<span style="color: #000; font-style: italic">john : users wheel developers</span>
+<p>The <code>groups</code> command has minimal options as it's designed for a simple purpose.</p>
+<h3>No options (default usage)</h3>
+<p>Shows the groups for the current user.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups
+<span style="color: #000; font-style: italic">staff wheel admin</span>
+</pre></div>
+<h3>Specify username</h3>
+<p>Shows the groups for the specified user.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups<span style="color: #F8F8F8"> </span>username
+<span style="color: #000; font-style: italic">username : staff wheel admin</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Checking your own groups</h3>
+<h3>Checking your own group memberships</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups
-<span style="color: #000; font-style: italic">user wheel audio video</span>
+<span style="color: #000; font-style: italic">user wheel admin staff</span>
 </pre></div>
-<h3>Checking groups for multiple users</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups<span style="color: #F8F8F8"> </span>root<span style="color: #F8F8F8"> </span>alice<span style="color: #F8F8F8"> </span>bob
-<span style="color: #000; font-style: italic">root : root bin daemon sys adm</span>
-<span style="color: #000; font-style: italic">alice : users wheel developers</span>
-<span style="color: #000; font-style: italic">bob : users guests</span>
+<h3>Checking another user's group memberships</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups<span style="color: #F8F8F8"> </span>root
+<span style="color: #000; font-style: italic">root : wheel admin system</span>
 </pre></div>
-<h2>Tips:</h2>
-<h3>Understanding Group Membership</h3>
-<p>Group membership determines what files and resources a user can access. The first group listed is typically the user's primary group, while others are supplementary groups.</p>
-<h3>Related Commands</h3>
-<p>Use <code>id -Gn</code> as an alternative to see your groups. For more detailed information including numeric group IDs, use <code>id</code> without options.</p>
-<h3>Checking System Group Files</h3>
-<p>If you need to see all groups defined on the system, check the <code>/etc/group</code> file with <code>cat /etc/group</code> or <code>getent group</code>.</p>
+<h3>Checking multiple users' group memberships</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>groups<span style="color: #F8F8F8"> </span>user1<span style="color: #F8F8F8"> </span>user2
+<span style="color: #000; font-style: italic">user1 : staff wheel</span>
+<span style="color: #000; font-style: italic">user2 : staff admin</span>
+</pre></div>
+<h2>Tips</h2>
+<h3>Understanding Group Membership Importance</h3>
+<p>Group memberships determine what files and resources a user can access. For example, users in the &quot;wheel&quot; group often have sudo privileges, while those in &quot;admin&quot; can perform administrative tasks.</p>
+<h3>Combining with Other Commands</h3>
+<p>Use <code>groups</code> with <code>id</code> for more comprehensive user information:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>id
+<span style="color: #000; font-style: italic">uid=501(user) gid=20(staff) groups=20(staff),12(everyone),61(localaccounts)</span>
+</pre></div>
+<h3>Checking Primary Group</h3>
+<p>The first group listed is usually the user's primary group, which is used by default when creating new files.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between primary and supplementary groups?</h4>
-<p>A. The primary group (usually the first one listed) is the default group assigned to files created by the user. Supplementary groups provide additional access permissions.</p>
+<h4>Q1. What is the difference between primary and secondary groups?</h4>
+<p>A. The primary group (also called the login group) is the default group assigned to files created by the user. Secondary groups provide additional permissions.</p>
 <h4>Q2. How do I add a user to a group?</h4>
-<p>A. Use <code>usermod -aG groupname username</code> to add a user to a supplementary group.</p>
-<h4>Q3. Why do I need to know my groups?</h4>
-<p>A. Group membership determines what files and resources you can access on the system. Troubleshooting permission issues often involves checking group membership.</p>
-<h4>Q4. Can I see the numeric group IDs instead of names?</h4>
-<p>A. Yes, use <code>id -G</code> instead of <code>groups</code> to see numeric group IDs.</p>
+<p>A. Use <code>sudo usermod -aG groupname username</code> on Linux or <code>sudo dseditgroup -o edit -a username -t user groupname</code> on macOS.</p>
+<h4>Q3. Why do I need to know my group memberships?</h4>
+<p>A. Group memberships determine what files and resources you can access. Troubleshooting permission issues often involves checking group memberships.</p>
+<h4>Q4. Can I see all groups on the system?</h4>
+<p>A. Yes, use the <code>getent group</code> command on Linux or <code>dscl . list /Groups</code> on macOS to see all groups.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/groups-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

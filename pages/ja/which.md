@@ -1,16 +1,16 @@
 # which コマンド
 
-PATH環境変数を検索してコマンドの場所を特定します。
+ユーザーのPATH内にあるコマンドの実行ファイルを探します。
 
 ## 概要
 
-`which`コマンドは、PATHに含まれる実行可能ファイルの場所を見つけます。コマンドラインでプログラム名を入力した際にどのバージョンが実行されるかを判断するのに役立ち、実行ファイルへのフルパスを表示します。
+`which`コマンドは、PATH環境変数にリストされているディレクトリを検索して、実行可能プログラムの場所を見つけます。コマンドラインから実行した場合にどのバージョンのプログラムが実行されるかを判断するのに役立ちます。
 
 ## オプション
 
 ### **-a, --all**
 
-PATHに含まれる一致する全ての実行ファイルを表示します（最初の一つだけではなく）。
+PATH内の一致する実行ファイルをすべて表示します（最初の1つだけではなく）。
 
 ```console
 $ which -a python
@@ -18,96 +18,81 @@ $ which -a python
 /usr/local/bin/python
 ```
 
-### **-s, --silent, --quiet**
+### **-s**
 
-通常の出力を抑制します。実行ファイルが見つかった場合は終了ステータス0を、見つからなかった場合は1を返します。
+サイレントモード - 出力なしで終了ステータスを返します（見つかった場合は0、見つからなかった場合は1）。
 
 ```console
-$ which -s python
+$ which -s git
 $ echo $?
 0
 ```
 
-### **-v, --version**
-
-バージョン情報を表示して終了します。
-
-```console
-$ which --version
-GNU which v2.21, Copyright (C) 1999 - 2015 Carlo Wood.
-```
-
 ## 使用例
 
-### 基本的な使い方
+### コマンドの場所を見つける
 
 ```console
 $ which ls
 /bin/ls
 ```
 
-### 複数のコマンドを一度に検索
+### コマンドが存在するかチェックする
 
 ```console
-$ which bash python grep
-/bin/bash
-/usr/bin/python
-/bin/grep
+$ which nonexistentcommand
+which: no nonexistentcommand in (/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin)
 ```
 
-### 他のコマンドと組み合わせる
+### 複数のコマンドで使用する
 
 ```console
-$ file $(which python)
-/usr/bin/python: symbolic link to python3
+$ which bash python perl
+/bin/bash
+/usr/bin/python
+/usr/bin/perl
 ```
 
 ## ヒント:
 
-### コマンドが存在するか確認する
+### コマンド置換で使用する
 
-条件文と組み合わせて、コマンドを使用する前に利用可能かどうかを確認できます：
-
+`which`をコマンド置換と一緒に使用して、コマンドのフルパスを実行できます:
 ```console
-$ if which git >/dev/null; then echo "Gitがインストールされています"; else echo "Gitがインストールされていません"; fi
-Gitがインストールされています
+$ $(which python) --version
+Python 3.9.6
 ```
 
-### より詳細な情報を得るために`type`と組み合わせる
+### 複数のバージョンを確認する
 
-`type`コマンドはコマンドについてより詳細な情報（ビルトイン、エイリアス、実行ファイルなど）を提供します：
+`which -a`を使用してPATH内のコマンドのすべてのインスタンスを見つけることができます。これはバージョンの競合をトラブルシューティングする際に役立ちます。
 
+### 他のコマンドと組み合わせる
+
+より多くの情報を得るために他のコマンドと組み合わせます:
 ```console
-$ type ls
-ls is aliased to `ls --color=auto'
+$ ls -l $(which python)
+-rwxr-xr-x 1 root wheel 31488 Jan 1 2023 /usr/bin/python
 ```
-
-### PATHの順序が重要
-
-PATHで最初に一致する実行ファイルが実行されます。`which -a`を使用すると、可能な全ての一致を確認できます。
 
 ## よくある質問
 
 #### Q1. `which`と`whereis`の違いは何ですか？
-A. `which`はPATH内の実行ファイルの場所のみを表示しますが、`whereis`はマニュアルページやソースファイルも検索します。
+A. `which`はPATH内の実行ファイルの場所のみを表示しますが、`whereis`はコマンドのソースコード、マニュアルページ、関連ファイルも見つけます。
 
-#### Q2. なぜ`which`はシェルのビルトインやエイリアスを見つけられないのですか？
-A. `which`はPATH内の実行ファイルのみを検索します。シェルのビルトイン、エイリアス、関数については、代わりに`type`コマンドを使用してください。
+#### Q2. なぜ`which`は存在するコマンドを見つけられないことがありますか？
+A. そのコマンドはシェルビルトイン（`cd`など）、エイリアス、またはPATH環境変数に含まれていない可能性があります。
 
-#### Q3. PATH内のコマンドの全てのインスタンスを見つけるにはどうすればよいですか？
-A. `which -a コマンド名`を使用すると、最初の一つだけでなく、一致する全ての実行ファイルを表示できます。
+#### Q3. コマンドがインストールされているかを確認するために`which`をどのように使用できますか？
+A. `which -s command && echo "Installed" || echo "Not installed"`を使用して、コマンドがPATHに存在するかを確認できます。
 
-#### Q4. なぜ`which`が何も返さないことがあるのですか？
-A. `which`が何も返さない場合、そのコマンドはPATH内に存在しないか、シェルのビルトインやエイリアスである可能性があります。
+#### Q4. `which`はシェルビルトインに対して機能しますか？
+A. いいえ、`which`はPATH内の実行ファイルのみを見つけ、`cd`や`echo`などのシェルビルトインは見つけません。
 
-## macOSに関する注意点
+## 参考文献
 
-macOSでは、`which`コマンドの動作がLinuxシステムとは異なる場合があります。macOSバージョンでは`--all`などのGNUオプションをすべてサポートしていません（ただし`-a`は機能します）。システム間でより一貫した動作を得るには、POSIX準拠の代替手段である`command -v`の使用を検討してください。
-
-## 参考資料
-
-https://man7.org/linux/man-pages/man1/which.1.html
+https://pubs.opengroup.org/onlinepubs/9699919799/utilities/which.html
 
 ## 改訂履歴
 
-2025/05/04 初版作成
+- 2025/05/05 初版

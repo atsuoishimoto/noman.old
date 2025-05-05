@@ -47,43 +47,49 @@
     <main>
       
   <h1>sftp command</h1>
-<p>Securely transfer files between hosts over an encrypted connection.</p>
+<p>Securely transfer files between hosts over an encrypted SSH connection.</p>
 <h2>Overview</h2>
-<p>SFTP (Secure File Transfer Protocol) is a network protocol for securely transferring files between computers. It runs over SSH, providing encryption and authentication. The <code>sftp</code> command provides an interactive file transfer program similar to FTP but with SSH encryption.</p>
+<p>SFTP (Secure File Transfer Protocol) is a network protocol that provides file access, file transfer, and file management over a secure connection. The <code>sftp</code> command is an interactive file transfer program similar to FTP, but it performs all operations over an encrypted SSH transport.</p>
 <h2>Options</h2>
-<h3><strong>-b</strong> / <strong>--batch</strong> <em>batchfile</em></h3>
-<p>Processes a batch file of sftp commands instead of running interactively.</p>
+<h3><strong>-b</strong> <em>batchfile</em></h3>
+<p>Process batch file of sftp commands.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>commands.txt<span style="color: #F8F8F8"> </span>user@remote.server
 <span style="color: #000; font-style: italic">Connecting to remote.server...</span>
-<span style="color: #000; font-style: italic">Batch file commands.txt processed</span>
+<span style="color: #000; font-style: italic">sftp&gt; get file.txt</span>
+<span style="color: #000; font-style: italic">Fetching /home/user/file.txt to file.txt</span>
+<span style="color: #000; font-style: italic">sftp&gt; exit</span>
 </pre></div>
-<h3><strong>-P</strong> / <strong>--port</strong> <em>port</em></h3>
+<h3><strong>-F</strong> <em>ssh_config</em></h3>
+<p>Specifies an alternative per-user configuration file for ssh.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-F<span style="color: #F8F8F8"> </span>~/.ssh/custom_config<span style="color: #F8F8F8"> </span>user@remote.server
+<span style="color: #000; font-style: italic">Connecting to remote.server...</span>
+</pre></div>
+<h3><strong>-i</strong> <em>identity_file</em></h3>
+<p>Selects the file from which the identity (private key) for public key authentication is read.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>~/.ssh/private_key<span style="color: #F8F8F8"> </span>user@remote.server
+<span style="color: #000; font-style: italic">Connecting to remote.server...</span>
+</pre></div>
+<h3><strong>-l</strong> <em>limit</em></h3>
+<p>Limits the used bandwidth, specified in Kbit/s.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">100</span><span style="color: #F8F8F8"> </span>user@remote.server
+<span style="color: #000; font-style: italic">Connecting to remote.server...</span>
+</pre></div>
+<h3><strong>-P</strong> <em>port</em></h3>
 <p>Specifies the port to connect to on the remote host.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2222</span><span style="color: #F8F8F8"> </span>user@remote.server
-<span style="color: #000; font-style: italic">Connecting to remote.server port 2222...</span>
-<span style="color: #000; font-style: italic">sftp&gt;</span>
-</pre></div>
-<h3><strong>-i</strong> / <strong>--identity</strong> <em>identity_file</em></h3>
-<p>Selects the file from which the identity (private key) for public key authentication is read.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>~/.ssh/my_key<span style="color: #F8F8F8"> </span>user@remote.server
 <span style="color: #000; font-style: italic">Connecting to remote.server...</span>
-<span style="color: #000; font-style: italic">sftp&gt;</span>
 </pre></div>
-<h3><strong>-r</strong> / <strong>--recursive</strong></h3>
-<p>Recursively copy entire directories when uploading or downloading.</p>
+<h3><strong>-r</strong></h3>
+<p>Recursively copy entire directories.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>user@remote.server
 <span style="color: #000; font-style: italic">sftp&gt; get -r remote_directory</span>
-<span style="color: #000; font-style: italic">Fetching /remote_directory/ to remote_directory</span>
-<span style="color: #000; font-style: italic">sftp&gt;</span>
 </pre></div>
-<h3><strong>-v</strong> / <strong>--verbose</strong></h3>
-<p>Raises the logging level, providing verbose debugging output.</p>
+<h3><strong>-v</strong></h3>
+<p>Raises the logging level, causing sftp to print debugging messages about its progress.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>user@remote.server
-<span style="color: #000; font-style: italic">OpenSSH_8.9p1, LibreSSL 3.3.6</span>
+<span style="color: #000; font-style: italic">OpenSSH_8.1p1, LibreSSL 2.7.3</span>
 <span style="color: #000; font-style: italic">debug1: Reading configuration data /etc/ssh/ssh_config</span>
-<span style="color: #000; font-style: italic">debug1: Connecting to remote.server port 22.</span>
 <span style="color: #000; font-style: italic">...</span>
-<span style="color: #000; font-style: italic">sftp&gt;</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Connecting to a Remote Server</h3>
@@ -93,14 +99,14 @@
 </pre></div>
 <h3>Downloading Files</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>user@remote.server
-<span style="color: #000; font-style: italic">sftp&gt; get remote_file.txt</span>
-<span style="color: #000; font-style: italic">Fetching /home/user/remote_file.txt to remote_file.txt</span>
+<span style="color: #000; font-style: italic">sftp&gt; get remote_file.txt local_file.txt</span>
+<span style="color: #000; font-style: italic">Fetching /home/user/remote_file.txt to local_file.txt</span>
 <span style="color: #000; font-style: italic">sftp&gt;</span>
 </pre></div>
 <h3>Uploading Files</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>user@remote.server
-<span style="color: #000; font-style: italic">sftp&gt; put local_file.txt</span>
-<span style="color: #000; font-style: italic">Uploading local_file.txt to /home/user/local_file.txt</span>
+<span style="color: #000; font-style: italic">sftp&gt; put local_file.txt remote_file.txt</span>
+<span style="color: #000; font-style: italic">Uploading local_file.txt to /home/user/remote_file.txt</span>
 <span style="color: #000; font-style: italic">sftp&gt;</span>
 </pre></div>
 <h3>Navigating Directories</h3>
@@ -108,45 +114,48 @@
 <span style="color: #000; font-style: italic">sftp&gt; pwd</span>
 <span style="color: #000; font-style: italic">Remote working directory: /home/user</span>
 <span style="color: #000; font-style: italic">sftp&gt; cd documents</span>
+<span style="color: #000; font-style: italic">sftp&gt; pwd</span>
+<span style="color: #000; font-style: italic">Remote working directory: /home/user/documents</span>
+<span style="color: #000; font-style: italic">sftp&gt; lcd ~/downloads</span>
 <span style="color: #000; font-style: italic">sftp&gt; lpwd</span>
-<span style="color: #000; font-style: italic">Local working directory: /Users/localuser</span>
-<span style="color: #000; font-style: italic">sftp&gt; lcd Downloads</span>
+<span style="color: #000; font-style: italic">Local working directory: /Users/localuser/downloads</span>
 </pre></div>
-<h2>Tips</h2>
+<h3>Listing Files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sftp<span style="color: #F8F8F8"> </span>user@remote.server
+<span style="color: #000; font-style: italic">sftp&gt; ls</span>
+<span style="color: #000; font-style: italic">file1.txt  file2.txt  documents/  images/</span>
+<span style="color: #000; font-style: italic">sftp&gt; lls</span>
+<span style="color: #000; font-style: italic">local_file1.txt  local_file2.txt  downloads/</span>
+</pre></div>
+<h2>Tips:</h2>
 <h3>Use Tab Completion</h3>
-<p>SFTP supports tab completion for both local and remote files, making it easier to navigate without typing full paths.</p>
-<h3>Interactive Commands</h3>
-<ul>
-<li><code>ls</code> - List remote files</li>
-<li><code>lls</code> - List local files</li>
-<li><code>cd</code> - Change remote directory</li>
-<li><code>lcd</code> - Change local directory</li>
-<li><code>mkdir</code> - Create remote directory</li>
-<li><code>rmdir</code> - Remove remote directory</li>
-<li><code>rm</code> - Delete remote files</li>
-<li><code>help</code> or <code>?</code> - Show available commands</li>
-</ul>
-<h3>Batch Mode for Automation</h3>
-<p>Create a text file with sftp commands and use the <code>-b</code> option for automated transfers in scripts.</p>
-<h3>Use Wildcards for Multiple Files</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #000; font-style: italic">sftp&gt; get *.txt</span>
+<p>SFTP supports tab completion for both local and remote files, making it easier to navigate and transfer files without typing full paths.</p>
+<h3>Create Aliases for Common Connections</h3>
+<p>Add aliases to your shell configuration file for frequently used SFTP connections:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87">alias</span><span style="color: #F8F8F8"> </span>work-sftp<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&#39;sftp user@work-server.com&#39;</span>
 </pre></div>
-<h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between SFTP and SCP?</h4>
-<p>A. SFTP is an interactive file transfer protocol that runs over SSH, while SCP is a non-interactive command for secure copying. SFTP offers more functionality like resuming transfers and directory listings.</p>
+<h3>Use Wildcards for Multiple File Transfers</h3>
+<p>Transfer multiple files at once using wildcards:</p>
+<pre><code>sftp&gt; get *.txt
+</code></pre><h3>Enable Compression for Slow Connections</h3>
+<p>Use the <code>-C</code> option to enable compression, which can speed up transfers on slow connections:</p>
+<pre><code>$ sftp -C user@remote.server
+</code></pre><h2>Frequently Asked Questions</h2>
+<h4>Q1. What's the difference between SFTP and FTP?</h4>
+<p>A. SFTP uses SSH for secure, encrypted file transfers, while traditional FTP sends data (including passwords) in plaintext, making it vulnerable to interception.</p>
 <h4>Q2. How do I transfer an entire directory?</h4>
-<p>A. Use the <code>-r</code> (recursive) option with the get or put command: <code>get -r remote_directory</code> or <code>put -r local_directory</code>.</p>
-<h4>Q3. Can I use SFTP in scripts?</h4>
-<p>A. Yes, use the <code>-b</code> option with a batch file containing SFTP commands: <code>sftp -b commands.txt user@remote.server</code>.</p>
-<h4>Q4. How do I change permissions of remote files?</h4>
-<p>A. Use the <code>chmod</code> command within the SFTP session: <code>chmod 644 remote_file.txt</code>.</p>
-<h4>Q5. How can I resume an interrupted file transfer?</h4>
-<p>A. Use the <code>reget</code> command to resume downloading a file or <code>reput</code> to resume uploading.</p>
+<p>A. Use the recursive option with get or put: <code>get -r remote_directory</code> or <code>put -r local_directory</code>.</p>
+<h4>Q3. Can I automate SFTP transfers?</h4>
+<p>A. Yes, use the <code>-b</code> option with a batch file containing SFTP commands, or consider using <code>scp</code> for simple transfers in scripts.</p>
+<h4>Q4. How do I exit the SFTP session?</h4>
+<p>A. Type <code>exit</code> or <code>quit</code> at the sftp prompt, or press Ctrl+D.</p>
+<h4>Q5. How can I see what commands are available in SFTP?</h4>
+<p>A. Type <code>help</code> or <code>?</code> at the sftp prompt to see a list of available commands.</p>
 <h2>References</h2>
 <p>https://man.openbsd.org/sftp.1</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

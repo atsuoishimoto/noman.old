@@ -1,193 +1,195 @@
 # sort command
 
-Sort lines of text files alphabetically or numerically.
+Sort lines of text files.
 
 ## Overview
 
-The `sort` command arranges lines in text files or from standard input in alphabetical, numerical, or custom-defined order. It can merge multiple sorted files, remove duplicate lines, and perform various other sorting operations. This utility is commonly used in data processing pipelines and for organizing text-based information.
+The `sort` command arranges lines of text files or standard input in alphabetical, numerical, or reverse order. It can merge multiple sorted files, remove duplicate lines, and perform various other sorting operations based on specific fields or characters within each line.
 
 ## Options
 
 ### **-n, --numeric-sort**
 
-Sort numerically instead of alphabetically. Recognizes numbers at the start of fields.
+Sort numerically (by numeric value) instead of alphabetically
 
 ```console
-$ cat numbers.txt
-10
-2
-1
 $ sort -n numbers.txt
 1
 2
 10
+20
+100
 ```
 
 ### **-r, --reverse**
 
-Reverse the result of comparisons, sorting in descending order.
+Reverse the result of comparisons
 
 ```console
-$ sort -r fruits.txt
-watermelon
-orange
-banana
+$ sort -r names.txt
+Zack
+Victor
+Susan
+Alice
+```
+
+### **-f, --ignore-case**
+
+Ignore case when sorting
+
+```console
+$ sort -f mixed_case.txt
+Alice
 apple
+Banana
+cat
+Dog
 ```
 
 ### **-k, --key=POS1[,POS2]**
 
-Sort based on a specific field (column) in the input.
+Sort via a key starting at POS1 and ending at POS2
 
 ```console
-$ cat employees.txt
-John 35 Developer
-Alice 28 Designer
-Bob 42 Manager
-$ sort -k2 -n employees.txt
-Alice 28 Designer
-John 35 Developer
-Bob 42 Manager
+$ sort -k 2 employees.txt
+101 Adams 5000
+103 Brown 4500
+102 Clark 5500
 ```
 
 ### **-t, --field-separator=SEP**
 
-Specify a field separator character (default is whitespace).
+Use SEP as the field separator instead of non-blank to blank transition
 
 ```console
-$ cat data.csv
-name,age,role
-John,35,Developer
-Alice,28,Designer
-Bob,42,Manager
-$ sort -t, -k2 -n data.csv
-name,age,role
-Alice,28,Designer
-John,35,Developer
-Bob,42,Manager
+$ sort -t: -k3,3n /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
 ```
 
 ### **-u, --unique**
 
-Output only the first of an equal run (remove duplicates).
+Output only the first of an equal run (remove duplicates)
 
 ```console
-$ cat duplicates.txt
-apple
-banana
-apple
-orange
-banana
 $ sort -u duplicates.txt
 apple
 banana
 orange
 ```
 
-### **-f, --ignore-case**
+### **-M, --month-sort**
 
-Ignore case when sorting alphabetically.
+Compare as months (JAN < FEB < ... < DEC)
 
 ```console
-$ cat mixed-case.txt
-Apple
-banana
-Carrot
-apple
-$ sort -f mixed-case.txt
-Apple
-apple
-banana
-Carrot
+$ sort -M months.txt
+Jan
+Feb
+Mar
+Apr
+Dec
 ```
 
 ### **-h, --human-numeric-sort**
 
-Compare human-readable numbers (e.g., 2K, 1M).
+Compare human readable numbers (e.g., 2K, 1G)
 
 ```console
-$ cat sizes.txt
-1K
-5M
-10G
-2K
 $ sort -h sizes.txt
-1K
-2K
-5M
-10G
+10K
+1M
+2M
+1G
+```
+
+### **-R, --random-sort**
+
+Sort by random hash of keys
+
+```console
+$ sort -R names.txt
+Victor
+Alice
+Susan
+Zack
 ```
 
 ## Usage Examples
 
-### Sorting a file and saving the output
+### Sorting a file numerically
 
 ```console
-$ sort names.txt > sorted_names.txt
+$ cat numbers.txt
+10
+2
+100
+1
+20
+$ sort -n numbers.txt
+1
+2
+10
+20
+100
+```
+
+### Sorting by specific column with custom delimiter
+
+```console
+$ cat data.csv
+John,25,Engineer
+Alice,30,Doctor
+Bob,22,Student
+$ sort -t, -k2,2n data.csv
+Bob,22,Student
+John,25,Engineer
+Alice,30,Doctor
 ```
 
 ### Merging multiple sorted files
 
 ```console
-$ sort -m sorted1.txt sorted2.txt > merged.txt
+$ sort -m file1.txt file2.txt > merged.txt
 ```
 
-### Sorting by multiple fields
+### Removing duplicates and saving to a new file
 
 ```console
-$ cat data.txt
-John Smith 35 Developer
-Alice Johnson 28 Designer
-Bob Williams 42 Manager
-$ sort -k4,4 -k1,1 data.txt
-Alice Johnson 28 Designer
-John Smith 35 Developer
-Bob Williams 42 Manager
-```
-
-### Finding unique values in a column
-
-```console
-$ cat logs.txt | cut -d' ' -f3 | sort -u
-ERROR
-INFO
-WARNING
+$ sort -u input.txt > output.txt
 ```
 
 ## Tips
 
+### Sort and Remove Duplicates in One Step
+Use `sort -u` to sort a file and remove duplicate lines in a single operation, which is more efficient than using `sort | uniq`.
+
+### Check if a File is Already Sorted
+Use `sort -c filename` to check if a file is already sorted without actually outputting anything. It will return an error message if the file is not sorted.
+
+### Memory Considerations for Large Files
+For very large files, use `sort -T /tmp` to specify a temporary directory with sufficient space, or `sort -S 1G` to allocate more memory for sorting.
+
 ### Stable Sort
-
-Use `sort -s` for a stable sort, which preserves the original order of lines with equal sort keys. This is useful when sorting by multiple criteria in sequence.
-
-### Memory Usage
-
-For very large files, use `sort -S` to specify memory buffer size or `sort -T` to specify a temporary directory with more space. For example: `sort -S 1G -T /tmp bigfile.txt`.
-
-### Check If Already Sorted
-
-Use `sort -c` to check if a file is already sorted without producing any output. The exit status will indicate if the file is sorted (0) or not (1).
-
-### Random Sort
-
-Use `sort -R` to randomize the order of lines, which is useful for selecting random samples from data.
+Use `sort -s` for a stable sort, which preserves the original order of lines with equal keys. This is useful when you want to maintain the original ordering of equivalent items.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I sort a file numerically?
-A. Use `sort -n filename` to sort numerically instead of alphabetically.
+#### Q1. How do I sort a file in reverse order?
+A. Use `sort -r filename` to sort in reverse (descending) order.
 
-#### Q2. How can I sort by a specific column?
-A. Use `sort -k COLUMN_NUMBER filename`. For example, `sort -k 2 filename` sorts by the second column.
+#### Q2. How can I sort a CSV file by a specific column?
+A. Use `sort -t, -k2,2 filename.csv` to sort by the second column, where `-t,` specifies the comma as the field separator.
 
-#### Q3. How do I remove duplicate lines while sorting?
-A. Use `sort -u filename` to output only unique lines.
+#### Q3. How do I sort IP addresses correctly?
+A. Use `sort -V` for version sorting, which works well for IP addresses: `sort -V ip_addresses.txt`.
 
-#### Q4. How can I sort in reverse order?
-A. Use `sort -r filename` to sort in descending order.
+#### Q4. How can I sort by multiple fields?
+A. Specify multiple keys: `sort -k1,1 -k2,2n filename` sorts first by field 1 alphabetically, then by field 2 numerically.
 
-#### Q5. How do I sort a CSV file by a specific column?
-A. Use `sort -t, -k COLUMN_NUMBER filename.csv` where `-t,` specifies the comma as the field separator.
+#### Q5. How do I sort a file with a header and keep the header at the top?
+A. Use: `(head -1 file.txt; tail -n +2 file.txt | sort) > sorted_file.txt`
 
 ## References
 
@@ -195,4 +197,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

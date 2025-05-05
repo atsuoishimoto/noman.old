@@ -4,128 +4,103 @@
 
 ## 概要
 
-`until`コマンドはシェルの構文で、指定された条件が真になるまで一連のコマンドをループ実行します。`while`ループが条件が真である間継続するのに対し、`until`は条件が偽である間継続します。特定のイベントを待機したり、特定の状態に達するまでタスクを繰り返したりする場合に便利です。
+`until` コマンドはシェルの構文で、指定された条件が真になるまでコマンドブロックを繰り返し実行します。条件が真である間実行される `while` とは異なり、`until` は条件が真になるまで実行されます。特定の状態に達するまで継続する必要があるループを作成するのに便利です。
 
 ## オプション
 
-`until`コマンドは独立したプログラムではなくシェル組み込みの構文であるため、従来のコマンドラインオプションはありません。代わりに、特定の構文に従います：
-
-```bash
-until テスト・コマンド
-do
-  コマンド群
-done
-```
-
-ここで：
-- `テスト・コマンド`は各繰り返しの前に評価されます
-- `コマンド群`は`テスト・コマンド`が非ゼロの終了ステータス（偽）を返す限り実行されます
-- `テスト・コマンド`がゼロの終了ステータス（真）を返すとループは終了します
+`until` コマンドは独立したプログラムではなくシェル組み込みの構文であるため、従来のコマンドラインオプションはありません。
 
 ## 使用例
 
-### 基本的な使い方
+### 基本的な until ループ
 
 ```console
-$ count=1
-$ until [ $count -gt 5 ]
-> do
->   echo "カウントは $count です"
->   ((count++))
+$ until [ $counter -ge 5 ]; do
+>   echo "Counter: $counter"
+>   ((counter++))
 > done
-カウントは 1 です
-カウントは 2 です
-カウントは 3 です
-カウントは 4 です
-カウントは 5 です
+Counter: 0
+Counter: 1
+Counter: 2
+Counter: 3
+Counter: 4
 ```
 
-### ファイルが存在するまで待機
+### ファイルが存在するまで待機する
 
 ```console
-$ until [ -f /tmp/ready.txt ]
-> do
->   echo "ファイルが現れるのを待っています..."
+$ until [ -f /tmp/signal_file ]; do
+>   echo "Waiting for signal file..."
 >   sleep 5
 > done
-> echo "ファイルが存在します、続行します！"
-ファイルが現れるのを待っています...
-ファイルが現れるのを待っています...
-ファイルが存在します、続行します！
+> echo "Signal file found!"
+Waiting for signal file...
+Waiting for signal file...
+Signal file found!
 ```
 
-### コマンドが成功するまで再試行
+### プロセスが完了するまで待機する
 
 ```console
-$ until ping -c 1 example.com > /dev/null
-> do
->   echo "サーバーが応答していません、5秒後に再試行します..."
+$ process_id=$!
+$ until ! ps -p $process_id > /dev/null; do
+>   echo "Process is still running..."
+>   sleep 2
+> done
+> echo "Process has completed."
+Process is still running...
+Process is still running...
+Process has completed.
+```
+
+### コマンドが成功するまで再試行する
+
+```console
+$ until ping -c 1 example.com > /dev/null; do
+>   echo "Network not available, retrying in 5 seconds..."
 >   sleep 5
 > done
-> echo "サーバーが起動しました！"
-サーバーが応答していません、5秒後に再試行します...
-サーバーが起動しました！
+> echo "Network is up!"
+Network not available, retrying in 5 seconds...
+Network is up!
 ```
 
 ## ヒント:
 
-### 早期終了にはbreakを使用
+### 必ず終了条件を含める
 
-特定の条件が満たされた場合に`until`ループを早期に終了するには、`break`文を使用できます：
+`until` ループには、最終的に条件を満たす方法があることを確認してください。そうしないと無限に実行されます。最大試行回数やタイムアウトを追加することを検討してください。
 
-```bash
-until [ 条件1 ]
-do
-  if [ 条件2 ]; then
-    break
-  fi
-  コマンド群
-done
-```
+### コマンド終了ステータスとの併用
 
-### ポーリングにはsleepと組み合わせる
+`until` ループはコマンド終了ステータス（成功は0、失敗は0以外）とうまく連携します。例えば、`until command; do something; done` は `command` が成功するまで実行し続けます。
 
-条件が真になるのを待つ場合は、過剰なCPU使用を避けるために`until`と`sleep`を組み合わせましょう：
+### ポーリングには sleep と組み合わせる
 
-```bash
-until 確認用コマンド
-do
-  sleep 5  # チェック間に5秒待機
-done
-```
+条件の変化を待つ場合は、ループ内で `sleep` を使用して過剰なCPU使用を防ぎます。これは外部イベントを確認する際に特に役立ちます。
 
-### 無限ループには注意
+### 必要に応じてループから抜け出す
 
-終了しない可能性のあるループを作成する際は注意が必要です。タイムアウトや最大繰り返し回数を追加することを検討してください：
-
-```bash
-count=0
-max_tries=100
-until [ 条件 ] || [ $count -ge $max_tries ]
-do
-  コマンド群
-  ((count++))
-done
-```
+メインの条件が満たされる前に別の条件が満たされた場合に早期に終了するために、`until` ループ内で `break` コマンドを使用できます。
 
 ## よくある質問
 
-#### Q1. `until`と`while`の違いは何ですか？
-A. `until`はテスト条件が偽である限りコマンドの実行を継続しますが、`while`は条件が真である限り継続します。つまり、`until [ 条件 ]`は`while ! [ 条件 ]`と同等です。
+#### Q1. `until` と `while` の違いは何ですか？
+A. `while` は条件が真である限りコマンドを実行しますが、`until` は条件が偽である限り（真になるまで）コマンドを実行します。
 
-#### Q2. `until`で複数の条件を使用できますか？
-A. はい、テストコマンド内で`&&`（AND）や`||`（OR）などの論理演算子を使用して複数の条件を組み合わせることができます。
+#### Q2. すべてのシェルで `until` を使用できますか？
+A. `until` は bash、zsh、kshなどの多くの現代的なシェルで利用可能ですが、dashやashのようなよりミニマルなシェルでは利用できない場合があります。
 
-#### Q3. 期待通りに動作しない`until`ループをデバッグするにはどうすればよいですか？
-A. ループの前に`set -x`を追加してシェルデバッグを有効にすると、実行される各コマンドが表示されます。ループの後に`set +x`を使用してデバッグをオフにできます。
+#### Q3. `until` での無限ループを防ぐにはどうすればよいですか？
+A. 条件が最終的に真になることを確認するか、最大値を持つカウンターを含め、カウンターが上限に達したときに `break` を使用してループを終了させます。
 
-#### Q4. すべてのシェルで`until`を使用できますか？
-A. `until`はbash、zsh、kshなどの多くの現代的なシェルで利用可能ですが、dashやashなどのより最小限のシェルでは利用できない場合があります。
+#### Q4. `until` ループをネストできますか？
+A. はい、`until` ループを他のループ内にネストできます。これには他の `until` ループ、`while` ループ、または `for` ループが含まれます。
 
-## 参考資料
+## 参考文献
 
 https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

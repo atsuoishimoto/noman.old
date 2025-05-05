@@ -47,103 +47,98 @@
     <main>
       
   <h1>cut command</h1>
-<p>Extract selected parts of lines from each FILE to standard output.</p>
+<p>Extract selected portions of each line from files.</p>
 <h2>Overview</h2>
-<p>The <code>cut</code> command is used to extract sections from each line of input files or standard input. It can cut by character position, byte position, or delimiter-separated fields. This is particularly useful for processing structured text files like CSV or TSV files, or for extracting specific columns from command output.</p>
+<p>The <code>cut</code> command extracts sections from each line of input files or standard input. It can select parts of text by character position, byte position, or delimiter-separated fields. This command is particularly useful for processing structured text files like CSV or TSV files, or for extracting specific columns from command output.</p>
 <h2>Options</h2>
 <h3><strong>-b, --bytes=LIST</strong></h3>
-<p>Extract specific bytes from each line</p>
+<p>Extract specific bytes from each line according to LIST.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-3
 <span style="color: #000; font-style: italic">Hel</span>
 </pre></div>
 <h3><strong>-c, --characters=LIST</strong></h3>
-<p>Extract specific characters from each line</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-5
-<span style="color: #000; font-style: italic">Hello</span>
+<p>Extract specific characters from each line according to LIST.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>-4
+<span style="color: #000; font-style: italic">ell</span>
 </pre></div>
 <h3><strong>-d, --delimiter=DELIM</strong></h3>
-<p>Use DELIM as the field delimiter character instead of the default tab</p>
+<p>Use DELIM as the field delimiter character instead of the default tab.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;name,age,city&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d,<span style="color: #F8F8F8"> </span>-f2
 <span style="color: #000; font-style: italic">age</span>
 </pre></div>
 <h3><strong>-f, --fields=LIST</strong></h3>
-<p>Select only the specified fields on each line</p>
+<p>Select only the specified fields from each line.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;name:age:city&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d:<span style="color: #F8F8F8"> </span>-f1,3
 <span style="color: #000; font-style: italic">name:city</span>
 </pre></div>
 <h3><strong>-s, --only-delimited</strong></h3>
-<p>Do not print lines not containing delimiters</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;field1,field2,field3\nno delimiter line\nother,fields,here\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d,<span style="color: #F8F8F8"> </span>-f1<span style="color: #F8F8F8"> </span>-s
+<p>Do not print lines that do not contain the delimiter character.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;field1,field2,field3\nno delimiter here\nA,B,C&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d,<span style="color: #F8F8F8"> </span>-f1<span style="color: #F8F8F8"> </span>-s
 <span style="color: #000; font-style: italic">field1</span>
-<span style="color: #000; font-style: italic">other</span>
+<span style="color: #000; font-style: italic">A</span>
 </pre></div>
 <h3><strong>--complement</strong></h3>
-<p>Complement the set of selected bytes, characters, or fields</p>
+<p>Complement the set of selected bytes, characters, or fields.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;field1,field2,field3&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d,<span style="color: #F8F8F8"> </span>-f1<span style="color: #F8F8F8"> </span>--complement
 <span style="color: #000; font-style: italic">field2,field3</span>
 </pre></div>
 <h3><strong>--output-delimiter=STRING</strong></h3>
-<p>Use STRING as the output delimiter instead of the input delimiter</p>
+<p>Use STRING as the output delimiter instead of the input delimiter.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;field1,field2,field3&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-d,<span style="color: #F8F8F8"> </span>-f1,3<span style="color: #F8F8F8"> </span>--output-delimiter<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot; | &quot;</span>
 <span style="color: #000; font-style: italic">field1 | field3</span>
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Extract specific columns from CSV file</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>data.csv
-<span style="color: #000; font-style: italic">name,age,city,country</span>
-<span style="color: #000; font-style: italic">John,25,New York,USA</span>
-<span style="color: #000; font-style: italic">Alice,30,London,UK</span>
+<span style="color: #000; font-style: italic">Name,Age,City</span>
+<span style="color: #000; font-style: italic">John,25,New York</span>
+<span style="color: #000; font-style: italic">Alice,30,London</span>
 <span style="color: #8F5902">$ </span>cut<span style="color: #F8F8F8"> </span>-d,<span style="color: #F8F8F8"> </span>-f1,3<span style="color: #F8F8F8"> </span>data.csv
-<span style="color: #000; font-style: italic">name,city</span>
+<span style="color: #000; font-style: italic">Name,City</span>
 <span style="color: #000; font-style: italic">John,New York</span>
 <span style="color: #000; font-style: italic">Alice,London</span>
 </pre></div>
-<h3>Extract characters from fixed-width data</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>fixed.txt
-<span style="color: #000; font-style: italic">ABCDEFGHIJKLMNOPQRSTUVWXYZ</span>
-<span style="color: #000; font-style: italic">abcdefghijklmnopqrstuvwxyz</span>
-<span style="color: #8F5902">$ </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>-10<span style="color: #F8F8F8"> </span>fixed.txt
-<span style="color: #000; font-style: italic">EFGHIJ</span>
-<span style="color: #000; font-style: italic">efghij</span>
+<h3>Extract a range of characters from each line</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">This is a test file</span>
+<span style="color: #000; font-style: italic">Another line of text</span>
+<span style="color: #8F5902">$ </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-10<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">This is a </span>
+<span style="color: #000; font-style: italic">Another li</span>
 </pre></div>
-<h3>Process command output</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-5,27-
-<span style="color: #000; font-style: italic">  PID COMMAND</span>
-<span style="color: #000; font-style: italic">    1 /sbin/init</span>
-<span style="color: #000; font-style: italic">  123 bash</span>
-<span style="color: #000; font-style: italic">  456 ps</span>
+<h3>Extract multiple ranges of characters</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;abcdefghijklmnopqrstuvwxyz&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-5,10-15
+<span style="color: #000; font-style: italic">abcdeijklmn</span>
+</pre></div>
+<h3>Using cut with other commands</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ps<span style="color: #F8F8F8"> </span>aux<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>cut<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>-10,42-50
+<span style="color: #000; font-style: italic">USER       PID</span>
+<span style="color: #000; font-style: italic">root       1</span>
+<span style="color: #000; font-style: italic">user       435</span>
 </pre></div>
 <h2>Tips:</h2>
-<h3>Specify Ranges in LIST</h3>
-<p>When specifying character or field positions, you can use:</p>
-<ul>
-<li>N: The Nth position</li>
-<li>N-: From the Nth position to the end</li>
-<li>N-M: From the Nth to the Mth position</li>
-<li>-M: From the beginning to the Mth position</li>
-</ul>
-<h3>Combine with Other Commands</h3>
-<p><code>cut</code> works well in pipelines with other commands like <code>grep</code>, <code>sort</code>, and <code>uniq</code> to process and filter text data.</p>
-<h3>Handle Missing Delimiters</h3>
-<p>By default, <code>cut</code> outputs the entire line if it doesn't contain the delimiter. Use <code>-s</code> to suppress these lines if needed.</p>
-<h3>Working with Multi-byte Characters</h3>
-<p>Be careful when using <code>-c</code> with multi-byte characters (like UTF-8). For these cases, consider using <code>-b</code> with the appropriate byte ranges.</p>
+<h3>Handling Missing Fields</h3>
+<p>When using <code>-f</code> with a delimiter, lines without the delimiter won't be processed by default. Use <code>-s</code> to skip these lines or omit it to process all lines.</p>
+<h3>Working with Fixed-Width Files</h3>
+<p>For fixed-width files where columns are aligned by spaces, use <code>-c</code> (character positions) rather than <code>-f</code> (fields).</p>
+<h3>Combining with Other Commands</h3>
+<p><code>cut</code> works well in pipelines with commands like <code>grep</code>, <code>sort</code>, and <code>awk</code>. For example, <code>grep &quot;pattern&quot; file.txt | cut -d, -f2,3</code> extracts specific fields from matching lines.</p>
+<h3>Handling Special Delimiters</h3>
+<p>When using special characters as delimiters (like space), escape them or use quotes: <code>cut -d' ' -f1</code> or <code>cut -d&quot; &quot; -f1</code>.</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between <code>-c</code> and <code>-b</code>?</h4>
-<p>A. <code>-c</code> selects by character positions, while <code>-b</code> selects by byte positions. They behave differently with multi-byte characters (like in UTF-8 encoding).</p>
-<h4>Q2. How do I extract multiple fields?</h4>
-<p>A. Use comma-separated values with the <code>-f</code> option, like <code>cut -f1,3,5</code>.</p>
-<h4>Q3. Can I change the output delimiter?</h4>
-<p>A. Yes, use <code>--output-delimiter=STRING</code> to specify a different output delimiter.</p>
-<h4>Q4. How do I extract everything except certain fields?</h4>
-<p>A. Use the <code>--complement</code> option along with <code>-f</code> to select all fields except those specified.</p>
-<h4>Q5. Why doesn't cut work with variable-width fields?</h4>
-<p>A. <code>cut</code> is designed for fixed-width fields or delimiter-separated fields. For variable-width processing, consider using <code>awk</code> instead.</p>
+<h4>Q1. How do I extract multiple fields that aren't consecutive?</h4>
+<p>A. Use a comma to separate field numbers: <code>cut -d, -f1,3,5 file.csv</code></p>
+<h4>Q2. Can cut handle multi-character delimiters?</h4>
+<p>A. No, <code>cut</code> only supports single-character delimiters. For multi-character delimiters, consider using <code>awk</code> instead.</p>
+<h4>Q3. How do I extract everything except certain fields?</h4>
+<p>A. Use the <code>--complement</code> option: <code>cut -d, -f2 --complement file.csv</code> extracts all fields except the second one.</p>
+<h4>Q4. Why doesn't cut work with my space-delimited file?</h4>
+<p>A. Space-delimited files often have variable numbers of spaces. Consider using <code>awk</code> for more flexible field separation.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/cut-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

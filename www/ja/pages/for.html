@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -47,63 +47,64 @@
     <main>
       
   <h1>for コマンド</h1>
-<p>リスト内の各項目に対してコマンドまたはコマンドセットを実行します。</p>
+<p>リスト内の各項目に対してコマンドを実行します。</p>
 <h2>概要</h2>
-<p><code>for</code> コマンドはシェルのループ構文で、値のリストを反復処理し、各値に対して指定されたコマンドを一度ずつ実行します。シェルスクリプトでのバッチ処理、自動化、繰り返しタスクによく使用されます。ループ変数はリスト内の各値を順番に取り、単一のコマンド構造で複数の項目に対して操作を実行できるようにします。</p>
+<p><code>for</code> コマンドは、値のリストを反復処理し、各項目に対してコマンドまたは一連のコマンドを実行できるシェル構文です。シェルスクリプトでのバッチ処理、自動化、繰り返しタスクによく使用されます。</p>
 <h2>オプション</h2>
-<p><code>for</code> コマンドはシェル組み込みコマンドであり、スタンドアロンプログラムのような従来のコマンドラインオプションはありません。代わりに、異なる構文のバリエーションがあります：</p>
-<h3><strong>基本構文</strong></h3>
-<p>単語のリストを反復処理する標準的な形式です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>one<span style="color: #F8F8F8"> </span>two<span style="color: #F8F8F8"> </span>three<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;番号: </span><span style="color: #000">$i</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
-<span style="color: #000; font-style: italic">番号: one</span>
-<span style="color: #000; font-style: italic">番号: two</span>
-<span style="color: #000; font-style: italic">番号: three</span>
+<p><code>for</code> コマンドはシェル組み込みコマンドであり、従来のコマンドラインオプションはありません。代わりに、特定の構文パターンに従います：</p>
+<h3>基本構文</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>変数<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>リスト<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span>コマンド<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
 </pre></div>
-<h3><strong>C言語スタイル構文</strong></h3>
-<p>bashやその他のシェルで利用可能な、数値反復のためのC言語風の構文です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">((</span><span style="color: #000">i</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>i&lt;<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>i++<span style="color: #CE5C00; font-weight: bold">))</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;カウント: </span><span style="color: #000">$i</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
-<span style="color: #000; font-style: italic">カウント: 1</span>
-<span style="color: #000; font-style: italic">カウント: 2</span>
-<span style="color: #000; font-style: italic">カウント: 3</span>
+<h3>C言語スタイルの構文（Bash）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">((</span>初期化<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>条件<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>増分<span style="color: #CE5C00; font-weight: bold">))</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span>コマンド<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>ファイルに対する反復処理</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>*.txt<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;処理中: </span><span style="color: #000">$file</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>cat<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$file</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
-<span style="color: #000; font-style: italic">処理中: notes.txt</span>
-<span style="color: #000; font-style: italic">これはnotes.txtの内容です</span>
-<span style="color: #000; font-style: italic">処理中: readme.txt</span>
-<span style="color: #000; font-style: italic">これはreadme.txtの内容です</span>
+<h3>値のリストを反復処理する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>name<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>Alice<span style="color: #F8F8F8"> </span>Bob<span style="color: #F8F8F8"> </span>Charlie<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;Hello, $name!&quot;</span>
+<span style="color: #000; font-style: italic">&gt; done</span>
+<span style="color: #000; font-style: italic">Hello, Alice!</span>
+<span style="color: #000; font-style: italic">Hello, Bob!</span>
+<span style="color: #000; font-style: italic">Hello, Charlie!</span>
 </pre></div>
-<h3>コマンド出力に対する反復処理</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>cut<span style="color: #F8F8F8"> </span>-d:<span style="color: #F8F8F8"> </span>-f1<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>head<span style="color: #F8F8F8"> </span>-3<span style="color: #204A87; font-weight: bold">)</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ユーザー: </span><span style="color: #000">$user</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
-<span style="color: #000; font-style: italic">ユーザー: root</span>
-<span style="color: #000; font-style: italic">ユーザー: daemon</span>
-<span style="color: #000; font-style: italic">ユーザー: bin</span>
+<h3>ディレクトリ内のファイルを処理する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>*.txt<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;Processing $file...&quot;</span>
+<span style="color: #000; font-style: italic">&gt;   wc -l &quot;$file&quot;</span>
+<span style="color: #000; font-style: italic">&gt; done</span>
+<span style="color: #000; font-style: italic">Processing document.txt...</span>
+<span style="color: #000; font-style: italic">      45 document.txt</span>
+<span style="color: #000; font-style: italic">Processing notes.txt...</span>
+<span style="color: #000; font-style: italic">      12 notes.txt</span>
 </pre></div>
-<h3>数値範囲に対する反復処理</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span>..5<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;数字 </span><span style="color: #000">$i</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
-<span style="color: #000; font-style: italic">数字 1</span>
-<span style="color: #000; font-style: italic">数字 2</span>
-<span style="color: #000; font-style: italic">数字 3</span>
-<span style="color: #000; font-style: italic">数字 4</span>
-<span style="color: #000; font-style: italic">数字 5</span>
+<h3>C言語スタイルのループを使用する（Bash）</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">((</span><span style="color: #000">i</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>i&lt;<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span>i++<span style="color: #CE5C00; font-weight: bold">))</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;Number: $i&quot;</span>
+<span style="color: #000; font-style: italic">&gt; done</span>
+<span style="color: #000; font-style: italic">Number: 1</span>
+<span style="color: #000; font-style: italic">Number: 2</span>
+<span style="color: #000; font-style: italic">Number: 3</span>
+<span style="color: #000; font-style: italic">Number: 4</span>
+<span style="color: #000; font-style: italic">Number: 5</span>
 </pre></div>
-<h3>ステップ値を使用した反復処理</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">0</span>..10..2<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;偶数: </span><span style="color: #000">$i</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
-<span style="color: #000; font-style: italic">偶数: 0</span>
-<span style="color: #000; font-style: italic">偶数: 2</span>
-<span style="color: #000; font-style: italic">偶数: 4</span>
-<span style="color: #000; font-style: italic">偶数: 6</span>
-<span style="color: #000; font-style: italic">偶数: 8</span>
-<span style="color: #000; font-style: italic">偶数: 10</span>
+<h3>コマンド置換を使用する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>cat<span style="color: #F8F8F8"> </span>users.txt<span style="color: #204A87; font-weight: bold">)</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #000; font-style: italic">&gt;   echo &quot;Creating home directory for $user&quot;</span>
+<span style="color: #000; font-style: italic">&gt;   mkdir -p /home/$user</span>
+<span style="color: #000; font-style: italic">&gt; done</span>
+<span style="color: #000; font-style: italic">Creating home directory for john</span>
+<span style="color: #000; font-style: italic">Creating home directory for sarah</span>
+<span style="color: #000; font-style: italic">Creating home directory for mike</span>
 </pre></div>
 <h2>ヒント:</h2>
 <h3>適切な引用符の使用</h3>
-<p>ループ内の変数は常に引用符で囲み、スペースを含むファイル名や値を正しく処理できるようにしましょう：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>*.txt<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;処理中: &#39;</span><span style="color: #000">$file</span><span style="color: #4E9A06">&#39;&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+<p>ループ内の変数は常に引用符で囲み、スペースや特殊文字を含むファイル名を適切に処理します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>*.txt<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
+<span style="color: #000; font-style: italic">&gt;   cp &quot;$file&quot; &quot;/backup/$(date +%Y%m%d)_$file&quot;</span>
+<span style="color: #000; font-style: italic">&gt; done</span>
 </pre></div>
 <h3>break と continue</h3>
-<p><code>break</code> を使用してループを早期に終了し、<code>continue</code> を使用して次の反復にスキップできます：</p>
+<p><code>break</code> を使用してループを早期に終了し、<code>continue</code> を使用して次の反復にスキップします：</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span>..10<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
 <span style="color: #000; font-style: italic">&gt;   if [ $i -eq 5 ]; then continue; fi</span>
 <span style="color: #000; font-style: italic">&gt;   if [ $i -eq 8 ]; then break; fi</span>
@@ -116,39 +117,29 @@
 <span style="color: #000; font-style: italic">6</span>
 <span style="color: #000; font-style: italic">7</span>
 </pre></div>
-<h3>ネストしたループ</h3>
-<p>より複雑な反復処理のために <code>for</code> ループをネストできます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span>..3<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span>
-<span style="color: #000; font-style: italic">&gt;   for j in a b c; do</span>
-<span style="color: #000; font-style: italic">&gt;     echo &quot;$i-$j&quot;</span>
-<span style="color: #000; font-style: italic">&gt;   done</span>
-<span style="color: #000; font-style: italic">&gt; done</span>
-<span style="color: #000; font-style: italic">1-a</span>
-<span style="color: #000; font-style: italic">1-b</span>
-<span style="color: #000; font-style: italic">1-c</span>
-<span style="color: #000; font-style: italic">2-a</span>
-<span style="color: #000; font-style: italic">2-b</span>
-<span style="color: #000; font-style: italic">2-c</span>
-<span style="color: #000; font-style: italic">3-a</span>
-<span style="color: #000; font-style: italic">3-b</span>
-<span style="color: #000; font-style: italic">3-c</span>
+<h3>シーケンス生成</h3>
+<p>数値シーケンスには波括弧展開を使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{</span><span style="color: #0000CF; font-weight: bold">1</span>..5<span style="color: #CE5C00; font-weight: bold">}</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$i</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+<span style="color: #000; font-style: italic">1</span>
+<span style="color: #000; font-style: italic">2</span>
+<span style="color: #000; font-style: italic">3</span>
+<span style="color: #000; font-style: italic">4</span>
+<span style="color: #000; font-style: italic">5</span>
 </pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. 数値の範囲を反復処理するにはどうすればよいですか？</h4>
-<p>A. 波括弧展開を使用します：<code>for i in {1..10}; do echo $i; done</code> または C言語スタイル構文：<code>for ((i=1; i&lt;=10; i++)); do echo $i; done</code>。</p>
-<h4>Q2. ファイルの各行を処理するにはどうすればよいですか？</h4>
-<p>A. <code>for</code> を使用することもできますが、<code>while</code> ループと <code>read</code> を使用する方が良いでしょう：<code>while read line; do echo &quot;$line&quot;; done &lt; file.txt</code>。</p>
-<h4>Q3. 配列要素を反復処理するにはどうすればよいですか？</h4>
+<h4>Q1. <code>for</code> ループと <code>while</code> ループの違いは何ですか？</h4>
+<p>A. <code>for</code> ループは事前定義されたアイテムのリストを反復処理しますが、<code>while</code> ループは条件が真である限り継続します。</p>
+<h4>Q2. 数値範囲をループするにはどうすればよいですか？</h4>
+<p>A. 波括弧展開を使用します：<code>for i in {1..10}; do echo $i; done</code> または C言語スタイルの構文：<code>for ((i=1; i&lt;=10; i++)); do echo $i; done</code>。</p>
+<h4>Q3. ファイル内の行をループするにはどうすればよいですか？</h4>
+<p>A. <code>read</code> を使った <code>while</code> ループを使用します：<code>while read line; do echo &quot;$line&quot;; done &lt; file.txt</code> または、コマンド置換を使った <code>for</code> ループ：<code>for line in $(cat file.txt); do echo &quot;$line&quot;; done</code>（後者は空白を保持しないことに注意）。</p>
+<h4>Q4. 配列要素を反復処理するにはどうすればよいですか？</h4>
 <p>A. <code>for element in &quot;${array[@]}&quot;; do echo &quot;$element&quot;; done</code> を使用します。</p>
-<h4>Q4. コマンド出力を反復処理するために <code>for</code> を使用できますか？</h4>
-<p>A. はい、コマンド置換を使用します：<code>for item in $(command); do echo &quot;$item&quot;; done</code>。</p>
-<h4>Q5. 数値範囲でステップ値を指定するにはどうすればよいですか？</h4>
-<p>A. 拡張波括弧展開を使用します：<code>for i in {開始..終了..ステップ}; do echo $i; done</code>。</p>
 <h2>参考文献</h2>
 <p>https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初版作成</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

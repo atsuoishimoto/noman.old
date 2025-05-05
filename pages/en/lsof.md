@@ -1,114 +1,132 @@
 # lsof command
 
-List open files and the processes that opened them.
+Lists open files and the processes that opened them.
 
 ## Overview
 
-`lsof` (List Open Files) displays information about files that are currently open by processes running on the system. It can show which processes have a particular file open, what files a specific process has open, and various other file usage details. This command is particularly useful for system administrators and developers for troubleshooting and monitoring system resources.
+`lsof` (list open files) displays information about files that are currently open by processes running on the system. It can show which processes have a particular file open, which files a specific process has open, network connections, and more. This command is invaluable for system troubleshooting, security monitoring, and understanding system resource usage.
 
 ## Options
 
 ### **-p PID**
 
-List files opened by a specific process ID
+Lists all files opened by the specified process ID.
 
 ```console
 $ lsof -p 1234
 COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
-bash     1234   user  cwd    DIR    8,1     4096 131073 /home/user
-bash     1234   user  rtd    DIR    8,1     4096      2 /
-bash     1234   user  txt    REG    8,1  1113504 917562 /bin/bash
+bash     1234   user  cwd    DIR    8,1     4096 123456 /home/user
+bash     1234   user  txt    REG    8,1   940336 789012 /usr/bin/bash
 ```
 
-### **-i [protocol][@hostname|hostaddr][:service|port]**
+### **-i**
 
-List files opened for Internet connections (optional protocol, host, and port specifications)
+Lists files associated with Internet connections (network files).
 
 ```console
-$ lsof -i TCP:22
-COMMAND  PID    USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
-sshd    1234    root    3u  IPv4  12345      0t0  TCP *:ssh (LISTEN)
-sshd    5678    root    4u  IPv6  23456      0t0  TCP *:ssh (LISTEN)
+$ lsof -i
+COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+chrome   1234   user   52u  IPv4  12345      0t0  TCP localhost:49152->localhost:http (ESTABLISHED)
+sshd     5678   root    3u  IPv4  23456      0t0  TCP *:ssh (LISTEN)
+```
+
+### **-i:[port]**
+
+Lists files associated with the specified port.
+
+```console
+$ lsof -i:22
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+sshd    1234 root    3u  IPv4  12345      0t0  TCP *:ssh (LISTEN)
 ```
 
 ### **-u username**
 
-List files opened by a specific user
+Lists files opened by a specific user.
 
 ```console
 $ lsof -u john
-COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
-bash     1234   john  cwd    DIR    8,1     4096 131073 /home/john
-chrome   2345   john   10u   REG    8,1    12345 262144 /tmp/file.tmp
+COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
+bash    1234   john  cwd    DIR    8,1     4096 123456 /home/john
+chrome  2345   john   10r   REG    8,1    12345 234567 /home/john/Downloads/file.pdf
 ```
 
 ### **-c command**
 
-List files opened by processes with the specified command name
+Lists files opened by processes with the specified command name.
 
 ```console
-$ lsof -c nginx
-COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
-nginx   1234 root  cwd    DIR    8,1     4096      2 /
-nginx   1234 root  txt    REG    8,1  1234567 917562 /usr/sbin/nginx
-nginx   1235 www   cwd    DIR    8,1     4096      2 /
+$ lsof -c chrome
+COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
+chrome   1234   user  cwd    DIR    8,1     4096 123456 /home/user
+chrome   1234   user  txt    REG    8,1 12345678 234567 /opt/google/chrome/chrome
 ```
 
 ### **-t**
 
-Display only process IDs (useful for scripting)
+Displays only process IDs, useful for scripting.
 
 ```console
-$ lsof -t -i TCP:80
+$ lsof -t -i:80
 1234
 5678
 ```
 
+### **+D directory**
+
+Lists all open files in the specified directory and its subdirectories.
+
+```console
+$ lsof +D /var/log
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
+rsyslogd 123 root    5w   REG    8,1    12345 123456 /var/log/syslog
+nginx   1234 www     3w   REG    8,1     5678 234567 /var/log/nginx/access.log
+```
+
 ## Usage Examples
 
-### Finding which process has a specific file open
+### Finding which process is using a specific file
 
 ```console
 $ lsof /var/log/syslog
-COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
-rsyslogd 854 syslog    7w   REG    8,1   256789 131074 /var/log/syslog
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
+rsyslogd 123 root    5w   REG    8,1    12345 123456 /var/log/syslog
 ```
 
-### Checking which processes are listening on network ports
+### Finding which process is listening on a specific port
 
 ```console
-$ lsof -i -P -n | grep LISTEN
-sshd      1234    root    3u  IPv4  12345      0t0  TCP *:22 (LISTEN)
-nginx     2345    root    6u  IPv4  23456      0t0  TCP *:80 (LISTEN)
-mysqld    3456   mysql   10u  IPv4  34567      0t0  TCP 127.0.0.1:3306 (LISTEN)
+$ lsof -i TCP:80
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+nginx   1234 root    6u  IPv4  12345      0t0  TCP *:http (LISTEN)
 ```
 
-### Finding all files opened by a specific user in a directory
+### Combining multiple options
 
 ```console
-$ lsof -u john /home/john
-COMMAND  PID  USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
-bash    1234  john  cwd    DIR    8,1     4096 131073 /home/john
-vim     2345  john    4u   REG    8,1    12345 262144 /home/john/document.txt
+$ lsof -u john -c chrome -i TCP
+COMMAND  PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+chrome  1234  john   52u  IPv4  12345      0t0  TCP localhost:49152->server:https (ESTABLISHED)
+chrome  1234  john   60u  IPv4  23456      0t0  TCP localhost:49153->cdn:https (ESTABLISHED)
 ```
 
-## Tips:
+## Tips
 
-### Combine Multiple Filters
+### Finding Processes Using Deleted Files
 
-You can combine multiple options to narrow down results. For example, `lsof -u username -i TCP` shows TCP connections for a specific user.
+When a process has a file open that has been deleted, you can find it with `lsof | grep deleted`. This is useful for reclaiming disk space by restarting processes holding onto deleted files.
 
-### Find Deleted Files Still in Use
+### Monitoring Network Connections
 
-Use `lsof +L1` to find deleted files that are still being held open by processes. This helps identify processes preventing disk space from being freed.
+Use `lsof -i -P -n` to show all network connections with numeric ports and IP addresses. The `-P` prevents port number to service name conversion, and `-n` prevents hostname lookups.
 
-### Monitor Network Connections
+### Finding Memory-Mapped Files
 
-Use `lsof -i` regularly to monitor network connections and identify unexpected network activity that might indicate security issues.
+Use `lsof -a -p PID -d mem` to see memory-mapped files for a specific process, which can help understand memory usage patterns.
 
-### Use with grep for Targeted Results
+### Continuous Monitoring
 
-Pipe `lsof` output to `grep` to filter for specific information, like `lsof | grep "/var/log"` to find processes accessing log files.
+Use `lsof -r 2` to repeat the listing every 2 seconds, which is useful for monitoring changing file usage patterns.
 
 ## Frequently Asked Questions
 
@@ -116,18 +134,28 @@ Pipe `lsof` output to `grep` to filter for specific information, like `lsof | gr
 A. Use `lsof -i:PORT_NUMBER` (e.g., `lsof -i:80` for HTTP port).
 
 #### Q2. How can I see all network connections?
-A. Use `lsof -i` to display all network connections. Add `-P` to show port numbers instead of service names.
+A. Use `lsof -i` to see all network connections, or `lsof -i TCP` for TCP connections only.
 
-#### Q3. How do I find which processes are accessing a specific file?
-A. Simply run `lsof /path/to/file` to see all processes that have the file open.
+#### Q3. How do I find all files opened by a specific user?
+A. Use `lsof -u USERNAME` to list all files opened by a specific user.
 
-#### Q4. How can I find all files opened by a specific process?
-A. Use `lsof -p PID` where PID is the process ID of interest.
+#### Q4. How can I find which processes are accessing a specific directory?
+A. Use `lsof +D /path/to/directory` to list all processes accessing files in that directory.
+
+#### Q5. How do I find which process is using a specific file?
+A. Simply run `lsof /path/to/file` to see which process has that file open.
+
+## macOS Considerations
+
+On macOS, `lsof` behavior may differ slightly from Linux versions:
+- The output format might have minor differences
+- Some options like `+D` might be slower on macOS due to filesystem differences
+- For network connections, consider using `lsof -i -P` as macOS tends to resolve service names by default
 
 ## References
 
-https://man7.org/linux/man-pages/man8/lsof.8.html
+https://www.freebsd.org/cgi/man.cgi?query=lsof
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

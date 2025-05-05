@@ -1,16 +1,16 @@
 # su command
 
-Switch user identity or become another user temporarily.
+Switch user identity or become another user.
 
 ## Overview
 
-The `su` command allows you to switch to another user account, most commonly the root user. Without specifying a username, `su` defaults to the superuser (root). It creates a new shell with the target user's environment and privileges.
+The `su` command allows users to temporarily become another user during a login session. By default, it switches to the superuser (root) when no username is specified. It creates a new shell with the target user's environment variables and permissions.
 
 ## Options
 
-### **-** or **-l**, **--login**
+### **-**, **-l**, **--login**
 
-Provide a login environment, simulating a direct login for the specified user
+Provide a login environment, simulating a direct login as the target user. This includes setting environment variables, changing to the target user's home directory, and running login scripts.
 
 ```console
 $ su - john
@@ -20,24 +20,24 @@ john@hostname:~$
 
 ### **-c**, **--command=COMMAND**
 
-Execute a single command as the specified user and then exit
+Execute a single command as the specified user and then exit.
 
 ```console
 $ su -c "ls -la /root" root
 Password: 
 total 28
-drwx------  4 root root 4096 May  4 10:15 .
-drwxr-xr-x 20 root root 4096 Apr 15 09:30 ..
--rw-------  1 root root  982 May  1 14:22 .bash_history
--rw-r--r--  1 root root 3106 Dec  5  2024 .bashrc
-drwxr-xr-x  3 root root 4096 Jan 10  2025 .config
--rw-r--r--  1 root root  161 Dec  5  2024 .profile
-drwx------  2 root root 4096 Feb 20  2025 .ssh
+drwx------  4 root root 4096 May  5 10:15 .
+drwxr-xr-x 20 root root 4096 May  5 10:15 ..
+-rw-------  1 root root  571 May  5 10:15 .bash_history
+-rw-r--r--  1 root root 3106 May  5 10:15 .bashrc
+drwx------  2 root root 4096 May  5 10:15 .cache
+-rw-r--r--  1 root root  161 May  5 10:15 .profile
+drwx------  2 root root 4096 May  5 10:15 .ssh
 ```
 
 ### **-s**, **--shell=SHELL**
 
-Run the specified shell instead of the default shell for the user
+Run the specified shell instead of the default shell for the target user.
 
 ```console
 $ su -s /bin/zsh john
@@ -47,7 +47,7 @@ john@hostname:~$
 
 ### **-p**, **--preserve-environment**
 
-Preserve the current environment variables when switching users
+Preserve the current environment variables instead of switching to the target user's environment.
 
 ```console
 $ su -p john
@@ -68,13 +68,13 @@ root@hostname:/home/user#
 ### Running a command as root and returning to normal user
 
 ```console
-$ su -c "apt update && apt upgrade -y" root
+$ su -c "apt update && apt upgrade" root
 Password: 
 [apt update and upgrade output]
 $
 ```
 
-### Switching to another user with their environment
+### Switching to another user with login environment
 
 ```console
 $ su - john
@@ -84,34 +84,35 @@ john@hostname:~$
 
 ## Tips:
 
-### Use sudo Instead When Possible
+### Use sudo instead when possible
 
-For most administrative tasks, using `sudo command` is preferable to `su` as it:
-- Logs all commands executed
-- Doesn't require sharing the root password
-- Provides more granular permission control
+Modern systems often prefer `sudo` over `su` for administrative tasks as it provides better logging and more granular permission control.
 
-### Exit the Superuser Shell Safely
+### Be careful with environment variables
 
-Always type `exit` or press Ctrl+D when you're done with the superuser shell to return to your regular user account.
+When using `su` without the `-` option, you keep your current environment variables, which might cause unexpected behavior. Use `-` for a clean environment.
 
-### Be Careful with Environment Variables
+### Exit the su session properly
 
-When using plain `su` (without `-`), you keep your current environment variables, which might cause unexpected behavior. Use `su -` for a clean environment.
+Type `exit` or press Ctrl+D to return to your original user session when finished with the elevated privileges.
+
+### Check before running commands as root
+
+Always double-check commands before executing them as root, as mistakes can damage your system.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `su` and `sudo`?
-A. `su` switches your entire user session to another user (typically root), while `sudo` executes just a single command with elevated privileges and then returns to your normal user.
+A. `su` switches your entire user session to another user (typically root), while `sudo` executes just one command with elevated privileges and then returns to your normal user.
 
-#### Q2. Why does `su` sometimes fail with "Authentication failure"?
-A. This usually happens because the root account password is incorrect or the root account is locked (common in Ubuntu and other distributions that prefer sudo).
+#### Q2. Why does `su` ask for a password?
+A. `su` requires the password of the target user you're switching to, not your own password (unlike `sudo` which asks for your password).
 
-#### Q3. How do I exit from the su session?
-A. Type `exit` or press Ctrl+D to return to your original user account.
+#### Q3. How do I exit from an `su` session?
+A. Type `exit` or press Ctrl+D to return to your original user session.
 
-#### Q4. What's the difference between `su` and `su -`?
-A. `su` only changes the user ID but keeps your current environment variables and working directory. `su -` provides a complete login environment for the new user, changing to their home directory and loading their profile.
+#### Q4. Why use `su -` instead of just `su`?
+A. `su -` provides a complete login environment of the target user, including their environment variables, working directory, and shell configuration. Plain `su` only changes the user ID but keeps your current environment.
 
 ## References
 
@@ -119,4 +120,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/su-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

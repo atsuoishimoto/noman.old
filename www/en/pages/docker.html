@@ -47,130 +47,110 @@
     <main>
       
   <h1>docker command</h1>
-<p>Manage Docker containers, images, networks, and other Docker objects.</p>
+<p>Manage Docker containers, images, networks, and volumes.</p>
 <h2>Overview</h2>
-<p>Docker is a platform that allows you to develop, ship, and run applications in containers. The <code>docker</code> command is the primary interface for interacting with Docker, enabling you to build, run, and manage containers, images, networks, volumes, and other Docker resources. It provides a consistent environment for applications to run regardless of the host system.</p>
+<p>Docker is a platform that uses containerization to package applications and their dependencies into isolated units. The <code>docker</code> command provides a CLI to build, run, and manage containers, images, networks, and volumes. It allows developers to create consistent environments across different machines.</p>
 <h2>Options</h2>
-<h3><strong>docker run</strong></h3>
-<p>Create and start a new container from an image</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>--name<span style="color: #F8F8F8"> </span>web<span style="color: #F8F8F8"> </span>nginx
-<span style="color: #000; font-style: italic">e7cc5d2c8cdc5b05a4f37ce6cf15e9f0e0a5bd2bec30cc5415917d669de12857</span>
-</pre></div>
-<h3><strong>docker ps</strong></h3>
-<p>List running containers (add <code>-a</code> to show all containers including stopped ones)</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>ps
-<span style="color: #000; font-style: italic">CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS     NAMES</span>
-<span style="color: #000; font-style: italic">e7cc5d2c8cdc   nginx     &quot;/docker-entrypoint.…&quot;   10 seconds ago   Up 9 seconds    80/tcp    web</span>
-</pre></div>
-<h3><strong>docker images</strong></h3>
-<p>List available images on your local system</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>images
-<span style="color: #000; font-style: italic">REPOSITORY   TAG       IMAGE ID       CREATED        SIZE</span>
-<span style="color: #000; font-style: italic">nginx        latest    a6bd71f48f68   2 weeks ago    187MB</span>
-<span style="color: #000; font-style: italic">ubuntu       latest    3b418d7b466a   4 weeks ago    77.8MB</span>
-</pre></div>
-<h3><strong>docker build</strong></h3>
-<p>Build an image from a Dockerfile</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:1.0<span style="color: #F8F8F8"> </span>.
-<span style="color: #000; font-style: italic">[+] Building 25.6s (10/10) FINISHED</span>
-<span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile                       0.1s</span>
-<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring dockerfile: 215B                                       0.0s</span>
-<span style="color: #000; font-style: italic"> =&gt; [internal] load .dockerignore                                          0.0s</span>
-<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring context: 2B                                            0.0s</span>
-<span style="color: #000; font-style: italic"> =&gt; [internal] load metadata for docker.io/library/node:14                 1.2s</span>
-<span style="color: #000; font-style: italic"> =&gt; [1/5] FROM docker.io/library/node:14@sha256:fcb6...                    0.0s</span>
-<span style="color: #000; font-style: italic"> =&gt; [internal] load build context                                          0.1s</span>
-<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring context: 1.25kB                                        0.0s</span>
-<span style="color: #000; font-style: italic"> =&gt; [2/5] WORKDIR /app                                                     0.5s</span>
-<span style="color: #000; font-style: italic"> =&gt; [3/5] COPY package*.json ./                                            0.1s</span>
-<span style="color: #000; font-style: italic"> =&gt; [4/5] RUN npm install                                                 20.5s</span>
-<span style="color: #000; font-style: italic"> =&gt; [5/5] COPY . .                                                         0.1s</span>
-<span style="color: #000; font-style: italic"> =&gt; exporting to image                                                     3.1s</span>
-<span style="color: #000; font-style: italic"> =&gt; =&gt; exporting layers                                                    3.1s</span>
-<span style="color: #000; font-style: italic"> =&gt; =&gt; writing image sha256:a1b2c3d4e5f6...                                0.0s</span>
-<span style="color: #000; font-style: italic"> =&gt; =&gt; naming to docker.io/library/myapp:1.0                               0.0s</span>
-</pre></div>
-<h3><strong>docker stop/start</strong></h3>
-<p>Stop or start existing containers</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>stop<span style="color: #F8F8F8"> </span>web
-<span style="color: #000; font-style: italic">web</span>
+<h3><strong>--help</strong></h3>
+<p>Display help information for Docker commands.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>--help
+<span style="color: #000; font-style: italic">Usage:  docker [OPTIONS] COMMAND</span>
 
-<span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>start<span style="color: #F8F8F8"> </span>web
-<span style="color: #000; font-style: italic">web</span>
-</pre></div>
-<h3><strong>docker exec</strong></h3>
-<p>Run a command in a running container</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span><span style="color: #204A87">exec</span><span style="color: #F8F8F8"> </span>-it<span style="color: #F8F8F8"> </span>web<span style="color: #F8F8F8"> </span>bash
-<span style="color: #8F5902">root@e7cc5d2c8cdc:/# </span>ls
-<span style="color: #000; font-style: italic">bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var</span>
-<span style="color: #8F5902">root@e7cc5d2c8cdc:/# </span><span style="color: #204A87">exit</span>
+<span style="color: #000; font-style: italic">A self-sufficient runtime for containers</span>
+
+<span style="color: #000; font-style: italic">Common Commands:</span>
+<span style="color: #000; font-style: italic">  run         Create and run a new container from an image</span>
+<span style="color: #000; font-style: italic">  exec        Execute a command in a running container</span>
+<span style="color: #000; font-style: italic">  ps          List containers</span>
+<span style="color: #000; font-style: italic">  build       Build an image from a Dockerfile</span>
+<span style="color: #000; font-style: italic">  pull        Download an image from a registry</span>
+<span style="color: #000; font-style: italic">  push        Upload an image to a registry</span>
+<span style="color: #000; font-style: italic">  images      List images</span>
+<span style="color: #000; font-style: italic">  login       Log in to a registry</span>
+<span style="color: #000; font-style: italic">  logout      Log out from a registry</span>
+<span style="color: #000; font-style: italic">  search      Search Docker Hub for images</span>
+<span style="color: #000; font-style: italic">  version     Show the Docker version information</span>
+<span style="color: #000; font-style: italic">  info        Display system-wide information</span>
+
+<span style="color: #000; font-style: italic">Management Commands:</span>
+<span style="color: #000; font-style: italic">  builder     Manage builds</span>
+<span style="color: #000; font-style: italic">  buildx*     Docker Buildx (Docker Inc., v0.10.4)</span>
+<span style="color: #000; font-style: italic">  compose*    Docker Compose (Docker Inc., v2.17.2)</span>
+<span style="color: #000; font-style: italic">  container   Manage containers</span>
+<span style="color: #000; font-style: italic">  context     Manage contexts</span>
+<span style="color: #000; font-style: italic">  image       Manage images</span>
+<span style="color: #000; font-style: italic">  manifest    Manage Docker image manifests and manifest lists</span>
+<span style="color: #000; font-style: italic">  network     Manage networks</span>
+<span style="color: #000; font-style: italic">  plugin      Manage plugins</span>
+<span style="color: #000; font-style: italic">  system      Manage Docker</span>
+<span style="color: #000; font-style: italic">  trust       Manage trust on Docker images</span>
+<span style="color: #000; font-style: italic">  volume      Manage volumes</span>
+
+<span style="color: #000; font-style: italic">[...]</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Running a container with port mapping</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>:80<span style="color: #F8F8F8"> </span>--name<span style="color: #F8F8F8"> </span>webserver<span style="color: #F8F8F8"> </span>nginx
-<span style="color: #000; font-style: italic">f499cc406d7e9d92537dec4182f2d0f9f9dbf74e2d9651c3c4c94a7b8a023c15</span>
-
-<span style="color: #8F5902">$ </span>curl<span style="color: #F8F8F8"> </span>http://localhost:8080
-<span style="color: #000; font-style: italic">&lt;!DOCTYPE html&gt;</span>
-<span style="color: #000; font-style: italic">&lt;html&gt;</span>
-<span style="color: #000; font-style: italic">&lt;head&gt;</span>
-<span style="color: #000; font-style: italic">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span>
-<span style="color: #000; font-style: italic">...</span>
+<h3>Running a container</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">80</span>:80<span style="color: #F8F8F8"> </span>--name<span style="color: #F8F8F8"> </span>webserver<span style="color: #F8F8F8"> </span>nginx
+<span style="color: #000; font-style: italic">e5d40ecd5de98d0bff8f57c4d7f1e2f132b95b5bd4c42d8f4e9f659d3e3950cd</span>
 </pre></div>
-<h3>Building and running a custom application</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:latest<span style="color: #F8F8F8"> </span>.
-<span style="color: #000; font-style: italic">[+] Building 15.3s (10/10) FINISHED</span>
-<span style="color: #000; font-style: italic">...</span>
-
-<span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3000</span>:3000<span style="color: #F8F8F8"> </span>--name<span style="color: #F8F8F8"> </span>myapplication<span style="color: #F8F8F8"> </span>myapp:latest
-<span style="color: #000; font-style: italic">a72f4623b8bfb647e8b108f770e5758eed96a37638e929278169a105ea86c912</span>
+<h3>Listing running containers</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>ps
+<span style="color: #000; font-style: italic">CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS                               NAMES</span>
+<span style="color: #000; font-style: italic">e5d40ecd5de9   nginx     &quot;/docker-entrypoint.…&quot;   10 seconds ago   Up 9 seconds    0.0.0.0:80-&gt;80/tcp, :::80-&gt;80/tcp   webserver</span>
 </pre></div>
-<h3>Managing container data with volumes</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>volume<span style="color: #F8F8F8"> </span>create<span style="color: #F8F8F8"> </span>mydata
-<span style="color: #000; font-style: italic">mydata</span>
-
-<span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>--name<span style="color: #F8F8F8"> </span>database<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>mydata:/var/lib/mysql<span style="color: #F8F8F8"> </span>mysql:8.0
-<span style="color: #000; font-style: italic">b8a1c375e3c2a9c0293bb9d4f9a6b1e7f2d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9</span>
+<h3>Building an image from a Dockerfile</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>build<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>myapp:1.0<span style="color: #F8F8F8"> </span>.
+<span style="color: #000; font-style: italic">[+] Building 10.5s (10/10) FINISHED</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load build definition from Dockerfile                                                 0.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring dockerfile: 215B                                                                0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load .dockerignore                                                                    0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring context: 2B                                                                      0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load metadata for docker.io/library/node:14                                           1.2s</span>
+<span style="color: #000; font-style: italic"> =&gt; [1/5] FROM docker.io/library/node:14@sha256:a158d3b9b4e3fa813fa6c8c590b8f0a860e015ad4e59bbce5744d5dc65798060  0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; [internal] load build context                                                                    0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; transferring context: 32B                                                                     0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; CACHED [2/5] WORKDIR /app                                                                        0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; [3/5] COPY package*.json ./                                                                      0.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; [4/5] RUN npm install                                                                            8.5s</span>
+<span style="color: #000; font-style: italic"> =&gt; [5/5] COPY . .                                                                                   0.1s</span>
+<span style="color: #000; font-style: italic"> =&gt; exporting to image                                                                               0.4s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; exporting layers                                                                              0.4s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; writing image sha256:d64d6b95f5b7e8c3e92a6c2f5f154610e2aa0163d3c1a9c832b80ed4d5a0e21e       0.0s</span>
+<span style="color: #000; font-style: italic"> =&gt; =&gt; naming to docker.io/library/myapp:1.0                                                         0.0s</span>
+</pre></div>
+<h3>Stopping a container</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>stop<span style="color: #F8F8F8"> </span>webserver
+<span style="color: #000; font-style: italic">webserver</span>
+</pre></div>
+<h3>Removing a container</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>rm<span style="color: #F8F8F8"> </span>webserver
+<span style="color: #000; font-style: italic">webserver</span>
 </pre></div>
 <h2>Tips</h2>
 <h3>Use Docker Compose for Multi-Container Applications</h3>
-<p>Instead of managing multiple containers with complex <code>docker run</code> commands, use Docker Compose with a <code>docker-compose.yml</code> file to define and run multi-container applications.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker-compose<span style="color: #F8F8F8"> </span>up<span style="color: #F8F8F8"> </span>-d
-</pre></div>
+<p>For applications with multiple services, use Docker Compose with a <code>docker-compose.yml</code> file instead of managing each container separately with <code>docker run</code> commands.</p>
 <h3>Clean Up Unused Resources</h3>
-<p>Docker can accumulate unused containers, images, and volumes over time. Use these commands to clean up:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>system<span style="color: #F8F8F8"> </span>prune<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># Remove all stopped containers, unused networks, dangling images</span>
-<span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>system<span style="color: #F8F8F8"> </span>prune<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># Also remove unused images, not just dangling ones</span>
-<span style="color: #8F5902">$ </span>docker<span style="color: #F8F8F8"> </span>volume<span style="color: #F8F8F8"> </span>prune<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># Remove unused volumes</span>
-</pre></div>
-<h3>Use Multi-Stage Builds for Smaller Images</h3>
-<p>Multi-stage builds in Dockerfiles help create smaller production images by separating build-time dependencies from runtime dependencies.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">FROM</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">node:14</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">AS</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">build</span>
-<span style="color: #204A87; font-weight: bold">WORKDIR</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">/app</span>
-<span style="color: #204A87; font-weight: bold">COPY</span><span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>.
-<span style="color: #204A87; font-weight: bold">RUN</span><span style="color: #F8F8F8"> </span>npm<span style="color: #F8F8F8"> </span>ci<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">&amp;&amp;</span><span style="color: #F8F8F8"> </span>npm<span style="color: #F8F8F8"> </span>run<span style="color: #F8F8F8"> </span>build
-
-<span style="color: #204A87; font-weight: bold">FROM</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">nginx:alpine</span>
-<span style="color: #204A87; font-weight: bold">COPY</span><span style="color: #F8F8F8"> </span>--from<span style="color: #CE5C00; font-weight: bold">=</span>build<span style="color: #F8F8F8"> </span>/app/dist<span style="color: #F8F8F8"> </span>/usr/share/nginx/html
-</pre></div>
-<h3>Use .dockerignore</h3>
-<p>Create a <code>.dockerignore</code> file similar to <code>.gitignore</code> to prevent unnecessary files from being included in your Docker build context, which speeds up builds and reduces image size.</p>
+<p>Use <code>docker system prune</code> to remove all stopped containers, unused networks, dangling images, and build cache. Add the <code>-a</code> flag to also remove all unused images.</p>
+<h3>Use Named Volumes for Persistent Data</h3>
+<p>Instead of using bind mounts, use named volumes for data that needs to persist between container restarts: <code>docker run -v mydata:/app/data myapp</code>.</p>
+<h3>Use Multi-Stage Builds</h3>
+<p>For smaller production images, use multi-stage builds in your Dockerfile to separate build dependencies from runtime dependencies.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between <code>docker run</code> and <code>docker start</code>?</h4>
 <p>A. <code>docker run</code> creates and starts a new container from an image, while <code>docker start</code> restarts a stopped container that already exists.</p>
-<h4>Q2. How do I access logs from a container?</h4>
-<p>A. Use <code>docker logs [container_name]</code> to view logs. Add <code>-f</code> to follow the logs in real-time.</p>
-<h4>Q3. How can I copy files between my host and a container?</h4>
-<p>A. Use <code>docker cp [source] [destination]</code>. For example: <code>docker cp ./file.txt mycontainer:/app/</code> or <code>docker cp mycontainer:/app/file.txt ./</code>.</p>
-<h4>Q4. How do I remove containers and images?</h4>
-<p>A. Use <code>docker rm [container_id]</code> to remove a container and <code>docker rmi [image_id]</code> to remove an image. Add <code>-f</code> to force removal.</p>
-<h4>Q5. How can I see resource usage of my containers?</h4>
-<p>A. Use <code>docker stats</code> to see CPU, memory, network, and disk usage of running containers.</p>
+<h4>Q2. How do I access a running container's shell?</h4>
+<p>A. Use <code>docker exec -it container_name /bin/bash</code> or <code>/bin/sh</code> to get an interactive shell inside a running container.</p>
+<h4>Q3. How do I view container logs?</h4>
+<p>A. Use <code>docker logs container_name</code> to view the logs of a container. Add <code>-f</code> to follow the log output in real-time.</p>
+<h4>Q4. How do I copy files between my host and a container?</h4>
+<p>A. Use <code>docker cp /host/path container_name:/container/path</code> to copy from host to container, or <code>docker cp container_name:/container/path /host/path</code> to copy from container to host.</p>
+<h4>Q5. How do I update a running container's configuration?</h4>
+<p>A. You can't update most configuration options of a running container. Instead, stop the container, remove it, and create a new one with the updated configuration.</p>
 <h2>References</h2>
-<p>https://docs.docker.com/engine/reference/commandline/cli/</p>
+<p>https://docs.docker.com/engine/reference/commandline/docker/</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

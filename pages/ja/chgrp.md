@@ -1,16 +1,16 @@
 # chgrp コマンド
 
-ファイルやディレクトリのグループ所有権を変更します。
+ファイルとディレクトリのグループ所有権を変更します。
 
 ## 概要
 
-`chgrp` コマンドはファイルやディレクトリのグループ所有権を変更するために使用されます。適切な権限を持つユーザーが、特定のファイルやディレクトリにどのグループがアクセスできるかを変更できるようにするもので、Unixファイルパーミッション管理の重要な側面です。
+`chgrp` コマンドはファイルとディレクトリのグループ所有権を変更します。適切な権限を持つユーザーが、特定のファイルやディレクトリにどのグループがアクセスできるかを変更できるようにします。これはマルチユーザー環境でのファイル権限とアクセス制御を管理するのに役立ちます。
 
 ## オプション
 
 ### **-c, --changes**
 
-グループ所有権が変更された場合に報告します。
+変更が行われた場合のみ診断メッセージを表示します。
 
 ```console
 $ chgrp -c staff document.txt
@@ -22,25 +22,24 @@ changed group of 'document.txt' from 'users' to 'staff'
 ほとんどのエラーメッセージを抑制します。
 
 ```console
-$ chgrp -f nonexistent_group document.txt
+$ chgrp -f nonexistentgroup file.txt
 ```
 
 ### **-v, --verbose**
 
-処理されるすべてのファイルについて詳細な情報を出力します。
+処理されるすべてのファイルに対して診断メッセージを出力します。
 
 ```console
-$ chgrp -v staff *.txt
-group of 'document.txt' retained as 'staff'
-group of 'notes.txt' changed from 'users' to 'staff'
+$ chgrp -v developers scripts/
+changed group of 'scripts/' from 'users' to 'developers'
 ```
 
 ### **-R, --recursive**
 
-ファイルとディレクトリを再帰的に処理します。
+ファイルとディレクトリに対して再帰的に操作します。
 
 ```console
-$ chgrp -R developers project_folder/
+$ chgrp -R developers project/
 ```
 
 ### **-h, --no-dereference**
@@ -48,91 +47,84 @@ $ chgrp -R developers project_folder/
 参照先のファイルではなくシンボリックリンク自体に影響を与えます。
 
 ```console
-$ chgrp -h staff symlink_file
+$ chgrp -h staff symlink.txt
 ```
 
 ### **--reference=RFILE**
 
-グループ値を指定する代わりに、RFILEのグループを使用します。
+グループ名を指定する代わりに、RFILEのグループを使用します。
 
 ```console
-$ chgrp --reference=template.txt document.txt
+$ chgrp --reference=template.txt newfile.txt
 ```
 
 ## 使用例
 
-### 単一ファイルのグループ所有権を変更する
+### 基本的なグループ変更
 
 ```console
 $ ls -l document.txt
--rw-r--r-- 1 user users 1024 May 4 10:30 document.txt
-$ chgrp staff document.txt
+-rw-r--r--  1 user  users  1024 May 5 10:30 document.txt
+$ chgrp developers document.txt
 $ ls -l document.txt
--rw-r--r-- 1 user staff 1024 May 4 10:30 document.txt
+-rw-r--r--  1 user  developers  1024 May 5 10:30 document.txt
 ```
 
-### 再帰的にグループ所有権を変更する
+### グループを再帰的に変更する
 
 ```console
-$ chgrp -R developers project/
-$ ls -l project/
-total 8
-drwxr-xr-x 2 user developers 4096 May 4 10:35 src/
--rw-r--r-- 1 user developers 2048 May 4 10:32 README.md
+$ chgrp -R webadmin /var/www/html
+$ ls -l /var/www/html
+total 16
+drwxr-xr-x  3 www-data  webadmin  4096 May 4 14:22 css
+drwxr-xr-x  2 www-data  webadmin  4096 May 4 14:22 js
+-rw-r--r--  1 www-data  webadmin  8192 May 5 09:15 index.html
 ```
 
-### 参照ファイルを使用してグループ所有権を変更する
+### 数値グループIDの使用
 
 ```console
-$ ls -l template.txt document.txt
--rw-r--r-- 1 user developers 1024 May 4 10:30 template.txt
--rw-r--r-- 1 user users 2048 May 4 10:32 document.txt
-$ chgrp --reference=template.txt document.txt
-$ ls -l document.txt
--rw-r--r-- 1 user developers 2048 May 4 10:32 document.txt
+$ chgrp 1001 config.ini
+$ ls -l config.ini
+-rw-r--r--  1 user  1001  512 May 5 11:45 config.ini
 ```
 
 ## ヒント:
 
+### 一貫性のために数値グループIDを使用する
+
+スクリプト作成や複数のシステム間で作業する場合、グループ名の代わりに数値グループID（GID）を使用すると、より信頼性が高くなります。グループ名はシステムによって異なる場合がありますが、GIDは一貫しています。
+
 ### 先にグループメンバーシップを確認する
 
-ファイルのグループを変更する前に、`groups`コマンドを使用して対象グループのメンバーであることを確認してください。自分が所属しているグループにのみファイルのグループを変更できます（rootユーザーを除く）。
+ファイルのグループを変更する前に、所有者が対象グループのメンバーであることを確認してください。`groups`コマンドを使用して、ユーザーがどのグループに属しているかを確認できます。
 
-### 数値グループIDを使用する
+### 完全な権限管理のためにchmodと組み合わせる
 
-グループIDの番号を知っている場合は、グループ名の代わりに番号を使用できます：
+多くの場合、グループ所有権と権限の両方を変更したいでしょう。`chgrp`の後に`chmod g+rw`を使用して、新しいグループに読み取りと書き込みの権限を与えます。
 
-```console
-$ chgrp 1000 document.txt
-```
+### ルートディレクトリの権限を保持する
 
-### chmodと組み合わせる
-
-グループ所有権を変更した後、`chmod`でグループのパーミッションを調整する必要があるかもしれません：
-
-```console
-$ chgrp developers project/
-$ chmod g+w project/
-```
+システムディレクトリで`-R`を使用する場合は、重要なシステムファイルのグループを変更しないように注意してください。システムの安定性に影響を与える可能性があります。
 
 ## よくある質問
 
-#### Q1. 誰がファイルのグループを変更できますか？
-A. ファイルの所有者は、自分が所属しているグループにのみファイルのグループを変更できます。rootユーザーは任意のファイルのグループを任意のグループに変更できます。
+#### Q1. `chgrp`と`chown`の違いは何ですか？
+A. `chgrp`はファイルのグループ所有権のみを変更しますが、`chown`はユーザーとグループの両方の所有権を変更できます。
 
-#### Q2. 自分がどのグループに所属しているか確認するには？
-A. `groups`コマンドを使用すると、自分が所属するすべてのグループを確認できます。
+#### Q2. 誰でもファイルのグループを変更できますか？
+A. いいえ。ファイル所有者またはroot権限を持つユーザーのみがファイルのグループを変更でき、所有者は自分が属しているグループにのみ割り当てることができます。
 
-#### Q3. 所有者とグループを一度に変更できますか？
-A. いいえ、`chgrp`はグループのみを変更します。所有者とグループを同時に変更するには、`chown user:group file`という構文で`chown`を使用してください。
+#### Q3. ファイルに割り当てられるグループを確認するにはどうすればよいですか？
+A. `groups`コマンドを使用して、自分が属しているグループを確認できます。
 
-#### Q4. 「Operation not permitted」エラーが出る理由は？
-A. これは通常、ファイルの所有者でない場合、対象グループのメンバーでない場合、またはファイルに不変フラグなどの特別なパーミッションが設定されている場合に発生します。
+#### Q4. ディレクトリのグループを変更すると、その中のファイルに影響しますか？
+A. いいえ、`-R`（再帰的）オプションを使用しない限り、ディレクトリのグループを変更してもその中のファイルには影響しません。
 
-## 参照
+## 参考文献
 
 https://www.gnu.org/software/coreutils/manual/html_node/chgrp-invocation.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

@@ -1,6 +1,6 @@
 # [ command
 
-Evaluates conditional expressions and returns a status based on the evaluation result.
+Evaluates conditional expressions and returns a status based on the evaluation.
 
 ## Overview
 
@@ -8,130 +8,161 @@ The `[` command (also known as `test`) is a shell builtin that evaluates conditi
 
 ## Options
 
-### **File Tests**
+### **-e file**
 
-Tests for file properties and attributes
-
-```console
-$ [ -f /etc/passwd ] && echo "Regular file exists"
-Regular file exists
-```
-
-### **String Tests**
-
-Compares strings or checks string properties
+Tests if file exists.
 
 ```console
-$ name="John"
-$ [ "$name" = "John" ] && echo "Names match"
-Names match
-```
-
-### **Integer Tests**
-
-Compares integer values
-
-```console
-$ age=25
-$ [ $age -gt 18 ] && echo "Adult"
-Adult
-```
-
-## Usage Examples
-
-### Testing if a file exists
-
-```console
-$ [ -e /etc/hosts ] && echo "File exists" || echo "File does not exist"
+$ [ -e /etc/passwd ] && echo "File exists" || echo "File does not exist"
 File exists
 ```
 
-### Checking if a directory is writable
+### **-f file**
+
+Tests if file exists and is a regular file.
+
+```console
+$ [ -f /etc/passwd ] && echo "Regular file" || echo "Not a regular file"
+Regular file
+```
+
+### **-d file**
+
+Tests if file exists and is a directory.
+
+```console
+$ [ -d /etc ] && echo "Directory exists" || echo "Not a directory"
+Directory exists
+```
+
+### **-r file**
+
+Tests if file exists and is readable.
+
+```console
+$ [ -r /etc/passwd ] && echo "File is readable" || echo "File is not readable"
+File is readable
+```
+
+### **-w file**
+
+Tests if file exists and is writable.
 
 ```console
 $ [ -w /tmp ] && echo "Directory is writable" || echo "Directory is not writable"
 Directory is writable
 ```
 
-### Comparing string values in an if statement
+### **-x file**
+
+Tests if file exists and is executable.
 
 ```console
-$ fruit="apple"
-$ if [ "$fruit" = "apple" ]; then
->   echo "It's an apple"
-> else
->   echo "It's not an apple"
-> fi
-It's an apple
+$ [ -x /bin/ls ] && echo "File is executable" || echo "File is not executable"
+File is executable
 ```
 
-## Common File Test Operators
+### **-z string**
 
-| Operator | Description |
-|----------|-------------|
-| `-e file` | True if file exists |
-| `-f file` | True if file is a regular file |
-| `-d file` | True if file is a directory |
-| `-r file` | True if file is readable |
-| `-w file` | True if file is writable |
-| `-x file` | True if file is executable |
-| `-s file` | True if file exists and has size greater than zero |
+Tests if the length of string is zero.
 
-## Common String Test Operators
+```console
+$ [ -z "" ] && echo "String is empty" || echo "String is not empty"
+String is empty
+```
 
-| Operator | Description |
-|----------|-------------|
-| `-z string` | True if string length is zero |
-| `-n string` | True if string length is non-zero |
-| `string1 = string2` | True if strings are equal |
-| `string1 != string2` | True if strings are not equal |
+### **-n string**
 
-## Common Integer Comparison Operators
+Tests if the length of string is non-zero.
 
-| Operator | Description |
-|----------|-------------|
-| `int1 -eq int2` | True if integers are equal |
-| `int1 -ne int2` | True if integers are not equal |
-| `int1 -lt int2` | True if int1 is less than int2 |
-| `int1 -le int2` | True if int1 is less than or equal to int2 |
-| `int1 -gt int2` | True if int1 is greater than int2 |
-| `int1 -ge int2` | True if int1 is greater than or equal to int2 |
+```console
+$ [ -n "hello" ] && echo "String is not empty" || echo "String is empty"
+String is not empty
+```
 
-## Tips
+## Usage Examples
+
+### String comparison
+
+```console
+$ name="John"
+$ [ "$name" = "John" ] && echo "Name is John" || echo "Name is not John"
+Name is John
+```
+
+### Numeric comparison
+
+```console
+$ age=25
+$ [ $age -eq 25 ] && echo "Age is 25" || echo "Age is not 25"
+Age is 25
+```
+
+### Combining conditions with logical operators
+
+```console
+$ [ -d /etc ] && [ -r /etc/passwd ] && echo "Both conditions are true"
+Both conditions are true
+```
+
+### Using in if statements
+
+```console
+$ if [ -f /etc/hosts ]; then
+>   echo "The hosts file exists"
+> else
+>   echo "The hosts file does not exist"
+> fi
+The hosts file exists
+```
+
+## Tips:
 
 ### Always Quote Variables
-Always quote variables in test expressions to prevent word splitting and globbing issues:
+
+Always quote variables inside `[` to prevent errors with empty variables or variables containing spaces:
+
 ```console
 $ [ "$variable" = "value" ]  # Correct
+$ [ $variable = value ]      # Potentially problematic
 ```
 
-### Use Double Brackets When Possible
-In Bash, consider using `[[` instead of `[` for more advanced features and fewer surprises:
+### Use Double Brackets in Bash
+
+In Bash, consider using `[[` instead of `[` for more advanced features and fewer quoting issues:
+
 ```console
-$ [[ $string =~ ^[0-9]+$ ]] && echo "Numeric"
+$ [[ $string == *txt ]] && echo "String ends with txt"
 ```
 
-### Remember the Spaces
-The `[` command requires spaces after the opening bracket and before the closing bracket:
+### Remember the Closing Bracket
+
+The `[` command requires a closing `]` as its last argument. Forgetting it will cause syntax errors.
+
+### Spacing is Critical
+
+Spaces are required around brackets and operators:
+
 ```console
-$ [ -f file.txt ]  # Correct
-$ [-f file.txt]    # Incorrect - will fail
+$ [ -f file.txt ]    # Correct
+$ [-f file.txt]      # Incorrect
+$ [ $a = $b ]        # Correct
+$ [ $a=$b ]          # Incorrect
 ```
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `[` and `[[`?
-A. `[` is a command (also known as `test`) available in all POSIX shells, while `[[` is a shell keyword in Bash and other modern shells that offers extended functionality like pattern matching and logical operators.
+A. `[` is a command (also known as `test`) available in all POSIX shells, while `[[` is a Bash/Zsh shell keyword with extended functionality like pattern matching and logical operators without escaping.
 
-#### Q2. Why do I need spaces around the brackets?
-A. The `[` is actually a command (like `ls` or `grep`), so it needs spaces to separate it from its arguments. The closing `]` is its final argument.
+#### Q2. How do I check if a variable is empty?
+A. Use `[ -z "$variable" ]` to check if a variable is empty or `[ -n "$variable" ]` to check if it's not empty.
 
-#### Q3. How do I test multiple conditions?
-A. Use `-a` (AND) or `-o` (OR) operators:
-```console
-$ [ -f file.txt -a -r file.txt ] && echo "File exists and is readable"
-```
-With `[[`, you can use `&&` and `||` instead.
+#### Q3. How do I compare numbers?
+A. Use `-eq` (equal), `-ne` (not equal), `-lt` (less than), `-le` (less than or equal), `-gt` (greater than), or `-ge` (greater than or equal): `[ "$num1" -eq "$num2" ]`.
+
+#### Q4. How do I compare strings?
+A. Use `=` (equal) or `!=` (not equal): `[ "$string1" = "$string2" ]`.
 
 ## References
 
@@ -139,4 +170,4 @@ https://pubs.opengroup.org/onlinepubs/9699919799/utilities/test.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

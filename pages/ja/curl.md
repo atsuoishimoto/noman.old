@@ -1,50 +1,38 @@
-# curl コマンド
+# curlコマンド
 
-URLを使用してサーバーとの間でデータを転送するツールで、HTTP、HTTPS、FTP、SFTPなど多数のプロトコルをサポートします。
+様々なプロトコルを使用してサーバーとの間でデータを転送するコマンドです。
 
 ## 概要
 
-`curl`はURLを使ってデータを転送するためのコマンドラインツールです。HTTP、HTTPS、FTP、FTPS、SCP、SFTP、LDAPなど、多くのプロトコルをサポートしています。ファイルのダウンロード、APIのテスト、HTTPリクエストの送信、ネットワーク問題のデバッグなどによく使用されます。`curl`は非対話式で、ユーザーの介入なしに動作するように設計されているため、スクリプトや自動化に最適です。
+`curl`は、様々なプロトコル（HTTP、HTTPS、FTP、SFTP、SCPなど）を使用してURLでデータを転送するためのコマンドラインツールです。ユーザーの対話なしで動作するように設計されており、ファイルのダウンロード、APIリクエスト、エンドポイントのテストなどに使用できます。`curl`はリクエストのカスタマイズ、認証の処理、データ転送の制御のための多数のオプションをサポートしています。
 
 ## オプション
 
-### **-o, --output \<file>**
+### **-o, --output \<file\>**
 
-出力を画面に表示せずにファイルに保存します
+出力を標準出力ではなくファイルに書き込みます。
 
 ```console
 $ curl -o example.html https://example.com
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100  1256  100  1256    0     0   9664      0 --:--:-- --:--:-- --:--:--  9663
+100  1256  100  1256    0     0   7503      0 --:--:-- --:--:-- --:--:--  7503
 ```
 
 ### **-O, --remote-name**
 
-URLからリモートファイル名を使用して出力を保存します
+リモートファイルと同じ名前のローカルファイルに出力を書き込みます。
 
 ```console
-$ curl -O https://example.com/sample.zip
+$ curl -O https://example.com/file.zip
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100 10.2M  100 10.2M    0     0  5.1MB/s      0 --:--:-- 0:00:02 --:--:-- 5.1MB
-```
-
-### **-L, --location**
-
-HTTPリダイレクト（3XXレスポンス）に従います
-
-```console
-$ curl -L http://github.com
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   142  100   142    0     0    573      0 --:--:-- --:--:-- --:--:--   573
-100  5891    0  5891    0     0  13090      0 --:--:-- --:--:-- --:--:-- 13090
+100 10.2M  100 10.2M    0     0  5.1M      0  0:00:02  0:00:02 --:--:-- 5.1M
 ```
 
 ### **-s, --silent**
 
-サイレントモード；進行状況メーターやエラーメッセージを表示しません
+サイレントまたは静かなモードで、進行状況メーターやエラーメッセージを表示しません。
 
 ```console
 $ curl -s https://example.com > example.html
@@ -52,60 +40,92 @@ $ curl -s https://example.com > example.html
 
 ### **-I, --head**
 
-HTTPヘッダーのみを取得します（HEADリクエスト）
+HTTPヘッダーのみを取得します。
 
 ```console
 $ curl -I https://example.com
 HTTP/2 200 
 content-type: text/html; charset=UTF-8
-date: Tue, 04 May 2025 12:00:00 GMT
-expires: Tue, 11 May 2025 12:00:00 GMT
+date: Mon, 05 May 2025 12:00:00 GMT
+expires: Mon, 12 May 2025 12:00:00 GMT
 cache-control: public, max-age=604800
 server: ECS (dcb/7F84)
 content-length: 1256
 ```
 
-### **-X, --request \<command>**
+### **-L, --location**
 
-使用するHTTPリクエストメソッドを指定します（GET、POST、PUT、DELETEなど）
+サーバーが要求されたページが移動したと報告した場合、リダイレクトに従います。
+
+```console
+$ curl -L http://github.com
+```
+
+### **-X, --request \<command\>**
+
+使用するリクエストメソッドを指定します（GET、POST、PUT、DELETEなど）。
 
 ```console
 $ curl -X POST https://api.example.com/data
 ```
 
-### **-H, --header \<header>**
+### **-H, --header \<header\>**
 
-リクエストにカスタムヘッダーを追加します
+カスタムヘッダーをサーバーに渡します。
 
 ```console
-$ curl -H "Content-Type: application/json" https://api.example.com
+$ curl -H "Content-Type: application/json" -H "Authorization: Bearer token123" https://api.example.com
 ```
 
-### **-d, --data \<data>**
+### **-d, --data \<data\>**
 
-リクエストボディにデータを送信します（通常POSTで使用）
+POSTリクエストで指定されたデータを送信します。
 
 ```console
 $ curl -X POST -d "name=John&age=30" https://api.example.com/users
 ```
 
-### **-A, --user-agent \<agent string>**
+### **--data-binary \<data\>**
 
-サーバーに送信するUser-Agent文字列を指定します
+追加処理なしで指定されたデータをそのまま送信します。
 
 ```console
-$ curl -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" https://example.com
+$ curl --data-binary @filename.json https://api.example.com/upload
+```
+
+### **-F, --form \<name=content\>**
+
+multipart/form-dataアップロード（ファイルアップロードなど）用です。
+
+```console
+$ curl -F "profile=@photo.jpg" https://api.example.com/upload
+```
+
+### **-u, --user \<user:password\>**
+
+サーバー認証のためのユーザーとパスワードを指定します。
+
+```console
+$ curl -u username:password https://api.example.com/secure
+```
+
+### **-k, --insecure**
+
+SSL使用時に安全でないサーバー接続を許可します。
+
+```console
+$ curl -k https://self-signed-certificate.com
 ```
 
 ## 使用例
 
-### ファイルをダウンロードして特定の名前で保存する
+### ファイルのダウンロード
 
 ```console
-$ curl -o linux-distro.iso https://example.com/downloads/linux.iso
+$ curl -o output.html https://example.com
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100 1500M  100 1500M    0     0  10.2M/s      0  0:02:27  0:02:27 --:--:-- 10.5M
+100  1256  100  1256    0     0  12560      0 --:--:-- --:--:-- --:--:-- 12560
 ```
 
 ### JSONデータを使用したPOSTリクエストの作成
@@ -115,28 +135,28 @@ $ curl -X POST -H "Content-Type: application/json" -d '{"name":"John","age":30}'
 {"id": 123, "status": "created"}
 ```
 
-### 認証を使用した複数ファイルのダウンロード
-
-```console
-$ curl -u username:password -O https://example.com/file1.txt -O https://example.com/file2.txt
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100  1256  100  1256    0     0  12560      0 --:--:-- --:--:-- --:--:-- 12560
-100  2048  100  2048    0     0  20480      0 --:--:-- --:--:-- --:--:-- 20480
-```
-
 ### ファイルのアップロード
 
 ```console
-$ curl -F "file=@localfile.jpg" https://example.com/upload
-{"status": "success", "url": "https://example.com/uploads/image123.jpg"}
+$ curl -F "file=@document.pdf" https://api.example.com/upload
+{"status": "success", "fileId": "abc123"}
 ```
 
-## ヒント:
+### リダイレクトに従い、出力を保存
 
-### デバッグ用の詳細モードを使用する
+```console
+$ curl -L -o result.html https://website-with-redirect.com
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   256  100   256    0     0   1024      0 --:--:-- --:--:-- --:--:--  1024
+100  5120  100  5120    0     0  10240      0 --:--:-- --:--:-- --:--:-- 10240
+```
 
-トラブルシューティングの際は、`-v`（詳細）または`-vv`（非常に詳細）を使用して、リクエストとレスポンスに関する詳細情報を確認できます：
+## ヒント
+
+### デバッグには詳細モードを使用する
+
+トラブルシューティング時には、`-v`（詳細）または`-vv`（より詳細）を使用して、リクエストとレスポンスの完全な詳細を確認できます：
 
 ```console
 $ curl -v https://example.com
@@ -144,24 +164,24 @@ $ curl -v https://example.com
 
 ### Cookieを保存して後で使用する
 
-Cookieが必要なセッションを処理するには：
+Cookieが必要なセッションの場合：
 
 ```console
 $ curl -c cookies.txt https://example.com/login -d "user=name&password=secret"
 $ curl -b cookies.txt https://example.com/protected-area
 ```
 
-### ダウンロード速度を制限する
+### 転送速度を制限する
 
-利用可能な帯域幅をすべて消費しないようにするには：
+すべての帯域幅を消費しないようにするには：
 
 ```console
-$ curl --limit-rate 1M -O https://example.com/large-file.zip
+$ curl --limit-rate 100K -O https://example.com/large-file.zip
 ```
 
 ### 中断されたダウンロードを再開する
 
-ダウンロードが中断された場合、再開できます：
+ダウンロードが中断された場合、`-C -`で再開できます：
 
 ```console
 $ curl -C - -O https://example.com/large-file.zip
@@ -169,45 +189,53 @@ $ curl -C - -O https://example.com/large-file.zip
 
 ### APIエンドポイントを素早くテストする
 
-素早いAPIテストのために、`jq`などのツールと組み合わせてJSONレスポンスをフォーマットできます：
+スクリプトを書かずに素早くAPIをテストするには：
 
 ```console
-$ curl -s https://api.example.com/users | jq
+$ curl -s https://api.example.com/data | jq
 ```
 
 ## よくある質問
 
-#### Q1. curlでファイルをダウンロードするにはどうすればよいですか？
-A. 元のファイル名で保存するには`curl -O URL`を使用し、異なるファイル名を指定するには`curl -o ファイル名 URL`を使用します。
-
-#### Q2. curlでPOSTリクエストを作成するにはどうすればよいですか？
-A. フォームデータの場合は`curl -X POST -d "key=value" URL`を、JSONデータの場合は`curl -X POST -H "Content-Type: application/json" -d '{"key":"value"}' URL`を使用します。
-
-#### Q3. curlでリダイレクトに従うにはどうすればよいですか？
-A. HTTPリダイレクトに従うには、`-L`または`--location`オプションを使用します。
-
-#### Q4. レスポンスのHTTPヘッダーを確認するにはどうすればよいですか？
-A. ヘッダーのみを表示するには`curl -I URL`を、ヘッダーと本文の両方を表示するには`curl -v URL`を使用します。
-
-#### Q5. curlで認証するにはどうすればよいですか？
-A. 基本認証には`curl -u ユーザー名:パスワード URL`を使用します。OAuthやトークンベースの認証には`curl -H "Authorization: Bearer あなたのトークン" URL`を使用します。
-
-## macOSに関する考慮事項
-
-macOSでは、デフォルトの`curl`はLinuxディストリビューションよりも古いバージョンであることが一般的です。新しい機能の一部が利用できない場合があります。また、macOSの`curl`はOpenSSLではなくSecure Transport（AppleのSSL/TLS実装）でビルドされているため、特にSSL証明書に関して、動作に微妙な違いが生じることがあります。
-
-すべての機能を備えた最新バージョンが必要な場合は、Homebrewを通じて`curl`をインストールすることを検討してください：
-
+#### Q1. curlで複数のファイルをダウンロードするにはどうすればよいですか？
+A. 複数の`-O`オプションを使用するか、bashループを使用します：
 ```console
-$ brew install curl
+$ curl -O https://example.com/file1.txt -O https://example.com/file2.txt
+```
+または：
+```console
+$ for url in https://example.com/file{1..5}.txt; do curl -O "$url"; done
 ```
 
-インストール後、システムバージョンではなくHomebrewバージョンを使用するために、`/usr/local/opt/curl/bin/curl`を使用するか、PATHに追加する必要があるかもしれません。
+#### Q2. HTTPレスポンスコードのみを確認するにはどうすればよいですか？
+A. `-s`と`-o /dev/null`オプションを`-w`と組み合わせて出力をフォーマットします：
+```console
+$ curl -s -o /dev/null -w "%{http_code}" https://example.com
+200
+```
 
-## 参考資料
+#### Q3. 特定のタイムアウトでリクエストを送信するにはどうすればよいですか？
+A. `--connect-timeout`と`--max-time`オプションを使用します：
+```console
+$ curl --connect-timeout 5 --max-time 10 https://example.com
+```
+
+#### Q4. curlでSSL証明書エラーを無視するにはどうすればよいですか？
+A. `-k`または`--insecure`オプションを使用しますが、セキュリティへの影響に注意してください：
+```console
+$ curl -k https://self-signed-certificate.com
+```
+
+#### Q5. curlをプロキシで使用するにはどうすればよいですか？
+A. `-x`または`--proxy`オプションを使用します：
+```console
+$ curl -x http://proxy-server:8080 https://example.com
+```
+
+## 参考文献
 
 https://curl.se/docs/manpage.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

@@ -47,24 +47,24 @@
     <main>
       
   <h1>pandoc command</h1>
-<p>Convert documents between various formats.</p>
+<p>Universal document converter that transforms files between markup formats.</p>
 <h2>Overview</h2>
-<p>Pandoc is a universal document converter that can transform files between markup formats. It's particularly useful for converting between Markdown, HTML, LaTeX, Word documents, and many other formats. Pandoc preserves document structure and can handle complex elements like tables, footnotes, and bibliographies.</p>
+<p>Pandoc is a powerful document conversion tool that can convert between numerous markup formats including Markdown, HTML, LaTeX, Word, EPUB, and many others. It's particularly useful for writers, academics, and publishers who need to transform documents while preserving formatting, citations, and other elements.</p>
 <h2>Options</h2>
 <h3><strong>-f, --from=FORMAT</strong></h3>
-<p>Specify the input format. If not specified, pandoc will attempt to guess the format.</p>
+<p>Specify input format. If not specified, Pandoc will attempt to guess the format.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>markdown<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>html<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.html
 </pre></div>
 <h3><strong>-t, --to=FORMAT</strong></h3>
-<p>Specify the output format.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>latex<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.tex
+<p>Specify output format.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>docx<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.docx
 </pre></div>
 <h3><strong>-o, --output=FILE</strong></h3>
 <p>Write output to FILE instead of stdout.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.pdf
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.html
 </pre></div>
 <h3><strong>--pdf-engine=PROGRAM</strong></h3>
-<p>Use the specified engine when producing PDF output.</p>
+<p>Specify which program to use when creating PDF output.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>--pdf-engine<span style="color: #CE5C00; font-weight: bold">=</span>xelatex<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.pdf
 </pre></div>
 <h3><strong>--toc, --table-of-contents</strong></h3>
@@ -76,56 +76,74 @@
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.html
 </pre></div>
 <h3><strong>-c, --css=URL</strong></h3>
-<p>Link to a CSS style sheet when creating HTML output.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>style.css<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.html
+<p>Link to a CSS file when creating HTML output.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>style.css<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.html
+</pre></div>
+<h3><strong>--bibliography=FILE</strong></h3>
+<p>Specify bibliography file for citation processing.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>--bibliography<span style="color: #CE5C00; font-weight: bold">=</span>references.bib<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.pdf
+</pre></div>
+<h3><strong>--citeproc</strong></h3>
+<p>Process citations using citeproc.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>--citeproc<span style="color: #F8F8F8"> </span>--bibliography<span style="color: #CE5C00; font-weight: bold">=</span>references.bib<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.pdf
+</pre></div>
+<h3><strong>-V, --variable=KEY[:VALUE]</strong></h3>
+<p>Set template variables for use in templates.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-V<span style="color: #F8F8F8"> </span><span style="color: #000">title</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;My Document&quot;</span><span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.pdf
 </pre></div>
 <h2>Usage Examples</h2>
 <h3>Converting Markdown to HTML</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.html
 </pre></div>
-<h3>Converting Markdown to PDF</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.pdf
+<h3>Converting Markdown to PDF with a custom template</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>--template<span style="color: #CE5C00; font-weight: bold">=</span>template.tex<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.pdf
 </pre></div>
-<h3>Converting HTML to Markdown</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>html<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>markdown<span style="color: #F8F8F8"> </span>https://example.com<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>example.md
+<h3>Converting multiple files to a single output</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>chapter1.md<span style="color: #F8F8F8"> </span>chapter2.md<span style="color: #F8F8F8"> </span>chapter3.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>book.docx
 </pre></div>
 <h3>Creating a presentation from Markdown</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>revealjs<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>presentation.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>presentation.html
 </pre></div>
-<h3>Converting Word to Markdown</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>docx<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>markdown<span style="color: #F8F8F8"> </span>document.docx<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.md
+<h3>Converting HTML to Markdown</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>html<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>markdown<span style="color: #F8F8F8"> </span>webpage.html<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>webpage.md
 </pre></div>
-<h2>Tips</h2>
+<h2>Tips:</h2>
 <h3>Use Templates for Consistent Output</h3>
-<p>Pandoc supports custom templates with the <code>--template</code> option. Create your own templates for consistent document styling across multiple conversions.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>--template<span style="color: #CE5C00; font-weight: bold">=</span>mytemplate.tex<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>document.pdf
+<p>Create custom templates for frequently used output formats to maintain consistent styling across documents:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>--template<span style="color: #CE5C00; font-weight: bold">=</span>mythesis.tex<span style="color: #F8F8F8"> </span>thesis.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>thesis.pdf
 </pre></div>
-<h3>Handling Citations and Bibliographies</h3>
-<p>Use <code>--citeproc</code> with a bibliography file to automatically format citations:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>--citeproc<span style="color: #F8F8F8"> </span>--bibliography<span style="color: #CE5C00; font-weight: bold">=</span>refs.bib<span style="color: #F8F8F8"> </span>paper.md<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span>paper.pdf
+<h3>Leverage Metadata Blocks</h3>
+<p>Include YAML metadata blocks at the top of your Markdown files to control document properties:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span>---
+title: &quot;Document Title&quot;
+author: &quot;Your Name&quot;
+<span style="color: #800080; font-weight: bold">date: &quot;2025-05-05&quot;</span>
+<span style="color: #800080; font-weight: bold">---</span>
 </pre></div>
-<h3>Batch Converting Multiple Files</h3>
+<h3>Batch Convert Multiple Files</h3>
 <p>Use shell loops to convert multiple files at once:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>f<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>*.md<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span>pandoc<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$f</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;${</span><span style="color: #000">f</span><span style="color: #000; font-weight: bold">%.md</span><span style="color: #4E9A06">}.html&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>file<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span>*.md<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span>pandoc<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$file</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;${</span><span style="color: #000">file</span><span style="color: #000; font-weight: bold">%.md</span><span style="color: #4E9A06">}.html&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+</pre></div>
+<h3>Preview Markdown in Real-time</h3>
+<p>For quick previews while writing, use pandoc with a pipe to a browser:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pandoc<span style="color: #F8F8F8"> </span>document.md<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>firefox<span style="color: #F8F8F8"> </span>-
 </pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What formats does pandoc support?</h4>
+<h4>Q1. What formats can pandoc convert between?</h4>
 <p>A. Pandoc supports numerous formats including Markdown, HTML, LaTeX, DOCX, ODT, EPUB, PDF, and many more. Run <code>pandoc --list-input-formats</code> or <code>pandoc --list-output-formats</code> to see all supported formats.</p>
-<h4>Q2. How do I convert a Markdown file to PDF?</h4>
-<p>A. Use <code>pandoc document.md -o document.pdf</code>. This requires a PDF engine like LaTeX to be installed on your system.</p>
-<h4>Q3. Can pandoc convert a website to Markdown?</h4>
-<p>A. Yes, you can convert a web page by providing its URL: <code>pandoc -f html -t markdown https://example.com -o example.md</code></p>
-<h4>Q4. How do I include images in my document?</h4>
-<p>A. In Markdown, use standard image syntax: <code>![Caption](path/to/image.jpg)</code>. Pandoc will include these images in the output document.</p>
-<h4>Q5. How can I customize the appearance of my output document?</h4>
-<p>A. Use CSS for HTML output (<code>-c style.css</code>), LaTeX variables for PDF output (<code>-V variable=value</code>), or custom templates (<code>--template=template.tex</code>).</p>
-<h2>macOS Considerations</h2>
-<p>On macOS, pandoc can be installed via Homebrew with <code>brew install pandoc</code>. For PDF output, you'll also need a LaTeX distribution like MacTeX: <code>brew install --cask mactex</code>. MacTeX is large (4GB+), so if space is a concern, consider BasicTeX instead: <code>brew install --cask basictex</code>.</p>
+<h4>Q2. How do I create a PDF with pandoc?</h4>
+<p>A. Use: <code>pandoc document.md -o document.pdf</code>. Note that this requires a LaTeX engine to be installed on your system.</p>
+<h4>Q3. How can I include citations in my document?</h4>
+<p>A. Use <code>--citeproc</code> with <code>--bibliography=references.bib</code>: <code>pandoc --citeproc --bibliography=references.bib document.md -o document.pdf</code>.</p>
+<h4>Q4. Can pandoc convert tables properly?</h4>
+<p>A. Yes, pandoc handles tables well across most formats. For complex tables, consider using the pipe table or grid table syntax in Markdown.</p>
+<h4>Q5. How do I customize the appearance of my output document?</h4>
+<p>A. Use templates (<code>--template</code>), CSS for HTML (<code>-c</code>), or variables (<code>-V</code>) to customize appearance.</p>
 <h2>References</h2>
 <p>https://pandoc.org/MANUAL.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

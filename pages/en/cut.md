@@ -1,16 +1,16 @@
 # cut command
 
-Extract selected parts of lines from each FILE to standard output.
+Extract selected portions of each line from files.
 
 ## Overview
 
-The `cut` command is used to extract sections from each line of input files or standard input. It can cut by character position, byte position, or delimiter-separated fields. This is particularly useful for processing structured text files like CSV or TSV files, or for extracting specific columns from command output.
+The `cut` command extracts sections from each line of input files or standard input. It can select parts of text by character position, byte position, or delimiter-separated fields. This command is particularly useful for processing structured text files like CSV or TSV files, or for extracting specific columns from command output.
 
 ## Options
 
 ### **-b, --bytes=LIST**
 
-Extract specific bytes from each line
+Extract specific bytes from each line according to LIST.
 
 ```console
 $ echo "Hello" | cut -b 1-3
@@ -19,16 +19,16 @@ Hel
 
 ### **-c, --characters=LIST**
 
-Extract specific characters from each line
+Extract specific characters from each line according to LIST.
 
 ```console
-$ echo "Hello World" | cut -c 1-5
-Hello
+$ echo "Hello" | cut -c 2-4
+ell
 ```
 
 ### **-d, --delimiter=DELIM**
 
-Use DELIM as the field delimiter character instead of the default tab
+Use DELIM as the field delimiter character instead of the default tab.
 
 ```console
 $ echo "name,age,city" | cut -d, -f2
@@ -37,7 +37,7 @@ age
 
 ### **-f, --fields=LIST**
 
-Select only the specified fields on each line
+Select only the specified fields from each line.
 
 ```console
 $ echo "name:age:city" | cut -d: -f1,3
@@ -46,17 +46,17 @@ name:city
 
 ### **-s, --only-delimited**
 
-Do not print lines not containing delimiters
+Do not print lines that do not contain the delimiter character.
 
 ```console
-$ printf "field1,field2,field3\nno delimiter line\nother,fields,here\n" | cut -d, -f1 -s
+$ printf "field1,field2,field3\nno delimiter here\nA,B,C" | cut -d, -f1 -s
 field1
-other
+A
 ```
 
 ### **--complement**
 
-Complement the set of selected bytes, characters, or fields
+Complement the set of selected bytes, characters, or fields.
 
 ```console
 $ echo "field1,field2,field3" | cut -d, -f1 --complement
@@ -65,7 +65,7 @@ field2,field3
 
 ### **--output-delimiter=STRING**
 
-Use STRING as the output delimiter instead of the input delimiter
+Use STRING as the output delimiter instead of the input delimiter.
 
 ```console
 $ echo "field1,field2,field3" | cut -d, -f1,3 --output-delimiter=" | "
@@ -78,74 +78,73 @@ field1 | field3
 
 ```console
 $ cat data.csv
-name,age,city,country
-John,25,New York,USA
-Alice,30,London,UK
+Name,Age,City
+John,25,New York
+Alice,30,London
 $ cut -d, -f1,3 data.csv
-name,city
+Name,City
 John,New York
 Alice,London
 ```
 
-### Extract characters from fixed-width data
+### Extract a range of characters from each line
 
 ```console
-$ cat fixed.txt
-ABCDEFGHIJKLMNOPQRSTUVWXYZ
-abcdefghijklmnopqrstuvwxyz
-$ cut -c 5-10 fixed.txt
-EFGHIJ
-efghij
+$ cat file.txt
+This is a test file
+Another line of text
+$ cut -c 1-10 file.txt
+This is a 
+Another li
 ```
 
-### Process command output
+### Extract multiple ranges of characters
 
 ```console
-$ ps | cut -c 1-5,27-
-  PID COMMAND
-    1 /sbin/init
-  123 bash
-  456 ps
+$ echo "abcdefghijklmnopqrstuvwxyz" | cut -c 1-5,10-15
+abcdeijklmn
+```
+
+### Using cut with other commands
+
+```console
+$ ps aux | cut -c 1-10,42-50
+USER       PID
+root       1
+user       435
 ```
 
 ## Tips:
 
-### Specify Ranges in LIST
+### Handling Missing Fields
 
-When specifying character or field positions, you can use:
-- N: The Nth position
-- N-: From the Nth position to the end
-- N-M: From the Nth to the Mth position
-- -M: From the beginning to the Mth position
+When using `-f` with a delimiter, lines without the delimiter won't be processed by default. Use `-s` to skip these lines or omit it to process all lines.
 
-### Combine with Other Commands
+### Working with Fixed-Width Files
 
-`cut` works well in pipelines with other commands like `grep`, `sort`, and `uniq` to process and filter text data.
+For fixed-width files where columns are aligned by spaces, use `-c` (character positions) rather than `-f` (fields).
 
-### Handle Missing Delimiters
+### Combining with Other Commands
 
-By default, `cut` outputs the entire line if it doesn't contain the delimiter. Use `-s` to suppress these lines if needed.
+`cut` works well in pipelines with commands like `grep`, `sort`, and `awk`. For example, `grep "pattern" file.txt | cut -d, -f2,3` extracts specific fields from matching lines.
 
-### Working with Multi-byte Characters
+### Handling Special Delimiters
 
-Be careful when using `-c` with multi-byte characters (like UTF-8). For these cases, consider using `-b` with the appropriate byte ranges.
+When using special characters as delimiters (like space), escape them or use quotes: `cut -d' ' -f1` or `cut -d" " -f1`.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `-c` and `-b`?
-A. `-c` selects by character positions, while `-b` selects by byte positions. They behave differently with multi-byte characters (like in UTF-8 encoding).
+#### Q1. How do I extract multiple fields that aren't consecutive?
+A. Use a comma to separate field numbers: `cut -d, -f1,3,5 file.csv`
 
-#### Q2. How do I extract multiple fields?
-A. Use comma-separated values with the `-f` option, like `cut -f1,3,5`.
+#### Q2. Can cut handle multi-character delimiters?
+A. No, `cut` only supports single-character delimiters. For multi-character delimiters, consider using `awk` instead.
 
-#### Q3. Can I change the output delimiter?
-A. Yes, use `--output-delimiter=STRING` to specify a different output delimiter.
+#### Q3. How do I extract everything except certain fields?
+A. Use the `--complement` option: `cut -d, -f2 --complement file.csv` extracts all fields except the second one.
 
-#### Q4. How do I extract everything except certain fields?
-A. Use the `--complement` option along with `-f` to select all fields except those specified.
-
-#### Q5. Why doesn't cut work with variable-width fields?
-A. `cut` is designed for fixed-width fields or delimiter-separated fields. For variable-width processing, consider using `awk` instead.
+#### Q4. Why doesn't cut work with my space-delimited file?
+A. Space-delimited files often have variable numbers of spaces. Consider using `awk` for more flexible field separation.
 
 ## References
 
@@ -153,4 +152,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/cut-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

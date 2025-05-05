@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -47,96 +47,90 @@
     <main>
       
   <h1>cp コマンド</h1>
-<p>ファイルやディレクトリをソースから宛先へコピーします。</p>
+<p>ファイルとディレクトリをソースから宛先へコピーします。</p>
 <h2>概要</h2>
-<p><code>cp</code> コマンドはファイルやディレクトリをコピーするために使用します。単一のファイルを別のファイルへ、複数のファイルをディレクトリへ、またはディレクトリ全体をその内容と共にコピーすることができます。デフォルトでは、<code>cp</code> は <code>-f</code> オプションが使用されない限り既存のファイルを上書きせず、また <code>-R</code> または <code>-r</code> オプションが指定されない限りディレクトリを再帰的にコピーしません。</p>
+<p><code>cp</code> コマンドはファイルとディレクトリをコピーします。単一のファイルを別のファイルへ、複数のファイルをディレクトリへ、またはディレクトリ構造全体をコピーすることができます。デフォルトでは、<code>cp</code> はオプションで強制されない限り既存のファイルを上書きせず、元のファイルのタイムスタンプと権限を保持します。</p>
 <h2>オプション</h2>
-<h3><strong>-a, --archive</strong></h3>
-<p>すべてのファイル属性を保持し、ディレクトリを再帰的にコピーするアーカイブモードです。<code>-dR --preserve=all</code> と同等です。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>documents/<span style="color: #F8F8F8"> </span>backup/
-<span style="color: #8F5902"># </span>documents<span style="color: #F8F8F8"> </span>ディレクトリの内容をすべての属性を保持して<span style="color: #F8F8F8"> </span>backup<span style="color: #F8F8F8"> </span>にコピーする
-</pre></div>
 <h3><strong>-r, -R, --recursive</strong></h3>
-<p>ディレクトリを再帰的にコピーします。すべてのサブディレクトリとその内容も含まれます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>projects/<span style="color: #F8F8F8"> </span>backup/
-<span style="color: #8F5902"># </span>projects<span style="color: #F8F8F8"> </span>ディレクトリとその中身を再帰的に<span style="color: #F8F8F8"> </span>backup<span style="color: #F8F8F8"> </span>にコピーする
+<p>ディレクトリを再帰的にコピーし、すべてのサブディレクトリとその内容を含めます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>Documents/<span style="color: #F8F8F8"> </span>Backup/
 </pre></div>
 <h3><strong>-i, --interactive</strong></h3>
-<p>既存のファイルを上書きする前に確認を求めます。各ファイルごとに判断できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>report.txt<span style="color: #F8F8F8"> </span>backup/
-<span style="color: #000; font-style: italic">cp: overwrite &#39;backup/report.txt&#39;? y</span>
-<span style="color: #8F5902"># </span>上書きするかどうかを確認している
+<p>既存のファイルを上書きする前に確認を求めます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span>destination/
+<span style="color: #000; font-style: italic">cp: overwrite &#39;destination/file.txt&#39;? y</span>
 </pre></div>
 <h3><strong>-f, --force</strong></h3>
-<p>書き込みのために開けない場合、宛先ファイルを削除して強制的にコピーします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>important.txt<span style="color: #F8F8F8"> </span>backup/
-<span style="color: #8F5902"># </span>強制的に<span style="color: #F8F8F8"> </span>important.txt<span style="color: #F8F8F8"> </span>を<span style="color: #F8F8F8"> </span>backup<span style="color: #F8F8F8"> </span>ディレクトリにコピーする
-</pre></div>
-<h3><strong>-v, --verbose</strong></h3>
-<p>コピーする前に各ファイル名を表示し、処理中のファイルを確認できます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>*.txt<span style="color: #F8F8F8"> </span>documents/
-<span style="color: #000; font-style: italic">&#39;report.txt&#39; -&gt; &#39;documents/report.txt&#39;</span>
-<span style="color: #000; font-style: italic">&#39;notes.txt&#39; -&gt; &#39;documents/notes.txt&#39;</span>
-<span style="color: #8F5902"># </span>コピーされるファイルとその宛先が表示される
+<p>必要に応じて宛先ファイルを削除して、確認なしでコピーを強制します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>important.txt<span style="color: #F8F8F8"> </span>destination/
 </pre></div>
 <h3><strong>-p, --preserve</strong></h3>
 <p>モード、所有権、タイムスタンプなどのファイル属性を保持します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>config.ini<span style="color: #F8F8F8"> </span>backup/
-<span style="color: #8F5902"># </span>ファイル属性を保持して<span style="color: #F8F8F8"> </span>config.ini<span style="color: #F8F8F8"> </span>を<span style="color: #F8F8F8"> </span>backup<span style="color: #F8F8F8"> </span>ディレクトリにコピーする
+</pre></div>
+<h3><strong>-v, --verbose</strong></h3>
+<p>コピーされる各ファイルの名前を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>*.txt<span style="color: #F8F8F8"> </span>Documents/
+<span style="color: #000; font-style: italic">&#39;file1.txt&#39; -&gt; &#39;Documents/file1.txt&#39;</span>
+<span style="color: #000; font-style: italic">&#39;file2.txt&#39; -&gt; &#39;Documents/file2.txt&#39;</span>
 </pre></div>
 <h3><strong>-u, --update</strong></h3>
 <p>ソースファイルが宛先ファイルより新しい場合、または宛先ファイルが存在しない場合にのみコピーします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>*.txt<span style="color: #F8F8F8"> </span>backup/
-<span style="color: #8F5902"># </span>新しいファイルまたは存在しないファイルのみをコピーする
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>*.log<span style="color: #F8F8F8"> </span>archive/
+</pre></div>
+<h3><strong>-a, --archive</strong></h3>
+<p>すべてのファイル属性を保持し、ディレクトリを再帰的にコピーします（-dR --preserve=all と同等）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>source_dir/<span style="color: #F8F8F8"> </span>destination_dir/
 </pre></div>
 <h2>使用例</h2>
 <h3>単一ファイルのコピー</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>report.txt<span style="color: #F8F8F8"> </span>backup/report.txt
-<span style="color: #8F5902"># </span>report.txt<span style="color: #F8F8F8"> </span>を<span style="color: #F8F8F8"> </span>backup<span style="color: #F8F8F8"> </span>ディレクトリにコピーする
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>report.pdf<span style="color: #F8F8F8"> </span>~/Documents/
 </pre></div>
-<h3>複数のファイルをディレクトリにコピー</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt<span style="color: #F8F8F8"> </span>destination/
-<span style="color: #8F5902"># </span>複数のファイルを<span style="color: #F8F8F8"> </span>destination<span style="color: #F8F8F8"> </span>ディレクトリにコピーする
+<h3>複数ファイルをディレクトリにコピー</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt<span style="color: #F8F8F8"> </span>~/Backup/
 </pre></div>
-<h3>詳細出力付きの再帰的コピー</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-rv<span style="color: #F8F8F8"> </span>projects/<span style="color: #F8F8F8"> </span>backup/
-<span style="color: #000; font-style: italic">&#39;projects/main.c&#39; -&gt; &#39;backup/projects/main.c&#39;</span>
-<span style="color: #000; font-style: italic">&#39;projects/lib/utils.c&#39; -&gt; &#39;backup/projects/lib/utils.c&#39;</span>
-<span style="color: #000; font-style: italic">&#39;projects/lib/utils.h&#39; -&gt; &#39;backup/projects/lib/utils.h&#39;</span>
-<span style="color: #8F5902"># </span>コピーされる各ファイルの情報が表示される
+<h3>ディレクトリをすべての内容と共にコピー</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>Projects/<span style="color: #F8F8F8"> </span>~/Backup/Projects/
 </pre></div>
-<h3>属性を保持したコピー</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-ap<span style="color: #F8F8F8"> </span>documents/<span style="color: #F8F8F8"> </span>archive/
-<span style="color: #8F5902"># </span>documents<span style="color: #F8F8F8"> </span>ディレクトリの内容をすべての属性を保持して<span style="color: #F8F8F8"> </span>archive<span style="color: #F8F8F8"> </span>にコピーする
+<h3>詳細出力と属性保持を伴うコピー</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-vp<span style="color: #F8F8F8"> </span>important.conf<span style="color: #F8F8F8"> </span>/etc/
+<span style="color: #000; font-style: italic">&#39;important.conf&#39; -&gt; &#39;/etc/important.conf&#39;</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>末尾のスラッシュを注意して使用する</h3>
-<p>ディレクトリをコピーする際、ソースの末尾にスラッシュをつけると「このディレクトリの内容をコピー」という意味になります：</p>
-<ul>
-<li><code>cp -r dir1 dir2</code> は dir2 が存在する場合、dir2/dir1 を作成します</li>
-<li><code>cp -r dir1/ dir2</code> は dir1 の内容を dir2 にコピーします</li>
-</ul>
-<h3>上書き前にバックアップを作成する</h3>
-<p><code>--backup</code> オプションを使用して、ファイルを上書きする前にバックアップを作成できます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>--backup<span style="color: #CE5C00; font-weight: bold">=</span>numbered<span style="color: #F8F8F8"> </span>important.txt<span style="color: #F8F8F8"> </span>destination/
-<span style="color: #8F5902"># </span>上書き前に番号付きバックアップを作成する
+<h3>ワイルドカードを使用して複数ファイルをコピー</h3>
+<p>パターンに一致する複数のファイルをコピーするにはワイルドカードを使用します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>*.jpg<span style="color: #F8F8F8"> </span>~/Pictures/
 </pre></div>
-<h3>シンボリックリンクの扱い</h3>
-<p>デフォルトでは、<code>cp</code> はシンボリックリンクをたどります。リンク先ではなくリンク自体をコピーするには、<code>-P</code> または <code>--no-dereference</code> を使用します。</p>
+<h3>上書き前にバックアップを作成</h3>
+<p><code>-b</code> オプションを使用して既存ファイルのバックアップを作成します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-b<span style="color: #F8F8F8"> </span>config.ini<span style="color: #F8F8F8"> </span>/etc/
+</pre></div>
+<p>これにより上書き前に <code>config.ini~</code> という名前のバックアップファイルが作成されます。</p>
+<h3>新しい場合のみコピー</h3>
+<p><code>-u</code> を使用して、ソースが宛先より新しい場合にのみファイルを更新します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-u<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>source_dir/<span style="color: #F8F8F8"> </span>destination_dir/
+</pre></div>
+<p>これはディレクトリの同期に便利です。</p>
+<h3>シンボリックリンクを保持</h3>
+<p><code>-d</code> または <code>--no-dereference</code> を使用して、シンボリックリンクが指すファイルをコピーするのではなく、リンクとして保持します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>link.txt<span style="color: #F8F8F8"> </span>destination/
+</pre></div>
 <h2>よくある質問</h2>
 <h4>Q1. 既存のファイルを上書きせずにファイルをコピーするにはどうすればよいですか？</h4>
-<p>A. <code>cp -n ソース 宛先</code> を使用します。これにより既存のファイルの上書きを防ぎます。</p>
+<p>A. <code>cp -n ソース 宛先</code> を使用します。<code>-n</code> オプションは既存ファイルの上書きを防ぎます。</p>
 <h4>Q2. 隠しファイルをコピーするにはどうすればよいですか？</h4>
-<p>A. 隠しファイル（ドットで始まるファイル）は通常通りコピーされます。隠しファイルを含むすべてのファイルをコピーするには、<code>cp -r .* * 宛先/</code> のようなパターンを使用するか、隠しファイルを明示的に指定します。</p>
-<h4>Q3. ファイルなしでディレクトリ構造だけをコピーするにはどうすればよいですか？</h4>
-<p>A. <code>cp</code> には直接のオプションがありません。<code>find</code> と <code>mkdir</code> または <code>rsync --include='*/' --exclude='*'</code> を使用する必要があるかもしれません。</p>
-<h4>Q4. 権限を保持してファイルをコピーするにはどうすればよいですか？</h4>
-<p>A. モード、所有権、タイムスタンプを保持するには <code>cp -p</code> を使用し、すべての属性を保持するには <code>cp -a</code> を使用します。</p>
-<h2>References</h2>
+<p>A. 隠しファイル（<code>.</code> で始まるもの）は通常通りコピーされます。隠しファイルを含むすべてのファイルをコピーするには、<code>cp -r source/. destination/</code> のようなワイルドカードを使用します。</p>
+<h4>Q3. ファイルをコピーして権限を維持するにはどうすればよいですか？</h4>
+<p>A. <code>cp -p ソース 宛先</code> を使用して、モード、所有権、タイムスタンプを保持します。</p>
+<h4>Q4. ディレクトリをすべての内容と共にコピーするにはどうすればよいですか？</h4>
+<p>A. <code>cp -r ソースディレクトリ 宛先ディレクトリ</code> を使用して、ディレクトリとそのすべての内容を再帰的にコピーします。</p>
+<h4>Q5. ディレクトリから特定のファイルタイプのみをコピーするにはどうすればよいですか？</h4>
+<p>A. ワイルドカードを使用します：<code>cp ソースディレクトリ/*.txt 宛先ディレクトリ/</code> でテキストファイルのみをコピーします。</p>
+<h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/cp-invocation.html</p>
-<h2>Revisions</h2>
+<h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初回リビジョン</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

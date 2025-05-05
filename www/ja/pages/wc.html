@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -46,86 +46,76 @@
   <div class="content">
     <main>
       
-  <h1>wc コマンド</h1>
+  <h1>wcコマンド</h1>
 <p>ファイル内の行数、単語数、バイト数をカウントします。</p>
 <h2>概要</h2>
-<p><code>wc</code>（word count）コマンドは、指定されたファイル内の行数、単語数、バイト数をカウントします。テキストファイルの統計情報を取得したり、ファイルサイズを確認したり、テキストデータ内の特定の要素をカウントしたりするのによく使用されます。デフォルトでは、各ファイルの行数、単語数、バイト数を表示し、その後にファイル名が続きます。</p>
+<p><code>wc</code>（word count）コマンドは、指定されたファイル内の行数、単語数、バイト数、または文字数をカウントして表示します。テキスト処理でファイルの内容を分析したり、他のコマンドの出力をカウントするパイプラインの一部として一般的に使用されます。</p>
 <h2>オプション</h2>
-<h3><strong>-c, --bytes</strong></h3>
-<p>ファイル内のバイト数をカウントします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wc<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">    1234 file.txt</span>
-</pre></div>
-<h3><strong>-m, --chars</strong></h3>
-<p>ファイル内の文字数をカウントします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wc<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">    1234 file.txt</span>
-</pre></div>
 <h3><strong>-l, --lines</strong></h3>
 <p>ファイル内の行数をカウントします。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wc<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">     100 file.txt</span>
+<span style="color: #000; font-style: italic">      42 file.txt</span>
 </pre></div>
 <h3><strong>-w, --words</strong></h3>
 <p>ファイル内の単語数をカウントします。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wc<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">     234 file.txt</span>
+<span style="color: #000; font-style: italic">     320 file.txt</span>
+</pre></div>
+<h3><strong>-c, --bytes</strong></h3>
+<p>ファイル内のバイト数をカウントします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wc<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">    1872 file.txt</span>
+</pre></div>
+<h3><strong>-m, --chars</strong></h3>
+<p>ファイル内の文字数をカウントします（マルチバイトエンコーディングではバイト数と異なる場合があります）。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wc<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">    1850 file.txt</span>
 </pre></div>
 <h3><strong>-L, --max-line-length</strong></h3>
-<p>最も長い行の長さを表示します。</p>
+<p>ファイル内の最長行の長さを表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wc<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">      80 file.txt</span>
+<span style="color: #000; font-style: italic">      78 file.txt</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>デフォルト出力（行数、単語数、バイト数）</h3>
+<h3>基本的な使用法（デフォルト出力）</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wc<span style="color: #F8F8F8"> </span>file.txt
-<span style="color: #000; font-style: italic">     100     234    1234 file.txt</span>
+<span style="color: #000; font-style: italic">      42     320    1872 file.txt</span>
 </pre></div>
-<h3>複数ファイルの行数カウント</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wc<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
-<span style="color: #000; font-style: italic">     100 file1.txt</span>
-<span style="color: #000; font-style: italic">     150 file2.txt</span>
-<span style="color: #000; font-style: italic">     250 total</span>
+<p>出力は行数、単語数、バイト数（この順序）を示しています。</p>
+<h3>複数のファイル</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wc<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt
+<span style="color: #000; font-style: italic">      42     320    1872 file1.txt</span>
+<span style="color: #000; font-style: italic">      10      85     492 file2.txt</span>
+<span style="color: #000; font-style: italic">      52     405    2364 total</span>
 </pre></div>
-<h3>パイプを使用して他のコマンドの出力をカウント</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>wc<span style="color: #F8F8F8"> </span>-l
-<span style="color: #000; font-style: italic">      12</span>
+<h3>パイプラインでwcを使用する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>wc<span style="color: #F8F8F8"> </span>-l
+<span style="color: #000; font-style: italic">       5</span>
 </pre></div>
-<h3>ディレクトリ内のすべてのテキストファイルの単語数をカウント</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>wc<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span>*.txt
-<span style="color: #000; font-style: italic">     234 file1.txt</span>
-<span style="color: #000; font-style: italic">     345 file2.txt</span>
-<span style="color: #000; font-style: italic">     579 total</span>
-</pre></div>
+<p>これはfile.txt内の「error」を含む行数をカウントします。</p>
 <h2>ヒント:</h2>
-<h3>空でない行のカウント</h3>
-<p>空でない行だけをカウントするには、<code>grep</code>と<code>wc</code>を組み合わせることができます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>file.txt
-</pre></div>
-<h3>簡単なファイルサイズ確認</h3>
-<p><code>wc -c</code>を使用すると、バイト単位でファイルサイズを簡単に確認できます。サイズだけが必要な場合は、<code>ls -l</code>よりも高速です。</p>
-<h3>特定のパターンをカウント</h3>
-<p><code>grep</code>と組み合わせて特定のパターンをカウントできます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>logfile.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>wc<span style="color: #F8F8F8"> </span>-l
-</pre></div>
-<h3>大きなファイルの処理</h3>
-<p>非常に大きなファイルの場合、<code>wc</code>はファイル全体をメモリにロードするのではなく、ストリーミングするため効率的です。</p>
+<h3>複数のファイルの単語数をカウントする</h3>
+<p>ワイルドカードを使用して複数のファイルの単語数をカウントできます：<code>wc -w *.txt</code>は現在のディレクトリ内のすべてのテキストファイルの単語数を表示します。</p>
+<h3>ディレクトリ内のファイル数をカウントする</h3>
+<p><code>ls</code>と組み合わせてファイル数をカウントします：<code>ls -1 | wc -l</code>は現在のディレクトリ内のエントリ数をカウントします。</p>
+<h3>メモリ使用量</h3>
+<p>非常に大きなファイルの場合、<code>wc</code>はサイズを確認するためにテキストエディタにファイルを読み込むよりもメモリ効率が良いです。</p>
+<h3>行数ヘッダーを無視する</h3>
+<p>スクリプトで<code>wc -l</code>を使用する場合、<code>awk</code>を使用して数字だけを抽出します：<code>wc -l file.txt | awk '{print $1}'</code></p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>wc</code>の出力は何を意味していますか？</h4>
-<p>A. デフォルトの出力は、ファイル名の前に3つの数字を表示します：行数、単語数、バイト数です。</p>
-<h4>Q2. ファイルの行数だけをカウントするにはどうすればよいですか？</h4>
-<p>A. <code>wc -l ファイル名</code>を使用します。</p>
-<h4>Q3. バイト数ではなく文字数をカウントできますか？</h4>
-<p>A. はい、<code>wc -m ファイル名</code>を使用して文字数をカウントできます。UTF-8エンコードされたファイルではバイト数と異なる場合があります。</p>
-<h4>Q4. 標準入力からのテキストの単語数をカウントするにはどうすればよいですか？</h4>
-<p>A. テキストを<code>wc -w</code>にパイプします。例：<code>echo &quot;hello world&quot; | wc -w</code></p>
-<h4>Q5. なぜ<code>wc -l</code>と<code>grep -c</code>の行数が異なることがありますか？</h4>
-<p>A. <code>wc -l</code>はすべての改行をカウントしますが、オプションなしの<code>grep -c</code>は一致する行をカウントします。空の行がこの違いに影響します。</p>
-<h2>参考資料</h2>
+<h4>Q1. wcは何の略ですか？</h4>
+<p>A. <code>wc</code>は「word count（単語数）」の略です。</p>
+<h4>Q2. ファイル内の文字だけをカウントするにはどうすればよいですか？</h4>
+<p>A. 文字数をカウントするには<code>wc -m</code>を使用します。バイト数の場合は<code>wc -c</code>を使用します（ASCIIファイルでは同じです）。</p>
+<h4>Q3. なぜ行数がテキストエディタで見るものと異なるのですか？</h4>
+<p>A. <code>wc</code>は改行文字をカウントするため、最後の行が改行で終わっていない場合や、エディタが折り返されたテキストに対して「仮想行」を表示する場合は、カウントが異なる場合があります。</p>
+<h4>Q4. ファイル名なしで数字だけを取得するにはどうすればよいですか？</h4>
+<p>A. 内容をパイプするか：<code>cat file.txt | wc -l</code>、またはawkを使用します：<code>wc -l file.txt | awk '{print $1}'</code></p>
+<h2>参考文献</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/wc-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初版作成</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

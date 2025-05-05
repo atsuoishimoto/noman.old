@@ -1,16 +1,16 @@
 # visudo コマンド
 
-sudoers ファイルを構文チェック付きで安全に編集します。
+sudoersファイルを構文チェック付きで安全に編集します。
 
 ## 概要
 
-`visudo` は `/etc/sudoers` ファイルを安全に編集するためのコマンドラインユーティリティです。sudoers ファイルは sudo アクセス権限を制御します。visudo は同時編集を防ぐためにファイルをロックし、変更を保存する前に構文チェックを行い、ユーザーがシステムからロックアウトされる可能性のある設定エラーを防止します。
+`visudo`は、sudoアクセス権限を制御するsudoers設定ファイルを安全に編集するためのコマンドラインユーティリティです。編集中にsudoersファイルをロックし、変更を保存する前に構文チェックを実行し、ファイルを破損する可能性のある複数の同時編集を防止します。
 
 ## オプション
 
-### **-c, --check**
+### **-c**
 
-sudoers ファイルの構文エラーのみをチェックし、変更は行いません。
+変更を加えずにsudoersファイルの構文エラーをチェックします。
 
 ```console
 $ sudo visudo -c
@@ -18,31 +18,37 @@ $ sudo visudo -c
 /etc/sudoers.d/custom: parsed OK
 ```
 
-### **-f, --file=file**
+### **-f file**
 
-デフォルトの `/etc/sudoers` の代わりに、別の sudoers ファイルの場所を指定します。
+デフォルトの代わりに編集する代替sudoersファイルの場所を指定します。
 
 ```console
 $ sudo visudo -f /etc/sudoers.d/custom
 ```
 
-### **-q, --quiet**
+### **-s**
 
-静かモードを有効にし、ほとんどの警告メッセージを抑制します。
+sudoersファイルの厳格なチェックを有効にします。このオプションを使用すると、visudoは未知のデフォルト値やエイリアスを含むsudoersファイルを拒否します。
 
 ```console
-$ sudo visudo -q -c
+$ sudo visudo -s
 ```
 
-### **-s, --strict**
+### **-q**
 
-sudoers ファイルの厳格なチェックを有効にします。構文解析エラーがある場合、visudo はエラーで終了します。
+静かモードを有効にし、デフォルトの情報メッセージを抑制します。
 
 ```console
-$ sudo visudo -s -f /etc/sudoers.d/test
->>> /etc/sudoers.d/test: syntax error near line 2 <<<
-parse error in /etc/sudoers.d/test near line 2
-visudo: fatal error, exiting.
+$ sudo visudo -q
+```
+
+### **-V**
+
+バージョン情報を表示して終了します。
+
+```console
+$ sudo visudo -V
+visudo version 1.9.5p2
 ```
 
 ## 使用例
@@ -53,65 +59,58 @@ visudo: fatal error, exiting.
 $ sudo visudo
 ```
 
-これにより、EDITOR 環境変数で指定されたエディタでデフォルトの `/etc/sudoers` ファイルが開きます。
-
-### カスタム Sudoers ファイルの編集
+### カスタムSudoersファイルの構文チェック
 
 ```console
-$ sudo visudo -f /etc/sudoers.d/local
+$ sudo visudo -cf /etc/sudoers.d/myconfig
+/etc/sudoers.d/myconfig: parsed OK
 ```
 
-これにより、`/etc/sudoers.d` ディレクトリにあるカスタム sudoers ファイルが開きます。
-
-### 編集せずに構文をチェック
+### 異なるエディタの使用
 
 ```console
-$ sudo visudo -c
-/etc/sudoers: parsed OK
-/etc/sudoers.d/custom: parsed OK
+$ sudo EDITOR=nano visudo
 ```
 
 ## ヒント:
 
-### 好みのエディタを設定する
+### Sudoers構文の理解
 
-visudo を実行する前に、EDITOR または VISUAL 環境変数を設定して好みのエディタを指定できます：
+sudoersファイルには特定の構文があります。一般的なエントリには以下が含まれます：
+- `user ALL=(ALL) ALL` - ユーザーが任意のユーザーとして任意のコマンドを実行できるようにします
+- `%group ALL=(ALL) ALL` - グループが任意のユーザーとして任意のコマンドを実行できるようにします
+- `user ALL=(ALL) NOPASSWD: ALL` - ユーザーがパスワードなしでコマンドを実行できるようにします
 
-```console
-$ export EDITOR=nano
-$ sudo visudo
-```
+### カスタム設定ファイルの作成
 
-### 直接編集ではなくインクルードを使用する
-
-メインの sudoers ファイルを編集する代わりに、カスタム設定用に `/etc/sudoers.d/` に別ファイルを作成しましょう。これにより管理が容易かつ安全になります。
+メインのsudoersファイルを編集する代わりに、`/etc/sudoers.d/`ディレクトリに別々のファイルを作成します。これにより、設定がよりモジュール化され、管理が容易になります。
 
 ```console
-$ sudo visudo -f /etc/sudoers.d/myusers
+$ sudo visudo -f /etc/sudoers.d/custom_rules
 ```
 
-### 終了前に必ず構文チェックを行う
+### 常にvisudoを使用する
 
-sudoers ファイルを編集する際は、保存前に必ず visudo の組み込み構文チェックを使用してください。構文エラーがある場合、visudo は警告を表示し、保存前に修正する機会を与えてくれます。
+テキストエディタで直接sudoersファイルを編集しないでください。常にvisudoを使用して、sudoの権限からロックアウトする可能性のある構文エラーを防止します。
 
 ## よくある質問
 
-#### Q1. visudo を使わずに直接 sudoers ファイルを編集するとどうなりますか？
-A. `/etc/sudoers` を通常のテキストエディタで直接編集することは危険です。構文エラーを導入すると、sudo アクセスが完全に失われ、管理機能からロックアウトされる可能性があります。
+#### Q1. sudoersファイルで構文エラーを作ってしまった場合はどうなりますか？
+A. visudoは変更を保存する前に構文チェックを実行します。エラーが見つかった場合、ファイルを再編集するか、それでも書き込むか、変更を破棄するかのオプションが表示されます。
 
-#### Q2. 新しいユーザーを sudoers に追加するにはどうすればよいですか？
-A. `sudo visudo` を実行し、`username ALL=(ALL:ALL) ALL` のような行を追加することで、ユーザーに完全な sudo 権限を付与できます。
+#### Q2. visudoで使用されるデフォルトのエディタを変更するにはどうすればよいですか？
+A. visudoを実行する前にEDITORまたはVISUAL環境変数を設定します：`EDITOR=nano sudo visudo`
 
-#### Q3. /etc/sudoers と /etc/sudoers.d/ 内のファイルの違いは何ですか？
-A. メインの `/etc/sudoers` ファイルは主要な設定ファイルであり、`/etc/sudoers.d/` はメイン設定に含まれる追加設定ファイル用のディレクトリです。このディレクトリに別ファイルを使用する方が、より整理された安全な方法です。
+#### Q3. 実際に編集せずにsudoersファイルをチェックできますか？
+A. はい、`sudo visudo -c`を使用して現在のsudoersファイルの構文をチェックするか、`sudo visudo -cf /path/to/file`を使用して特定のファイルをチェックできます。
 
-#### Q4. visudo が使用するデフォルトエディタを変更するにはどうすればよいですか？
-A. visudo を実行する前に EDITOR または VISUAL 環境変数を設定します：`export EDITOR=nano`
+#### Q4. /etc/sudoersを直接編集することとvisudoを使用することの違いは何ですか？
+A. visudoは編集中にsudoersファイルをロックし、構文検証を実行し、ファイルを破損する可能性のある複数の同時編集を防止します。
 
-## 参考資料
+## 参考文献
 
-https://www.sudo.ws/docs/man/1.9.13/visudo.man/
+https://www.sudo.ws/docs/man/1.8.27/visudo.man/
 
 ## 改訂履歴
 
-- 2025/05/04 初回改訂
+- 2025/05/05 初版

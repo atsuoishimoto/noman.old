@@ -1,108 +1,30 @@
 # apt コマンド
 
-Debian系Linuxディストリビューション（Ubuntuなど）用のパッケージ管理ユーティリティです。
+Debian系Linuxディストリビューション用のパッケージ管理ツールです。
 
 ## 概要
 
-`apt`（Advanced Package Tool）は、Debian系Linuxディストリビューションでソフトウェアパッケージのインストール、更新、削除、管理を行うためのコマンドラインユーティリティです。依存関係を自動的に処理し、`dpkg`などの低レベルツールと比較してユーザーフレンドリーなインターフェースを提供することで、パッケージ管理を簡素化します。
+`apt` (Advanced Package Tool) は、UbuntuなどのDebian系Linuxディストリビューションでソフトウェアパッケージのインストール、更新、削除、管理を行うためのコマンドラインユーティリティです。依存関係の処理、設定、インストールプロセスを自動的に処理することで、パッケージ管理を簡素化します。
 
 ## オプション
 
-### **-y, --yes, --assume-yes**
+### **update**
 
-プロンプトに自動的に「yes」と答え、非対話的な使用を可能にします
-
-```console
-$ sudo apt install firefox -y
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-firefox is already the newest version (115.0+build2-0ubuntu0.22.04.1).
-0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
-```
-
-### **-q, --quiet**
-
-進行状況インジケータを省略し、ログ記録に適した出力を生成します
-
-```console
-$ sudo apt update -q
-Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
-Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
-Fetched 110 kB in 1s (110 kB/s)
-Reading package lists...
-Building dependency tree...
-Reading state information...
-All packages are up to date.
-```
-
-### **--no-install-recommends**
-
-推奨パッケージのインストールをスキップし、必須の依存関係のみをインストールします
-
-```console
-$ sudo apt install gimp --no-install-recommends
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-The following packages will be installed:
-  gimp gimp-data libbabl-0.1-0 libgegl-0.4-0 [...]
-```
-
-### **-s, --simulate, --just-print, --dry-run, --recon, --no-act**
-
-アクションをシミュレートしますが、実際にはシステムを変更しません
-
-```console
-$ sudo apt remove firefox -s
-NOTE: This is only a simulation!
-      apt needs root privileges for real execution.
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-The following packages will be REMOVED:
-  firefox
-0 upgraded, 0 newly installed, 1 to remove and 0 not upgraded.
-Remv firefox [115.0+build2-0ubuntu0.22.04.1]
-```
-
-## 使用例
-
-### パッケージのインストール
-
-```console
-$ sudo apt install vlc
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-The following additional packages will be installed:
-  libvlc-bin libvlc5 libvlccore9 vlc-bin vlc-data vlc-plugin-base
-Suggested packages:
-  vlc-plugin-access-extra vlc-plugin-video-output vlc-plugin-video-splitter
-  vlc-plugin-visualization
-The following NEW packages will be installed:
-  libvlc-bin libvlc5 libvlccore9 vlc vlc-bin vlc-data vlc-plugin-base
-0 upgraded, 7 newly installed, 0 to remove and 0 not upgraded.
-Need to get 7,192 kB of archives.
-After this operation, 32.8 MB of additional disk space will be used.
-Do you want to continue? [Y/n] y
-```
-
-### パッケージリストの更新
+リポジトリからパッケージリストを更新します
 
 ```console
 $ sudo apt update
 Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
 Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
-Get:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [119 kB]
-Fetched 229 kB in 2s (114 kB/s)
 Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
 All packages are up to date.
 ```
 
-### インストール済みパッケージのアップグレード
+### **upgrade**
+
+インストール済みのパッケージを最新バージョンにアップグレードします
 
 ```console
 $ sudo apt upgrade
@@ -110,82 +32,183 @@ Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
 Calculating upgrade... Done
-The following packages will be upgraded:
-  firefox libnss3 python3-software-properties software-properties-common
-4 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
-Need to get 75.8 MB of archives.
-After this operation, 1,024 B of additional disk space will be used.
-Do you want to continue? [Y/n] y
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
 ```
 
-### パッケージの削除
+### **install**
+
+新しいパッケージをインストールします
 
 ```console
-$ sudo apt remove gimp
+$ sudo apt install nginx
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  nginx-common nginx-core
+Suggested packages:
+  fcgiwrap nginx-doc
+The following NEW packages will be installed:
+  nginx nginx-common nginx-core
+0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
+```
+
+### **remove**
+
+パッケージを削除しますが、設定ファイルは保持します
+
+```console
+$ sudo apt remove nginx
 Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
 The following packages will be REMOVED:
-  gimp
-0 upgraded, 0 newly installed, 1 to remove and 0 not upgraded.
-After this operation, 20.5 MB disk space will be freed.
-Do you want to continue? [Y/n] y
+  nginx nginx-core
+0 upgraded, 0 newly installed, 2 to remove and 0 not upgraded.
 ```
 
-### パッケージの検索
+### **purge**
+
+パッケージとその設定ファイルを削除します
 
 ```console
-$ apt search text-editor
-Sorting... Done
-Full Text Search... Done
-gedit/jammy,now 41.0-3 amd64 [installed]
-  GNU text editor for the GNOME desktop environment
-
-mousepad/jammy 0.5.8-1 amd64
-  simple Xfce oriented text editor
-
-nano/jammy,now 6.2-1 amd64 [installed]
-  small, friendly text editor inspired by Pico
+$ sudo apt purge nginx
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following packages will be REMOVED:
+  nginx* nginx-common* nginx-core*
+0 upgraded, 0 newly installed, 3 to remove and 0 not upgraded.
 ```
 
-## ヒント:
+### **autoremove**
+
+依存関係を満たすために自動的にインストールされ、もはや必要なくなったパッケージを削除します
+
+```console
+$ sudo apt autoremove
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+```
+
+### **search**
+
+名前や説明でパッケージを検索します
+
+```console
+$ apt search nginx
+Sorting... Done
+Full Text Search... Done
+nginx/jammy-updates,jammy-security 1.18.0-6ubuntu14.4 all
+  small, powerful, scalable web/proxy server
+```
+
+### **show**
+
+パッケージに関する詳細情報を表示します
+
+```console
+$ apt show nginx
+Package: nginx
+Version: 1.18.0-6ubuntu14.4
+Priority: optional
+Section: web
+Origin: Ubuntu
+...
+```
+
+### **list --installed**
+
+インストール済みのすべてのパッケージを一覧表示します
+
+```console
+$ apt list --installed
+Listing... Done
+accountsservice/jammy,now 22.07.5-2ubuntu1.4 amd64 [installed]
+acl/jammy,now 2.3.1-1 amd64 [installed]
+acpi-support/jammy,now 0.144 amd64 [installed]
+...
+```
+
+## 使用例
+
+### 複数のパッケージを一度にインストールする
+
+```console
+$ sudo apt install git curl wget
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+curl is already the newest version (7.81.0-1ubuntu1.14).
+The following NEW packages will be installed:
+  git wget
+0 upgraded, 2 newly installed, 0 to remove and 0 not upgraded.
+```
+
+### システム全体をアップグレードする
+
+```console
+$ sudo apt update && sudo apt upgrade -y
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Calculating upgrade... Done
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+```
+
+### パッケージの特定バージョンをインストールする
+
+```console
+$ sudo apt install nginx=1.18.0-6ubuntu14.3
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  nginx-common nginx-core
+The following NEW packages will be installed:
+  nginx nginx-common nginx-core
+0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
+```
+
+## ヒント
 
 ### apt-getの代わりにaptを使用する
 
-`apt`は古い`apt-get`コマンドと比較して、プログレスバーやカラー出力を備えたよりユーザーフレンドリーなインターフェースを提供しながら、最も一般的に使用される機能を提供します。
+`apt`は、古い`apt-get`コマンドと比較して、プログレスバーやカラー出力を備えたよりユーザーフレンドリーなインターフェースを提供します。
 
-### 未使用パッケージのクリーンアップ
+### 定期的にシステムをクリーンアップする
 
-`sudo apt autoremove`を定期的に実行して、依存関係として自動的にインストールされたが、もはや必要とされないパッケージを削除しましょう。
+不要なパッケージを削除し、取得したパッケージファイルのローカルリポジトリをクリアすることでディスク容量を解放するために、定期的に`sudo apt autoremove`と`sudo apt clean`を実行しましょう。
 
-### 壊れたパッケージの修復
+### パッケージバージョンを固定する
 
-パッケージのインストールに問題が発生した場合は、`sudo apt --fix-broken install`を試して依存関係の問題を解決してください。
+パッケージがアップグレードされないようにするには、`sudo apt-mark hold パッケージ名`を使用します。再びアップグレードを許可するには、`sudo apt-mark unhold パッケージ名`を使用します。
 
-### 利用可能なディスク容量の確認
+### 壊れた依存関係を確認する
 
-大規模なインストールやアップグレードの前に、`df -h`で利用可能なディスク容量を確認しましょう。容量不足になるとパッケージ操作が失敗する可能性があります。
-
-### apt-markでパッケージを保護する
-
-`sudo apt-mark hold パッケージ名`を使用して、パッケージが自動的にアップグレード、削除、またはインストールされるのを防ぐことができます。
+インストールに失敗した後に発生する可能性のある壊れた依存関係を修正するには、`sudo apt --fix-broken install`を使用します。
 
 ## よくある質問
 
 #### Q1. aptとapt-getの違いは何ですか？
-A. `apt`は、`apt-get`と`apt-cache`の最も一般的に使用される機能を組み合わせた、より使いやすい新しいコマンドで、出力フォーマットと進行状況の情報が改善されています。
+A. `apt`は、`apt-get`と`apt-cache`の最も一般的に使用される機能を組み合わせた、より使いやすい新しいコマンドで、出力フォーマットとプログレス情報が改善されています。
 
-#### Q2. 設定ファイルを含めてパッケージを完全に削除するにはどうすればよいですか？
-A. `remove`の代わりに`sudo apt purge パッケージ名`を使用します。不要になった依存関係も削除するには、`autoremove`を追加します：`sudo apt purge パッケージ名 && sudo apt autoremove`。
+#### Q2. 「Could not get lock」エラーを修正するにはどうすればよいですか？
+A. これは通常、別のパッケージマネージャーが実行中であることを意味します。それが終了するのを待つか、`ps aux | grep apt`で停止したプロセスを確認し、必要に応じて`sudo kill <プロセスID>`で終了させてください。
 
-#### Q3. 特定のバージョンのパッケージをインストールするにはどうすればよいですか？
-A. `sudo apt install パッケージ名=バージョン`を使用します。例：`sudo apt install nginx=1.18.0-0ubuntu1`。
+#### Q3. プロンプトなしでパッケージをインストールするにはどうすればよいですか？
+A. `-y`フラグを使用します：`sudo apt install -y パッケージ名`でプロンプトに自動的に「はい」と答えます。
 
-#### Q4. 「Unable to lock the administration directory」エラーを修正するにはどうすればよいですか？
-A. これは通常、別のパッケージマネージャーが実行中であることを意味します。終了するのを待つか、`ps aux | grep apt`で停止したプロセスを確認し、必要に応じて終了させてください。また、`sudo rm /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/lib/dpkg/lock*`でロックファイルを削除する必要がある場合もあります。
+#### Q4. セキュリティパッケージのみを更新するにはどうすればよいですか？
+A. `sudo apt update && sudo apt upgrade -s`を使用してアップグレードをシミュレートし、その後、更新したい特定のセキュリティパッケージに対して`sudo apt install パッケージ名`を使用します。
 
-#### Q5. 単一のパッケージを更新するにはどうすればよいですか？
-A. `sudo apt install --only-upgrade パッケージ名`を使用します。
+#### Q5. パッケージをダウングレードするにはどうすればよいですか？
+A. `sudo apt install パッケージ名=バージョン番号`を使用して、特定の古いバージョンをインストールします。
 
 ## 参考資料
 
@@ -193,4 +216,4 @@ https://manpages.ubuntu.com/manpages/jammy/man8/apt.8.html
 
 ## 改訂履歴
 
-- 2025/05/04 初回改訂
+- 2025/05/05 初版

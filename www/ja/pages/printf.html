@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -47,15 +47,15 @@
     <main>
       
   <h1>printf コマンド</h1>
-<p>指定されたフォーマット文字列に従ってデータを整形し、出力します。</p>
+<p>指定されたフォーマット文字列に従ってデータをフォーマットして表示します。</p>
 <h2>概要</h2>
-<p><code>printf</code> コマンドは、フォーマット指定に従ってデータを整形し、標準出力に表示します。C言語のprintf関数と同様に動作し、テキストの配置、数値のフォーマット、文字列操作など、出力形式を細かく制御できます。</p>
+<p><code>printf</code> コマンドは、フォーマット指定に従ってデータをフォーマットし、標準出力に表示します。C プログラミング言語の printf 関数と同様に動作し、テキストの配置、数値のフォーマット、文字列操作など、出力フォーマットを細かく制御できます。</p>
 <h2>オプション</h2>
-<h3><strong>-v 変数名</strong></h3>
-<p>出力を標準出力に表示する代わりに、指定したシェル変数に代入します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>greeting<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, %s!&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;World&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$greeting</span>
-<span style="color: #000; font-style: italic">Hello, World!</span>
+<h3><strong>-v VAR</strong></h3>
+<p>出力を標準出力に表示する代わりに、シェル変数 VAR に割り当てます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>myvar<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, %s&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;World&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$myvar</span>
+<span style="color: #000; font-style: italic">Hello, World</span>
 </pre></div>
 <h3><strong>--help</strong></h3>
 <p>ヘルプメッセージを表示して終了します。</p>
@@ -63,103 +63,114 @@
 <span style="color: #000; font-style: italic">Usage: printf FORMAT [ARGUMENT]...</span>
 <span style="color: #000; font-style: italic">   or: printf OPTION</span>
 <span style="color: #000; font-style: italic">Print ARGUMENT(s) according to FORMAT, or execute according to OPTION:</span>
+
+<span style="color: #000; font-style: italic">      --help     display this help and exit</span>
+<span style="color: #000; font-style: italic">      --version  output version information and exit</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
 <h3><strong>--version</strong></h3>
 <p>バージョン情報を出力して終了します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span>--version
-<span style="color: #000; font-style: italic">printf (GNU coreutils) 9.0</span>
-<span style="color: #000; font-style: italic">Copyright (C) 2021 Free Software Foundation, Inc.</span>
-<span style="color: #000; font-style: italic">...</span>
+<span style="color: #000; font-style: italic">printf (GNU coreutils) 8.32</span>
+<span style="color: #000; font-style: italic">Copyright (C) 2020 Free Software Foundation, Inc.</span>
+<span style="color: #000; font-style: italic">License GPLv3+: GNU GPL version 3 or later &lt;https://gnu.org/licenses/gpl.html&gt;.</span>
+<span style="color: #000; font-style: italic">This is free software: you are free to change and redistribute it.</span>
+<span style="color: #000; font-style: italic">There is NO WARRANTY, to the extent permitted by law.</span>
+
+<span style="color: #000; font-style: italic">Written by David MacKenzie.</span>
 </pre></div>
 <h2>フォーマット指定子</h2>
 <h3><strong>%s</strong> - 文字列</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;名前: %s\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;太郎&quot;</span>
-<span style="color: #000; font-style: italic">名前: 太郎</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello, %s!\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;World&quot;</span>
+<span style="color: #000; font-style: italic">Hello, World!</span>
 </pre></div>
-<h3><strong>%d</strong> または <strong>%i</strong> - 整数</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;数値: %d\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">42</span>
-<span style="color: #000; font-style: italic">数値: 42</span>
+<h3><strong>%d</strong> - 10進整数</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Number: %d\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">42</span>
+<span style="color: #000; font-style: italic">Number: 42</span>
 </pre></div>
 <h3><strong>%f</strong> - 浮動小数点数</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;価格: ¥%.2f\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1980</span>.5
-<span style="color: #000; font-style: italic">価格: ¥1980.50</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Pi is approximately %.2f\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>.14159
+<span style="color: #000; font-style: italic">Pi is approximately 3.14</span>
 </pre></div>
 <h3><strong>%c</strong> - 文字</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;最初の文字: %c\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;A&quot;</span>
-<span style="color: #000; font-style: italic">最初の文字: A</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;First letter: %c\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;A&quot;</span>
+<span style="color: #000; font-style: italic">First letter: A</span>
 </pre></div>
-<h3><strong>%x</strong> または <strong>%X</strong> - 16進数</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;16進数: 0x%x\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">255</span>
-<span style="color: #000; font-style: italic">16進数: 0xff</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;16進数: 0x%X\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">255</span>
-<span style="color: #000; font-style: italic">16進数: 0xFF</span>
+<h3><strong>%x</strong> - 16進数</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hex: %x\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">255</span>
+<span style="color: #000; font-style: italic">Hex: ff</span>
+</pre></div>
+<h3><strong>%%</strong> - パーセント記号そのもの</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;100%% complete\n&quot;</span>
+<span style="color: #000; font-style: italic">100% complete</span>
 </pre></div>
 <h2>使用例</h2>
 <h3>基本的なテキストフォーマット</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;こんにちは、%s！\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;世界&quot;</span>
-<span style="color: #000; font-style: italic">こんにちは、世界！</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Name: %s, Age: %d\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Alice&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">30</span>
+<span style="color: #000; font-style: italic">Name: Alice, Age: 30</span>
 </pre></div>
 <h3>複数の引数</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%sは%d歳です。\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;佐藤&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">30</span>
-<span style="color: #000; font-style: italic">佐藤は30歳です。</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%s %s %s\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;one&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;two&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;three&quot;</span>
+<span style="color: #000; font-style: italic">one two three</span>
 </pre></div>
 <h3>幅と配置</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%-10s | %10s\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;左揃え&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;右揃え&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%-10s | %10s\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;テキスト&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;テキスト&quot;</span>
-<span style="color: #000; font-style: italic">左揃え      |     右揃え</span>
-<span style="color: #000; font-style: italic">テキスト    |   テキスト</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;|%-10s|%10s|\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;left&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;right&quot;</span>
+<span style="color: #000; font-style: italic">|left      |     right|</span>
 </pre></div>
-<h3>数値フォーマット</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;整数: %d, 小数: %.2f, 16進数: %x\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">42</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>.14159<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">255</span>
-<span style="color: #000; font-style: italic">整数: 42, 小数: 3.14, 16進数: ff</span>
+<h3>浮動小数点数の精度</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%.2f %.4f %.0f\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>.14159<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>.71828<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>.999
+<span style="color: #000; font-style: italic">3.14 2.7183 6</span>
 </pre></div>
-<h3>フォーマットの繰り返し</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%s\n&quot;</span><span style="color: #F8F8F8"> </span>ファイル1<span style="color: #F8F8F8"> </span>ファイル2<span style="color: #F8F8F8"> </span>ファイル3
-<span style="color: #000; font-style: italic">ファイル1</span>
-<span style="color: #000; font-style: italic">ファイル2</span>
-<span style="color: #000; font-style: italic">ファイル3</span>
+<h3>表のフォーマット</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%-10s %-8s %s\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Name&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Age&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;City&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%-10s %-8d %s\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Alice&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">30</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;New York&quot;</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;%-10s %-8d %s\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Bob&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">25</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Chicago&quot;</span>
+<span style="color: #000; font-style: italic">Name       Age      City</span>
+<span style="color: #000; font-style: italic">Alice      30       New York</span>
+<span style="color: #000; font-style: italic">Bob        25       Chicago</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>エスケープシーケンス</h3>
-<p><code>\n</code>（改行）、<code>\t</code>（タブ）、<code>\\</code>（バックスラッシュ）などのエスケープシーケンスを使用して出力を整形できます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;1行目\n2行目\tタブ付き\n&quot;</span>
-<span style="color: #000; font-style: italic">1行目</span>
-<span style="color: #000; font-style: italic">2行目	タブ付き</span>
+<h3>エスケープシーケンスを使用する</h3>
+<p>一般的なエスケープシーケンスには <code>\n</code>（改行）、<code>\t</code>（タブ）、<code>\\</code>（バックスラッシュ）があります。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Line 1\nLine 2\tTabbed\n&quot;</span>
+<span style="color: #000; font-style: italic">Line 1</span>
+<span style="color: #000; font-style: italic">Line 2	Tabbed</span>
 </pre></div>
-<h3>ゼロで数値を埋める</h3>
-<p>幅を指定したフォーマット指定子を使用して、数値をゼロで埋めることができます：</p>
+<h3>先頭にゼロを付けた数値フォーマット</h3>
+<p><code>%0Nd</code> という形式を使用します。N は合計幅です：</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ID: %04d\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">42</span>
 <span style="color: #000; font-style: italic">ID: 0042</span>
 </pre></div>
-<h3>リテラルの % 文字を出力する</h3>
-<p>リテラルの % 文字を出力するには、%% を使用します：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;割引: 25%%\n&quot;</span>
-<span style="color: #000; font-style: italic">割引: 25%</span>
+<h3>フォーマット引数の再利用</h3>
+<p>出力位置が引数よりも多い場合、最後の引数が再利用されます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;A: %d, B: %d, C: %d\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>
+<span style="color: #000; font-style: italic">A: 1, B: 2, C: 2</span>
 </pre></div>
-<h3>フォーマットの再利用</h3>
-<p>フォーマット文字列は追加の引数に対して再利用されます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ユーザー: %s\n&quot;</span><span style="color: #F8F8F8"> </span>田中<span style="color: #F8F8F8"> </span>佐藤<span style="color: #F8F8F8"> </span>鈴木
-<span style="color: #000; font-style: italic">ユーザー: 田中</span>
-<span style="color: #000; font-style: italic">ユーザー: 佐藤</span>
-<span style="color: #000; font-style: italic">ユーザー: 鈴木</span>
+<h3>改行なしで表示</h3>
+<p><code>echo</code> と異なり、<code>printf</code> は自動的に改行を追加しません：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;No newline&quot;</span>
+<span style="color: #000; font-style: italic">No newline$</span>
 </pre></div>
 <h2>よくある質問</h2>
 <h4>Q1. <code>printf</code> と <code>echo</code> の違いは何ですか？</h4>
-<p>A. <code>printf</code> はより精密なフォーマット制御を提供しますが、<code>echo</code> はよりシンプルで柔軟性が低いです。<code>printf</code> は自動的に改行を追加せず、明示的に <code>\n</code> を指定する必要があり、データ型のフォーマット指定子をサポートしています。</p>
-<h4>Q2. 小数点以下の桁数を固定するにはどうすればよいですか？</h4>
-<p>A. <code>%f</code> と精度修飾子を使用します：<code>printf &quot;%.2f&quot; 3.14159</code> は <code>3.14</code> を出力します。</p>
-<h4>Q3. <code>printf</code> で日付をフォーマットするにはどうすればよいですか？</h4>
-<p>A. <code>printf</code> で直接日付をフォーマットすることはできません。<code>date</code> コマンドを使用してフォーマットされた日付文字列を生成し、それを <code>printf</code> に渡します。</p>
-<h4>Q4. タブや改行などの特殊文字を出力するにはどうすればよいですか？</h4>
-<p>A. エスケープシーケンスを使用します：タブには <code>\t</code>、改行には <code>\n</code>、キャリッジリターンには <code>\r</code>、バックスラッシュには <code>\\</code> を使用します。</p>
-<h4>Q5. シェルスクリプトで <code>printf</code> を使用できますか？</h4>
-<p>A. はい、<code>printf</code> はフォーマットされた出力や <code>-v</code> オプションを使った変数代入のために、シェルスクリプトでよく使用されます。</p>
-<h2>参考資料</h2>
+<p>A. <code>printf</code> はより正確なフォーマット制御を提供しますが、デフォルトでは改行を追加しません。<code>echo</code> はよりシンプルですが、フォーマットオプションが少なく、自動的に改行を追加します。</p>
+<h4>Q2. <code>printf</code> で日付をフォーマットするにはどうすればよいですか？</h4>
+<p>A. <code>printf</code> で直接日付をフォーマットすることはできません。<code>date</code> コマンドを使用してフォーマットされた日付文字列を生成し、それを <code>printf</code> に渡します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Today is %s\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">$(</span>date<span style="color: #F8F8F8"> </span>+<span style="color: #4E9A06">&quot;%Y-%m-%d&quot;</span><span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">Today is 2025-05-05</span>
+</pre></div>
+<h4>Q3. タブや改行などの特殊文字を表示するにはどうすればよいですか？</h4>
+<p>A. エスケープシーケンスを使用します：<code>\t</code> はタブ、<code>\n</code> は改行、<code>\r</code> はキャリッジリターン、<code>\\</code> はバックスラッシュそのものを表します。</p>
+<h4>Q4. 数値の小数点以下の桁数をフォーマットするにはどうすればよいですか？</h4>
+<p>A. 精度指定子を使用します。例えば <code>%.2f</code> は小数点以下2桁を表示します：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Price: </span>$<span style="color: #4E9A06">%.2f\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">9</span>.99
+<span style="color: #000; font-style: italic">Price: $9.99</span>
+</pre></div>
+<h2>参考文献</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/printf-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初版作成</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -47,96 +47,100 @@
     <main>
       
   <h1>git switch コマンド</h1>
-<p>ブランチを切り替えたり、作業ツリーのファイルを復元したりします。</p>
+<p>ブランチの切り替えやワーキングツリーファイルの復元を行います。</p>
 <h2>概要</h2>
-<p><code>git switch</code> コマンドは、Gitリポジトリ内でブランチを切り替えるために使用されます。Git 2.23で導入され、<code>git checkout</code>の特定の用途に対するよりユーザーフレンドリーな代替手段となっています。<code>git checkout</code>は複数の目的を果たしますが、<code>git switch</code>は特にブランチ操作のために設計されており、より明確でエラーが発生しにくくなっています。</p>
+<p><code>git switch</code> コマンドは、Gitリポジトリでブランチを切り替えるために使用されます。これはGit 2.23で導入され、<code>git checkout</code>の特定の用途に対するよりユーザーフレンドリーな代替手段です。<code>git checkout</code>が複数の目的を果たすのに対し、<code>git switch</code>は特にブランチ操作のために設計されており、コマンド構造がより直感的になっています。</p>
 <h2>オプション</h2>
-<h3><strong>-c, --create &lt;branch&gt;</strong></h3>
+<h3><strong>-c, --create</strong></h3>
 <p>新しいブランチを作成して切り替えます。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>feature-login
 <span style="color: #000; font-style: italic">Switched to a new branch &#39;feature-login&#39;</span>
-<span style="color: #8F5902"># </span>新しいブランチ<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;feature-login&#39;</span><span style="color: #F8F8F8"> </span>に切り替えた
 </pre></div>
 <h3><strong>-d, --detach</strong></h3>
 <p>デタッチドHEAD状態でコミットに切り替えます。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>--detach<span style="color: #F8F8F8"> </span>HEAD~3
-<span style="color: #000; font-style: italic">Note: switching to &#39;HEAD~3&#39;.</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>1a2b3c4
+<span style="color: #000; font-style: italic">Note: switching to &#39;1a2b3c4&#39;.</span>
 
 <span style="color: #000; font-style: italic">You are in &#39;detached HEAD&#39; state...</span>
-<span style="color: #000; font-style: italic">HEAD is now at a1b2c3d Previous commit message</span>
-<span style="color: #8F5902"># </span><span style="color: #4E9A06">&#39;HEAD~3&#39;</span><span style="color: #F8F8F8"> </span>に切り替えている
-<span style="color: #8F5902"># </span><span style="color: #4E9A06">&#39;デタッチドHEAD&#39;</span>状態になっている
-<span style="color: #8F5902"># </span>HEADは現在<span style="color: #F8F8F8"> </span>a1b2c3d（前のコミットメッセージ）にある
-</pre></div>
-<h3><strong>-t, --track</strong></h3>
-<p>新しいブランチを作成する際に、「upstream」設定をセットアップします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>feature-auth<span style="color: #F8F8F8"> </span>--track<span style="color: #F8F8F8"> </span>origin/feature-auth
-<span style="color: #000; font-style: italic">Branch &#39;feature-auth&#39; set up to track remote branch &#39;feature-auth&#39; from &#39;origin&#39;.</span>
-<span style="color: #000; font-style: italic">Switched to a new branch &#39;feature-auth&#39;</span>
-<span style="color: #8F5902"># </span>ブランチ<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;feature-auth&#39;</span><span style="color: #F8F8F8"> </span>は<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;origin&#39;</span><span style="color: #F8F8F8"> </span>からのリモートブランチ<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;feature-auth&#39;</span><span style="color: #F8F8F8"> </span>を追跡するように設定された
-<span style="color: #8F5902"># </span>新しいブランチ<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;feature-auth&#39;</span><span style="color: #F8F8F8"> </span>に切り替えた
+<span style="color: #000; font-style: italic">HEAD is now at 1a2b3c4 Add login functionality</span>
 </pre></div>
 <h3><strong>--discard-changes</strong></h3>
 <p>切り替える前にローカルの変更を破棄します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>--discard-changes<span style="color: #F8F8F8"> </span>main
 <span style="color: #000; font-style: italic">Switched to branch &#39;main&#39;</span>
-<span style="color: #8F5902"># </span>ブランチ<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;main&#39;</span><span style="color: #F8F8F8"> </span>に切り替えた（ローカルの変更は破棄された）
+</pre></div>
+<h3><strong>-f, --force</strong></h3>
+<p>インデックスまたはワーキングツリーがHEADと異なる場合でも強制的に切り替えます。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>main
+<span style="color: #000; font-style: italic">Switched to branch &#39;main&#39;</span>
 </pre></div>
 <h3><strong>-m, --merge</strong></h3>
-<p>ローカルの変更を新しいブランチにマージします。</p>
+<p>現在のブランチ、ワーキングツリーの内容、および新しいブランチの間で3方向マージを実行します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span>feature-branch
 <span style="color: #000; font-style: italic">Switched to branch &#39;feature-branch&#39;</span>
-<span style="color: #8F5902"># </span>ブランチ<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;feature-branch&#39;</span><span style="color: #F8F8F8"> </span>に切り替えた（ローカルの変更はマージされた）
+</pre></div>
+<h3><strong>--orphan</strong></h3>
+<p>新しい孤立ブランチ（履歴のないブランチ）を作成します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>--orphan<span style="color: #F8F8F8"> </span>new-root
+<span style="color: #000; font-style: italic">Switched to a new branch &#39;new-root&#39;</span>
+</pre></div>
+<h3><strong>-t, --track</strong></h3>
+<p>新しいブランチを作成する際に、「upstream」設定を行います。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>feature-branch<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>origin/feature-branch
+<span style="color: #000; font-style: italic">Branch &#39;feature-branch&#39; set up to track remote branch &#39;feature-branch&#39; from &#39;origin&#39;.</span>
+<span style="color: #000; font-style: italic">Switched to a new branch &#39;feature-branch&#39;</span>
 </pre></div>
 <h3><strong>-</strong></h3>
 <p>前のブランチに切り替えます。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-
 <span style="color: #000; font-style: italic">Switched to branch &#39;main&#39;</span>
-<span style="color: #8F5902"># </span>前のブランチ<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;main&#39;</span><span style="color: #F8F8F8"> </span>に切り替えた
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的なブランチ切り替え</h3>
+<h3>基本的なブランチの切り替え</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>main
 <span style="color: #000; font-style: italic">Switched to branch &#39;main&#39;</span>
-<span style="color: #8F5902"># </span>ブランチ<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;main&#39;</span><span style="color: #F8F8F8"> </span>に切り替えた
 </pre></div>
 <h3>新しいブランチの作成と切り替え</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>new-feature
-<span style="color: #000; font-style: italic">Switched to a new branch &#39;new-feature&#39;</span>
-<span style="color: #8F5902"># </span>新しいブランチ<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;new-feature&#39;</span><span style="color: #F8F8F8"> </span>に切り替えた
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span>feature-auth
+<span style="color: #000; font-style: italic">Switched to a new branch &#39;feature-auth&#39;</span>
 </pre></div>
 <h3>リモートブランチへの切り替え</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>feature-branch
 <span style="color: #000; font-style: italic">Branch &#39;feature-branch&#39; set up to track remote branch &#39;feature-branch&#39; from &#39;origin&#39;.</span>
 <span style="color: #000; font-style: italic">Switched to a new branch &#39;feature-branch&#39;</span>
-<span style="color: #8F5902"># </span>ブランチ<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;feature-branch&#39;</span><span style="color: #F8F8F8"> </span>は<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;origin&#39;</span><span style="color: #F8F8F8"> </span>からのリモートブランチ<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;feature-branch&#39;</span><span style="color: #F8F8F8"> </span>を追跡するように設定された
-<span style="color: #8F5902"># </span>新しいブランチ<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;feature-branch&#39;</span><span style="color: #F8F8F8"> </span>に切り替えた
+</pre></div>
+<h3>特定のコミットへの切り替え</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>git<span style="color: #F8F8F8"> </span>switch<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>1a2b3c4
+<span style="color: #000; font-style: italic">Note: switching to &#39;1a2b3c4&#39;.</span>
+
+<span style="color: #000; font-style: italic">You are in &#39;detached HEAD&#39; state...</span>
+<span style="color: #000; font-style: italic">HEAD is now at 1a2b3c4 Add login functionality</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3><code>git switch -</code> を使用してブランチ間をトグルする</h3>
-<p>Unixの <code>cd -</code> と同様に、<code>git switch -</code> を使用すると、現在のブランチと前のブランチの間を素早く切り替えることができます。開発中に頻繁にコンテキストを切り替える必要がある場合に便利です。</p>
-<h3>ブランチ操作には <code>git checkout</code> よりも <code>git switch</code> を優先する</h3>
-<p><code>git switch</code> は、ブランチを扱う際に <code>git checkout</code> よりも明示的で安全です。<code>checkout</code> の二重目的（ブランチの切り替えとファイルの復元）による混乱を避けることができます。</p>
-<h3><code>--discard-changes</code> は注意して使用する</h3>
-<p><code>--discard-changes</code> オプションはすべてのローカル変更を破棄します。このオプションを使用する前に、それらの変更が不要であることを確認してください。破棄された変更は復元できません。</p>
+<h3><code>-</code> を使用してブランチ間をトグルする</h3>
+<p>ダッシュの省略形（<code>git switch -</code>）を使用すると、シェルの <code>cd -</code> と同様に、現在のブランチと前のブランチの間を素早く切り替えることができます。</p>
+<h3>より良いワークフローのために <code>git branch</code> と組み合わせる</h3>
+<p>切り替える前に利用可能なブランチを確認するには、<code>git branch</code> を使用してから <code>git switch ブランチ名</code> を実行します。</p>
+<h3>ブランチ操作には <code>checkout</code> よりも <code>switch</code> を優先する</h3>
+<p><code>git switch</code> は、ブランチ操作に特化して設計されており、より明確なセマンティクスを持っているため、ブランチ操作には <code>git checkout</code> よりも直感的です。</p>
 <h3>自動的に追跡ブランチを作成する</h3>
-<p>ローカルに存在しないリモートブランチに切り替える場合、Gitは自動的に追跡ブランチを作成します。これにより、<code>-c</code> と <code>--track</code> オプションを明示的に使用する必要がなくなります。</p>
+<p>ローカルに存在しないリモートブランチに切り替える場合、ブランチ名が単一のリモートに存在すれば、Gitは自動的に追跡ブランチを作成します。</p>
 <h2>よくある質問</h2>
 <h4>Q1. <code>git switch</code> と <code>git checkout</code> の違いは何ですか？</h4>
-<p>A. <code>git switch</code> はブランチ操作のみに焦点を当てていますが、<code>git checkout</code> はブランチの切り替えやファイルの復元など複数の目的を持っています。<code>git switch</code> は、より明確で焦点を絞ったコマンドを提供するために導入されました。</p>
-<h4>Q2. 特定のコミットから新しいブランチを作成するにはどうすればよいですか？</h4>
-<p>A. <code>git switch -c &lt;新しいブランチ名&gt; &lt;コミットハッシュ&gt;</code> を使用して、特定のコミットから始まる新しいブランチを作成して切り替えることができます。</p>
-<h4>Q3. コミットされていない変更がある状態でブランチを切り替えることはできますか？</h4>
-<p>A. はい、変更がターゲットブランチと競合しない場合は可能です。競合がある場合、Gitは切り替えを防止します。<code>--discard-changes</code> を使用して変更を破棄するか、<code>--merge</code> を使用して変更をターゲットブランチにマージすることができます。</p>
-<h4>Q4. リモートブランチに切り替えるにはどうすればよいですか？</h4>
-<p>A. 単に <code>git switch ブランチ名</code> を使用します。ブランチがリモートに存在し、ローカルには存在しない場合、Gitは自動的に追跡ブランチを作成します。</p>
-<h4>Q5. 特定のタグに切り替えるにはどうすればよいですか？</h4>
-<p>A. <code>git switch --detach タグ名</code> を使用して、タグが指すコミットにデタッチドHEAD状態で切り替えることができます。</p>
+<p>A. <code>git switch</code> はブランチ操作のみに焦点を当てていますが、<code>git checkout</code> はブランチの切り替え、ファイルの復元など、複数の目的を持っています。<code>git switch</code> は、より明確で具体的なコマンドを提供するために導入されました。</p>
+<h4>Q2. 新しいブランチを作成して切り替えるにはどうすればよいですか？</h4>
+<p>A. <code>git switch -c 新しいブランチ名</code> を使用して、1つのコマンドで新しいブランチを作成して切り替えることができます。</p>
+<h4>Q3. ブランチを切り替える際にローカルの変更を破棄するにはどうすればよいですか？</h4>
+<p>A. <code>git switch --discard-changes ブランチ名</code> を使用して、切り替える前にローカルの変更を破棄できます。</p>
+<h4>Q4. 前のブランチに戻るにはどうすればよいですか？</h4>
+<p>A. <code>git switch -</code> を使用して、以前にチェックアウトしたブランチに切り替えることができます。</p>
+<h4>Q5. コミットしていない変更がある状態でブランチを切り替えるとどうなりますか？</h4>
+<p>A. 競合がある場合、Gitは切り替えを防止します。変更をコミットするか、<code>git stash</code> で一時保存するか、<code>--discard-changes</code> または <code>--merge</code> オプションを使用することができます。</p>
 <h2>参考文献</h2>
 <p>https://git-scm.com/docs/git-switch</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初回改訂</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

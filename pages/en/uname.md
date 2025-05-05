@@ -4,17 +4,17 @@ Print system information about the operating system.
 
 ## Overview
 
-The `uname` command displays system information about the operating system running on your computer. It can show details such as the kernel name, network hostname, kernel release, kernel version, machine hardware, processor type, and operating system.
+The `uname` command displays system information about the operating system running on your computer. It can show the kernel name, network node hostname, kernel release, kernel version, machine hardware name, processor type, hardware platform, and operating system.
 
 ## Options
 
 ### **-a, --all**
 
-Print all information in the following order: kernel name, network hostname, kernel release, kernel version, machine hardware, processor type, and operating system.
+Print all information, in the following order: kernel name, network node hostname, kernel release, kernel version, machine hardware name, processor type, hardware platform, operating system.
 
 ```console
 $ uname -a
-Linux hostname 5.15.0-91-generic #101-Ubuntu SMP Tue Apr 16 14:15:57 UTC 2024 x86_64 x86_64 GNU/Linux
+Linux hostname 5.15.0-76-generic #83-Ubuntu SMP Thu Jun 15 19:16:32 UTC 2023 x86_64 x86_64 GNU/Linux
 ```
 
 ### **-s, --kernel-name**
@@ -41,7 +41,7 @@ Print the kernel release.
 
 ```console
 $ uname -r
-5.15.0-91-generic
+5.15.0-76-generic
 ```
 
 ### **-v, --kernel-version**
@@ -50,7 +50,7 @@ Print the kernel version.
 
 ```console
 $ uname -v
-#101-Ubuntu SMP Tue Apr 16 14:15:57 UTC 2024
+#83-Ubuntu SMP Thu Jun 15 19:16:32 UTC 2023
 ```
 
 ### **-m, --machine**
@@ -64,10 +64,19 @@ x86_64
 
 ### **-p, --processor**
 
-Print the processor type (or "unknown" if it cannot be determined).
+Print the processor type (or "unknown" if not known).
 
 ```console
 $ uname -p
+x86_64
+```
+
+### **-i, --hardware-platform**
+
+Print the hardware platform (or "unknown" if not known).
+
+```console
+$ uname -i
 x86_64
 ```
 
@@ -82,64 +91,61 @@ GNU/Linux
 
 ## Usage Examples
 
-### Checking kernel version for compatibility
+### Getting kernel information
 
 ```console
-$ uname -r
-5.15.0-91-generic
+$ uname -sr
+Linux 5.15.0-76-generic
 ```
 
-### Getting complete system information
-
-```console
-$ uname -a
-Linux hostname 5.15.0-91-generic #101-Ubuntu SMP Tue Apr 16 14:15:57 UTC 2024 x86_64 x86_64 GNU/Linux
-```
-
-### Checking architecture for software installation
+### Checking architecture for compatibility
 
 ```console
 $ uname -m
 x86_64
 ```
 
-## Tips
-
-### Combine with Other Commands
-
-Combine `uname` with other commands like `lsb_release` to get more detailed distribution information:
+### Displaying complete system information
 
 ```console
-$ uname -r && lsb_release -a
-5.15.0-91-generic
-No LSB modules are available.
-Distributor ID: Ubuntu
-Description:    Ubuntu 22.04.3 LTS
-Release:        22.04
-Codename:       jammy
+$ uname -a
+Linux hostname 5.15.0-76-generic #83-Ubuntu SMP Thu Jun 15 19:16:32 UTC 2023 x86_64 x86_64 GNU/Linux
 ```
 
-### Use in Scripts
+## Tips:
 
-The `uname` command is particularly useful in shell scripts to determine the operating system or architecture before performing system-specific operations.
+### Identify System Architecture
 
-### macOS Considerations
+Use `uname -m` to quickly identify if your system is 32-bit (i686) or 64-bit (x86_64), which is essential when downloading software or compiling from source.
 
-On macOS, `uname -s` will return "Darwin" instead of "Linux", and some options like `-o` may not be available or may behave differently.
+### Check Kernel Version
+
+Use `uname -r` to check your kernel version before installing kernel-dependent software or drivers.
+
+### Combine Options
+
+You can combine multiple options like `uname -sr` to get specific information without displaying everything.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I check which Linux kernel version I'm running?
+#### Q1. How do I check if my system is 32-bit or 64-bit?
+A. Use `uname -m`. If it returns "x86_64", you have a 64-bit system. If it returns "i686" or "i386", you have a 32-bit system.
+
+#### Q2. How can I find my Linux kernel version?
 A. Use `uname -r` to display the kernel release version.
 
-#### Q2. How can I tell if my system is 32-bit or 64-bit?
-A. Use `uname -m` to show the machine hardware name. "x86_64" indicates a 64-bit system, while "i686" or "i386" indicates a 32-bit system.
+#### Q3. What's the difference between `uname -v` and `uname -r`?
+A. `uname -r` shows the kernel release (like "5.15.0-76-generic"), while `uname -v` shows the kernel version, which typically includes build information (like "#83-Ubuntu SMP Thu Jun 15 19:16:32 UTC 2023").
 
-#### Q3. What's the difference between `uname -r` and `uname -v`?
-A. `uname -r` shows the kernel release (like "5.15.0-91-generic"), while `uname -v` shows the kernel version, which typically includes build information (like "#101-Ubuntu SMP Tue Apr 16 14:15:57 UTC 2024").
+#### Q4. How do I check what Linux distribution I'm using?
+A. `uname` only shows kernel information. To check your distribution, use `cat /etc/os-release` or `lsb_release -a` instead.
 
-#### Q4. Why does `uname -p` sometimes return "unknown"?
-A. The processor type might not be determinable on some systems, in which case "unknown" is returned.
+## macOS Considerations
+
+On macOS, `uname` works similarly but with some differences:
+- The `-o` option is not available on macOS
+- The output of `uname -a` will show "Darwin" as the kernel name instead of "Linux"
+- To get macOS version information, use `sw_vers` instead
 
 ## References
 
@@ -147,4 +153,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/uname-invocation.html
 
 ## Revisions
 
-2025/05/04 First revision
+- 2025/05/05 First revision

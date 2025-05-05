@@ -1,78 +1,88 @@
 # git merge コマンド
 
-複数の開発履歴を統合します。
+異なるブランチからの変更を現在のブランチに統合します。
 
 ## 概要
 
-`git merge`は複数のコミット履歴を一つの統一された履歴に結合します。主に、あるブランチの変更を別のブランチに統合するために使用され、一般的には開発が完了した後にフィーチャーブランチをメインブランチにマージするときに使われます。このコマンドは指定されたブランチの変更を現在のブランチに取り込みます。
+`git merge` は、1つ以上のブランチからの変更を現在のブランチに統合します。これは一般的に、開発ブランチから完成した機能をメインブランチに取り込んだり、メインブランチの最新の変更を機能ブランチに取り込んだりするために使用されます。このコマンドは、高速前進（fast-forward）マージでない限り、マージされた状態を表す新しいコミットを作成します。
 
 ## オプション
 
-### **-m, --message=\<message\>**
+### **--ff**
 
-マージコミットに使用するコミットメッセージを設定します。
+可能な場合は高速前進マージを実行します（デフォルトの動作）。
 
 ```console
-$ git merge feature-branch -m "ログイン機能の新しいフィーチャーブランチをマージ"
+$ git merge feature-branch
+Updating 5ab1c2d..8ef9a0b
+Fast-forward
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 ```
 
 ### **--no-ff**
 
-マージがfast-forwardで解決できる場合でも、マージコミットを作成します。
+高速前進マージが可能な場合でも、マージコミットを作成します。
 
 ```console
 $ git merge --no-ff feature-branch
 Merge made by the 'recursive' strategy.
- login.js | 75 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 login.js
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 ```
 
-### **--ff-only**
+### **--squash**
 
-現在のHEADが既に最新であるか、マージがfast-forwardとして解決できる場合を除いて、マージを拒否し、非ゼロのステータスで終了します。
+指定されたブランチからのすべての変更を単一の変更セットにまとめ、それを別途コミットできるようにします。
 
 ```console
-$ git merge --ff-only upstream/main
-Updating 1234abc..5678def
-Fast-forward
- README.md | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+$ git merge --squash feature-branch
+Squash commit -- not updating HEAD
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+```
+
+### **-m, --message**
+
+マージコミットのコミットメッセージを設定します。
+
+```console
+$ git merge -m "Merge feature X into main" feature-branch
+Merge made by the 'recursive' strategy.
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 ```
 
 ### **--abort**
 
-現在の競合解決プロセスを中止し、マージ前の状態に戻そうとします。
+現在のマージを中止し、マージ前の状態に戻します。
 
 ```console
 $ git merge feature-branch
-Auto-merging index.html
-CONFLICT (content): Merge conflict in index.html
+Auto-merging file.txt
+CONFLICT (content): Merge conflict in file.txt
 Automatic merge failed; fix conflicts and then commit the result.
 
 $ git merge --abort
 ```
 
-### **--squash**
+### **--continue**
 
-マージが行われたかのように作業ツリーとインデックス状態を生成しますが、実際にはコミットを作成せず、HEADも移動しません。
+コンフリクトが解決された後にマージを続行します。
 
 ```console
-$ git merge --squash feature-branch
-Updating 1234abc..5678def
-Fast-forward
-Squash commit -- not updating HEAD
- login.js | 75 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 login.js
+$ git merge --continue
 ```
 
-### **-s, --strategy=\<strategy\>**
+### **-s, --strategy**
 
-指定されたマージ戦略を使用します。一般的な値はrecursive、resolve、octopus、ours、subtreeなどです。
+使用するマージ戦略を指定します。
 
 ```console
 $ git merge -s recursive feature-branch
+Merge made by the 'recursive' strategy.
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 ```
 
 ## 使用例
@@ -84,61 +94,72 @@ $ git checkout main
 Switched to branch 'main'
 
 $ git merge feature-branch
-Updating 1234abc..5678def
+Updating 5ab1c2d..8ef9a0b
 Fast-forward
- login.js | 75 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 login.js
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 ```
 
-### 複数のブランチをマージする
+### マージコミットの作成
 
 ```console
 $ git checkout main
 Switched to branch 'main'
 
-$ git merge feature1 feature2 feature3
-Merge made by the 'octopus' strategy.
- feature1.js | 20 ++++++++++++++++++++
- feature2.js | 15 +++++++++++++++
- feature3.js | 30 ++++++++++++++++++++++++++++++
- 3 files changed, 65 insertions(+)
+$ git merge --no-ff feature-branch
+Merge made by the 'recursive' strategy.
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 ```
 
-### マージ競合の解決
+### ブランチからのコミットのスカッシュ
+
+```console
+$ git checkout main
+Switched to branch 'main'
+
+$ git merge --squash feature-branch
+Squash commit -- not updating HEAD
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+$ git commit -m "Implemented feature X"
+[main abc1234] Implemented feature X
+ 1 file changed, 2 insertions(+)
+```
+
+### マージコンフリクトの解決
 
 ```console
 $ git merge feature-branch
-Auto-merging index.html
-CONFLICT (content): Merge conflict in index.html
+Auto-merging file.txt
+CONFLICT (content): Merge conflict in file.txt
 Automatic merge failed; fix conflicts and then commit the result.
 
-# index.htmlの競合を手動で解決した後
-$ git add index.html
-$ git commit
-[main 1234abc] Merge branch 'feature-branch'
+# コンフリクトしたファイルを編集して解決する
+
+$ git add file.txt
+$ git merge --continue
+# または代わりに: git commit
 ```
 
-## ヒント:
+## ヒント
 
-### フィーチャーブランチには`--no-ff`を使用する
+### 高速前進マージの理解
 
-フィーチャーブランチをマージする際は、`--no-ff`を使用してブランチの履歴を保持し、コミット履歴にフィーチャーブランチがマージされたことを明確にすることを検討してください。
+高速前進マージは、ターゲットブランチの履歴がソースブランチの直接的な延長である場合に発生します。Gitは単にポインタを前方に移動させるだけで、マージコミットを作成しません。より良い履歴追跡のために `--no-ff` を使用して、マージコミットを強制することができます。
 
-### マージ結果のプレビュー
+### マージのプレビュー
 
-実際のマージを実行する前に、以下のコマンドを使用してマージされる変更をプレビューできます：
-```console
-$ git diff ...branch-name
-```
+マージを実行する前に、`git diff <branch>` を使用してマージされる変更をプレビューするか、`git merge --no-commit --no-ff <branch>` を使用してコミットせずにマージをステージングし、結果を検査できるようにします。
 
-### Fast-Forwardマージを理解する
+### マージコンフリクトの処理
 
-Fast-forwardマージは、ターゲットブランチのコミットが現在のブランチの直接の子孫である場合に発生します。Gitはマージコミットを作成せずにポインタを前方に移動するだけです。マージコミットを強制したい場合は`--no-ff`を使用してください。
+コンフリクトが発生すると、Gitは影響を受けるファイルにマークを付けます。これらのファイルを編集してコンフリクトを解決し、`git add` を使用して解決済みとマークし、最後に `git merge --continue` または `git commit` を使用してマージを完了します。
 
-### 履歴をクリーンにするためのSquashマージ
+### マージ戦略の使用
 
-フィーチャーブランチからの全ての変更を対象ブランチの単一のコミットにまとめたい場合は`--squash`を使用します。これによりコミット履歴がより整理され、読みやすくなります。
+複雑なマージの場合は、`-s` で異なる戦略を使用することを検討してください。デフォルトの `recursive` 戦略はほとんどの場合うまく機能しますが、一方の側の変更を優先したい場合は `ours` または `theirs` が役立つことがあります。
 
 ## よくある質問
 
@@ -146,18 +167,18 @@ Fast-forwardマージは、ターゲットブランチのコミットが現在�
 A. マージは両方のブランチからの変更を組み合わせた新しいコミットを作成し、ブランチの履歴を保持します。リベースはブランチのコミットをターゲットブランチの上に再生し、線形の履歴を作成しますが、コミット履歴を書き換えます。
 
 #### Q2. マージを元に戻すにはどうすればよいですか？
-A. マージをプッシュしていない場合は、`git reset --hard HEAD~1`を使用して最後のコミットを元に戻せます。既にプッシュしている場合は、`git revert -m 1 <マージコミットのハッシュ>`を使用してマージを元に戻す新しいコミットを作成することを検討してください。
+A. マージをプッシュしていない場合は、`git reset --hard HEAD~1` を使用して最後のコミットを元に戻します。すでにプッシュしている場合は、`git revert -m 1 <merge-commit-hash>` を使用してマージを元に戻す新しいコミットを作成することを検討してください。
 
-#### Q3. Gitマージでの「fast-forward」とは何ですか？
-A. Fast-forwardマージは、フィーチャーブランチが作成されてから基本ブランチに新しいコミットがない場合に発生します。Gitはマージコミットを作成せずに、基本ブランチのポインタをフィーチャーブランチのポインタまで前進させるだけです。
+#### Q3. 高速前進マージとは何ですか？
+A. 高速前進マージは、マージされるブランチが作成されてから現在のブランチに新しいコミットがない場合に発生します。Gitは単にブランチポインタをマージされるブランチの最新のコミットに前進させるだけです。
 
-#### Q4. マージ競合を解決するにはどうすればよいですか？
-A. Gitが競合を報告した場合、競合したファイルを編集して差異を解決し、`git add`を使用して解決済みとマークし、最後に`git commit`を実行してマージを完了します。
+#### Q4. 別のブランチから特定のファイルだけをマージするにはどうすればよいですか？
+A. `git checkout <branch-name> -- <file-path>` を使用して別のブランチから特定のファイルを取得し、それらの変更をコミットします。
 
-## 参考資料
+## 参考文献
 
 https://git-scm.com/docs/git-merge
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

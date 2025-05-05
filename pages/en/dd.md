@@ -4,137 +4,141 @@ Convert and copy files with block-level operations.
 
 ## Overview
 
-`dd` is a command-line utility for copying and converting data. Unlike standard copy commands, it allows precise control over block sizes, byte order, and data transformations. It's commonly used for creating disk images, backing up partitions, converting file formats, and performing low-level data operations.
+The `dd` command copies data between files using specified block sizes, performing conversions during the copy. It's commonly used for tasks like creating disk images, backing up partitions, wiping disks, and benchmarking I/O performance. Unlike most Unix commands, `dd` uses a unique syntax with `option=value` pairs rather than traditional flags.
 
 ## Options
 
-### **-if=FILE, --input=FILE**
+### **if=FILE**
 
-Specifies the input file to read from (default is standard input)
+Specifies the input file to read from. If not specified, stdin is used.
 
 ```console
 $ dd if=/dev/sda
 ```
 
-### **-of=FILE, --output=FILE**
+### **of=FILE**
 
-Specifies the output file to write to (default is standard output)
+Specifies the output file to write to. If not specified, stdout is used.
 
 ```console
 $ dd if=/dev/sda of=/dev/sdb
 ```
 
-### **-bs=BYTES, --block-size=BYTES**
+### **bs=BYTES**
 
-Sets both input and output block sizes to BYTES
-
-```console
-$ dd if=/dev/zero of=testfile bs=1M count=10
-10+0 records in
-10+0 records out
-10485760 bytes (10 MB, 10 MiB) copied, 0.0119631 s, 876 MB/s
-```
-
-### **-count=N, --count=N**
-
-Copies only N input blocks
+Sets both input and output block size to BYTES. This can significantly affect performance.
 
 ```console
-$ dd if=/dev/urandom of=random.dat bs=1M count=5
-5+0 records in
-5+0 records out
-5242880 bytes (5.2 MB, 5.0 MiB) copied, 0.0452266 s, 116 MB/s
-```
-
-### **-status=LEVEL, --status=LEVEL**
-
-Controls the level of information displayed (none, noxfer, progress)
-
-```console
-$ dd if=/dev/zero of=testfile bs=1M count=100 status=progress
-51380224 bytes (51 MB, 49 MiB) copied, 0.0519088 s, 990 MB/s
+$ dd if=/dev/zero of=testfile bs=1M count=100
 100+0 records in
 100+0 records out
-104857600 bytes (105 MB, 100 MiB) copied, 0.105822 s, 991 MB/s
+104857600 bytes (105 MB, 100 MiB) transferred in 0.083 seconds, 1.3 GB/s
 ```
 
-### **-conv=CONVS, --conv=CONVS**
+### **count=N**
 
-Converts the file as per the comma-separated symbol list
+Copy only N input blocks. Limits the amount of data copied.
 
 ```console
-$ dd if=input.txt of=output.txt conv=ucase
+$ dd if=/dev/urandom of=random.dat bs=1M count=10
+10+0 records in
+10+0 records out
+10485760 bytes (10 MB, 10 MiB) transferred in 0.035 seconds, 299 MB/s
+```
+
+### **status=LEVEL**
+
+Controls the information displayed while dd is running:
+- `none`: No output until completion
+- `noxfer`: Suppress the final transfer statistics
+- `progress`: Show periodic transfer statistics
+
+```console
+$ dd if=/dev/zero of=testfile bs=1G count=1 status=progress
+536870912 bytes (537 MB, 512 MiB) copied, 0.5 s, 1.1 GB/s
+1+0 records in
+1+0 records out
+1073741824 bytes (1.1 GB, 1.0 GiB) transferred in 0.969 seconds, 1.1 GB/s
+```
+
+### **conv=CONVS**
+
+Perform conversions on the data. Multiple conversions can be specified, separated by commas:
+- `sync`: Pad input blocks with zeros
+- `noerror`: Continue after read errors
+- `notrunc`: Don't truncate the output file
+
+```console
+$ dd if=/dev/sda of=disk.img conv=sync,noerror
 ```
 
 ## Usage Examples
 
-### Creating a disk image
-
-```console
-$ dd if=/dev/sda of=disk.img bs=4M status=progress
-8589934592 bytes (8.6 GB, 8.0 GiB) copied, 126 s, 68.2 MB/s
-2048+0 records in
-2048+0 records out
-8589934592 bytes (8.6 GB, 8.0 GiB) copied, 126.453 s, 67.9 MB/s
-```
-
 ### Creating a bootable USB drive
 
 ```console
-$ sudo dd if=ubuntu.iso of=/dev/sdb bs=4M status=progress conv=fsync
-1073741824 bytes (1.1 GB, 1.0 GiB) copied, 35.6279 s, 30.1 MB/s
-256+0 records in
-256+0 records out
-1073741824 bytes (1.1 GB, 1.0 GiB) copied, 35.6423 s, 30.1 MB/s
+$ sudo dd if=ubuntu.iso of=/dev/sdb bs=4M status=progress
+1485881344 bytes (1.5 GB, 1.4 GiB) copied, 120 s, 12.4 MB/s
+354+1 records in
+354+1 records out
+1485881344 bytes (1.5 GB, 1.4 GiB) transferred in 120.023 seconds, 12.4 MB/s
 ```
 
-### Creating a file of zeros
+### Creating a disk image
 
 ```console
-$ dd if=/dev/zero of=zeros.bin bs=1M count=100
-100+0 records in
-100+0 records out
-104857600 bytes (105 MB, 100 MiB) copied, 0.101822 s, 1.0 GB/s
+$ sudo dd if=/dev/sda of=disk_backup.img bs=8M status=progress
+20971520000 bytes (21 GB, 20 GiB) copied, 300 s, 70 MB/s
+2500+0 records in
+2500+0 records out
+20971520000 bytes (21 GB, 20 GiB) transferred in 300.123 seconds, 69.9 MB/s
+```
+
+### Wiping a disk with zeros
+
+```console
+$ sudo dd if=/dev/zero of=/dev/sdb bs=8M status=progress
+8589934592 bytes (8.6 GB, 8.0 GiB) copied, 120 s, 71.6 MB/s
+1024+0 records in
+1024+0 records out
+8589934592 bytes (8.6 GB, 8.0 GiB) transferred in 120.001 seconds, 71.6 MB/s
 ```
 
 ## Tips
 
-### Use Status Progress for Long Operations
+### Use Appropriate Block Size
 
-For operations that take a long time, use `status=progress` to see real-time information about the copy process.
+The `bs` parameter significantly affects performance. For most operations, values between 1M and 8M provide good performance. Too small (like the default 512 bytes) can be very slow, while too large may waste memory.
 
-### Be Careful with Block Devices
+### Always Use Status=progress
 
-When working with block devices like `/dev/sda`, double-check your command before executing. A mistake can overwrite important data.
+Adding `status=progress` provides real-time feedback on long-running operations, which is essential when copying large amounts of data.
 
-### Optimize Performance with Block Size
+### Send SIGUSR1 Signal for Progress Updates
 
-Larger block sizes (like `bs=4M` or `bs=8M`) often improve performance for large transfers, but very large values may not always be better.
+If you forgot to use `status=progress`, you can send the USR1 signal to get a progress update:
 
-### Use fsync for USB Drives
+```console
+$ kill -USR1 $(pgrep dd)
+```
 
-When writing to USB drives, add `conv=fsync` to ensure all data is written to the device before dd completes.
+### Be Extremely Careful with Device Names
 
-### Backup the MBR
-
-To backup just the Master Boot Record: `sudo dd if=/dev/sda of=mbr.bin bs=512 count=1`
+Double-check device names (like `/dev/sda`) before running dd. Using the wrong output device can destroy data. The command `lsblk` can help identify the correct devices.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I clone an entire hard drive?
-A. Use `dd if=/dev/source_drive of=/dev/destination_drive bs=4M status=progress`. Make sure the destination drive is at least as large as the source.
+#### Q1. Why is dd called "disk destroyer"?
+A. This nickname comes from its power to completely overwrite disks without confirmation. A simple typo in device names can lead to catastrophic data loss.
 
-#### Q2. Why is dd called "disk destroyer"?
-A. This nickname comes from its potential to cause data loss if used incorrectly. Always double-check device names before executing dd commands.
+#### Q2. How can I make dd run faster?
+A. Use larger block sizes (bs=4M or bs=8M), ensure you're not hitting I/O bottlenecks, and consider using `oflag=direct` to bypass the buffer cache for certain operations.
 
-#### Q3. How can I make dd faster?
-A. Increase the block size (bs) parameter to values like 4M or 8M, and avoid unnecessary conversions.
+#### Q3. How do I monitor dd progress?
+A. Use `status=progress` option or send the USR1 signal to the dd process with `kill -USR1 $(pgrep dd)`.
 
-#### Q4. How do I create a file of a specific size?
-A. Use `dd if=/dev/zero of=filename bs=1M count=X` where X is the desired size in megabytes.
-
-#### Q5. How do I monitor dd progress?
-A. Use `status=progress` option in newer versions. For older versions, you can send the USR1 signal to the dd process: `kill -USR1 $(pgrep dd)`.
+#### Q4. Why does dd use different syntax from other Unix commands?
+A. dd's syntax (option=value) comes from IBM's JCL (Job Control Language) and was preserved for historical reasons when it was implemented in Unix.
 
 ## References
 
@@ -142,4 +146,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/dd-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

@@ -49,10 +49,17 @@
   <h1>basename command</h1>
 <p>Extract the filename or directory name from a pathname.</p>
 <h2>Overview</h2>
-<p>The <code>basename</code> command strips directory components and a specified suffix from a given path, leaving just the filename or the final directory name. It's commonly used in shell scripts to extract filenames from full paths or to remove file extensions.</p>
+<p><code>basename</code> strips directory components and suffixes from a given path, returning just the filename or the final directory name. It's commonly used in shell scripts to extract filenames from full paths or to remove file extensions.</p>
 <h2>Options</h2>
+<h3><strong>basename NAME [SUFFIX]</strong></h3>
+<p>Removes directory components from NAME and an optional SUFFIX.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>/usr/bin/sort
+<span style="color: #000; font-style: italic">sort</span>
+</pre></div>
+<h3><strong>basename OPTION... NAME...</strong></h3>
+<p>Process multiple names according to the specified options.</p>
 <h3><strong>-a, --multiple</strong></h3>
-<p>Process multiple arguments, treating each as a NAME.</p>
+<p>Support multiple arguments and treat each as a NAME.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>/usr/bin/sort<span style="color: #F8F8F8"> </span>/usr/bin/cut
 <span style="color: #000; font-style: italic">sort</span>
 <span style="color: #000; font-style: italic">cut</span>
@@ -64,64 +71,63 @@
 </pre></div>
 <h3><strong>-z, --zero</strong></h3>
 <p>End each output line with NUL, not newline.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>file.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hexdump<span style="color: #F8F8F8"> </span>-C
-<span style="color: #000; font-style: italic">00000000  66 69 6c 65 2e 74 78 74  00                       |file.txt.|</span>
-<span style="color: #000; font-style: italic">00000009</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>-z<span style="color: #F8F8F8"> </span>/usr/bin/sort<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>hexdump<span style="color: #F8F8F8"> </span>-C
+<span style="color: #000; font-style: italic">00000000  73 6f 72 74 00                                    |sort.|</span>
+<span style="color: #000; font-style: italic">00000005</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic filename extraction</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>/usr/local/bin/example.sh
-<span style="color: #000; font-style: italic">example.sh</span>
+<h3>Removing directory components</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>/home/user/documents/report.pdf
+<span style="color: #000; font-style: italic">report.pdf</span>
 </pre></div>
 <h3>Removing file extension</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>/home/user/documents/report.pdf<span style="color: #F8F8F8"> </span>.pdf
 <span style="color: #000; font-style: italic">report</span>
 </pre></div>
-<h3>Using in shell scripts</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">filename</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$path</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;The filename is: </span><span style="color: #000">$filename</span><span style="color: #4E9A06">&quot;</span>
-<span style="color: #000; font-style: italic">The filename is: example.txt</span>
+<h3>Processing multiple files with the same suffix</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>.txt<span style="color: #F8F8F8"> </span>file1.txt<span style="color: #F8F8F8"> </span>file2.txt<span style="color: #F8F8F8"> </span>file3.txt
+<span style="color: #000; font-style: italic">file1</span>
+<span style="color: #000; font-style: italic">file2</span>
+<span style="color: #000; font-style: italic">file3</span>
 </pre></div>
-<h3>Processing multiple paths</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span>-a<span style="color: #F8F8F8"> </span>/var/log/syslog<span style="color: #F8F8F8"> </span>/etc/passwd<span style="color: #F8F8F8"> </span>/usr/bin/bash
-<span style="color: #000; font-style: italic">syslog</span>
-<span style="color: #000; font-style: italic">passwd</span>
-<span style="color: #000; font-style: italic">bash</span>
+<h3>Using in shell scripts</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">filename</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$fullpath</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;The filename is: </span><span style="color: #000">$filename</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">The filename is: document.pdf</span>
 </pre></div>
 <h2>Tips:</h2>
-<h3>Combine with dirname</h3>
-<p>Use <code>basename</code> with <code>dirname</code> to split a path into its components:</p>
+<h3>Use with <code>dirname</code> for Path Manipulation</h3>
+<p><code>basename</code> pairs well with <code>dirname</code> when you need to separate a path into its components:</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">path</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;/home/user/documents/report.pdf&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #000">dir</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>dirname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$path</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
-<span style="color: #8F5902">$ </span><span style="color: #000">file</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$path</span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">)</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Directory: </span><span style="color: #000">$dir</span><span style="color: #4E9A06">, File: </span><span style="color: #000">$file</span><span style="color: #4E9A06">&quot;</span>
-<span style="color: #000; font-style: italic">Directory: /home/user/documents, File: report.pdf</span>
-</pre></div>
-<h3>Quote your arguments</h3>
-<p>Always quote your arguments to handle filenames with spaces or special characters:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;/path/to/my file.txt&quot;</span>
-<span style="color: #000; font-style: italic">my file.txt</span>
-</pre></div>
-<h3>Use with parameter expansion</h3>
-<p>In Bash, you can often use parameter expansion instead of <code>basename</code>:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">path</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;/home/user/documents/report.pdf&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;${</span><span style="color: #000">path</span><span style="color: #000; font-weight: bold">##*/</span><span style="color: #4E9A06">}&quot;</span>
+<span style="color: #8F5902">$ </span>dirname<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$path</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">/home/user/documents</span>
+<span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$path</span><span style="color: #4E9A06">&quot;</span>
 <span style="color: #000; font-style: italic">report.pdf</span>
 </pre></div>
+<h3>Handling Paths with Spaces</h3>
+<p>Always quote your arguments when paths might contain spaces:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;/path/with spaces/file.txt&quot;</span>
+<span style="color: #000; font-style: italic">file.txt</span>
+</pre></div>
+<h3>Stripping Multiple Extensions</h3>
+<p>To remove multiple extensions (like <code>.tar.gz</code>), you'll need to use multiple commands or other tools like <code>sed</code>:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>basename<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;archive.tar.gz&quot;</span><span style="color: #F8F8F8"> </span>.gz<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>basename<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span>.tar
+<span style="color: #000; font-style: italic">archive</span>
+</pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. What's the difference between <code>basename</code> and <code>dirname</code>?</h4>
-<p>A. <code>basename</code> extracts the final component (filename or directory name) from a path, while <code>dirname</code> extracts the directory portion of the path.</p>
-<h4>Q2. How do I remove multiple extensions (like .tar.gz)?</h4>
-<p>A. <code>basename</code> only removes one suffix at a time. For multiple extensions, you'll need to use it multiple times or use shell parameter expansion.</p>
-<h4>Q3. Does <code>basename</code> work with relative paths?</h4>
-<p>A. Yes, it works with both absolute and relative paths, always returning the final component.</p>
-<h4>Q4. Can <code>basename</code> handle paths with spaces?</h4>
-<p>A. Yes, but you need to quote the arguments to prevent the shell from interpreting spaces as argument separators.</p>
+<h4>Q1. What's the difference between <code>basename</code> and just using parameter expansion in bash?</h4>
+<p>A. While <code>${filename##*/}</code> in bash performs a similar function, <code>basename</code> works across different shells and provides additional options like suffix removal.</p>
+<h4>Q2. Can <code>basename</code> handle multiple files at once?</h4>
+<p>A. Yes, with the <code>-a</code> or <code>--multiple</code> option, it can process multiple filenames in a single command.</p>
+<h4>Q3. How do I remove multiple extensions like <code>.tar.gz</code>?</h4>
+<p>A. <code>basename</code> can only remove one suffix at a time. For multiple extensions, you'll need to run <code>basename</code> multiple times or use other text processing tools.</p>
+<h4>Q4. Does <code>basename</code> modify the original file?</h4>
+<p>A. No, <code>basename</code> only outputs the modified name to standard output. It doesn't change any files on disk.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/basename-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

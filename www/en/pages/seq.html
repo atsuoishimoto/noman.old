@@ -47,12 +47,12 @@
     <main>
       
   <h1>seq command</h1>
-<p>Print a sequence of numbers from FIRST to LAST by INCREMENT steps.</p>
+<p>Print a sequence of numbers.</p>
 <h2>Overview</h2>
-<p>The <code>seq</code> command generates a sequence of numbers from a starting value to an ending value, with an optional step increment. It's commonly used in shell scripts for creating loops, generating test data, or producing evenly spaced numerical sequences.</p>
+<p>The <code>seq</code> command generates a sequence of numbers from a starting point to an ending point, with an optional increment. It's commonly used in shell scripts for creating loops, generating test data, or creating numbered lists.</p>
 <h2>Options</h2>
 <h3><strong>-f, --format=FORMAT</strong></h3>
-<p>Use printf-style floating-point FORMAT to print each number</p>
+<p>Use printf style floating-point FORMAT</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Number: %.2f&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
 <span style="color: #000; font-style: italic">Number: 1.00</span>
 <span style="color: #000; font-style: italic">Number: 2.00</span>
@@ -65,18 +65,20 @@
 </pre></div>
 <h3><strong>-w, --equal-width</strong></h3>
 <p>Equalize width by padding with leading zeros</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">12</span>
 <span style="color: #000; font-style: italic">08</span>
 <span style="color: #000; font-style: italic">09</span>
 <span style="color: #000; font-style: italic">10</span>
+<span style="color: #000; font-style: italic">11</span>
+<span style="color: #000; font-style: italic">12</span>
 </pre></div>
-<h3><strong>-t, --terminator=CHAR</strong></h3>
-<p>Use CHAR as output terminator instead of newline</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot; &quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #000; font-style: italic">1 2 3</span>
+<h3><strong>-t, --format-separator=SEPARATOR</strong></h3>
+<p>Use SEPARATOR as output separator (default: \n)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;,&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
+<span style="color: #000; font-style: italic">1,2,3,</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic Usage</h3>
+<h3>Basic sequence generation</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
 <span style="color: #000; font-style: italic">1</span>
 <span style="color: #000; font-style: italic">2</span>
@@ -84,7 +86,7 @@
 <span style="color: #000; font-style: italic">4</span>
 <span style="color: #000; font-style: italic">5</span>
 </pre></div>
-<h3>Specifying Start, Increment, and End</h3>
+<h3>Specifying start, increment, and end</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span>
 <span style="color: #000; font-style: italic">2</span>
 <span style="color: #000; font-style: italic">4</span>
@@ -92,7 +94,19 @@
 <span style="color: #000; font-style: italic">8</span>
 <span style="color: #000; font-style: italic">10</span>
 </pre></div>
-<h3>Using Negative Numbers</h3>
+<h3>Creating a comma-separated list</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span>-s,<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
+<span style="color: #000; font-style: italic">1,2,3,4,5</span>
+</pre></div>
+<h3>Using seq in a for loop</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #204A87; font-weight: bold">)</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Processing item </span><span style="color: #000">$i</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
+<span style="color: #000; font-style: italic">Processing item 1</span>
+<span style="color: #000; font-style: italic">Processing item 2</span>
+<span style="color: #000; font-style: italic">Processing item 3</span>
+</pre></div>
+<h2>Tips:</h2>
+<h3>Use seq for Counting Down</h3>
+<p>To generate a descending sequence, specify a negative increment:</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>-1<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>
 <span style="color: #000; font-style: italic">5</span>
 <span style="color: #000; font-style: italic">4</span>
@@ -100,46 +114,31 @@
 <span style="color: #000; font-style: italic">2</span>
 <span style="color: #000; font-style: italic">1</span>
 </pre></div>
-<h3>Creating a Range for Loops</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #204A87; font-weight: bold">)</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Processing item </span><span style="color: #000">$i</span><span style="color: #4E9A06">&quot;</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
-<span style="color: #000; font-style: italic">Processing item 1</span>
-<span style="color: #000; font-style: italic">Processing item 2</span>
-<span style="color: #000; font-style: italic">Processing item 3</span>
+<h3>Combine with xargs for Parallel Processing</h3>
+<p>Use seq with xargs to run multiple parallel processes:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-P4<span style="color: #F8F8F8"> </span>-I<span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Processing job {}&quot;</span>
 </pre></div>
-<h2>Tips:</h2>
-<h3>Use with xargs for Parallel Processing</h3>
-<p>Combine <code>seq</code> with <code>xargs</code> to process multiple tasks in parallel:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8"> </span>-I<span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Processing job {}&quot;</span>
-</pre></div>
-<h3>Generate File Names with Leading Zeros</h3>
-<p>Create sequentially numbered files with consistent width:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">for</span><span style="color: #F8F8F8"> </span>i<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">$(</span>seq<span style="color: #F8F8F8"> </span>-w<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #204A87; font-weight: bold">)</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">do</span><span style="color: #F8F8F8"> </span>touch<span style="color: #F8F8F8"> </span>file_<span style="color: #000">$i</span>.txt<span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">done</span>
-<span style="color: #8F5902">$ </span>ls
-<span style="color: #000; font-style: italic">file_01.txt file_02.txt file_03.txt file_04.txt file_05.txt</span>
-</pre></div>
-<h3>Use Floating Point Numbers</h3>
-<p><code>seq</code> supports decimal numbers for more precise sequences:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.5<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span>.5<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span>.5
-<span style="color: #000; font-style: italic">0.5</span>
-<span style="color: #000; font-style: italic">1.0</span>
-<span style="color: #000; font-style: italic">1.5</span>
-<span style="color: #000; font-style: italic">2.0</span>
-<span style="color: #000; font-style: italic">2.5</span>
+<h3>Create Formatted Sequences</h3>
+<p>For more complex formatting, combine with printf:</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>seq<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-I<span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">printf</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Item %03d\n&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span>
+<span style="color: #000; font-style: italic">Item 001</span>
+<span style="color: #000; font-style: italic">Item 002</span>
+<span style="color: #000; font-style: italic">Item 003</span>
 </pre></div>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How do I create a sequence with a specific increment?</h4>
-<p>A. Use the format <code>seq START INCREMENT END</code>. For example, <code>seq 0 0.5 2</code> creates a sequence from 0 to 2 with 0.5 increments.</p>
-<h4>Q2. Can seq handle negative numbers?</h4>
-<p>A. Yes, <code>seq</code> can work with negative numbers for start, increment, and end values. For example, <code>seq 5 -1 1</code> counts down from 5 to 1.</p>
-<h4>Q3. How do I prevent seq from printing each number on a new line?</h4>
-<p>A. Use the <code>-s</code> option to specify a separator: <code>seq -s &quot;, &quot; 1 5</code> outputs &quot;1, 2, 3, 4, 5&quot;.</p>
-<h4>Q4. Can seq format numbers with leading zeros?</h4>
-<p>A. Yes, use the <code>-w</code> option: <code>seq -w 8 12</code> outputs &quot;08&quot;, &quot;09&quot;, &quot;10&quot;, &quot;11&quot;, &quot;12&quot;.</p>
+<h4>Q1. How do I generate a sequence with decimal numbers?</h4>
+<p>A. Use the <code>-f</code> option with a floating-point format: <code>seq -f &quot;%.1f&quot; 1 0.5 3</code> will generate 1.0, 1.5, 2.0, 2.5, 3.0.</p>
+<h4>Q2. How can I create a sequence with leading zeros?</h4>
+<p>A. Use the <code>-w</code> option: <code>seq -w 1 10</code> will pad numbers with leading zeros to make them equal width.</p>
+<h4>Q3. How do I use seq to create a range of IP addresses?</h4>
+<p>A. You can combine seq with other commands: <code>for i in $(seq 1 5); do echo &quot;192.168.1.$i&quot;; done</code></p>
+<h4>Q4. Can seq handle large numbers?</h4>
+<p>A. Yes, seq can handle large integers within your system's numerical limits.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/seq-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

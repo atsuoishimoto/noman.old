@@ -1,27 +1,27 @@
-# find コマンド
+# findコマンド
 
 ディレクトリ階層内でファイルを検索します。
 
 ## 概要
 
-`find` コマンドは、名前、タイプ、サイズ、更新時間などの様々な条件に基づいて、ディレクトリ階層内のファイルを検索するツールです。ファイルを見つけ出し、一致した結果に対して操作を実行するための強力なツールです。
+`find`コマンドは、名前、タイプ、サイズ、更新時刻などのさまざまな条件に基づいて、ディレクトリ階層内のファイルを検索します。これは、ファイルを見つけて、一致した結果に対して操作を実行するための強力なツールです。
 
 ## オプション
 
-### **-iname パターン**
+### **-iname**
 
-大文字と小文字を区別せずに、名前がパターンに一致するファイルを検索します。これは `-name` に似ていますが、大文字小文字を区別しない検索を行います。
+指定したパターンに一致するファイルを大文字小文字を区別せずに検索します。`-name`に似ていますが、大文字小文字の違いを無視します。
 
 ```console
 $ find . -iname "*.txt"
 ./notes.txt
 ./Documents/README.txt
-./Documents/report.TXT
+./projects/readme.TXT
 ```
 
-### **-name パターン**
+### **-name**
 
-大文字と小文字を区別して、名前がパターンに一致するファイルを検索します。
+指定したパターンに一致するファイルを検索します（大文字小文字を区別）。
 
 ```console
 $ find . -name "*.txt"
@@ -29,123 +29,127 @@ $ find . -name "*.txt"
 ./Documents/README.txt
 ```
 
-### **-type タイプ**
+### **-type**
 
 特定のタイプのファイルを検索します。一般的なタイプには以下があります：
-- `f` は通常のファイル
-- `d` はディレクトリ
-- `l` はシンボリックリンク
+- `f`（通常ファイル）
+- `d`（ディレクトリ）
+- `l`（シンボリックリンク）
 
 ```console
-$ find . -type d
-.
-./Documents
-./Downloads
-./Pictures
+$ find . -type f -name "*.jpg"
+./photos/vacation.jpg
+./profile.jpg
 ```
 
-### **-size n[cwbkMG]**
+### **-size**
 
-サイズに基づいてファイルを検索します：
-- `c` はバイト単位
-- `k` はキロバイト単位
-- `M` はメガバイト単位
-- `G` はギガバイト単位
-- `+` 接頭辞は「より大きい」を意味します
-- `-` 接頭辞は「より小さい」を意味します
+ファイルサイズに基づいて検索します。
+- `+n`（nより大きい）
+- `-n`（nより小さい）
+- `n`（ちょうどn）
+
+単位：`c`（バイト）、`k`（キロバイト）、`M`（メガバイト）、`G`（ギガバイト）
 
 ```console
 $ find . -size +10M
-./Videos/movie.mp4
-./Downloads/installer.iso
+./videos/tutorial.mp4
+./backups/archive.zip
 ```
 
-### **-mtime n**
+### **-mtime**
 
-n日前に変更されたファイルを検索します。`+n` は「n日より前」、`-n` は「n日以内」を意味します。
+ファイルの更新時刻（日数）に基づいて検索します。
+- `+n`（n日より前）
+- `-n`（n日以内）
+- `n`（ちょうどn日前）
 
 ```console
 $ find . -mtime -7
-./Documents/recent-report.txt
-./Downloads/recent-file.zip
+./documents/recent_report.pdf
+./notes.txt
 ```
 
-## 使用例
+### **-exec**
 
-### 特定の権限を持つファイルを検索する
-
-```console
-$ find /home -type f -perm 644
-/home/user/file1.txt
-/home/user/file2.txt
-```
-
-### 一致するファイルに対してコマンドを実行する
+一致した各ファイルに対してコマンドを実行します。
 
 ```console
 $ find . -name "*.log" -exec rm {} \;
 ```
 
-### 空のファイルを検索する
+## 使用例
+
+### 大文字小文字を区別せず特定の拡張子を持つファイルを検索
 
 ```console
-$ find /var/log -type f -empty
-/var/log/empty.log
+$ find /home/user -iname "*.jpg"
+/home/user/Pictures/vacation.jpg
+/home/user/Downloads/photo.JPG
+/home/user/Documents/scan.Jpg
 ```
 
-### 過去24時間以内に変更されたファイルを検索する
+### 一時ファイルを検索して削除
 
 ```console
-$ find /home/user -type f -mtime -1
-/home/user/recent-document.txt
-/home/user/today-notes.md
+$ find /tmp -name "temp*" -type f -exec rm {} \;
+```
+
+### 過去1週間に更新された大きなファイルを検索
+
+```console
+$ find /home -type f -size +100M -mtime -7
+/home/user/Downloads/movie.mp4
+/home/user/Documents/presentation.pptx
+```
+
+### 空のディレクトリを検索
+
+```console
+$ find /var/log -type d -empty
+/var/log/old
+/var/log/archive/2024
 ```
 
 ## ヒント:
 
-### 大文字小文字を区別しない検索には `-iname` を使用する
+### ワイルドカードを慎重に使用する
 
-ファイル名の正確な大文字小文字が不明な場合は、`-name` の代わりに `-iname` を使用して、大文字小文字に関係なくファイルを一致させることができます。
+`-name`や`-iname`でパターンを使用する場合、シェル展開を防ぐためにパターンを引用符で囲むことを忘れないでください：`find . -name "*.txt"`であり、`find . -name *.txt`ではありません。
 
-### 論理演算子で複数の条件を組み合わせる
+### ディレクトリの深さを制限する
 
-`-and`、`-or`、`-not`（または `!`）を使用して複雑な検索条件を作成できます：
-```console
-$ find . -type f -name "*.txt" -and -size +1M
-```
+`-maxdepth`を使用して`find`が検索する深さを制限すると、パフォーマンスが大幅に向上します：`find . -maxdepth 2 -name "*.log"`。
 
-### `-maxdepth` でディレクトリの深さを制限する
+### 複数の条件を組み合わせる
 
-`-maxdepth` を使用して `find` の検索深度を制御できます：
-```console
-$ find . -maxdepth 2 -name "*.jpg"
-```
+`-a`（AND、デフォルト）、`-o`（OR）、`!`または`-not`（NOT）を使用して、複雑な検索条件を作成します：`find . -name "*.jpg" -a -size +1M`。
 
-### エラーメッセージをリダイレクトする
+### 「Permission denied」メッセージを回避する
 
-「Permission denied」エラーを非表示にするには `2>/dev/null` を使用します：
-```console
-$ find / -name "config.xml" 2>/dev/null
-```
+エラーメッセージを`/dev/null`にリダイレクトして「Permission denied」エラーを抑制します：`find / -name "file.txt" 2>/dev/null`。
 
 ## よくある質問
 
-#### Q1. 名前でファイルを検索するにはどうすればよいですか？
-A. 大文字小文字を区別する検索には `find /検索パス -name "ファイル名"` を、大文字小文字を区別しない検索には `find /検索パス -iname "ファイル名"` を使用します。
+#### Q1. 大文字小文字を区別せずにファイル名で検索するにはどうすればよいですか？
+A. `-iname`オプションを使用します：`find . -iname "パターン"`。
 
-#### Q2. 最近変更されたファイルを検索するにはどうすればよいですか？
-A. `find /検索パス -mtime -n` を使用します。nは日数です。例えば、`-mtime -7` は過去7日以内に変更されたファイルを検索します。
+#### Q2. 過去24時間以内に更新されたファイルを検索するにはどうすればよいですか？
+A. `-mtime -1`を使用します：`find . -mtime -1`。
 
-#### Q3. ファイルを検索して削除するにはどうすればよいですか？
-A. `find /検索パス -name "パターン" -delete` または `find /検索パス -name "パターン" -exec rm {} \;` を使用します。
+#### Q3. ファイルを検索して一つのコマンドで削除するにはどうすればよいですか？
+A. `-exec`オプションを使用します：`find . -name "パターン" -exec rm {} \;`。
 
-#### Q4. 検索からディレクトリを除外するにはどうすればよいですか？
-A. `! -path "*/除外するディレクトリ/*"` または `-not -path "*/除外するディレクトリ/*"` を使用します。
+#### Q4. `-iname`と`-name`の違いは何ですか？
+A. `-iname`は大文字小文字を区別しない検索を行い、`-name`は大文字小文字を区別します。
 
-## 参考資料
+#### Q5. サブディレクトリなしで現在のディレクトリのみを検索するにはどうすればよいですか？
+A. `-maxdepth 1`を使用します：`find . -maxdepth 1 -name "パターン"`。
+
+## 参考文献
 
 https://www.gnu.org/software/findutils/manual/html_node/find_html/index.html
 
 ## 改訂履歴
 
-- 2025/05/04 初回改訂
+- 2025/05/05 初版

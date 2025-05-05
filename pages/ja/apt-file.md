@@ -1,154 +1,161 @@
-# apt-file コマンド
+# apt-fileコマンド
 
 APTパッケージ管理システム内のパッケージ内のファイルを検索します。
 
 ## 概要
 
-`apt-file`は、システムにインストールされていないものも含め、APTリポジトリで利用可能なパッケージ内のファイルを検索できるコマンドラインユーティリティです。特定のファイルを提供するパッケージを見つけたり、インストール前にパッケージの内容を調べたりするのに特に役立ちます。
+apt-fileは、Debianベースのシステム向けのコマンドラインユーティリティで、インストールされていないパッケージ内のファイルも検索できます。特定のファイルを提供するパッケージを見つけたり、インストール前にパッケージの内容を調べたりするのに特に役立ちます。
 
 ## オプション
 
-### **-l, --list**
+### **search**
 
-指定したパッケージの内容を一覧表示します。
-
-```console
-$ apt-file list firefox
-firefox: /etc/firefox/syspref.js
-firefox: /etc/xul-ext/ubufox.js
-firefox: /usr/bin/firefox
-firefox: /usr/lib/firefox/browser/chrome.manifest
-firefox: /usr/lib/firefox/browser/chrome/icons/default/default128.png
-[...]
-```
-
-### **-s, --search**
-
-特定のファイルまたはパターンを含むパッケージを検索します。
+パターンに一致するファイルを含むパッケージを検索します
 
 ```console
-$ apt-file search bin/ls
-coreutils: /bin/ls
-```
-
-### **-x, --regexp**
-
-検索に正規表現を使用します。
-
-```console
-$ apt-file -x search '.*bin/python3$'
+$ apt-file search /usr/bin/python3
 python3-minimal: /usr/bin/python3
+```
+
+### **list**
+
+指定したパッケージ内のファイルを一覧表示します
+
+```console
+$ apt-file list python3-minimal
+python3-minimal: /usr/bin/python3
+python3-minimal: /usr/share/doc/python3-minimal/README.Debian
+python3-minimal: /usr/share/doc/python3-minimal/changelog.Debian.gz
+python3-minimal: /usr/share/doc/python3-minimal/copyright
 ```
 
 ### **-a, --architecture**
 
-検索するアーキテクチャを指定します。
+検索するアーキテクチャを指定します
 
 ```console
-$ apt-file -a arm64 search bin/ls
-coreutils: /bin/ls
+$ apt-file -a amd64 search libssl.so
+libssl-dev: /usr/lib/x86_64-linux-gnu/libssl.so
 ```
 
-### **-c, --cache**
+### **-F, --fixed-string**
 
-特定のキャッシュディレクトリを使用します。
+パターンを正規表現として解釈しません
 
 ```console
-$ apt-file -c /tmp/apt-file-cache search bin/ls
-coreutils: /bin/ls
+$ apt-file -F search "libssl.so.1.1"
+libssl1.1: /usr/lib/x86_64-linux-gnu/libssl.so.1.1
 ```
 
-### **-u, --update**
+### **-l, --package-only**
 
-パッケージリストのキャッシュを更新します。
+ファイルパスではなく、パッケージ名のみを表示します
+
+```console
+$ apt-file -l search /usr/bin/python3
+python3-minimal
+```
+
+### **-x, --regexp**
+
+パターンを正規表現として解釈します（デフォルト）
+
+```console
+$ apt-file -x search "^/usr/bin/py.*3$"
+python3-minimal: /usr/bin/python3
+```
+
+### **-v, --verbose**
+
+操作中により多くの情報を表示します
+
+```console
+$ apt-file -v search /usr/bin/python3
+Reading package lists... Done
+Building dependency tree... Done
+python3-minimal: /usr/bin/python3
+```
+
+### **update**
+
+コンテンツデータベースを更新します
 
 ```console
 $ sudo apt-file update
-Processing 'main' component lists
-Processing 'universe' component lists
-Processing 'restricted' component lists
-Processing 'multiverse' component lists
+Downloading complete file https://deb.debian.org/debian/dists/bookworm/Contents-amd64.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 45.2M  100 45.2M    0     0  5215k      0  0:00:08  0:00:08 --:--:-- 6123k
 ```
 
 ## 使用例
 
-### 特定のコマンドを提供するパッケージを見つける
+### 特定のファイルを提供するパッケージを見つける
 
 ```console
-$ apt-file search bin/grep
-grep: /bin/grep
+$ apt-file search /usr/bin/convert
+imagemagick-6.q16: /usr/bin/convert
 ```
 
 ### パッケージ内のすべてのファイルを一覧表示する
 
 ```console
-$ apt-file list coreutils | head -5
-coreutils: /bin/cat
-coreutils: /bin/chgrp
-coreutils: /bin/chmod
-coreutils: /bin/chown
-coreutils: /bin/cp
+$ apt-file list wget
+wget: /etc/wgetrc
+wget: /usr/bin/wget
+wget: /usr/share/doc/wget/AUTHORS
+wget: /usr/share/doc/wget/COPYING
+wget: /usr/share/doc/wget/NEWS.gz
+wget: /usr/share/doc/wget/README
+wget: /usr/share/info/wget.info.gz
+wget: /usr/share/man/man1/wget.1.gz
 ```
 
-### ライブラリファイルを検索する
+### 開発用のヘッダーファイルを見つける
 
 ```console
-$ apt-file search libssl.so.1.1
-libssl1.1: /usr/lib/x86_64-linux-gnu/libssl.so.1.1
+$ apt-file search "include/openssl/ssl.h"
+libssl-dev: /usr/include/openssl/ssl.h
 ```
 
 ## ヒント:
 
-### 最初にキャッシュを更新する
+### 最初にデータベースを更新する
 
-apt-fileを初めて使用する場合や、しばらく使用していない場合は、必ず`sudo apt-file update`を実行してください。これにより、最新のパッケージ情報が確保されます。
+apt-fileを使用する前、特にシステム更新後や最近使用していない場合は、常に`sudo apt-file update`を実行してください。これにより、最新のパッケージ情報が確保されます。
 
-### Grepで結果を絞り込む
+### 複雑なフィルタリングにはgrepと組み合わせる
 
-apt-fileが多くの結果を返す場合は、出力をgrepでフィルタリングします：
-
+より複雑なフィルタリングには、apt-fileとgrepを組み合わせてください：
 ```console
-$ apt-file search .so | grep ssl
+$ apt-file list python3 | grep "bin/"
 ```
 
-### パッケージインストールと組み合わせて使用する
+### コンパイル用の依存関係を見つける
 
-「コマンドが見つかりません」というエラーが発生した場合、apt-fileを使用してそのコマンドを提供するパッケージを見つけることができます：
-
+不足しているヘッダーファイルを報告するソフトウェアをコンパイルする場合、apt-fileを使用してインストールが必要な開発パッケージを見つけます：
 ```console
-$ apt-file search bin/missing-command
-```
-
-### 他のAPTツールと組み合わせる
-
-apt-fileをapt-cacheやaptと一緒に使用して、包括的なパッケージ情報を取得します：
-
-```console
-$ apt-file search bin/python3
-$ apt-cache show python3-minimal
+$ apt-file search missing_header.h
 ```
 
 ## よくある質問
 
-#### Q1. apt-fileをインストールするにはどうすればよいですか？
-A. `sudo apt install apt-file`を使用してインストールし、その後`sudo apt-file update`でキャッシュを更新します。
+#### Q1. apt-fileとdpkg -Sの違いは何ですか？
+A. dpkg -Sはインストール済みのパッケージのみを検索しますが、apt-fileはインストールされていないものも含め、利用可能なすべてのパッケージを検索できます。
 
-#### Q2. apt-file searchが結果を返さないのはなぜですか？
-A. `sudo apt-file update`でapt-fileのキャッシュを更新する必要があるかもしれません。また、正しいファイルパスを使用していることを確認してください。
+#### Q2. apt-fileをインストールするにはどうすればよいですか？
+A. `sudo apt install apt-file`を実行し、その後`sudo apt-file update`を実行してデータベースを初期化します。
 
-#### Q3. apt-fileはシステムにインストールされていないパッケージ内のファイルを検索できますか？
-A. はい、それがapt-fileの主な機能の一つです。設定されたリポジトリ内のすべてのパッケージを検索します。
+#### Q3. なぜapt-file searchは遅いのですか？
+A. apt-fileは大量のファイルデータベースを検索します。より具体的な検索パターンや-Fオプションを使用すると検索が速くなります。
 
-#### Q4. apt-fileとdpkg -Sの違いは何ですか？
-A. `dpkg -S`はインストール済みのパッケージ内のファイルのみを検索しますが、`apt-file`はリポジトリで利用可能なすべてのパッケージを検索します。
+#### Q4. apt-fileデータベースはどのくらいの頻度で更新すべきですか？
+A. apt updateでパッケージリストを更新するたび、または少なくとも月に1回は更新してください。
 
-#### Q5. 特定の拡張子を持つファイルを検索するにはどうすればよいですか？
-A. 正規表現オプションを使用します：`apt-file -x search '\.so$'`ですべての.soファイルを検索できます。
+## 参考文献
 
-## 参考資料
-
-https://manpages.debian.org/stable/apt-file/apt-file.1.en.html
+https://manpages.debian.org/bookworm/apt-file/apt-file.1.en.html
 
 ## 改訂履歴
 
-- 2025/05/04 初回改訂
+- 2025/05/05 初版

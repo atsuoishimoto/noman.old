@@ -4,7 +4,7 @@ Print the resolved absolute file path.
 
 ## Overview
 
-The `realpath` command resolves a pathname to its absolute path, following all symbolic links. It's useful for determining the actual location of files, especially when working with symbolic links or relative paths.
+The `realpath` command resolves symbolic links and relative path components to display the absolute canonical path of a file or directory. It follows all symbolic links, resolves references to /./, /../, and removes extra '/' characters to produce a standardized path.
 
 ## Options
 
@@ -31,32 +31,28 @@ $ realpath -m /nonexistent/file
 
 ### **-L, --logical**
 
-Resolve '..' components before symlinks (default behavior)
+Resolve '..' components before symlinks
 
 ```console
-$ ln -s /usr/bin bin_link
-$ realpath -L bin_link/../share
-/usr/share
+$ realpath -L /etc/alternatives/../hosts
+/etc/hosts
 ```
 
 ### **-P, --physical**
 
-Resolve symlinks as encountered, then resolve '..' components
+Resolve symlinks as encountered (default)
 
 ```console
-$ ln -s /usr/bin bin_link
-$ realpath -P bin_link/../share
-/share
+$ realpath -P /etc/alternatives/../hosts
+/etc/hosts
 ```
 
 ### **-q, --quiet**
 
-Suppress error messages
+Suppress most error messages
 
 ```console
 $ realpath -q /nonexistent/file
-$ echo $?
-1
 ```
 
 ### **-s, --strip, --no-symlinks**
@@ -64,9 +60,9 @@ $ echo $?
 Don't expand symlinks
 
 ```console
-$ ln -s /usr/bin bin_link
-$ realpath -s bin_link
-/home/user/bin_link
+$ ln -s /etc/hosts symlink_to_hosts
+$ realpath -s symlink_to_hosts
+/path/to/current/directory/symlink_to_hosts
 ```
 
 ### **-z, --zero**
@@ -75,7 +71,7 @@ End each output line with NUL, not newline
 
 ```console
 $ realpath -z /etc/hosts | hexdump -C
-00000000  2f 65 74 63 2f 68 6f 73  74 73 00                 |/etc/hosts.|
+00000000  2f 65 74 63 2f 68 6f 73  74 73 00              |/etc/hosts.|
 0000000b
 ```
 
@@ -89,50 +85,53 @@ $ realpath bin/../share
 /usr/local/share
 ```
 
-### Working with symbolic links
+### Resolving a symbolic link
 
 ```console
-$ ln -s /var/log logs
-$ realpath logs
-/var/log
+$ ln -s /etc/hosts my_hosts
+$ realpath my_hosts
+/etc/hosts
 ```
 
-### Using in scripts to get absolute paths
+### Processing multiple paths
 
 ```console
-$ cat myscript.sh
-#!/bin/bash
-SCRIPT_DIR=$(realpath $(dirname "$0"))
-echo "Script is located in: $SCRIPT_DIR"
+$ realpath /etc/hosts /etc/passwd /etc/group
+/etc/hosts
+/etc/passwd
+/etc/group
 ```
 
-## Tips
+## Tips:
 
-### Use in Shell Scripts
+### Use in Scripts for Reliable File Paths
 
-When writing shell scripts, use `realpath` to get the absolute path of the script directory with `SCRIPT_DIR=$(realpath $(dirname "$0"))`. This ensures your script works correctly regardless of where it's called from.
+When writing shell scripts, use `realpath` to ensure you're working with absolute paths, which helps avoid issues with relative paths when the script changes directories.
 
 ### Combine with Other Commands
 
-Pair `realpath` with commands like `find` or `xargs` to process files with their absolute paths: `find . -type f | xargs realpath`.
+Pipe the output of `realpath` to other commands when you need the absolute path:
+```console
+$ cd $(realpath ~/Documents)
+```
 
-### Handling Errors
+### Check if Paths Exist
 
-Use the `-q` option when you want to suppress error messages, and check the exit status instead. This is useful in scripts where you want to handle errors gracefully.
+Use `-e` to verify that a path exists before attempting operations on it.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `realpath` and `readlink -f`?
-A. Both commands resolve symbolic links and return absolute paths, but `realpath` offers more options for controlling how paths are resolved. `readlink -f` is more commonly available on older systems.
+A. They're similar, but `realpath` is part of GNU coreutils and has more options. `readlink -f` is more commonly available on various Unix systems.
 
-#### Q2. How do I use `realpath` to check if a file exists?
-A. Use `realpath -e` which will return an error if the file doesn't exist.
+#### Q2. How do I get the absolute path without resolving symlinks?
+A. Use `realpath -s` or `realpath --no-symlinks` to get the absolute path without resolving symbolic links.
 
 #### Q3. Can `realpath` handle spaces in filenames?
-A. Yes, but when using it in scripts, make sure to quote the arguments: `realpath "$filename"`.
+A. Yes, `realpath` properly handles spaces and special characters in filenames.
 
-#### Q4. What's the difference between `-L` and `-P` options?
-A. `-L` (logical) resolves '..' components before symlinks, while `-P` (physical) resolves symlinks first, then resolves '..' components. The default is `-L`.
+#### Q4. How do I use `realpath` to get the directory containing a file?
+A. Use `dirname` with `realpath`: `dirname $(realpath filename)`
 
 ## References
 
@@ -140,4 +139,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/realpath-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

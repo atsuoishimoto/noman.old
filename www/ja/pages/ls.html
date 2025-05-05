@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -49,104 +49,97 @@
   <h1>ls コマンド</h1>
 <p>ディレクトリの内容を一覧表示します。</p>
 <h2>概要</h2>
-<p><code>ls</code> コマンドは、指定した場所のファイルとディレクトリを表示します。デフォルトでは、現在のディレクトリの内容をアルファベット順に表示します。ファイルシステムを操作する際に最も頻繁に使用されるコマンドの一つです。</p>
+<p><code>ls</code> コマンドは、指定した場所のファイルとディレクトリを表示します。デフォルトでは、現在の作業ディレクトリの内容をアルファベット順に表示し、隠しファイル（ドットで始まるファイル）は除外します。これはファイルシステムを操作・探索する際に最も頻繁に使用されるコマンドの一つです。</p>
 <h2>オプション</h2>
-<h3><strong>-l</strong> (ロングフォーマット)</h3>
-<p>各ファイルの詳細情報（権限、リンク数、所有者、グループ、サイズ、更新日時など）を表示します。</p>
+<h3><strong>-l</strong></h3>
+<p>詳細情報を長いリスト形式で表示し、ファイルのパーミッション、リンク数、所有者、グループ、サイズ、更新時刻を表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-l
 <span style="color: #000; font-style: italic">total 16</span>
 <span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1024 Apr 10 15:30 document.txt</span>
 <span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects</span>
 </pre></div>
-<h3><strong>-a</strong> (すべて)</h3>
+<h3><strong>-a, --all</strong></h3>
 <p>隠しファイル（ドットで始まるファイル）を含むすべてのファイルを表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-a
 <span style="color: #000; font-style: italic">.  ..  .hidden  document.txt  projects</span>
 </pre></div>
-<h3><strong>-h</strong> (人間が読みやすい形式)</h3>
-<p><code>-l</code> と組み合わせて使用すると、ファイルサイズを人間が読みやすい形式（KB、MB、GB）で表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-lh
-<span style="color: #000; font-style: italic">total 16K</span>
-<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1.0K Apr 10 15:30 document.txt</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff   96B Apr 9  14:22 projects</span>
-</pre></div>
-<h3><strong>-d</strong> (ディレクトリ)</h3>
-<p>ディレクトリの内容ではなく、ディレクトリ自体を一覧表示します。</p>
+<h3><strong>-d, --directory</strong></h3>
+<p>ディレクトリ自体をリスト表示し、その内容は表示しません。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>*/
 <span style="color: #000; font-style: italic">projects/  documents/  downloads/</span>
 </pre></div>
-<h3><strong>-s</strong> (サイズ)</h3>
+<h3><strong>-s, --size</strong></h3>
 <p>各ファイルに割り当てられたブロックサイズを表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-s
 <span style="color: #000; font-style: italic">total 16</span>
 <span style="color: #000; font-style: italic">8 document.txt  8 projects</span>
 </pre></div>
-<h3><strong>-t</strong> (時間)</h3>
-<p>ファイルを更新時間順（最新のものが最初）にソートします。</p>
+<h3><strong>-t</strong></h3>
+<p>更新時刻順にソートし、最新のものを先に表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-lt
 <span style="color: #000; font-style: italic">total 16</span>
 <span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1024 Apr 10 15:30 document.txt</span>
 <span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects</span>
 </pre></div>
-<h3><strong>-r</strong> (逆順)</h3>
+<h3><strong>-r, --reverse</strong></h3>
 <p>ソート順を逆にします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-lr
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-ltr
 <span style="color: #000; font-style: italic">total 16</span>
 <span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects</span>
 <span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1024 Apr 10 15:30 document.txt</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>複数のオプションを組み合わせる</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-lha
-<span style="color: #000; font-style: italic">total 20K</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  4 user  staff  128B Apr 10 15:35 .</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x 18 user  staff  576B Apr 10 14:00 ..</span>
-<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff   74B Apr 10 15:32 .hidden</span>
-<span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1.0K Apr 10 15:30 document.txt</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff   96B Apr 9  14:22 projects</span>
-</pre></div>
-<h3>パターンによるファイルの一覧表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>*.txt
-<span style="color: #000; font-style: italic">document.txt  notes.txt  readme.txt</span>
-</pre></div>
-<h3>サイズ順にファイルをソート（最大のものから）</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-lhS
+<h3>人間が読みやすいサイズでファイルを一覧表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-lh
 <span style="color: #000; font-style: italic">total 16K</span>
 <span style="color: #000; font-style: italic">-rw-r--r--  1 user  staff  1.0K Apr 10 15:30 document.txt</span>
 <span style="color: #000; font-style: italic">drwxr-xr-x  3 user  staff   96B Apr 9  14:22 projects</span>
 </pre></div>
+<h3>ディレクトリのみを一覧表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-ld<span style="color: #F8F8F8"> </span>*/
+<span style="color: #000; font-style: italic">drwxr-xr-x 3 user staff 96 Apr 9 14:22 projects/</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x 5 user staff 160 Apr 8 10:15 documents/</span>
+</pre></div>
+<h3>ファイルタイプ別に一覧表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-F
+<span style="color: #000; font-style: italic">document.txt  projects/  script.sh*</span>
+</pre></div>
+<h3>ディレクトリを再帰的に一覧表示</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>-R
+<span style="color: #000; font-style: italic">.:</span>
+<span style="color: #000; font-style: italic">document.txt  projects</span>
+
+<span style="color: #000; font-style: italic">./projects:</span>
+<span style="color: #000; font-style: italic">README.md  src</span>
+
+<span style="color: #000; font-style: italic">./projects/src:</span>
+<span style="color: #000; font-style: italic">main.c  utils.h</span>
+</pre></div>
 <h2>ヒント:</h2>
-<h3>カラーコード出力</h3>
-<p>多くのシステムでは、<code>ls</code> が異なるファイルタイプを異なる色で表示するように設定されています。Linuxでは <code>ls --color=auto</code>、macOSでは <code>ls -G</code> で強制的に色付けできます。</p>
-<h3>再帰的な一覧表示</h3>
-<p><code>ls -R</code> を使用すると、サブディレクトリを再帰的に一覧表示し、ディレクトリツリー全体を表示できます。</p>
-<h3>ソートオプションの組み合わせ</h3>
-<p><code>-t</code>（時間順）と <code>-r</code>（逆順）などのソートオプションを組み合わせる場合、<code>-r</code> は常に現在のソート順を逆にすることを覚えておきましょう。例えば、<code>ls -ltr</code> は最も古いファイルを最初に表示します。</p>
-<h3>エイリアス</h3>
-<p>多くのユーザーは、シェル設定ファイルで <code>ls -l</code> を <code>ll</code>、<code>ls -la</code> を <code>la</code> などのエイリアスを作成して、一般的な組み合わせのタイピングを省略しています。</p>
+<h3>オプションを組み合わせて強力な一覧表示を実現</h3>
+<p><code>ls -lha</code> のようにオプションを組み合わせることで、詳細情報と人間が読みやすいサイズで隠しファイルを含むすべてのファイルを表示できます。</p>
+<h3>色分けで視認性を向上</h3>
+<p>多くのシステムでは <code>ls</code> が <code>ls --color=auto</code> としてエイリアス設定されており、ファイルタイプごとに色分けされます。設定されていない場合は、シェル設定に追加できます。</p>
+<h3>サイズでファイルをソート</h3>
+<p><code>ls -lS</code> を使用してファイルをサイズ順（大きいものから）にソートすると、容量を多く消費しているファイルを特定するのに役立ちます。</p>
+<h3>出力形式をカスタマイズ</h3>
+<p><code>ls -l --time-style=long-iso</code> を使用すると、より標準化されたタイムスタンプ形式（YYYY-MM-DD HH:MM）で表示できます。</p>
 <h2>よくある質問</h2>
 <h4>Q1. ディレクトリのみを一覧表示するにはどうすればよいですか？</h4>
 <p>A. 現在の場所のディレクトリのみを一覧表示するには <code>ls -d */</code> を使用します。</p>
-<h4>Q2. ファイルサイズを読みやすい形式で表示するにはどうすればよいですか？</h4>
-<p>A. <code>ls -lh</code> を使用すると、バイト単位ではなく KB、MB、GB でファイルサイズを表示できます。</p>
-<h4>Q3. ファイルをサイズ順にソートするにはどうすればよいですか？</h4>
-<p>A. <code>ls -lS</code> を使用すると、ファイルをサイズ順（最大のものが最初）にソートできます。順序を逆にするには <code>-r</code>（<code>ls -lSr</code>）を追加します。</p>
-<h4>Q4. 最近変更されたファイルを最初に表示するにはどうすればよいですか？</h4>
-<p>A. <code>ls -lt</code> を使用すると、最新のファイルが最初に表示されるように更新時間順にソートできます。</p>
-<h4>Q5. ファイルをiノード番号と一緒に表示するにはどうすればよいですか？</h4>
-<p>A. <code>ls -i</code> を使用すると、各ファイルのインデックス番号（iノード）が表示されます。</p>
-<h2>macOSに関する注意点</h2>
-<p>macOSでは、一部のGNU lsオプションが利用できなかったり、動作が異なる場合があります：</p>
-<ul>
-<li>カラー出力を有効にするには、<code>--color</code> の代わりに <code>-G</code> を使用します</li>
-<li><code>-h</code> オプションはLinuxと同じように動作します</li>
-<li>拡張属性を表示するには、macOS固有の <code>ls -@</code> を使用します</li>
-</ul>
+<h4>Q2. ファイルサイズをKB、MB等で表示するにはどうすればよいですか？</h4>
+<p>A. 人間が読みやすいサイズで表示するには <code>ls -lh</code> を使用します。</p>
+<h4>Q3. ファイルを更新時刻順にソートするにはどうすればよいですか？</h4>
+<p>A. 更新時刻順（最新のものから）にソートするには <code>ls -lt</code> を使用します。</p>
+<h4>Q4. ファイルを再帰的に一覧表示するにはどうすればよいですか？</h4>
+<p>A. すべてのファイルとサブディレクトリを再帰的に一覧表示するには <code>ls -R</code> を使用します。</p>
+<h4>Q5. 隠しファイルを表示するにはどうすればよいですか？</h4>
+<p>A. 隠しファイルを含むすべてのファイルを表示するには <code>ls -a</code> を使用します。</p>
 <h2>参考資料</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/ls-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 -d, -s, -t, -r オプションとmacOSに関する注意点を追加しました。</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

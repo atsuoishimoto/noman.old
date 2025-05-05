@@ -47,18 +47,18 @@
     <main>
       
   <h1>xargs command</h1>
-<p>Executes commands using arguments from standard input.</p>
+<p>Execute commands using arguments from standard input.</p>
 <h2>Overview</h2>
-<p><code>xargs</code> is a command-line utility that builds and executes commands from standard input. It reads items from standard input, delimited by blanks or newlines, and executes a command (by default <code>/bin/echo</code>) using those items as arguments. This is particularly useful for processing output from other commands and applying operations to multiple files or data streams.</p>
+<p><code>xargs</code> reads items from standard input and executes a command with those items as arguments. It's particularly useful for building command lines from the output of other commands, handling large argument lists, and processing data in batches.</p>
 <h2>Options</h2>
 <h3><strong>-0, --null</strong></h3>
 <p>Input items are terminated by a null character instead of whitespace, useful when input might contain spaces or newlines.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.txt&quot;</span><span style="color: #F8F8F8"> </span>-print0<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-0<span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;example&quot;</span>
-<span style="color: #000; font-style: italic">./file1.txt:example text here</span>
-<span style="color: #000; font-style: italic">./path with spaces/file2.txt:another example</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.txt&quot;</span><span style="color: #F8F8F8"> </span>-print0<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-0<span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;pattern&quot;</span>
+<span style="color: #000; font-style: italic">./file1.txt:pattern found here</span>
+<span style="color: #000; font-style: italic">./path with spaces/file2.txt:pattern also here</span>
 </pre></div>
-<h3><strong>-I, --replace[=REPLACE]</strong></h3>
-<p>Replace occurrences of REPLACE (default is {}) in the initial arguments with names read from standard input.</p>
+<h3><strong>-I, --replace[=R]</strong></h3>
+<p>Replace occurrences of R (default is {}) in the initial arguments with names read from standard input.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;file1.txt file2.txt&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-I<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span>cp<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span>backup/
 </pre></div>
 <h3><strong>-n, --max-args=MAX-ARGS</strong></h3>
@@ -71,58 +71,56 @@
 <p>Run up to MAX-PROCS processes simultaneously.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.jpg&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8"> </span>-I<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span>convert<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span>.png
 </pre></div>
-<h3><strong>-t, --verbose</strong></h3>
-<p>Print the command to be executed before running it.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;file1.txt file2.txt&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>rm
-<span style="color: #000; font-style: italic">rm file1.txt file2.txt</span>
+<h3><strong>-d, --delimiter=DELIM</strong></h3>
+<p>Input items are terminated by DELIM character instead of whitespace.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;file1.txt:file2.txt:file3.txt&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;:&quot;</span><span style="color: #F8F8F8"> </span>ls<span style="color: #F8F8F8"> </span>-l
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 123 May 5 10:00 file1.txt</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 456 May 5 10:01 file2.txt</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user group 789 May 5 10:02 file3.txt</span>
 </pre></div>
 <h3><strong>-p, --interactive</strong></h3>
 <p>Prompt the user before executing each command.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;file1.txt file2.txt&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>rm
-<span style="color: #000; font-style: italic">rm file1.txt file2.txt ?...</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;important_file.txt&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span>rm
+<span style="color: #000; font-style: italic">rm important_file.txt ?...</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Processing files with spaces in names</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.txt&quot;</span><span style="color: #F8F8F8"> </span>-print0<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-0<span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;pattern&quot;</span>
-<span style="color: #000; font-style: italic">./document.txt:pattern found here</span>
-<span style="color: #000; font-style: italic">./notes with spaces.txt:another pattern example</span>
+<h3>Finding and removing files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.tmp&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>rm
 </pre></div>
-<h3>Batch processing files</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.jpg&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span><span style="color: #F8F8F8"> </span>-I<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span>convert<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span>.png
+<h3>Batch processing with multiple arguments</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>file_list.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-n<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span>tar<span style="color: #F8F8F8"> </span>-czf<span style="color: #F8F8F8"> </span>archive.tar.gz
 </pre></div>
-<h3>Deleting files listed in a file</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>files_to_delete.txt<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>rm
+<h3>Using with grep to search multiple files</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.py&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;import requests&quot;</span>
+<span style="color: #000; font-style: italic">./script1.py:import requests</span>
+<span style="color: #000; font-style: italic">./utils/http.py:import requests as req</span>
 </pre></div>
-<h3>Running multiple commands on each input</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;file1 file2&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-I<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span>sh<span style="color: #F8F8F8"> </span>-c<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&#39;echo {}; wc -l {}&#39;</span>
-<span style="color: #000; font-style: italic">file1</span>
-<span style="color: #000; font-style: italic">      42 file1</span>
-<span style="color: #000; font-style: italic">file2</span>
-<span style="color: #000; font-style: italic">      18 file2</span>
+<h3>Handling filenames with spaces</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>find<span style="color: #F8F8F8"> </span>.<span style="color: #F8F8F8"> </span>-name<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;*.jpg&quot;</span><span style="color: #F8F8F8"> </span>-print0<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>xargs<span style="color: #F8F8F8"> </span>-0<span style="color: #F8F8F8"> </span>-I<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span>mv<span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">{}</span><span style="color: #F8F8F8"> </span>./images/
 </pre></div>
-<h2>Tips</h2>
-<h3>Use -0 with find -print0</h3>
-<p>When dealing with filenames that contain spaces, newlines, or other special characters, always pair <code>find -print0</code> with <code>xargs -0</code> to ensure proper handling.</p>
-<h3>Prevent Command Injection</h3>
-<p>Be careful when using user-supplied input with xargs. Use the <code>-I</code> option with a placeholder to avoid command injection vulnerabilities.</p>
-<h3>Preview Commands with -t</h3>
-<p>Use the <code>-t</code> option to see what commands will be executed before they run, especially when working with destructive operations like <code>rm</code>.</p>
-<h3>Control Parallelism</h3>
-<p>For CPU-intensive tasks, use <code>-P</code> with the number of CPU cores to optimize performance without overloading your system.</p>
+<h2>Tips:</h2>
+<h3>Prevent Command Execution with Empty Input</h3>
+<p>Use <code>xargs --no-run-if-empty</code> to avoid running the command if standard input is empty, which can prevent unexpected behavior.</p>
+<h3>Preview Commands Before Execution</h3>
+<p>Use <code>xargs -t</code> to print each command before executing it, which helps verify what will be run without using interactive mode.</p>
+<h3>Handle Filenames with Special Characters</h3>
+<p>Always use <code>-print0</code> with <code>find</code> and <code>-0</code> with <code>xargs</code> when dealing with filenames that might contain spaces, newlines, or other special characters.</p>
+<h3>Limit Batch Size for Large Operations</h3>
+<p>When processing many files, use <code>-n</code> to limit the number of arguments per command execution to avoid &quot;argument list too long&quot; errors.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between piping to a command and using xargs?</h4>
-<p>A. Piping (<code>|</code>) sends the output of one command as input to another command, while <code>xargs</code> converts input into arguments for a command. Many commands don't accept input from stdin for filenames, which is where xargs becomes necessary.</p>
-<h4>Q2. How do I use xargs to handle filenames with spaces?</h4>
-<p>A. Use <code>find -print0</code> with <code>xargs -0</code> to properly handle filenames with spaces, newlines, or other special characters.</p>
-<h4>Q3. Can xargs run multiple commands for each input?</h4>
-<p>A. Yes, use the <code>-I</code> option with <code>sh -c</code> to run multiple commands: <code>xargs -I {} sh -c 'command1 {}; command2 {}'</code></p>
-<h4>Q4. How can I limit the number of arguments per command?</h4>
-<p>A. Use the <code>-n</code> option followed by the maximum number of arguments: <code>xargs -n 5 command</code></p>
+<p>A. Piping (<code>|</code>) sends the output as standard input to the next command, while <code>xargs</code> converts the input into command-line arguments. Many commands like <code>rm</code> or <code>cp</code> expect arguments, not standard input.</p>
+<h4>Q2. How do I use xargs with commands that need the filename in the middle?</h4>
+<p>A. Use the <code>-I</code> option with a placeholder: <code>find . -name &quot;*.txt&quot; | xargs -I {} mv {} {}.bak</code></p>
+<h4>Q3. How can I make xargs run faster for many files?</h4>
+<p>A. Use the <code>-P</code> option to run multiple processes in parallel: <code>xargs -P 4</code> runs up to 4 processes simultaneously.</p>
+<h4>Q4. Why does xargs sometimes split my input unexpectedly?</h4>
+<p>A. By default, xargs splits on whitespace. Use <code>-d</code> to specify a different delimiter or <code>-0</code> for null-terminated input.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/findutils/manual/html_node/find_html/xargs-options.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

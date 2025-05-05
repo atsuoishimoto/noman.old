@@ -1,16 +1,16 @@
 # seq command
 
-Print a sequence of numbers from FIRST to LAST by INCREMENT steps.
+Print a sequence of numbers.
 
 ## Overview
 
-The `seq` command generates a sequence of numbers from a starting value to an ending value, with an optional step increment. It's commonly used in shell scripts for creating loops, generating test data, or producing evenly spaced numerical sequences.
+The `seq` command generates a sequence of numbers from a starting point to an ending point, with an optional increment. It's commonly used in shell scripts for creating loops, generating test data, or creating numbered lists.
 
 ## Options
 
 ### **-f, --format=FORMAT**
 
-Use printf-style floating-point FORMAT to print each number
+Use printf style floating-point FORMAT
 
 ```console
 $ seq -f "Number: %.2f" 1 3
@@ -33,24 +33,26 @@ $ seq -s ", " 1 5
 Equalize width by padding with leading zeros
 
 ```console
-$ seq -w 8 10
+$ seq -w 8 12
 08
 09
 10
+11
+12
 ```
 
-### **-t, --terminator=CHAR**
+### **-t, --format-separator=SEPARATOR**
 
-Use CHAR as output terminator instead of newline
+Use SEPARATOR as output separator (default: \n)
 
 ```console
-$ seq -t " " 1 3
-1 2 3 
+$ seq -t "," 1 3
+1,2,3,
 ```
 
 ## Usage Examples
 
-### Basic Usage
+### Basic sequence generation
 
 ```console
 $ seq 5
@@ -61,7 +63,7 @@ $ seq 5
 5
 ```
 
-### Specifying Start, Increment, and End
+### Specifying start, increment, and end
 
 ```console
 $ seq 2 2 10
@@ -72,18 +74,14 @@ $ seq 2 2 10
 10
 ```
 
-### Using Negative Numbers
+### Creating a comma-separated list
 
 ```console
-$ seq 5 -1 1
-5
-4
-3
-2
-1
+$ seq -s, 1 5
+1,2,3,4,5
 ```
 
-### Creating a Range for Loops
+### Using seq in a for loop
 
 ```console
 $ for i in $(seq 1 3); do echo "Processing item $i"; done
@@ -94,50 +92,51 @@ Processing item 3
 
 ## Tips:
 
-### Use with xargs for Parallel Processing
+### Use seq for Counting Down
 
-Combine `seq` with `xargs` to process multiple tasks in parallel:
+To generate a descending sequence, specify a negative increment:
 
 ```console
-$ seq 1 10 | xargs -P 4 -I{} echo "Processing job {}"
+$ seq 5 -1 1
+5
+4
+3
+2
+1
 ```
 
-### Generate File Names with Leading Zeros
+### Combine with xargs for Parallel Processing
 
-Create sequentially numbered files with consistent width:
+Use seq with xargs to run multiple parallel processes:
 
 ```console
-$ for i in $(seq -w 1 5); do touch file_$i.txt; done
-$ ls
-file_01.txt file_02.txt file_03.txt file_04.txt file_05.txt
+$ seq 1 10 | xargs -P4 -I{} echo "Processing job {}"
 ```
 
-### Use Floating Point Numbers
+### Create Formatted Sequences
 
-`seq` supports decimal numbers for more precise sequences:
+For more complex formatting, combine with printf:
 
 ```console
-$ seq 0.5 0.5 2.5
-0.5
-1.0
-1.5
-2.0
-2.5
+$ seq 1 3 | xargs -I{} printf "Item %03d\n" {}
+Item 001
+Item 002
+Item 003
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. How do I create a sequence with a specific increment?
-A. Use the format `seq START INCREMENT END`. For example, `seq 0 0.5 2` creates a sequence from 0 to 2 with 0.5 increments.
+#### Q1. How do I generate a sequence with decimal numbers?
+A. Use the `-f` option with a floating-point format: `seq -f "%.1f" 1 0.5 3` will generate 1.0, 1.5, 2.0, 2.5, 3.0.
 
-#### Q2. Can seq handle negative numbers?
-A. Yes, `seq` can work with negative numbers for start, increment, and end values. For example, `seq 5 -1 1` counts down from 5 to 1.
+#### Q2. How can I create a sequence with leading zeros?
+A. Use the `-w` option: `seq -w 1 10` will pad numbers with leading zeros to make them equal width.
 
-#### Q3. How do I prevent seq from printing each number on a new line?
-A. Use the `-s` option to specify a separator: `seq -s ", " 1 5` outputs "1, 2, 3, 4, 5".
+#### Q3. How do I use seq to create a range of IP addresses?
+A. You can combine seq with other commands: `for i in $(seq 1 5); do echo "192.168.1.$i"; done`
 
-#### Q4. Can seq format numbers with leading zeros?
-A. Yes, use the `-w` option: `seq -w 8 12` outputs "08", "09", "10", "11", "12".
+#### Q4. Can seq handle large numbers?
+A. Yes, seq can handle large integers within your system's numerical limits.
 
 ## References
 
@@ -145,4 +144,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/seq-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

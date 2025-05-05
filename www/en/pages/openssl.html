@@ -47,128 +47,107 @@
     <main>
       
   <h1>openssl command</h1>
-<p>Provides cryptographic functionality for secure communications, certificate management, and various cryptographic operations.</p>
+<p>Manage cryptographic functions including certificate creation, encryption, and secure connections.</p>
 <h2>Overview</h2>
-<p>OpenSSL is a robust toolkit implementing the Secure Sockets Layer (SSL) and Transport Layer Security (TLS) protocols along with a full-strength general purpose cryptography library. It allows users to create certificates, manage keys, encrypt/decrypt files, generate message digests, and perform many other cryptographic operations from the command line.</p>
+<p>OpenSSL is a robust command-line tool for working with SSL/TLS protocols and various cryptographic functions. It allows users to create certificates, generate keys, encrypt/decrypt files, hash data, and test secure connections. The command provides extensive functionality for implementing security in network communications and managing digital certificates.</p>
 <h2>Options</h2>
-<p>OpenSSL uses a command-based structure where the main command is followed by a subcommand and its options.</p>
-<h3><strong>s_client</strong> - SSL/TLS client</h3>
-<p>Implements a generic SSL/TLS client which connects to a remote host using SSL/TLS.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>s_client<span style="color: #F8F8F8"> </span>-connect<span style="color: #F8F8F8"> </span>example.com:443
-<span style="color: #000; font-style: italic">CONNECTED(00000003)</span>
-<span style="color: #000; font-style: italic">depth=2 C = US, O = Internet Security Research Group, CN = ISRG Root X1</span>
-<span style="color: #000; font-style: italic">verify return:1</span>
-<span style="color: #000; font-style: italic">depth=1 C = US, O = Let&#39;s Encrypt, CN = R3</span>
-<span style="color: #000; font-style: italic">verify return:1</span>
-<span style="color: #000; font-style: italic">depth=0 CN = example.com</span>
-<span style="color: #000; font-style: italic">verify return:1</span>
-<span style="color: #000; font-style: italic">---</span>
-<span style="color: #000; font-style: italic">Certificate chain</span>
-<span style="color: #000; font-style: italic"> 0 s:CN = example.com</span>
-<span style="color: #000; font-style: italic">   i:C = US, O = Let&#39;s Encrypt, CN = R3</span>
+<h3><strong>req</strong></h3>
+<p>Create and process certificate requests</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>req<span style="color: #F8F8F8"> </span>-new<span style="color: #F8F8F8"> </span>-key<span style="color: #F8F8F8"> </span>private.key<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>request.csr
+<span style="color: #000; font-style: italic">You are about to be asked to enter information that will be incorporated</span>
+<span style="color: #000; font-style: italic">into your certificate request.</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3><strong>x509</strong> - Certificate display and signing utility</h3>
-<p>Displays certificate information, converts certificates to various formats, and signs certificate requests.</p>
+<h3><strong>x509</strong></h3>
+<p>Certificate display and signing utility</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>x509<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>certificate.crt<span style="color: #F8F8F8"> </span>-text<span style="color: #F8F8F8"> </span>-noout
 <span style="color: #000; font-style: italic">Certificate:</span>
 <span style="color: #000; font-style: italic">    Data:</span>
 <span style="color: #000; font-style: italic">        Version: 3 (0x2)</span>
-<span style="color: #000; font-style: italic">        Serial Number:</span>
-<span style="color: #000; font-style: italic">            04:e5:7b:d2:1d:d5:e5:2c:...</span>
-<span style="color: #000; font-style: italic">        Signature Algorithm: sha256WithRSAEncryption</span>
-<span style="color: #000; font-style: italic">        Issuer: C=US, O=Let&#39;s Encrypt, CN=R3</span>
+<span style="color: #000; font-style: italic">        Serial Number: 12345 (0x3039)</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3><strong>genrsa</strong> - Generate RSA private key</h3>
-<p>Generates an RSA private key.</p>
+<h3><strong>genrsa</strong></h3>
+<p>Generate RSA private key</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>genrsa<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>private.key<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2048</span>
-<span style="color: #000; font-style: italic">Generating RSA private key, 2048 bit long modulus (2 primes)</span>
-<span style="color: #000; font-style: italic">.....+++++</span>
-<span style="color: #000; font-style: italic">.....+++++</span>
-<span style="color: #000; font-style: italic">e is 65537 (0x010001)</span>
+<span style="color: #000; font-style: italic">Generating RSA private key, 2048 bit long modulus</span>
+<span style="color: #000; font-style: italic">.....+++</span>
+<span style="color: #000; font-style: italic">.............+++</span>
+<span style="color: #000; font-style: italic">e is 65537 (0x10001)</span>
 </pre></div>
-<h3><strong>req</strong> - PKCS#10 certificate request and certificate generating utility</h3>
-<p>Creates and processes certificate requests in PKCS#10 format.</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>req<span style="color: #F8F8F8"> </span>-new<span style="color: #F8F8F8"> </span>-key<span style="color: #F8F8F8"> </span>private.key<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>certificate.csr
-<span style="color: #000; font-style: italic">You are about to be asked to enter information that will be incorporated</span>
-<span style="color: #000; font-style: italic">into your certificate request.</span>
-<span style="color: #000; font-style: italic">What you are about to enter is what is called a Distinguished Name or a DN.</span>
-<span style="color: #000; font-style: italic">There are quite a few fields but you can leave some blank</span>
-<span style="color: #000; font-style: italic">For some fields there will be a default value,</span>
-<span style="color: #000; font-style: italic">If you enter &#39;.&#39;, the field will be left blank.</span>
-<span style="color: #000; font-style: italic">-----</span>
-<span style="color: #000; font-style: italic">Country Name (2 letter code) [AU]:US</span>
-<span style="color: #000; font-style: italic">State or Province Name (full name) [Some-State]:California</span>
+<h3><strong>rsa</strong></h3>
+<p>Process RSA keys</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>rsa<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>private.key<span style="color: #F8F8F8"> </span>-pubout<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>public.key
+<span style="color: #000; font-style: italic">writing RSA key</span>
+</pre></div>
+<h3><strong>s_client</strong></h3>
+<p>SSL/TLS client program for testing connections</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>s_client<span style="color: #F8F8F8"> </span>-connect<span style="color: #F8F8F8"> </span>example.com:443
+<span style="color: #000; font-style: italic">CONNECTED(00000003)</span>
+<span style="color: #000; font-style: italic">depth=2 O = Digital Signature Trust Co., CN = DST Root CA X3</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3><strong>enc</strong> - Encoding with ciphers</h3>
-<p>Encrypts or decrypts using various cipher algorithms.</p>
+<h3><strong>enc</strong></h3>
+<p>Encrypt or decrypt using various cipher algorithms</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>enc<span style="color: #F8F8F8"> </span>-aes-256-cbc<span style="color: #F8F8F8"> </span>-salt<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>plaintext.txt<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>encrypted.txt
 <span style="color: #000; font-style: italic">enter aes-256-cbc encryption password:</span>
 <span style="color: #000; font-style: italic">Verifying - enter aes-256-cbc encryption password:</span>
 </pre></div>
-<h2>Usage Examples</h2>
-<h3>Checking a remote SSL/TLS server</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>s_client<span style="color: #F8F8F8"> </span>-connect<span style="color: #F8F8F8"> </span>example.com:443<span style="color: #F8F8F8"> </span>-servername<span style="color: #F8F8F8"> </span>example.com
-<span style="color: #000; font-style: italic">CONNECTED(00000003)</span>
-<span style="color: #000; font-style: italic">depth=2 C = US, O = Internet Security Research Group, CN = ISRG Root X1</span>
-<span style="color: #000; font-style: italic">verify return:1</span>
-<span style="color: #000; font-style: italic">...</span>
+<h3><strong>dgst</strong></h3>
+<p>Compute message digests (hashes)</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>dgst<span style="color: #F8F8F8"> </span>-sha256<span style="color: #F8F8F8"> </span>file.txt
+<span style="color: #000; font-style: italic">SHA256(file.txt)= 3a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b</span>
 </pre></div>
-<h3>Creating a self-signed certificate</h3>
+<h2>Usage Examples</h2>
+<h3>Creating a Self-Signed Certificate</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>req<span style="color: #F8F8F8"> </span>-x509<span style="color: #F8F8F8"> </span>-newkey<span style="color: #F8F8F8"> </span>rsa:4096<span style="color: #F8F8F8"> </span>-keyout<span style="color: #F8F8F8"> </span>key.pem<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>cert.pem<span style="color: #F8F8F8"> </span>-days<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">365</span><span style="color: #F8F8F8"> </span>-nodes
-<span style="color: #000; font-style: italic">Generating a RSA private key</span>
-<span style="color: #000; font-style: italic">.....++++</span>
-<span style="color: #000; font-style: italic">.....++++</span>
+<span style="color: #000; font-style: italic">Generating a 4096 bit RSA private key</span>
+<span style="color: #000; font-style: italic">.......................++</span>
+<span style="color: #000; font-style: italic">.......................++</span>
 <span style="color: #000; font-style: italic">writing new private key to &#39;key.pem&#39;</span>
 <span style="color: #000; font-style: italic">-----</span>
 <span style="color: #000; font-style: italic">You are about to be asked to enter information that will be incorporated</span>
 <span style="color: #000; font-style: italic">into your certificate request.</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3>Verifying certificate chain</h3>
+<h3>Verifying a Certificate Chain</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>verify<span style="color: #F8F8F8"> </span>-CAfile<span style="color: #F8F8F8"> </span>ca-bundle.crt<span style="color: #F8F8F8"> </span>certificate.crt
 <span style="color: #000; font-style: italic">certificate.crt: OK</span>
 </pre></div>
-<h3>Generating a random password</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>rand<span style="color: #F8F8F8"> </span>-base64<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">12</span>
-<span style="color: #000; font-style: italic">Ew6Y9RzYxAQeFA==</span>
+<h3>Converting Certificate Formats</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>x509<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>certificate.crt<span style="color: #F8F8F8"> </span>-inform<span style="color: #F8F8F8"> </span>PEM<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>certificate.der<span style="color: #F8F8F8"> </span>-outform<span style="color: #F8F8F8"> </span>DER
 </pre></div>
-<h2>Tips</h2>
-<h3>Use Proper Key Permissions</h3>
-<p>Always set restrictive permissions on private keys to prevent unauthorized access:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>chmod<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">600</span><span style="color: #F8F8F8"> </span>private.key
+<h3>Checking SSL/TLS Connection Details</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>s_client<span style="color: #F8F8F8"> </span>-connect<span style="color: #F8F8F8"> </span>example.com:443<span style="color: #F8F8F8"> </span>-showcerts
+<span style="color: #000; font-style: italic">CONNECTED(00000003)</span>
+<span style="color: #000; font-style: italic">depth=2 O = Digital Signature Trust Co., CN = DST Root CA X3</span>
+<span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3>Verify Certificate Expiration</h3>
-<p>Check when a certificate expires to avoid unexpected service disruptions:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>x509<span style="color: #F8F8F8"> </span>-enddate<span style="color: #F8F8F8"> </span>-noout<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>certificate.crt
-<span style="color: #000; font-style: italic">notAfter=May 15 12:00:00 2026 GMT</span>
-</pre></div>
-<h3>Convert Certificate Formats</h3>
-<p>OpenSSL can convert between different certificate formats (PEM, DER, PKCS#12):</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>x509<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>cert.pem<span style="color: #F8F8F8"> </span>-inform<span style="color: #F8F8F8"> </span>PEM<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>cert.der<span style="color: #F8F8F8"> </span>-outform<span style="color: #F8F8F8"> </span>DER
-</pre></div>
-<h3>Use -passin and -passout for Automation</h3>
-<p>When scripting, use these options to provide passwords non-interactively:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>openssl<span style="color: #F8F8F8"> </span>rsa<span style="color: #F8F8F8"> </span>-in<span style="color: #F8F8F8"> </span>encrypted.key<span style="color: #F8F8F8"> </span>-out<span style="color: #F8F8F8"> </span>decrypted.key<span style="color: #F8F8F8"> </span>-passin<span style="color: #F8F8F8"> </span>file:password.txt
-</pre></div>
+<h2>Tips:</h2>
+<h3>Check Certificate Expiration</h3>
+<p>Use <code>openssl x509 -enddate -noout -in certificate.crt</code> to quickly check when a certificate expires without displaying all certificate details.</p>
+<h3>Generate Strong Random Passwords</h3>
+<p>Use <code>openssl rand -base64 16</code> to generate a secure random password of 16 bytes (displayed as base64).</p>
+<h3>View Certificate Information in a Browser</h3>
+<p>To check certificate details for a website without connecting to it, use <code>openssl x509 -in certificate.crt -text -noout</code> after saving the certificate locally.</p>
+<h3>Troubleshoot SSL/TLS Connections</h3>
+<p>When facing connection issues, use <code>openssl s_client -connect hostname:port -debug</code> to see detailed information about the handshake process.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. How do I create a CSR (Certificate Signing Request)?</h4>
-<p>A. Use <code>openssl req -new -key private.key -out request.csr</code>. You'll be prompted for certificate information.</p>
+<p>A. Use <code>openssl req -new -key private.key -out request.csr</code>. You'll be prompted for certificate information like organization name and common name.</p>
 <h4>Q2. How can I check the contents of a certificate?</h4>
-<p>A. Use <code>openssl x509 -in certificate.crt -text -noout</code> to display the certificate details.</p>
+<p>A. Use <code>openssl x509 -in certificate.crt -text -noout</code> to display the certificate details in human-readable format.</p>
 <h4>Q3. How do I convert a certificate from PEM to PKCS#12 format?</h4>
-<p>A. Use <code>openssl pkcs12 -export -out certificate.pfx -inkey private.key -in certificate.crt -certfile ca-chain.crt</code>.</p>
-<h4>Q4. How can I test a secure connection to a website?</h4>
-<p>A. Use <code>openssl s_client -connect example.com:443 -servername example.com</code> to establish a connection and view certificate details.</p>
-<h4>Q5. How do I generate a strong random password?</h4>
-<p>A. Use <code>openssl rand -base64 16</code> to generate a 16-byte random string encoded in base64.</p>
+<p>A. Use <code>openssl pkcs12 -export -out certificate.pfx -inkey private.key -in certificate.crt</code> to create a PKCS#12 file containing both the certificate and private key.</p>
+<h4>Q4. How can I test an SSL/TLS connection to a server?</h4>
+<p>A. Use <code>openssl s_client -connect hostname:port</code> to establish a connection and view the certificate information.</p>
+<h4>Q5. How do I generate a random string for use as a key or password?</h4>
+<p>A. Use <code>openssl rand -base64 32</code> to generate a 32-byte random string encoded in base64.</p>
 <h2>References</h2>
 <p>https://www.openssl.org/docs/man1.1.1/man1/</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

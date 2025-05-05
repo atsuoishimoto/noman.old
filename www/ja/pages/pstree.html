@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -46,104 +46,129 @@
   <div class="content">
     <main>
       
-  <h1>pstree コマンド</h1>
-<p>プロセスの親子関係を示すツリーを表示します。</p>
+  <h1>pstreeコマンド</h1>
+<p>実行中のプロセスをツリー形式で表示します。</p>
 <h2>概要</h2>
-<p><code>pstree</code> コマンドは実行中のプロセスをツリー形式で表示し、プロセス間の親子関係を簡単に確認できるようにします。どのプロセスがどのプロセスを生成したかを視覚的に表現し、プロセス間の接続関係を明確に示します。</p>
+<p><code>pstree</code>コマンドは、システム上で実行中のプロセスをツリー状の図で表示し、プロセス間の親子関係を示します。この視覚化によって、プロセスの階層構造や、どのプロセスが他のプロセスを生成したかを簡単に理解できます。</p>
 <h2>オプション</h2>
-<h3><strong>-a, --arguments</strong></h3>
-<p>各プロセスのコマンドライン引数を表示します。</p>
+<h3><strong>-a</strong></h3>
+<p>コマンドライン引数を表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-a
 <span style="color: #000; font-style: italic">systemd</span>
-<span style="color: #000; font-style: italic">  ├─ModemManager</span>
 <span style="color: #000; font-style: italic">  ├─NetworkManager --no-daemon</span>
 <span style="color: #000; font-style: italic">  ├─accounts-daemon</span>
-<span style="color: #000; font-style: italic">  ├─avahi-daemon --syslog</span>
-<span style="color: #000; font-style: italic">  │   └─avahi-daemon --syslog</span>
-<span style="color: #000; font-style: italic">  └─sshd -D</span>
+<span style="color: #000; font-style: italic">  ├─avahi-daemon</span>
+<span style="color: #000; font-style: italic">  │   └─avahi-daemon</span>
+<span style="color: #000; font-style: italic">  └─sshd</span>
 <span style="color: #000; font-style: italic">      └─sshd</span>
 <span style="color: #000; font-style: italic">          └─sshd</span>
 <span style="color: #000; font-style: italic">              └─bash</span>
 </pre></div>
-<h3><strong>-p, --show-pids</strong></h3>
-<p>プロセス名と一緒にPID（プロセスID）を表示します。</p>
+<h3><strong>-p</strong></h3>
+<p>PID（プロセスID）を表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-p
-<span style="color: #000; font-style: italic">systemd(1)─┬─ModemManager(823)</span>
-<span style="color: #000; font-style: italic">           ├─NetworkManager(824)</span>
-<span style="color: #000; font-style: italic">           ├─accounts-daemon(825)</span>
-<span style="color: #000; font-style: italic">           ├─avahi-daemon(826)───avahi-daemon(845)</span>
-<span style="color: #000; font-style: italic">           └─sshd(1025)───sshd(1789)───sshd(1823)───bash(1824)</span>
+<span style="color: #000; font-style: italic">systemd(1)</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager(623)</span>
+<span style="color: #000; font-style: italic">  ├─accounts-daemon(645)</span>
+<span style="color: #000; font-style: italic">  ├─avahi-daemon(647)</span>
+<span style="color: #000; font-style: italic">  │   └─avahi-daemon(648)</span>
+<span style="color: #000; font-style: italic">  └─sshd(1025)</span>
+<span style="color: #000; font-style: italic">      └─sshd(2156)</span>
+<span style="color: #000; font-style: italic">          └─sshd(2158)</span>
+<span style="color: #000; font-style: italic">              └─bash(2159)</span>
 </pre></div>
-<h3><strong>-h, --highlight-all</strong></h3>
+<h3><strong>-n</strong></h3>
+<p>プロセスを名前ではなくPIDでソートします。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-n
+<span style="color: #000; font-style: italic">systemd</span>
+<span style="color: #000; font-style: italic">  ├─systemd-journald</span>
+<span style="color: #000; font-style: italic">  ├─systemd-udevd</span>
+<span style="color: #000; font-style: italic">  ├─systemd-resolved</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager</span>
+<span style="color: #000; font-style: italic">  ├─accounts-daemon</span>
+<span style="color: #000; font-style: italic">  └─sshd</span>
+</pre></div>
+<h3><strong>-u</strong></h3>
+<p>uid（ユーザーID）の変更を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-u
+<span style="color: #000; font-style: italic">systemd</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager</span>
+<span style="color: #000; font-style: italic">  ├─accounts-daemon(root)</span>
+<span style="color: #000; font-style: italic">  ├─avahi-daemon(avahi)</span>
+<span style="color: #000; font-style: italic">  │   └─avahi-daemon(avahi)</span>
+<span style="color: #000; font-style: italic">  └─sshd</span>
+<span style="color: #000; font-style: italic">      └─sshd(john)</span>
+<span style="color: #000; font-style: italic">          └─bash(john)</span>
+</pre></div>
+<h3><strong>-h</strong></h3>
 <p>現在のプロセスとその祖先を強調表示します。</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-h
-<span style="color: #000; font-style: italic">systemd─┬─ModemManager</span>
-<span style="color: #000; font-style: italic">        ├─NetworkManager</span>
-<span style="color: #000; font-style: italic">        ├─accounts-daemon</span>
-<span style="color: #000; font-style: italic">        ├─avahi-daemon───avahi-daemon</span>
-<span style="color: #000; font-style: italic">        └─sshd───sshd───sshd───bash</span>
+<span style="color: #000; font-style: italic">systemd</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager</span>
+<span style="color: #000; font-style: italic">  ├─accounts-daemon</span>
+<span style="color: #000; font-style: italic">  └─sshd</span>
+<span style="color: #000; font-style: italic">      └─sshd</span>
+<span style="color: #000; font-style: italic">          └─sshd</span>
+<span style="color: #000; font-style: italic">              └─bash───pstree</span>
 </pre></div>
-<h3><strong>-u, --uid-changes</strong></h3>
-<p>ユーザーID（uid）の変更を表示します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-u
-<span style="color: #000; font-style: italic">systemd─┬─ModemManager</span>
-<span style="color: #000; font-style: italic">        ├─NetworkManager</span>
-<span style="color: #000; font-style: italic">        ├─accounts-daemon</span>
-<span style="color: #000; font-style: italic">        ├─avahi-daemon───avahi-daemon</span>
-<span style="color: #000; font-style: italic">        └─sshd───sshd───sshd───bash(user)</span>
-</pre></div>
-<h3><strong>-n, --numeric-sort</strong></h3>
-<p>同じ親を持つプロセスを名前ではなくPID順にソートします。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-n
-<span style="color: #000; font-style: italic">systemd─┬─ModemManager</span>
-<span style="color: #000; font-style: italic">        ├─NetworkManager</span>
-<span style="color: #000; font-style: italic">        ├─accounts-daemon</span>
-<span style="color: #000; font-style: italic">        ├─avahi-daemon───avahi-daemon</span>
-<span style="color: #000; font-style: italic">        └─sshd───sshd───sshd───bash</span>
+<h3><strong>-g</strong></h3>
+<p>PGID（プロセスグループID）を表示します。</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-g
+<span style="color: #000; font-style: italic">systemd(1)</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager(623,623)</span>
+<span style="color: #000; font-style: italic">  ├─accounts-daemon(645,645)</span>
+<span style="color: #000; font-style: italic">  └─sshd(1025,1025)</span>
+<span style="color: #000; font-style: italic">      └─sshd(2156,2156)</span>
+<span style="color: #000; font-style: italic">          └─bash(2159,2159)</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>特定ユーザーのプロセスツリーを表示</h3>
+<h3>特定ユーザーのプロセスを表示する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>username
-<span style="color: #000; font-style: italic">bash───vim</span>
+<span style="color: #000; font-style: italic">sshd───bash───vim</span>
 </pre></div>
-<h3>特定のPIDのプロセスツリーを表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1234</span>
-<span style="color: #000; font-style: italic">bash───firefox───Web Content</span>
-</pre></div>
-<h3>複数のオプションを組み合わせて詳細な出力を得る</h3>
+<h3>オプションを組み合わせて詳細な出力を得る</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-apu
 <span style="color: #000; font-style: italic">systemd(1)</span>
-<span style="color: #000; font-style: italic">  ├─ModemManager(823)</span>
-<span style="color: #000; font-style: italic">  ├─NetworkManager(824) --no-daemon</span>
-<span style="color: #000; font-style: italic">  ├─accounts-daemon(825)</span>
-<span style="color: #000; font-style: italic">  ├─avahi-daemon(826) --syslog</span>
-<span style="color: #000; font-style: italic">  │   └─avahi-daemon(845) --syslog</span>
-<span style="color: #000; font-style: italic">  └─sshd(1025) -D</span>
-<span style="color: #000; font-style: italic">      └─sshd(1789)</span>
-<span style="color: #000; font-style: italic">          └─sshd(1823)</span>
-<span style="color: #000; font-style: italic">              └─bash(1824)(user)</span>
+<span style="color: #000; font-style: italic">  ├─NetworkManager(623) --no-daemon</span>
+<span style="color: #000; font-style: italic">  ├─accounts-daemon(645)</span>
+<span style="color: #000; font-style: italic">  ├─avahi-daemon(647)(avahi)</span>
+<span style="color: #000; font-style: italic">  │   └─avahi-daemon(648)(avahi)</span>
+<span style="color: #000; font-style: italic">  └─sshd(1025)</span>
+<span style="color: #000; font-style: italic">      └─sshd(2156)(john)</span>
+<span style="color: #000; font-style: italic">          └─bash(2159)(john)</span>
+</pre></div>
+<h3>特定のプロセスとその子プロセスを見つける</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>pstree<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">|</span><span style="color: #F8F8F8"> </span>grep<span style="color: #F8F8F8"> </span>firefox
+<span style="color: #000; font-style: italic">        │           ├─firefox(2345)───{firefox}(2346)</span>
+<span style="color: #000; font-style: italic">        │           │                 ├─{firefox}(2347)</span>
+<span style="color: #000; font-style: italic">        │           │                 ├─{firefox}(2348)</span>
+<span style="color: #000; font-style: italic">        │           │                 └─{firefox}(2349)</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>親子プロセス関係の特定</h3>
-<p>トラブルシューティング時に <code>pstree -p</code> を使用すると、特定の子プロセスがどの親プロセスから生成されたかを素早く特定できます。これによりプロセス階層の理解が容易になります。</p>
-<h3>リソースを多く消費するプロセスグループの特定</h3>
-<p><code>ps</code> コマンドと組み合わせることで、リソースを多く消費するプロセスだけでなく、そのプロセスファミリー全体を特定できます：<code>pstree -p $(ps -eo pid,pcpu --sort=-pcpu | head -2 | tail -1 | awk '{print $1}')</code></p>
-<h3>大規模システム向けのコンパクトビュー</h3>
-<p>多数のプロセスが実行されているシステムでは、<code>pstree -c</code> を使用すると、同一のサブツリーを圧縮せずにより簡潔な表示が得られます。</p>
+<h3>コンパクト表示</h3>
+<p>デフォルトでは、同一のツリーブランチはスペースを節約するために圧縮されます。<code>-c</code>オプションを使用すると、この動作を無効にして、すべてのプロセスを個別に表示できます。</p>
+<h3>ASCII文字</h3>
+<p>ツリー構造がターミナルで正しく表示されない場合は、<code>-A</code>オプションを使用して、デフォルトのUTF-8文字の代わりにASCII文字を使用します。</p>
+<h3>プロセスの系統をたどる</h3>
+<p>デバッグ時には、<code>pstree -p</code>を使用してプロセスの親子関係をすばやく特定できます。これはアプリケーションの構造を理解するのに役立ちます。</p>
+<h3>grepと組み合わせる</h3>
+<p>出力をgrepにパイプして特定のプロセスを見つけます: <code>pstree -p | grep firefox</code></p>
 <h2>よくある質問</h2>
-<h4>Q1. <code>pstree</code> と <code>ps</code> の違いは何ですか？</h4>
-<p>A. <code>ps</code> はプロセスをフラットなフォーマットでリスト表示するのに対し、<code>pstree</code> は親子関係を示す階層的なツリー構造で表示します。</p>
-<h4>Q2. <code>pstree</code> でプロセスIDを確認できますか？</h4>
-<p>A. はい、<code>pstree -p</code> を使用するとプロセス名と一緒にPIDを表示できます。</p>
-<h4>Q3. 特定ユーザーのプロセスツリーを確認するにはどうすればよいですか？</h4>
-<p>A. <code>pstree ユーザー名</code> を実行すると、そのユーザーが所有するプロセスのみが表示されます。</p>
-<h4>Q4. プロセスツリーでコマンドライン引数を確認できますか？</h4>
-<p>A. はい、<code>pstree -a</code> を使用すると各プロセスのコマンドライン引数が表示されます。</p>
+<h4>Q1. pstreeはpsとどう違いますか？</h4>
+<p>A. <code>ps</code>はプロセスをフラットなリストで表示しますが、<code>pstree</code>はプロセスを親子関係を示す階層的なツリー構造で表示します。</p>
+<h4>Q2. pstreeでプロセスIDを見ることはできますか？</h4>
+<p>A. はい、<code>-p</code>オプションを使用すると、プロセス名と一緒にプロセスIDを表示できます。</p>
+<h4>Q3. コマンドライン引数を表示するにはどうすればよいですか？</h4>
+<p>A. <code>-a</code>オプションを使用すると、各プロセスのコマンドライン引数を表示できます。</p>
+<h4>Q4. 特定のユーザーのプロセスだけを表示できますか？</h4>
+<p>A. はい、ユーザー名を引数として指定します: <code>pstree username</code></p>
+<h4>Q5. テキストのみのターミナルで出力を読みやすくするにはどうすればよいですか？</h4>
+<p>A. <code>-A</code>オプションを使用して、ツリー構造にUTF-8の代わりにASCII文字を使用します。</p>
 <h2>参考資料</h2>
 <p>https://man7.org/linux/man-pages/man1/pstree.1.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初版作成</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -47,101 +47,90 @@
     <main>
       
   <h1>expr コマンド</h1>
-<p>式を評価し、結果を出力します。</p>
+<p>式を評価して結果を出力します。</p>
 <h2>概要</h2>
-<p><code>expr</code> は式を評価して結果を出力するコマンドラインユーティリティです。算術演算、文字列操作、論理比較を実行できます。このコマンドは主にシェルスクリプト内で、シェル組み込みコマンドだけでは難しい計算や文字列操作を行うために使用されます。</p>
+<p><code>expr</code> はコマンドライン・ユーティリティで、式を評価して結果を出力します。算術演算、文字列操作、論理比較を実行します。このコマンドは主にシェルスクリプト内での計算や文字列操作に使用されます。</p>
 <h2>オプション</h2>
 <h3><strong>--help</strong></h3>
 <p>ヘルプメッセージを表示して終了します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>--help
-<span style="color: #000; font-style: italic">Usage: expr EXPRESSION</span>
-<span style="color: #000; font-style: italic">  or:  expr OPTION</span>
-<span style="color: #000; font-style: italic">Print the value of EXPRESSION to standard output.</span>
-<span style="color: #000; font-style: italic">...</span>
-</pre></div>
-<h3><strong>--version</strong></h3>
+<pre><code>$ expr --help
+Usage: expr EXPRESSION
+  or:  expr OPTION
+</code></pre><h3><strong>--version</strong></h3>
 <p>バージョン情報を出力して終了します。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>--version
-<span style="color: #000; font-style: italic">expr (GNU coreutils) 9.0</span>
-<span style="color: #000; font-style: italic">Copyright (C) 2021 Free Software Foundation, Inc.</span>
-<span style="color: #000; font-style: italic">License GPLv3+: GNU GPL version 3 or later &lt;https://gnu.org/licenses/gpl.html&gt;.</span>
-<span style="color: #000; font-style: italic">This is free software: you are free to change and redistribute it.</span>
-<span style="color: #000; font-style: italic">There is NO WARRANTY, to the extent permitted by law.</span>
-</pre></div>
-<h2>使用例</h2>
+<pre><code>$ expr --version
+expr (GNU coreutils) 9.0
+Copyright (C) 2021 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &lt;https://gnu.org/licenses/gpl.html&gt;.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+</code></pre><h2>使用例</h2>
 <h3>基本的な算術演算</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #000; font-style: italic">8</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">10</span><span style="color: #F8F8F8"> </span>-<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span>
-<span style="color: #000; font-style: italic">6</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\*</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">4</span>
-<span style="color: #000; font-style: italic">12</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>/<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #000; font-style: italic">4</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">20</span><span style="color: #F8F8F8"> </span>%<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #000; font-style: italic">2</span>
-</pre></div>
-<h3>文字列操作</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>length<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span>
-<span style="color: #000; font-style: italic">11</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>substr<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">7</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #000; font-style: italic">World</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span>index<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Hello World&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;W&quot;</span>
-<span style="color: #000; font-style: italic">7</span>
-</pre></div>
-<h3>論理比較</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\&gt;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #000; font-style: italic">1</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\&lt;</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #000; font-style: italic">0</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #000">5</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #000; font-style: italic">1</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>!<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #000; font-style: italic">0</span>
-</pre></div>
-<h3>シェルスクリプトでの使用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">a</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">5</span>
-<span style="color: #8F5902">$ </span><span style="color: #000">b</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #8F5902">$ </span><span style="color: #000">c</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>expr<span style="color: #F8F8F8"> </span><span style="color: #000">$a</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #000">$b</span><span style="color: #204A87; font-weight: bold">)</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$c</span>
-<span style="color: #000; font-style: italic">8</span>
-</pre></div>
-<h2>ヒント:</h2>
+<pre><code>$ expr 5 + 3
+8
+$ expr 10 - 4
+6
+$ expr 3 \* 4
+12
+$ expr 20 / 5
+4
+$ expr 20 % 3
+2
+</code></pre><h3>文字列操作</h3>
+<pre><code>$ expr length &quot;Hello World&quot;
+11
+$ expr substr &quot;Hello World&quot; 1 5
+Hello
+$ expr index &quot;Hello World&quot; &quot;o&quot;
+5
+</code></pre><h3>論理比較</h3>
+<pre><code>$ expr 5 \&gt; 3
+1
+$ expr 5 \&lt; 3
+0
+$ expr 5 = 5
+1
+$ expr 5 != 3
+1
+</code></pre><h3>シェルスクリプトでの使用</h3>
+<pre><code>$ a=5
+$ b=3
+$ c=$(expr $a + $b)
+$ echo $c
+8
+</code></pre><h2>ヒント:</h2>
 <h3>特殊文字のエスケープ</h3>
-<p>乗算（*）、除算（/）など、シェルで特別な意味を持つ文字はバックスラッシュ（\）でエスケープする必要があります。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">\*</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span>
-<span style="color: #000; font-style: italic">15</span>
-</pre></div>
-<h3>スペースの要件</h3>
+<p>乗算(*)、除算(/)、その他の特殊文字は、シェルによる解釈を防ぐためにバックスラッシュでエスケープしてください。</p>
+<pre><code>$ expr 5 \* 3
+15
+</code></pre><h3>スペースが重要</h3>
 <p><code>expr</code> は演算子とオペランドの間にスペースが必要です。スペースがないと、コマンドは正しく動作しません。</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span>+3<span style="color: #F8F8F8">    </span><span style="color: #8F5902; font-style: italic"># 間違い</span>
-<span style="color: #000; font-style: italic">5+3</span>
-<span style="color: #8F5902">$ </span>expr<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">5</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">3</span><span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># 正しい</span>
-<span style="color: #000; font-style: italic">8</span>
-</pre></div>
-<h3>戻り値</h3>
-<p><code>expr</code> は式が0以外かつ空でない値に評価される場合は0を、式が0または空の場合は1を、式が無効な場合は2を返します。</p>
+<pre><code>$ expr 5+3     # 間違い
+5+3
+$ expr 5 + 3   # 正しい
+8
+</code></pre><h3>戻り値</h3>
+<p><code>expr</code> は、式がゼロ以外かつ空でない値に評価される場合は0を、式がゼロまたは空の場合は1を、式が無効な場合は2を返します。</p>
 <h3>変数のインクリメントに使用</h3>
-<p><code>expr</code> の一般的な使用法はシェルスクリプトでカウンターをインクリメントすることです：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">i</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #0000CF; font-weight: bold">1</span>
-<span style="color: #8F5902">$ </span><span style="color: #000">i</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #204A87; font-weight: bold">$(</span>expr<span style="color: #F8F8F8"> </span><span style="color: #000">$i</span><span style="color: #F8F8F8"> </span>+<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #204A87; font-weight: bold">)</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$i</span>
-<span style="color: #000; font-style: italic">2</span>
-</pre></div>
-<h2>よくある質問</h2>
-<h4>Q1. <code>expr</code> とシェルの算術演算の違いは何ですか？</h4>
-<p>A. 現代のシェルは <code>$(( ))</code> で算術演算をサポートしていますが、<code>expr</code> は異なるシェル間でより移植性が高く、追加の文字列操作関数を提供します。</p>
-<h4>Q2. なぜ <code>expr</code> での乗算が失敗するのですか？</h4>
-<p>A. アスタリスクをバックスラッシュでエスケープする必要があります：<code>expr 5 \* 3</code>。そうしないと、シェルはワイルドカードとして解釈します。</p>
-<h4>Q3. 文字列操作に <code>expr</code> をどのように使用できますか？</h4>
-<p>A. <code>expr</code> は文字列操作のために <code>length</code>、<code>substr</code>、<code>index</code> などの関数を提供しています。例えば：<code>expr length &quot;string&quot;</code> や <code>expr substr &quot;string&quot; 1 3</code> などです。</p>
-<h4>Q4. 現代のシェルスクリプティングでも <code>expr</code> は関連性がありますか？</h4>
-<p>A. 新しいシェルには組み込みの算術機能がありますが、<code>expr</code> は文字列操作関数や、異なるシェル環境間で移植性が必要なスクリプトに引き続き有用です。</p>
-<h2>参考資料</h2>
+<p><code>expr</code> はシェルスクリプトでカウンターをインクリメントするためによく使用されます：</p>
+<pre><code>$ i=1
+$ i=$(expr $i + 1)
+$ echo $i
+2
+</code></pre><h2>よくある質問</h2>
+<h4>Q1. <code>expr</code> と bash の <code>$(())</code> の違いは何ですか？</h4>
+<p>A. <code>expr</code> はすべてのPOSIXシェルで動作する外部コマンドですが、<code>$(())</code> はbashの組み込み算術展開で、より高速ですが移植性が低いです。</p>
+<h4>Q2. <code>expr</code> で浮動小数点計算を行うにはどうすればよいですか？</h4>
+<p>A. <code>expr</code> は整数演算のみを扱います。浮動小数点計算には、代わりに <code>bc</code> や <code>awk</code> を使用してください。</p>
+<h4>Q3. なぜ <code>expr</code> での乗算が失敗するのですか？</h4>
+<p>A. アスタリスク(*) は、シェルがワイルドカードとして解釈するのを防ぐためにバックスラッシュ (<code>\*</code>) でエスケープする必要があります。</p>
+<h4>Q4. <code>expr</code> は正規表現を扱えますか？</h4>
+<p>A. いいえ、<code>expr</code> は完全な正規表現をサポートしていません。パターンマッチングには、<code>grep</code>、<code>sed</code>、<code>awk</code> などのツールを使用してください。</p>
+<h2>参考文献</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/expr-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初版作成</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

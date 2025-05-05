@@ -47,9 +47,9 @@
     <main>
       
   <h1>whoami command</h1>
-<p>Display the effective username of the current user.</p>
+<p>Display the effective user ID of the current user.</p>
 <h2>Overview</h2>
-<p>The <code>whoami</code> command prints the username associated with the current effective user ID. This simple utility helps identify which user account is being used for the current session, which is particularly useful in scripts, when switching between users, or when troubleshooting permission issues.</p>
+<p>The <code>whoami</code> command prints the username associated with the current effective user ID. It's a simple utility that helps identify which user account is currently being used in the terminal session, which is particularly useful in scripts or when switching between different user accounts.</p>
 <h2>Options</h2>
 <p>The <code>whoami</code> command has very few options as it performs a single, straightforward function.</p>
 <h3><strong>--help</strong></h3>
@@ -66,7 +66,7 @@
 <span style="color: #000; font-style: italic">Report whoami translation bugs to &lt;https://translationproject.org/team/&gt;</span>
 </pre></div>
 <h3><strong>--version</strong></h3>
-<p>Display version information and exit.</p>
+<p>Output version information and exit.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>whoami<span style="color: #F8F8F8"> </span>--version
 <span style="color: #000; font-style: italic">whoami (GNU coreutils) 8.32</span>
 <span style="color: #000; font-style: italic">Copyright (C) 2020 Free Software Foundation, Inc.</span>
@@ -77,48 +77,41 @@
 <span style="color: #000; font-style: italic">Written by Richard Mlynarik.</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic Usage</h3>
-<p>Simply type <code>whoami</code> to see your current effective username:</p>
+<h3>Basic usage</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>whoami
-<span style="color: #000; font-style: italic">alice</span>
+<span style="color: #000; font-style: italic">john</span>
 </pre></div>
-<h3>Using in Scripts</h3>
-<p>The command is often used in shell scripts to check the current user:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87; font-weight: bold">if</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #204A87; font-weight: bold">$(</span>whoami<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span>!<span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;root&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #CE5C00; font-weight: bold">]</span><span style="color: #000; font-weight: bold">;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">then</span>
-<span style="color: #000; font-style: italic">&gt;   echo &quot;This script must be run as root&quot;</span>
-<span style="color: #000; font-style: italic">&gt;   exit 1</span>
-<span style="color: #000; font-style: italic">&gt; fi</span>
-<span style="color: #000; font-style: italic">This script must be run as root</span>
+<h3>Using in a script to check current user</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;Current user is </span><span style="color: #204A87; font-weight: bold">$(</span>whoami<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">&quot;</span>
+<span style="color: #000; font-style: italic">Current user is john</span>
 </pre></div>
-<h3>After Switching Users</h3>
-<p>After using <code>su</code> or <code>sudo</code> to change users, <code>whoami</code> shows the new effective user:</p>
+<h3>Using after switching users with sudo</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>whoami
-<span style="color: #000; font-style: italic">alice</span>
-<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>-s
-<span style="color: #8F5902"># </span>whoami
+<span style="color: #000; font-style: italic">john</span>
+<span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>whoami
 <span style="color: #000; font-style: italic">root</span>
 </pre></div>
 <h2>Tips</h2>
-<h3>Understanding Effective vs. Real User ID</h3>
-<p><code>whoami</code> shows the effective user ID, which may differ from your real user ID when using commands like <code>sudo</code>. To see both real and effective IDs, use the <code>id</code> command instead.</p>
-<h3>Alternative Commands</h3>
-<p>The <code>id -un</code> command provides the same information as <code>whoami</code> and is available on all UNIX-like systems, making it a more portable alternative in scripts.</p>
-<h3>Security Considerations</h3>
-<p>When writing security-sensitive scripts, remember that <code>whoami</code> only shows the effective user, not necessarily the user who originally launched the process.</p>
+<h3>Difference from <code>id</code> command</h3>
+<p>The <code>whoami</code> command is equivalent to <code>id -un</code>. The <code>id</code> command provides more comprehensive user identity information, while <code>whoami</code> focuses only on the username.</p>
+<h3>Use in shell scripts</h3>
+<p><code>whoami</code> is particularly useful in shell scripts to check which user is running the script, allowing for conditional execution based on user identity.</p>
+<h3>Root user verification</h3>
+<p>Use <code>whoami</code> to verify if you're currently operating with root privileges after using commands like <code>sudo</code> or <code>su</code>.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. What's the difference between <code>whoami</code> and <code>who am i</code>?</h4>
-<p>A. <code>whoami</code> shows the effective username of the current process, while <code>who am i</code> (or <code>who -m</code>) shows the original login name, terminal, and login time.</p>
-<h4>Q2. Can <code>whoami</code> tell me if I'm running as root?</h4>
-<p>A. Yes. If <code>whoami</code> returns &quot;root&quot;, you're running with root privileges.</p>
+<p>A. <code>whoami</code> shows the effective username (who you are currently running as), while <code>who am i</code> (or <code>who -m</code>) shows the original login name, which might be different if you've used <code>su</code> or <code>sudo</code>.</p>
+<h4>Q2. Can <code>whoami</code> show information about other users?</h4>
+<p>A. No, <code>whoami</code> only displays information about the current effective user. To get information about other users, use commands like <code>id username</code> or <code>finger username</code>.</p>
 <h4>Q3. Does <code>whoami</code> work the same on all Unix/Linux systems?</h4>
-<p>A. Yes, the basic functionality is consistent across Unix-like systems, though some systems might have slightly different output formatting.</p>
-<h4>Q4. Why would I use <code>whoami</code> instead of <code>id</code>?</h4>
-<p>A. <code>whoami</code> is simpler and provides just the username, while <code>id</code> gives more comprehensive information including user ID, group ID, and group memberships.</p>
+<p>A. Yes, <code>whoami</code> is a standard command with consistent behavior across Unix-like operating systems, including Linux and macOS.</p>
+<h4>Q4. Why would I use <code>whoami</code> instead of <code>echo $USER</code>?</h4>
+<p>A. <code>whoami</code> shows the effective user (who you're running as), while <code>$USER</code> shows the login user. They differ when you use <code>sudo</code> or <code>su</code> to change users.</p>
 <h2>References</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/whoami-invocation.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

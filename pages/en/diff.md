@@ -4,33 +4,24 @@ Compare files line by line.
 
 ## Overview
 
-The `diff` command compares two files or directories and displays the differences between them. It's commonly used to see what changes have been made to files, create patch files, or compare configurations. The output shows which lines need to be changed to make the files identical.
+The `diff` command compares two files or directories and displays the differences between them. It's commonly used to identify changes between file versions, create patches, or check what has been modified in a file.
 
 ## Options
 
 ### **-u, --unified**
 
-Output differences in the unified format, showing context around the differences. This is the most readable and commonly used format.
+Output differences in unified format, showing context around the changes.
 
 ```console
 $ diff -u file1.txt file2.txt
---- file1.txt	2025-05-04 10:00:00.000000000 -0400
-+++ file2.txt	2025-05-04 10:30:00.000000000 -0400
+--- file1.txt	2025-05-05 10:00:00.000000000 -0400
++++ file2.txt	2025-05-05 10:30:00.000000000 -0400
 @@ -1,3 +1,4 @@
  This is a test file.
 -It has some content.
 +It has some modified content.
  The end of the file.
-+A new line was added.
-```
-
-### **-i, --ignore-case**
-
-Ignore case differences when comparing files.
-
-```console
-$ diff -i uppercase.txt lowercase.txt
-[No output if files differ only in case]
++A new line added.
 ```
 
 ### **-b, --ignore-space-change**
@@ -38,17 +29,20 @@ $ diff -i uppercase.txt lowercase.txt
 Ignore changes in the amount of white space.
 
 ```console
-$ diff -b spaced.txt compact.txt
-[No output if files differ only in spacing]
+$ diff -b file1.txt file2.txt
+2c2
+< It has some content.
+---
+> It has some   modified content.
 ```
 
-### **-w, --ignore-all-space**
+### **-i, --ignore-case**
 
-Ignore all white space when comparing lines.
+Ignore case differences in file contents.
 
 ```console
-$ diff -w file1.txt file2.txt
-[No output if files differ only in whitespace]
+$ diff -i uppercase.txt lowercase.txt
+[No output if files differ only in case]
 ```
 
 ### **-r, --recursive**
@@ -57,122 +51,127 @@ Recursively compare any subdirectories found.
 
 ```console
 $ diff -r dir1 dir2
-Only in dir1: unique_file1.txt
-Only in dir2: unique_file2.txt
-diff -r dir1/common.txt dir2/common.txt
-1c1
-< Original content
+diff -r dir1/file.txt dir2/file.txt
+2c2
+< This is in dir1
 ---
-> Modified content
+> This is in dir2
+Only in dir2: newfile.txt
 ```
 
-### **-q, --brief**
+### **-N, --new-file**
 
-Report only whether files differ, not the details of the differences.
+Treat absent files as empty.
 
 ```console
-$ diff -q file1.txt file2.txt
-Files file1.txt and file2.txt differ
+$ diff -N file1.txt nonexistent.txt
+1,3d0
+< This is a test file.
+< It has some content.
+< The end of the file.
+```
+
+### **-c, --context**
+
+Output differences in context format with 3 lines of context.
+
+```console
+$ diff -c file1.txt file2.txt
+*** file1.txt	2025-05-05 10:00:00.000000000 -0400
+--- file2.txt	2025-05-05 10:30:00.000000000 -0400
+***************
+*** 1,3 ****
+  This is a test file.
+- It has some content.
+  The end of the file.
+--- 1,4 ----
+  This is a test file.
++ It has some modified content.
+  The end of the file.
++ A new line added.
 ```
 
 ## Usage Examples
 
-### Basic File Comparison
+### Comparing two files
 
 ```console
-$ diff file1.txt file2.txt
+$ diff original.txt modified.txt
 2c2
-< It has some content.
+< This is the original line.
 ---
-> It has some modified content.
-3a4
-> A new line was added.
+> This is the modified line.
+4d3
+< This line will be deleted.
 ```
 
-### Creating a Patch File
+### Creating a patch file
 
 ```console
 $ diff -u original.txt modified.txt > changes.patch
-$ patch original.txt < changes.patch
-patching file original.txt
+$ cat changes.patch
+--- original.txt	2025-05-05 10:00:00.000000000 -0400
++++ modified.txt	2025-05-05 10:30:00.000000000 -0400
+@@ -1,4 +1,3 @@
+ First line is unchanged.
+-This is the original line.
++This is the modified line.
+ Third line is unchanged.
+-This line will be deleted.
 ```
 
-### Comparing Directories
+### Comparing directories
 
 ```console
-$ diff -r project_v1 project_v2
-Only in project_v2: new_feature.py
-diff -r project_v1/main.py project_v2/main.py
-10c10,12
-< print("Hello World")
+$ diff -r dir1 dir2
+Only in dir1: uniquefile1.txt
+Only in dir2: uniquefile2.txt
+diff -r dir1/common.txt dir2/common.txt
+1c1
+< This is in dir1
 ---
-> print("Hello World!")
-> print("Version 2.0")
-> print("Copyright 2025")
+> This is in dir2
 ```
 
-### Side-by-Side Comparison
+## Tips:
 
-```console
-$ diff -y file1.txt file2.txt
-This is a test file.                 This is a test file.
-It has some content.               | It has some modified content.
-The end of the file.                 The end of the file.
-                                   > A new line was added.
-```
+### Understanding diff output
 
-## Tips
+The standard diff output format uses line numbers and commands:
+- `a` (add): Lines added to the second file
+- `d` (delete): Lines deleted from the first file
+- `c` (change): Lines changed between files
 
-### Use Color for Better Readability
+### Use color for better readability
 
-Many systems have `colordiff` installed, which adds color highlighting to diff output:
+Many systems support colored diff output with `diff --color=auto` which makes changes easier to spot.
 
-```console
-$ colordiff -u file1.txt file2.txt
-```
+### Combine with grep for specific changes
 
-### Context Control
+Use `diff file1 file2 | grep pattern` to find only differences containing specific text.
 
-Control the amount of context shown with `-U NUM` or `--unified=NUM`:
+### Side-by-side comparison
 
-```console
-$ diff -U1 file1.txt file2.txt
-```
-
-### Ignore Version Control Files
-
-When comparing directories, use `--exclude=PATTERN` to ignore certain files:
-
-```console
-$ diff -r --exclude=".git" dir1 dir2
-```
-
-### Use with Version Control
-
-While version control systems have their own diff tools, you can use external diff:
-
-```console
-$ git diff --no-index --external-diff=diff -u file1.txt file2.txt
-```
+Use `diff -y` or `diff --side-by-side` to see differences in a two-column format, which can be easier to read for some changes.
 
 ## Frequently Asked Questions
 
 #### Q1. What do the symbols in diff output mean?
-A. In normal output: `a` means add, `d` means delete, `c` means change. Lines with `<` are from the first file, `>` are from the second file, and `---` separates the changes.
+A. In standard output, `<` indicates lines from the first file, `>` indicates lines from the second file, and `---` separates changed sections.
 
-#### Q2. How can I make diff output more readable?
-A. Use the unified format (`-u`) or side-by-side format (`-y`). For colored output, use `colordiff` if available.
+#### Q2. How do I create a patch file?
+A. Use `diff -u original.txt modified.txt > changes.patch` to create a unified format patch file.
 
-#### Q3. How do I create a patch file that can be applied later?
-A. Use `diff -u original_file modified_file > patch_file.patch` and then apply it with `patch original_file < patch_file.patch`.
+#### Q3. How can I ignore whitespace differences?
+A. Use `diff -b` to ignore changes in whitespace, or `diff -w` to ignore all whitespace.
 
-#### Q4. Can diff compare binary files?
-A. By default, diff works with text files. For binary files, consider using `cmp` or specialized tools like `xxdiff` or `hexdump` combined with diff.
+#### Q4. How do I apply a diff patch?
+A. Use the `patch` command: `patch original.txt < changes.patch`
 
 ## References
 
-https://www.gnu.org/software/diffutils/manual/html_node/diff.html
+https://www.gnu.org/software/diffutils/manual/html_node/diff-Options.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

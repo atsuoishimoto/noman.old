@@ -47,68 +47,66 @@
     <main>
       
   <h1>xdg-mime command</h1>
-<p>Query and set file type associations in desktop environments.</p>
+<p>Query or set file type associations in desktop environments.</p>
 <h2>Overview</h2>
-<p><code>xdg-mime</code> is a command-line tool that helps manage file type associations in Linux desktop environments. It allows users to query which application is associated with a specific file type (MIME type), set default applications for file types, and add new MIME type information to the system.</p>
+<p><code>xdg-mime</code> is a command-line tool for managing file type associations in Linux desktop environments. It allows users to query which application is associated with a specific file type (MIME type), set default applications for file types, and add new MIME type information to the system.</p>
 <h2>Options</h2>
-<h3><strong>query default [mimetype]</strong></h3>
-<p>Queries the default application for a specific MIME type.</p>
+<h3><strong>query default</strong></h3>
+<p>Query the default application for a MIME type</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>text/plain
 <span style="color: #000; font-style: italic">gedit.desktop</span>
 </pre></div>
-<h3><strong>query filetype [file]</strong></h3>
-<p>Determines the MIME type of a file.</p>
+<h3><strong>query filetype</strong></h3>
+<p>Determine the MIME type of a file</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>filetype<span style="color: #F8F8F8"> </span>document.pdf
 <span style="color: #000; font-style: italic">application/pdf</span>
 </pre></div>
-<h3><strong>default [application.desktop] [mimetype(s)]</strong></h3>
-<p>Sets the default application for one or more MIME types.</p>
+<h3><strong>default</strong></h3>
+<p>Set the default application for a MIME type</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>firefox.desktop<span style="color: #F8F8F8"> </span>text/html
 </pre></div>
-<h3><strong>install [--mode mode] [--novendor] mimetypes-file</strong></h3>
-<p>Installs new MIME type information from a file.</p>
+<h3><strong>install</strong></h3>
+<p>Install new MIME information from an XML file</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>install<span style="color: #F8F8F8"> </span>--mode<span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8"> </span>myapplication-mime.xml
 </pre></div>
+<h3><strong>uninstall</strong></h3>
+<p>Remove MIME information</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>uninstall<span style="color: #F8F8F8"> </span>--mode<span style="color: #F8F8F8"> </span>user<span style="color: #F8F8F8"> </span>myapplication-mime.xml
+</pre></div>
 <h2>Usage Examples</h2>
+<h3>Setting Firefox as default browser</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>firefox.desktop<span style="color: #F8F8F8"> </span>x-scheme-handler/http
+<span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>firefox.desktop<span style="color: #F8F8F8"> </span>x-scheme-handler/https
+</pre></div>
 <h3>Finding which application opens PDF files</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>application/pdf
-<span style="color: #000; font-style: italic">evince.desktop</span>
+<span style="color: #000; font-style: italic">okular.desktop</span>
 </pre></div>
-<h3>Setting Firefox as the default browser</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>firefox.desktop<span style="color: #F8F8F8"> </span>x-scheme-handler/http<span style="color: #F8F8F8"> </span>x-scheme-handler/https
-</pre></div>
-<h3>Checking the MIME type of a file</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>filetype<span style="color: #F8F8F8"> </span>myimage.jpg
-<span style="color: #000; font-style: italic">image/jpeg</span>
-</pre></div>
-<h3>Setting a different text editor for text files</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>default<span style="color: #F8F8F8"> </span>code.desktop<span style="color: #F8F8F8"> </span>text/plain
+<h3>Checking a file's MIME type</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>xdg-mime<span style="color: #F8F8F8"> </span>query<span style="color: #F8F8F8"> </span>filetype<span style="color: #F8F8F8"> </span>~/Downloads/presentation.pptx
+<span style="color: #000; font-style: italic">application/vnd.openxmlformats-officedocument.presentationml.presentation</span>
 </pre></div>
 <h2>Tips:</h2>
-<h3>Desktop Entry Files Location</h3>
-<p>Desktop entry files (<code>.desktop</code>) are typically located in <code>/usr/share/applications/</code> or <code>~/.local/share/applications/</code>. You need to reference these files when setting default applications.</p>
-<h3>System-wide vs. User-specific Settings</h3>
-<p>Use <code>--mode system</code> to make system-wide changes (requires root privileges) or <code>--mode user</code> (default) for user-specific settings.</p>
-<h3>Finding Available Desktop Files</h3>
-<p>To see available desktop files for setting defaults, you can list them with:</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ls<span style="color: #F8F8F8"> </span>/usr/share/applications/*.desktop
-</pre></div>
-<h3>MIME Type Reference</h3>
-<p>Common MIME types include <code>text/plain</code> for text files, <code>application/pdf</code> for PDFs, <code>image/jpeg</code> for JPEG images, and <code>video/mp4</code> for MP4 videos.</p>
+<h3>Finding Desktop Files</h3>
+<p>Desktop files are typically located in <code>/usr/share/applications/</code> or <code>~/.local/share/applications/</code>. You need to reference these files when setting default applications.</p>
+<h3>Creating Custom MIME Types</h3>
+<p>You can create custom MIME types by writing XML files and installing them with <code>xdg-mime install</code>. This is useful for applications that handle specialized file formats.</p>
+<h3>System vs. User Configuration</h3>
+<p>Use <code>--mode user</code> to make changes only for the current user, or <code>--mode system</code> for system-wide changes (requires root privileges).</p>
 <h2>Frequently Asked Questions</h2>
-<h4>Q1. How do I find out what application will open a specific file?</h4>
-<p>A. Use <code>xdg-mime query default $(xdg-mime query filetype filename)</code> to first determine the file's MIME type and then query which application is associated with it.</p>
-<h4>Q2. How do I reset file associations to system defaults?</h4>
-<p>A. There's no direct reset command in xdg-mime. You would need to delete the relevant entries in <code>~/.config/mimeapps.list</code> or set them to the desired defaults manually.</p>
-<h4>Q3. Why isn't my new file association working?</h4>
-<p>A. Some desktop environments cache MIME associations. Try logging out and back in, or restart the file manager. Also ensure the <code>.desktop</code> file exists and is properly formatted.</p>
-<h4>Q4. Can I associate multiple applications with one file type?</h4>
-<p>A. <code>xdg-mime</code> only sets the default application. Alternative applications can be configured through your desktop environment's file properties dialog.</p>
+<h4>Q1. How do I find the MIME type of a file?</h4>
+<p>A. Use <code>xdg-mime query filetype filename</code> to determine the MIME type.</p>
+<h4>Q2. How do I set the default application for a file type?</h4>
+<p>A. Use <code>xdg-mime default application.desktop mimetype</code> where application.desktop is the desktop file and mimetype is the MIME type.</p>
+<h4>Q3. Where are MIME type associations stored?</h4>
+<p>A. User-specific associations are stored in <code>~/.config/mimeapps.list</code> and system-wide associations in <code>/usr/share/applications/mimeapps.list</code>.</p>
+<h4>Q4. How can I reset file associations to system defaults?</h4>
+<p>A. Remove the relevant entries from your <code>~/.config/mimeapps.list</code> file.</p>
 <h2>References</h2>
 <p>https://portland.freedesktop.org/doc/xdg-mime.html</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

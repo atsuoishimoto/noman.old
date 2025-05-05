@@ -1,16 +1,16 @@
 # hostname command
 
-Display or set the system's host name.
+Display or set the system's hostname.
 
 ## Overview
 
-The `hostname` command displays or sets the current host name of the system. The host name is the name by which a network device is known on a network. This command is useful for identifying the current machine in scripts or when working across multiple systems.
+The `hostname` command displays or sets the current host, domain, or node name of the system. Without arguments, it prints the current hostname. With appropriate privileges, it can be used to set a new hostname.
 
 ## Options
 
 ### **-s, --short**
 
-Display the short host name, cutting off any domain information.
+Display the short hostname (the portion before the first dot) without the domain information.
 
 ```console
 $ hostname -s
@@ -28,7 +28,7 @@ mycomputer.example.com
 
 ### **-d, --domain**
 
-Display the DNS domain name.
+Display the domain name the system belongs to.
 
 ```console
 $ hostname -d
@@ -42,15 +42,6 @@ Display the IP address(es) of the host.
 ```console
 $ hostname -i
 192.168.1.100
-```
-
-### **-I, --all-ip-addresses**
-
-Display all network addresses of the host.
-
-```console
-$ hostname -I
-192.168.1.100 10.0.0.1 172.16.0.1
 ```
 
 ## Usage Examples
@@ -70,50 +61,55 @@ $ hostname
 newname
 ```
 
-### Using hostname in a script to identify the current machine
+### Displaying all network addresses of the host
 
 ```console
-$ echo "Running backup script on $(hostname)"
-Running backup script on mycomputer.example.com
+$ hostname --all-ip-addresses
+192.168.1.100 10.0.0.1 127.0.0.1
 ```
 
-## Tips
+## Tips:
 
 ### Permanent Hostname Changes
 
-The `hostname` command only changes the hostname temporarily until the next reboot. For permanent changes:
-- On systemd-based systems: Use `hostnamectl set-hostname newname`
-- On Debian/Ubuntu: Edit `/etc/hostname`
-- On RHEL/CentOS: Edit `/etc/sysconfig/network`
+The `hostname` command only changes the hostname temporarily until the next reboot. To make permanent changes:
+- On Linux: Edit `/etc/hostname` or use `hostnamectl set-hostname newname`
+- On macOS: Use System Preferences > Sharing > Computer Name or `scutil --set HostName newname`
 
-### Network Configuration
+### Hostname vs. FQDN
 
-Changing your hostname might require updating other files like `/etc/hosts` to ensure proper name resolution.
+The hostname is just the computer name (e.g., "mycomputer"), while the FQDN includes the domain (e.g., "mycomputer.example.com"). Use `-f` when you need the complete network identity.
 
-### Hostname Restrictions
+### Hostname Resolution
 
-Hostnames should follow RFC 1178 guidelines: use only letters, digits, and hyphens, and should not exceed 63 characters.
+The hostname command doesn't update DNS or `/etc/hosts`. After changing a hostname, you may need to update these separately for proper network resolution.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between hostname and FQDN?
-A. A hostname is just the name of the machine (e.g., "mycomputer"), while the FQDN includes the domain (e.g., "mycomputer.example.com").
+#### Q1. What's the difference between hostname and hostnamectl?
+A. `hostname` is a simple utility to display or temporarily set the system hostname, while `hostnamectl` (on systemd-based Linux systems) can permanently set various hostname parameters and is the preferred method on modern Linux distributions.
 
-#### Q2. Why does my hostname reset after reboot?
-A. The `hostname` command only makes temporary changes. For permanent changes, you need to modify system configuration files or use tools like `hostnamectl`.
+#### Q2. Why does hostname -i sometimes return 127.0.1.1 instead of my actual IP?
+A. This happens when the hostname is mapped to 127.0.1.1 in `/etc/hosts`, which is common in some distributions. Use `hostname --all-ip-addresses` or `ip addr` for more accurate network information.
 
-#### Q3. Can I use special characters in my hostname?
-A. It's recommended to use only letters, numbers, and hyphens in hostnames to ensure compatibility with all network services.
-
-#### Q4. How do I find my hostname in a script?
-A. Simply use the command `$(hostname)` in your script to get the current hostname.
+#### Q3. How can I make hostname changes permanent?
+A. Edit `/etc/hostname` on Linux or use `hostnamectl set-hostname newname`. On macOS, use `scutil --set HostName newname`.
 
 ## macOS Considerations
 
-On macOS, the hostname command works similarly, but permanent changes should be made using:
-- `sudo scutil --set HostName newname` for the hostname
-- `sudo scutil --set LocalHostName newname` for the Bonjour hostname
-- `sudo scutil --set ComputerName "New Name"` for the user-friendly computer name
+On macOS, there are three different hostname settings that can be configured:
+
+- HostName: The network hostname (FQDN)
+- LocalHostName: The Bonjour hostname (used for local network discovery)
+- ComputerName: The user-friendly name shown in the UI
+
+To set these values, use:
+
+```console
+$ sudo scutil --set HostName "hostname.domain.com"
+$ sudo scutil --set LocalHostName "hostname"
+$ sudo scutil --set ComputerName "My Computer"
+```
 
 ## References
 
@@ -121,4 +117,4 @@ https://man7.org/linux/man-pages/man1/hostname.1.html
 
 ## Revisions
 
-2025/05/04 First revision
+- 2025/05/05 First revision

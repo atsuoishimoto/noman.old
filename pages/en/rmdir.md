@@ -4,7 +4,7 @@ Remove empty directories from the filesystem.
 
 ## Overview
 
-The `rmdir` command removes empty directories from the filesystem. It will only delete directories that contain no files or subdirectories. For removing directories with content, you would need to use the `rm` command with specific options.
+The `rmdir` command removes empty directories from the filesystem. Unlike `rm -r`, which can remove directories with their contents, `rmdir` will only succeed if the specified directories are completely empty.
 
 ## Options
 
@@ -24,10 +24,9 @@ ls: cannot access 'test': No such file or directory
 Output a diagnostic message for every directory processed.
 
 ```console
-$ mkdir empty1 empty2
-$ rmdir -v empty1 empty2
-rmdir: removing directory, 'empty1'
-rmdir: removing directory, 'empty2'
+$ mkdir empty_dir
+$ rmdir -v empty_dir
+rmdir: removing directory, 'empty_dir'
 ```
 
 ### **--ignore-fail-on-non-empty**
@@ -35,11 +34,11 @@ rmdir: removing directory, 'empty2'
 Ignore failures that occur solely because a directory is non-empty.
 
 ```console
-$ mkdir nonempty
-$ touch nonempty/file
-$ rmdir --ignore-fail-on-non-empty nonempty
+$ mkdir dir_with_file
+$ touch dir_with_file/file.txt
+$ rmdir --ignore-fail-on-non-empty dir_with_file
 $ ls
-nonempty
+dir_with_file
 ```
 
 ## Usage Examples
@@ -47,57 +46,60 @@ nonempty
 ### Removing a single empty directory
 
 ```console
-$ mkdir emptydir
-$ rmdir emptydir
+$ mkdir empty_dir
+$ rmdir empty_dir
 $ ls
-[emptydir no longer appears in the listing]
+[empty_dir no longer appears in the listing]
 ```
 
-### Removing multiple empty directories at once
+### Removing nested empty directories
 
 ```console
-$ mkdir dir1 dir2 dir3
-$ rmdir dir1 dir2 dir3
+$ mkdir -p parent/child/grandchild
+$ rmdir -p parent/child/grandchild
 $ ls
-[none of the directories appear in the listing]
+[parent directory and its subdirectories are removed]
 ```
 
 ### Attempting to remove a non-empty directory
 
 ```console
-$ mkdir nonempty
-$ touch nonempty/file
-$ rmdir nonempty
-rmdir: failed to remove 'nonempty': Directory not empty
+$ mkdir non_empty
+$ touch non_empty/file.txt
+$ rmdir non_empty
+rmdir: failed to remove 'non_empty': Directory not empty
 ```
 
 ## Tips:
 
-### Check if a Directory is Empty First
+### Use rm -r for Non-Empty Directories
 
-Before using `rmdir`, you can check if a directory is empty with `ls -A directory_name`. If nothing is listed, the directory is empty.
+When you need to remove directories that contain files, use `rm -r directory_name` instead of `rmdir`. Be careful with this command as it will recursively delete everything in the directory.
 
-### Use with find Command
+### Combine with find to Remove Multiple Empty Directories
 
-Combine with `find` to remove multiple empty directories: `find /path -type d -empty -exec rmdir {} \;`
+You can use `find` with `rmdir` to remove multiple empty directories at once:
+```console
+$ find . -type d -empty -exec rmdir {} \;
+```
 
-### Removing Directory Trees
+### Check Before Removing
 
-For removing entire directory trees (including non-empty directories), use `rm -r` instead of `rmdir`. Be careful as this will delete all contents without prompting.
+If you're unsure whether a directory is empty, use `ls -la directory_name` to check its contents before attempting to remove it.
 
 ## Frequently Asked Questions
 
-#### Q1. Why does rmdir fail with "Directory not empty"?
-A. `rmdir` only removes empty directories. If the directory contains any files or subdirectories, use `rm -r directory_name` instead.
+#### Q1. What's the difference between `rmdir` and `rm -r`?
+A. `rmdir` only removes empty directories, while `rm -r` removes directories and all their contents recursively.
 
-#### Q2. How is rmdir different from rm -d?
-A. They are functionally equivalent for empty directories. Both commands can only remove empty directories.
+#### Q2. How do I remove a directory that contains files?
+A. You cannot use `rmdir` for this purpose. Use `rm -r directory_name` instead.
 
-#### Q3. Can rmdir remove multiple directories at once?
-A. Yes, you can specify multiple directories: `rmdir dir1 dir2 dir3`.
+#### Q3. Can I remove multiple directories at once with `rmdir`?
+A. Yes, you can specify multiple directory names as arguments: `rmdir dir1 dir2 dir3`.
 
-#### Q4. How do I remove nested empty directories?
-A. Use the `-p` option: `rmdir -p parent/child/grandchild` will remove all three directories if they're empty.
+#### Q4. What happens if I try to remove a non-existent directory?
+A. `rmdir` will display an error message indicating that the directory does not exist.
 
 ## References
 
@@ -105,4 +107,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/rmdir-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

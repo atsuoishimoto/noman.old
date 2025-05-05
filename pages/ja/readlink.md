@@ -1,16 +1,16 @@
 # readlink コマンド
 
-シンボリックリンクの解決先またはファイルの正規名を表示します。
+シンボリックリンクの解決先やファイルの正規名を表示します。
 
 ## 概要
 
-`readlink`コマンドは、シンボリックリンクのターゲットやファイルの正規パスを表示します。パス内のシンボリックリンクを解決し、実際の参照先を示します。多くのシンボリックリンクを含むファイルシステムで、ファイルの実際の場所を特定するのに役立ちます。
+`readlink` コマンドは、シンボリックリンクの対象または、ファイルの正規パスを表示します。シンボリックリンクを解決し、実際の宛先パスを返します。これは、シンボリックリンクの指す先を判断したり、ファイルの絶対パスを取得したりする必要があるスクリプトに役立ちます。
 
 ## オプション
 
 ### **-f, --canonicalize**
 
-指定されたパスの各コンポーネントのシンボリックリンクを再帰的にたどり、正規化します
+与えられた名前の各コンポーネントのすべてのシンボリックリンクを再帰的に辿って正規化します。最後のコンポーネント以外は存在する必要があります
 
 ```console
 $ ln -s /etc/hosts mylink
@@ -20,22 +20,20 @@ $ readlink -f mylink
 
 ### **-e, --canonicalize-existing**
 
-指定されたパスの各コンポーネントのシンボリックリンクを再帰的にたどり正規化しますが、すべてのコンポーネントが存在する必要があります
+与えられた名前の各コンポーネントのすべてのシンボリックリンクを再帰的に辿って正規化します。すべてのコンポーネントが存在する必要があります
 
 ```console
 $ readlink -e mylink
 /etc/hosts
-$ readlink -e nonexistent
-# ファイルが存在しないため出力なし
 ```
 
 ### **-m, --canonicalize-missing**
 
-指定されたパスの各コンポーネントのシンボリックリンクを再帰的にたどり正規化しますが、コンポーネントの存在は必要ありません
+与えられた名前の各コンポーネントのすべてのシンボリックリンクを再帰的に辿って正規化します。コンポーネントの存在に関する要件はありません
 
 ```console
-$ readlink -m /nonexistent/path/file.txt
-/nonexistent/path/file.txt
+$ readlink -m /nonexistent/path
+/nonexistent/path
 ```
 
 ### **-n, --no-newline**
@@ -43,8 +41,8 @@ $ readlink -m /nonexistent/path/file.txt
 末尾の区切り文字（改行）を出力しません
 
 ```console
-$ readlink -n mylink && echo " (この文は同じ行に続きます)"
-/etc/hosts (この文は同じ行に続きます)
+$ readlink -n mylink && echo " (this is the target)"
+/etc/hosts (this is the target)
 ```
 
 ### **-z, --zero**
@@ -59,73 +57,78 @@ $ readlink -z mylink | hexdump -C
 
 ### **-v, --verbose**
 
-エラーを報告します（すべてのシステムで実装されているわけではありません）
+エラーを報告します
 
 ```console
 $ readlink -v nonexistent
-readlink: nonexistent: そのようなファイルやディレクトリはありません
+readlink: nonexistent: No such file or directory
 ```
 
 ## 使用例
 
-### シンボリックリンクの基本的な読み取り
+### シンボリックリンクを読み取る基本的な使用法
 
 ```console
-$ ln -s /usr/bin/python3 python
-$ readlink python
-/usr/bin/python3
+$ ln -s /usr/bin bin_link
+$ readlink bin_link
+/usr/bin
 ```
 
-### 複数のシンボリックリンクを持つファイルの正規パスを見つける
+### ファイルの絶対パスを取得する
 
 ```console
-$ ln -s /etc/passwd passwd_link
-$ ln -s passwd_link passwd_link2
-$ readlink -f passwd_link2
-/etc/passwd
+$ readlink -f ../relative/path/to/file.txt
+/absolute/path/to/file.txt
 ```
 
-### 相対パスでの作業
+### スクリプト内でreadlinkを使用する
 
 ```console
-$ mkdir -p dir1/dir2
-$ ln -s dir1/dir2 mydir
-$ readlink -f mydir
-/home/user/dir1/dir2
+$ SCRIPT_PATH=$(readlink -f "$0")
+$ SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
+$ echo "This script is located in: $SCRIPT_DIR"
+This script is located in: /home/user/scripts
 ```
 
 ## ヒント:
 
-### 直接解決と完全解決の区別
+### -f、-e、-mの違い
 
-シンボリックリンクの直接のターゲットだけを見るには通常の`readlink`を使用し、シンボリックリンクのチェーンを最終的な宛先まで追跡するには`readlink -f`を使用します。
+- `-f` はすべてのシンボリックリンクを辿りますが、最終コンポーネントのみが存在する必要があります
+- `-e` はすべてのシンボリックリンクを辿りますが、すべてのコンポーネントが存在する必要があります
+- `-m` は存在要件なしですべてのシンボリックリンクを辿ります（存在しないパスに便利です）
 
-### パスがシンボリックリンクかどうかを確認する
+### シェルスクリプトでの使用
 
-`readlink`が何も返さずに非ゼロのステータスで終了する場合、そのパスはシンボリックリンクではありません。これはスクリプトでファイルがシンボリックリンクかどうかをテストするのに使えます。
+シェルスクリプトを書く際、`readlink -f "$0"`を使用して、呼び出し元に関係なくスクリプト自体の絶対パスを取得できます。
 
-### 他のコマンドと組み合わせる
+### ファイル名のスペース処理
 
-シンボリックリンクではなく実際のファイルに対して操作する必要がある場合は、`readlink`の出力を他のコマンドにパイプすると便利です。
+readlinkを使用する際は、スペースを含むファイル名を処理するために常に変数を引用符で囲みます：
+
+```console
+$ readlink -f "$my_file"  # 正しい
+$ readlink -f $my_file    # スペースがある場合は不正確
+```
 
 ## よくある質問
 
 #### Q1. `readlink`と`realpath`の違いは何ですか？
-A. どちらもシンボリックリンクを解決しますが、`realpath`は常に絶対パスを提供するのに対し、基本的な`readlink`はシンボリックリンクの直接のターゲットのみを表示します。`readlink -f`は`realpath`に似ています。
+A. どちらのコマンドもシンボリックリンクを解決しますが、`realpath`は常に絶対パスを提供するのに対し、オプションなしの`readlink`は単にシンボリックリンクの対象を表示します。`-f`オプションを使用すると、`readlink`は`realpath`と同様に動作します。
 
-#### Q2. オプションなしの`readlink`が何も返さないことがあるのはなぜですか？
-A. オプションなしの`readlink`はシンボリックリンクに対してのみ機能します。通常のファイルやディレクトリに使用すると、何も返さずにエラーコードで終了します。
+#### Q2. スクリプトを含むディレクトリを取得するにはどうすればよいですか？
+A. `dirname "$(readlink -f "$0")"`を使用して、呼び出し元に関係なくスクリプトを含むディレクトリを取得できます。
 
-#### Q3. シェルスクリプトで`readlink`を安全に使用するにはどうすればよいですか？
-A. `readlink -f "$path"`を使用して正規パスを取得すると、適切に引用符で囲まれていれば、スペースや特殊文字を正しく処理できます。
+#### Q3. オプションなしの`readlink`が通常のファイルで失敗するのはなぜですか？
+A. オプションなしの`readlink`はシンボリックリンクでのみ機能します。通常のファイルでも機能させるには`-f`を使用してください。
 
-#### Q4. シンボリックリンクが存在しないファイルを指している場合はどうなりますか？
-A. 基本的な`readlink`は、ターゲットが存在しなくてもターゲットパスを表示します。`readlink -e`は失敗しますが、`readlink -f`と`readlink -m`は可能な限り解決します。
+#### Q4. ファイルがシンボリックリンクかどうかを確認するために`readlink`を使用するにはどうすればよいですか？
+A. オプションなしの`readlink`が出力を返す場合、そのファイルはシンボリックリンクです。エラーを返す場合、シンボリックリンクではありません。
 
-## 参照
+## 参考文献
 
 https://www.gnu.org/software/coreutils/manual/html_node/readlink-invocation.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

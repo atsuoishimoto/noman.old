@@ -1,28 +1,39 @@
-# jq コマンド
+# jqコマンド
 
-JSONデータを軽量で柔軟なコマンドラインプロセッサで処理・変換します。
+軽量なコマンドラインプロセッサでJSONデータを処理・変換します。
 
 ## 概要
 
-`jq`はコマンドラインJSON処理ツールで、構造化データの切り出し、フィルタリング、マッピング、変換を簡単に行えます。JSONデータに対する`sed`のように機能し、複雑なスクリプトを書かなくても特定のフィールドの抽出、値の変換、配列のフィルタリングなどを行うことができます。
+`jq`は柔軟なコマンドラインJSONプロセッサで、構造化データの切り出し、フィルタリング、マッピング、変換が可能です。JSONデータに対する`sed`のように機能し、特定のフィールドの抽出、値の変換、配列のフィルタリング、出力のフォーマットなどをコマンドラインやスクリプトから実行できます。
 
 ## オプション
 
 ### **-r, --raw-output**
 
-文字列を引用符なしで出力し、より読みやすい結果を得られます。
+JSON形式でエンコードされた文字列ではなく、生の文字列を出力します（引用符を削除）。
 
 ```console
 $ echo '{"name": "John"}' | jq -r '.name'
 John
 ```
 
-### **-s, --slurp**
+### **-c, --compact-output**
 
-複数のJSONオブジェクトを読み込み、それらを配列に結合します。
+整形された出力ではなく、コンパクトな出力を生成します。
 
 ```console
-$ echo '{"id": 1}\n{"id": 2}' | jq -s '.'
+$ echo '{"name": "John", "age": 30}' | jq -c '.'
+{"name":"John","age":30}
+```
+
+### **-s, --slurp**
+
+すべての入力を配列として読み込み、フィルタを適用します。
+
+```console
+$ echo '{"id": 1}' > file1.json
+$ echo '{"id": 2}' > file2.json
+$ jq -s '.' file1.json file2.json
 [
   {
     "id": 1
@@ -35,57 +46,48 @@ $ echo '{"id": 1}\n{"id": 2}' | jq -s '.'
 
 ### **-f, --from-file FILENAME**
 
-コマンドラインではなくファイルからフィルターを読み込みます。
+ファイルからフィルタを読み込みます。
 
 ```console
+$ echo '.name' > filter.jq
 $ echo '{"name": "John", "age": 30}' | jq -f filter.jq
-# filter.jqの内容: .name
 "John"
-```
-
-### **-c, --compact-output**
-
-整形されたJSONではなく、コンパクトなJSONを出力します。
-
-```console
-$ echo '{"name": "John", "age": 30}' | jq -c '.'
-{"name":"John","age":30}
 ```
 
 ### **-n, --null-input**
 
-入力を読み込まず、フィルターに基づいて結果を生成します。
+入力を読み込まず、jqが独自に構築します。
 
 ```console
-$ jq -n '{"hello": "world"}'
+$ jq -n '{"created_at": now | todate}'
 {
-  "hello": "world"
+  "created_at": "2025-05-05T00:00:00Z"
 }
 ```
 
 ## 使用例
 
-### 特定のフィールドの抽出
+### 特定のフィールドを抽出する
 
 ```console
 $ echo '{"user": {"name": "John", "age": 30}}' | jq '.user.name'
 "John"
 ```
 
-### 配列のフィルタリング
+### 配列をフィルタリングする
 
 ```console
-$ echo '[{"name": "John", "age": 30}, {"name": "Jane", "age": 25}]' | jq '.[] | select(.age > 28)'
+$ echo '{"users": [{"name": "John", "age": 30}, {"name": "Jane", "age": 25}]}' | jq '.users[] | select(.age > 28)'
 {
   "name": "John",
   "age": 30
 }
 ```
 
-### データの変換
+### データ構造を変換する
 
 ```console
-$ echo '[{"name": "John"}, {"name": "Jane"}]' | jq 'map({username: .name})'
+$ echo '{"users": [{"name": "John"}, {"name": "Jane"}]}' | jq '.users | map({username: .name})'
 [
   {
     "username": "John"
@@ -96,70 +98,73 @@ $ echo '[{"name": "John"}, {"name": "Jane"}]' | jq 'map({username: .name})'
 ]
 ```
 
-### 配列の操作
+### curlと組み合わせてAPIレスポンスを処理する
 
 ```console
-$ echo '{"users": ["John", "Jane", "Bob"]}' | jq '.users[1]'
-"Jane"
+$ curl -s 'https://api.example.com/users' | jq '.[] | {id, name}'
+{
+  "id": 1,
+  "name": "John Doe"
+}
+{
+  "id": 2,
+  "name": "Jane Smith"
+}
 ```
 
-## ヒント:
+## ヒント
 
-### 複数のフィルターをパイプでつなぐ
+### 複雑な変換にパイプを使用する
 
-複数のフィルターをパイプでつないで複雑な変換を実行できます：
+複数のフィルタをパイプでつなげて、複雑な変換を段階的に実行できます：
 
 ```console
-$ echo '[{"name": "John", "age": 30}, {"name": "Jane", "age": 25}]' | jq '.[] | select(.age > 25) | .name'
+$ echo '{"users": [{"name": "John", "roles": ["admin", "user"]}, {"name": "Jane", "roles": ["user"]}]}' | jq '.users[] | select(.roles | contains(["admin"])) | .name'
 "John"
+```
+
+### 新しいJSONオブジェクトを作成する
+
+オブジェクト構築構文を使用して、新しいJSON構造を作成できます：
+
+```console
+$ echo '{"first": "John", "last": "Doe"}' | jq '{full_name: "\(.first) \(.last)", username: .first | ascii_downcase}'
+{
+  "full_name": "John Doe",
+  "username": "john"
+}
 ```
 
 ### 組み込み関数を使用する
 
-`jq`には`length`、`keys`、`has`、`map`など多くの組み込み関数があり、データ操作が容易になります：
+`jq`には文字列操作、配列操作などのための多くの組み込み関数があります：
 
 ```console
-$ echo '{"a": 1, "b": 2, "c": 3}' | jq 'keys'
-[
-  "a",
-  "b",
-  "c"
-]
-```
-
-### 変数を作成する
-
-複雑なフィルターで再利用するために`as`キーワードを使用して変数を作成できます：
-
-```console
-$ echo '{"items": [{"price": 10}, {"price": 20}]}' | jq '.items | map(.price) | add as $total | {"total": $total, "count": length}'
-{
-  "total": 30,
-  "count": 2
-}
+$ echo '[1, 2, 3, 4, 5]' | jq 'map(. * 2) | add'
+30
 ```
 
 ## よくある質問
 
-#### Q1. jqでJSONをフォーマットするにはどうすればよいですか？
-A. JSONを`jq '.'`にパイプするだけで整形された出力が得られます。
+#### Q1. JSONから特定のフィールドを抽出するにはどうすればよいですか？
+A. ドット表記を使用します：`jq '.fieldname'`、またはネストしたフィールドの場合：`jq '.parent.child'`。
 
-#### Q2. 引用符なしで値を抽出するにはどうすればよいですか？
-A. `-r`または`--raw-output`オプションを使用すると、引用符なしで文字列を出力できます。
+#### Q2. 出力から引用符を削除するにはどうすればよいですか？
+A. `-r`または`--raw-output`オプションを使用します：`jq -r '.field'`。
 
 #### Q3. 条件に基づいて配列をフィルタリングするにはどうすればよいですか？
-A. 条件付きの`select()`を使用します：`jq '.[] | select(.field == "value")'`
+A. `select()`を使用します：`jq '.items[] | select(.price > 10)'`。
 
-#### Q4. 複数のJSONファイルを処理するにはどうすればよいですか？
-A. `-s`（slurp）オプションを使用して、複数の入力を配列に結合します。
+#### Q4. jqで日付をフォーマットするにはどうすればよいですか？
+A. `strftime`関数を使用します：`jq '.timestamp | fromdate | strftime("%Y-%m-%d")'`。
 
-#### Q5. 既存のデータから新しいJSONを作成するにはどうすればよいですか？
-A. フィルター内でオブジェクトリテラルを作成します：`jq '{new_key: .old_key, calculated: (.value * 2)}'`
+#### Q5. 配列を反復処理するにはどうすればよいですか？
+A. 配列イテレータを使用します：`jq '.items[]'`で各要素を処理します。
 
-## 参考資料
+## 参考文献
 
 https://stedolan.github.io/jq/manual/
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

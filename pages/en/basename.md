@@ -4,13 +4,26 @@ Extract the filename or directory name from a pathname.
 
 ## Overview
 
-The `basename` command strips directory components and a specified suffix from a given path, leaving just the filename or the final directory name. It's commonly used in shell scripts to extract filenames from full paths or to remove file extensions.
+`basename` strips directory components and suffixes from a given path, returning just the filename or the final directory name. It's commonly used in shell scripts to extract filenames from full paths or to remove file extensions.
 
 ## Options
 
+### **basename NAME [SUFFIX]**
+
+Removes directory components from NAME and an optional SUFFIX.
+
+```console
+$ basename /usr/bin/sort
+sort
+```
+
+### **basename OPTION... NAME...**
+
+Process multiple names according to the specified options.
+
 ### **-a, --multiple**
 
-Process multiple arguments, treating each as a NAME.
+Support multiple arguments and treat each as a NAME.
 
 ```console
 $ basename -a /usr/bin/sort /usr/bin/cut
@@ -32,18 +45,18 @@ file
 End each output line with NUL, not newline.
 
 ```console
-$ basename -z file.txt | hexdump -C
-00000000  66 69 6c 65 2e 74 78 74  00                       |file.txt.|
-00000009
+$ basename -z /usr/bin/sort | hexdump -C
+00000000  73 6f 72 74 00                                    |sort.|
+00000005
 ```
 
 ## Usage Examples
 
-### Basic filename extraction
+### Removing directory components
 
 ```console
-$ basename /usr/local/bin/example.sh
-example.sh
+$ basename /home/user/documents/report.pdf
+report.pdf
 ```
 
 ### Removing file extension
@@ -53,69 +66,65 @@ $ basename /home/user/documents/report.pdf .pdf
 report
 ```
 
+### Processing multiple files with the same suffix
+
+```console
+$ basename -a -s .txt file1.txt file2.txt file3.txt
+file1
+file2
+file3
+```
+
 ### Using in shell scripts
 
 ```console
-$ filename=$(basename "$path")
+$ filename=$(basename "$fullpath")
 $ echo "The filename is: $filename"
-The filename is: example.txt
-```
-
-### Processing multiple paths
-
-```console
-$ basename -a /var/log/syslog /etc/passwd /usr/bin/bash
-syslog
-passwd
-bash
+The filename is: document.pdf
 ```
 
 ## Tips:
 
-### Combine with dirname
+### Use with `dirname` for Path Manipulation
 
-Use `basename` with `dirname` to split a path into its components:
-
+`basename` pairs well with `dirname` when you need to separate a path into its components:
 ```console
 $ path="/home/user/documents/report.pdf"
-$ dir=$(dirname "$path")
-$ file=$(basename "$path")
-$ echo "Directory: $dir, File: $file"
-Directory: /home/user/documents, File: report.pdf
-```
-
-### Quote your arguments
-
-Always quote your arguments to handle filenames with spaces or special characters:
-
-```console
-$ basename "/path/to/my file.txt"
-my file.txt
-```
-
-### Use with parameter expansion
-
-In Bash, you can often use parameter expansion instead of `basename`:
-
-```console
-$ path="/home/user/documents/report.pdf"
-$ echo "${path##*/}"
+$ dirname "$path"
+/home/user/documents
+$ basename "$path"
 report.pdf
+```
+
+### Handling Paths with Spaces
+
+Always quote your arguments when paths might contain spaces:
+```console
+$ basename "/path/with spaces/file.txt"
+file.txt
+```
+
+### Stripping Multiple Extensions
+
+To remove multiple extensions (like `.tar.gz`), you'll need to use multiple commands or other tools like `sed`:
+```console
+$ basename "archive.tar.gz" .gz | basename -s .tar
+archive
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `basename` and `dirname`?
-A. `basename` extracts the final component (filename or directory name) from a path, while `dirname` extracts the directory portion of the path.
+#### Q1. What's the difference between `basename` and just using parameter expansion in bash?
+A. While `${filename##*/}` in bash performs a similar function, `basename` works across different shells and provides additional options like suffix removal.
 
-#### Q2. How do I remove multiple extensions (like .tar.gz)?
-A. `basename` only removes one suffix at a time. For multiple extensions, you'll need to use it multiple times or use shell parameter expansion.
+#### Q2. Can `basename` handle multiple files at once?
+A. Yes, with the `-a` or `--multiple` option, it can process multiple filenames in a single command.
 
-#### Q3. Does `basename` work with relative paths?
-A. Yes, it works with both absolute and relative paths, always returning the final component.
+#### Q3. How do I remove multiple extensions like `.tar.gz`?
+A. `basename` can only remove one suffix at a time. For multiple extensions, you'll need to run `basename` multiple times or use other text processing tools.
 
-#### Q4. Can `basename` handle paths with spaces?
-A. Yes, but you need to quote the arguments to prevent the shell from interpreting spaces as argument separators.
+#### Q4. Does `basename` modify the original file?
+A. No, `basename` only outputs the modified name to standard output. It doesn't change any files on disk.
 
 ## References
 
@@ -123,4 +132,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/basename-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

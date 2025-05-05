@@ -1,78 +1,88 @@
 # git merge command
 
-Join two or more development histories together.
+Combines changes from different branches into the current branch.
 
 ## Overview
 
-`git merge` combines multiple sequences of commits into one unified history. It's primarily used to integrate changes from one branch into another, typically merging feature branches into the main branch after development is complete. The command incorporates specified branches' changes into the current branch.
+`git merge` integrates changes from one or more branches into the current branch. It's commonly used to incorporate completed features from development branches into the main branch or to bring the latest changes from the main branch into a feature branch. The command creates a new commit that represents the merged state, unless it's a fast-forward merge.
 
 ## Options
 
-### **-m, --message=\<message\>**
+### **--ff**
 
-Set the commit message to be used for the merge commit.
+Perform a fast-forward merge when possible (default behavior).
 
 ```console
-$ git merge feature-branch -m "Merge feature branch with new login functionality"
+$ git merge feature-branch
+Updating 5ab1c2d..8ef9a0b
+Fast-forward
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 ```
 
 ### **--no-ff**
 
-Create a merge commit even when the merge resolves as a fast-forward.
+Creates a merge commit even when a fast-forward merge would be possible.
 
 ```console
 $ git merge --no-ff feature-branch
 Merge made by the 'recursive' strategy.
- login.js | 75 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 login.js
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 ```
 
-### **--ff-only**
+### **--squash**
 
-Refuse to merge and exit with a non-zero status unless the current HEAD is already up to date or the merge can be resolved as a fast-forward.
+Combines all changes from the specified branch into a single set of changes, which can then be committed separately.
 
 ```console
-$ git merge --ff-only upstream/main
-Updating 1234abc..5678def
-Fast-forward
- README.md | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+$ git merge --squash feature-branch
+Squash commit -- not updating HEAD
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+```
+
+### **-m, --message**
+
+Sets the commit message for the merge commit.
+
+```console
+$ git merge -m "Merge feature X into main" feature-branch
+Merge made by the 'recursive' strategy.
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 ```
 
 ### **--abort**
 
-Abort the current conflict resolution process and try to reconstruct the pre-merge state.
+Aborts the current merge and restores the pre-merge state.
 
 ```console
 $ git merge feature-branch
-Auto-merging index.html
-CONFLICT (content): Merge conflict in index.html
+Auto-merging file.txt
+CONFLICT (content): Merge conflict in file.txt
 Automatic merge failed; fix conflicts and then commit the result.
 
 $ git merge --abort
 ```
 
-### **--squash**
+### **--continue**
 
-Produce the working tree and index state as if a merge happened, but do not actually make a commit or move the HEAD.
+Continues the merge after conflicts have been resolved.
 
 ```console
-$ git merge --squash feature-branch
-Updating 1234abc..5678def
-Fast-forward
-Squash commit -- not updating HEAD
- login.js | 75 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 login.js
+$ git merge --continue
 ```
 
-### **-s, --strategy=\<strategy\>**
+### **-s, --strategy**
 
-Use the given merge strategy. Common values are recursive, resolve, octopus, ours, and subtree.
+Specifies the merge strategy to use.
 
 ```console
 $ git merge -s recursive feature-branch
+Merge made by the 'recursive' strategy.
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 ```
 
 ## Usage Examples
@@ -84,75 +94,86 @@ $ git checkout main
 Switched to branch 'main'
 
 $ git merge feature-branch
-Updating 1234abc..5678def
+Updating 5ab1c2d..8ef9a0b
 Fast-forward
- login.js | 75 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 login.js
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 ```
 
-### Merging Multiple Branches
+### Creating a Merge Commit
 
 ```console
 $ git checkout main
 Switched to branch 'main'
 
-$ git merge feature1 feature2 feature3
-Merge made by the 'octopus' strategy.
- feature1.js | 20 ++++++++++++++++++++
- feature2.js | 15 +++++++++++++++
- feature3.js | 30 ++++++++++++++++++++++++++++++
- 3 files changed, 65 insertions(+)
+$ git merge --no-ff feature-branch
+Merge made by the 'recursive' strategy.
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+```
+
+### Squashing Commits from a Branch
+
+```console
+$ git checkout main
+Switched to branch 'main'
+
+$ git merge --squash feature-branch
+Squash commit -- not updating HEAD
+ file.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+$ git commit -m "Implemented feature X"
+[main abc1234] Implemented feature X
+ 1 file changed, 2 insertions(+)
 ```
 
 ### Resolving Merge Conflicts
 
 ```console
 $ git merge feature-branch
-Auto-merging index.html
-CONFLICT (content): Merge conflict in index.html
+Auto-merging file.txt
+CONFLICT (content): Merge conflict in file.txt
 Automatic merge failed; fix conflicts and then commit the result.
 
-# After manually resolving conflicts in index.html
-$ git add index.html
-$ git commit
-[main 1234abc] Merge branch 'feature-branch'
+# Edit the conflicted files to resolve conflicts
+
+$ git add file.txt
+$ git merge --continue
+# Or alternatively: git commit
 ```
 
 ## Tips
 
-### Use `--no-ff` for Feature Branches
+### Understanding Fast-Forward Merges
 
-When merging feature branches, consider using `--no-ff` to preserve the branch history and make it clear in the commit history that a feature branch was merged.
+A fast-forward merge occurs when the target branch's history is a direct extension of the source branch. Git simply moves the pointer forward without creating a merge commit. Use `--no-ff` to force a merge commit for better history tracking.
 
-### Preview Merge Results
+### Previewing Merges
 
-Before performing an actual merge, you can preview the changes that would be merged using:
-```console
-$ git diff ...branch-name
-```
+Before performing a merge, use `git diff <branch>` to preview changes that will be merged, or `git merge --no-commit --no-ff <branch>` to stage the merge without committing, allowing you to inspect the result.
 
-### Understand Fast-Forward Merges
+### Handling Merge Conflicts
 
-A fast-forward merge occurs when the target branch's commits are direct descendants of the current branch. Git simply moves the pointer forward without creating a merge commit. Use `--no-ff` if you want to force a merge commit.
+When conflicts occur, Git marks them in the affected files. Edit these files to resolve conflicts, then use `git add` to mark them as resolved, and finally `git merge --continue` or `git commit` to complete the merge.
 
-### Squash Merges for Clean History
+### Using Merge Strategies
 
-Use `--squash` when you want to combine all changes from a feature branch into a single commit on the target branch, which can make the commit history cleaner and more readable.
+For complex merges, consider using different strategies with `-s`. The default `recursive` strategy works well for most cases, but `ours` or `theirs` can be useful when you want to prefer one side's changes over the other.
 
 ## Frequently Asked Questions
 
-#### Q1. What is the difference between merge and rebase?
+#### Q1. What's the difference between merge and rebase?
 A. Merge creates a new commit that combines changes from both branches, preserving the branch history. Rebase replays your branch's commits on top of the target branch, creating a linear history but rewriting commit history.
 
 #### Q2. How do I undo a merge?
 A. If you haven't pushed the merge, use `git reset --hard HEAD~1` to undo the last commit. If you've already pushed, consider using `git revert -m 1 <merge-commit-hash>` to create a new commit that undoes the merge.
 
-#### Q3. What does "fast-forward" mean in Git merge?
-A. A fast-forward merge occurs when there are no new commits on the base branch since the feature branch was created. Git simply moves the base branch pointer forward to the feature branch pointer without creating a merge commit.
+#### Q3. What is a fast-forward merge?
+A. A fast-forward merge occurs when the current branch has no new commits since the branch being merged was created. Git simply moves the branch pointer forward to the latest commit of the merged branch.
 
-#### Q4. How do I resolve merge conflicts?
-A. When Git reports conflicts, edit the conflicted files to resolve the differences, then use `git add` to mark them as resolved, and finally `git commit` to complete the merge.
+#### Q4. How do I merge only specific files from another branch?
+A. Use `git checkout <branch-name> -- <file-path>` to bring specific files from another branch, then commit those changes.
 
 ## References
 
@@ -160,4 +181,4 @@ https://git-scm.com/docs/git-merge
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

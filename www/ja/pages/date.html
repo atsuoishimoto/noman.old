@@ -37,7 +37,7 @@
         <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -49,130 +49,104 @@
   <h1>date コマンド</h1>
 <p>システムの日付と時刻を表示または設定します。</p>
 <h2>概要</h2>
-<p><code>date</code> コマンドはシステムクロックに基づいて現在の日付と時刻を表示します。また、日付の出力をさまざまな形式でフォーマットしたり、タイムゾーン間で変換したり、適切な権限で実行すると、システムの日付と時刻を設定したりすることもできます。</p>
+<p><code>date</code> コマンドは、現在の日付と時刻をさまざまな形式で表示します。スーパーユーザー権限で実行すると、システムの日付と時刻を設定することもできます。このコマンドは高度にカスタマイズ可能で、フォーマット指定子を通じてさまざまな形式での出力が可能です。</p>
 <h2>オプション</h2>
-<h3><strong>-d, --date=文字列</strong></h3>
-<p>現在の時刻ではなく、指定した文字列で表される時刻を表示します</p>
+<h3><strong>-d, --date=STRING</strong></h3>
+<p>'now'ではなく、STRINGで指定された時刻を表示します</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;next Thursday&quot;</span>
-<span style="color: #000; font-style: italic">Thu May  8 00:00:00 UTC 2025</span>
-<span style="color: #8F5902"># </span>次の木曜日の日時を表示している
+<span style="color: #000; font-style: italic">Thu May 12 00:00:00 EDT 2025</span>
 </pre></div>
-<h3><strong>-f, --file=日付ファイル</strong></h3>
-<p>日付ファイルの各行を日付として解釈して表示します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2023-01-01&quot;</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>dates.txt
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;tomorrow&quot;</span><span style="color: #F8F8F8"> </span>&gt;&gt;<span style="color: #F8F8F8"> </span>dates.txt
+<h3><strong>-f, --file=DATEFILE</strong></h3>
+<p>--dateと同様；DATEFILEの各行に対して一度ずつ実行します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2025-01-01&quot;</span><span style="color: #F8F8F8"> </span>&gt;<span style="color: #F8F8F8"> </span>dates.txt
+<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2025-12-25&quot;</span><span style="color: #F8F8F8"> </span>&gt;&gt;<span style="color: #F8F8F8"> </span>dates.txt
 <span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-f<span style="color: #F8F8F8"> </span>dates.txt
-<span style="color: #000; font-style: italic">Sun Jan  1 00:00:00 UTC 2023</span>
-<span style="color: #000; font-style: italic">Mon May  5 00:00:00 UTC 2025</span>
-<span style="color: #8F5902"># </span>ファイル内の各行を日付として解釈して表示している
+<span style="color: #000; font-style: italic">Wed Jan  1 00:00:00 EST 2025</span>
+<span style="color: #000; font-style: italic">Thu Dec 25 00:00:00 EST 2025</span>
 </pre></div>
 <h3><strong>-I[TIMESPEC], --iso-8601[=TIMESPEC]</strong></h3>
-<p>ISO 8601形式で日付/時刻を出力します。TIMESPECには'date'、'hours'、'minutes'、'seconds'、または'ns'を指定できます</p>
+<p>ISO 8601形式で日付/時刻を出力します。TIMESPECは'date'（日付のみ）、'hours'、'minutes'、'seconds'、または'ns'を指定できます</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-I
-<span style="color: #000; font-style: italic">2025-05-04</span>
+<span style="color: #000; font-style: italic">2025-05-05</span>
 <span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-Iseconds
-<span style="color: #000; font-style: italic">2025-05-04T12:34:56+00:00</span>
-<span style="color: #8F5902"># </span>ISO<span style="color: #F8F8F8"> </span>8601形式で日付と時刻を表示している
-</pre></div>
-<h3><strong>-r, --reference=ファイル</strong></h3>
-<p>指定したファイルの最終更新時刻を表示します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>touch<span style="color: #F8F8F8"> </span>testfile
-<span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>testfile
-<span style="color: #000; font-style: italic">Sun May  4 12:34:56 UTC 2025</span>
-<span style="color: #8F5902"># </span>ファイルの最終更新時刻を表示している
+<span style="color: #000; font-style: italic">2025-05-05T10:30:45-04:00</span>
 </pre></div>
 <h3><strong>-R, --rfc-email</strong></h3>
-<p>RFC 5322形式（メールヘッダーに適した形式）で日付と時刻を出力します</p>
+<p>RFC 5322形式で日付と時刻を出力します（例：Mon, 14 Aug 2006 02:34:56 -0600）</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-R
-<span style="color: #000; font-style: italic">Sun, 04 May 2025 12:34:56 +0000</span>
-<span style="color: #8F5902"># </span>メールヘッダーに適した形式で表示している
+<span style="color: #000; font-style: italic">Mon, 05 May 2025 10:30:45 -0400</span>
+</pre></div>
+<h3><strong>-r, --reference=FILE</strong></h3>
+<p>FILEの最終更新時刻を表示します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-r<span style="color: #F8F8F8"> </span>/etc/passwd
+<span style="color: #000; font-style: italic">Mon May  5 08:15:30 EDT 2025</span>
 </pre></div>
 <h3><strong>-u, --utc, --universal</strong></h3>
-<p>協定世界時（UTC）で時刻を表示または設定します</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date
-<span style="color: #000; font-style: italic">Sun May  4 12:34:56 PDT 2025</span>
-<span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-u
-<span style="color: #000; font-style: italic">Sun May  4 19:34:56 UTC 2025</span>
-<span style="color: #8F5902"># </span>UTCでの時刻を表示している
+<p>協定世界時（UTC）で表示または設定します</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-u
+<span style="color: #000; font-style: italic">Mon May  5 14:30:45 UTC 2025</span>
 </pre></div>
 <h3><strong>+FORMAT</strong></h3>
-<p>FORMAT指定に従って出力をフォーマットします</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;+%Y-%m-%d %H:%M:%S&quot;</span>
-<span style="color: #000; font-style: italic">2025-05-04 12:34:56</span>
-<span style="color: #8F5902"># </span>指定した形式で日付と時刻を表示している
+<p>指定したFORMAT文字列を使用して出力をフォーマットします</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>+<span style="color: #4E9A06">&quot;%Y-%m-%d %H:%M:%S&quot;</span>
+<span style="color: #000; font-style: italic">2025-05-05 10:30:45</span>
 </pre></div>
 <h2>使用例</h2>
-<h3>基本的な日付表示</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date
-<span style="color: #000; font-style: italic">Sun May  4 12:34:56 PDT 2025</span>
-<span style="color: #8F5902"># </span>現在の日付と時刻を表示している
-</pre></div>
-<h3>カスタムフォーマット</h3>
+<h3>カスタムフォーマットで日付を表示する</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;+Today is %A, %B %d, %Y&quot;</span>
-<span style="color: #000; font-style: italic">Today is Sunday, May 04, 2025</span>
-<span style="color: #8F5902"># </span>カスタム形式で日付を表示している
+<span style="color: #000; font-style: italic">Today is Monday, May 05, 2025</span>
 </pre></div>
-<h3>日付の計算</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;next week&quot;</span>
-<span style="color: #000; font-style: italic">Sun May 11 12:34:56 PDT 2025</span>
-<span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2 months ago&quot;</span>
-<span style="color: #000; font-style: italic">Fri Mar  4 12:34:56 PST 2025</span>
-<span style="color: #8F5902"># </span>相対的な日付を計算して表示している
+<h3>未来の日付を計算する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;30 days&quot;</span>
+<span style="color: #000; font-style: italic">Wed Jun  4 10:30:45 EDT 2025</span>
 </pre></div>
-<h3>システム日付の設定（root権限が必要）</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>date<span style="color: #F8F8F8"> </span>-s<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2025-05-04 12:00:00&quot;</span>
-<span style="color: #000; font-style: italic">Sun May  4 12:00:00 PDT 2025</span>
-<span style="color: #8F5902"># </span>システムの日付と時刻を設定している
+<h3>Unixタイムスタンプ（エポックからの秒数）を表示する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>+%s
+<span style="color: #000; font-style: italic">1746724245</span>
+</pre></div>
+<h3>Unixタイムスタンプを人間が読める日付に変換する</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-d<span style="color: #F8F8F8"> </span>@1609459200
+<span style="color: #000; font-style: italic">Fri Jan  1 00:00:00 EST 2021</span>
 </pre></div>
 <h2>ヒント:</h2>
-<h3>よく使われるフォーマット指定子</h3>
+<h3>一般的なフォーマット指定子</h3>
 <ul>
 <li><code>%Y</code>: 年（例：2025）</li>
 <li><code>%m</code>: 月（01-12）</li>
-<li><code>%d</code>: 日（01-31）</li>
+<li><code>%d</code>: 月の日（01-31）</li>
 <li><code>%H</code>: 時（00-23）</li>
 <li><code>%M</code>: 分（00-59）</li>
 <li><code>%S</code>: 秒（00-60）</li>
-<li><code>%A</code>: 曜日の完全名（例：Sunday）</li>
-<li><code>%B</code>: 月の完全名（例：May）</li>
-<li><code>%Z</code>: タイムゾーン略称（例：PDT）</li>
+<li><code>%A</code>: 曜日の完全名（例：Monday）</li>
+<li><code>%B</code>: 月の完全名（例：January）</li>
 </ul>
-<h3>ファイル名用のタイムスタンプ</h3>
-<p>スクリプトで一意のファイル名を生成するためのタイムスタンプを作成できます：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span><span style="color: #000">backup_file</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;backup_</span><span style="color: #204A87; font-weight: bold">$(</span>date<span style="color: #F8F8F8"> </span>+%Y%m%d_%H%M%S<span style="color: #204A87; font-weight: bold">)</span><span style="color: #4E9A06">.tar.gz&quot;</span>
-<span style="color: #8F5902">$ </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #000">$backup_file</span>
-<span style="color: #000; font-style: italic">backup_20250504_123456.tar.gz</span>
-<span style="color: #8F5902"># </span>現在の日時を含むファイル名を生成している
+<h3>システム日付の設定</h3>
+<p>システム日付を設定するには（root権限が必要）：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>date<span style="color: #F8F8F8"> </span>MMDDhhmm<span style="color: #CE5C00; font-weight: bold">[[</span>CC<span style="color: #CE5C00; font-weight: bold">]</span>YY<span style="color: #CE5C00; font-weight: bold">][</span>.ss<span style="color: #CE5C00; font-weight: bold">]</span>
 </pre></div>
-<h3>Unixタイムスタンプ</h3>
-<p>Unixタイムスタンプ（1970年1月1日からの秒数）を取得します：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>+%s
-<span style="color: #000; font-style: italic">1746619200</span>
-<span style="color: #8F5902"># </span>Unixタイムスタンプを表示している
+<p>例えば、2025年5月5日10時30分45秒に設定するには：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>sudo<span style="color: #F8F8F8"> </span>date<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">050510302025</span>.45
+</pre></div>
+<h3>バックアップのタイムスタンプ</h3>
+<p>バックアップファイルを作成する際に、ファイル名にタイムスタンプを含めます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cp<span style="color: #F8F8F8"> </span>important.txt<span style="color: #F8F8F8"> </span>important.txt.<span style="color: #204A87; font-weight: bold">$(</span>date<span style="color: #F8F8F8"> </span>+%Y%m%d_%H%M%S<span style="color: #204A87; font-weight: bold">)</span>
 </pre></div>
 <h2>よくある質問</h2>
-<h4>Q1. 特定の形式で日付を表示するにはどうすればよいですか？</h4>
-<p>A. <code>+FORMAT</code>オプションをフォーマット指定子と共に使用します。例えば：<code>date &quot;+%Y-%m-%d&quot;</code>は日付を2025-05-04として表示します。</p>
-<h4>Q2. 異なるタイムゾーンの日付を表示するにはどうすればよいですか？</h4>
-<p>A. <code>TZ</code>環境変数を使用できます：<code>TZ=&quot;America/New_York&quot; date</code>はニューヨークの時間を表示します。</p>
-<h4>Q3. Unixタイムスタンプを読みやすい日付に変換するにはどうすればよいですか？</h4>
-<p>A. <code>date -d @タイムスタンプ</code>を使用します。例えば：<code>date -d @1609459200</code>はタイムスタンプ1609459200の日付を表示します。</p>
-<h4>Q4. 未来または過去の日付を計算するにはどうすればよいですか？</h4>
-<p>A. <code>-d</code>オプションを相対的な時間表現と共に使用します：<code>date -d &quot;next Monday&quot;</code>または<code>date -d &quot;3 days ago&quot;</code>などです。</p>
-<h2>macOSでの注意点</h2>
-<p>macOSでは、<code>date</code>コマンドのオプションが若干異なります。<code>-d</code>オプションは利用できず、代わりに日付調整には<code>-v</code>を使用します：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span>-v+1d<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># 1日追加</span>
-<span style="color: #000; font-style: italic">Mon May  5 12:34:56 PDT 2025</span>
-</pre></div>
-<p>macOSでのフォーマットは同じ構文を使用します：</p>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>date<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;+%Y-%m-%d&quot;</span>
-<span style="color: #000; font-style: italic">2025-05-04</span>
-</pre></div>
-<h2>参考資料</h2>
+<h4>Q1. 現在の時刻だけを表示するにはどうすればよいですか？</h4>
+<p>A. <code>date +%T</code> または <code>date +&quot;%H:%M:%S&quot;</code> を使用します。</p>
+<h4>Q2. 昨日の日付を取得するにはどうすればよいですか？</h4>
+<p>A. <code>date -d &quot;yesterday&quot;</code> または <code>date -d &quot;1 day ago&quot;</code> を使用します。</p>
+<h4>Q3. UTC/GMTで日付を表示するにはどうすればよいですか？</h4>
+<p>A. <code>date -u</code> を使用して現在の時刻をUTCで表示します。</p>
+<h4>Q4. 今から X 日後の日付を計算するにはどうすればよいですか？</h4>
+<p>A. <code>date -d &quot;+X days&quot;</code> を使用します。Xは日数です。</p>
+<h4>Q5. Unixタイムスタンプ（エポック時間）を取得するにはどうすればよいですか？</h4>
+<p>A. <code>date +%s</code> を使用して1970年1月1日からの秒数を表示します。</p>
+<h2>参考文献</h2>
 <p>https://www.gnu.org/software/coreutils/manual/html_node/date-invocation.html</p>
 <h2>改訂履歴</h2>
 <ul>
-<li>2025/05/04 初版作成</li>
+<li>2025/05/05 初版</li>
 </ul>
 
 

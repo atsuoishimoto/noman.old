@@ -47,25 +47,25 @@
     <main>
       
   <h1>ssh command</h1>
-<p>Securely connect to remote machines over an encrypted network connection.</p>
+<p>Securely connect to remote systems over an encrypted network connection.</p>
 <h2>Overview</h2>
-<p>SSH (Secure Shell) is a protocol for securely accessing remote computers. The <code>ssh</code> command establishes encrypted connections to remote servers, allowing secure terminal access, file transfers, and port forwarding. It's the standard method for administering remote systems and replacing older, insecure protocols like telnet.</p>
+<p>SSH (Secure Shell) is a protocol for securely accessing remote computers and executing commands remotely. It provides encrypted communications between two untrusted hosts over an insecure network, replacing older protocols like telnet and rsh. SSH is commonly used for remote login, command execution, file transfers, and tunneling other applications.</p>
 <h2>Options</h2>
-<h3><strong>-p, --port PORT</strong></h3>
+<h3><strong>-p port</strong></h3>
 <p>Specifies the port to connect to on the remote host (default is 22)</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-p<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2222</span><span style="color: #F8F8F8"> </span>user@example.com
 <span style="color: #000; font-style: italic">user@example.com&#39;s password: </span>
-<span style="color: #000; font-style: italic">Last login: Mon May 4 09:15:22 2025 from 192.168.1.5</span>
+<span style="color: #000; font-style: italic">Last login: Mon May 5 10:23:45 2025 from 192.168.1.100</span>
 <span style="color: #8F5902">user@example.com:~$</span>
 </pre></div>
-<h3><strong>-i, --identity_file KEYFILE</strong></h3>
+<h3><strong>-i identity_file</strong></h3>
 <p>Selects a file from which the identity (private key) for public key authentication is read</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>~/.ssh/my_private_key<span style="color: #F8F8F8"> </span>user@example.com
-<span style="color: #000; font-style: italic">Last login: Mon May 4 10:30:15 2025 from 192.168.1.5</span>
+<span style="color: #000; font-style: italic">Last login: Mon May 5 09:15:30 2025 from 192.168.1.100</span>
 <span style="color: #8F5902">user@example.com:~$</span>
 </pre></div>
-<h3><strong>-v, --verbose</strong></h3>
-<p>Enables verbose mode, showing detailed connection information (use -vv or -vvv for more detail)</p>
+<h3><strong>-v</strong></h3>
+<p>Verbose mode, useful for debugging connection issues</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-v<span style="color: #F8F8F8"> </span>user@example.com
 <span style="color: #000; font-style: italic">OpenSSH_8.9p1, LibreSSL 3.3.6</span>
 <span style="color: #000; font-style: italic">debug1: Reading configuration data /etc/ssh/ssh_config</span>
@@ -73,87 +73,87 @@
 <span style="color: #000; font-style: italic">debug1: Connection established.</span>
 <span style="color: #000; font-style: italic">...</span>
 </pre></div>
-<h3><strong>-L PORT:HOST:HOSTPORT</strong></h3>
-<p>Sets up local port forwarding, connecting a local port to a remote host and port</p>
+<h3><strong>-L local_port:remote_host:remote_port</strong></h3>
+<p>Forwards a local port to a port on the remote host</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>:localhost:80<span style="color: #F8F8F8"> </span>user@example.com
 <span style="color: #000; font-style: italic">user@example.com&#39;s password: </span>
-<span style="color: #000; font-style: italic">Last login: Mon May 4 11:45:33 2025 from 192.168.1.5</span>
+<span style="color: #000; font-style: italic">Last login: Mon May 5 11:30:22 2025 from 192.168.1.100</span>
 </pre></div>
-<h3><strong>-X, --enable X11 forwarding</strong></h3>
-<p>Enables X11 forwarding for running graphical applications remotely</p>
+<h3><strong>-X</strong></h3>
+<p>Enables X11 forwarding, allowing graphical applications to be displayed locally</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-X<span style="color: #F8F8F8"> </span>user@example.com
 <span style="color: #000; font-style: italic">user@example.com&#39;s password: </span>
-<span style="color: #000; font-style: italic">Last login: Mon May 4 12:20:10 2025 from 192.168.1.5</span>
-<span style="color: #8F5902">user@example.com:~$ </span>firefox<span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">&amp;</span>
-<span style="color: #000; font-style: italic">[1] 12345</span>
+<span style="color: #000; font-style: italic">Last login: Mon May 5 14:45:10 2025 from 192.168.1.100</span>
+<span style="color: #8F5902">user@example.com:~$ </span>firefox
+</pre></div>
+<h3><strong>-t</strong></h3>
+<p>Force pseudo-terminal allocation, useful for executing interactive programs on the remote system</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>user@example.com<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;sudo apt update&quot;</span>
+<span style="color: #000; font-style: italic">user@example.com&#39;s password: </span>
+<span style="color: #000; font-style: italic">[sudo] password for user: </span>
+<span style="color: #000; font-style: italic">Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]</span>
+<span style="color: #000; font-style: italic">...</span>
 </pre></div>
 <h2>Usage Examples</h2>
-<h3>Basic Connection</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>username@hostname
-<span style="color: #000; font-style: italic">username@hostname&#39;s password: </span>
-<span style="color: #000; font-style: italic">Last login: Mon May 4 08:30:45 2025 from 192.168.1.5</span>
-<span style="color: #8F5902">username@hostname:~$</span>
-</pre></div>
-<h3>Running a Command on Remote Server</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>user@example.com<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ls -la /var/log&quot;</span>
-<span style="color: #000; font-style: italic">total 1024</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x 10 root root   4096 May  4 08:15 .</span>
-<span style="color: #000; font-style: italic">drwxr-xr-x 14 root root   4096 Apr 30 09:22 ..</span>
-<span style="color: #000; font-style: italic">-rw-r-----  1 root adm  125376 May  4 08:10 auth.log</span>
-<span style="color: #000; font-style: italic">-rw-r-----  1 root adm   15233 May  4 08:12 syslog</span>
-</pre></div>
-<h3>Secure File Copy Using SSH</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>scp<span style="color: #F8F8F8"> </span>-P<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2222</span><span style="color: #F8F8F8"> </span>localfile.txt<span style="color: #F8F8F8"> </span>user@example.com:/home/user/
+<h3>Basic SSH Connection</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>user@example.com
 <span style="color: #000; font-style: italic">user@example.com&#39;s password: </span>
-<span style="color: #000; font-style: italic">localfile.txt                                 100%  156KB  2.5MB/s  00:00</span>
+<span style="color: #000; font-style: italic">Last login: Mon May 5 08:30:15 2025 from 192.168.1.100</span>
+<span style="color: #8F5902">user@example.com:~$</span>
 </pre></div>
-<h3>Port Forwarding to Access a Remote Web Server</h3>
+<h3>Running a Command on Remote Host</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>user@example.com<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;ls -la&quot;</span>
+<span style="color: #000; font-style: italic">total 32</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x 5 user user 4096 May  5 08:30 .</span>
+<span style="color: #000; font-style: italic">drwxr-xr-x 3 root root 4096 Jan  1 00:00 ..</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user user  220 Jan  1 00:00 .bash_logout</span>
+<span style="color: #000; font-style: italic">-rw-r--r-- 1 user user 3771 Jan  1 00:00 .bashrc</span>
+<span style="color: #000; font-style: italic">drwx------ 2 user user 4096 May  5 08:30 .ssh</span>
+</pre></div>
+<h3>SSH with Key-Based Authentication</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-i<span style="color: #F8F8F8"> </span>~/.ssh/id_rsa<span style="color: #F8F8F8"> </span>user@example.com
+<span style="color: #000; font-style: italic">Last login: Mon May 5 12:15:30 2025 from 192.168.1.100</span>
+<span style="color: #8F5902">user@example.com:~$</span>
+</pre></div>
+<h3>Port Forwarding (Local to Remote)</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>ssh<span style="color: #F8F8F8"> </span>-L<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">8080</span>:localhost:80<span style="color: #F8F8F8"> </span>user@example.com
 <span style="color: #000; font-style: italic">user@example.com&#39;s password: </span>
-<span style="color: #000; font-style: italic">Last login: Mon May 4 14:30:22 2025 from 192.168.1.5</span>
+<span style="color: #000; font-style: italic">Last login: Mon May 5 15:20:45 2025 from 192.168.1.100</span>
 </pre></div>
-<h2>Tips</h2>
+<h2>Tips:</h2>
+<h3>Set Up SSH Keys for Password-less Login</h3>
+<p>Generate an SSH key pair with <code>ssh-keygen</code> and copy the public key to the remote server with <code>ssh-copy-id user@example.com</code>. This eliminates the need to enter passwords for each connection.</p>
 <h3>Use SSH Config File</h3>
-<p>Create a <code>~/.ssh/config</code> file to store connection settings for different hosts:</p>
+<p>Create a <code>~/.ssh/config</code> file to store connection settings for frequently accessed servers:</p>
 <pre><code>Host myserver
     HostName example.com
     User username
     Port 2222
-    IdentityFile ~/.ssh/id_rsa_example
+    IdentityFile ~/.ssh/special_key
 </code></pre><p>Then simply use <code>ssh myserver</code> to connect.</p>
-<h3>Set Up SSH Keys for Password-less Login</h3>
-<p>Generate keys with <code>ssh-keygen</code> and copy to remote server with <code>ssh-copy-id user@hostname</code> to avoid typing passwords.</p>
 <h3>Keep SSH Connections Alive</h3>
-<p>Add these lines to <code>~/.ssh/config</code> to prevent timeouts:</p>
+<p>Add these lines to your <code>~/.ssh/config</code> file to prevent timeouts:</p>
 <pre><code>Host *
     ServerAliveInterval 60
     ServerAliveCountMax 3
-</code></pre><h3>Use Agent Forwarding for Multi-hop Connections</h3>
-<p>Use <code>ssh -A user@server1</code> to forward your authentication agent, allowing you to connect from server1 to other servers without copying your keys.</p>
+</code></pre><h3>Use SSH Agent for Key Management</h3>
+<p>Start <code>ssh-agent</code> and add your keys with <code>ssh-add</code> to avoid typing passphrases repeatedly during a session.</p>
 <h2>Frequently Asked Questions</h2>
 <h4>Q1. How do I generate SSH keys?</h4>
-<p>A. Use <code>ssh-keygen -t rsa -b 4096</code> to generate a strong RSA key pair. The public key (.pub) is shared with servers, while the private key remains secret.</p>
-<h4>Q2. How can I make SSH connections faster?</h4>
-<p>A. Use <code>ssh -o ControlMaster=auto -o ControlPath=~/.ssh/control-%h-%p-%r -o ControlPersist=yes user@host</code> to enable connection sharing, or add these settings to your SSH config file.</p>
-<h4>Q3. How do I troubleshoot SSH connection issues?</h4>
-<p>A. Use <code>ssh -v user@host</code> (or <code>-vv</code> or <code>-vvv</code> for more detail) to see verbose connection information that can help identify problems.</p>
-<h4>Q4. How can I securely copy files between servers?</h4>
-<p>A. Use <code>scp</code> for individual files or <code>rsync -e ssh</code> for directories and efficient transfers with resume capability.</p>
-<h2>macOS Precautions</h2>
-<p>On macOS, the SSH agent behavior differs slightly from Linux. To ensure your SSH keys are properly loaded:</p>
-<ol>
-<li>Use <code>ssh-add -K ~/.ssh/your_key</code> to store keys in the macOS keychain</li>
-<li>For macOS Monterey (12) and later, add this to <code>~/.ssh/config</code>:<pre><code>Host *
-  UseKeychain yes
-  AddKeysToAgent yes
-</code></pre></li>
-<li>macOS may prompt for keychain access when using SSH keys</li>
-</ol>
+<p>A. Use the <code>ssh-keygen</code> command. The default is <code>ssh-keygen -t rsa -b 4096</code>, which creates a 4096-bit RSA key pair.</p>
+<h4>Q2. How can I copy my SSH public key to a server?</h4>
+<p>A. Use <code>ssh-copy-id user@example.com</code> to copy your public key to the remote server's authorized_keys file.</p>
+<h4>Q3. How do I transfer files using SSH?</h4>
+<p>A. Use the related <code>scp</code> (secure copy) or <code>sftp</code> (secure file transfer protocol) commands, which use the SSH protocol.</p>
+<h4>Q4. How can I keep my SSH connection from timing out?</h4>
+<p>A. Configure <code>ServerAliveInterval</code> and <code>ServerAliveCountMax</code> in your SSH config file, or use the <code>-o</code> option: <code>ssh -o ServerAliveInterval=60 user@example.com</code>.</p>
+<h4>Q5. How do I troubleshoot SSH connection issues?</h4>
+<p>A. Use the <code>-v</code> (verbose) option, with additional v's for more detail (<code>-vv</code> or <code>-vvv</code>).</p>
 <h2>References</h2>
 <p>https://man.openbsd.org/ssh.1</p>
 <h2>Revisions</h2>
 <ul>
-<li>2025/05/04 First revision</li>
+<li>2025/05/05 First revision</li>
 </ul>
 
 

@@ -4,7 +4,7 @@ Create links between files.
 
 ## Overview
 
-The `ln` command creates links to files or directories. It can create hard links (the default) or symbolic links (with the `-s` option). Hard links point directly to the file's data on disk, while symbolic links are special files that point to another file or directory by name.
+The `ln` command creates links between files. It can create hard links (the default) or symbolic links (with the `-s` option). Hard links point directly to the file's data on disk, while symbolic links are special files that point to another file by name.
 
 ## Options
 
@@ -15,7 +15,7 @@ Create a symbolic link instead of a hard link.
 ```console
 $ ln -s target_file link_name
 $ ls -l link_name
-lrwxrwxrwx 1 user user 10 May 4 10:00 link_name -> target_file
+lrwxrwxrwx 1 user user 10 May 5 10:00 link_name -> target_file
 ```
 
 ### **-f, --force**
@@ -28,7 +28,7 @@ $ ln -sf target_file existing_link
 
 ### **-n, --no-dereference**
 
-Treat destination that is a symbolic link to a directory as if it were a normal file.
+Treat destination that is a symlink to a directory as if it were a normal file.
 
 ```console
 $ ln -sfn new_target existing_link
@@ -48,7 +48,7 @@ $ ln -sv target_file link_name
 Create symbolic links relative to link location.
 
 ```console
-$ ln -sr ../dir1/file1 link_name
+$ ln -sr ../target_file link_name
 ```
 
 ## Usage Examples
@@ -58,9 +58,9 @@ $ ln -sr ../dir1/file1 link_name
 ```console
 $ echo "Original content" > original.txt
 $ ln original.txt hardlink.txt
-$ ls -l *txt
--rw-r--r-- 2 user user 16 May 4 10:00 hardlink.txt
--rw-r--r-- 2 user user 16 May 4 10:00 original.txt
+$ ls -l original.txt hardlink.txt
+-rw-r--r-- 2 user user 16 May 5 10:00 hardlink.txt
+-rw-r--r-- 2 user user 16 May 5 10:00 original.txt
 ```
 
 ### Creating a symbolic link to a file
@@ -68,69 +68,57 @@ $ ls -l *txt
 ```console
 $ ln -s /path/to/file.txt symlink.txt
 $ ls -l symlink.txt
-lrwxrwxrwx 1 user user 15 May 4 10:00 symlink.txt -> /path/to/file.txt
+lrwxrwxrwx 1 user user 14 May 5 10:00 symlink.txt -> /path/to/file.txt
 ```
 
 ### Creating a symbolic link to a directory
 
 ```console
-$ ln -s /usr/local/bin bin_link
-$ ls -l bin_link
-lrwxrwxrwx 1 user user 14 May 4 10:00 bin_link -> /usr/local/bin
+$ ln -s /path/to/directory dir_link
+$ ls -l dir_link
+lrwxrwxrwx 1 user user 17 May 5 10:00 dir_link -> /path/to/directory
 ```
 
 ### Creating a relative symbolic link
 
 ```console
-$ mkdir -p dir1/subdir
-$ touch dir1/file.txt
-$ ln -sr dir1/file.txt dir1/subdir/link.txt
-$ ls -l dir1/subdir/link.txt
-lrwxrwxrwx 1 user user 9 May 4 10:00 dir1/subdir/link.txt -> ../file.txt
+$ ln -sr ../../shared/config.txt config_link
+$ ls -l config_link
+lrwxrwxrwx 1 user user 22 May 5 10:00 config_link -> ../../shared/config.txt
 ```
 
 ## Tips
 
-### Hard Links vs. Symbolic Links
+### Understanding Hard Links vs Symbolic Links
 
-- Hard links share the same inode as the original file, meaning they reference the same physical data on disk. Changes to either file affect both.
-- Hard links cannot span filesystems and cannot link to directories.
-- Symbolic links are separate files that point to another file by name and can span filesystems.
-- If the original file of a symbolic link is deleted, the link becomes "broken" and points to nothing.
+- Hard links share the same inode as the original file, meaning they point to the same physical data on disk. Changes to either file affect both, and the file isn't deleted until all hard links are removed.
+- Symbolic links are separate files that point to another file by name. If the original file is moved or deleted, the symlink becomes broken.
 
-### Updating Existing Symbolic Links
+### Hard Link Limitations
 
-Use `-sfn` together to safely update existing symbolic links:
-```console
-$ ln -sfn new_target existing_link
-```
+Hard links cannot link to directories or files on different filesystems. Use symbolic links in these cases.
 
-### Checking for Broken Symbolic Links
+### Checking if a File is a Link
 
-Find broken symbolic links in the current directory:
-```console
-$ find . -type l -exec test ! -e {} \; -print
-```
+Use `ls -l` to see if a file is a link. Symbolic links show with an "l" at the beginning of permissions and an arrow pointing to the target.
+
+### Fixing Broken Symbolic Links
+
+If you move the target of a symbolic link, the link will break. Use `ln -sf` to update it to point to the new location.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between hard links and symbolic links?
-A. Hard links directly reference a file's inode (data on disk) and can't span filesystems or link to directories. Symbolic links are pointer files that reference another file by path and can link across filesystems and to directories.
+#### Q1. What's the difference between hard and symbolic links?
+A. Hard links share the same inode (data on disk) as the original file, while symbolic links are separate files that point to another file by name. Hard links can't cross filesystems or link to directories.
 
-#### Q2. How do I update an existing symbolic link?
+#### Q2. How do I create a symbolic link to a directory?
+A. Use `ln -s /path/to/directory link_name` to create a symbolic link to a directory.
+
+#### Q3. How can I update an existing symbolic link?
 A. Use `ln -sf new_target existing_link` to force the creation of a new link, replacing the existing one.
 
-#### Q3. Can I create a hard link to a directory?
-A. No, hard links to directories are not allowed in most Unix/Linux systems to prevent filesystem loops.
-
-#### Q4. How can I tell if a file is a symbolic link?
-A. Use `ls -l filename` - symbolic links will show an "l" at the beginning of the permissions and display the target with an arrow (->).
-
-## macOS Considerations
-
-On macOS, the `ln` command works similarly to Linux, but there are some differences:
-- The `-r` (relative) option may not be available in older macOS versions.
-- For compatibility across systems, use the full `-symbolic` option instead of just `-s` if you encounter issues.
+#### Q4. Why is my symbolic link broken?
+A. Symbolic links break when the target file is moved or deleted. They point to a path, not the actual file data.
 
 ## References
 
@@ -138,4 +126,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/ln-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision
