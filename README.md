@@ -52,9 +52,18 @@ Noman requires virtually no human intervention. Since pages are AI-generated, th
 
 ## 🛠 Installation
 
-```bash
-curl -sSL https://noman.sh/install.sh | bash
-```
+We recommend using uv to install Noman.
+
+1. Install uv (if not already installed):
+
+   ```console
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
+2. Install Noman using uv:
+
+   ```console
+   uv tool install noman
+   ```
 
 ## License
 
