@@ -59,3 +59,7 @@ curl -sSL https://noman.sh/install.sh | bash
 ## License
 
 MIT License
+
+## Disclaimer
+
+Whether written by human or conjured by machine learning, any document may contain errors or omissions. This content is provided “as is” with no warranties of any kind, either express or implied. Users must independently verify the accuracy and applicability of all content, especially before use in production environments.

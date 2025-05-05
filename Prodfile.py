@@ -86,7 +86,7 @@ def generate_document(*prompts, max_tokens):
 @rule(
     "pages/en/%.md",
     uses="commands/%/.empty",
-    depends=(PROMPT, command_prompt, lang_prompt, FORMAT),
+    depends=(PROMPT, command_prompt, FORMAT),
 )
 def build_noman_en(target, *deps):
     print("building:", target)
@@ -122,7 +122,7 @@ TODAY is {TODAY}.
 @rule(
     "pages/*/%.md",
     uses="commands/%/.empty",
-    depends=("pages/en/%.md", PROMPT, command_prompt, lang_prompt, FORMAT),
+    depends=("pages/en/%.md", lang_prompt),
 )
 def build_noman(target, en, *deps):
     print("building:", target)

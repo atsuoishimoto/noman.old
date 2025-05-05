@@ -120,8 +120,8 @@ def main():
         sys.exit(0)
 
     if not args.name:
-        print("No page name provided", file=sys.stderr)
-        sys.exit(1)
+        parser.print_help()
+        sys.exit(2)
 
     file = (root / args.name).with_suffix(".md")
 
