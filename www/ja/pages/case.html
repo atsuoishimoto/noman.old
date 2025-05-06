@@ -34,10 +34,10 @@
     </div>
     <div class="nav-right">
       <div class="nav-search">
-        <input id="nav-searchbox" type="text" placeholder="Search command..." />
+        <input id="nav-searchbox" type="text" placeholder="コマンドを検索" />
       </div>
       <div class="nav-links">
-        <a href="/ja/commandlist.html">Commands</a>
+        <a href="/ja/commandlist.html">コマンド一覧</a>
         <span id="language-switcher"></span>
       </div>
     </div>
@@ -46,12 +46,12 @@
   <div class="content">
     <main>
       
-  <h1>case コマンド概要</h1>
-<p><code>case</code> は、シェルスクリプト内で条件分岐を行うための構文です。パターンマッチングを使用して、与えられた値に基づいて異なる処理を実行します。</p>
-<h2>オプション</h2>
-<p><code>case</code> はコマンドではなくシェル構文のため、オプションはありません。代わりに、基本的な構文と使い方を説明します。</p>
-<h3><strong>基本構文</strong></h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span>値<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
+  <h1>case コマンド</h1>
+<p>シェルスクリプトでパターンマッチングに基づく条件分岐を実行します。</p>
+<h2>概要</h2>
+<p><code>case</code>文はシェルの構文で、パターンマッチングに基づいて複数の条件分岐を可能にします。単一の値を複数のパターンと比較する場合、複数の<code>if-else</code>文よりも読みやすく効率的です。<code>case</code>文は、コマンドライン引数の処理、メニュー選択、または複数の条件チェックが必要な状況でシェルスクリプトでよく使用されます。</p>
+<h2>構文</h2>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span>単語<span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
 <span style="color: #F8F8F8">  </span>パターン1<span style="color: #CE5C00; font-weight: bold">)</span>
 <span style="color: #F8F8F8">    </span>コマンド1
 <span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
@@ -63,112 +63,151 @@
 <span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
 <span style="color: #204A87; font-weight: bold">esac</span>
 </pre></div>
-<ul>
-<li><code>値</code> は評価される変数や文字列</li>
-<li><code>パターン</code> はワイルドカードを含むことができるマッチングパターン</li>
-<li><code>;;</code> は各ケースの終了を示す</li>
-<li><code>*</code> はどのパターンにも一致しない場合のデフォルト処理</li>
-<li><code>esac</code> は <code>case</code> 構文の終了を示す（<code>case</code> を逆さまに書いたもの）</li>
-</ul>
 <h2>使用例</h2>
-<h3>基本的な使い方</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic">#!/bin/bash</span>
-<span style="color: #000">fruit</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;りんご&quot;</span>
+<h3>基本的なパターンマッチング</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>example.sh
+<span style="color: #8F5902">#</span>!/bin/bash
+<span style="color: #000; font-style: italic">fruit=&quot;apple&quot;</span>
 
-<span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$fruit</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;りんご&quot;</span><span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;これはりんごです&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;バナナ&quot;</span><span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;これはバナナです&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;オレンジ&quot;</span><span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;これはオレンジです&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">  </span>*<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;不明な果物です&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #204A87; font-weight: bold">esac</span>
+<span style="color: #000; font-style: italic">case &quot;$fruit&quot; in</span>
+<span style="color: #000; font-style: italic">  &quot;apple&quot;)</span>
+<span style="color: #000; font-style: italic">    echo &quot;これはリンゴです。&quot;</span>
+<span style="color: #000; font-style: italic">    ;;</span>
+<span style="color: #000; font-style: italic">  &quot;banana&quot;)</span>
+<span style="color: #000; font-style: italic">    echo &quot;これはバナナです。&quot;</span>
+<span style="color: #000; font-style: italic">    ;;</span>
+<span style="color: #000; font-style: italic">  *)</span>
+<span style="color: #000; font-style: italic">    echo &quot;これは他のものです。&quot;</span>
+<span style="color: #000; font-style: italic">    ;;</span>
+<span style="color: #000; font-style: italic">esac</span>
 
-<span style="color: #8F5902; font-style: italic"># 出力: これはりんごです</span>
+<span style="color: #8F5902">$ </span>./example.sh
+<span style="color: #000; font-style: italic">これはリンゴです。</span>
 </pre></div>
-<h3>複数のパターンマッチング</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic">#!/bin/bash</span>
-<span style="color: #000">day</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;月&quot;</span>
+<h3>一つのアクションに対する複数のパターン</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>example2.sh
+<span style="color: #8F5902">#</span>!/bin/bash
+<span style="color: #000; font-style: italic">fruit=&quot;pear&quot;</span>
 
-<span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$day</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;月&quot;</span><span style="color: #000; font-weight: bold">|</span><span style="color: #4E9A06">&quot;火&quot;</span><span style="color: #000; font-weight: bold">|</span><span style="color: #4E9A06">&quot;水&quot;</span><span style="color: #000; font-weight: bold">|</span><span style="color: #4E9A06">&quot;木&quot;</span><span style="color: #000; font-weight: bold">|</span><span style="color: #4E9A06">&quot;金&quot;</span><span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;平日です&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;土&quot;</span><span style="color: #000; font-weight: bold">|</span><span style="color: #4E9A06">&quot;日&quot;</span><span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;週末です&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">  </span>*<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;無効な曜日です&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #204A87; font-weight: bold">esac</span>
+<span style="color: #000; font-style: italic">case &quot;$fruit&quot; in</span>
+<span style="color: #000; font-style: italic">  &quot;apple&quot;|&quot;pear&quot;|&quot;peach&quot;)</span>
+<span style="color: #000; font-style: italic">    echo &quot;これは仁果類または核果類です。&quot;</span>
+<span style="color: #000; font-style: italic">    ;;</span>
+<span style="color: #000; font-style: italic">  &quot;banana&quot;|&quot;pineapple&quot;)</span>
+<span style="color: #000; font-style: italic">    echo &quot;これは熱帯果実です。&quot;</span>
+<span style="color: #000; font-style: italic">    ;;</span>
+<span style="color: #000; font-style: italic">  *)</span>
+<span style="color: #000; font-style: italic">    echo &quot;不明な果物タイプです。&quot;</span>
+<span style="color: #000; font-style: italic">    ;;</span>
+<span style="color: #000; font-style: italic">esac</span>
 
-<span style="color: #8F5902; font-style: italic"># 出力: 平日です</span>
-</pre></div>
-<h3>ワイルドカードの使用</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic">#!/bin/bash</span>
-<span style="color: #000">filename</span><span style="color: #CE5C00; font-weight: bold">=</span><span style="color: #4E9A06">&quot;document.txt&quot;</span>
-
-<span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$filename</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
-<span style="color: #F8F8F8">  </span>*.txt<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;テキストファイルです&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">  </span>*.jpg<span style="color: #000; font-weight: bold">|</span>*.png<span style="color: #000; font-weight: bold">|</span>*.gif<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;画像ファイルです&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">  </span>*.sh<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;シェルスクリプトです&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">  </span>*<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;不明なファイル形式です&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #204A87; font-weight: bold">esac</span>
-
-<span style="color: #8F5902; font-style: italic"># 出力: テキストファイルです</span>
+<span style="color: #8F5902">$ </span>./example2.sh
+<span style="color: #000; font-style: italic">これは仁果類または核果類です。</span>
 </pre></div>
 <h3>コマンドライン引数の処理</h3>
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902; font-style: italic">#!/bin/bash</span>
-<span style="color: #8F5902; font-style: italic"># このスクリプトを example.sh とする</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>options.sh
+<span style="color: #8F5902">#</span>!/bin/bash
 
-<span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$1</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;start&quot;</span><span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;サービスを開始します&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;stop&quot;</span><span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;サービスを停止します&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">  </span><span style="color: #4E9A06">&quot;restart&quot;</span><span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;サービスを再起動します&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
-<span style="color: #F8F8F8">  </span>*<span style="color: #CE5C00; font-weight: bold">)</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;使用法: </span><span style="color: #000">$0</span><span style="color: #4E9A06"> {start|stop|restart}&quot;</span>
-<span style="color: #F8F8F8">    </span><span style="color: #204A87">exit</span><span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span>
+<span style="color: #000; font-style: italic">case &quot;$1&quot; in</span>
+<span style="color: #000; font-style: italic">  -h|--help)</span>
+<span style="color: #000; font-style: italic">    echo &quot;使用法: $0 [オプション]&quot;</span>
+<span style="color: #000; font-style: italic">    echo &quot;オプション:&quot;</span>
+<span style="color: #000; font-style: italic">    echo &quot;  -h, --help     このヘルプメッセージを表示&quot;</span>
+<span style="color: #000; font-style: italic">    echo &quot;  -v, --version  バージョン情報を表示&quot;</span>
+<span style="color: #000; font-style: italic">    ;;</span>
+<span style="color: #000; font-style: italic">  -v|--version)</span>
+<span style="color: #000; font-style: italic">    echo &quot;バージョン 1.0&quot;</span>
+<span style="color: #000; font-style: italic">    ;;</span>
+<span style="color: #000; font-style: italic">  *)</span>
+<span style="color: #000; font-style: italic">    echo &quot;不明なオプション: $1&quot;</span>
+<span style="color: #000; font-style: italic">    echo &quot;詳細は --help を使用してください。&quot;</span>
+<span style="color: #000; font-style: italic">    ;;</span>
+<span style="color: #000; font-style: italic">esac</span>
+
+<span style="color: #8F5902">$ </span>./options.sh<span style="color: #F8F8F8"> </span>--help
+<span style="color: #000; font-style: italic">使用法: ./options.sh [オプション]</span>
+<span style="color: #000; font-style: italic">オプション:</span>
+<span style="color: #000; font-style: italic">  -h, --help     このヘルプメッセージを表示</span>
+<span style="color: #000; font-style: italic">  -v, --version  バージョン情報を表示</span>
+</pre></div>
+<h3>ワイルドカードを使用したパターンマッチング</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>cat<span style="color: #F8F8F8"> </span>wildcard.sh
+<span style="color: #8F5902">#</span>!/bin/bash
+<span style="color: #000; font-style: italic">filename=&quot;document.txt&quot;</span>
+
+<span style="color: #000; font-style: italic">case &quot;$filename&quot; in</span>
+<span style="color: #000; font-style: italic">  *.txt)</span>
+<span style="color: #000; font-style: italic">    echo &quot;テキストファイル&quot;</span>
+<span style="color: #000; font-style: italic">    ;;</span>
+<span style="color: #000; font-style: italic">  *.jpg|*.png|*.gif)</span>
+<span style="color: #000; font-style: italic">    echo &quot;画像ファイル&quot;</span>
+<span style="color: #000; font-style: italic">    ;;</span>
+<span style="color: #000; font-style: italic">  *.sh)</span>
+<span style="color: #000; font-style: italic">    echo &quot;シェルスクリプト&quot;</span>
+<span style="color: #000; font-style: italic">    ;;</span>
+<span style="color: #000; font-style: italic">  *)</span>
+<span style="color: #000; font-style: italic">    echo &quot;不明なファイルタイプ&quot;</span>
+<span style="color: #000; font-style: italic">    ;;</span>
+<span style="color: #000; font-style: italic">esac</span>
+
+<span style="color: #8F5902">$ </span>./wildcard.sh
+<span style="color: #000; font-style: italic">テキストファイル</span>
+</pre></div>
+<h2>ヒント</h2>
+<h3>フォールスルーに ;&amp; または ;&amp;&amp; を使用する（Bash 4以降）</h3>
+<p>Bash 4以降では、<code>;&amp; </code>を使用して次のパターンをテストせずに続行するか、<code>;&amp;&amp; </code>を使用して次のパターンをテストできます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$var</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
+<span style="color: #F8F8F8">  </span>pattern1<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;pattern1に一致&quot;</span>
+<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;&amp;</span><span style="color: #F8F8F8"> </span><span style="color: #8F5902; font-style: italic"># 次のパターンにフォールスルー</span>
+<span style="color: #F8F8F8">  </span>pattern2<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;pattern1が一致した場合、これも実行される&quot;</span>
 <span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
 <span style="color: #204A87; font-weight: bold">esac</span>
-
-<span style="color: #8F5902; font-style: italic"># 実行例: ./example.sh start</span>
-<span style="color: #8F5902; font-style: italic"># 出力: サービスを開始します</span>
+</pre></div>
+<h3>パイプ記号でパターンを組み合わせる</h3>
+<p>パイプ記号 <code>|</code> を使用して、同じアクションに対して複数のパターンを一致させます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$var</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
+<span style="color: #F8F8F8">  </span>yes<span style="color: #000; font-weight: bold">|</span>y<span style="color: #000; font-weight: bold">|</span>Y<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;肯定的&quot;</span>
+<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
+<span style="color: #204A87; font-weight: bold">esac</span>
+</pre></div>
+<h3>常にデフォルトケースを含める</h3>
+<p>予期しない入力を処理するために、<code>*</code> を使用してデフォルトケースを含めます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$var</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
+<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># 他のパターン</span>
+<span style="color: #F8F8F8">  </span>*<span style="color: #CE5C00; font-weight: bold">)</span>
+<span style="color: #F8F8F8">    </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;一致するものが見つかりません&quot;</span>
+<span style="color: #F8F8F8">    </span><span style="color: #000; font-weight: bold">;;</span>
+<span style="color: #204A87; font-weight: bold">esac</span>
+</pre></div>
+<h3>変数の周りに引用符を使用する</h3>
+<p>単語分割とグロブを防ぐために、常に変数を引用符で囲みます：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;</span><span style="color: #000">$variable</span><span style="color: #4E9A06">&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
+<span style="color: #F8F8F8">  </span><span style="color: #8F5902; font-style: italic"># パターン</span>
+<span style="color: #204A87; font-weight: bold">esac</span>
 </pre></div>
 <h2>よくある質問</h2>
-<h3>Q1. <code>case</code> と <code>if-elif-else</code> の違いは何ですか？</h3>
-<p>A. <code>case</code> は主にパターンマッチングに特化しており、複数の文字列パターンを簡潔に比較できます。<code>if-elif-else</code> はより汎用的で、複雑な条件式を扱えますが、多くの文字列比較を行う場合は <code>case</code> の方が読みやすくなります。</p>
-<h3>Q2. <code>case</code> で正規表現は使えますか？</h3>
-<p>A. 基本的な <code>case</code> では完全な正規表現はサポートしていませんが、ワイルドカード（<code>*</code>, <code>?</code>）やパターンマッチングは使用できます。より高度な正規表現が必要な場合は、<code>=~</code> 演算子を使った <code>if</code> 文や <code>grep</code> コマンドを検討してください。</p>
-<h3>Q3. 複数のパターンで同じ処理を実行するにはどうすればいいですか？</h3>
-<p>A. パイプ記号 <code>|</code> で複数のパターンを区切ることで、同じ処理を実行できます（例: <code>&quot;パターン1&quot;|&quot;パターン2&quot;)</code>）。</p>
-<h3>Q4. <code>;;</code> と <code>;&amp;</code> と <code>;;&amp;</code> の違いは何ですか？</h3>
-<p>A. <code>;;</code> は通常のケース終了、<code>;&amp;</code> は次のケースも無条件に実行（フォールスルー）、<code>;;&amp;</code> はパターンが一致した場合に次のケースも評価します。ただし <code>;&amp;</code> と <code>;;&amp;</code> は Bash 4.0 以降でのみ使用可能です。</p>
-<h2>追加のヒント</h2>
+<h4>Q1. <code>case</code>は<code>if-else</code>文とどう違いますか？</h4>
+<p>A. <code>case</code>は単一の値を複数のパターンと比較する場合、より読みやすく効率的です。一般的な条件論理ではなく、特にパターンマッチング用に設計されています。</p>
+<h4>Q2. <code>case</code>パターンで正規表現を使用できますか？</h4>
+<p>A. <code>case</code>は正規表現ではなく、シェルのパターンマッチング（グロビング）を使用します。<code>*</code>、<code>?</code>などのワイルドカードや<code>[a-z]</code>などの文字クラスは使用できますが、<code>+</code>や<code>\d</code>などの正規表現構文は使用できません。</p>
+<h4>Q3. <code>case</code>文で任意のパターンに一致させるにはどうすればよいですか？</h4>
+<p>A. パターンとして<code>*</code>を使用すると、何にでも一致します。これは通常、デフォルトケースとして使用されます。</p>
+<h4>Q4. 数値比較で<code>case</code>を使用できますか？</h4>
+<p>A. はい、ただし構文に注意する必要があります。例えば：</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #204A87; font-weight: bold">case</span><span style="color: #F8F8F8"> </span><span style="color: #000">$number</span><span style="color: #F8F8F8"> </span><span style="color: #204A87; font-weight: bold">in</span>
+<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">0</span>-9<span style="color: #CE5C00; font-weight: bold">])</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;1桁&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
+<span style="color: #F8F8F8">  </span><span style="color: #CE5C00; font-weight: bold">[</span><span style="color: #0000CF; font-weight: bold">0</span>-9<span style="color: #CE5C00; font-weight: bold">][</span><span style="color: #0000CF; font-weight: bold">0</span>-9<span style="color: #CE5C00; font-weight: bold">])</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2桁&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
+<span style="color: #F8F8F8">  </span>*<span style="color: #CE5C00; font-weight: bold">)</span><span style="color: #F8F8F8"> </span><span style="color: #204A87">echo</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;2桁以上または数字ではない&quot;</span><span style="color: #F8F8F8"> </span><span style="color: #000; font-weight: bold">;;</span>
+<span style="color: #204A87; font-weight: bold">esac</span>
+</pre></div>
+<h2>参考文献</h2>
+<p>https://www.gnu.org/software/bash/manual/html_node/Conditional-Constructs.html</p>
+<h2>改訂履歴</h2>
 <ul>
-<li><code>case</code> 文は特にコマンドライン引数の処理やメニュー選択の実装に適しています。</li>
-<li>大文字と小文字を区別せずにマッチングしたい場合は、変数を小文字に変換してから比較することができます：<code>case &quot;${変数,,}&quot; in</code></li>
-<li>複雑なスクリプトでは、<code>case</code> 文をネストさせることも可能ですが、可読性のために避けた方が良いでしょう。</li>
-<li><code>case</code> 文の中で変数を設定したり、関数を呼び出したりすることもできます。</li>
+<li>2025/05/06 初版</li>
 </ul>
 
 

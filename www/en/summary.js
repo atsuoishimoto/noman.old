@@ -11,6 +11,12 @@ pages = {
   "basename": {
     "summary": "Extract the filename or directory name from a pathname."
   },
+  "break": {
+    "summary": "Exits from a for, while, until, or select loop in shell scripts."
+  },
+  "case": {
+    "summary": "Performs conditional branching based on pattern matching in shell scripts."
+  },
   "cat": {
     "summary": "Concatenate and display file contents to standard output."
   },
@@ -110,6 +116,9 @@ pages = {
   "free": {
     "summary": "Display amount of free and used memory in the system."
   },
+  "function": {
+    "summary": "Define shell functions for later execution."
+  },
   "gdb": {
     "summary": "Debug programs interactively with the GNU Debugger."
   },
@@ -207,6 +216,9 @@ pages = {
   },
   "http": {
     "summary": "Send arbitrary HTTP requests and display responses."
+  },
+  "if": {
+    "summary": "Evaluates conditional expressions and executes commands based on the result."
   },
   "install": {
     "summary": "Copy files and set attributes."
