@@ -1,31 +1,31 @@
 # unzip command
 
-Extract files from a ZIP archive.
+Extract files from ZIP archives.
 
 ## Overview
 
-The `unzip` command extracts files from ZIP archives. It supports various compression methods and can handle password-protected archives, display archive contents without extraction, and selectively extract specific files. It's the standard tool for working with ZIP files on Unix-like systems.
+`unzip` extracts files and directories from ZIP archives. It supports various compression methods and can handle password-protected archives. The command can list, test, and extract the contents of ZIP files, making it essential for working with compressed data.
 
 ## Options
 
-### **-l (--list)**
+### **-l**
 
-List the contents of a ZIP archive without extracting
+List archive contents without extracting
 
 ```console
 $ unzip -l archive.zip
 Archive:  archive.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-     1234  2025-01-01 12:34   file1.txt
-      567  2025-01-02 15:45   file2.txt
+     1024  2025-01-01 12:34   file1.txt
+      512  2025-01-02 15:45   file2.txt
 ---------                     -------
-     1801                     2 files
+     1536                     2 files
 ```
 
-### **-t (--test)**
+### **-t**
 
-Test the integrity of a ZIP archive without extracting
+Test archive integrity without extracting
 
 ```console
 $ unzip -t archive.zip
@@ -35,7 +35,7 @@ Archive:  archive.zip
 No errors detected in compressed data of archive.zip.
 ```
 
-### **-o (--overwrite)**
+### **-o**
 
 Overwrite existing files without prompting
 
@@ -46,42 +46,39 @@ Archive:  archive.zip
   inflating: file2.txt
 ```
 
-### **-n (--never-overwrite)**
+### **-d, --directory**
 
-Never overwrite existing files (skip extraction of files that already exist)
-
-```console
-$ unzip -n archive.zip
-Archive:  archive.zip
- extracting: file1.txt
- extracting: file2.txt
-```
-
-### **-d (--directory)**
-
-Extract files to a specified directory
+Extract files to specified directory
 
 ```console
-$ unzip archive.zip -d extracted_files/
+$ unzip archive.zip -d extracted_files
 Archive:  archive.zip
    creating: extracted_files/
   inflating: extracted_files/file1.txt
   inflating: extracted_files/file2.txt
 ```
 
-### **-P (--password)**
+### **-P**
 
-Specify password for encrypted archives
+Use password for encrypted archives
 
 ```console
-$ unzip -P mypassword protected.zip
+$ unzip -P secretpassword protected.zip
 Archive:  protected.zip
-  inflating: secret.txt
+  inflating: confidential.txt
 ```
 
-### **-j (--junk-paths)**
+### **-q**
 
-Extract files without creating directories (junk the paths)
+Quiet mode (suppress normal output)
+
+```console
+$ unzip -q archive.zip
+```
+
+### **-j**
+
+Junk paths (don't create directories)
 
 ```console
 $ unzip -j archive.zip
@@ -100,62 +97,61 @@ Archive:  archive.zip
   inflating: file1.txt
 ```
 
-### Extracting files with wildcard patterns
-
-```console
-$ unzip archive.zip "*.txt"
-Archive:  archive.zip
-  inflating: file1.txt
-  inflating: file2.txt
-```
-
-### Extracting with verbose output
+### Listing contents with detailed information
 
 ```console
 $ unzip -v archive.zip
 Archive:  archive.zip
  Length   Method    Size  Cmpr    Date    Time   CRC-32   Name
 --------  ------  ------- ---- ---------- ----- --------  ----
-    1234  Defl:N      567  54% 2025-01-01 12:34 a1b2c3d4  file1.txt
-     567  Defl:N      234  59% 2025-01-02 15:45 e5f6g7h8  file2.txt
+    1024  Defl:N      512  50% 2025-01-01 12:34 a1b2c3d4  file1.txt
+     512  Defl:N      256  50% 2025-01-02 15:45 e5f6g7h8  file2.txt
 --------          -------  ---                            -------
-    1801              801  56%                            2 files
+    1536              768  50%                            2 files
 ```
 
-## Tips
+### Extracting all files except specific ones
+
+```console
+$ unzip archive.zip -x file2.txt
+Archive:  archive.zip
+  inflating: file1.txt
+```
+
+## Tips:
 
 ### Preview Archive Contents Before Extracting
 
 Always use `unzip -l archive.zip` to preview the contents before extraction. This helps avoid accidentally extracting files that might overwrite existing ones.
 
-### Handle Path Traversal Safely
+### Handle Password-Protected Archives
 
-Be cautious with archives from untrusted sources. Some ZIP files may contain entries with "../" paths that could overwrite files outside the extraction directory. Use the `-d` option to specify a dedicated extraction directory.
+For encrypted archives, use `unzip -P password archive.zip`. If you don't want to expose the password in command history, omit the -P option and unzip will prompt for the password.
 
-### Extract to a Temporary Directory
+### Extract to a Specific Directory
 
-When working with unfamiliar archives, extract to a temporary directory first using `unzip archive.zip -d temp/` to inspect the contents before moving them to their final location.
+Use `unzip archive.zip -d target_directory` to extract files to a specific location instead of the current directory. This keeps your workspace organized.
 
-### Handling Large Archives
+### Dealing with Path Issues
 
-For large archives, use `unzip -q` (quiet mode) to reduce output and speed up extraction, or use `unzip -n` to avoid overwriting existing files if you're resuming a previous extraction.
+If a ZIP file contains absolute paths or paths with `../`, use `unzip -j` to extract just the files without their directory structure, preventing potential security issues.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I extract a password-protected ZIP file?
-A. Use `unzip -P password archive.zip`. If you don't want to expose the password in command history, omit the -P option and unzip will prompt for the password.
+#### Q1. How do I extract only specific files from a ZIP archive?
+A. Use `unzip archive.zip filename1 filename2` to extract only the specified files.
 
-#### Q2. How can I extract only specific files from a ZIP archive?
-A. Use `unzip archive.zip filename1 filename2` to extract only the specified files. You can also use wildcards like `unzip archive.zip "*.txt"`.
+#### Q2. How can I extract a ZIP file without overwriting existing files?
+A. By default, unzip prompts before overwriting. Use `unzip -n archive.zip` to never overwrite existing files.
 
-#### Q3. How do I extract a ZIP file without creating its directory structure?
-A. Use `unzip -j archive.zip` to extract all files to the current directory without creating subdirectories.
+#### Q3. How do I handle ZIP files with non-English filenames?
+A. Use `unzip -O CP936 archive.zip` for Chinese filenames or other appropriate character encodings for different languages.
 
-#### Q4. How can I check if a ZIP file is valid without extracting it?
-A. Use `unzip -t archive.zip` to test the integrity of the archive without extracting any files.
+#### Q4. Can unzip handle password-protected ZIP files?
+A. Yes, use `unzip -P password archive.zip` or omit the password to be prompted securely.
 
-#### Q5. How do I handle filename encoding issues?
-A. If filenames appear garbled, try using the `-O` option to specify the encoding, like `unzip -O CP936 archive.zip` for Chinese Windows archives.
+#### Q5. How do I extract a ZIP file without creating its directory structure?
+A. Use `unzip -j archive.zip` to "junk" the paths and extract all files to a single directory.
 
 ## References
 
@@ -163,4 +159,4 @@ https://linux.die.net/man/1/unzip
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

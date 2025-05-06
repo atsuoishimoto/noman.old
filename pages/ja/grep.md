@@ -72,6 +72,17 @@ system.log:7
 debug.log:0
 ```
 
+### **-o, --only-matching**
+
+一致した部分のみを表示します
+
+```console
+$ grep -o "error" log.txt
+error
+error
+error
+```
+
 ### **-A NUM, --after-context=NUM**
 
 一致する行の後にNUM行の後続コンテキストを表示します
@@ -140,6 +151,14 @@ utils.py:# TODO: Optimize this algorithm
 config.py:# TODO: Add configuration validation
 ```
 
+### 一致を含むファイル名のみの表示
+
+```console
+$ grep -l "error" logs/*.log
+logs/app.log
+logs/system.log
+```
+
 ## ヒント:
 
 ### カラーハイライトを使用する
@@ -190,4 +209,5 @@ https://www.gnu.org/software/grep/manual/grep.html
 
 ## 改訂履歴
 
+- 2025/05/06 行の一致部分のみを表示する-oオプションを追加。
 - 2025/05/05 初版

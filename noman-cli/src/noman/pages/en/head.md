@@ -8,9 +8,9 @@ The `head` command outputs the first part of files to standard output. By defaul
 
 ## Options
 
-### **-n, --lines=[-]NUM**
+### **-n, --lines=N**
 
-Print the first NUM lines instead of the default 10. With a leading '-', print all but the last NUM lines of each file.
+Print the first N lines instead of the default 10
 
 ```console
 $ head -n 5 file.txt
@@ -21,9 +21,9 @@ Line 4
 Line 5
 ```
 
-### **-c, --bytes=[-]NUM**
+### **-c, --bytes=N**
 
-Print the first NUM bytes instead of lines. With a leading '-', print all but the last NUM bytes of each file.
+Print the first N bytes of each file
 
 ```console
 $ head -c 20 file.txt
@@ -32,17 +32,17 @@ This is the first 20
 
 ### **-q, --quiet, --silent**
 
-Never print headers giving file names.
+Never print headers giving file names
 
 ```console
 $ head -q file1.txt file2.txt
-(Content of file1.txt)
-(Content of file2.txt)
+(content of file1.txt)
+(content of file2.txt)
 ```
 
 ### **-v, --verbose**
 
-Always print headers giving file names.
+Always print headers giving file names
 
 ```console
 $ head -v file.txt
@@ -54,86 +54,78 @@ Line 2
 
 ## Usage Examples
 
-### Viewing the beginning of a log file
+### View the beginning of a log file
 
 ```console
 $ head /var/log/syslog
-May  3 14:22:01 hostname systemd[1]: Starting Daily apt download activities...
-May  3 14:22:01 hostname systemd[1]: apt-daily.service: Succeeded.
-May  3 14:22:01 hostname systemd[1]: Finished Daily apt download activities.
+May  5 10:15:01 hostname CRON[12345]: (root) CMD (command -v debian-sa1 > /dev/null && debian-sa1 1 1)
+May  5 10:17:01 hostname CRON[12346]: (root) CMD (/usr/local/bin/backup.sh)
 ...
 ```
 
-### Viewing multiple files at once
+### View the first few lines of multiple files
 
 ```console
-$ head -n 2 file1.txt file2.txt
-==> file1.txt <==
-First line of file1
-Second line of file1
+$ head -n 3 *.conf
+==> apache.conf <==
+# Apache configuration
+ServerName localhost
+Listen 80
 
-==> file2.txt <==
-First line of file2
-Second line of file2
+==> nginx.conf <==
+# Nginx configuration
+worker_processes auto;
+events {
 ```
 
-### Viewing all but the last N lines
+### Using head with pipes
 
 ```console
-$ head -n -2 file.txt
-Line 1
-Line 2
-Line 3
-...
-(all lines except the last 2)
+$ ps aux | head -5
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0 168940  9416 ?        Ss   May04   0:02 /sbin/init
+root         2  0.0  0.0      0     0 ?        S    May04   0:00 [kthreadd]
+root         3  0.0  0.0      0     0 ?        I<   May04   0:00 [rcu_gp]
+root         4  0.0  0.0      0     0 ?        I<   May04   0:00 [rcu_par_gp]
 ```
 
 ## Tips
 
-### Combine with other commands
+### Combining with tail
 
-Use `head` with pipes to limit output from other commands:
-
-```console
-$ ls -l | head -n 5
-```
-
-This shows only the first 5 entries from a directory listing.
-
-### View beginning of large files
-
-For very large files, use `head` to preview content without loading the entire file:
-
-```console
-$ head -n 20 huge_log.txt
-```
-
-### Use with tail for middle sections
-
-Combine `head` with `tail` to extract a section from the middle of a file:
+Use `head` and `tail` together to extract specific line ranges:
 
 ```console
 $ head -n 20 file.txt | tail -n 10
 ```
-
 This shows lines 11-20 of the file.
+
+### Using negative numbers
+
+With GNU head, you can use `-n -N` to print all lines except the last N:
+
+```console
+$ head -n -5 file.txt
+```
+This shows all lines except the last 5.
+
+### Monitoring growing files
+
+Unlike `tail -f`, `head` doesn't have a follow mode. Use `tail` with the `-f` option when you need to monitor files that are actively being written to.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I view a specific number of lines from a file?
-A. Use `head -n NUMBER filename` to view the first NUMBER lines.
+#### Q1. What's the difference between head and tail?
+A. `head` shows the beginning of a file (first 10 lines by default), while `tail` shows the end of a file (last 10 lines by default).
 
-#### Q2. Can I view multiple files at once with head?
-A. Yes, simply list all filenames: `head file1.txt file2.txt file3.txt`.
+#### Q2. How can I view a specific number of characters instead of lines?
+A. Use the `-c` option: `head -c 100 file.txt` will show the first 100 bytes of the file.
 
-#### Q3. How do I view the first few bytes instead of lines?
-A. Use `head -c NUMBER filename` to view the first NUMBER bytes.
+#### Q3. How do I view the first few lines of multiple files without the filename headers?
+A. Use the `-q` option: `head -q file1.txt file2.txt`
 
-#### Q4. How can I view all lines except the last few?
-A. Use `head -n -NUMBER filename` to view all lines except the last NUMBER lines.
-
-#### Q5. How do I suppress the filename headers when viewing multiple files?
-A. Use the `-q` option: `head -q file1.txt file2.txt`.
+#### Q4. Can head follow a file as it grows like tail -f?
+A. No, `head` doesn't have a follow mode. Use `tail -f` for monitoring growing files.
 
 ## References
 
@@ -141,4 +133,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/head-invocation.html
 
 ## Revisions
 
-2025/05/04 First revision
+- 2025/05/05 First revision

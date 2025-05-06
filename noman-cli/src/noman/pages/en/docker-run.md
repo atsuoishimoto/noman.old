@@ -1,71 +1,52 @@
 # docker run command
 
-Create and start a new container from a specified image.
+Creates and starts a new container from an image.
 
 ## Overview
 
-The `docker run` command creates and starts a container from a Docker image. It combines the functionality of `docker create` and `docker start` in a single command. This command allows you to specify runtime parameters, environment variables, network settings, volume mounts, and other configuration options when launching a container.
+`docker run` creates and runs a new container from a specified Docker image. It combines the functionality of `docker create` and `docker start` in a single command. This command is fundamental for launching containers with various configurations, network settings, volume mounts, and runtime parameters.
 
 ## Options
 
+### **--name**
+
+Assign a name to the container
+
+```console
+$ docker run --name my-nginx nginx
+```
+
 ### **-d, --detach**
 
-Run the container in the background (detached mode) and print the container ID
+Run container in background and print container ID
 
 ```console
 $ docker run -d nginx
-3a41f9da42324b98a5f34d8c5c09c319f7e8e99cf24c573fc603ed52b11c42e7
+7cb5d2b9a7eab87f07182b5bf58936c9947890995b1b94f412912fa822a9ecb5
 ```
 
-### **-i, --interactive**
+### **-p, --publish**
 
-Keep STDIN open even if not attached, allowing interactive sessions
-
-```console
-$ docker run -i ubuntu /bin/bash
-root@7c3bfd21a2a4:/#
-```
-
-### **-t, --tty**
-
-Allocate a pseudo-TTY, typically used with `-i` for interactive terminal sessions
-
-```console
-$ docker run -it ubuntu
-root@7c3bfd21a2a4:/# ls
-bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
-```
-
-### **-p, --publish [host-port]:[container-port]**
-
-Publish a container's port to the host
+Publish a container's port(s) to the host
 
 ```console
 $ docker run -p 8080:80 nginx
 ```
 
-### **-v, --volume [host-path]:[container-path]**
+### **-v, --volume**
 
-Bind mount a volume from the host to the container
+Bind mount a volume
 
 ```console
 $ docker run -v /host/path:/container/path nginx
 ```
 
-### **-e, --env [key]=[value]**
+### **-e, --env**
 
-Set environment variables inside the container
-
-```console
-$ docker run -e DB_HOST=localhost -e DB_PORT=5432 postgres
-```
-
-### **--name [name]**
-
-Assign a name to the container
+Set environment variables
 
 ```console
-$ docker run --name my-web-server nginx
+$ docker run -e MYSQL_ROOT_PASSWORD=my-secret-pw mysql
 ```
 
 ### **--rm**
@@ -77,73 +58,89 @@ $ docker run --rm alpine echo "Hello, World!"
 Hello, World!
 ```
 
-### **--network [network]**
+### **-i, --interactive**
+
+Keep STDIN open even if not attached
+
+```console
+$ docker run -i ubuntu
+```
+
+### **-t, --tty**
+
+Allocate a pseudo-TTY
+
+```console
+$ docker run -it ubuntu bash
+root@7cb5d2b9a7ea:/#
+```
+
+### **--network**
 
 Connect a container to a network
 
 ```console
-$ docker run --network my-network nginx
+$ docker run --network=my-network nginx
+```
+
+### **--restart**
+
+Restart policy to apply when a container exits
+
+```console
+$ docker run --restart=always nginx
 ```
 
 ## Usage Examples
 
-### Running a container in detached mode with port mapping
+### Running a web server with port mapping
 
 ```console
-$ docker run -d -p 8080:80 --name web-server nginx
-3a41f9da42324b98a5f34d8c5c09c319f7e8e99cf24c573fc603ed52b11c42e7
+$ docker run -d --name my-website -p 8080:80 nginx
+7cb5d2b9a7eab87f07182b5bf58936c9947890995b1b94f412912fa822a9ecb5
 ```
 
 ### Running an interactive shell in a container
 
 ```console
 $ docker run -it --rm ubuntu bash
-root@7c3bfd21a2a4:/# echo "I'm in a container"
-I'm in a container
-root@7c3bfd21a2a4:/# exit
+root@7cb5d2b9a7ea:/# ls
+bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@7cb5d2b9a7ea:/# exit
 ```
 
-### Running a container with volume mounts and environment variables
+### Running a container with environment variables and volume mounts
 
 ```console
 $ docker run -d \
-  --name postgres-db \
+  --name my-database \
   -e POSTGRES_PASSWORD=mysecretpassword \
-  -e POSTGRES_USER=myuser \
   -v pgdata:/var/lib/postgresql/data \
   -p 5432:5432 \
   postgres:13
 ```
 
-## Tips
+## Tips:
+
+### Use --rm for Temporary Containers
+
+When running containers for one-off tasks or testing, use the `--rm` flag to automatically clean up the container after it exits, preventing container clutter.
+
+### Combine -i and -t for Interactive Sessions
+
+The `-it` combination is commonly used when you need an interactive terminal session with the container, such as running a shell.
 
 ### Use Named Volumes for Persistent Data
 
-Instead of binding to specific host paths, use named volumes for better portability:
-
-```console
-$ docker run -v mydata:/app/data nginx
-```
+Instead of binding to host directories, consider using named volumes (`-v myvolume:/container/path`) for better portability and management of persistent data.
 
 ### Limit Container Resources
 
-Use `--memory` and `--cpus` to limit container resource usage:
+Use `--memory` and `--cpus` flags to limit the resources a container can use, preventing a single container from consuming all host resources.
 
 ```console
 $ docker run --memory=512m --cpus=0.5 nginx
 ```
-
-### Use Environment Files for Multiple Variables
-
-For containers requiring many environment variables, use an env file:
-
-```console
-$ docker run --env-file ./env.list nginx
-```
-
-### Cleanup Containers Automatically
-
-Always use `--rm` for short-lived containers to avoid accumulating stopped containers.
 
 ## Frequently Asked Questions
 
@@ -151,16 +148,16 @@ Always use `--rm` for short-lived containers to avoid accumulating stopped conta
 A. `docker run` creates and starts a new container from an image, while `docker start` restarts a stopped container that already exists.
 
 #### Q2. How do I run a container in the background?
-A. Use the `-d` or `--detach` flag: `docker run -d nginx`.
+A. Use the `-d` or `--detach` flag to run the container in the background.
 
-#### Q3. How can I access a running container's shell?
-A. Use `docker run -it [image] bash` to start a new container with a shell, or `docker exec -it [container-id] bash` to access a shell in an already running container.
+#### Q3. How can I access a service running in a container?
+A. Use the `-p` or `--publish` flag to map container ports to host ports, e.g., `-p 8080:80` maps container port 80 to host port 8080.
 
-#### Q4. How do I expose multiple ports?
-A. Use multiple `-p` flags: `docker run -p 80:80 -p 443:443 nginx`.
+#### Q4. How do I pass environment variables to a container?
+A. Use the `-e` or `--env` flag followed by the variable name and value, e.g., `-e VARIABLE=value`.
 
-#### Q5. How do I run a container with a specific user?
-A. Use the `--user` flag: `docker run --user 1000:1000 nginx`.
+#### Q5. How do I share files between my host and a container?
+A. Use the `-v` or `--volume` flag to mount host directories or volumes into the container, e.g., `-v /host/path:/container/path`.
 
 ## References
 
@@ -168,4 +165,4 @@ https://docs.docker.com/engine/reference/commandline/run/
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

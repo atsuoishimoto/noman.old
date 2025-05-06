@@ -1,16 +1,16 @@
-# rsync コマンド
+# rsyncコマンド
 
-ファイルやディレクトリをローカルまたはリモート間で同期します。
+ローカルシステムとリモートシステム間、またはローカルディレクトリ間でファイルとディレクトリを同期します。
 
 ## 概要
 
-`rsync`は、高速で多機能なファイルコピーおよび同期ツールで、ローカルまたはリモート接続を介して動作します。ソースとデスティネーション間の差分のみを転送することで、ディレクトリやホスト間でファイルを効率的に転送・同期するように設計されています。これにより、特に大きなファイルや頻繁に同期する場合には、通常のコピーコマンドよりも高速に処理できます。
+`rsync`は、場所間でファイルを効率的に転送・同期する高速で多機能なファイルコピー・同期ツールです。ソースと宛先の間の差分のみをコピーするため、後続の転送では通常のコピーコマンドよりもはるかに高速です。セキュアなリモート転送のためにSSH経由で動作することも、ローカルディレクトリ間で動作することもできます。
 
 ## オプション
 
 ### **-a, --archive**
 
-アーカイブモードで、ほぼすべての属性を保持します（-rlptgoDと同等）。バックアップ操作で最も一般的に使用されるオプションです。
+アーカイブモード。権限、所有権、タイムスタンプを保持し、ディレクトリを再帰的にコピーします。
 
 ```console
 $ rsync -a /source/directory/ /destination/directory/
@@ -18,7 +18,7 @@ $ rsync -a /source/directory/ /destination/directory/
 
 ### **-v, --verbose**
 
-詳細表示を増やし、転送されているファイルを表示します。
+詳細表示を増やし、転送されるファイルと最後に要約を表示します。
 
 ```console
 $ rsync -av /source/directory/ /destination/directory/
@@ -37,23 +37,23 @@ total size is 10,240  speedup is 8.04
 転送中にファイルデータを圧縮して、帯域幅の使用量を削減します。
 
 ```console
-$ rsync -avz /source/directory/ user@remote-host:/destination/directory/
+$ rsync -az /source/directory/ user@remote:/destination/directory/
 ```
 
 ### **-P, --partial --progress**
 
-転送中の進行状況を表示し、部分的に転送されたファイルを保持します。
+転送中の進捗状況を表示し、部分的に転送されたファイルを保持します。
 
 ```console
-$ rsync -avP large_file.iso /backup/
+$ rsync -avP large_file.iso user@remote:/destination/
 sending incremental file list
 large_file.iso
-    852,492,288 100%   85.23MB/s    0:00:09 (xfr#1, to-chk=0/1)
+    153,092,096  14%   15.23MB/s    0:01:12
 ```
 
 ### **--delete**
 
-ソースに存在しないデスティネーション内のファイルを削除し、デスティネーションをソースの完全なミラーにします。
+ソースに存在しない宛先のファイルを削除し、宛先を正確なミラーにします。
 
 ```console
 $ rsync -av --delete /source/directory/ /destination/directory/
@@ -61,98 +61,129 @@ $ rsync -av --delete /source/directory/ /destination/directory/
 
 ### **-n, --dry-run**
 
-実際に変更を加えずに試験実行を行います。
+変更を加えずに試験実行を行います。
 
 ```console
 $ rsync -avn --delete /source/directory/ /destination/directory/
-sending incremental file list
-./
-file1.txt
-file2.txt
+```
 
-sent 123 bytes  received 42 bytes  330.00 bytes/sec
-total size is 10,240  speedup is 62.07 (DRY RUN)
+### **-e, --rsh=COMMAND**
+
+使用するリモートシェルを指定します（通常はオプション付きのssh）。
+
+```console
+$ rsync -av -e "ssh -p 2222" /source/directory/ user@remote:/destination/
+```
+
+### **-u, --update**
+
+宛先の方が新しいファイルをスキップします。
+
+```console
+$ rsync -avu /source/directory/ /destination/directory/
+```
+
+### **--exclude=PATTERN**
+
+指定したパターンに一致するファイルを除外します。
+
+```console
+$ rsync -av --exclude="*.log" /source/directory/ /destination/directory/
 ```
 
 ## 使用例
 
-### リモートサーバーへの同期
+### ローカルディレクトリの同期
 
 ```console
-$ rsync -avz ~/Documents/ user@remote-server:/backup/documents/
+$ rsync -av /home/user/documents/ /media/backup/documents/
+sending incremental file list
+report.docx
+presentation.pptx
+notes.txt
+
+sent 15,234 bytes  received 85 bytes  30,638.00 bytes/sec
+total size is 45,678  speedup is 2.98
+```
+
+### リモートサーバーへのバックアップ
+
+```console
+$ rsync -avz --delete ~/documents/ user@remote.server:/backup/documents/
 sending incremental file list
 ./
 report.docx
 presentation.pptx
-data.xlsx
+notes.txt
 
-sent 2,345,678 bytes  received 1,234 bytes  469,382.40 bytes/sec
-total size is 2,340,000  speedup is 0.99
+sent 45,678 bytes  received 612 bytes  9,258.00 bytes/sec
+total size is 45,678  speedup is 0.99
 ```
 
-### 除外ファイルを指定したバックアップの作成
+### リモートサーバーからのダウンロード
 
 ```console
-$ rsync -av --exclude='*.tmp' --exclude='cache/' /home/user/ /mnt/backup/home/
+$ rsync -avz user@remote.server:/remote/directory/ /local/directory/
+receiving incremental file list
+./
+file1.txt
+file2.txt
+directory/
+directory/file3.txt
+
+received 10,240 bytes  received 214 bytes  6,969.33 bytes/sec
+total size is 10,240  speedup is 0.98
 ```
 
-### ウェブサイトのミラーリング
+### ウェブサイトのミラーリング（特定のファイルを除外）
 
 ```console
-$ rsync -avz --delete user@remote-server:/var/www/html/ /local/mirror/
-```
-
-### 大きなファイル転送の再開
-
-```console
-$ rsync -avP --partial user@remote-server:large_file.iso /downloads/
+$ rsync -avz --delete --exclude="*.tmp" --exclude=".git/" /local/website/ user@server:/var/www/html/
 ```
 
 ## ヒント:
 
-### 末尾のスラッシュを注意して使用する
+### 末尾のスラッシュを慎重に使用する
 
-ディレクトリをコピーする際、ソースの末尾にスラッシュ（`/source/`）をつけると「このディレクトリの内容をコピー」を意味し、スラッシュなし（`/source`）は「このディレクトリとその内容をコピー」を意味します。
+ソースの末尾にスラッシュがあると「このディレクトリの内容をコピーする」という意味になり、スラッシュがないと「このディレクトリとその内容をコピーする」という意味になります。この微妙な違いによって、コピーされるものが大きく変わる可能性があります。
 
-### パスワードなし転送のためのSSH鍵の設定
+### ハードリンクを保持する
 
-頻繁にリモート転送を行う場合は、SSH鍵認証を設定して、パスワードの入力を省略できます。
+転送されるファイル間のハードリンクを保持する必要がある場合は、`-H`または`--hard-links`オプションを使用します。
 
-### バックグラウンド転送のための帯域制限
+### 大きな転送には帯域制限を使用する
+
+ネットワーク経由の大きな転送には、`--bwlimit=KBPS`を使用して帯域幅の使用量を制限します（例：`--bwlimit=1000`で1000KB/秒に制限）。
+
+### バックアップスナップショットの作成
+
+rsyncと`--link-dest`オプションを組み合わせて、変更されていないファイルにハードリンクを使用する効率的なバックアップスナップショットを作成し、ディスク容量を節約します。
 
 ```console
-$ rsync --bwlimit=1000 -av /source/ /destination/
+$ rsync -av --link-dest=/backups/daily.1 /source/ /backups/daily.0/
 ```
-これにより転送速度が1000 KB/秒に制限され、すべての帯域幅を消費すべきでないバックグラウンド転送に役立ちます。
-
-### ハードリンクを使用したスナップショットの作成
-
-```console
-$ rsync -a --link-dest=/backup/previous /source/ /backup/current/
-```
-これにより、変更されていないファイルを以前のバックアップにハードリンクすることで、容量効率の良いバックアップが作成できます。
 
 ## よくある質問
 
-#### Q1. rsyncはscpやcpとどう違いますか？
-A. `cp`や`scp`と異なり、rsyncはファイル間の差分のみを転送するため、同じデータの後続の転送がはるかに高速になります。また、ファイル属性の保存や同期処理のためのより多くのオプションを提供しています。
+#### Q1. rsyncはscpとどう違いますか？
+A. rsyncはファイル間の差分のみを転送するため、後続の転送がはるかに高速です。また、同期、属性の保持のためのオプションが多く、中断された転送を再開することもできます。
 
-#### Q2. rsyncは中断された転送を再開できますか？
-A. はい、`--partial`オプション（または`-P`）を使用すると、rsyncは部分的に転送されたファイルを最初からやり直すのではなく、再開できます。
+#### Q2. 実際に実行する前にrsyncが何をするかをテストするにはどうすればよいですか？
+A. `-n`または`--dry-run`オプションを使用して、変更を加えずに何が転送されるかを確認できます。
 
-#### Q3. rsyncがデスティネーションのファイルを削除しないようにするにはどうすればよいですか？
-A. デフォルトでは、rsyncはファイルを削除しません。ソースからファイルを追加または更新するだけです。ソースに存在しないデスティネーション内のファイルを削除するには、`--delete`オプションを明示的に指定する必要があります。
+#### Q3. すべての属性を保持しながらファイルを同期するにはどうすればよいですか？
+A. `-a`（アーカイブ）オプションを使用します。これは`-rlptgoD`（再帰的、リンク保持、権限、時間、グループ、所有者、特殊ファイル）と同等です。
 
-#### Q4. rsyncが実際に何をするかを事前にテストするにはどうすればよいですか？
-A. `--dry-run`または`-n`オプションを使用すると、実際に変更を加えることなく、何が転送されるかを確認できます。
+#### Q4. rsyncはソースに存在しない宛先のファイルを削除できますか？
+A. はい、`--delete`オプションを使用して、宛先をソースの正確なミラーにすることができます。
 
-#### Q5. rsyncは2つのリモートサーバー間でファイルを同期できますか？
-A. はい、ただしサーバーの1つでrsyncを実行するか、`--rsync-path`オプションを使用してリモートマシン上のrsyncへのパスを指定する必要があります。
+#### Q5. 特定のファイルやディレクトリを除外するにはどうすればよいですか？
+A. 個々のパターンには`--exclude=PATTERN`を使用し、ファイルからパターンを読み込むには`--exclude-from=FILE`を使用します。
 
-## References
+## 参考文献
 
 https://download.samba.org/pub/rsync/rsync.html
 
-## Revisions
+## 改訂履歴
 
-- 2025/05/04 First revision
+- 2025/05/05 初版

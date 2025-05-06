@@ -4,130 +4,139 @@ Securely copy files between hosts on a network using SSH for data transfer.
 
 ## Overview
 
-`scp` (secure copy) is a command-line utility that allows you to securely transfer files between computers over an encrypted SSH connection. It combines the functionality of the `cp` command with the security of SSH, making it a safe way to copy files to, from, or between remote servers.
+`scp` (secure copy) transfers files between hosts over an encrypted SSH connection. It works similarly to the `cp` command but can copy files to or from remote systems. The command handles authentication, encryption, and file transfers in a single operation, making it a convenient tool for secure file transfers.
 
 ## Options
 
-### **-r, --recursive**
+### **-r**
 
-Recursively copy entire directories
+Recursively copy entire directories.
 
 ```console
 $ scp -r documents/ user@remote:/home/user/backup/
-documents/file1.txt                 100%  123     1.2KB/s   00:00    
-documents/file2.txt                 100%  456     2.3KB/s   00:00
-documents/subfolder/file3.txt       100%  789     3.4KB/s   00:00
+user@remote's password: 
+file1.txt                                 100%  123     1.2KB/s   00:00    
+file2.txt                                 100%  456     4.5KB/s   00:00
 ```
 
-### **-P, --port**
+### **-P**
 
-Specify a different port to connect to on the remote host
+Specify a different port for the SSH connection (note: uppercase P, unlike ssh which uses lowercase p).
 
 ```console
 $ scp -P 2222 file.txt user@remote:/home/user/
-file.txt                            100%  123     1.2KB/s   00:00
+user@remote's password: 
+file.txt                                  100%  789     7.8KB/s   00:00
 ```
 
 ### **-p**
 
-Preserve modification times, access times, and modes from the original file
+Preserve modification times, access times, and modes from the original file.
 
 ```console
-$ scp -p important.txt user@remote:/home/user/
-important.txt                       100%  123     1.2KB/s   00:00
+$ scp -p important.conf user@remote:/etc/
+user@remote's password: 
+important.conf                            100%  321     3.2KB/s   00:00
 ```
 
-### **-q, --quiet**
+### **-C**
 
-Quiet mode: disables progress meter and warning/diagnostic messages
+Enable compression during the transfer.
 
 ```console
-$ scp -q large_file.zip user@remote:/home/user/
+$ scp -C largefile.zip user@remote:/home/user/
+user@remote's password: 
+largefile.zip                             100%  10MB    5.0MB/s   00:02
 ```
 
-### **-C, --compress**
+### **-q**
 
-Enable compression during file transfer
+Quiet mode - disables the progress meter and warning/diagnostic messages.
 
 ```console
-$ scp -C large_file.zip user@remote:/home/user/
-large_file.zip                      100%  10MB    5.0MB/s   00:02
+$ scp -q confidential.pdf user@remote:/home/user/
+user@remote's password: 
 ```
 
-### **-l, --limit-bandwidth**
+### **-i**
 
-Limit bandwidth used (specified in Kbit/s)
+Specify an identity file (private key) for public key authentication.
 
 ```console
-$ scp -l 1000 large_file.zip user@remote:/home/user/
-large_file.zip                      100%  10MB    1.0MB/s   00:10
+$ scp -i ~/.ssh/mykey.pem file.txt user@remote:/home/user/
+file.txt                                  100%  789     7.8KB/s   00:00
 ```
 
 ## Usage Examples
 
-### Copying a local file to a remote server
+### Copying a file to a remote server
 
 ```console
-$ scp document.txt user@remote.server:/path/to/destination/
-document.txt                        100%  123     1.2KB/s   00:00
+$ scp document.txt user@remote.server.com:/home/user/documents/
+user@remote.server.com's password: 
+document.txt                              100%  1234     12.3KB/s   00:00
 ```
 
-### Copying a file from a remote server to local machine
+### Copying a file from a remote server
 
 ```console
-$ scp user@remote.server:/path/to/file.txt ./
-file.txt                            100%  123     1.2KB/s   00:00
+$ scp user@remote.server.com:/home/user/report.pdf ./
+user@remote.server.com's password: 
+report.pdf                                100%  5678     56.7KB/s   00:01
 ```
 
-### Copying between two remote servers
+### Copying between two remote hosts
 
 ```console
-$ scp user1@server1:/path/to/file.txt user2@server2:/path/to/destination/
-file.txt                            100%  123     1.2KB/s   00:00
+$ scp user1@source.com:/files/data.txt user2@destination.com:/backup/
+user1@source.com's password: 
+user2@destination.com's password: 
+data.txt                                  100%  2345     23.4KB/s   00:00
 ```
 
 ### Copying multiple files at once
 
 ```console
-$ scp file1.txt file2.txt user@remote:/home/user/
-file1.txt                           100%  123     1.2KB/s   00:00
-file2.txt                           100%  456     2.3KB/s   00:00
+$ scp file1.txt file2.txt user@remote:/destination/
+user@remote's password: 
+file1.txt                                 100%  123     1.2KB/s   00:00
+file2.txt                                 100%  456     4.5KB/s   00:00
 ```
 
 ## Tips:
 
-### Use SSH Keys for Passwordless Transfers
+### Use SSH Config to Simplify Commands
 
-Set up SSH key authentication to avoid entering passwords for each transfer. This is both more secure and more convenient for frequent transfers.
+If you have hosts defined in your `~/.ssh/config` file, you can use the host aliases instead of typing full hostnames and usernames.
 
 ### Escape Special Characters in Filenames
 
-When transferring files with spaces or special characters, use quotes or escape the characters:
-```console
-$ scp "file with spaces.txt" user@remote:/home/user/
-```
+When specifying filenames with spaces or special characters, use quotes or escape them with backslashes.
 
-### Verify Fingerprints for New Connections
+### Use Public Key Authentication
 
-Always verify the SSH fingerprint when connecting to a new server to prevent man-in-the-middle attacks.
+Set up SSH keys to avoid typing passwords for each transfer. This is both more secure and more convenient.
 
-### Use Compression for Slow Connections
+### Bandwidth Limiting
 
-The `-C` option enables compression, which can significantly speed up transfers over slow network connections, especially for text files.
+Use the `-l` option to limit bandwidth usage (in Kbit/s) when transferring large files over slow connections.
 
 ## Frequently Asked Questions
 
 #### Q1. How does scp differ from regular cp?
-A. `scp` works over a network using SSH encryption, while `cp` only works locally. `scp` requires authentication and provides secure, encrypted file transfers.
+A. `scp` works over SSH to copy files between different hosts securely, while `cp` only copies files locally on the same system.
 
-#### Q2. Can I resume an interrupted file transfer with scp?
-A. No, `scp` doesn't support resuming interrupted transfers. For that functionality, consider using `rsync` with the `-P` option.
+#### Q2. Can I resume an interrupted transfer?
+A. No, `scp` doesn't support resuming interrupted transfers. For that functionality, consider using `rsync` instead.
 
-#### Q3. How can I transfer an entire directory?
-A. Use the `-r` (recursive) option: `scp -r /path/to/directory user@remote:/destination/`
+#### Q3. How can I copy an entire directory?
+A. Use the `-r` (recursive) option: `scp -r /source/directory user@remote:/destination/`
 
-#### Q4. How do I specify a non-standard SSH port?
-A. Use the `-P` option: `scp -P 2222 file.txt user@remote:/home/user/`
+#### Q4. Is scp secure?
+A. Yes, `scp` uses SSH for authentication and encryption, making it secure for transferring files over untrusted networks.
+
+#### Q5. Why is my scp transfer slow?
+A. Try using the `-C` option to enable compression, or check network conditions. For large directories with many small files, consider using `tar` to create an archive first.
 
 ## References
 
@@ -135,4 +144,4 @@ https://man.openbsd.org/scp.1
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

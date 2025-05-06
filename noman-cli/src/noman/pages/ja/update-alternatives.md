@@ -1,159 +1,147 @@
 # update-alternatives コマンド
 
-代替システム内のシンボリックリンクを管理し、デフォルトコマンドを決定します。
+alternatives システムでデフォルトコマンドを決定するシンボリックリンクを管理します。
 
 ## 概要
 
-`update-alternatives`は代替システム内のシンボリックリンクを作成、削除、維持、表示するためのコマンドです。このシステムにより、同じプログラムの複数のバージョンを共存させ、そのうちの1つをデフォルトとして指定できます。主にDebianベースのLinuxディストリビューションで、ユーザーがコマンドを実行したときにどのバージョンのプログラムが実行されるかを管理するために使用されます。
+`update-alternatives` は、ユーザーが特定のコマンド名を入力したときに実行されるコマンドを決定するシンボリックリンクの作成、削除、管理、および情報表示を行います。これは Debian の alternatives システムの一部で、同じプログラムの複数のバージョンが共存し、そのうちの1つをデフォルトとして指定できるようにします。
 
 ## オプション
 
-### **--install** (`-i`)
+### **--install**
 
-新しい代替リンクグループを作成します
+新しい alternative リンクグループを作成します
 
 ```console
 $ sudo update-alternatives --install /usr/bin/editor editor /usr/bin/vim 50
-update-alternatives: using /usr/bin/vim to provide /usr/bin/editor (editor) in auto mode
+update-alternatives: /usr/bin/vim を提供するために /usr/bin/editor (editor) を自動モードで使用します
 ```
 
-### **--remove** (`-r`)
+### **--config**
 
-システムから代替を削除します
-
-```console
-$ sudo update-alternatives --remove editor /usr/bin/vim
-update-alternatives: removing editor (/usr/bin/vim) from auto mode
-```
-
-### **--config** (`-c`)
-
-リンクグループで利用可能な代替を表示し、対話的に選択できるようにします
+リンクグループに使用する alternative を設定します
 
 ```console
 $ sudo update-alternatives --config editor
-There are 3 choices for the alternative editor (providing /usr/bin/editor).
+editor の alternative は 3 個あります (which provide /usr/bin/editor)。
 
-  Selection    Path              Priority   Status
+  選択肢    パス                優先度   状態
 ------------------------------------------------------------
-* 0            /usr/bin/vim       50        auto mode
-  1            /usr/bin/nano      40        manual mode
-  2            /usr/bin/emacs     30        manual mode
-  3            /usr/bin/vim       50        manual mode
+* 0            /usr/bin/vim         50        自動モード
+  1            /usr/bin/emacs       40        手動モード
+  2            /usr/bin/nano        30        手動モード
+  3            /usr/bin/vim         50        手動モード
 
-Press <enter> to keep the current choice[*], or type selection number:
+現在の選択[*]を保持するには Enter、さもなければ選択肢の番号のキーを押してください:
 ```
 
-### **--display** (`-d`)
+### **--display**
 
 リンクグループに関する情報を表示します
 
 ```console
 $ update-alternatives --display editor
-editor - auto mode
-  link best version is /usr/bin/vim
-  link currently points to /usr/bin/vim
-  link editor is /usr/bin/editor
-  slave editor.1.gz is /usr/share/man/man1/editor.1.gz
-  slave editor.fr.1.gz is /usr/share/man/fr/man1/editor.1.gz
-  slave editor.it.1.gz is /usr/share/man/it/man1/editor.1.gz
-  slave editor.pl.1.gz is /usr/share/man/pl/man1/editor.1.gz
-  slave editor.ru.1.gz is /usr/share/man/ru/man1/editor.1.gz
-/usr/bin/vim - priority 50
-  slave editor.1.gz: /usr/share/man/man1/vim.1.gz
-  slave editor.fr.1.gz: /usr/share/man/fr/man1/vim.1.gz
-  slave editor.it.1.gz: /usr/share/man/it/man1/vim.1.gz
-  slave editor.pl.1.gz: /usr/share/man/pl/man1/vim.1.gz
-  slave editor.ru.1.gz: /usr/share/man/ru/man1/vim.1.gz
+editor - 自動モード
+  最適バージョンへのリンクは /usr/bin/vim です
+  リンクは現在 /usr/bin/vim を指しています
+  リンク editor は /usr/bin/editor です
+  スレーブ editor.1.gz は /usr/share/man/man1/editor.1.gz です
+  スレーブ editor.fr.1.gz は /usr/share/man/fr/man1/editor.1.gz です
+  /usr/bin/emacs - 優先度 40
+  /usr/bin/nano - 優先度 30
+  /usr/bin/vim - 優先度 50
 ```
 
-### **--auto** (`-a`)
+### **--remove**
 
-リンクグループを自動モードに設定します（最も優先度の高い代替が使用されます）
+リンクグループから alternative を削除します
 
 ```console
-$ sudo update-alternatives --auto editor
-update-alternatives: using /usr/bin/vim to provide /usr/bin/editor (editor) in auto mode
+$ sudo update-alternatives --remove editor /usr/bin/emacs
+update-alternatives: 自動モードから editor (/usr/bin/emacs) を削除しています
 ```
 
-### **--set** (`-s`)
+### **--set**
 
-特定の代替をリンクグループの選択肢として設定します
+特定の alternative を選択済みとしてリンクグループに設定します
 
 ```console
 $ sudo update-alternatives --set editor /usr/bin/nano
-update-alternatives: using /usr/bin/nano to provide /usr/bin/editor (editor) in manual mode
+update-alternatives: /usr/bin/nano を提供するために /usr/bin/editor (editor) を手動モードで使用します
+```
+
+### **--auto**
+
+リンクグループを自動モードに設定します（最も優先度の高い alternative が使用されます）
+
+```console
+$ sudo update-alternatives --auto editor
+update-alternatives: /usr/bin/vim を提供するために /usr/bin/editor (editor) を自動モードで使用します
 ```
 
 ## 使用例
 
-### 新しいJavaバージョンを代替に追加する
+### Java alternatives の設定
 
 ```console
 $ sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-11-openjdk/bin/java 1100
-update-alternatives: using /usr/lib/jvm/java-11-openjdk/bin/java to provide /usr/bin/java (java) in auto mode
-```
+update-alternatives: /usr/lib/jvm/java-11-openjdk/bin/java を提供するために /usr/bin/java (java) を自動モードで使用します
 
-### 異なるJavaバージョン間を切り替える
+$ sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-8-openjdk/bin/java 1000
+update-alternatives: /usr/lib/jvm/java-11-openjdk/bin/java を提供するために /usr/bin/java (java) を自動モードで使用します
 
-```console
 $ sudo update-alternatives --config java
-There are 3 choices for the alternative java (providing /usr/bin/java).
+java の alternative は 2 個あります (which provide /usr/bin/java)。
 
-  Selection    Path                                           Priority   Status
+  選択肢    パス                                      優先度   状態
 ------------------------------------------------------------
-* 0            /usr/lib/jvm/java-11-openjdk/bin/java          1100      auto mode
-  1            /usr/lib/jvm/java-8-openjdk/bin/java           1080      manual mode
-  2            /usr/lib/jvm/java-17-openjdk/bin/java          1170      manual mode
-  3            /usr/lib/jvm/java-11-openjdk/bin/java          1100      manual mode
+* 0            /usr/lib/jvm/java-11-openjdk/bin/java     1100      自動モード
+  1            /usr/lib/jvm/java-8-openjdk/bin/java      1000      手動モード
+  2            /usr/lib/jvm/java-11-openjdk/bin/java     1100      手動モード
 
-Press <enter> to keep the current choice[*], or type selection number: 2
-update-alternatives: using /usr/lib/jvm/java-17-openjdk/bin/java to provide /usr/bin/java (java) in manual mode
+現在の選択[*]を保持するには Enter、さもなければ選択肢の番号のキーを押してください:
 ```
 
-### 特定のコマンドのすべての代替を一覧表示する
+### コマンドで利用可能な alternatives を確認する
 
 ```console
-$ update-alternatives --list java
-/usr/lib/jvm/java-8-openjdk/bin/java
-/usr/lib/jvm/java-11-openjdk/bin/java
-/usr/lib/jvm/java-17-openjdk/bin/java
+$ update-alternatives --list editor
+/usr/bin/emacs
+/usr/bin/nano
+/usr/bin/vim
 ```
 
-## ヒント:
+## ヒント
 
-### 優先度の値を理解する
+### 優先度の値について理解する
 
-高い優先度の値（例えば50より100）は、自動モードでどの代替が選択されるかを決定します。新しい代替をインストールする際、それをデフォルトにしたい場合は、既存のものより高い優先度を割り当てます。
+優先度の値が高いほど（例えば50より100の方が）、自動モードで選択される可能性が高くなります。alternatives を設定する際は、優先するバージョンに高い数値を割り当ててください。
 
-### 関連コマンドのグループを管理する
+### 関連コマンドのグループ管理
 
-Javaのように複数の関連コマンド（java、javac、jar）を持つプログラムの場合、代替をインストールする際に`--slave`オプションを使用して一緒に管理できます。
-
-### 現在のデフォルトを確認する
-
-変更を加える前に、`--display`を使用して代替グループの現在の設定を確認しましょう。これにより、システムへの意図しない変更を避けることができます。
+複数のコマンド（Javaのjava、javac、jarなど）を持つプログラムの場合、すべてのツールで一貫したバージョン管理を確保するために、各コマンドの alternatives を作成してください。
 
 ### 自動モードと手動モード
 
-自動モードでは、システムは最も優先度の高い代替を自動的に選択します。手動モードでは、優先度に関係なく、手動で選択した代替が維持されます。
+自動モードでは、システムは最も優先度の高い alternative を選択します。手動モードでは、より高い優先度の alternative が後でインストールされても、選択した選択肢が維持されます。
+
+### スレーブリンク
+
+関連ファイル（メインの alternative と一緒に変更されるべきマニュアルページなど）を管理するには、スレーブリンク（`--slave` オプション付き）を使用してください。
 
 ## よくある質問
 
-#### Q1. update-alternativesとシンボリックリンクの違いは何ですか？
-A. `update-alternatives`はシンボリックリンクを標準化された方法で管理する高レベルのシステムです。プログラムのバージョン間を切り替えるための一貫したインターフェースを提供し、利用可能な代替を追跡します。
+#### Q1. 自動モードと手動モードの違いは何ですか？
+A. 自動モードでは、システムは最も優先度の高い alternative を選択します。手動モードでは、明示的に変更するまで選択した選択肢が維持されます。
 
-#### Q2. どのプログラムが代替システムを使用しているか知るにはどうすればいいですか？
-A. `update-alternatives --get-selections`で管理されているすべての代替を一覧表示できます。
+#### Q2. コマンドで利用可能なすべての alternatives を確認するにはどうすればよいですか？
+A. `update-alternatives --list コマンド名` を使用してすべての alternatives を確認するか、`update-alternatives --display コマンド名` でより詳細な情報を確認できます。
 
-#### Q3. 代替をシステムから完全に削除できますか？
-A. はい、`update-alternatives --remove-all <名前>`を使用して、特定のコマンドのすべての代替を削除できます。
+#### Q3. alternative を完全に削除するにはどうすればよいですか？
+A. `update-alternatives --remove リンク名 パス` を使用して、グループから特定の alternative を削除します。
 
-#### Q4. 代替を提供する新しいパッケージをインストールするとどうなりますか？
-A. パッケージマネージャーは通常、インストール中に`update-alternatives`を呼び出して、事前定義された優先度で新しい代替をシステムに追加します。
-
-#### Q5. 壊れた代替を修正するにはどうすればいいですか？
-A. 代替が存在しないファイルを指している場合、`--remove`でそれを削除し、正しい代替を再インストールできます。
+#### Q4. alternatives をインストールする際にどの優先度の数値を使用すべきですか？
+A. 優先度は任意の整数です。高い数値（100など）は低い数値（10など）よりも優先度が高くなります。優先順位を反映した値を選択してください。
 
 ## 参考資料
 
@@ -161,4 +149,4 @@ https://manpages.debian.org/bullseye/dpkg/update-alternatives.1.en.html
 
 ## 改訂履歴
 
-2025/05/04 初回改訂
+- 2025/05/05 初版

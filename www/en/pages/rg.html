@@ -88,7 +88,7 @@
 <span style="color: #000; font-style: italic">src/utils.js:15:function formatDate(date) {</span>
 </pre></div>
 <h3><strong>--no-ignore</strong></h3>
-<p>Don't respect ignore files (.gitignore, .ignore, etc.).</p>
+<p>Don't respect ignore files (.gitignore, .ignore, etc.). This option tells ripgrep to search in files and directories that would normally be ignored, such as those specified in .gitignore files.</p>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>--no-ignore<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;password&quot;</span>
 <span style="color: #000; font-style: italic">node_modules/config.js:5:  password: &quot;dummy_password&quot;,</span>
 <span style="color: #000; font-style: italic">.git/config:10:  password = hunter2</span>
@@ -113,6 +113,23 @@
 <span style="color: #000; font-style: italic">src/main.js:20:  // TODO: Implement validation</span>
 <span style="color: #000; font-style: italic">src/main.js:21:  return transform(data);</span>
 </pre></div>
+<h3><strong>-o, --only-matching</strong></h3>
+<p>Print only the matched parts of a line.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-o<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;TODO.*&quot;</span>
+<span style="color: #000; font-style: italic">src/main.js:TODO: Implement validation</span>
+<span style="color: #000; font-style: italic">docs/roadmap.md:TODO: Add authentication</span>
+</pre></div>
+<h3><strong>-m, --max-count NUM</strong></h3>
+<p>Only show up to NUM matches for each file.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-m<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">2</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;error&quot;</span><span style="color: #F8F8F8"> </span>log.txt
+<span style="color: #000; font-style: italic">log.txt:15:error: connection failed</span>
+<span style="color: #000; font-style: italic">log.txt:23:error: timeout occurred</span>
+</pre></div>
+<h3><strong>--max-depth NUM</strong></h3>
+<p>Limit the depth of directory traversal to NUM levels.</p>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>--max-depth<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">1</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;TODO&quot;</span>
+<span style="color: #000; font-style: italic">./main.js:20:  // TODO: Implement validation</span>
+</pre></div>
 <h2>Usage Examples</h2>
 <h3>Search in specific file types</h3>
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-t<span style="color: #F8F8F8"> </span>js<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;useState&quot;</span>
@@ -131,6 +148,15 @@
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;TODO&quot;</span><span style="color: #F8F8F8"> </span>--glob<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;!node_modules&quot;</span>
 <span style="color: #000; font-style: italic">src/main.js:20:  // TODO: Implement validation</span>
 <span style="color: #000; font-style: italic">docs/roadmap.md:15:TODO: Add authentication</span>
+</pre></div>
+<h3>Show only filenames with matching patterns</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>-l<span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;password&quot;</span>
+<span style="color: #000; font-style: italic">config.js</span>
+<span style="color: #000; font-style: italic">auth.js</span>
+</pre></div>
+<h3>Search only in current directory (no recursion)</h3>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><span style="color: #8F5902">$ </span>rg<span style="color: #F8F8F8"> </span>--max-depth<span style="color: #F8F8F8"> </span><span style="color: #0000CF; font-weight: bold">0</span><span style="color: #F8F8F8"> </span><span style="color: #4E9A06">&quot;function&quot;</span>
+<span style="color: #000; font-style: italic">main.js:10:function calculateTotal(items) {</span>
 </pre></div>
 <h2>Tips:</h2>
 <h3>Use Fixed Strings for Faster Searches</h3>
@@ -161,10 +187,16 @@
 <p>A. Use <code>-L</code> or <code>--follow</code> to follow symbolic links when searching.</p>
 <h4>Q5. What does the --no-ignore option do?</h4>
 <p>A. The <code>--no-ignore</code> option tells ripgrep to search files and directories that would normally be ignored due to .gitignore, .ignore, or similar files. This is useful when you need to search in directories like node_modules or other typically ignored locations.</p>
+<h4>Q6. How can I search only in the current directory without recursing into subdirectories?</h4>
+<p>A. Use <code>--max-depth 0</code> to limit the search to only the current directory without recursing into subdirectories.</p>
+<h4>Q7. How do I show only the matching filenames?</h4>
+<p>A. Use <code>-l</code> or <code>--files-with-matches</code> to show only the paths of files containing matches.</p>
 <h2>References</h2>
 <p>https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md</p>
 <h2>Revisions</h2>
 <ul>
+<li>2025/05/06 Added --max-depth and -m options, expanded usage examples to include non-recursive search, added new FAQs about limiting directory depth and showing only filenames.</li>
+<li>2025/05/06 Added -o, --only-matching option.</li>
 <li>2025/05/05 Added explanation for --no-ignore option and expanded FAQs.</li>
 </ul>
 

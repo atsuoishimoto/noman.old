@@ -4,21 +4,15 @@ Execute commands repeatedly as long as a condition is true.
 
 ## Overview
 
-The `while` command is a shell construct that creates a loop, executing a set of commands repeatedly as long as a specified condition evaluates to true. It's commonly used in shell scripts for tasks that need to be repeated until a certain condition is met, such as processing files line by line or implementing countdown timers.
+The `while` command is a shell construct that creates a loop, executing a set of commands repeatedly as long as a specified condition evaluates to true. It's commonly used for iterating a fixed number of times, processing input line by line, or running commands until a specific condition changes.
 
 ## Options
 
-The `while` command itself doesn't have options like standalone Unix commands. Instead, it's a shell control structure with a specific syntax:
-
-```bash
-while CONDITION; do
-  COMMANDS
-done
-```
+The `while` command doesn't have traditional command-line options as it's a shell built-in construct rather than a standalone program.
 
 ## Usage Examples
 
-### Basic while loop with a counter
+### Basic while loop
 
 ```console
 $ i=1
@@ -36,107 +30,83 @@ Count: 5
 ### Reading file line by line
 
 ```console
-$ cat names.txt
-Alice
-Bob
-Charlie
-$ while read name; do
->   echo "Hello, $name!"
-> done < names.txt
-Hello, Alice!
-Hello, Bob!
-Hello, Charlie!
+$ while read line; do
+>   echo "Line: $line"
+> done < file.txt
+Line: This is the first line
+Line: This is the second line
+Line: This is the third line
 ```
 
 ### Infinite loop with break condition
 
 ```console
-$ i=1
 $ while true; do
->   echo "Iteration $i"
->   if [ $i -eq 3 ]; then
->     echo "Breaking out of loop"
+>   echo "Enter a number (0 to exit):"
+>   read num
+>   if [ "$num" -eq 0 ]; then
 >     break
 >   fi
->   i=$((i+1))
+>   echo "You entered: $num"
 > done
-Iteration 1
-Iteration 2
-Iteration 3
-Breaking out of loop
+Enter a number (0 to exit):
+5
+You entered: 5
+Enter a number (0 to exit):
+0
 ```
 
-### Waiting for a condition
+### Processing command output
 
 ```console
-$ while [ ! -f /tmp/ready.txt ]; do
->   echo "Waiting for file to appear..."
->   sleep 1
+$ ls -1 *.txt | while read file; do
+>   echo "Processing $file"
+>   wc -l "$file"
 > done
-Waiting for file to appear...
-Waiting for file to appear...
-Waiting for file to appear...
+Processing document.txt
+      10 document.txt
+Processing notes.txt
+       5 notes.txt
 ```
 
 ## Tips
 
-### Use `break` to Exit Early
+### Use Control-C to Exit Infinite Loops
 
-The `break` command can be used inside a while loop to exit immediately, regardless of the condition:
+If you create an infinite loop (like `while true; do...`) and need to exit, press Control-C to terminate the loop.
 
-```bash
-while condition; do
-  if [other_condition]; then
-    break  # Exit the loop
-  fi
-  # commands
-done
+### Combine with Sleep for Polling
+
+Use `while` with the `sleep` command to periodically check conditions:
+
+```console
+$ while ! ping -c 1 server.example.com &>/dev/null; do
+>   echo "Server not reachable, waiting..."
+>   sleep 5
+> done
 ```
 
-### Use `continue` to Skip Iterations
+### Avoid Common Pitfalls
 
-The `continue` command skips the rest of the current iteration and jumps back to the condition check:
+Be careful with conditions that might never become false, which can create infinite loops. Always ensure there's a way for the condition to eventually evaluate to false.
 
-```bash
-while condition; do
-  if [skip_condition]; then
-    continue  # Skip to next iteration
-  fi
-  # commands that won't run if continue is executed
-done
-```
+### Use Continue to Skip Iterations
 
-### Avoid Infinite Loops
-
-Always ensure your while loop has a way to terminate. Include a condition that will eventually become false or use a `break` statement. If you accidentally create an infinite loop, press Ctrl+C to terminate it.
-
-### Use `sleep` for Timed Loops
-
-When polling for a condition, use the `sleep` command to prevent excessive CPU usage:
-
-```bash
-while [ condition ]; do
-  # commands
-  sleep 1  # Wait 1 second before checking again
-done
-```
+The `continue` statement can be used within a `while` loop to skip the rest of the current iteration and move to the next one.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `while` and `until`?
-A. `while` executes commands as long as the condition is true, whereas `until` executes commands as long as the condition is false (until it becomes true).
+A. `while` executes commands as long as the condition is true, whereas `until` executes commands as long as the condition is false.
 
-#### Q2. How do I read a file line by line with a while loop?
-A. Use `while read line; do commands; done < file.txt` to process each line of a file.
+#### Q2. Can I use `while` to read from standard input?
+A. Yes, `while read line; do ...; done` without a redirection will read from standard input.
 
-#### Q3. How can I create an infinite loop?
-A. Use `while true; do commands; done` or `while :; do commands; done` to create an infinite loop. Remember to include a way to exit the loop (like a `break` statement).
+#### Q3. How do I create a countdown timer with `while`?
+A. Use a decreasing counter: `count=10; while [ $count -gt 0 ]; do echo $count; count=$((count-1)); sleep 1; done; echo "Done!"`
 
-#### Q4. Can I nest while loops?
-A. Yes, you can nest while loops inside other while loops. Each loop needs its own `do` and `done` keywords.
-
-#### Q5. How do I use while with command output?
-A. You can pipe command output to a while loop: `command | while read line; do something; done`
+#### Q4. How can I process multiple values in each iteration?
+A. Use multiple variables in the read command: `while read name age; do echo "$name is $age years old"; done < data.txt`
 
 ## References
 
@@ -144,4 +114,4 @@ https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html
 
 ## Revisions
 
-2025/05/04 First revision
+- 2025/05/05 First revision

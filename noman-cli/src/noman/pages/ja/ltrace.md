@@ -4,169 +4,176 @@
 
 ## 概要
 
-`ltrace`はプログラムが行う動的ライブラリ呼び出しを表示するデバッグユーティリティです。システムコールやプロセスが受信したシグナルも表示できます。このツールは、ソースコードが利用できない場合のプログラムのデバッグや、プログラムがライブラリとどのように相互作用するかを理解するのに特に役立ちます。
+`ltrace` は、プログラム実行中に行われる動的ライブラリ呼び出しを表示するデバッグユーティリティです。システムコールや受信したシグナルも表示できます。このツールは、プログラムがライブラリとどのように相互作用するかを理解したり、問題を診断したり、アプリケーションのリバースエンジニアリングを行ったりする際に役立ちます。
 
 ## オプション
 
-### **-c, --count**
+### **-c**
 
-各ライブラリ呼び出しの時間と回数をカウントし、最後に要約を報告します。
+時間、呼び出し回数をカウントし、最後に要約レポートを表示します。
 
 ```console
 $ ltrace -c ls
 % time     seconds  usecs/call     calls      function
 ------ ----------- ----------- --------- --------------------
- 21.05    0.000080          2        40 strlen
- 15.79    0.000060          2        30 __ctype_b_loc
- 10.53    0.000040          2        20 readdir64
-  7.89    0.000030          2        15 fwrite
-  5.26    0.000020          2        10 malloc
-  5.26    0.000020          2        10 free
-  5.26    0.000020          2        10 __errno_location
-  5.26    0.000020          2        10 __cxa_atexit
-  5.26    0.000020         20         1 opendir
-  5.26    0.000020         20         1 closedir
-  5.26    0.000020         20         1 setlocale
-  5.26    0.000020         20         1 isatty
-  2.63    0.000010         10         1 bindtextdomain
+ 28.57    0.000040          8         5 strlen
+ 21.43    0.000030         15         2 readdir64
+ 14.29    0.000020         10         2 closedir
+ 14.29    0.000020         10         2 opendir
+  7.14    0.000010         10         1 __errno_location
+  7.14    0.000010         10         1 fclose
+  7.14    0.000010         10         1 fopen
 ------ ----------- ----------- --------- --------------------
-100.00    0.000380                   150 total
+100.00    0.000140                    14 total
 ```
 
-### **-f, --follow**
+### **-f**
 
-現在トレースされているプロセスによって作成される子プロセスをトレースします。
+現在トレース中のプロセスによって作成される子プロセスをトレースします。
 
 ```console
-$ ltrace -f ./program
-[pid 12345] malloc(32)                                  = 0x55d7e9fa7260
-[pid 12345] fork()                                      = 12346
-[pid 12346] malloc(64)                                  = 0x55d7e9fa7290
+$ ltrace -f ./parent_program
+[pid 12345] malloc(32)                                      = 0x55d45e9a12a0
+[pid 12345] fork()                                          = 12346
+[pid 12346] malloc(64)                                      = 0x55d45e9a1340
 ```
 
-### **-e, --expr=EXPR**
+### **-e PATTERN**
 
-トレースまたはフィルタリングするライブラリ呼び出しを指定します。形式は[!][?][=][%][/@][+|-]pattern[@arch][:function]です。
+トレースするライブラリ呼び出しやトレースしないライブラリ呼び出しを指定します。
 
 ```console
 $ ltrace -e malloc+free ls
-ls->malloc(32)                                          = 0x55d7e9fa7260
-ls->malloc(64)                                          = 0x55d7e9fa7290
-ls->free(0x55d7e9fa7260)                                = <void>
-ls->free(0x55d7e9fa7290)                                = <void>
+ls->malloc(24)                                             = 0x55d45e9a12a0
+ls->malloc(13)                                             = 0x55d45e9a1340
+ls->free(0x55d45e9a12a0)                                   = <void>
+ls->free(0x55d45e9a1340)                                   = <void>
 ```
 
-### **-p, --pid=PID**
+### **-p PID**
 
 指定されたPIDのプロセスにアタッチしてトレースを開始します。
 
 ```console
 $ ltrace -p 1234
-[pid 1234] read(5, "data", 1024)                        = 4
-[pid 1234] write(1, "output", 6)                        = 6
+[pid 1234] read(5, "Hello World", 1024)                    = 11
+[pid 1234] write(1, "Hello World", 11)                     = 11
 ```
 
-### **-S, --summary**
+### **-S**
 
-トレースの最後にライブラリ呼び出しの使用状況の要約を表示します。
+ライブラリ呼び出しに加えてシステムコールも表示します。
 
 ```console
 $ ltrace -S ls
-ls->__libc_start_main(0x401670, 1, 0x7ffd2d121768, 0x4017a0 <unfinished ...>
-...
-+++ exited (status 0) +++
-% time     seconds  usecs/call     calls      function
------- ----------- ----------- --------- --------------------
- 21.05    0.000080          2        40 strlen
- 15.79    0.000060          2        30 __ctype_b_loc
- 10.53    0.000040          2        20 readdir64
+SYS_brk(NULL)                                              = 0x55d45e9a1000
+SYS_access("/etc/ld.so.preload", R_OK)                     = -2
+malloc(256)                                                = 0x55d45e9a12a0
+SYS_open("/etc/ld.so.cache", O_RDONLY)                     = 3
 ```
 
-### **-o, --output=FILE**
+### **-o FILENAME**
 
-トレース出力を標準エラー出力ではなくFILEに書き込みます。
+トレース出力を標準エラー出力ではなく、指定したファイルに書き込みます。
 
 ```console
 $ ltrace -o trace.log ls
 $ cat trace.log
-ls->__libc_start_main(0x401670, 1, 0x7ffd2d121768, 0x4017a0 <unfinished ...>
-ls->setlocale(6, "")                                    = "en_US.UTF-8"
-ls->bindtextdomain("coreutils", "/usr/share/locale")    = "/usr/share/locale"
+malloc(256)                                                = 0x55d45e9a12a0
+free(0x55d45e9a12a0)                                       = <void>
 ```
 
 ## 使用例
 
-### 基本的な使用法
+### 基本的な使い方
 
 ```console
 $ ltrace ls
-ls->__libc_start_main(0x401670, 1, 0x7ffd2d121768, 0x4017a0 <unfinished ...>
-ls->setlocale(6, "")                                    = "en_US.UTF-8"
-ls->bindtextdomain("coreutils", "/usr/share/locale")    = "/usr/share/locale"
-ls->textdomain("coreutils")                             = "coreutils"
-ls->__cxa_atexit(0x4014a0, 0, 0, 0x736c6974)            = 0
-ls->getenv("QUOTING_STYLE")                             = nil
+__libc_start_main(0x401670, 1, 0x7ffd74a3c648, 0x406750 <unfinished ...>
+strrchr("ls", '/')                                         = NULL
+setlocale(LC_ALL, "")                                      = "en_US.UTF-8"
+bindtextdomain("coreutils", "/usr/share/locale")           = "/usr/share/locale"
+textdomain("coreutils")                                    = "coreutils"
+__cxa_atexit(0x402860, 0, 0, 0x736c6974)                   = 0
+isatty(1)                                                  = 1
+getenv("QUOTING_STYLE")                                    = NULL
+getenv("COLUMNS")                                          = NULL
+ioctl(1, 21523, 0x7ffd74a3c4e0)                            = 0
 ...
 +++ exited (status 0) +++
 ```
 
-### 特定のライブラリ呼び出しのトレース
+### 特定の関数をトレースする
 
 ```console
 $ ltrace -e malloc+free+open ./program
-./program->malloc(1024)                                 = 0x55d7e9fa7260
-./program->open("/etc/passwd", 0, 0)                    = 3
-./program->malloc(2048)                                 = 0x55d7e9fa7660
-./program->free(0x55d7e9fa7260)                         = <void>
-./program->free(0x55d7e9fa7660)                         = <void>
+program->malloc(1024)                                      = 0x55d45e9a12a0
+program->open("/etc/passwd", 0, 0)                         = 3
+program->free(0x55d45e9a12a0)                              = <void>
 ```
 
-### 時間情報付きのトレース
+### 時間情報付きでトレースする
 
 ```console
-$ ltrace -tt ./program
-15:30:45.123456 __libc_start_main(0x401670, 1, 0x7ffd2d121768, 0x4017a0 <unfinished ...>
-15:30:45.123789 setlocale(6, "")                        = "en_US.UTF-8"
-15:30:45.124012 malloc(1024)                            = 0x55d7e9fa7260
-15:30:45.124234 free(0x55d7e9fa7260)                    = <void>
+$ ltrace -tt ls
+15:30:45.789012 __libc_start_main(0x401670, 1, 0x7ffd74a3c648, 0x406750 <unfinished ...>
+15:30:45.789234 strrchr("ls", '/')                         = NULL
+15:30:45.789456 setlocale(LC_ALL, "")                      = "en_US.UTF-8"
+...
+15:30:45.795678 +++ exited (status 0) +++
 ```
 
-## ヒント:
+## ヒント
 
 ### ノイズをフィルタリングする
 
-`-e`オプションを使用して、関心のある特定の関数呼び出しに焦点を当てましょう。これにより出力量が減少し、分析が容易になります。
+`-e` オプションを使用して、関心のある特定の関数呼び出しに焦点を当て、出力の混雑を減らします：
+```console
+$ ltrace -e malloc+free+open ./program
+```
 
-### straceと組み合わせる
+### 他のツールと組み合わせる
 
-包括的なデバッグのために、ライブラリ呼び出し用の`ltrace`とシステムコール用の`strace`の両方を使用しましょう。これによりプログラムの動作の完全な全体像が得られます。
+ltraceの出力をgrepにパイプして、特定の関数呼び出しを見つけます：
+```console
+$ ltrace ./program 2>&1 | grep "open"
+```
 
-### 分析のための出力リダイレクト
+### 子プロセスをトレースする
 
-複雑なプログラムの場合、`-o`で出力をファイルにリダイレクトし、`grep`や`awk`などのツールを使用してトレースデータを分析しましょう。
+子プロセスを生成する複雑なアプリケーションをデバッグする場合は、`-f` を使用して子プロセスも追跡します：
+```console
+$ ltrace -f ./server
+```
 
-### コアダンプとの併用
+### 後で分析するために出力を保存する
 
-クラッシュのデバッグ時には、`ltrace`でプログラムを実行して、クラッシュ前に行われたライブラリ呼び出しを確認しましょう。
+長時間実行されるプログラムの場合、`-o` でトレースをファイルに保存します：
+```console
+$ ltrace -o debug.log ./program
+```
 
 ## よくある質問
 
 #### Q1. ltraceとstraceの違いは何ですか？
-A. `ltrace`はライブラリ呼び出し（libcなどの共有ライブラリ内の関数）をトレースするのに対し、`strace`はシステムコール（カーネルとの直接的な相互作用）をトレースします。`ltrace`は`printf()`のようなより高レベルの操作を表示し、`strace`は`write()`のようなより低レベルの操作を表示します。
+A. `ltrace` はライブラリ呼び出し（共有ライブラリからの関数）をトレースし、`strace` はシステムコール（カーネルとの相互作用）をトレースします。`ltrace -S` を使用すると両方を見ることができます。
 
-#### Q2. ltraceはトレース対象のプログラムを遅くしますか？
-A. はい、トレースには大きなオーバーヘッドが加わります。傍受される各呼び出しはコンテキストスイッチを必要とし、特に多くのライブラリ呼び出しを行うプログラムでは、かなり遅くなる可能性があります。
+#### Q2. なぜltraceはすべての関数呼び出しを表示しないのですか？
+A. `ltrace` は外部ライブラリへの呼び出しのみを表示し、プログラム内部の関数呼び出しは表示しません。それにはプロファイラやデバッガが必要です。
 
-#### Q3. 特定のライブラリ関数だけをトレースするにはどうすればよいですか？
-A. `-e`オプションをパターンと共に使用します。例えば：`ltrace -e malloc+free+fopen ./program`とすると、メモリ割り当てとファイル操作のみをトレースします。
+#### Q3. ltraceはトレース対象のプログラムを遅くすることがありますか？
+A. はい、トレースには大きなオーバーヘッドがあります。特に `-f`（フォークを追跡）を有効にすると、プログラムの実行速度は遅くなります。
 
-#### Q4. ltraceは静的にリンクされたプログラムをトレースできますか？
-A. いいえ、`ltrace`は主に動的にリンクされたプログラムで動作します。静的にリンクされたプログラムでは、ライブラリ呼び出しは実行可能ファイルにコンパイルされ、動的リンカーを通じて行われません。
+#### Q4. すでに実行中のプログラムをトレースするにはどうすればよいですか？
+A. `ltrace -p PID` を使用して、すでに実行中のプロセスにアタッチします。
 
-## 参考資料
+#### Q5. 静的にリンクされたバイナリでltraceを使用できますか？
+A. いいえ、`ltrace` は主に動的にリンクされた実行ファイルで動作します。共有ライブラリへの呼び出しを傍受するためです。
+
+## 参考文献
 
 https://man7.org/linux/man-pages/man1/ltrace.1.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

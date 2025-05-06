@@ -1,94 +1,93 @@
 # for コマンド
 
-リスト内の各項目に対してコマンドまたはコマンドセットを実行します。
+リスト内の各項目に対してコマンドを実行します。
 
 ## 概要
 
-`for` コマンドはシェルのループ構文で、値のリストを反復処理し、各値に対して指定されたコマンドを一度ずつ実行します。シェルスクリプトでのバッチ処理、自動化、繰り返しタスクによく使用されます。ループ変数はリスト内の各値を順番に取り、単一のコマンド構造で複数の項目に対して操作を実行できるようにします。
+`for` コマンドは、値のリストを反復処理し、各項目に対してコマンドまたは一連のコマンドを実行できるシェル構文です。シェルスクリプトでのバッチ処理、自動化、繰り返しタスクによく使用されます。
 
 ## オプション
 
-`for` コマンドはシェル組み込みコマンドであり、スタンドアロンプログラムのような従来のコマンドラインオプションはありません。代わりに、異なる構文のバリエーションがあります：
+`for` コマンドはシェル組み込みコマンドであり、従来のコマンドラインオプションはありません。代わりに、特定の構文パターンに従います：
 
-### **基本構文**
-
-単語のリストを反復処理する標準的な形式です。
+### 基本構文
 
 ```console
-$ for i in one two three; do echo "番号: $i"; done
-番号: one
-番号: two
-番号: three
+$ for 変数 in リスト; do コマンド; done
 ```
 
-### **C言語スタイル構文**
-
-bashやその他のシェルで利用可能な、数値反復のためのC言語風の構文です。
+### C言語スタイルの構文（Bash）
 
 ```console
-$ for ((i=1; i<=3; i++)); do echo "カウント: $i"; done
-カウント: 1
-カウント: 2
-カウント: 3
+$ for ((初期化; 条件; 増分)); do コマンド; done
 ```
 
 ## 使用例
 
-### ファイルに対する反復処理
+### 値のリストを反復処理する
 
 ```console
-$ for file in *.txt; do echo "処理中: $file"; cat "$file"; done
-処理中: notes.txt
-これはnotes.txtの内容です
-処理中: readme.txt
-これはreadme.txtの内容です
+$ for name in Alice Bob Charlie; do
+>   echo "Hello, $name!"
+> done
+Hello, Alice!
+Hello, Bob!
+Hello, Charlie!
 ```
 
-### コマンド出力に対する反復処理
+### ディレクトリ内のファイルを処理する
 
 ```console
-$ for user in $(cut -d: -f1 /etc/passwd | head -3); do echo "ユーザー: $user"; done
-ユーザー: root
-ユーザー: daemon
-ユーザー: bin
+$ for file in *.txt; do
+>   echo "Processing $file..."
+>   wc -l "$file"
+> done
+Processing document.txt...
+      45 document.txt
+Processing notes.txt...
+      12 notes.txt
 ```
 
-### 数値範囲に対する反復処理
+### C言語スタイルのループを使用する（Bash）
 
 ```console
-$ for i in {1..5}; do echo "数字 $i"; done
-数字 1
-数字 2
-数字 3
-数字 4
-数字 5
+$ for ((i=1; i<=5; i++)); do
+>   echo "Number: $i"
+> done
+Number: 1
+Number: 2
+Number: 3
+Number: 4
+Number: 5
 ```
 
-### ステップ値を使用した反復処理
+### コマンド置換を使用する
 
 ```console
-$ for i in {0..10..2}; do echo "偶数: $i"; done
-偶数: 0
-偶数: 2
-偶数: 4
-偶数: 6
-偶数: 8
-偶数: 10
+$ for user in $(cat users.txt); do
+>   echo "Creating home directory for $user"
+>   mkdir -p /home/$user
+> done
+Creating home directory for john
+Creating home directory for sarah
+Creating home directory for mike
 ```
 
 ## ヒント:
 
 ### 適切な引用符の使用
 
-ループ内の変数は常に引用符で囲み、スペースを含むファイル名や値を正しく処理できるようにしましょう：
+ループ内の変数は常に引用符で囲み、スペースや特殊文字を含むファイル名を適切に処理します：
 
 ```console
-$ for file in *.txt; do echo "処理中: '$file'"; done
+$ for file in *.txt; do
+>   cp "$file" "/backup/$(date +%Y%m%d)_$file"
+> done
 ```
 
 ### break と continue
 
-`break` を使用してループを早期に終了し、`continue` を使用して次の反復にスキップできます：
+`break` を使用してループを早期に終了し、`continue` を使用して次の反復にスキップします：
 
 ```console
 $ for i in {1..10}; do
@@ -104,43 +103,32 @@ $ for i in {1..10}; do
 7
 ```
 
-### ネストしたループ
+### シーケンス生成
 
-より複雑な反復処理のために `for` ループをネストできます：
+数値シーケンスには波括弧展開を使用します：
 
 ```console
-$ for i in {1..3}; do
->   for j in a b c; do
->     echo "$i-$j"
->   done
-> done
-1-a
-1-b
-1-c
-2-a
-2-b
-2-c
-3-a
-3-b
-3-c
+$ for i in {1..5}; do echo $i; done
+1
+2
+3
+4
+5
 ```
 
 ## よくある質問
 
-#### Q1. 数値の範囲を反復処理するにはどうすればよいですか？
-A. 波括弧展開を使用します：`for i in {1..10}; do echo $i; done` または C言語スタイル構文：`for ((i=1; i<=10; i++)); do echo $i; done`。
+#### Q1. `for` ループと `while` ループの違いは何ですか？
+A. `for` ループは事前定義されたアイテムのリストを反復処理しますが、`while` ループは条件が真である限り継続します。
 
-#### Q2. ファイルの各行を処理するにはどうすればよいですか？
-A. `for` を使用することもできますが、`while` ループと `read` を使用する方が良いでしょう：`while read line; do echo "$line"; done < file.txt`。
+#### Q2. 数値範囲をループするにはどうすればよいですか？
+A. 波括弧展開を使用します：`for i in {1..10}; do echo $i; done` または C言語スタイルの構文：`for ((i=1; i<=10; i++)); do echo $i; done`。
 
-#### Q3. 配列要素を反復処理するにはどうすればよいですか？
+#### Q3. ファイル内の行をループするにはどうすればよいですか？
+A. `read` を使った `while` ループを使用します：`while read line; do echo "$line"; done < file.txt` または、コマンド置換を使った `for` ループ：`for line in $(cat file.txt); do echo "$line"; done`（後者は空白を保持しないことに注意）。
+
+#### Q4. 配列要素を反復処理するにはどうすればよいですか？
 A. `for element in "${array[@]}"; do echo "$element"; done` を使用します。
-
-#### Q4. コマンド出力を反復処理するために `for` を使用できますか？
-A. はい、コマンド置換を使用します：`for item in $(command); do echo "$item"; done`。
-
-#### Q5. 数値範囲でステップ値を指定するにはどうすればよいですか？
-A. 拡張波括弧展開を使用します：`for i in {開始..終了..ステップ}; do echo $i; done`。
 
 ## 参考文献
 
@@ -148,4 +136,4 @@ https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

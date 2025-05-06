@@ -1,44 +1,53 @@
 # update-locale command
 
-Configure system-wide locale settings by updating the /etc/default/locale file.
+Configure system locale settings by updating /etc/default/locale.
 
 ## Overview
 
-The `update-locale` command modifies system-wide locale settings on Debian-based Linux distributions. It updates the `/etc/default/locale` file, which defines environment variables that determine language, character encoding, and regional formatting preferences used by the system and applications.
+`update-locale` is a command used to modify the system-wide locale settings on Debian-based Linux systems. It updates the configuration file at `/etc/default/locale`, which defines language, character encoding, and regional settings for the entire system. This command is typically used by system administrators to change language settings or character encoding for all users.
 
 ## Options
 
 ### **--reset**
 
-Reset all locale variables by removing the `/etc/default/locale` file
+Reset all locale variables (remove them from the configuration file)
 
 ```console
 $ sudo update-locale --reset
 ```
 
-### **VARIABLE=value**
+### **LANG=**
 
-Set a specific locale variable to the specified value
+Set the default locale for all categories
 
 ```console
 $ sudo update-locale LANG=en_US.UTF-8
 ```
 
-### **--locale-file=FILE**
+### **LC_ALL=**
 
-Specify an alternative locale file instead of the default `/etc/default/locale`
+Set the locale for all categories, overriding all other settings
 
 ```console
-$ sudo update-locale --locale-file=/path/to/custom/locale
+$ sudo update-locale LC_ALL=en_US.UTF-8
+```
+
+### **--help**
+
+Display help information
+
+```console
+$ update-locale --help
+Usage: update-locale [OPTIONS] [VARIABLE=VALUE ...]
+  or:  update-locale --reset
+Options:
+  --help         display this help and exit
+  --reset        reset all locale variables
+  --locale-file=FILE
+                 use FILE as locale file instead of /etc/default/locale
 ```
 
 ## Usage Examples
-
-### Setting the system language to English (US)
-
-```console
-$ sudo update-locale LANG=en_US.UTF-8
-```
 
 ### Setting multiple locale variables at once
 
@@ -48,45 +57,75 @@ $ sudo update-locale LANG=en_GB.UTF-8 LC_TIME=en_GB.UTF-8 LC_PAPER=en_GB.UTF-8
 
 ### Removing a specific locale variable
 
+To remove a specific locale variable, set it to an empty string:
+
 ```console
-$ sudo update-locale LC_PAPER=
+$ sudo update-locale LC_TIME=
 ```
 
-## Tips:
+### Checking current locale settings
 
-### Check Current Locale Settings
-
-Before making changes, check your current locale settings with the `locale` command to understand what you're modifying.
+While not part of update-locale, you can view current settings with:
 
 ```console
 $ locale
 LANG=en_US.UTF-8
+LANGUAGE=
 LC_CTYPE="en_US.UTF-8"
 LC_NUMERIC="en_US.UTF-8"
-...
+LC_TIME="en_US.UTF-8"
+LC_COLLATE="en_US.UTF-8"
+LC_MONETARY="en_US.UTF-8"
+LC_MESSAGES="en_US.UTF-8"
+LC_PAPER="en_US.UTF-8"
+LC_NAME="en_US.UTF-8"
+LC_ADDRESS="en_US.UTF-8"
+LC_TELEPHONE="en_US.UTF-8"
+LC_MEASUREMENT="en_US.UTF-8"
+LC_IDENTIFICATION="en_US.UTF-8"
+LC_ALL=
 ```
 
-### Generate Required Locales First
+## Tips:
 
-Make sure the locales you want to use are generated on your system. Use `locale -a` to list available locales and `sudo locale-gen <locale>` to generate missing ones.
+### System-wide vs. User Settings
 
-### System Restart May Be Required
+Remember that `update-locale` changes system-wide settings. Individual users can override these in their shell startup files (like `.bashrc`) with their own locale preferences.
 
-Some changes to locale settings might require a system restart or at least a logout/login to take full effect across all applications.
+### Changes Take Effect on Next Login
+
+Changes made with `update-locale` typically don't affect current sessions. Users need to log out and log back in for the new locale settings to take effect.
+
+### Common Locale Variables
+
+- `LANG`: Default locale for all categories
+- `LC_CTYPE`: Character classification and case conversion
+- `LC_TIME`: Date and time formats
+- `LC_NUMERIC`: Number formatting
+- `LC_MONETARY`: Currency formatting
+- `LC_MESSAGES`: Language for system messages
+
+### Available Locales
+
+To see what locales are available on your system:
+
+```console
+$ locale -a
+```
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between LANG and LC_ALL?
-A. `LANG` is the default locale for all categories when specific `LC_*` variables are not set. `LC_ALL` overrides all other locale variables, including `LANG`.
+#### Q1. How do I change the system language?
+A. Use `sudo update-locale LANG=your_language_code.UTF-8` (e.g., `LANG=fr_FR.UTF-8` for French).
 
-#### Q2. How do I set the system to use English interface but local formats?
-A. Set `LANG` to your preferred English locale (e.g., `en_US.UTF-8`) and set specific `LC_*` variables like `LC_TIME` and `LC_MONETARY` to your local format.
+#### Q2. Why aren't my locale changes taking effect?
+A. You need to log out and log back in for changes to take effect. For immediate effect in the current shell, use `export LANG=your_language_code.UTF-8`.
 
-#### Q3. Why do some applications ignore my locale settings?
-A. Some applications might have their own language settings that override system locale, or they might not support the locale you've configured.
+#### Q3. How do I generate additional locales?
+A. First generate the locale with `sudo locale-gen your_language_code.UTF-8`, then set it with `update-locale`.
 
-#### Q4. How do I completely reset all locale settings?
-A. Use `sudo update-locale --reset` to remove all locale settings from the system configuration file.
+#### Q4. What's the difference between LANG and LC_ALL?
+A. `LANG` is the default for all locale categories, while `LC_ALL` overrides all other locale settings. Use `LC_ALL` sparingly as it's meant for troubleshooting.
 
 ## References
 
@@ -94,4 +133,4 @@ https://manpages.debian.org/bullseye/locales/update-locale.8.en.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

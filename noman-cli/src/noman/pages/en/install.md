@@ -4,48 +4,48 @@ Copy files and set attributes.
 
 ## Overview
 
-The `install` command copies files to specified destinations while setting their permissions and ownership. It's commonly used in scripts and makefiles to install programs, scripts, and configuration files to their proper locations in the system.
+The `install` command copies files to specified destinations while setting permissions, ownership, and timestamps. It's commonly used in scripts and makefiles to place files in their proper locations during software installation, combining the functionality of `cp`, `chmod`, `chown`, and `mkdir` into a single command.
 
 ## Options
 
 ### **-d, --directory**
 
-Create directories (and their parents if needed) instead of copying files.
+Create directories instead of copying files.
 
 ```console
 $ install -d /tmp/new_directory
 $ ls -ld /tmp/new_directory
-drwxr-xr-x 2 user user 4096 May 4 10:15 /tmp/new_directory
+drwxr-xr-x 2 user user 4096 May 5 10:00 /tmp/new_directory
 ```
 
 ### **-m, --mode=MODE**
 
-Set the permission mode (as in chmod) for the destination file or directory.
+Set permission mode (as in chmod), instead of the default rwxr-xr-x.
 
 ```console
-$ install -m 755 script.sh /usr/local/bin/
-$ ls -l /usr/local/bin/script.sh
--rwxr-xr-x 1 root root 256 May 4 10:20 /usr/local/bin/script.sh
+$ install -m 644 source.txt /tmp/
+$ ls -l /tmp/source.txt
+-rw-r--r-- 1 user user 123 May 5 10:01 /tmp/source.txt
 ```
 
 ### **-o, --owner=OWNER**
 
-Set the owner for the destination files (requires superuser privileges).
+Set ownership (super-user only).
 
 ```console
-$ sudo install -o nobody script.sh /usr/local/bin/
-$ ls -l /usr/local/bin/script.sh
--rwxr-xr-x 1 nobody root 256 May 4 10:25 /usr/local/bin/script.sh
+$ sudo install -o root source.txt /tmp/
+$ ls -l /tmp/source.txt
+-rwxr-xr-x 1 root user 123 May 5 10:02 /tmp/source.txt
 ```
 
 ### **-g, --group=GROUP**
 
-Set the group for the destination files (requires superuser privileges).
+Set group ownership (super-user only).
 
 ```console
-$ sudo install -g staff script.sh /usr/local/bin/
-$ ls -l /usr/local/bin/script.sh
--rwxr-xr-x 1 root staff 256 May 4 10:30 /usr/local/bin/script.sh
+$ sudo install -g wheel source.txt /tmp/
+$ ls -l /tmp/source.txt
+-rwxr-xr-x 1 user wheel 123 May 5 10:03 /tmp/source.txt
 ```
 
 ### **-s, --strip**
@@ -53,78 +53,94 @@ $ ls -l /usr/local/bin/script.sh
 Strip symbol tables from executables.
 
 ```console
-$ install -s myprogram /usr/local/bin/
+$ install -s executable /tmp/
 ```
 
 ### **-v, --verbose**
 
-Print the name of each file before copying it.
+Print the name of each directory as it is created.
 
 ```console
-$ install -v script.sh /usr/local/bin/
-'script.sh' -> '/usr/local/bin/script.sh'
+$ install -v source.txt /tmp/
+'source.txt' -> '/tmp/source.txt'
+```
+
+### **-b, --backup[=CONTROL]**
+
+Make a backup of each existing destination file.
+
+```console
+$ install -b source.txt /tmp/
+$ ls -l /tmp/
+-rwxr-xr-x 1 user user 123 May 5 10:04 source.txt
+-rwxr-xr-x 1 user user 123 May 5 10:03 source.txt~
+```
+
+### **-c, --compare**
+
+Do not copy if the source and destination files are the same.
+
+```console
+$ install -c source.txt /tmp/
 ```
 
 ## Usage Examples
 
-### Installing a script with specific permissions
+### Installing a file with specific permissions
 
 ```console
-$ sudo install -m 755 -o root -g root myscript.sh /usr/local/bin/
-$ ls -l /usr/local/bin/myscript.sh
--rwxr-xr-x 1 root root 512 May 4 10:35 /usr/local/bin/myscript.sh
+$ install -m 755 myscript.sh /usr/local/bin/
 ```
 
 ### Creating multiple directories at once
 
 ```console
-$ install -d -m 750 /tmp/project/{bin,lib,doc}
-$ ls -ld /tmp/project/bin /tmp/project/lib /tmp/project/doc
-drwxr-x--- 2 user user 4096 May 4 10:40 /tmp/project/bin
-drwxr-x--- 2 user user 4096 May 4 10:40 /tmp/project/doc
-drwxr-x--- 2 user user 4096 May 4 10:40 /tmp/project/lib
+$ install -d /tmp/dir1 /tmp/dir2 /tmp/dir3
+```
+
+### Installing a file with specific owner and group
+
+```console
+$ sudo install -o www-data -g www-data -m 644 config.php /var/www/html/
 ```
 
 ### Installing multiple files to a directory
 
 ```console
-$ install -m 644 config.json settings.ini /etc/myapp/
-$ ls -l /etc/myapp/
--rw-r--r-- 1 root root 1024 May 4 10:45 config.json
--rw-r--r-- 1 root root 512 May 4 10:45 settings.ini
+$ install -m 644 *.txt /tmp/
 ```
 
 ## Tips:
 
-### Use in Makefiles
+### Use for Deployment Scripts
 
-The `install` command is commonly used in Makefiles for software installation. It's preferred over `cp` because it handles permissions and ownership in one step.
+The `install` command is ideal for deployment scripts because it handles permissions and ownership in one step, making it more efficient than separate `cp` and `chmod` commands.
 
-### Creating Directory Trees
+### Create Parent Directories
 
-When using `-d`, parent directories are created automatically if they don't exist, similar to `mkdir -p`.
+Unlike `mkdir -p`, `install -d` doesn't create parent directories. If you need to create a nested directory structure, create the parents first or use `mkdir -p` instead.
 
-### Default Permissions
+### Preserve File Attributes
 
-If no mode is specified with `-m`, the default is typically 755 (rwxr-xr-x) for executables and 644 (rw-r--r--) for non-executables.
+When you want to preserve the original file's attributes, use `install -p` which preserves the modification time, access time, and modes of the source files.
 
-### Backup Option
+### Backup Strategy
 
-Use `-b` or `--backup` to create backups of existing destination files before overwriting them.
+When using `-b` for backups, you can control the backup suffix with `--suffix=SUFFIX` or set the backup method with `--backup=CONTROL` (where CONTROL can be 'none', 'numbered', 'existing', or 'simple').
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `install` and `cp`?
-A. While `cp` simply copies files, `install` copies files and sets permissions, ownership, and other attributes in a single command. It's designed specifically for installing files in a system.
+A. `install` combines copying with setting permissions and ownership in one command, while `cp` only copies files. `install` is designed for software installation, while `cp` is a general-purpose copy command.
 
-#### Q2. Can I use `install` to create directories?
-A. Yes, use `install -d` to create directories with specific permissions, similar to `mkdir -p` but with more control over permissions.
+#### Q2. Can `install` create directories like `mkdir`?
+A. Yes, with the `-d` option, `install` can create directories with specific permissions in one step.
 
-#### Q3. Do I need root privileges to use `install`?
-A. You only need root privileges when installing to system directories or when changing ownership with `-o` or `-g` options.
+#### Q3. Does `install` preserve file timestamps?
+A. By default, `install` updates timestamps to the current time. Use the `-p` option to preserve the original timestamps.
 
-#### Q4. Can `install` preserve file attributes?
-A. Unlike `cp -p`, `install` is designed to set specific attributes rather than preserve existing ones. Use `cp -p` if you want to preserve the original file's attributes.
+#### Q4. Can I use `install` to copy directories recursively?
+A. No, `install` doesn't have a recursive option like `cp -r`. You need to create the directory structure first and then install files into it.
 
 ## References
 
@@ -132,4 +148,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/install-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

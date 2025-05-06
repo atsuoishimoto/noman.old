@@ -4,13 +4,13 @@ List directory contents.
 
 ## Overview
 
-The `ls` command displays files and directories in the specified location. By default, it shows the contents of the current directory, sorted alphabetically. It's one of the most frequently used commands for navigating and examining the file system.
+The `ls` command displays files and directories in the specified location. By default, it shows the contents of the current working directory, sorted alphabetically, excluding hidden files (those starting with a dot). It's one of the most frequently used commands for navigating and exploring the filesystem.
 
 ## Options
 
-### **-l** (Long format)
+### **-l**
 
-Displays detailed information about each file including permissions, number of links, owner, group, size, and modification time.
+Display detailed information in a long listing format, showing file permissions, number of links, owner, group, size, and modification time.
 
 ```console
 $ ls -l
@@ -19,38 +19,27 @@ total 16
 drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects
 ```
 
-### **-a** (All)
+### **-a, --all**
 
-Shows all files, including hidden files (those starting with a dot).
+Show all files, including hidden files (those starting with a dot).
 
 ```console
 $ ls -a
 .  ..  .hidden  document.txt  projects
 ```
 
-### **-h** (Human-readable)
+### **-d, --directory**
 
-When used with `-l`, displays file sizes in human-readable format (KB, MB, GB).
-
-```console
-$ ls -lh
-total 16K
--rw-r--r--  1 user  staff  1.0K Apr 10 15:30 document.txt
-drwxr-xr-x  3 user  staff   96B Apr 9  14:22 projects
-```
-
-### **-d** (Directory)
-
-Lists directories themselves, not their contents.
+List directories themselves, not their contents.
 
 ```console
 $ ls -d */
 projects/  documents/  downloads/
 ```
 
-### **-s** (Size)
+### **-s, --size**
 
-Prints the allocated size of each file in blocks.
+Print the allocated size of each file in blocks.
 
 ```console
 $ ls -s
@@ -58,9 +47,9 @@ total 16
 8 document.txt  8 projects
 ```
 
-### **-t** (Time)
+### **-t**
 
-Sorts files by modification time, newest first.
+Sort by modification time, newest first.
 
 ```console
 $ ls -lt
@@ -69,12 +58,12 @@ total 16
 drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects
 ```
 
-### **-r** (Reverse)
+### **-r, --reverse**
 
-Reverses the order of the sort.
+Reverse the order of the sort.
 
 ```console
-$ ls -lr
+$ ls -ltr
 total 16
 drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects
 -rw-r--r--  1 user  staff  1024 Apr 10 15:30 document.txt
@@ -82,75 +71,78 @@ drwxr-xr-x  3 user  staff   96  Apr 9  14:22 projects
 
 ## Usage Examples
 
-### Combining multiple options
+### Listing files with human-readable sizes
 
 ```console
-$ ls -lha
-total 20K
-drwxr-xr-x  4 user  staff  128B Apr 10 15:35 .
-drwxr-xr-x 18 user  staff  576B Apr 10 14:00 ..
--rw-r--r--  1 user  staff   74B Apr 10 15:32 .hidden
--rw-r--r--  1 user  staff  1.0K Apr 10 15:30 document.txt
-drwxr-xr-x  3 user  staff   96B Apr 9  14:22 projects
-```
-
-### Listing files by pattern
-
-```console
-$ ls *.txt
-document.txt  notes.txt  readme.txt
-```
-
-### Sorting files by size (largest first)
-
-```console
-$ ls -lhS
+$ ls -lh
 total 16K
 -rw-r--r--  1 user  staff  1.0K Apr 10 15:30 document.txt
 drwxr-xr-x  3 user  staff   96B Apr 9  14:22 projects
 ```
 
-## Tips
+### Listing only directories
 
-### Color-coded Output
+```console
+$ ls -ld */
+drwxr-xr-x 3 user staff 96 Apr 9 14:22 projects/
+drwxr-xr-x 5 user staff 160 Apr 8 10:15 documents/
+```
 
-Many systems configure `ls` to display different file types in different colors. You can enforce this with `ls --color=auto` on Linux or `ls -G` on macOS.
+### Listing files by file type
 
-### Recursive Listing
+```console
+$ ls -F
+document.txt  projects/  script.sh*
+```
 
-Use `ls -R` to list subdirectories recursively, showing the entire directory tree.
+### Recursive listing of directories
 
-### Combining Sort Options
+```console
+$ ls -R
+.:
+document.txt  projects
 
-When combining sort options like `-t` (time) and `-r` (reverse), remember that `-r` always reverses the current sort order. For example, `ls -ltr` shows the oldest files first.
+./projects:
+README.md  src
 
-### Aliases
+./projects/src:
+main.c  utils.h
+```
 
-Many users create aliases like `ll` for `ls -l` and `la` for `ls -la` in their shell configuration files to save typing common combinations.
+## Tips:
+
+### Combine Options for Powerful Listings
+
+Combine options like `ls -lha` to show all files (including hidden ones) with detailed information and human-readable sizes.
+
+### Use Color Coding for Better Visibility
+
+Many systems have `ls` aliased to `ls --color=auto`, which color-codes different file types. If not, you can add this to your shell configuration.
+
+### Sort Files by Size
+
+Use `ls -lS` to sort files by size (largest first), which helps identify space-consuming files.
+
+### Customize the Output Format
+
+Use `ls -l --time-style=long-iso` for a more standardized timestamp format (YYYY-MM-DD HH:MM).
 
 ## Frequently Asked Questions
 
 #### Q1. How do I list only directories?
 A. Use `ls -d */` to list only directories in the current location.
 
-#### Q2. How can I see file sizes in a readable format?
-A. Use `ls -lh` to see file sizes in KB, MB, or GB instead of bytes.
+#### Q2. How can I see file sizes in KB, MB, etc.?
+A. Use `ls -lh` for human-readable sizes.
 
-#### Q3. How do I sort files by size?
-A. Use `ls -lS` to sort files by size (largest first). Add `-r` (`ls -lSr`) to reverse the order.
+#### Q3. How do I sort files by modification time?
+A. Use `ls -lt` to sort by modification time, newest first.
 
-#### Q4. How can I see the most recently modified files first?
-A. Use `ls -lt` to sort by modification time with newest files first.
+#### Q4. How do I list files recursively?
+A. Use `ls -R` to list all files and subdirectories recursively.
 
-#### Q5. How do I list files with their inode numbers?
-A. Use `ls -i` to display the index number (inode) of each file.
-
-## macOS Considerations
-
-On macOS, some GNU ls options may not be available or may work differently:
-- Use `-G` instead of `--color` to enable colorized output
-- The `-h` option works the same way as on Linux
-- For extended attributes, use `ls -@` which is specific to macOS
+#### Q5. How can I see hidden files?
+A. Use `ls -a` to show all files, including hidden ones.
 
 ## References
 
@@ -158,4 +150,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/ls-invocation.html
 
 ## Revisions
 
-- 2025/05/04 Added -d, -s, -t, -r options and macOS considerations.
+- 2025/05/05 First revision

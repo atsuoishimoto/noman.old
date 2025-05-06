@@ -4,66 +4,33 @@ Define and run multi-container Docker applications.
 
 ## Overview
 
-Docker Compose is a tool for defining and running multi-container Docker applications. With a YAML file, you configure your application's services, networks, and volumes, then start all services with a single command. It simplifies the process of managing multiple containers that work together as part of an application.
+Docker Compose is a tool for defining and running multi-container Docker applications. With a YAML file, you configure your application's services, networks, and volumes, then create and start all services with a single command. It simplifies the process of managing complex applications that require multiple interconnected containers.
 
 ## Options
 
-### **-f, --file FILE**
-
-Specify an alternate compose file (default: docker-compose.yml)
-
-```console
-$ docker-compose -f custom-compose.yml up
-Creating network "myapp_default" with the default driver
-Creating myapp_web_1 ... done
-Creating myapp_db_1  ... done
-```
-
-### **-p, --project-name NAME**
-
-Specify an alternate project name (default: directory name)
-
-```console
-$ docker-compose -p myproject up
-Creating network "myproject_default" with the default driver
-Creating myproject_web_1 ... done
-Creating myproject_db_1  ... done
-```
-
-### **--verbose**
-
-Show more output
-
-```console
-$ docker-compose --verbose up
-compose.config.config.find: Using configuration files: ./docker-compose.yml
-docker.auth.find_config_file: Trying paths: ['/home/user/.docker/config.json', '/home/user/.dockercfg']
-docker.auth.find_config_file: Found file at path: /home/user/.docker/config.json
-...
-```
-
-### **--log-level LEVEL**
-
-Set log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-
-```console
-$ docker-compose --log-level INFO up
-Creating network "myapp_default" with the default driver
-Creating myapp_web_1 ... done
-Creating myapp_db_1  ... done
-```
-
-## Common Commands
-
 ### **up**
 
-Create and start containers
+Create and start containers defined in the compose file
+
+```console
+$ docker-compose up
+Creating network "myapp_default" with the default driver
+Creating myapp_db_1    ... done
+Creating myapp_redis_1 ... done
+Creating myapp_web_1   ... done
+Attaching to myapp_db_1, myapp_redis_1, myapp_web_1
+```
+
+### **-d, --detach**
+
+Run containers in the background
 
 ```console
 $ docker-compose up -d
 Creating network "myapp_default" with the default driver
-Creating myapp_web_1 ... done
-Creating myapp_db_1  ... done
+Creating myapp_db_1    ... done
+Creating myapp_redis_1 ... done
+Creating myapp_web_1   ... done
 ```
 
 ### **down**
@@ -72,10 +39,12 @@ Stop and remove containers, networks, images, and volumes
 
 ```console
 $ docker-compose down
-Stopping myapp_web_1 ... done
-Stopping myapp_db_1  ... done
-Removing myapp_web_1 ... done
-Removing myapp_db_1  ... done
+Stopping myapp_web_1   ... done
+Stopping myapp_redis_1 ... done
+Stopping myapp_db_1    ... done
+Removing myapp_web_1   ... done
+Removing myapp_redis_1 ... done
+Removing myapp_db_1    ... done
 Removing network myapp_default
 ```
 
@@ -85,10 +54,11 @@ List containers
 
 ```console
 $ docker-compose ps
-    Name                  Command               State           Ports
------------------------------------------------------------------------------
-myapp_db_1    docker-entrypoint.sh mysqld      Up      3306/tcp, 33060/tcp
-myapp_web_1   docker-php-entrypoint php-fpm    Up      9000/tcp
+     Name                    Command               State           Ports         
+--------------------------------------------------------------------------------
+myapp_db_1      docker-entrypoint.sh mysqld      Up      3306/tcp, 33060/tcp
+myapp_redis_1   docker-entrypoint.sh redis ...   Up      6379/tcp              
+myapp_web_1     docker-entrypoint.sh npm start   Up      0.0.0.0:3000->3000/tcp
 ```
 
 ### **logs**
@@ -97,20 +67,23 @@ View output from containers
 
 ```console
 $ docker-compose logs
-Attaching to myapp_web_1, myapp_db_1
-db_1   | 2025-05-04T10:15:30.123456Z 0 [Note] mysqld: ready for connections.
-web_1  | [04-May-2025 10:15:32] NOTICE: fpm is running, pid 1
+Attaching to myapp_web_1, myapp_redis_1, myapp_db_1
+web_1    | > myapp@1.0.0 start
+web_1    | > node server.js
+web_1    | Server listening on port 3000
+db_1     | 2023-05-05T12:34:56.789Z 0 [Note] mysqld: ready for connections.
 ```
 
-### **exec**
+### **-f, --follow**
 
-Execute a command in a running container
+Follow log output (with logs command)
 
 ```console
-$ docker-compose exec web php -v
-PHP 8.2.0 (cli) (built: Dec 6 2024) (NTS)
-Copyright (c) The PHP Group
-Zend Engine v4.2.0, Copyright (c) Zend Technologies
+$ docker-compose logs -f
+Attaching to myapp_web_1, myapp_redis_1, myapp_db_1
+web_1    | > myapp@1.0.0 start
+web_1    | > node server.js
+web_1    | Server listening on port 3000
 ```
 
 ### **build**
@@ -120,129 +93,141 @@ Build or rebuild services
 ```console
 $ docker-compose build
 Building web
-Step 1/10 : FROM php:8.2-fpm
- ---> 123456789abc
-Step 2/10 : WORKDIR /var/www/html
+Step 1/10 : FROM node:14
+ ---> 1234567890ab
+Step 2/10 : WORKDIR /app
  ---> Using cache
  ---> abcdef123456
 ...
-Successfully built 987654321fed
+Successfully built 0123456789ab
 Successfully tagged myapp_web:latest
+```
+
+### **exec**
+
+Execute a command in a running container
+
+```console
+$ docker-compose exec web npm test
+> myapp@1.0.0 test
+> jest
+
+PASS  ./app.test.js
+  ✓ should return 200 (32ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+```
+
+### **-f, --file**
+
+Specify an alternate compose file
+
+```console
+$ docker-compose -f docker-compose.prod.yml up -d
+Creating network "myapp_default" with the default driver
+Creating myapp_db_1    ... done
+Creating myapp_redis_1 ... done
+Creating myapp_web_1   ... done
 ```
 
 ## Usage Examples
 
-### Basic Web Application with Database
+### Starting a development environment
 
 ```console
-$ cat docker-compose.yml
-version: '3'
-services:
-  web:
-    image: nginx:latest
-    ports:
-      - "8080:80"
-    volumes:
-      - ./html:/usr/share/nginx/html
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: myapp
-
-$ docker-compose up -d
+$ docker-compose up
 Creating network "myapp_default" with the default driver
-Creating myapp_web_1 ... done
-Creating myapp_db_1  ... done
+Creating myapp_db_1    ... done
+Creating myapp_redis_1 ... done
+Creating myapp_web_1   ... done
+Attaching to myapp_db_1, myapp_redis_1, myapp_web_1
 ```
 
-### Scaling Services
+### Rebuilding and starting services
+
+```console
+$ docker-compose up --build
+Building web
+Step 1/10 : FROM node:14
+...
+Successfully built 0123456789ab
+Successfully tagged myapp_web:latest
+Creating network "myapp_default" with the default driver
+Creating myapp_db_1    ... done
+Creating myapp_redis_1 ... done
+Creating myapp_web_1   ... done
+```
+
+### Running a one-off command in a service container
+
+```console
+$ docker-compose run web npm install express
+Creating myapp_web_run ... done
++ express@4.18.2
+added 57 packages in 2.5s
+```
+
+### Scaling a service
 
 ```console
 $ docker-compose up -d --scale web=3
-Creating network "myapp_default" with the default driver
 Creating myapp_web_1 ... done
 Creating myapp_web_2 ... done
 Creating myapp_web_3 ... done
-Creating myapp_db_1  ... done
 ```
 
-## Tips
+## Tips:
 
 ### Use Environment Variables
 
-Store sensitive information like passwords in a `.env` file instead of hardcoding them in your docker-compose.yml file.
+Store sensitive information like passwords and API keys in a `.env` file instead of hardcoding them in your compose file.
 
 ```console
 $ cat .env
 DB_PASSWORD=secretpassword
-
-$ cat docker-compose.yml
-version: '3'
-services:
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+API_KEY=1234567890abcdef
 ```
 
-### Use Profiles for Selective Service Startup
+### Override Default Compose File
 
-Profiles allow you to start only specific services when needed.
+Create a `docker-compose.override.yml` file for development-specific settings that will automatically be used alongside the base `docker-compose.yml` file.
 
-```console
-$ cat docker-compose.yml
-version: '3.9'
+### Use Named Volumes for Persistence
+
+Named volumes preserve data between container restarts and rebuilds:
+
+```yaml
+volumes:
+  db_data:
+
 services:
-  app:
-    image: myapp
   db:
-    image: mysql
-  test:
-    image: myapp-test
-    profiles:
-      - testing
-
-$ docker-compose --profile testing up
-```
-
-### Use Docker Compose Override Files
-
-Create a `docker-compose.override.yml` file to override settings in your main compose file without modifying it.
-
-```console
-$ cat docker-compose.yml
-version: '3'
-services:
-  web:
-    image: nginx
-
-$ cat docker-compose.override.yml
-version: '3'
-services:
-  web:
-    ports:
-      - "8080:80"
+    image: postgres
     volumes:
-      - ./html:/usr/share/nginx/html
+      - db_data:/var/lib/postgresql/data
 ```
+
+### Use Version Control for Compose Files
+
+Keep your compose files in version control to track changes and collaborate with team members.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `docker-compose up` and `docker-compose up -d`?
-A. `docker-compose up` starts containers and shows their output in the terminal. The `-d` flag (detached mode) runs containers in the background.
+#### Q1. What's the difference between `docker-compose up` and `docker-compose run`?
+A. `up` starts all services defined in the compose file, while `run` starts a specific service and runs a one-off command.
 
-#### Q2. How do I update a single service without affecting others?
-A. Use `docker-compose up -d --no-deps --build service_name` to rebuild and update a specific service without restarting dependent services.
+#### Q2. How do I update a single service?
+A. Use `docker-compose up --build <service_name>` to rebuild and update a specific service.
 
 #### Q3. How can I view logs for a specific service?
-A. Use `docker-compose logs service_name` to view logs for a specific service. Add `-f` to follow the logs in real-time.
+A. Use `docker-compose logs <service_name>` to view logs for a specific service.
 
-#### Q4. Can I use Docker Compose in production?
-A. While Docker Compose can be used in production, Docker Swarm or Kubernetes are often preferred for production deployments due to their additional orchestration features.
+#### Q4. How do I stop services without removing containers?
+A. Use `docker-compose stop` to stop services without removing containers, networks, or volumes.
 
-#### Q5. How do I clean up unused volumes?
-A. Use `docker-compose down -v` to remove containers, networks, and volumes defined in your compose file.
+#### Q5. How can I run docker-compose in production?
+A. While docker-compose can be used in production, Docker Swarm or Kubernetes are often better choices for production deployments. If using compose, create a production-specific compose file with appropriate settings.
 
 ## References
 
@@ -250,4 +235,4 @@ https://docs.docker.com/compose/reference/
 
 ## Revisions
 
-2025/05/04 First revision
+- 2025/05/05 First revision

@@ -4,7 +4,7 @@
 
 ## 概要
 
-`file` コマンドは指定された各ファイルを調査し、そのタイプを分類します。テキスト、実行可能ファイル、データ、その他の形式かどうかを判断するために一連のテストを実行します。多くのコマンドがファイル拡張子に依存するのとは異なり、`file` はファイルの実際の内容を調べてタイプを識別します。
+`file` コマンドは、ファイル名の拡張子に依存せず、ファイルの内容を調査してそのタイプを識別します。ファイルがテキスト、実行可能バイナリ、データファイル、またはその他のタイプであるかを判断するために、さまざまなテストを実行します。これは、拡張子が欠けていたり誤解を招くようなファイルを扱う場合に特に役立ちます。
 
 ## オプション
 
@@ -19,7 +19,7 @@ ASCII text
 
 ### **-i, --mime**
 
-従来の説明の代わりにMIMEタイプ文字列を表示します。
+従来のファイルタイプの説明の代わりにMIMEタイプを表示します。
 
 ```console
 $ file -i document.txt
@@ -28,7 +28,7 @@ document.txt: text/plain; charset=us-ascii
 
 ### **-z, --uncompress**
 
-圧縮ファイルの中身を調べます。
+圧縮ファイルの中身を調べようとします。
 
 ```console
 $ file -z archive.gz
@@ -55,7 +55,7 @@ $ file -s /dev/sda1
 
 ## 使用例
 
-### 基本的なファイル識別
+### 複数のファイルを一度にチェックする
 
 ```console
 $ file document.txt image.png script.sh
@@ -64,74 +64,65 @@ image.png:    PNG image data, 1920 x 1080, 8-bit/color RGB, non-interlaced
 script.sh:    Bourne-Again shell script, ASCII text executable
 ```
 
-### 複数ファイルの調査
+### バイナリファイルの調査
 
 ```console
-$ file *
-document.txt:  ASCII text
-image.png:     PNG image data, 1920 x 1080, 8-bit/color RGB, non-interlaced
-script.sh:     Bourne-Again shell script, ASCII text executable
-archive.tar:   POSIX tar archive (GNU)
-binary:        ELF 64-bit LSB executable, x86-64
+$ file /bin/ls
+/bin/ls: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=2f15ad836be3339dec0e2e6a3c637e08e48aacbd, for GNU/Linux 3.2.0, stripped
 ```
 
-### ディレクトリの調査
+### ファイルエンコーディングの確認
 
 ```console
-$ file projects/
-projects/: directory
+$ file --mime-encoding document.txt
+document.txt: us-ascii
 ```
 
 ## ヒント:
 
-### パイプとの使用
+### findコマンドとの併用
 
-特殊な引数 `-` を使用して、他のコマンドからの出力を `file` にパイプで渡し、標準入力から読み取ることができます：
-
-```console
-$ cat unknown_file | file -
-/dev/stdin: ASCII text
-```
-
-### 再帰的なファイルタイプ識別
-
-`find` と組み合わせて、再帰的にファイルタイプを識別できます：
+`find`と組み合わせてディレクトリ構造内のファイルタイプを識別します：
 
 ```console
 $ find . -type f -exec file {} \;
 ```
 
-### 実行可能ファイルの識別
+### ディスクパーティションの調査
 
-`file` コマンドは、バイナリが32ビットか64ビットか、どのアーキテクチャ用にコンパイルされているかを判断するのに役立ちます：
+`file -s`を使用してディスクパーティションとファイルシステムを調査します：
 
 ```console
-$ file /bin/ls
-/bin/ls: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32
+$ sudo file -s /dev/sd*
+```
+
+### ファイルエンコーディングの確認
+
+国際的なテキストを扱う場合、`file --mime-encoding`を使用して文字エンコーディングを判断します：
+
+```console
+$ file --mime-encoding international_text.txt
+international_text.txt: utf-8
 ```
 
 ## よくある質問
 
-#### Q1. `file` コマンドはどのようにファイルタイプを判定しますか？
-A. `file` は「マジック」テストを使用します - ファイルの最初の数バイトを調べ、データベース（通常は `/usr/share/file/magic` にあります）の既知のパターンと比較します。
+#### Q1. fileコマンドはどれくらい正確ですか？
+A. `file`コマンドは一般的に正確ですが、完璧ではありません。パターンを調べるための「マジック」テストを使用しますが、特にカスタムや珍しいフォーマットのファイルタイプは誤認識される場合があります。
 
-#### Q2. `file` はすべてのファイルタイプを識別できますか？
-A. `file` は多くの一般的なファイルタイプを識別できますが、専門的または独自の形式は認識できない場合があります。ファイルの内容に基づいて最善の推測を提供します。
+#### Q2. fileは暗号化されたファイルを検出できますか？
+A. はい、`file`は暗号化されたファイルを検出できることが多いですが、暗号化方法を特定せずに「データ」または「暗号化データ」としてのみ識別する場合があります。
 
-#### Q3. なぜ `file` はテキストファイルを特定のエンコーディングとして報告することがありますか？
-A. `file` は文字パターンを分析して、UTF-8、ASCII、その他の文字セットなどのテキストエンコーディングを検出します。
+#### Q3. fileはファイル拡張子の使用とどう違いますか？
+A. ファイル拡張子（変更されたり誤解を招く可能性がある）に依存する代わりに、`file`はファイルの実際の内容を調査してタイプを判断するため、より信頼性の高い識別が可能です。
 
-#### Q4. ファイル名なしでMIMEタイプだけを取得するにはどうすればよいですか？
-A. `file -b -i ファイル名` を使用すると、ファイル名の接頭辞なしでMIMEタイプのみを取得できます。
+#### Q4. fileはプログラミング言語のソースコードを識別できますか？
+A. はい、`file`は多くのプログラミング言語のソースファイルを識別できますが、時には単に「ASCIIテキスト」などと一般的に識別するだけの場合もあります。
 
-## macOSに関する考慮事項
-
-macOSでは、`file` コマンドはLinuxバージョンと同様に動作しますが、出力形式や検出機能が若干異なる場合があります。マジックデータベースの場所は通常 `/usr/share/file/magic` または `/etc/magic` にあります。
-
-## 参考資料
+## 参考文献
 
 https://man7.org/linux/man-pages/man1/file.1.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

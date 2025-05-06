@@ -4,7 +4,7 @@ Monitor I/O usage by processes on the system.
 
 ## Overview
 
-`iotop` is a top-like utility that displays real-time disk I/O usage information for processes. It shows which processes are using the disk, how much they're reading and writing, and their I/O priority. This tool is particularly useful for identifying which processes are causing high disk activity.
+`iotop` is a top-like utility for monitoring I/O usage by processes or threads. It displays real-time disk I/O statistics, showing which processes are using the most disk read/write bandwidth. This tool is particularly useful for identifying I/O-intensive processes that might be causing system slowdowns.
 
 ## Options
 
@@ -14,10 +14,10 @@ Only show processes or threads that are actually doing I/O
 
 ```console
 $ sudo iotop -o
-Total DISK READ:         0.00 B/s | Total DISK WRITE:         7.56 K/s
+Total DISK READ:         0.00 B/s | Total DISK WRITE:         7.63 K/s
 Current DISK READ:       0.00 B/s | Current DISK WRITE:       0.00 B/s
-    PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
-   1234 be/4 root        0.00 B/s    7.56 K/s  0.00 %  0.00 % systemd-journald
+    TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
+   1234 be/4 root        0.00 B/s    7.63 K/s  0.00 %  0.00 % systemd-journald
 ```
 
 ### **-b, --batch**
@@ -25,12 +25,12 @@ Current DISK READ:       0.00 B/s | Current DISK WRITE:       0.00 B/s
 Run in non-interactive mode, useful for logging
 
 ```console
-$ sudo iotop -b -n 3
-Total DISK READ:         0.00 B/s | Total DISK WRITE:        15.69 K/s
+$ sudo iotop -b -n 5
+Total DISK READ:         0.00 B/s | Total DISK WRITE:        15.27 K/s
 Current DISK READ:       0.00 B/s | Current DISK WRITE:       0.00 B/s
-    PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
+    TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
       1 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % systemd
-    346 be/4 root        0.00 B/s    7.84 K/s  0.00 %  0.00 % systemd-journald
+   1234 be/4 root        0.00 B/s   15.27 K/s  0.00 %  0.00 % systemd-journald
 [...]
 ```
 
@@ -40,7 +40,8 @@ Set the number of iterations before exiting (for non-interactive mode)
 
 ```console
 $ sudo iotop -b -n 2
-[output shows 2 iterations of disk I/O statistics]
+Total DISK READ:         0.00 B/s | Total DISK WRITE:        15.27 K/s
+[...output for 2 iterations...]
 ```
 
 ### **-d SEC, --delay=SEC**
@@ -49,16 +50,25 @@ Set the delay between iterations in seconds (default 1.0)
 
 ```console
 $ sudo iotop -d 5
-[updates display every 5 seconds]
+# Updates every 5 seconds instead of the default 1 second
 ```
 
 ### **-p PID, --pid=PID**
 
-Monitor only the specified process ID
+Monitor only processes with specified PID
 
 ```console
 $ sudo iotop -p 1234
-[shows I/O statistics only for process with PID 1234]
+# Shows I/O statistics only for process with PID 1234
+```
+
+### **-u USER, --user=USER**
+
+Monitor only processes of specified user
+
+```console
+$ sudo iotop -u apache
+# Shows I/O statistics only for processes owned by user 'apache'
 ```
 
 ### **-a, --accumulated**
@@ -67,7 +77,7 @@ Show accumulated I/O instead of bandwidth
 
 ```console
 $ sudo iotop -a
-[shows total I/O performed by each process since iotop started]
+# Shows total I/O done since process start rather than current rate
 ```
 
 ## Usage Examples
@@ -76,63 +86,67 @@ $ sudo iotop -a
 
 ```console
 $ sudo iotop
-Total DISK READ:         0.00 B/s | Total DISK WRITE:        23.45 K/s
-Current DISK READ:       0.00 B/s | Current DISK WRITE:       7.84 K/s
-    PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
+Total DISK READ:         0.00 B/s | Total DISK WRITE:        23.47 K/s
+Current DISK READ:       0.00 B/s | Current DISK WRITE:       0.00 B/s
+    TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
       1 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % systemd
-    346 be/4 root        0.00 B/s    7.84 K/s  0.00 %  0.00 % systemd-journald
-[...]
+   1234 be/4 root        0.00 B/s   15.27 K/s  0.00 %  0.00 % systemd-journald
+   2345 be/4 mysql       0.00 B/s    8.20 K/s  0.00 %  0.00 % mysqld
 ```
 
-### Monitoring only active I/O processes and logging to a file
+### Logging I/O activity to a file
 
 ```console
-$ sudo iotop -bo -n 60 -d 10 > disk_activity.log
-[captures 60 snapshots at 10-second intervals of processes doing I/O]
+$ sudo iotop -botq -n 10 > io_log.txt
+# Logs 10 iterations of I/O activity in batch mode, showing only processes doing I/O,
+# with timestamps, and without header information
 ```
 
-### Monitoring specific processes
+### Monitoring specific user's processes
 
 ```console
-$ sudo iotop -p 1234,5678
-[shows I/O statistics only for processes with PIDs 1234 and 5678]
+$ sudo iotop -o -u www-data
+# Shows only I/O-active processes owned by www-data user
 ```
 
 ## Tips:
 
-### Run with sudo
+### Interactive Commands
 
-`iotop` requires root privileges to access the I/O statistics. Always run it with `sudo` or as the root user.
+While running iotop interactively, you can use these keyboard shortcuts:
+- `o`: Toggle --only mode (show only processes doing I/O)
+- `p`: Toggle showing processes (vs threads)
+- `a`: Toggle accumulated I/O mode
+- `q`: Quit the program
 
-### Use -o for busy systems
+### Run with Sudo
 
-On systems with many processes, use the `-o` option to show only processes that are actually performing I/O operations, making it easier to identify problematic processes.
+`iotop` requires root privileges to access I/O statistics. Always run it with `sudo` or as the root user.
 
-### Keyboard shortcuts
+### Identify I/O Bottlenecks
 
-While running interactively, you can use:
-- `o` to toggle the --only option
-- `p` to toggle showing processes (not threads)
-- `a` to toggle accumulated I/O mode
-- `q` to quit
+Use `iotop -o` to quickly identify which processes are currently causing I/O load, which is useful for troubleshooting system slowdowns.
 
-### Combine with logging
+### Combine with Logging
 
-For troubleshooting intermittent I/O issues, run `iotop` in batch mode and redirect output to a log file that you can analyze later.
+For long-term monitoring, use `iotop -b -o -n [count] > logfile` to capture I/O statistics over time.
 
 ## Frequently Asked Questions
 
 #### Q1. Why do I get "iotop: command not found"?
-A. `iotop` may not be installed by default. Install it using your distribution's package manager (e.g., `apt install iotop` on Debian/Ubuntu or `yum install iotop` on RHEL/CentOS).
+A. You need to install iotop first. On Debian/Ubuntu: `sudo apt install iotop`, on RHEL/CentOS: `sudo yum install iotop`.
 
 #### Q2. Why do I get "Permission denied" when running iotop?
-A. `iotop` requires root privileges to access I/O statistics. Run it with `sudo iotop` or as the root user.
+A. iotop requires root privileges. Run it with `sudo iotop` or as the root user.
 
-#### Q3. How can I see which process is causing disk I/O spikes?
-A. Run `sudo iotop -o` to show only processes that are actively performing I/O operations.
+#### Q3. How can I see only processes that are actively using disk I/O?
+A. Use `sudo iotop -o` to show only processes that are actually performing I/O operations.
 
-#### Q4. What do the SWAPIN and IO columns mean?
-A. SWAPIN shows the percentage of time the process spent swapping in, while IO shows the percentage of time the process spent waiting for I/O.
+#### Q4. Can I log iotop output to a file?
+A. Yes, use batch mode: `sudo iotop -b -n [iterations] > filename.log`
+
+#### Q5. How do I monitor I/O for a specific process?
+A. Use `sudo iotop -p PID` where PID is the process ID you want to monitor.
 
 ## References
 
@@ -140,4 +154,4 @@ https://man7.org/linux/man-pages/man8/iotop.8.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

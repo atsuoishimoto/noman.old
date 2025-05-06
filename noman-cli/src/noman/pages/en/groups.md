@@ -4,66 +4,86 @@ Display the groups a user belongs to.
 
 ## Overview
 
-The `groups` command shows all the groups that a specified user is a member of. If no user is specified, it displays the groups for the current user. This command is useful for checking user permissions and access rights in Unix/Linux systems.
+The `groups` command shows all the groups that a specified user is a member of. If no user is specified, it displays the groups for the current user. This command is useful for checking group memberships for permission-related issues.
 
 ## Options
 
-The `groups` command has very few options as it's a simple utility:
+The `groups` command has minimal options as it's designed for a simple purpose.
 
-### **username**
+### No options (default usage)
 
-Displays the groups for the specified username
+Shows the groups for the current user.
 
 ```console
-$ groups john
-john : users wheel developers
+$ groups
+staff wheel admin
+```
+
+### Specify username
+
+Shows the groups for the specified user.
+
+```console
+$ groups username
+username : staff wheel admin
 ```
 
 ## Usage Examples
 
-### Checking your own groups
+### Checking your own group memberships
 
 ```console
 $ groups
-user wheel audio video
+user wheel admin staff
 ```
 
-### Checking groups for multiple users
+### Checking another user's group memberships
 
 ```console
-$ groups root alice bob
-root : root bin daemon sys adm
-alice : users wheel developers
-bob : users guests
+$ groups root
+root : wheel admin system
 ```
 
-## Tips:
+### Checking multiple users' group memberships
 
-### Understanding Group Membership
+```console
+$ groups user1 user2
+user1 : staff wheel
+user2 : staff admin
+```
 
-Group membership determines what files and resources a user can access. The first group listed is typically the user's primary group, while others are supplementary groups.
+## Tips
 
-### Related Commands
+### Understanding Group Membership Importance
 
-Use `id -Gn` as an alternative to see your groups. For more detailed information including numeric group IDs, use `id` without options.
+Group memberships determine what files and resources a user can access. For example, users in the "wheel" group often have sudo privileges, while those in "admin" can perform administrative tasks.
 
-### Checking System Group Files
+### Combining with Other Commands
 
-If you need to see all groups defined on the system, check the `/etc/group` file with `cat /etc/group` or `getent group`.
+Use `groups` with `id` for more comprehensive user information:
+
+```console
+$ id
+uid=501(user) gid=20(staff) groups=20(staff),12(everyone),61(localaccounts)
+```
+
+### Checking Primary Group
+
+The first group listed is usually the user's primary group, which is used by default when creating new files.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between primary and supplementary groups?
-A. The primary group (usually the first one listed) is the default group assigned to files created by the user. Supplementary groups provide additional access permissions.
+#### Q1. What is the difference between primary and secondary groups?
+A. The primary group (also called the login group) is the default group assigned to files created by the user. Secondary groups provide additional permissions.
 
 #### Q2. How do I add a user to a group?
-A. Use `usermod -aG groupname username` to add a user to a supplementary group.
+A. Use `sudo usermod -aG groupname username` on Linux or `sudo dseditgroup -o edit -a username -t user groupname` on macOS.
 
-#### Q3. Why do I need to know my groups?
-A. Group membership determines what files and resources you can access on the system. Troubleshooting permission issues often involves checking group membership.
+#### Q3. Why do I need to know my group memberships?
+A. Group memberships determine what files and resources you can access. Troubleshooting permission issues often involves checking group memberships.
 
-#### Q4. Can I see the numeric group IDs instead of names?
-A. Yes, use `id -G` instead of `groups` to see numeric group IDs.
+#### Q4. Can I see all groups on the system?
+A. Yes, use the `getent group` command on Linux or `dscl . list /Groups` on macOS to see all groups.
 
 ## References
 
@@ -71,4 +91,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/groups-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

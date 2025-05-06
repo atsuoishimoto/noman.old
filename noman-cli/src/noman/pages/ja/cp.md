@@ -1,59 +1,36 @@
 # cp コマンド
 
-ファイルやディレクトリをソースから宛先へコピーします。
+ファイルとディレクトリをソースから宛先へコピーします。
 
 ## 概要
 
-`cp` コマンドはファイルやディレクトリをコピーするために使用します。単一のファイルを別のファイルへ、複数のファイルをディレクトリへ、またはディレクトリ全体をその内容と共にコピーすることができます。デフォルトでは、`cp` は `-f` オプションが使用されない限り既存のファイルを上書きせず、また `-R` または `-r` オプションが指定されない限りディレクトリを再帰的にコピーしません。
+`cp` コマンドはファイルとディレクトリをコピーします。単一のファイルを別のファイルへ、複数のファイルをディレクトリへ、またはディレクトリ構造全体をコピーすることができます。デフォルトでは、`cp` はオプションで強制されない限り既存のファイルを上書きせず、元のファイルのタイムスタンプと権限を保持します。
 
 ## オプション
 
-### **-a, --archive**
-
-すべてのファイル属性を保持し、ディレクトリを再帰的にコピーするアーカイブモードです。`-dR --preserve=all` と同等です。
-
-```console
-$ cp -a documents/ backup/
-# documents ディレクトリの内容をすべての属性を保持して backup にコピーする
-```
-
 ### **-r, -R, --recursive**
 
-ディレクトリを再帰的にコピーします。すべてのサブディレクトリとその内容も含まれます。
+ディレクトリを再帰的にコピーし、すべてのサブディレクトリとその内容を含めます。
 
 ```console
-$ cp -r projects/ backup/
-# projects ディレクトリとその中身を再帰的に backup にコピーする
+$ cp -r Documents/ Backup/
 ```
 
 ### **-i, --interactive**
 
-既存のファイルを上書きする前に確認を求めます。各ファイルごとに判断できます。
+既存のファイルを上書きする前に確認を求めます。
 
 ```console
-$ cp -i report.txt backup/
-cp: overwrite 'backup/report.txt'? y
-# 上書きするかどうかを確認している
+$ cp -i file.txt destination/
+cp: overwrite 'destination/file.txt'? y
 ```
 
 ### **-f, --force**
 
-書き込みのために開けない場合、宛先ファイルを削除して強制的にコピーします。
+必要に応じて宛先ファイルを削除して、確認なしでコピーを強制します。
 
 ```console
-$ cp -f important.txt backup/
-# 強制的に important.txt を backup ディレクトリにコピーする
-```
-
-### **-v, --verbose**
-
-コピーする前に各ファイル名を表示し、処理中のファイルを確認できます。
-
-```console
-$ cp -v *.txt documents/
-'report.txt' -> 'documents/report.txt'
-'notes.txt' -> 'documents/notes.txt'
-# コピーされるファイルとその宛先が表示される
+$ cp -f important.txt destination/
 ```
 
 ### **-p, --preserve**
@@ -62,7 +39,16 @@ $ cp -v *.txt documents/
 
 ```console
 $ cp -p config.ini backup/
-# ファイル属性を保持して config.ini を backup ディレクトリにコピーする
+```
+
+### **-v, --verbose**
+
+コピーされる各ファイルの名前を表示します。
+
+```console
+$ cp -v *.txt Documents/
+'file1.txt' -> 'Documents/file1.txt'
+'file2.txt' -> 'Documents/file2.txt'
 ```
 
 ### **-u, --update**
@@ -70,8 +56,15 @@ $ cp -p config.ini backup/
 ソースファイルが宛先ファイルより新しい場合、または宛先ファイルが存在しない場合にのみコピーします。
 
 ```console
-$ cp -u *.txt backup/
-# 新しいファイルまたは存在しないファイルのみをコピーする
+$ cp -u *.log archive/
+```
+
+### **-a, --archive**
+
+すべてのファイル属性を保持し、ディレクトリを再帰的にコピーします（-dR --preserve=all と同等）。
+
+```console
+$ cp -a source_dir/ destination_dir/
 ```
 
 ## 使用例
@@ -79,73 +72,81 @@ $ cp -u *.txt backup/
 ### 単一ファイルのコピー
 
 ```console
-$ cp report.txt backup/report.txt
-# report.txt を backup ディレクトリにコピーする
+$ cp report.pdf ~/Documents/
 ```
 
-### 複数のファイルをディレクトリにコピー
+### 複数ファイルをディレクトリにコピー
 
 ```console
-$ cp file1.txt file2.txt file3.txt destination/
-# 複数のファイルを destination ディレクトリにコピーする
+$ cp file1.txt file2.txt file3.txt ~/Backup/
 ```
 
-### 詳細出力付きの再帰的コピー
+### ディレクトリをすべての内容と共にコピー
 
 ```console
-$ cp -rv projects/ backup/
-'projects/main.c' -> 'backup/projects/main.c'
-'projects/lib/utils.c' -> 'backup/projects/lib/utils.c'
-'projects/lib/utils.h' -> 'backup/projects/lib/utils.h'
-# コピーされる各ファイルの情報が表示される
+$ cp -r Projects/ ~/Backup/Projects/
 ```
 
-### 属性を保持したコピー
+### 詳細出力と属性保持を伴うコピー
 
 ```console
-$ cp -ap documents/ archive/
-# documents ディレクトリの内容をすべての属性を保持して archive にコピーする
+$ cp -vp important.conf /etc/
+'important.conf' -> '/etc/important.conf'
 ```
 
 ## ヒント:
 
-### 末尾のスラッシュを注意して使用する
+### ワイルドカードを使用して複数ファイルをコピー
 
-ディレクトリをコピーする際、ソースの末尾にスラッシュをつけると「このディレクトリの内容をコピー」という意味になります：
-- `cp -r dir1 dir2` は dir2 が存在する場合、dir2/dir1 を作成します
-- `cp -r dir1/ dir2` は dir1 の内容を dir2 にコピーします
-
-### 上書き前にバックアップを作成する
-
-`--backup` オプションを使用して、ファイルを上書きする前にバックアップを作成できます：
-
+パターンに一致する複数のファイルをコピーするにはワイルドカードを使用します：
 ```console
-$ cp --backup=numbered important.txt destination/
-# 上書き前に番号付きバックアップを作成する
+$ cp *.jpg ~/Pictures/
 ```
 
-### シンボリックリンクの扱い
+### 上書き前にバックアップを作成
 
-デフォルトでは、`cp` はシンボリックリンクをたどります。リンク先ではなくリンク自体をコピーするには、`-P` または `--no-dereference` を使用します。
+`-b` オプションを使用して既存ファイルのバックアップを作成します：
+```console
+$ cp -b config.ini /etc/
+```
+これにより上書き前に `config.ini~` という名前のバックアップファイルが作成されます。
+
+### 新しい場合のみコピー
+
+`-u` を使用して、ソースが宛先より新しい場合にのみファイルを更新します：
+```console
+$ cp -u -r source_dir/ destination_dir/
+```
+これはディレクトリの同期に便利です。
+
+### シンボリックリンクを保持
+
+`-d` または `--no-dereference` を使用して、シンボリックリンクが指すファイルをコピーするのではなく、リンクとして保持します：
+```console
+$ cp -d link.txt destination/
+```
 
 ## よくある質問
 
 #### Q1. 既存のファイルを上書きせずにファイルをコピーするにはどうすればよいですか？
-A. `cp -n ソース 宛先` を使用します。これにより既存のファイルの上書きを防ぎます。
+A. `cp -n ソース 宛先` を使用します。`-n` オプションは既存ファイルの上書きを防ぎます。
 
 #### Q2. 隠しファイルをコピーするにはどうすればよいですか？
-A. 隠しファイル（ドットで始まるファイル）は通常通りコピーされます。隠しファイルを含むすべてのファイルをコピーするには、`cp -r .* * 宛先/` のようなパターンを使用するか、隠しファイルを明示的に指定します。
+A. 隠しファイル（`.` で始まるもの）は通常通りコピーされます。隠しファイルを含むすべてのファイルをコピーするには、`cp -r source/. destination/` のようなワイルドカードを使用します。
 
-#### Q3. ファイルなしでディレクトリ構造だけをコピーするにはどうすればよいですか？
-A. `cp` には直接のオプションがありません。`find` と `mkdir` または `rsync --include='*/' --exclude='*'` を使用する必要があるかもしれません。
+#### Q3. ファイルをコピーして権限を維持するにはどうすればよいですか？
+A. `cp -p ソース 宛先` を使用して、モード、所有権、タイムスタンプを保持します。
 
-#### Q4. 権限を保持してファイルをコピーするにはどうすればよいですか？
-A. モード、所有権、タイムスタンプを保持するには `cp -p` を使用し、すべての属性を保持するには `cp -a` を使用します。
+#### Q4. ディレクトリをすべての内容と共にコピーするにはどうすればよいですか？
+A. `cp -r ソースディレクトリ 宛先ディレクトリ` を使用して、ディレクトリとそのすべての内容を再帰的にコピーします。
 
-## References
+#### Q5. ディレクトリから特定のファイルタイプのみをコピーするにはどうすればよいですか？
+A. ワイルドカードを使用します：`cp ソースディレクトリ/*.txt 宛先ディレクトリ/` でテキストファイルのみをコピーします。
+
+## 参考資料
 
 https://www.gnu.org/software/coreutils/manual/html_node/cp-invocation.html
 
-## Revisions
+## 改訂履歴
 
-- 2025/05/04 初回リビジョン
+- 2025/05/05 初版

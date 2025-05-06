@@ -1,16 +1,16 @@
 # pandoc command
 
-Convert documents between various formats.
+Universal document converter that transforms files between markup formats.
 
 ## Overview
 
-Pandoc is a universal document converter that can transform files between markup formats. It's particularly useful for converting between Markdown, HTML, LaTeX, Word documents, and many other formats. Pandoc preserves document structure and can handle complex elements like tables, footnotes, and bibliographies.
+Pandoc is a powerful document conversion tool that can convert between numerous markup formats including Markdown, HTML, LaTeX, Word, EPUB, and many others. It's particularly useful for writers, academics, and publishers who need to transform documents while preserving formatting, citations, and other elements.
 
 ## Options
 
 ### **-f, --from=FORMAT**
 
-Specify the input format. If not specified, pandoc will attempt to guess the format.
+Specify input format. If not specified, Pandoc will attempt to guess the format.
 
 ```console
 $ pandoc -f markdown -t html document.md -o document.html
@@ -18,10 +18,10 @@ $ pandoc -f markdown -t html document.md -o document.html
 
 ### **-t, --to=FORMAT**
 
-Specify the output format.
+Specify output format.
 
 ```console
-$ pandoc -t latex document.md -o document.tex
+$ pandoc -t docx document.md -o document.docx
 ```
 
 ### **-o, --output=FILE**
@@ -29,12 +29,12 @@ $ pandoc -t latex document.md -o document.tex
 Write output to FILE instead of stdout.
 
 ```console
-$ pandoc document.md -o document.pdf
+$ pandoc document.md -o document.html
 ```
 
 ### **--pdf-engine=PROGRAM**
 
-Use the specified engine when producing PDF output.
+Specify which program to use when creating PDF output.
 
 ```console
 $ pandoc document.md --pdf-engine=xelatex -o document.pdf
@@ -58,10 +58,34 @@ $ pandoc -s document.md -o document.html
 
 ### **-c, --css=URL**
 
-Link to a CSS style sheet when creating HTML output.
+Link to a CSS file when creating HTML output.
 
 ```console
-$ pandoc -s -c style.css document.md -o document.html
+$ pandoc -c style.css document.md -o document.html
+```
+
+### **--bibliography=FILE**
+
+Specify bibliography file for citation processing.
+
+```console
+$ pandoc --bibliography=references.bib document.md -o document.pdf
+```
+
+### **--citeproc**
+
+Process citations using citeproc.
+
+```console
+$ pandoc --citeproc --bibliography=references.bib document.md -o document.pdf
+```
+
+### **-V, --variable=KEY[:VALUE]**
+
+Set template variables for use in templates.
+
+```console
+$ pandoc -V title="My Document" document.md -o document.pdf
 ```
 
 ## Usage Examples
@@ -72,16 +96,16 @@ $ pandoc -s -c style.css document.md -o document.html
 $ pandoc document.md -o document.html
 ```
 
-### Converting Markdown to PDF
+### Converting Markdown to PDF with a custom template
 
 ```console
-$ pandoc document.md -o document.pdf
+$ pandoc document.md --template=template.tex -o document.pdf
 ```
 
-### Converting HTML to Markdown
+### Converting multiple files to a single output
 
 ```console
-$ pandoc -f html -t markdown https://example.com -o example.md
+$ pandoc chapter1.md chapter2.md chapter3.md -o book.docx
 ```
 
 ### Creating a presentation from Markdown
@@ -90,58 +114,66 @@ $ pandoc -f html -t markdown https://example.com -o example.md
 $ pandoc -t revealjs -s presentation.md -o presentation.html
 ```
 
-### Converting Word to Markdown
+### Converting HTML to Markdown
 
 ```console
-$ pandoc -f docx -t markdown document.docx -o document.md
+$ pandoc -f html -t markdown webpage.html -o webpage.md
 ```
 
-## Tips
+## Tips:
 
 ### Use Templates for Consistent Output
 
-Pandoc supports custom templates with the `--template` option. Create your own templates for consistent document styling across multiple conversions.
+Create custom templates for frequently used output formats to maintain consistent styling across documents:
 
 ```console
-$ pandoc --template=mytemplate.tex document.md -o document.pdf
+$ pandoc --template=mythesis.tex thesis.md -o thesis.pdf
 ```
 
-### Handling Citations and Bibliographies
+### Leverage Metadata Blocks
 
-Use `--citeproc` with a bibliography file to automatically format citations:
+Include YAML metadata blocks at the top of your Markdown files to control document properties:
 
-```console
-$ pandoc --citeproc --bibliography=refs.bib paper.md -o paper.pdf
+```markdown
+---
+title: "Document Title"
+author: "Your Name"
+date: "2025-05-05"
+---
 ```
 
-### Batch Converting Multiple Files
+### Batch Convert Multiple Files
 
 Use shell loops to convert multiple files at once:
 
 ```console
-$ for f in *.md; do pandoc "$f" -o "${f%.md}.html"; done
+$ for file in *.md; do pandoc "$file" -o "${file%.md}.html"; done
+```
+
+### Preview Markdown in Real-time
+
+For quick previews while writing, use pandoc with a pipe to a browser:
+
+```console
+$ pandoc document.md | firefox -
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. What formats does pandoc support?
+#### Q1. What formats can pandoc convert between?
 A. Pandoc supports numerous formats including Markdown, HTML, LaTeX, DOCX, ODT, EPUB, PDF, and many more. Run `pandoc --list-input-formats` or `pandoc --list-output-formats` to see all supported formats.
 
-#### Q2. How do I convert a Markdown file to PDF?
-A. Use `pandoc document.md -o document.pdf`. This requires a PDF engine like LaTeX to be installed on your system.
+#### Q2. How do I create a PDF with pandoc?
+A. Use: `pandoc document.md -o document.pdf`. Note that this requires a LaTeX engine to be installed on your system.
 
-#### Q3. Can pandoc convert a website to Markdown?
-A. Yes, you can convert a web page by providing its URL: `pandoc -f html -t markdown https://example.com -o example.md`
+#### Q3. How can I include citations in my document?
+A. Use `--citeproc` with `--bibliography=references.bib`: `pandoc --citeproc --bibliography=references.bib document.md -o document.pdf`.
 
-#### Q4. How do I include images in my document?
-A. In Markdown, use standard image syntax: `![Caption](path/to/image.jpg)`. Pandoc will include these images in the output document.
+#### Q4. Can pandoc convert tables properly?
+A. Yes, pandoc handles tables well across most formats. For complex tables, consider using the pipe table or grid table syntax in Markdown.
 
-#### Q5. How can I customize the appearance of my output document?
-A. Use CSS for HTML output (`-c style.css`), LaTeX variables for PDF output (`-V variable=value`), or custom templates (`--template=template.tex`).
-
-## macOS Considerations
-
-On macOS, pandoc can be installed via Homebrew with `brew install pandoc`. For PDF output, you'll also need a LaTeX distribution like MacTeX: `brew install --cask mactex`. MacTeX is large (4GB+), so if space is a concern, consider BasicTeX instead: `brew install --cask basictex`.
+#### Q5. How do I customize the appearance of my output document?
+A. Use templates (`--template`), CSS for HTML (`-c`), or variables (`-V`) to customize appearance.
 
 ## References
 
@@ -149,4 +181,4 @@ https://pandoc.org/MANUAL.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

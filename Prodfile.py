@@ -23,8 +23,6 @@ from anthropic import Anthropic
 api_key = os.environ["NOMAN_ANTHROPIC_API_KEY"]
 client = Anthropic(api_key=api_key)
 
-import make_summary
-
 
 TODAY = datetime.datetime.now(tz=datetime.UTC).date().strftime("%Y/%m/%d")
 COMMANDDIR = Path("./commands")
@@ -176,21 +174,6 @@ def gen_en():
         docs.append(name)
     build(docs)
 
-@task
-def summary():
-    for lang in ["ja", "en"]:
-        dest = WWW / lang
-        dest.mkdir(parents=True, exist_ok=True)
-
-        d = make_summary.make_summary(Path(f"pages/{lang}"))
-        d = {k: {"summary": v} for k, v in sorted(d.items())}
-        for k, v in d.items():
-            v.update(read_commandinfo(k))
-
-        text = json.dumps(d, ensure_ascii=False, indent=2)
-        (dest / "summary.json").write_text(text.strip())
-        (dest / "summary.js").write_text(f"pages = {text.strip()};")
-
 
 def read_commandinfo(command):
     conf = Path("commands") / command / "command.yaml"
@@ -288,5 +271,10 @@ def build_www():
 def build_cli():
     for lang in ["ja", "en"]:
         run("cp", f"pages/{lang}/*.md", f"noman-cli/src/noman/pages/{lang}")
-        run("cp", f"pages/{lang}/*.md", f"noman-cli/src/noman/pages/{lang}")
-    run("uv build", cwd="noman-cli")
+        summary = make_summary(Path(f"pages/{lang}"))
+        for k, v in summary:
+            v.update(read_commandinfo(k))
+        Path(f"noman-cli/src/noman/pages/{lang}/summary.json").write_text(
+            json.dumps(summary, ensure_ascii=False, indent=2)
+       )
+    #run("uv build", cwd="noman-cli")

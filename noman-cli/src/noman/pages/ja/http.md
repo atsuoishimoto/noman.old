@@ -1,16 +1,16 @@
 # http コマンド
 
-コマンドラインからHTTPリクエストを送信し、レスポンスを表示します。
+任意のHTTPリクエストを送信し、レスポンスを表示します。
 
 ## 概要
 
-`http`コマンドはHTTPieの一部で、Webサービスとのコマンドライン操作をより人間に優しくするように設計された使いやすいHTTPクライアントです。様々なメソッド（GET、POST、PUTなど）でHTTPリクエストを送信するためのシンプルなインターフェースを提供し、読みやすさを向上させるためにカラー表示された出力を表示します。
+`http`コマンドは、HTTPリクエストを行うためのユーザーフレンドリーなコマンドラインHTTPクライアントです。これはHTTPieツールの一部で、カラー出力、JSONサポート、よりシンプルな構文を備え、curlよりも直感的に設計されています。APIのテスト、Webサービスのデバッグ、最小限の入力でのコンテンツのダウンロードが可能です。
 
 ## オプション
 
 ### **-j, --json**
 
-リクエストボディにJSONデータを送信します。
+データをJSONとして送信します。Content-Typeヘッダーをapplication/jsonに設定します。
 
 ```console
 $ http -j POST example.com name=John age:=30
@@ -18,7 +18,7 @@ $ http -j POST example.com name=John age:=30
 
 ### **-f, --form**
 
-リクエストボディにフォームエンコードされたデータを送信します。
+データをフォームエンコードとして送信します。Content-Typeヘッダーをapplication/x-www-form-urlencodedに設定します。
 
 ```console
 $ http -f POST example.com name=John age=30
@@ -26,7 +26,7 @@ $ http -f POST example.com name=John age=30
 
 ### **-a, --auth**
 
-認証情報を指定します。
+認証用のユーザー名とパスワードを指定します。
 
 ```console
 $ http -a username:password example.com
@@ -40,50 +40,33 @@ $ http -a username:password example.com
 $ http -h example.com
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=UTF-8
-Date: Sat, 04 May 2025 12:00:00 GMT
+Date: Mon, 05 May 2025 12:00:00 GMT
 Server: nginx
 Content-Length: 1256
 ```
 
 ### **-v, --verbose**
 
-HTTPの通信全体（リクエストとレスポンス）を表示します。
+HTTP通信全体（リクエストとレスポンス）を表示します。
 
 ```console
 $ http -v example.com
-GET / HTTP/1.1
-Host: example.com
-User-Agent: HTTPie/3.2.1
-Accept-Encoding: gzip, deflate
-Accept: */*
-Connection: keep-alive
-
-HTTP/1.1 200 OK
-Content-Type: text/html; charset=UTF-8
-Date: Sat, 04 May 2025 12:00:00 GMT
-Server: nginx
-Content-Length: 1256
-
-<!doctype html>
-<html>
-...
 ```
 
-### **--verify**
+### **-d, --download**
 
-SSL検証を制御します。`no`に設定すると検証を無効にできます。
+レスポンスボディをファイルにダウンロードします。
 
 ```console
-$ http --verify=no https://example.com
+$ http -d example.com/file.pdf
 ```
 
-### **--session**
+### **--offline**
 
-複数のリクエストでセッションを作成または再利用します。
+リクエストを構築して表示しますが、送信はしません。
 
 ```console
-$ http --session=mysession -a username:password example.com
-$ http --session=mysession example.com/api/resource
+$ http --offline POST example.com name=John
 ```
 
 ## 使用例
@@ -94,13 +77,12 @@ $ http --session=mysession example.com/api/resource
 $ http example.com
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=UTF-8
-Date: Sat, 04 May 2025 12:00:00 GMT
-Server: nginx
-Content-Length: 1256
+...
 
 <!doctype html>
 <html>
 ...
+</html>
 ```
 
 ### JSONデータを使用したPOST
@@ -109,8 +91,6 @@ Content-Length: 1256
 $ http POST api.example.com/users name=John age:=30 is_active:=true
 HTTP/1.1 201 Created
 Content-Type: application/json
-Location: /users/123
-Content-Length: 42
 
 {
     "id": 123,
@@ -120,68 +100,54 @@ Content-Length: 42
 }
 ```
 
-### ファイルのダウンロード
+### リクエストヘッダーの使用
 
 ```console
-$ http --download https://example.com/file.zip
-Downloading to "file.zip"
-Done. 15.43 MB in 2.32s (6.65 MB/s)
+$ http example.com User-Agent:MyApp X-API-Token:abc123
 ```
 
-### カスタムヘッダー
+### ファイルアップロード
 
 ```console
-$ http example.com X-API-Token:abc123 User-Agent:MyApp/1.0
+$ http POST example.com/upload file@/path/to/file.jpg
 ```
 
 ## ヒント:
 
-### 一般的なHTTPメソッドのショートカットを使用する
+### 文字列以外のJSON値には`:=`を使用する
 
-HTTPieは一般的なHTTPメソッドのショートカットを提供しているため、`http GET example.com`の代わりに`http example.com`を使用できます。
+JSONデータを送信する際、数値、ブール値、nullには`:=`を使用します: `count:=42 active:=true data:=null`
 
-### JSONデータの構文
+### 出力をファイルにリダイレクトする
 
-JSONデータを送信する場合、数値とブール値には`:=`を、文字列には`=`を使用します：
-- `name=John`は`{"name": "John"}`になる
-- `age:=30`は`{"age": 30}`になる
-- `active:=true`は`{"active": true}`になる
+標準シェルのリダイレクトを使用してレスポンスを保存できます: `http example.com > response.html`
 
-### 出力を他のツールにパイプする
+### セッションを使用して永続的なクッキーを維持する
 
-出力を`jq`などのツールにパイプしてJSON処理を行うことができます：
-```console
-$ http api.example.com/users | jq '.[] | select(.active==true)'
-```
+`--session=name`を使用してリクエスト間でクッキーを維持します: `http --session=logged-in -a user:pass example.com`
 
-### 出力リダイレクションを使用する
+### JSONは自動的に整形表示される
 
-標準出力リダイレクションを使用してレスポンスボディをファイルに保存できます：
-```console
-$ http example.com/image.jpg > image.jpg
-```
+HTTPieは自動的にJSONレスポンスを読みやすく整形し、ターミナルでの構文ハイライトを提供します。
 
 ## よくある質問
 
-#### Q1. フォームデータを使ってPOSTリクエストを送信するにはどうすればよいですか？
-A. `http -f POST example.com name=value`を使用して、フォームエンコードされたデータを送信します。
+#### Q1. `http`と`curl`の違いは何ですか？
+A. `http`（HTTPie）は、より直感的な構文、自動カラー出力、デフォルトのJSONサポートを提供し、一般的な操作に必要な入力が少なくて済みます。
 
-#### Q2. リクエストに認証情報を含めるにはどうすればよいですか？
-A. `-a`または`--auth`オプションを使用します：`http -a username:password example.com`
+#### Q2. クエリパラメータを送信するにはどうすればよいですか？
+A. URLに`?`と`&`を付けて追加します: `http example.com/search?q=term&page=2` または`==`構文を使用します: `http example.com q==term page==2`
 
-#### Q3. HTTP通信の全体を確認するにはどうすればよいですか？
-A. `-v`または`--verbose`オプションを使用して、リクエストとレスポンスの両方の詳細を確認できます。
+#### Q3. カスタムHTTPメソッドを送信するにはどうすればよいですか？
+A. URLの前にメソッドを指定するだけです: `http PUT example.com`
 
-#### Q4. リクエストにファイルを送信するにはどうすればよいですか？
-A. `@filename`を使用してファイルの内容を含めます：`http POST example.com file@/path/to/file.txt`
+#### Q4. リダイレクトに従うにはどうすればよいですか？
+A. `--follow`オプションを使用します: `http --follow example.com/redirecting-url`
 
-#### Q5. リクエストにクッキーを設定するにはどうすればよいですか？
-A. `--session`オプションを使用してリクエスト間でクッキーを維持するか、手動でCookieヘッダーを設定します。
-
-## 参考資料
+## 参考文献
 
 https://httpie.io/docs/cli
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

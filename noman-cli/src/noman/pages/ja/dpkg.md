@@ -1,10 +1,10 @@
 # dpkg コマンド
 
-Debian ベースのシステム（Ubuntu など）で Debian パッケージファイル（.deb）を管理する。
+Debian ベースのシステム向けのパッケージ管理ツールで、.deb パッケージのインストール、削除、情報表示などを扱います。
 
 ## 概要
 
-`dpkg` は Debian ベースの Linux ディストリビューション向けのパッケージ管理システムです。.deb パッケージのインストール、削除、情報表示などを処理します。`apt` のような高レベルのパッケージマネージャとは異なり、`dpkg` は .deb ファイルを直接扱い、依存関係を自動的に解決しません。
+`dpkg`（Debian Package）は、Ubuntu などの Debian ベースの Linux ディストリビューションにおける中核的なパッケージ管理ユーティリティです。.deb パッケージファイルを直接扱い、ユーザーがパッケージのインストール、削除、設定、情報照会を行うことができます。`apt` のような高レベルツールとは異なり、`dpkg` はパッケージファイルを直接操作し、依存関係を自動的に処理しません。
 
 ## オプション
 
@@ -13,47 +13,44 @@ Debian ベースのシステム（Ubuntu など）で Debian パッケージフ�
 .deb ファイルからパッケージをインストールします
 
 ```console
-$ sudo dpkg -i firefox_115.0+build2-0ubuntu0.20.04.1_amd64.deb
-Selecting previously unselected package firefox.
-(Reading database ... 186342 files and directories currently installed.)
-Preparing to unpack firefox_115.0+build2-0ubuntu0.20.04.1_amd64.deb ...
-Unpacking firefox (115.0+build2-0ubuntu0.20.04.1) ...
-Setting up firefox (115.0+build2-0ubuntu0.20.04.1) ...
-Processing triggers for mime-support (3.64ubuntu1) ...
+$ sudo dpkg -i package.deb
+(Reading database ... 200000 files and directories currently installed.)
+Preparing to unpack package.deb ...
+Unpacking package (1.0-1) ...
+Setting up package (1.0-1) ...
 ```
 
 ### **-r, --remove**
 
-インストール済みのパッケージを削除します（設定ファイルは保持）
+設定ファイルを残してインストール済みパッケージを削除します
 
 ```console
-$ sudo dpkg -r firefox
-(Reading database ... 186342 files and directories currently installed.)
-Removing firefox (115.0+build2-0ubuntu0.20.04.1) ...
+$ sudo dpkg -r package
+(Reading database ... 200000 files and directories currently installed.)
+Removing package (1.0-1) ...
 ```
 
 ### **-P, --purge**
 
-インストール済みのパッケージを完全に削除します（設定ファイルも含む）
+設定ファイルを含めてインストール済みパッケージを削除します
 
 ```console
-$ sudo dpkg -P firefox
-(Reading database ... 186342 files and directories currently installed.)
-Removing firefox (115.0+build2-0ubuntu0.20.04.1) ...
-Purging configuration files for firefox ...
+$ sudo dpkg -P package
+(Reading database ... 200000 files and directories currently installed.)
+Purging configuration files for package (1.0-1) ...
 ```
 
-### **-l, --list [パターン]**
+### **-l, --list**
 
-オプションのパターンに一致するインストール済みパッケージを一覧表示します
+パターンに一致するすべてのインストール済みパッケージを一覧表示します
 
 ```console
-$ dpkg -l firefox
+$ dpkg -l firefox*
 | Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
 |/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
 ||/ Name           Version      Architecture Description
 +++-==============-============-============-=================================
-ii  firefox        115.0+build2 amd64        Safe and easy web browser from Mozilla
+ii  firefox        115.0.2      amd64        Safe and easy web browser from Mozilla
 ```
 
 ### **-L, --listfiles**
@@ -62,27 +59,16 @@ ii  firefox        115.0+build2 amd64        Safe and easy web browser from Mozi
 
 ```console
 $ dpkg -L firefox
-/.
-/usr
-/usr/bin
-/usr/bin/firefox
-/usr/lib
 /usr/lib/firefox
+/usr/lib/firefox/browser
+/usr/lib/firefox/browser/chrome
+/usr/lib/firefox/browser/chrome.manifest
 ...
-```
-
-### **-S, --search**
-
-特定のファイルを所有するパッケージを検索します
-
-```console
-$ dpkg -S /usr/bin/firefox
-firefox: /usr/bin/firefox
 ```
 
 ### **-s, --status**
 
-パッケージの詳細なステータス情報を表示します
+パッケージのステータス詳細を表示します
 
 ```console
 $ dpkg -s firefox
@@ -90,87 +76,139 @@ Package: firefox
 Status: install ok installed
 Priority: optional
 Section: web
-Installed-Size: 256348
+Installed-Size: 256000
 Maintainer: Ubuntu Mozilla Team <ubuntu-mozillateam@lists.ubuntu.com>
 Architecture: amd64
-Version: 115.0+build2-0ubuntu0.20.04.1
-Depends: lsb-release, libatk1.0-0 (>= 1.12.4), libc6 (>= 2.28), ...
-Description: Safe and easy web browser from Mozilla
- Firefox delivers safe, easy web browsing. A familiar user interface,
- enhanced security features including protection from online identity theft,
- and integrated search let you get the most out of the web.
+Version: 115.0.2
+...
+```
+
+### **-S, --search**
+
+ファイルを所有するパッケージを検索します
+
+```console
+$ dpkg -S /usr/bin/firefox
+firefox: /usr/bin/firefox
 ```
 
 ### **--configure**
 
-セットアップが必要な展開済みパッケージを設定します
+展開済みのパッケージを設定します
 
 ```console
-$ sudo dpkg --configure firefox
-Setting up firefox (115.0+build2-0ubuntu0.20.04.1) ...
+$ sudo dpkg --configure package
+Setting up package (1.0-1) ...
+```
+
+### **--unpack**
+
+パッケージを設定せずに展開します
+
+```console
+$ sudo dpkg --unpack package.deb
+(Reading database ... 200000 files and directories currently installed.)
+Preparing to unpack package.deb ...
+Unpacking package (1.0-1) over (1.0-0) ...
 ```
 
 ## 使用例
 
-### パッケージをインストールして依存関係を修正する
+### 複数のパッケージを一度にインストールする
 
 ```console
-$ sudo dpkg -i package.deb
-$ sudo apt-get install -f
+$ sudo dpkg -i package1.deb package2.deb package3.deb
+(Reading database ... 200000 files and directories currently installed.)
+Preparing to unpack package1.deb ...
+Unpacking package1 (1.0-1) ...
+Preparing to unpack package2.deb ...
+Unpacking package2 (2.0-1) ...
+Preparing to unpack package3.deb ...
+Unpacking package3 (3.0-1) ...
+Setting up package1 (1.0-1) ...
+Setting up package2 (2.0-1) ...
+Setting up package3 (3.0-1) ...
 ```
 
 ### インストール済みのすべてのパッケージを一覧表示する
 
 ```console
 $ dpkg -l
+| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
+|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
+||/ Name           Version      Architecture Description
++++-==============-============-============-=================================
+ii  accountsservice 0.6.55-0ubuntu12 amd64    query and manipulate user account information
+ii  acl            2.2.53-6      amd64        access control list - utilities
+ii  adduser        3.118ubuntu2  all          add and remove users and groups
+...
 ```
 
-### ファイルがどのパッケージに属しているかを調べる
+### 壊れたパッケージのインストールを修復する
 
 ```console
-$ dpkg -S /usr/bin/python3
-python3-minimal: /usr/bin/python3
+$ sudo dpkg --configure -a
+Setting up package1 (1.0-1) ...
+Setting up package2 (2.0-1) ...
 ```
 
-## ヒント:
+## ヒント
 
-### 壊れた依存関係を修正する
+### 依存関係の処理
 
-`dpkg` が依存関係の不足により失敗した場合は、`sudo apt-get install -f` を実行して解決します。これは .deb ファイルを直接インストールする際の一般的なワークフローです。
+`dpkg` は依存関係を自動的に解決しません。依存関係エラーが発生した場合は、次のコマンドを使用します：
+```console
+$ sudo apt-get -f install
+```
+これにより、`dpkg` インストール後の壊れた依存関係を修復しようとします。
 
-### パッケージリストのバックアップ
+### インストール中の設定を防ぐ
 
-システムの大きな変更を行う前に、`dpkg --get-selections > packages.list` でインストール済みパッケージのリストを保存しておきましょう。後で `sudo dpkg --set-selections < packages.list && sudo apt-get dselect-upgrade` で復元できます。
+パッケージを設定せずに展開するには、`-i` の代わりに `--unpack` を使用します。これは、設定前にファイルを変更する必要がある場合に便利です：
+```console
+$ sudo dpkg --unpack package.deb
+$ # ファイルに変更を加える
+$ sudo dpkg --configure package
+```
 
-### パッケージの整合性を検証する
+### コマンドを提供するパッケージを見つける
 
-インストール前に `dpkg-deb --info package.deb` でパッケージを検査し、`dpkg -V パッケージ名` でインストール済みファイルをパッケージデータベースと照合して検証できます。
+特定のコマンドを提供するパッケージを知りたい場合：
+```console
+$ which command
+/usr/bin/command
+$ dpkg -S /usr/bin/command
+package: /usr/bin/command
+```
 
-### パッケージの再設定
+### パッケージステータスコードを理解する
 
-パッケージを再設定する必要がある場合（設定を変更するなど）、`sudo dpkg-reconfigure パッケージ名` を使用すると設定スクリプトを再実行できます。
+`dpkg -l` 出力の最初の2文字はパッケージのステータスを示します：
+- `ii`: パッケージがインストールされ設定済み
+- `rc`: パッケージは削除されたが設定ファイルは残っている
+- `un`: パッケージは不明/インストールされていない
 
 ## よくある質問
 
-#### Q1. `dpkg` と `apt` の違いは何ですか？
-A. `dpkg` は .deb ファイルを直接扱い、依存関係を自動的に処理しません。`apt` はより高レベルのツールで、依存関係を解決し、リポジトリからパッケージをダウンロードできます。
+#### Q1. dpkg と apt の違いは何ですか？
+A. `dpkg` は .deb ファイルを直接扱い、依存関係を自動的に処理しない低レベルのパッケージマネージャです。`apt` は依存関係を解決し、リポジトリからパッケージをダウンロードできる高レベルのツールです。
 
 #### Q2. 「依存関係の問題」エラーを修正するにはどうすればよいですか？
-A. `dpkg -i` が失敗した後に `sudo apt-get install -f` を実行して、不足している依存関係を解決します。
+A. `dpkg` インストール後に依存関係の問題を解決するには、`sudo apt-get -f install` を実行してください。
 
-#### Q3. インストール前に .deb パッケージがどのファイルをインストールするか確認するにはどうすればよいですか？
-A. `dpkg-deb --contents package.deb` を使用して、パッケージに含まれるファイルを一覧表示します。
+#### Q3. インストール前にパッケージがインストールするファイルを確認するにはどうすればよいですか？
+A. パッケージをインストールせずに含まれるファイルを一覧表示するには、`dpkg-deb --contents package.deb` を使用します。
 
-#### Q4. パッケージを再インストールするにはどうすればよいですか？
-A. `sudo dpkg -i --force-reinstall package.deb` または apt を使用して `sudo apt-get install --reinstall パッケージ名` を実行します。
+#### Q4. dpkg でパッケージを再インストールするにはどうすればよいですか？
+A. すでにインストールされているパッケージを再インストールするには、`sudo dpkg -i --force-reinstall package.deb` を使用します。
 
 #### Q5. パッケージが自動的にアップグレードされないようにするにはどうすればよいですか？
-A. `sudo apt-mark hold パッケージ名` を使用して、自動アップグレードを防止します。
+A. パッケージが自動的にアップグレードされないようにするには、`sudo apt-mark hold package` を使用します。
 
-## 参考資料
+## 参考文献
 
-https://manpages.debian.org/buster/dpkg/dpkg.1.en.html
+https://man7.org/linux/man-pages/man1/dpkg.1.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

@@ -1,50 +1,118 @@
-# perf コマンド
+# perfコマンド
 
-Linuxのパフォーマンス分析ツールで、ハードウェアカウンタ統計やトレース機能を提供します。
+Linuxのパフォーマンス分析ツールで、ハードウェアカウンタの統計情報やトレース機能を提供します。
 
 ## 概要
 
-`perf`は、強力なLinuxプロファイリングおよびパフォーマンス分析ツールです。CPUのパフォーマンスモニタリングハードウェアカウンタにアクセスして、プログラム実行に関する統計情報を収集します。最小限のオーバーヘッドでCPUパフォーマンスイベントのモニタリング、システムコールのトレース、アプリケーションパフォーマンスの分析が可能です。Linuxカーネルツールの一部である`perf`は、開発者がボトルネックを特定し、コードを最適化するのに役立ちます。
+`perf`は、CPUのパフォーマンスモニタリングハードウェアカウンタにアクセスしてプログラム実行に関する統計情報を収集する、強力なLinuxプロファイリングツールです。CPUパフォーマンスイベントのモニタリング、システムコールのトレース、アプリケーションのプロファイリング、ハードウェアおよびソフトウェアイベントの分析が可能です。Linuxカーネルツールの一部であり、アプリケーションやシステムのパフォーマンスボトルネックを特定するのに役立ちます。
 
 ## オプション
 
-### **-e, --event**
+### **stat**
 
-カウントまたはサンプリングするパフォーマンスイベントを指定します
+コマンドを実行し、パフォーマンスカウンタの統計情報を収集します
 
 ```console
-$ perf stat -e cycles,instructions ./myprogram
+$ perf stat ls
+Documents  Downloads  Pictures  Videos
+
+ Performance counter stats for 'ls':
+
+              0.93 msec task-clock                #    0.781 CPUs utilized          
+                 0      context-switches          #    0.000 K/sec                  
+                 0      cpu-migrations            #    0.000 K/sec                  
+                89      page-faults               #    0.096 M/sec                  
+           1,597,086      cycles                  #    1.724 GHz                    
+           1,221,363      instructions            #    0.76  insn per cycle         
+             245,931      branches                #  265.518 M/sec                  
+              10,764      branch-misses           #    4.38% of all branches        
+
+       0.001189061 seconds time elapsed
+
+       0.001090000 seconds user
+       0.000000000 seconds sys
+```
+
+### **record**
+
+後の分析のためにパフォーマンスデータを記録します
+
+```console
+$ perf record -g ./myprogram
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.064 MB perf.data (1302 samples) ]
+```
+
+### **report**
+
+以前の記録からパフォーマンスデータを表示します
+
+```console
+$ perf report
+# Samples: 1302
+#
+# Overhead  Command      Shared Object        Symbol
+# ........  .......  .................  ..............
+#
+    35.71%  myprogram  myprogram           [.] process_data
+    24.58%  myprogram  libc-2.31.so        [.] malloc
+    15.21%  myprogram  myprogram           [.] calculate_result
+```
+
+### **top**
+
+Linuxのシステムプロファイリングツールで、topに似ていますがパフォーマンスカウンタ情報を含みます
+
+```console
+$ perf top
+Samples: 42K of event 'cycles', 4000 Hz, Event count (approx.): 10456889073
+Overhead  Shared Object                       Symbol
+  12.67%  [kernel]                            [k] _raw_spin_unlock_irqrestore
+   4.71%  [kernel]                            [k] finish_task_switch
+   2.82%  [kernel]                            [k] __schedule
+   2.40%  firefox                             [.] 0x00000000022e002d
+```
+
+### **list**
+
+モニタリング可能なイベントを一覧表示します
+
+```console
+$ perf list
+List of pre-defined events (to be used in -e):
+
+  cpu-cycles OR cycles                               [Hardware event]
+  instructions                                       [Hardware event]
+  cache-references                                   [Hardware event]
+  cache-misses                                       [Hardware event]
+  branch-instructions OR branches                    [Hardware event]
+  branch-misses                                      [Hardware event]
+  ...
+```
+
+### **-e, --event**
+
+モニタリングするイベントを指定します（他のコマンドと共に使用）
+
+```console
+$ perf stat -e cycles,instructions,cache-misses ./myprogram
  Performance counter stats for './myprogram':
 
-       1,234,567      cycles
-       2,345,678      instructions             #    1.90  insn per cycle
-       
-       0.123456789 seconds time elapsed
+     1,234,567,890      cycles
+       987,654,321      instructions              #    0.80  insn per cycle
+         5,432,109      cache-misses
+
+       1.234567890 seconds time elapsed
 ```
 
 ### **-p, --pid**
 
-プロセスIDによる既存プロセスのプロファイリング
+PIDで特定のプロセスをモニタリングします
 
 ```console
-$ perf record -p 1234 -g
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.452 MB perf.data (5093 samples) ]
-```
-
-### **-a, --all-cpus**
-
-すべてのCPUのシステム全体のモニタリング
-
-```console
-$ perf stat -a sleep 5
- Performance counter stats for 'system wide':
-
-       12,345,678      cpu-cycles           
-        5,678,901      instructions              #    0.46  insn per cycle
-          123,456      cache-misses
-
-       5.000621884 seconds time elapsed
+$ perf record -p 1234
+^C[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.452 MB perf.data (2371 samples) ]
 ```
 
 ### **-g, --call-graph**
@@ -54,100 +122,121 @@ $ perf stat -a sleep 5
 ```console
 $ perf record -g ./myprogram
 [ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.452 MB perf.data (5093 samples) ]
+[ perf record: Captured and wrote 0.128 MB perf.data (2567 samples) ]
 ```
 
 ## 使用例
 
-### 基本的なCPU統計情報
+### コマンドのCPU使用状況のプロファイリング
 
 ```console
-$ perf stat ./myprogram
- Performance counter stats for './myprogram':
+$ perf stat -d ls -la
+total 56
+drwxr-xr-x  9 user user 4096 May  5 10:00 .
+drwxr-xr-x 28 user user 4096 May  4 15:30 ..
+-rw-r--r--  1 user user 8980 May  5 09:45 file.txt
 
-          0.086283      task-clock (msec)         #    0.733 CPUs utilized
-                 2      context-switches          #    0.023 M/sec
-                 0      cpu-migrations            #    0.000 K/sec
-               108      page-faults               #    0.001 M/sec
-           235,538      cycles                    #    2.731 GHz
-           580,716      instructions              #    2.47  insn per cycle
-           116,931      branches                  #    1.356 M/sec
-             3,468      branch-misses             #    2.97% of all branches
+ Performance counter stats for 'ls -la':
 
-       0.117743392 seconds time elapsed
+              1.52 msec task-clock                #    0.812 CPUs utilized          
+                 0      context-switches          #    0.000 K/sec                  
+                 0      cpu-migrations            #    0.000 K/sec                  
+               102      page-faults               #    0.067 M/sec                  
+         3,842,901      cycles                    #    2.530 GHz                    
+         5,779,212      instructions              #    1.50  insn per cycle         
+         1,059,631      branches                  #  697.128 M/sec                  
+            36,789      branch-misses             #    3.47% of all branches        
+         1,254,898      L1-dcache-loads           #  825.590 M/sec                  
+            45,632      L1-dcache-load-misses     #    3.64% of all L1-dcache accesses
+
+       0.001871938 seconds time elapsed
+
+       0.001871000 seconds user
+       0.000000000 seconds sys
 ```
 
-### パフォーマンスデータの記録と分析
+### アプリケーションパフォーマンスの記録と分析
 
 ```console
-$ perf record -g ./myprogram
+$ perf record -g ./myapplication
 [ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.452 MB perf.data (5093 samples) ]
+[ perf record: Captured and wrote 0.253 MB perf.data (3842 samples) ]
 
 $ perf report
-# Samples: 5K of event 'cycles'
-# Event count (approx.): 2345678901
+# To display the perf.data header info, please use --header/--header-only options.
 #
-# Overhead  Command      Shared Object        Symbol
+# Samples: 3K of event 'cycles'
+# Event count (approx.): 3842000000
+#
+# Overhead  Command        Shared Object        Symbol
 # ........  .......  .................  ..............
 #
-    14.59%  myprogram  myprogram           [.] process_data
-    10.21%  myprogram  myprogram           [.] calculate_result
-     8.45%  myprogram  libc-2.31.so        [.] malloc
+    35.42%  myapplication  myapplication        [.] process_data
+    21.67%  myapplication  libc-2.31.so         [.] malloc
+    15.89%  myapplication  myapplication        [.] calculate_result
 ```
 
-### システムコールのトレース
+### 特定のハードウェアイベントのモニタリング
 
 ```console
-$ perf trace -p 1234
-     0.000 ( 0.000 ms): myprogram/1234 write(fd: 1, buf: 0x7f9876543210, count: 16) = 16
-     0.223 ( 0.019 ms): myprogram/1234 read(fd: 0, buf: 0x7f9876543210, count: 1024) = 64
-     0.415 ( 0.021 ms): myprogram/1234 open(filename: 0x7f9876543210, flags: RDONLY) = 3
+$ perf stat -e L1-dcache-loads,L1-dcache-load-misses,L1-dcache-stores ./myprogram
+ Performance counter stats for './myprogram':
+
+       123,456,789      L1-dcache-loads
+         2,345,678      L1-dcache-load-misses     #    1.90% of all L1-dcache accesses
+        98,765,432      L1-dcache-stores
+
+       2.345678901 seconds time elapsed
 ```
 
 ## ヒント:
 
-### フレームグラフを使用した可視化
+### 完全なアクセスのためにrootとして実行
 
-FlameGraphのようなツールを使用してperfデータをフレームグラフに変換し、コールスタックを視覚化してコード内のホットスポットを素早く特定できます。
+多くのperf機能はroot権限を必要とします。すべてのハードウェアカウンタとシステム全体のプロファイリング機能にアクセスするには、`sudo perf`を使用してください。
 
+### 視覚化のためにフレームグラフを使用
+
+分析を容易にするために、perfデータをフレームグラフに変換します：
 ```console
-$ perf record -g -F 99 ./myprogram
-$ perf script | ./FlameGraph/stackcollapse-perf.pl | ./FlameGraph/flamegraph.pl > profile.svg
+$ perf record -g ./myprogram
+$ perf script | FlameGraph/stackcollapse-perf.pl | FlameGraph/flamegraph.pl > flamegraph.svg
 ```
 
-### 特定のイベントに焦点を当てる
+### ホットスポットに集中
 
-すべてのイベントを収集するのではなく、特定のパフォーマンス問題を診断するためにcache-missesやbranch-missesなどの特定のイベントに焦点を当てます。
+パフォーマンスデータを分析する際は、オーバーヘッドの割合が最も高い関数に最初に集中してください。これらは最適化の機会が最も大きい部分です。
 
+### 記録中のオーバーヘッドを削減
+
+本番環境でのプロファイリングでは、`-F`を使用して低い頻度でサンプリングし、パフォーマンスへの影響を減らします：
 ```console
-$ perf stat -e cache-misses,branch-misses ./myprogram
+$ perf record -F 99 -g -p 1234
 ```
 
-### サンプリングによるオーバーヘッドの削減
+### ソースコードの注釈付け
 
-本番環境では、頻度を指定してサンプリングを使用することでオーバーヘッドを削減できます：
-
+`perf annotate`を使用して、パフォーマンスの問題を引き起こしている特定のコード行を確認します：
 ```console
-$ perf record -F 99 -g ./myprogram
+$ perf annotate -d ./myprogram
 ```
 
 ## よくある質問
 
-#### Q1. `perf stat`と`perf record`の違いは何ですか？
-A. `perf stat`はパフォーマンスカウンタの概要を提供し、`perf record`は後で`perf report`で分析するための詳細なサンプルをキャプチャします。
+#### Q1. perf statとperf recordの違いは何ですか？
+A. `perf stat`はコマンド完了後にパフォーマンスメトリクスの要約を提供するのに対し、`perf record`は後で`perf report`で分析できる詳細なパフォーマンスデータを取得します。
 
-#### Q2. 実行中のアプリケーションをプロファイリングするにはどうすればよいですか？
-A. `perf record -p PID`を使用します。PIDは実行中のアプリケーションのプロセスIDです。
+#### Q2. 実行中のプロセスをプロファイリングするにはどうすればよいですか？
+A. `perf record -p PID`を使用して、プロセスIDで実行中のプロセスにアタッチします。
 
-#### Q3. 仮想マシンでperfを使用できますか？
-A. はい、ただし制限があります。仮想化環境では一部のハードウェアカウンタが利用できなかったり、正確でなかったりする場合があります。
+#### Q3. perf reportの出力をどのように解釈すればよいですか？
+A. 「Overhead」列は各関数に起因するサンプルの割合を示し、パフォーマンスのボトルネックを特定するのに役立ちます。割合が高いほど、その関数がより多くのCPU時間を消費していることを示します。
 
-#### Q4. どの関数がCPUを最も使用しているかを確認するにはどうすればよいですか？
-A. リアルタイムの関数モニタリングには`perf top`を使用するか、詳細な分析には`perf record`の後に`perf report`を使用します。
+#### Q4. perfはGPUパフォーマンスをプロファイリングできますか？
+A. 標準のperfは主にCPUとシステムパフォーマンスに焦点を当てています。GPUプロファイリングには、NVIDIAのnvprofやAMDのROCmプロファイラなどの専用ツールがより適しています。
 
-#### Q5. perfはすべてのLinuxディストリビューションで動作しますか？
-A. ほとんどの最新ディストリビューションはperfをサポートしていますが、機能はカーネルバージョンと構成によって異なる場合があります。
+#### Q5. perf.dataファイルのサイズを小さくするにはどうすればよいですか？
+A. `--freq`または`-F`オプションを使用してサンプリングレートを下げるか、`-a`オプションと時間指定を使用してデータ収集期間を制限します。
 
 ## 参考文献
 
@@ -155,4 +244,4 @@ https://perf.wiki.kernel.org/index.php/Main_Page
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

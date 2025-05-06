@@ -4,7 +4,7 @@ Stream editor for filtering and transforming text.
 
 ## Overview
 
-`sed` (stream editor) is a powerful utility that parses and transforms text, line by line. It reads input from files or standard input, applies specified editing commands, and outputs the result to standard output. It's commonly used for search and replace operations, text extraction, and other text manipulations in shell scripts and command-line operations.
+`sed` (stream editor) is a powerful utility that parses and transforms text, line by line. It reads input from files or standard input, applies specified editing commands, and outputs the result to standard output. It's commonly used for search and replace operations, text extraction, and other text transformations without modifying the original file.
 
 ## Options
 
@@ -13,8 +13,8 @@ Stream editor for filtering and transforming text.
 Add commands in the script to the set of commands to be executed.
 
 ```console
-$ echo "hello world" | sed -e 's/hello/goodbye/' -e 's/world/universe/'
-goodbye universe
+$ echo "hello world" | sed -e 's/hello/hi/' -e 's/world/there/'
+hi there
 ```
 
 ### **-f script-file, --file=script-file**
@@ -23,10 +23,10 @@ Add commands from script-file to the set of commands to be executed.
 
 ```console
 $ cat script.sed
-s/hello/goodbye/
-s/world/universe/
+s/hello/hi/
+s/world/there/
 $ echo "hello world" | sed -f script.sed
-goodbye universe
+hi there
 ```
 
 ### **-i[SUFFIX], --in-place[=SUFFIX]**
@@ -35,9 +35,9 @@ Edit files in place (makes backup if SUFFIX supplied).
 
 ```console
 $ echo "hello world" > file.txt
-$ sed -i 's/hello/goodbye/' file.txt
+$ sed -i 's/hello/hi/' file.txt
 $ cat file.txt
-goodbye world
+hi world
 ```
 
 ### **-n, --quiet, --silent**
@@ -70,34 +70,24 @@ The quick red fox
 ### Global Substitution
 
 ```console
-$ echo "one two one three one" | sed 's/one/ONE/g'
-ONE two ONE three ONE
-```
-
-### Print Specific Lines
-
-```console
-$ cat file.txt
-Line 1
-Line 2
-Line 3
-Line 4
-$ sed -n '2,3p' file.txt
-Line 2
-Line 3
+$ echo "one two one three one" | sed 's/one/1/g'
+1 two 1 three 1
 ```
 
 ### Delete Lines
 
 ```console
-$ cat file.txt
-Line 1
-Line 2
-Line 3
-Line 4
-$ sed '2,3d' file.txt
-Line 1
-Line 4
+$ echo -e "line 1\nline 2\nline 3" | sed '2d'
+line 1
+line 3
+```
+
+### Print Specific Lines
+
+```console
+$ echo -e "line 1\nline 2\nline 3" | sed -n '2,3p'
+line 2
+line 3
 ```
 
 ### Multiple Editing Commands
@@ -107,18 +97,18 @@ $ echo "hello world" | sed 's/hello/hi/; s/world/there/'
 hi there
 ```
 
-## Tips
+## Tips:
 
-### Use Delimiters Other Than '/'
+### Use Delimiter Other Than '/'
 
-When your pattern or replacement contains slashes, use a different delimiter to avoid escaping:
+When working with paths or URLs that contain slashes, use a different delimiter:
 
 ```console
-$ echo "/usr/local/bin" | sed 's:/usr:~:'
+$ echo "/usr/local/bin" | sed 's:/usr:~:g'
 ~/local/bin
 ```
 
-### Backup Files When Editing In-place
+### Create Backup Before In-place Editing
 
 Always create backups when using `-i` for in-place editing:
 
@@ -128,37 +118,30 @@ $ sed -i.bak 's/old/new/g' file.txt
 
 ### Address Ranges
 
-Use line numbers, patterns, or ranges to target specific lines:
-- `1,5` - lines 1 through 5
-- `/start/,/end/` - lines from pattern "start" to pattern "end"
-- `5,+2` - line 5 and the next 2 lines
+Use address ranges to apply commands to specific lines:
+- `1,5s/old/new/` - substitute on lines 1-5
+- `/start/,/end/s/old/new/` - substitute between patterns
 
-### Append, Insert, and Change Lines
+### Multiline Editing
 
-```console
-$ echo -e "line 1\nline 2\nline 3" | sed '2a\new line after 2'
-line 1
-line 2
-new line after 2
-line 3
-```
+For complex edits across multiple lines, consider using the `-z` option to work with null-terminated lines.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I replace text in a file permanently?
-A. Use the `-i` option: `sed -i 's/old/new/g' filename`. Add a suffix like `-i.bak` to create a backup.
+#### Q1. How do I replace all occurrences of a pattern in a file?
+A. Use the global flag: `sed 's/pattern/replacement/g' file.txt`
 
-#### Q2. How can I print only lines matching a pattern?
-A. Use `-n` with the `p` command: `sed -n '/pattern/p' filename`.
+#### Q2. How do I edit a file in-place?
+A. Use the `-i` option: `sed -i 's/pattern/replacement/g' file.txt`
 
-#### Q3. What's the difference between 's/pattern/replacement/' and 's/pattern/replacement/g'?
-A. Without the `g` flag, only the first occurrence on each line is replaced. With `g`, all occurrences are replaced.
+#### Q3. How do I delete specific lines from a file?
+A. Use the delete command: `sed '5d' file.txt` (deletes line 5) or `sed '/pattern/d' file.txt` (deletes lines matching pattern)
 
-#### Q4. How do I delete lines matching a pattern?
-A. Use the `d` command: `sed '/pattern/d' filename`.
+#### Q4. How do I extract specific lines from a file?
+A. Use `-n` with the print command: `sed -n '10,20p' file.txt` (prints lines 10-20)
 
-#### Q5. How can I use variables in sed commands?
-A. Use double quotes and escape special characters: `sed "s/$var/replacement/g" filename`.
+#### Q5. How do I use multiple sed commands?
+A. Either use `-e` for each command: `sed -e 'cmd1' -e 'cmd2'` or separate commands with semicolons: `sed 'cmd1; cmd2'`
 
 ## References
 
@@ -166,4 +149,4 @@ https://www.gnu.org/software/sed/manual/sed.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

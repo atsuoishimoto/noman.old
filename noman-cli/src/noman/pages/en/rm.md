@@ -4,7 +4,7 @@ Remove files or directories from the filesystem.
 
 ## Overview
 
-The `rm` command deletes files and directories from your filesystem. By default, it removes files but not directories. Once files are deleted with `rm`, they cannot be easily recovered, so use this command with caution.
+The `rm` command deletes files and directories from the filesystem. By default, it doesn't remove directories and doesn't prompt for confirmation before removing files. Once files are deleted with `rm`, they cannot be easily recovered, so use this command with caution.
 
 ## Options
 
@@ -84,47 +84,47 @@ $
 
 ```console
 $ rm -v *.log
-removed 'app.log'
 removed 'error.log'
+removed 'access.log'
 removed 'system.log'
 $
 ```
 
 ## Tips:
 
-### Use the -i Flag for Safety
+### Use with Caution
 
-When deleting important files, use `rm -i` to get a confirmation prompt before each deletion. This helps prevent accidental file removal.
+The `rm` command permanently deletes files without moving them to a trash or recycle bin. Always double-check what you're deleting, especially when using wildcards.
 
-### Be Extremely Careful with rm -rf
+### Safer Deletion with Interactive Mode
 
-The combination of `-r` (recursive) and `-f` (force) is powerful and dangerous. Never use `rm -rf /` or `rm -rf /*` as these can destroy your entire system.
+When deleting multiple files, use `rm -i` to confirm each deletion. This helps prevent accidental removal of important files.
 
-### Use Wildcards with Caution
+### Avoid `rm -rf /`
 
-Before using wildcards like `*.txt`, consider running `ls *.txt` first to see which files will be affected.
+Never run `rm -rf /` or `rm -rf /*` as these commands will attempt to delete everything on your system, potentially rendering it unusable.
 
-### Create Aliases for Safety
+### Use Aliases for Safety
 
-Consider creating an alias in your shell configuration: `alias rm='rm -i'` to always prompt for confirmation.
+Consider creating an alias in your shell configuration: `alias rm='rm -i'` to always use interactive mode by default.
 
 ## Frequently Asked Questions
 
-#### Q1. Can I recover files deleted with rm?
-A. Generally no. Unlike moving files to a "trash" or "recycle bin", `rm` permanently deletes files. Recovery might be possible with specialized tools, but it's not guaranteed.
+#### Q1. Can I recover files deleted with `rm`?
+A. Generally no. Unlike graphical file managers, `rm` doesn't move files to a trash folder. Recovery requires specialized tools and isn't guaranteed.
 
-#### Q2. How do I remove a directory?
-A. Use `rm -r directory/` to remove a directory and all its contents. For empty directories, you can also use `rmdir directory/`.
+#### Q2. How do I remove files with special characters in their names?
+A. Use quotes around the filename or escape the special characters with a backslash. For example: `rm "file with spaces.txt"` or `rm file\ with\ spaces.txt`.
 
-#### Q3. How can I safely delete files?
-A. Use `rm -i` for interactive prompts or consider using `trash-cli` utilities that move files to a recoverable trash location instead of deleting them permanently.
+#### Q3. How can I safely remove a directory and all its contents?
+A. Use `rm -r directory/` to recursively remove a directory and its contents. Add `-i` for confirmation prompts.
 
-#### Q4. What does "Operation not permitted" mean?
-A. This usually indicates you don't have sufficient permissions to delete the file. Try using `sudo rm` if you have administrator privileges.
+#### Q4. What's the difference between `rm -r` and `rmdir`?
+A. `rmdir` only removes empty directories, while `rm -r` removes directories and all their contents recursively.
 
-## macOS Precautions
+## macOS Considerations
 
-On macOS, the default `rm` command doesn't move files to the Trash. Once deleted, files are permanently removed. Consider using `mv file ~/.Trash/` to move files to the Trash instead, or install tools like `trash` that provide this functionality.
+On macOS, the default `rm` command doesn't support the `--one-file-system` option available in GNU rm. Also, to completely bypass the macOS Trash when deleting files from external drives, you must use `rm` rather than the Finder's delete function.
 
 ## References
 
@@ -132,4 +132,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/rm-invocation.html
 
 ## Revisions
 
-2025/05/04 First revision
+- 2025/05/05 First revision

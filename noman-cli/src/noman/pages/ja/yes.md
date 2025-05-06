@@ -1,27 +1,12 @@
 # yes コマンド
 
-文字列を中断されるまで繰り返し出力します。
+文字列が終了されるまで繰り返し出力します。
 
 ## 概要
 
-`yes` コマンドは、デフォルトでは「y」という文字列を改行付きで、終了されるまで連続して出力します。主に確認を求めるコマンドプロンプトに自動的に応答するために使用され、スクリプトが手動介入なしで実行できるようにします。
+`yes` コマンドは、終了されるまで文字列（デフォルトでは "y"）を継続的に出力します。一般的に、確認が必要なスクリプトやコマンドに対して自動的に応答するために使用されます。
 
 ## オプション
-
-### **-V, --version**
-
-バージョン情報を表示して終了します。
-
-```console
-$ yes --version
-yes (GNU coreutils) 9.0
-Copyright (C) 2021 Free Software Foundation, Inc.
-License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
-
-Written by David MacKenzie.
-```
 
 ### **--help**
 
@@ -37,9 +22,24 @@ Repeatedly output a line with all specified STRING(s), or 'y'.
       --version  output version information and exit
 ```
 
+### **--version**
+
+バージョン情報を出力して終了します。
+
+```console
+$ yes --version
+yes (GNU coreutils) 9.0
+Copyright (C) 2021 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by David MacKenzie.
+```
+
 ## 使用例
 
-### デフォルトの動作（「y」を出力）
+### デフォルトの使用法（"y"を繰り返し出力）
 
 ```console
 $ yes
@@ -47,76 +47,72 @@ y
 y
 y
 y
-[Ctrl+Cで中断されるまで続く]
+y
+^C
 ```
 
 ### カスタム文字列の出力
 
 ```console
-$ yes "同意します"
-同意します
-同意します
-同意します
-[Ctrl+Cで中断されるまで続く]
+$ yes "I agree"
+I agree
+I agree
+I agree
+I agree
+^C
 ```
 
-### スクリプトでのプロンプトへの自動応答
+### 別のコマンドへのパイプ
 
 ```console
 $ yes | rm -i *.txt
-rm: remove regular file 'file1.txt'? rm: remove regular file 'file2.txt'?
-```
-
-### コマンドに複数の入力を提供
-
-```console
-$ yes n y | rm -i file1.txt file2.txt
-rm: remove regular file 'file1.txt'? rm: remove regular file 'file2.txt'?
+rm: remove regular file 'file1.txt'? rm: remove regular file 'file2.txt'? 
 ```
 
 ## ヒント:
 
-### コマンドの停止
+### 複数のプロンプトを自動的に確認
 
-`yes` は Ctrl+C で停止するまで無限に実行されることを常に覚えておきましょう。終了し忘れると、システムリソースを不必要に消費する可能性があります。
-
-### 出力の制限
-
-出力回数を制限したい場合は、`yes` を `head` にパイプすることができます：
+手動介入なしで複数の操作を確認する必要がある場合は、`yes`をコマンドにパイプします：
 
 ```console
-$ yes | head -n 5
-y
-y
-y
-y
-y
+$ yes | apt-get install package1 package2 package3
 ```
 
-### パフォーマンステスト
+### headで出力を制限
 
-`yes` コマンドは、最大速度で出力を生成するため、簡単なパフォーマンステストやシステムに負荷をかけるために使用できます。
+特定の回数の繰り返しが必要な場合は、`head`を使用します：
 
-### 破壊的なコマンドでの注意
+```console
+$ yes "Hello" | head -n 5
+Hello
+Hello
+Hello
+Hello
+Hello
+```
 
-`rm -rf` のような破壊的なコマンドで `yes` を使用する際は注意が必要である。期待通りの動作をするか、まず安全なコマンドでテストしてから使用すること。
+### テストファイルの生成
+
+出力をリダイレクトして特定のサイズのテストファイルを作成します：
+
+```console
+$ yes "data" | head -c 1M > testfile.txt
+```
 
 ## よくある質問
 
-#### Q1. `yes` コマンドの目的は何ですか？
-A. 主な目的は、スクリプト内の対話式プロンプトに自動的に応答することで、通常は確認の質問に「y」で答えます。
+#### Q1. `yes`コマンドを停止するにはどうすればよいですか？
+A. Ctrl+Cを押してコマンドを終了します。
 
-#### Q2. `yes` コマンドを停止するにはどうすればよいですか？
-A. Ctrl+C を押してコマンドを終了します。
+#### Q2. `yes`で複数の文字列を出力できますか？
+A. はい、複数の引数を提供できます：`yes word1 word2`は「word1 word2」を繰り返し出力します。
 
-#### Q3. `yes` に「y」以外の文字列を出力させることはできますか？
-A. はい、引数として希望の文字列を指定するだけです：`yes "カスタムテキスト"`
+#### Q3. `yes`コマンドの目的は何ですか？
+A. 主にスクリプトやコマンドの確認プロンプトに自動的に「y」と答えるために使用されます。
 
-#### Q4. `yes` が文字列を出力する回数を制限する方法はありますか？
-A. コマンド自体にはこのオプションはありませんが、`head` に `-n` オプションを付けてパイプすることができます：`yes | head -n 10`
-
-#### Q5. `yes` はシステムリソースを多く消費しますか？
-A. 可能な限り高速に出力を生成するため、かなりのCPUリソースを消費する可能性があります。必要がなくなったら必ず終了してください。
+#### Q4. `yes`はシステムリソースを大量に消費しますか？
+A. 非常に速く出力を生成し、CPUリソースを消費する可能性があるため、フローを制御する別のコマンドにパイプする場合に最適です。
 
 ## 参考文献
 
@@ -124,4 +120,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/yes-invocation.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

@@ -72,6 +72,17 @@ system.log:7
 debug.log:0
 ```
 
+### **-o, --only-matching**
+
+Print only the matched parts of matching lines
+
+```console
+$ grep -o "error" log.txt
+error
+error
+error
+```
+
 ### **-A NUM, --after-context=NUM**
 
 Print NUM lines of trailing context after matching lines
@@ -140,6 +151,14 @@ utils.py:# TODO: Optimize this algorithm
 config.py:# TODO: Add configuration validation
 ```
 
+### Displaying Only Filenames with Matches
+
+```console
+$ grep -l "error" logs/*.log
+logs/app.log
+logs/system.log
+```
+
 ## Tips:
 
 ### Use Color Highlighting
@@ -190,4 +209,5 @@ https://www.gnu.org/software/grep/manual/grep.html
 
 ## Revisions
 
+- 2025/05/06 Added -o option for displaying only matched parts of lines.
 - 2025/05/05 First revision

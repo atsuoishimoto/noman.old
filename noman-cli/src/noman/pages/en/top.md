@@ -4,31 +4,26 @@ Display and update sorted information about processes.
 
 ## Overview
 
-`top` is a real-time system monitoring program that displays a continuously updated list of processes. It shows system summary information and a list of processes or threads currently managed by the Linux kernel. The display is sorted by CPU usage by default, allowing users to monitor system resource usage and identify processes consuming the most resources.
+`top` provides a dynamic real-time view of running system processes. It displays a continuously updated list of processes, showing CPU usage, memory consumption, running time, and other system statistics. The display refreshes at regular intervals, allowing users to monitor system performance and identify resource-intensive processes.
 
 ## Options
 
 ### **-d, --delay**
 
-Specifies the delay between screen updates in seconds (can include decimal points)
+Specify the delay between screen updates in seconds (can include decimal points)
 
 ```console
 $ top -d 5
-top - 14:22:10 up 3 days,  5:10,  2 users,  load average: 0.15, 0.21, 0.28
-Tasks: 213 total,   1 running, 212 sleeping,   0 stopped,   0 zombie
-%Cpu(s):  2.3 us,  1.2 sy,  0.0 ni, 96.4 id,  0.0 wa,  0.0 hi,  0.1 si,  0.0 st
-MiB Mem :  15895.1 total,   7403.2 free,   3265.4 used,   5226.5 buff/cache
-MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.  12039.3 avail Mem
-...
+[Updates the display every 5 seconds instead of the default]
 ```
 
 ### **-n, --iterations**
 
-Specifies the number of iterations before exiting
+Specify the maximum number of iterations before exiting
 
 ```console
 $ top -n 3
-[top will display 3 updates then exit]
+[Displays 3 updates then exits]
 ```
 
 ### **-p, --pid**
@@ -37,16 +32,16 @@ Monitor only the processes with specified process IDs
 
 ```console
 $ top -p 1234,5678
-[displays only processes with PIDs 1234 and 5678]
+[Shows only processes with PIDs 1234 and 5678]
 ```
 
 ### **-u, --user**
 
-Show only processes owned by the specified user
+Show only processes owned by specified user
 
 ```console
 $ top -u username
-[displays only processes owned by 'username']
+[Shows only processes owned by 'username']
 ```
 
 ### **-b, --batch**
@@ -55,97 +50,107 @@ Run in batch mode (useful for sending output to other programs or files)
 
 ```console
 $ top -b -n 1 > top_output.txt
-[saves one iteration of top output to top_output.txt]
+[Captures one iteration of top output to a file]
 ```
 
-## Usage Examples
+### **-H, --threads**
 
-### Basic Usage
-
-```console
-$ top
-top - 14:22:10 up 3 days,  5:10,  2 users,  load average: 0.15, 0.21, 0.28
-Tasks: 213 total,   1 running, 212 sleeping,   0 stopped,   0 zombie
-%Cpu(s):  2.3 us,  1.2 sy,  0.0 ni, 96.4 id,  0.0 wa,  0.0 hi,  0.1 si,  0.0 st
-MiB Mem :  15895.1 total,   7403.2 free,   3265.4 used,   5226.5 buff/cache
-MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.  12039.3 avail Mem
-
-  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
- 1234 user      20   0 3256892 125232  42348 S   2.0   0.8   5:23.02 firefox
- 5678 user      20   0  723964  56892  38212 S   1.3   0.4   2:42.15 terminal
-```
-
-### Monitoring Specific Processes with Higher Refresh Rate
+Show individual threads instead of summarizing by process
 
 ```console
-$ top -d 0.5 -p 1234,5678
-[displays only processes 1234 and 5678, updating every 0.5 seconds]
+$ top -H
+[Displays threads instead of processes]
 ```
 
 ## Interactive Commands
 
-While `top` is running, you can use these keyboard commands:
+While top is running, you can use these keyboard commands:
 
-- **h or ?**: Display help
-- **q**: Quit the program
-- **k**: Kill a process (prompts for PID)
-- **r**: Renice a process (change priority)
-- **f**: Select fields to display
-- **o**: Change sort field
-- **1**: Toggle display of individual CPU cores
-- **m**: Toggle memory display mode
-- **t**: Toggle task/CPU display mode
-- **c**: Toggle command line/program name display
-- **M**: Sort by memory usage
-- **P**: Sort by CPU usage (default)
-- **T**: Sort by time/cumulative time
+### Process Control
 
-## Tips
-
-### Identify Resource-Intensive Processes
-
-Press `P` to sort by CPU usage or `M` to sort by memory usage to quickly identify which processes are consuming the most resources.
-
-### Save Output to a File
-
-Use batch mode with the `-b` option to save the output to a file for later analysis:
-```console
-$ top -b -n 1 > system_snapshot.txt
+```
+k - Kill a process (prompts for PID and signal)
+r - Renice a process (change priority)
+q - Quit the top command
 ```
 
-### Customize the Display
+### Display Options
 
-Press `f` while top is running to select which columns to display, allowing you to focus on the metrics that matter most to you.
+```
+h or ? - Help screen
+f - Field management (add/remove columns)
+o - Change sort field
+1 - Toggle display of individual CPU cores
+m - Toggle memory display mode
+t - Toggle task/CPU display mode
+c - Toggle command line/program name
+```
 
-### Monitor Multiple CPUs
+## Usage Examples
 
-Press `1` to show individual CPU core usage instead of the combined average, which is useful for identifying if a process is maxing out a single core.
+### Basic System Monitoring
+
+```console
+$ top
+top - 14:23:45 up 3 days, 2:34, 2 users, load average: 0.15, 0.10, 0.09
+Tasks: 213 total,   1 running, 212 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  2.3 us,  0.7 sy,  0.0 ni, 96.9 id,  0.1 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :  15895.1 total,   7431.0 free,   3820.2 used,   4643.9 buff/cache
+MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.  11389.0 avail Mem 
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+ 1234 user      20   0 3256712 198232  89456 S   2.0   1.2   5:23.45 firefox
+ 5678 user      20   0 2345678 123456  65432 S   1.5   0.8   3:45.67 chrome
+```
+
+### Monitoring Specific User's Processes
+
+```console
+$ top -u root
+[Shows only processes owned by root user]
+```
+
+### Saving Top Output to a File
+
+```console
+$ top -b -n 1 | grep firefox > firefox_processes.txt
+[Captures information about Firefox processes to a file]
+```
+
+## Tips:
+
+### Sorting the Process List
+
+Press `P` to sort by CPU usage, `M` to sort by memory usage, or `T` to sort by time. This helps quickly identify resource-intensive processes.
+
+### Changing Update Interval
+
+Press `d` or `s` while top is running to change the refresh interval. Useful for monitoring rapidly changing systems or conserving resources.
+
+### Filtering Processes
+
+Use `o` or `O` to filter processes based on specific criteria. For example, filtering by memory usage above a certain threshold.
+
+### Memory Display Units
+
+Press `E` to cycle through different memory display units (KiB, MiB, GiB, etc.) for easier reading of memory statistics.
 
 ## Frequently Asked Questions
 
 #### Q1. How do I exit top?
-A. Press the `q` key to quit the program.
+A. Press `q` to quit the top command.
 
 #### Q2. How can I kill a process from within top?
-A. Press `k`, then enter the PID of the process you want to terminate, followed by the signal number (9 for SIGKILL).
+A. Press `k`, enter the PID of the process you want to kill, then specify the signal number (9 for SIGKILL).
 
 #### Q3. How do I change the refresh rate?
-A. Use the `-d` option followed by the number of seconds (e.g., `top -d 3` for 3-second updates), or press `d` while top is running and enter a new delay.
+A. Use the `-d` option when starting top (e.g., `top -d 5` for 5 seconds) or press `d` while top is running.
 
-#### Q4. How can I see only processes for a specific user?
-A. Use `top -u username` or press `u` while top is running and enter the username.
+#### Q4. Why does top show different CPU usage than other tools?
+A. top calculates CPU usage based on the time between refreshes, while other tools may use different calculation methods or time intervals.
 
-#### Q5. What do the load average numbers mean?
-A. The three numbers represent the system load average over the last 1, 5, and 15 minutes. Values below your CPU core count generally indicate the system isn't overloaded.
-
-## macOS Considerations
-
-On macOS, the `top` command has different options and output format compared to Linux. Some key differences:
-
-- The `-o` option is used to specify the sort field (e.g., `top -o cpu`)
-- Memory is displayed in different units
-- Some interactive commands differ
-- Use `man top` on macOS to see the specific options available
+#### Q5. How can I see memory usage in a more readable format?
+A. Press `E` while top is running to cycle through different memory display units.
 
 ## References
 
@@ -153,4 +158,4 @@ https://man7.org/linux/man-pages/man1/top.1.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

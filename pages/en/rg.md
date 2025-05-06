@@ -70,7 +70,7 @@ src/utils.js:15:function formatDate(date) {
 
 ### **--no-ignore**
 
-Don't respect ignore files (.gitignore, .ignore, etc.).
+Don't respect ignore files (.gitignore, .ignore, etc.). This option tells ripgrep to search in files and directories that would normally be ignored, such as those specified in .gitignore files.
 
 ```console
 $ rg --no-ignore "password"
@@ -110,6 +110,35 @@ src/main.js:20:  // TODO: Implement validation
 src/main.js:21:  return transform(data);
 ```
 
+### **-o, --only-matching**
+
+Print only the matched parts of a line.
+
+```console
+$ rg -o "TODO.*"
+src/main.js:TODO: Implement validation
+docs/roadmap.md:TODO: Add authentication
+```
+
+### **-m, --max-count NUM**
+
+Only show up to NUM matches for each file.
+
+```console
+$ rg -m 2 "error" log.txt
+log.txt:15:error: connection failed
+log.txt:23:error: timeout occurred
+```
+
+### **--max-depth NUM**
+
+Limit the depth of directory traversal to NUM levels.
+
+```console
+$ rg --max-depth 1 "TODO"
+./main.js:20:  // TODO: Implement validation
+```
+
 ## Usage Examples
 
 ### Search in specific file types
@@ -140,6 +169,21 @@ src/api.ts:42:  throw new Error("Invalid response");
 $ rg "TODO" --glob "!node_modules"
 src/main.js:20:  // TODO: Implement validation
 docs/roadmap.md:15:TODO: Add authentication
+```
+
+### Show only filenames with matching patterns
+
+```console
+$ rg -l "password"
+config.js
+auth.js
+```
+
+### Search only in current directory (no recursion)
+
+```console
+$ rg --max-depth 0 "function"
+main.js:10:function calculateTotal(items) {
 ```
 
 ## Tips:
@@ -194,10 +238,18 @@ A. Use `-L` or `--follow` to follow symbolic links when searching.
 #### Q5. What does the --no-ignore option do?
 A. The `--no-ignore` option tells ripgrep to search files and directories that would normally be ignored due to .gitignore, .ignore, or similar files. This is useful when you need to search in directories like node_modules or other typically ignored locations.
 
+#### Q6. How can I search only in the current directory without recursing into subdirectories?
+A. Use `--max-depth 0` to limit the search to only the current directory without recursing into subdirectories.
+
+#### Q7. How do I show only the matching filenames?
+A. Use `-l` or `--files-with-matches` to show only the paths of files containing matches.
+
 ## References
 
 https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
 
 ## Revisions
 
+- 2025/05/06 Added --max-depth and -m options, expanded usage examples to include non-recursive search, added new FAQs about limiting directory depth and showing only filenames.
+- 2025/05/06 Added -o, --only-matching option.
 - 2025/05/05 Added explanation for --no-ignore option and expanded FAQs.

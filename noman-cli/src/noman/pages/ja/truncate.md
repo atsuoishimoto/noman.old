@@ -1,26 +1,26 @@
-# truncate コマンド
+# truncateコマンド
 
 ファイルのサイズを指定したサイズに縮小または拡張します。
 
 ## 概要
 
-`truncate` コマンドは、ファイルのサイズを縮小または拡張して指定した長さに変更します。存在しないファイルを新規作成することもでき、複数のファイルを一度に同じサイズに設定できます。特定のサイズのファイルを素早く作成したり、ログファイルを切り詰めたりするのに便利です。
+`truncate`コマンドは、ファイルのサイズを指定した長さに変更します。末尾からデータを削除してファイルを縮小したり、ヌルバイトを追加して拡張したりすることができます。このコマンドは、特定のサイズのファイルを作成する場合や、ファイルを保持したままコンテンツをクリアする場合、またはディスク容量のシナリオをテストする場合に便利です。
 
 ## オプション
 
 ### **-s, --size=SIZE**
 
-ファイルサイズを SIZE バイトに設定または調整します
+ファイルサイズをSIZEに設定または調整します。SIZEは絶対的な数値、または「+」や「-」の接頭辞を付けた相対的な調整値を指定できます。
 
 ```console
 $ truncate -s 100 myfile.txt
 $ ls -l myfile.txt
--rw-r--r-- 1 user group 100 May 4 10:15 myfile.txt
+-rw-r--r-- 1 user group 100 May 5 10:00 myfile.txt
 ```
 
 ### **-c, --no-create**
 
-存在しないファイルを作成しません
+存在しないファイルを作成しません。
 
 ```console
 $ truncate -c -s 50 nonexistent.txt
@@ -29,7 +29,7 @@ truncate: cannot open 'nonexistent.txt' for writing: No such file or directory
 
 ### **-o, --io-blocks**
 
-SIZE をバイト数ではなく IO ブロック数として扱います
+SIZEをバイト数ではなくI/Oブロック数として扱います。
 
 ```console
 $ truncate -o -s 2 blockfile.dat
@@ -37,81 +37,98 @@ $ truncate -o -s 2 blockfile.dat
 
 ### **-r, --reference=RFILE**
 
-RFILE のサイズに基づいてサイズを設定します
+RFILEのサイズに基づいてサイズを設定します。
 
 ```console
 $ truncate -r reference.txt target.txt
 ```
 
-## 使用例
+### **--help**
 
-### 特定のサイズの新しい空ファイルを作成する
+ヘルプ情報を表示して終了します。
 
 ```console
-$ truncate -s 1M largefile.bin
-$ ls -lh largefile.bin
--rw-r--r-- 1 user group 1.0M May 4 10:20 largefile.bin
+$ truncate --help
 ```
 
-### 既存のファイルを縮小する
+### **--version**
+
+バージョン情報を出力して終了します。
 
 ```console
-$ echo "This is a test file with some content" > testfile.txt
+$ truncate --version
+```
+
+## 使用例
+
+### 特定のサイズの空ファイルを作成する
+
+```console
+$ truncate -s 1M largefile.dat
+$ ls -lh largefile.dat
+-rw-r--r-- 1 user group 1.0M May 5 10:05 largefile.dat
+```
+
+### ファイルを小さいサイズに縮小する
+
+```console
+$ echo "This is a test file with content" > testfile.txt
 $ truncate -s 10 testfile.txt
 $ cat testfile.txt
 This is a 
 ```
 
+### ファイルサイズを拡張する
+
+```console
+$ echo "Small" > smallfile.txt
+$ truncate -s 100 smallfile.txt
+$ ls -l smallfile.txt
+-rw-r--r-- 1 user group 100 May 5 10:10 smallfile.txt
+```
+
 ### 相対サイズの使用
 
 ```console
-$ truncate -s 100 myfile.txt    # 正確に100バイトに設定
-$ truncate -s +50 myfile.txt    # 50バイト追加（現在150バイト）
-$ truncate -s -30 myfile.txt    # 30バイト削除（現在120バイト）
-$ truncate -s %64 myfile.txt    # サイズを64の倍数に切り下げ（96バイト）
+$ truncate -s 100 myfile.txt
+$ truncate -s +50 myfile.txt  # 50バイト追加
+$ truncate -s -30 myfile.txt  # 30バイト削除
+$ ls -l myfile.txt
+-rw-r--r-- 1 user group 120 May 5 10:15 myfile.txt
 ```
 
 ## ヒント:
 
-### ゼロ埋めと切り詰め
+### スパースファイルの作成
 
-ファイルを拡張する場合、`truncate` は新しい領域をゼロやその他のデータで埋めるわけではなく、単にファイルサイズを拡張します。これにより、拡張された部分が実際に書き込まれるまでディスク容量を使用しない「スパースファイル」が作成されます。
+ファイルを拡張する際、`truncate`はヌルバイトを追加することでスパースファイル（実際に消費するディスク容量よりも大きく見えるファイル）を作成します。これは、実際のディスク容量を消費せずに大きなファイルでアプリケーションをテストするのに役立ちます。
 
-### 簡易ログローテーション
+### ファイルを素早く空にする
 
-`truncate -s 0` を使用すると、ファイルを削除せずにログファイルを素早く空にでき、ファイルのパーミッションと所有権が保持されます：
+`truncate -s 0 filename`を使用すると、ファイルを削除せずに素早く空にできます。これにより、すべてのコンテンツを削除しながらもファイルの権限と所有権が保持されます。
 
-```console
-$ truncate -s 0 /path/to/logfile.log
-```
+### 縮小時の注意点
 
-### テストファイルの作成
-
-ディスク容量やファイル転送操作をテストするための特定サイズのテストファイルを作成できます：
-
-```console
-$ truncate -s 10M test10mb.bin
-$ truncate -s 1G test1gb.bin
-```
+ファイルを縮小する場合、新しいサイズを超えるデータは永久に失われます。重要なファイルを切り詰める前には、必ずバックアップを作成してください。
 
 ## よくある質問
 
-#### Q1. `truncate` と `touch` の違いは何ですか？
-A. `touch` はタイムスタンプを更新し、空のファイルを作成できますが、`truncate` は特定のサイズのファイルを作成したり、既存のファイルサイズを変更したりできます。
+#### Q1. ファイルを小さいサイズに切り詰めると何が起こりますか？
+A. 指定したサイズを超えるデータは永久に削除されます。ファイルは指定したバイト位置で正確に切り取られます。
 
-#### Q2. `truncate` は実際にディスク容量を割り当てますか？
-A. ファイルを拡張する場合、`truncate` はスパースファイルを作成し、データが書き込まれるまで実際にはディスク容量を消費しません。
+#### Q2. truncateはすべてのファイルタイプで動作しますか？
+A. `truncate`は通常のファイルでは動作しますが、デバイスやソケットなどの特殊ファイルでは期待通りに動作しない場合があります。主に通常のファイル用に設計されています。
 
-#### Q3. `truncate` を使ってファイルにデータを追加できますか？
-A. いいえ、`truncate` はコンテンツを追加せずにファイルサイズのみを変更します。データを追加するには、リダイレクション（`>>`）や `echo`、`cat` などのツールを使用してください。
+#### Q3. truncateと`> file`リダイレクションの違いは何ですか？
+A. `> file`はファイルを完全に空にしますが、`truncate`はファイルを任意の特定のサイズに設定でき、拡張したり正確なバイト数に縮小したりできます。
 
-#### Q4. ファイルを削除せずに完全に空にするにはどうすればよいですか？
-A. `truncate -s 0 ファイル名` を使用して、ファイル自体を保持したままファイルサイズをゼロに減らします。
+#### Q4. truncateで特定の内容を持つファイルを作成できますか？
+A. いいえ、`truncate`はファイルサイズのみを調整します。ファイルを拡張する場合、ヌルバイト（ゼロ）が追加されます。特定の内容を持つファイルを作成するには、`echo`や`cat`などの他のコマンドを使用する必要があります。
 
-## References
+## 参考文献
 
 https://www.gnu.org/software/coreutils/manual/html_node/truncate-invocation.html
 
-## Revisions
+## 改訂履歴
 
-- 2025/05/04 初回リビジョン
+- 2025/05/05 初版

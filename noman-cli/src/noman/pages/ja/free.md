@@ -4,52 +4,52 @@
 
 ## 概要
 
-`free`コマンドは、物理RAMとスワップスペースの両方について、システムのメモリ使用状況（合計、使用中、利用可能なメモリ）に関する情報を提供します。メモリリソースを素早く確認し、潜在的なメモリ制約を特定するための簡単な方法です。
+`free` コマンドは、システム内の物理メモリとスワップメモリの合計、使用中、空き容量を表示します。また、カーネルが使用しているバッファとキャッシュも表示します。メモリ使用状況のスナップショットを提供し、ユーザーがシステムリソースを監視し、メモリ関連の問題を診断するのに役立ちます。
 
 ## オプション
 
-### **-b, --bytes**
+### **-b**
 
 メモリ量をバイト単位で表示します。
 
 ```console
 $ free -b
-               total        used        free      shared  buff/cache   available
-Mem:     8273514496  3145728000  1073741824   536870912  4053844992  4594966528
-Swap:    2147483648   268435456  1879048192
+              total        used        free      shared  buff/cache   available
+Mem:    8273514496  3868327936  1535881216   602931200  2869305344  3459538944
+Swap:   2147479552           0  2147479552
 ```
 
-### **-k, --kilo**
+### **-k**
 
 メモリ量をキロバイト単位で表示します（デフォルト）。
 
 ```console
 $ free -k
-               total        used        free      shared  buff/cache   available
-Mem:        8080580     3072000     1048576      524288     3959808     4487272
-Swap:       2097152      262144     1835008
+              total        used        free      shared  buff/cache   available
+Mem:        8079604     3777664     1500860      588800     2801080     3378456
+Swap:       2097148           0     2097148
 ```
 
-### **-m, --mega**
+### **-m**
 
 メモリ量をメガバイト単位で表示します。
 
 ```console
 $ free -m
-               total        used        free      shared  buff/cache   available
-Mem:           7890        3000        1024         512        3866        4382
-Swap:          2048         256        1792
+              total        used        free      shared  buff/cache   available
+Mem:           7889        3689        1465         574        2735        3299
+Swap:          2047           0        2047
 ```
 
-### **-g, --giga**
+### **-g**
 
 メモリ量をギガバイト単位で表示します。
 
 ```console
 $ free -g
-               total        used        free      shared  buff/cache   available
-Mem:              7           2           1           0           3           4
-Swap:             2           0           1
+              total        used        free      shared  buff/cache   available
+Mem:              7           3           1           0           2           3
+Swap:             1           0           1
 ```
 
 ### **-h, --human**
@@ -58,43 +58,24 @@ Swap:             2           0           1
 
 ```console
 $ free -h
-               total        used        free      shared  buff/cache   available
-Mem:           7.7Gi       3.0Gi       1.0Gi       512Mi       3.7Gi       4.2Gi
-Swap:          2.0Gi       256Mi       1.7Gi
+              total        used        free      shared  buff/cache   available
+Mem:          7.7Gi       3.6Gi       1.4Gi       574Mi       2.7Gi       3.2Gi
+Swap:         2.0Gi          0B       2.0Gi
 ```
 
 ### **-s, --seconds N**
 
-N秒間隔で結果を継続的に表示します。
+N秒間隔で更新しながら結果を継続的に表示します。
 
 ```console
 $ free -s 2
-               total        used        free      shared  buff/cache   available
-Mem:           7890        3000        1024         512        3866        4382
-Swap:          2048         256        1792
+              total        used        free      shared  buff/cache   available
+Mem:        8079604     3777664     1500860      588800     2801080     3378456
+Swap:       2097148           0     2097148
 
-               total        used        free      shared  buff/cache   available
-Mem:           7890        3010        1014         512        3866        4372
-Swap:          2048         256        1792
-```
-
-### **-c, --count N**
-
-結果をN回表示した後、終了します。-sオプションと一緒に使用する必要があります。
-
-```console
-$ free -c 3 -s 1
-               total        used        free      shared  buff/cache   available
-Mem:           7890        3000        1024         512        3866        4382
-Swap:          2048         256        1792
-
-               total        used        free      shared  buff/cache   available
-Mem:           7890        3010        1014         512        3866        4372
-Swap:          2048         256        1792
-
-               total        used        free      shared  buff/cache   available
-Mem:           7890        3020        1004         512        3866        4362
-Swap:          2048         256        1792
+              total        used        free      shared  buff/cache   available
+Mem:        8079604     3778112     1500412      588800     2801080     3378008
+Swap:       2097148           0     2097148
 ```
 
 ### **-t, --total**
@@ -103,21 +84,21 @@ Swap:          2048         256        1792
 
 ```console
 $ free -t
-               total        used        free      shared  buff/cache   available
-Mem:           7890        3000        1024         512        3866        4382
-Swap:          2048         256        1792
-Total:         9938        3256        2816
+              total        used        free      shared  buff/cache   available
+Mem:        8079604     3777664     1500860      588800     2801080     3378456
+Swap:       2097148           0     2097148
+Total:     10176752     3777664     3598008
 ```
 
 ### **-w, --wide**
 
-ワイドモードに切り替えます。ワイドモードでは80文字より長い行が生成されます。
+ワイドモードに切り替えます。ワイドモードでは80文字より長い行が生成されます。このモードではバッファとキャッシュが別々の列で報告されます。
 
 ```console
 $ free -w
-               total        used        free      shared     buffers       cache   available
-Mem:           7890        3000        1024         512         366        3500        4382
-Swap:          2048         256        1792
+              total        used        free      shared     buffers       cache   available
+Mem:        8079604     3777664     1500860      588800      245760     2555320     3378456
+Swap:       2097148           0     2097148
 ```
 
 ## 使用例
@@ -126,82 +107,75 @@ Swap:          2048         256        1792
 
 ```console
 $ free
-               total        used        free      shared  buff/cache   available
-Mem:           7890        3000        1024         512        3866        4382
-Swap:          2048         256        1792
+              total        used        free      shared  buff/cache   available
+Mem:        8079604     3777664     1500860      588800     2801080     3378456
+Swap:       2097148           0     2097148
 ```
 
-### 人間が読みやすい形式でのメモリ情報と合計
+### 人間が読みやすい形式で合計を表示
 
 ```console
 $ free -ht
-               total        used        free      shared  buff/cache   available
-Mem:           7.7Gi       3.0Gi       1.0Gi       512Mi       3.7Gi       4.2Gi
-Swap:          2.0Gi       256Mi       1.7Gi
-Total:         9.7Gi       3.2Gi       2.7Gi
+              total        used        free      shared  buff/cache   available
+Mem:          7.7Gi       3.6Gi       1.4Gi       574Mi       2.7Gi       3.2Gi
+Swap:         2.0Gi          0B       2.0Gi
+Total:        9.7Gi       3.6Gi       3.4Gi
 ```
 
 ### 5秒間隔での継続的なモニタリング
 
 ```console
 $ free -h -s 5
-               total        used        free      shared  buff/cache   available
-Mem:           7.7Gi       3.0Gi       1.0Gi       512Mi       3.7Gi       4.2Gi
-Swap:          2.0Gi       256Mi       1.7Gi
-
-               total        used        free      shared  buff/cache   available
-Mem:           7.7Gi       3.1Gi       900Mi       512Mi       3.7Gi       4.1Gi
-Swap:          2.0Gi       256Mi       1.7Gi
+              total        used        free      shared  buff/cache   available
+Mem:          7.7Gi       3.6Gi       1.4Gi       574Mi       2.7Gi       3.2Gi
+Swap:         2.0Gi          0B       2.0Gi
 ```
 
-## ヒント:
+## ヒント
 
-### 出力列の理解
+### メモリ出力の理解
 
 - **total**: インストールされた総メモリ
 - **used**: 現在使用中のメモリ
 - **free**: 未使用のメモリ
 - **shared**: 複数のプロセスで共有されているメモリ
 - **buff/cache**: カーネルバッファとページキャッシュで使用されているメモリ
-- **available**: スワップなしで新しいアプリケーションに利用可能なメモリの推定値
+- **available**: スワップなしで新しいアプリケーションを起動できる利用可能なメモリの推定値
 
-### 利用可能なメモリに注目する
+### 「available」と「free」の解釈
 
-「available」列は「free」列よりも重要です。これには、必要に応じてバッファやキャッシュから再利用できるメモリが含まれているためです。
+システムに十分なメモリがあるかを評価する際は、「free」よりも「available」列の方が重要です。これには、解放して使用できるメモリが含まれています。
 
-### 時間経過によるメモリのモニタリング
+### 時間経過に伴うメモリのモニタリング
 
-`free -s`を使用して時間経過によるメモリ使用状況をモニタリングすると、メモリリークや使用パターンを特定するのに役立ちます。
+`free -s N`を使用して時間の経過とともにメモリ使用量をモニタリングすると、メモリリークや使用パターンを特定するのに役立ちます。
 
-### 他のコマンドと組み合わせる
+### キャッシュメモリのクリア
 
-`free`の出力を他のコマンドにパイプして特定の情報を取得できます：
+システム管理者は以下のコマンドでページキャッシュ、dentriesおよびinodesを解放できます：
 ```console
-$ free -m | grep Mem
-Mem:           7890        3000        1024         512        3866        4382
+$ sudo sh -c "sync; echo 3 > /proc/sys/vm/drop_caches"
 ```
+（注意：これは慎重に行うべきであり、通常の操作ではほとんど必要ありません）
 
 ## よくある質問
 
-#### Q1. 「free」と「available」メモリの違いは何ですか？
-A. 「free」メモリは完全に未使用のメモリであるのに対し、「available」にはスワップなしで新しいアプリケーションのためにバッファやキャッシュから再利用できるメモリが含まれています。
+#### Q1. 「free」メモリが非常に少ないとはどういう意味ですか？
+A. 空きメモリが少ないことは必ずしも問題ではありません。Linuxはパフォーマンス向上のためにディスクキャッシュとして利用可能なメモリを使用します。アプリケーションに割り当て可能なメモリの良い指標として「available」列を見てください。
 
-#### Q2. なぜ「free」メモリが少ないのですか？
-A. Linuxはパフォーマンス向上のために利用可能なメモリをディスクキャッシュに使用します。アプリケーションが使用できるメモリの指標としては「available」列を見るのがより適切です。
+#### Q2. なぜスワップメモリが使用されていないのですか？
+A. スワップは物理メモリがほぼ使い果たされた場合や、非アクティブなメモリページに対してのみ使用されます。システムに十分なRAMがある場合、スワップは使用されないままかもしれません。
 
-#### Q3. システムのメモリ不足をどうやって確認できますか？
-A. 「available」列をモニタリングしてください。それが常に低く、スワップ使用量が高い場合、システムはメモリ圧迫状態にある可能性があります。
+#### Q3. メモリ使用量を継続的に監視するにはどうすればよいですか？
+A. `free -s N`を使用します。Nは更新間隔の秒数です。例えば、`free -s 5`は5秒ごとに更新されます。
 
-#### Q4. 「buff/cache」列は何を表していますか？
-A. カーネルバッファとディスクキャッシュに使用されているメモリを示しています。このメモリは、アプリケーションが必要とする場合に再利用できることが多いです。
+#### Q4. バッファとキャッシュの違いは何ですか？
+A. バッファはブロックデバイスI/Oに使用され、キャッシュはファイルシステムページに使用されます。標準出力では「buff/cache」として結合されていますが、`-w`オプションで別々に表示できます。
 
-#### Q5. メモリ使用状況を継続的にモニタリングするにはどうすればよいですか？
-A. `free -s N`を使用します。Nは更新間隔の秒数です。
-
-## 参考資料
+## 参考文献
 
 https://www.man7.org/linux/man-pages/man1/free.1.html
 
 ## 改訂履歴
 
-- 2025/05/04 初回改訂
+- 2025/05/05 初版

@@ -1,14 +1,14 @@
 # tree command
 
-Display directory contents in a tree-like format, showing the hierarchical structure of directories and files.
+Display directory contents in a hierarchical tree structure.
 
 ## Overview
 
-The `tree` command recursively displays the contents of directories in a tree-like format, making it easy to visualize directory structures. It shows files and directories with indentation and connecting lines to represent the hierarchy, providing a clear view of how files are organized.
+The `tree` command recursively lists the contents of directories in a tree-like format, showing the relationships between files and directories. It provides a visual representation of directory structures, making it easier to understand the organization of files and subdirectories.
 
 ## Options
 
-### **-a, --all**
+### **-a**
 
 Display all files, including hidden files (those starting with a dot)
 
@@ -19,15 +19,16 @@ $ tree -a
 │   ├── HEAD
 │   ├── config
 │   └── hooks
+├── .gitignore
 ├── README.md
 └── src
     ├── .env
     └── main.js
 
-3 directories, 5 files
+3 directories, 6 files
 ```
 
-### **-d, --dirs-only**
+### **-d**
 
 List directories only, not files
 
@@ -44,14 +45,16 @@ $ tree -d
 5 directories
 ```
 
-### **-L, --level [level]**
+### **-L, --level**
 
-Limit the depth of directory recursion to the specified level
+Limit the depth of directory recursion
 
 ```console
 $ tree -L 2
 .
 ├── docs
+│   ├── api.md
+│   └── usage.md
 ├── node_modules
 │   ├── express
 │   └── lodash
@@ -60,66 +63,76 @@ $ tree -L 2
     ├── components
     └── index.js
 
-5 directories, 2 files
+5 directories, 4 files
 ```
 
-### **-I, --ignore [pattern]**
+### **-C**
 
-Ignore files/directories that match the pattern (uses shell glob patterns)
-
-```console
-$ tree -I "node_modules"
-.
-├── docs
-├── package.json
-└── src
-    ├── components
-    │   └── Button.js
-    └── index.js
-
-3 directories, 3 files
-```
-
-### **-C, --color**
-
-Turn on colorized output
+Add colorization to the output
 
 ```console
 $ tree -C
+# Output will be colorized with directories, files, and executables in different colors
 ```
 
-### **-F, --classify**
+### **-p**
 
-Append indicators to entries (/ for directories, * for executable files, etc.)
+Print file type and permissions for each file
 
 ```console
-$ tree -F
+$ tree -p
 .
-├── docs/
-├── package.json
-└── src/
-    ├── components/
-    │   └── Button.js
-    └── index.js*
+├── [drwxr-xr-x]  docs
+│   ├── [-rw-r--r--]  api.md
+│   └── [-rw-r--r--]  usage.md
+├── [-rw-r--r--]  package.json
+└── [drwxr-xr-x]  src
+    └── [-rwxr-xr-x]  index.js
 
-3 directories, 3 files
+2 directories, 4 files
 ```
 
-### **-h, --human-readable**
+### **-s**
 
-Print sizes in human-readable format (e.g., 1K, 234M, 2G)
+Print the size of each file
 
 ```console
-$ tree -h
+$ tree -s
+.
+├── [       4096]  docs
+│   ├── [        450]  api.md
+│   └── [        890]  usage.md
+├── [        1240]  package.json
+└── [       4096]  src
+    └── [         320]  index.js
+
+2 directories, 4 files
+```
+
+### **-h**
+
+Print the size in a more human-readable format
+
+```console
+$ tree -sh
 .
 ├── [4.0K]  docs
-├── [ 340]  package.json
+│   ├── [450]   api.md
+│   └── [890]   usage.md
+├── [1.2K]  package.json
 └── [4.0K]  src
-    ├── [4.0K]  components
-    │   └── [1.2K]  Button.js
-    └── [ 256]  index.js
+    └── [320]   index.js
 
-3 directories, 3 files
+2 directories, 4 files
+```
+
+### **--filelimit n**
+
+Do not descend directories that contain more than n entries
+
+```console
+$ tree --filelimit 10
+# Will not show contents of directories with more than 10 files
 ```
 
 ## Usage Examples
@@ -130,88 +143,99 @@ $ tree -h
 $ tree
 .
 ├── docs
-│   └── README.md
+│   ├── api.md
+│   └── usage.md
 ├── package.json
 └── src
     ├── components
-    │   └── Button.js
+    │   ├── Button.js
+    │   └── Input.js
     └── index.js
 
-3 directories, 3 files
+3 directories, 5 files
 ```
 
-### Limiting depth and showing only specific file types
+### Limiting depth and showing file sizes
 
 ```console
-$ tree -L 2 --prune -P "*.js"
-.
-├── package.json
-└── src
-    ├── components
-    └── index.js
-
-2 directories, 2 files
-```
-
-### Showing file sizes with human-readable format
-
-```console
-$ tree -h --du
+$ tree -L 1 -sh
 .
 ├── [4.0K]  docs
-│   └── [ 340]  README.md
-├── [ 340]  package.json
-└── [5.5K]  src
-    ├── [4.3K]  components
-    │   └── [1.2K]  Button.js
-    └── [ 256]  index.js
+├── [1.2K]  package.json
+└── [4.0K]  src
+
+2 directories, 1 file
+```
+
+### Filtering by pattern
+
+```console
+$ tree -P "*.js"
+.
+├── docs
+├── package.json
+└── src
+    ├── components
+    │   ├── Button.js
+    │   └── Input.js
+    └── index.js
 
 3 directories, 3 files
+```
+
+### Output to a file
+
+```console
+$ tree > directory_structure.txt
+$ cat directory_structure.txt
+.
+├── docs
+│   ├── api.md
+│   └── usage.md
+├── package.json
+└── src
+    ├── components
+    │   ├── Button.js
+    │   └── Input.js
+    └── index.js
+
+3 directories, 5 files
 ```
 
 ## Tips
 
-### Save Tree Output to a File
+### Exclude Version Control Directories
 
-You can redirect the output to a file for documentation purposes:
-```console
-$ tree > directory_structure.txt
-```
+Use `tree -I "node_modules|.git"` to exclude specific directories like node_modules and .git from the output, making the tree more readable for project directories.
 
-### Exclude Multiple Patterns
+### Create ASCII Output for Documentation
 
-Use multiple `-I` options or separate patterns with pipes:
-```console
-$ tree -I "node_modules|*.log|.git"
-```
+Use `tree -A` to ensure ASCII characters are used instead of graphic characters, which is useful when creating documentation that needs to be displayed in environments with limited character support.
 
-### Find Large Directories
+### Count Files and Directories
 
-Combine `-h` with `--du` to show directory sizes and identify space-consuming directories:
-```console
-$ tree -h --du -d
-```
+Use `tree --noreport` to suppress the file/directory report at the end if you just want the tree structure without the summary.
 
-### Custom Output Format
+### Customize Output Format
 
-Use `-J` for JSON output or `-X` for XML output when you need to process the directory structure programmatically.
+Combine options like `-pugh` to show permissions, usernames, group names, and human-readable sizes all at once for a comprehensive directory listing.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I install tree on my system?
-A. On Debian/Ubuntu: `sudo apt install tree`, on macOS with Homebrew: `brew install tree`, on CentOS/RHEL: `sudo yum install tree`.
+#### Q1. How do I install tree on macOS?
+A. You can install tree using Homebrew with the command `brew install tree`.
 
-#### Q2. How can I limit the depth of directories shown?
-A. Use the `-L` option followed by the depth level: `tree -L 2` will show only two levels deep.
+#### Q2. How can I exclude certain directories from the output?
+A. Use the `-I` option followed by a pattern, e.g., `tree -I "node_modules|.git"` to exclude node_modules and .git directories.
 
-#### Q3. How do I exclude certain directories from the output?
-A. Use the `-I` option followed by a pattern: `tree -I "node_modules"` will exclude the node_modules directory.
+#### Q3. How do I limit the depth of directories shown?
+A. Use the `-L` option followed by a number, e.g., `tree -L 2` to show only two levels of directories.
 
-#### Q4. How can I show only directories?
-A. Use the `-d` option: `tree -d` will show only directories, not files.
+#### Q4. Can tree output to a file instead of the terminal?
+A. Yes, use redirection: `tree > output.txt` to save the output to a file.
 
 #### Q5. How do I show hidden files?
-A. Use the `-a` option: `tree -a` will show all files including hidden ones.
+A. Use the `-a` option: `tree -a` to show all files including hidden ones.
 
 ## References
 
@@ -219,4 +243,4 @@ https://linux.die.net/man/1/tree
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

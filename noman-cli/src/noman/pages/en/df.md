@@ -1,10 +1,10 @@
 # df command
 
-Display information about disk space usage on mounted filesystems.
+Display disk space usage for file systems.
 
 ## Overview
 
-The `df` command reports the amount of disk space used and available on file systems. By default, it shows space in 1K blocks, but can be configured to display in human-readable formats. It's commonly used to monitor disk usage and identify filesystems that are running low on space.
+The `df` command reports file system disk space usage, showing information about mounted file systems including their total size, used space, available space, and mount points. It's commonly used to monitor disk space and identify file systems that are running low on space.
 
 ## Options
 
@@ -15,21 +15,21 @@ Display sizes in human-readable format (e.g., 1K, 234M, 2G)
 ```console
 $ df -h
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/sda1        20G  7.8G   11G  42% /
+/dev/sda1        20G   15G  4.0G  79% /
 tmpfs           3.9G     0  3.9G   0% /dev/shm
-/dev/sda3       450G  254G  174G  60% /home
+/dev/sda2       50G   20G   28G  42% /home
 ```
 
 ### **-T, --print-type**
 
-Print filesystem type (e.g., ext4, xfs)
+Print file system type
 
 ```console
 $ df -T
-Filesystem     Type     1K-blocks     Used Available Use% Mounted on
-/dev/sda1      ext4      20971520  8126464  11714048  42% /
-tmpfs          tmpfs      4048380        0   4048380   0% /dev/shm
-/dev/sda3      ext4     471859200 266338304 181889024  60% /home
+Filesystem     Type     1K-blocks    Used Available Use% Mounted on
+/dev/sda1      ext4      20971520 15728640   4194304  79% /
+tmpfs          tmpfs      4096000        0   4096000   0% /dev/shm
+/dev/sda2      ext4      52428800 20971520  29360128  42% /home
 ```
 
 ### **-i, --inodes**
@@ -38,77 +38,104 @@ List inode information instead of block usage
 
 ```console
 $ df -i
-Filesystem      Inodes  IUsed    IFree IUse% Mounted on
-/dev/sda1      1310720 248932  1061788   19% /
-tmpfs          1012095      1  1012094    1% /dev/shm
-/dev/sda3      29491200 845621 28645579    3% /home
+Filesystem      Inodes  IUsed   IFree IUse% Mounted on
+/dev/sda1      1310720 354026  956694   27% /
+tmpfs           999037      1  999036    1% /dev/shm
+/dev/sda2      3276800 125892 3150908    4% /home
 ```
 
 ### **-a, --all**
 
-Include filesystems with 0 blocks or that are otherwise ignored by default
+Include dummy, duplicate, or inaccessible file systems
 
 ```console
 $ df -a
-Filesystem     1K-blocks     Used Available Use% Mounted on
-/dev/sda1       20971520  8126464  11714048  42% /
+Filesystem     1K-blocks    Used Available Use% Mounted on
+/dev/sda1       20971520 15728640   4194304  79% /
 proc                   0        0         0    - /proc
 sysfs                  0        0         0    - /sys
-tmpfs            4048380        0   4048380   0% /dev/shm
-/dev/sda3      471859200 266338304 181889024  60% /home
+tmpfs            4096000        0   4096000   0% /dev/shm
+/dev/sda2       52428800 20971520  29360128  42% /home
+```
+
+### **-P, --portability**
+
+Use the POSIX output format
+
+```console
+$ df -P
+Filesystem     1024-blocks      Used  Available Capacity Mounted on
+/dev/sda1          20971520  15728640    4194304      79% /
+tmpfs               4096000         0    4096000       0% /dev/shm
+/dev/sda2          52428800  20971520   29360128      42% /home
 ```
 
 ## Usage Examples
 
-### Checking space on a specific filesystem
+### Checking space on a specific file system
 
 ```console
 $ df -h /home
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/sda3       450G  254G  174G  60% /home
+/dev/sda2        50G   20G   28G  42% /home
 ```
 
-### Combining options for detailed output
+### Combining options for detailed information
 
 ```console
 $ df -hT
 Filesystem     Type   Size  Used Avail Use% Mounted on
-/dev/sda1      ext4    20G  7.8G   11G  42% /
+/dev/sda1      ext4    20G   15G  4.0G  79% /
 tmpfs          tmpfs  3.9G     0  3.9G   0% /dev/shm
-/dev/sda3      ext4   450G  254G  174G  60% /home
+/dev/sda2      ext4    50G   20G   28G  42% /home
 ```
 
-## Tips:
+### Checking space on all file systems including special ones
 
-### Focus on Important Filesystems
+```console
+$ df -ha
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        20G   15G  4.0G  79% /
+proc               0     0     0    - /proc
+sysfs              0     0     0    - /sys
+tmpfs            3.9G     0  3.9G   0% /dev/shm
+/dev/sda2        50G   20G   28G  42% /home
+```
 
-Use `df -h | grep -v tmpfs` to exclude temporary filesystems when you only want to see physical disks.
+## Tips
 
-### Monitor Critical Filesystems
+### Focus on Important File Systems
 
-Set up alerts when filesystems exceed a certain percentage. For example, check if root is over 90% full: `df -h / | awk 'NR==2 {print $5}' | sed 's/%//'`.
+Use `df -h | grep -v tmpfs` to filter out temporary file systems and focus on physical disks.
 
-### Check Inode Usage
+### Identify Large File Systems
 
-Sometimes filesystems run out of inodes before they run out of space, especially when there are many small files. Use `df -i` to monitor inode usage.
+Combine with sort to identify the largest file systems: `df -h | sort -rh -k2`.
+
+### Monitor Critical Thresholds
+
+Watch for file systems with high usage percentages (over 90%) as they may need attention soon.
+
+### Check Specific Mount Points
+
+When troubleshooting, check specific mount points directly: `df -h /var` to see if a particular directory is running out of space.
 
 ## Frequently Asked Questions
 
-#### Q1. What does "Use%" mean in the df output?
-A. It shows the percentage of the filesystem that is currently in use. Values approaching 100% indicate the filesystem is nearly full.
+#### Q1. What does the "Use%" column mean?
+A. It shows the percentage of the file system's capacity that is currently in use.
 
-#### Q2. Why does df show less free space than I expected?
-A. By default, most filesystems reserve 5% of space for the root user and system processes. This reserved space isn't counted as available to regular users.
+#### Q2. How can I check disk space in a more readable format?
+A. Use `df -h` for human-readable sizes (KB, MB, GB).
 
-#### Q3. How can I see disk usage in gigabytes instead of kilobytes?
-A. Use `df -h` for human-readable output that automatically scales to the appropriate unit (KB, MB, GB, etc.).
+#### Q3. Why do some file systems show 0 size?
+A. Special file systems like /proc and /sys are virtual and don't consume actual disk space.
 
-#### Q4. Why do some filesystems show 0 blocks or 100% usage?
-A. Virtual filesystems like /proc and /sys show 0 blocks because they don't use actual disk space. They exist only in memory.
+#### Q4. How do I check inode usage?
+A. Use `df -i` to display inode information instead of block usage.
 
-## macOS Considerations
-
-On macOS, the `df` command has slightly different options. The `-T` option is not available, and the output format differs. Use `df -h` for human-readable output, which works consistently across platforms.
+#### Q5. What's the difference between df and du?
+A. `df` reports disk space usage at the file system level, while `du` reports disk usage at the file and directory level.
 
 ## References
 
@@ -116,4 +143,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/df-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

@@ -1,16 +1,16 @@
 # zip コマンド
 
-ファイルを圧縮アーカイブにパッケージ化します。
+ファイルやディレクトリを圧縮してZIPアーカイブを作成または更新します。
 
 ## 概要
 
-`zip`コマンドは、1つ以上のファイルやディレクトリを含むZIP形式の圧縮アーカイブを作成します。ファイル圧縮、バックアップ、異なるオペレーティングシステム間でのファイル共有によく使用されます。ZIPは広くサポートされている形式で、ファイル属性やディレクトリ構造を維持します。
+`zip`コマンドは、ZIP形式の圧縮アーカイブを作成します。この形式はファイル圧縮やパッケージングに広く使用されています。既存のアーカイブにファイルを追加したり、アーカイブ内のファイルを更新したり、自己解凍型アーカイブを作成したりすることができます。ZIPファイルはファイル属性とディレクトリ構造を維持するため、クロスプラットフォームでのファイル共有に便利です。
 
 ## オプション
 
-### **-r, --recurse-paths**
+### **-r**
 
-サブディレクトリ内のファイルを再帰的に含めます
+ディレクトリとそのサブディレクトリ内のファイルを再帰的に含める
 
 ```console
 $ zip -r archive.zip documents/
@@ -20,9 +20,27 @@ $ zip -r archive.zip documents/
   adding: documents/images/photo.jpg (deflated 2%)
 ```
 
-### **-e, --encrypt**
+### **-u**
 
-ZIPアーカイブの内容をパスワードで暗号化します
+アーカイブ内のバージョンよりも新しい場合、zipアーカイブ内の既存エントリを更新する
+
+```console
+$ zip -u archive.zip documents/report.txt
+updating: documents/report.txt (deflated 35%)
+```
+
+### **-d**
+
+zipアーカイブからエントリを削除する
+
+```console
+$ zip -d archive.zip documents/report.txt
+deleting: documents/report.txt
+```
+
+### **-e**
+
+パスワードでzipファイルの内容を暗号化する
 
 ```console
 $ zip -e secure.zip confidential.txt
@@ -31,55 +49,67 @@ Verify password:
   adding: confidential.txt (deflated 42%)
 ```
 
-### **-u, --update**
+### **-j**
 
-ZIPアーカイブ内の既存エントリを更新し、新しいファイルを追加します
-
-```console
-$ zip -u archive.zip newfile.txt updated.txt
-  adding: newfile.txt (deflated 30%)
-  updating: updated.txt (deflated 25%)
-```
-
-### **-d, --delete**
-
-ZIPアーカイブからエントリを削除します
+ファイル名のみを保存する（パスを破棄する）
 
 ```console
-$ zip -d archive.zip unwanted.txt
-deleting: unwanted.txt
-```
-
-### **-j, --junk-paths**
-
-ディレクトリパスなしでファイル名のみを格納します
-
-```console
-$ zip -j flat.zip documents/report.txt documents/images/photo.jpg
+$ zip -j archive.zip documents/report.txt documents/images/photo.jpg
   adding: report.txt (deflated 35%)
   adding: photo.jpg (deflated 2%)
 ```
 
-### **-9, --compress-level**
+### **-m**
 
-圧縮レベルを設定します（0-9、9が最大圧縮）
+指定したファイルをzipアーカイブに移動する（元のファイルを削除する）
 
 ```console
-$ zip -9 compressed.zip largefile.dat
-  adding: largefile.dat (deflated 68%)
+$ zip -m archive.zip temp.txt
+  adding: temp.txt (deflated 30%)
+```
+
+### **-9**
+
+最大圧縮を使用する（最も遅い）
+
+```console
+$ zip -9 archive.zip largefile.dat
+  adding: largefile.dat (deflated 65%)
+```
+
+### **-0**
+
+圧縮せずにファイルを保存する
+
+```console
+$ zip -0 archive.zip already-compressed.jpg
+  adding: already-compressed.jpg (stored 0%)
+```
+
+### **-v**
+
+zip操作に関する詳細情報を表示する
+
+```console
+$ zip -v archive.zip document.txt
+  adding: document.txt (deflated 35%)
+zip diagnostic: adding document.txt
+Total bytes read: 1024 (1.0k)
+Total bytes written: 665 (665b)
+Compression ratio: 35.1%
 ```
 
 ## 使用例
 
-### 基本的なZIPアーカイブの作成
+### 基本的なzipアーカイブの作成
 
 ```console
 $ zip backup.zip file1.txt file2.txt
-  adding: file1.txt (deflated 32%)
-  adding: file2.txt (deflated 28%)
+  adding: file1.txt (deflated 42%)
+  adding: file2.txt (deflated 38%)
 ```
 
-### サブディレクトリを含むディレクトリ全体の圧縮
+### サブディレクトリを含むディレクトリ全体をzip化する
 
 ```console
 $ zip -r project.zip project/
@@ -87,62 +117,70 @@ $ zip -r project.zip project/
   adding: project/src/ (stored 0%)
   adding: project/src/main.c (deflated 45%)
   adding: project/docs/ (stored 0%)
-  adding: project/docs/readme.md (deflated 38%)
+  adding: project/docs/readme.md (deflated 40%)
 ```
 
-### パスワード保護された最大圧縮のZIPの作成
+### パスワード保護されたzipファイルの作成
 
 ```console
-$ zip -e -9 secure-archive.zip important/*.pdf
+$ zip -e -r confidential.zip sensitive_data/
 Enter password: 
 Verify password: 
-  adding: important/document1.pdf (deflated 15%)
-  adding: important/document2.pdf (deflated 12%)
+  adding: sensitive_data/ (stored 0%)
+  adding: sensitive_data/accounts.xlsx (deflated 52%)
+  adding: sensitive_data/passwords.txt (deflated 35%)
+```
+
+### 既存のアーカイブ内のファイルを更新する
+
+```console
+$ zip -u archive.zip updated_file.txt
+updating: updated_file.txt (deflated 40%)
 ```
 
 ## ヒント:
 
-### 展開せずにZIPの内容を表示する
+### 異なる圧縮レベルを使用する
 
-関連コマンド`unzip -l archive.zip`を使用して、ZIPファイルの内容を展開せずに一覧表示できます。
+大きなアーカイブの場合、異なる圧縮レベルの使用を検討してください。すでに圧縮されているファイル（JPEGなど）には`-0`を、最大圧縮が有益なテキストファイルには`-9`を使用します。
 
-### 特定のファイルを除外する
+### 不要なファイルを除外する
 
-`-x`オプションでパターンを使用して特定のファイルを除外できます：`zip -r archive.zip directory/ -x "*.tmp" "*.log"`
+パターンを使用してファイルを除外できます：`zip -r archive.zip directory -x "*.git*" "*.DS_Store"`はGitファイルとmacOSシステムファイルを除外します。
 
-### 大きなZIPファイルを分割する
+### 自己解凍型アーカイブの作成
 
-非常に大きなアーカイブの場合、`-s`オプションを使用してZIPを小さな部分に分割できます：`zip -s 100m -r large.zip bigdirectory/`
+一部のシステムでは、`zip -A archive.zip`で自己解凍型アーカイブを作成できます。これによりZIPファイルに解凍コードが追加され、実行可能になります。
 
-### 圧縮率の調整
+### 大きなアーカイブの分割
 
-すでに圧縮されているファイル（JPEGなど）には`zip -0`（圧縮なし）を使用し、テキストファイルには`zip -9`（最大圧縮）を使用すると効率的です。
+制限されたメディアを介して転送する必要がある非常に大きなアーカイブの場合、`-s`オプションを使用してアーカイブを小さな部分に分割します：`zip -s 100m -r archive.zip large_directory/`
 
 ## よくある質問
 
-#### Q1. ZIPファイルを展開するにはどうすればよいですか？
-A. 関連コマンド`unzip archive.zip`を使用してZIPアーカイブからファイルを展開できます。
+#### Q1. ZIPファイルを解凍するにはどうすればよいですか？
+A. `unzip`コマンドを使用します：`unzip archive.zip`。`zip`コマンドはアーカイブの作成または変更のみを行います。
 
-#### Q2. 既存のZIPアーカイブにファイルを追加できますか？
-A. はい、`zip -u archive.zip 新しいファイル`を使用して既存のアーカイブにファイルを追加または更新できます。
+#### Q2. ZIPファイルを解凍せずに内容を確認するにはどうすればよいですか？
+A. `unzip -l archive.zip`を使用して、解凍せずに内容を一覧表示します。
 
-#### Q3. ファイルを圧縮せずにZIPファイルを作成するにはどうすればよいですか？
-A. `zip -0 archive.zip ファイル`を使用して、圧縮なしでファイルを格納できます（JPEGなどの既に圧縮されているファイルに便利です）。
+#### Q3. Unixパーミッションを保持するZIPファイルを作成するにはどうすればよいですか？
+A. `-X`オプションを使用します：`zip -X archive.zip files`でUnixパーミッションを含むファイル属性を保持します。
 
-#### Q4. ZIPファイルをパスワード保護するにはどうすればよいですか？
-A. `zip -e archive.zip ファイル`を使用して暗号化されたZIPファイルを作成します。パスワードの入力を求められます。
+#### Q4. ZIPファイルにコメントを追加できますか？
+A. はい、`-z`オプションを使用します：`zip -z archive.zip`を実行すると、コメントの入力を求められます。
 
-#### Q5. ZIPアーカイブを作成するときにファイルのパーミッションを保持するにはどうすればよいですか？
-A. Unixライクなシステムでは、`zip -X archive.zip ファイル`を使用してファイルのパーミッションとUID/GID情報を保持できます。
+#### Q5. ファイル名のエンコーディングの問題を処理するにはどうすればよいですか？
+A. `-UN=encoding`を使用してファイル名のエンコーディングを指定します。例：`zip -UN=UTF8 archive.zip files`。
 
-## macOSに関する注意点
+## macOSに関する考慮事項
 
-macOSでは、組み込みのArchive Utilityが作成するZIPファイルは、特定のUnixファイル属性を保持しない場合があります。より詳細な制御が必要な場合は、コマンドラインの`zip`ユーティリティを使用してください。また、macOSはディレクトリ内に隠しファイル`.DS_Store`を作成することがあり、`-x "*.DS_Store"`で明示的に除外しない限り、ZIPアーカイブに含まれることに注意してください。
+macOSでは、デフォルトの`zip`コマンドがアーカイブに`.DS_Store`や`__MACOSX`ディレクトリなどの追加の隠しファイルを作成することがあります。これを避けるには、拡張属性を除外する`-X`オプションを使用するか、`-x "*.DS_Store" "__MACOSX/*"`のような除外パターンを追加します。
 
-## 参考資料
+## 参考文献
 
 https://linux.die.net/man/1/zip
 
 ## 改訂履歴
 
-- 2025/05/04 初回改訂
+- 2025/05/05 初版

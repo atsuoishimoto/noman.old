@@ -70,7 +70,7 @@ src/utils.js:15:function formatDate(date) {
 
 ### **--no-ignore**
 
-無視ファイル（.gitignore、.ignoreなど）を尊重しません。
+無視ファイル（.gitignore、.ignoreなど）を尊重しません。このオプションは、.gitignoreファイルなどで通常無視されるファイルやディレクトリも検索するようripgrepに指示します。
 
 ```
 $ rg --no-ignore "password"
@@ -110,6 +110,35 @@ src/main.js:20:  // TODO: Implement validation
 src/main.js:21:  return transform(data);
 ```
 
+### **-o, --only-matching**
+
+一致した部分のみを表示します。
+
+```
+$ rg -o "TODO.*"
+src/main.js:TODO: Implement validation
+docs/roadmap.md:TODO: Add authentication
+```
+
+### **-m, --max-count NUM**
+
+各ファイルにつき最大NUM個の一致のみを表示します。
+
+```
+$ rg -m 2 "error" log.txt
+log.txt:15:error: connection failed
+log.txt:23:error: timeout occurred
+```
+
+### **--max-depth NUM**
+
+ディレクトリの走査の深さをNUMレベルに制限します。
+
+```
+$ rg --max-depth 1 "TODO"
+./main.js:20:  // TODO: Implement validation
+```
+
 ## 使用例
 
 ### 特定のファイルタイプで検索
@@ -140,6 +169,21 @@ src/api.ts:42:  throw new Error("Invalid response");
 $ rg "TODO" --glob "!node_modules"
 src/main.js:20:  // TODO: Implement validation
 docs/roadmap.md:15:TODO: Add authentication
+```
+
+### 一致するパターンを持つファイル名のみを表示
+
+```
+$ rg -l "password"
+config.js
+auth.js
+```
+
+### 現在のディレクトリのみで検索（再帰なし）
+
+```
+$ rg --max-depth 0 "function"
+main.js:10:function calculateTotal(items) {
 ```
 
 ## ヒント:
@@ -194,10 +238,18 @@ A. `-L` または `--follow` を使用して、検索時にシンボリックリ
 #### Q5. --no-ignoreオプションは何をしますか？
 A. `--no-ignore` オプションは、.gitignore、.ignore、または同様のファイルによって通常無視されるファイルやディレクトリも検索するようripgrepに指示します。これは、node_modulesや他の通常無視される場所で検索する必要がある場合に便利です。
 
+#### Q6. サブディレクトリに再帰せずに現在のディレクトリのみを検索するにはどうすればよいですか？
+A. `--max-depth 0` を使用して、サブディレクトリに再帰せずに現在のディレクトリのみに検索を制限します。
+
+#### Q7. 一致するファイル名のみを表示するにはどうすればよいですか？
+A. `-l` または `--files-with-matches` を使用して、一致を含むファイルのパスのみを表示します。
+
 ## 参考文献
 
 https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
 
 ## 改訂履歴
 
+- 2025/05/06 --max-depthと-mオプションを追加し、非再帰的検索を含む使用例を拡充し、ディレクトリの深さ制限とファイル名のみの表示に関する新しいFAQを追加しました。
+- 2025/05/06 -o, --only-matchingオプションを追加しました。
 - 2025/05/05 --no-ignoreオプションの説明を追加し、FAQを拡充しました。

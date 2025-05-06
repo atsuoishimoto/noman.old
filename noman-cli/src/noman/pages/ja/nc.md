@@ -1,37 +1,36 @@
 # nc コマンド
 
-ネットワーク接続を作成・管理し、データ転送、ポートスキャン、ネットワークデバッグを行います。
+ネットワーク接続を作成・管理し、データ転送、ポートスキャン、ネットワークデバッグを行うコマンドです。
 
 ## 概要
 
-`nc`（netcat）は、TCPまたはUDPプロトコルを使用してネットワーク接続間でデータを読み書きする多目的ネットワークユーティリティです。サーバーやクライアントの作成、ファイル転送、ポートスキャン、ネットワーク問題のデバッグなどができる「ネットワークのスイスアーミーナイフ」として機能します。シンプルで柔軟性があるため、システム管理者やセキュリティ専門家にとって不可欠なツールとなっています。
+`nc`（netcat）は、TCPまたはUDPプロトコルを使用してネットワーク接続を介してデータを読み書きする多目的ネットワークユーティリティです。ネットワーク操作のための「スイスアーミーナイフ」として機能し、サーバーの作成、サービスへの接続、ファイル転送、ポートスキャン、ネットワーク問題のデバッグなどを行うことができます。
 
 ## オプション
 
-### **-l, --listen**
+### **-l**
 
-接続を開始するのではなく、着信接続をリッスンします。
+リモートホストへの接続を開始するのではなく、着信接続をリッスンします。
 
 ```console
 $ nc -l 8080
-Hello, world!
 ```
 
-### **-p, --port**
+### **-p**
 
-ncが使用すべきソースポートを指定します（権限制限と可用性に依存）。
+ncが使用するソースポートを指定します。
 
 ```console
-$ nc -p 31337 example.com 80
+$ nc -p 12345 example.com 80
 ```
 
-### **-v, --verbose**
+### **-v**
 
-詳細な出力を有効にして、より多くの接続詳細を表示します。
+詳細な出力を有効にし、より多くの接続詳細を表示します。
 
 ```console
 $ nc -v example.com 80
-Connection to example.com 80 port [tcp/http] succeeded!
+Connection to example.com port 80 [tcp/http] succeeded!
 ```
 
 ### **-z**
@@ -39,121 +38,126 @@ Connection to example.com 80 port [tcp/http] succeeded!
 データを送信せずにリスニングデーモンをスキャンします（ポートスキャンモード）。
 
 ```console
-$ nc -zv example.com 20-30
+$ nc -z -v example.com 20-30
 Connection to example.com 22 port [tcp/ssh] succeeded!
 ```
 
-### **-u, --udp**
+### **-u**
 
 デフォルトのTCPプロトコルの代わりにUDPを使用します。
 
 ```console
-$ nc -u 192.168.1.100 53
+$ nc -u 192.168.1.1 53
 ```
 
-### **-w, --timeout**
+### **-w**
 
-接続試行のタイムアウトを設定します。
+接続とポートスキャンのタイムアウトを秒単位で指定します。
 
 ```console
 $ nc -w 5 example.com 80
 ```
 
-## 使用例
+### **-n**
 
-### シンプルなチャットサーバーの作成
+DNS検索をスキップし、数値IPアドレスのみを使用します。
 
 ```console
-$ nc -l 1234
+$ nc -n 192.168.1.1 80
 ```
 
-### チャットサーバーへの接続
+## 使用例
+
+### 簡単なチャットサーバーとクライアント
 
 ```console
+# サーバー側
+$ nc -l 1234
+Hello from client!
+Hello from server!
+
+# クライアント側
 $ nc 192.168.1.100 1234
-Hello, are you there?
+Hello from client!
+Hello from server!
 ```
 
 ### ファイル転送
 
-サーバー側:
 ```console
+# 受信側
 $ nc -l 1234 > received_file.txt
-```
 
-クライアント側:
-```console
+# 送信側
 $ nc 192.168.1.100 1234 < file_to_send.txt
 ```
 
 ### ポートスキャン
 
 ```console
-$ nc -zv example.com 20-30
-Connection to example.com 22 port [tcp/ssh] succeeded!
-Connection to example.com 25 port [tcp/smtp] succeeded!
+$ nc -z -v 192.168.1.1 20-30
+Connection to 192.168.1.1 22 port [tcp/ssh] succeeded!
+Connection to 192.168.1.1 25 port [tcp/smtp] succeeded!
+```
+
+### HTTPリクエスト
+
+```console
+$ echo -e "GET / HTTP/1.1\r\nHost: example.com\r\n\r\n" | nc example.com 80
+HTTP/1.1 200 OK
+Content-Type: text/html
+...
+```
+
+## ヒント
+
+### 永続的なリスニングサーバー
+
+クライアント切断後もサーバーを実行し続けるには、（サポートされているシステムで）`-k`オプションを使用します：
+```console
+$ nc -k -l 8080
 ```
 
 ### バナーグラビング
 
+特定のポートで実行されているサービスを素早く識別します：
 ```console
 $ nc -v example.com 22
-Connection to example.com 22 port [tcp/ssh] succeeded!
 SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.5
 ```
 
-## ヒント:
+### プロキシ接続
 
-### シンプルなWebサーバーとして使用
-
-基本的なHTTPサーバーを作成してファイルを提供できます：
+ncを使用して2つのエンドポイント間の簡単なプロキシを作成します：
 ```console
-$ while true; do nc -l 8080 < response.html; done
+$ nc -l 8080 | nc example.com 80
 ```
 
-### 出力をファイルにリダイレクト
+### ネットワーク問題のデバッグ
 
-トラブルシューティング時に、後で分析するために出力を保存します：
-```console
-$ nc example.com 80 > output.txt
-```
-
-### ポートが開いているか確認
-
-特定のポートがアクセス可能かどうかを素早く確認する方法：
-```console
-$ nc -zv example.com 443
-```
-
-### パイプと組み合わせて使用
-
-ncはUnixパイプと組み合わせて複雑な操作を行うことができます：
-```console
-$ echo -e "GET / HTTP/1.0\r\n\r\n" | nc example.com 80
-```
+接続問題のトラブルシューティングを行う際は、アプリケーション固有のデバッグに入る前に、ncを使用して特定のポートに到達可能かどうかをテストします。
 
 ## よくある質問
 
-#### Q1. ncとtelnetの違いは何ですか？
-A. どちらもリモートサービスに接続できますが、`nc`はポートスキャン、UDPサポート、より優れたスクリプト機能など、より多機能です。telnetは主に対話型ターミナルセッション用に設計されています。
+#### Q1. ncで簡単なチャットサーバーを作成するにはどうすればよいですか？
+A. サーバー側で`nc -l PORT`を実行し、クライアント側で`nc SERVER_IP PORT`を実行します。メッセージを入力してEnterキーを押すと送信されます。
 
-#### Q2. クライアントが切断した後もnetcatリスナーを実行し続けるにはどうすればよいですか？
-A. バージョンによってサポートされている場合は、`-k`オプションを使用してクライアント切断後もサーバーをリスニング状態に保ちます。それ以外の場合は、ループで囲みます：`while true; do nc -l 8080; done`
+#### Q2. ncを使用してファイルを転送できますか？
+A. はい。受信側で`nc -l PORT > filename`を実行し、送信側で`nc DESTINATION_IP PORT < filename`を実行します。
 
-#### Q3. netcatは機密データの転送に安全ですか？
-A. いいえ、netcatはデータを平文で送信します。安全な転送には、`scp`、`sftp`、またはSSH経由でnetcatをトンネリングするツールの使用を検討してください。
+#### Q3. ncでオープンポートをスキャンするにはどうすればよいですか？
+A. `nc -z -v TARGET_IP PORT_RANGE`を使用します（例：`nc -z -v example.com 20-100`）。
 
-#### Q4. Webサーバーが動作しているかをテストするにはどうすればよいですか？
-A. 次のコマンドを使用します：`echo -e "GET / HTTP/1.0\r\n\r\n" | nc example.com 80`
+#### Q4. 機密データの転送にncは安全ですか？
+A. いいえ、ncはデータを平文で送信します。機密データには、scp、sftpなどの安全な代替手段を使用するか、送信前にデータを暗号化してください。
 
-## macOSに関する注意点
+#### Q5. ncとncatの違いは何ですか？
+A. ncatはNmapプロジェクトの一部であり、従来のncとの互換性を維持しながら、SSL対応、プロキシ接続、より高度なオプションなどの追加機能を提供します。
 
-macOSでは、デフォルトの`nc`実装はGNU netcatよりも機能が少ない場合があります。`-k`（リスニングを継続する）などの一部のオプションは利用できない可能性があります。Homebrewを通じて代替バージョンをインストールすることを検討してください：`brew install netcat`
+## 参考文献
 
-## 参考資料
-
-https://man7.org/linux/man-pages/man1/nc.1.html
+https://man.openbsd.org/nc.1
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

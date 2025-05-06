@@ -1,10 +1,10 @@
 # which command
 
-Locate a command by searching through the PATH environment variable.
+Locate a command's executable file in the user's PATH.
 
 ## Overview
 
-The `which` command finds the location of executable files in your PATH. It helps you determine which version of a program would run if you typed its name at the command line, showing the full path to the executable.
+The `which` command searches through the directories listed in the PATH environment variable to find the location of executable programs. It helps determine which version of a program would be executed if run from the command line.
 
 ## Options
 
@@ -18,96 +18,81 @@ $ which -a python
 /usr/local/bin/python
 ```
 
-### **-s, --silent, --quiet**
+### **-s**
 
-Suppress normal output; return exit status 0 if any executable is found, 1 if not.
+Silent mode - return exit status (0 if found, 1 if not found) without output.
 
 ```console
-$ which -s python
+$ which -s git
 $ echo $?
 0
 ```
 
-### **-v, --version**
-
-Display version information and exit.
-
-```console
-$ which --version
-GNU which v2.21, Copyright (C) 1999 - 2015 Carlo Wood.
-```
-
 ## Usage Examples
 
-### Basic usage
+### Finding a command's location
 
 ```console
 $ which ls
 /bin/ls
 ```
 
-### Finding multiple commands at once
+### Checking if a command exists
 
 ```console
-$ which bash python grep
+$ which nonexistentcommand
+which: no nonexistentcommand in (/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin)
+```
+
+### Using with multiple commands
+
+```console
+$ which bash python perl
 /bin/bash
 /usr/bin/python
-/bin/grep
+/usr/bin/perl
 ```
 
-### Using with other commands
+## Tips:
 
+### Use with command substitution
+
+You can use `which` with command substitution to execute the full path of a command:
 ```console
-$ file $(which python)
-/usr/bin/python: symbolic link to python3
+$ $(which python) --version
+Python 3.9.6
 ```
 
-## Tips
+### Check for multiple versions
 
-### Check if a Command Exists
+Use `which -a` to find all instances of a command in your PATH, which is helpful when troubleshooting version conflicts.
 
-Use `which` with a conditional to check if a command is available before using it:
+### Combine with other commands
 
+Combine with other commands for more information:
 ```console
-$ if which git >/dev/null; then echo "Git is installed"; else echo "Git is not installed"; fi
-Git is installed
+$ ls -l $(which python)
+-rwxr-xr-x 1 root wheel 31488 Jan 1 2023 /usr/bin/python
 ```
-
-### Combine with `type` for More Information
-
-The `type` command provides more details about a command (builtin, alias, or executable):
-
-```console
-$ type ls
-ls is aliased to `ls --color=auto'
-```
-
-### Remember PATH Order Matters
-
-The first matching executable in your PATH is the one that will be executed. Use `which -a` to see all possible matches.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `which` and `whereis`?
-A. `which` only shows executable locations in your PATH, while `whereis` also finds manual pages and source files.
+A. `which` only shows the executable's location in your PATH, while `whereis` also finds the command's source code, man pages, and related files.
 
-#### Q2. Why does `which` not find shell builtins or aliases?
-A. `which` only finds executable files in your PATH. For shell builtins, aliases, or functions, use the `type` command instead.
+#### Q2. Why does `which` sometimes not find a command that exists?
+A. The command might be a shell builtin (like `cd`), an alias, or not in your PATH environment variable.
 
-#### Q3. How can I find all instances of a command in my PATH?
-A. Use `which -a command` to show all matching executables, not just the first one.
+#### Q3. How can I use `which` to check if a command is installed?
+A. Use `which -s command && echo "Installed" || echo "Not installed"` to check if a command exists in your PATH.
 
-#### Q4. Why does `which` sometimes return nothing?
-A. If `which` returns nothing, the command either doesn't exist in your PATH or might be a shell builtin/alias.
-
-## macOS Considerations
-
-On macOS, the `which` command may behave differently than on Linux systems. The macOS version doesn't support all the GNU options like `--all` (though `-a` works). For more consistent behavior across systems, consider using `command -v` which is a POSIX-compliant alternative.
+#### Q4. Does `which` work for shell builtins?
+A. No, `which` only finds executable files in your PATH, not shell builtins like `cd` or `echo`.
 
 ## References
 
-https://man7.org/linux/man-pages/man1/which.1.html
+https://pubs.opengroup.org/onlinepubs/9699919799/utilities/which.html
 
 ## Revisions
 
-2025/05/04 First revision
+- 2025/05/05 First revision

@@ -1,44 +1,54 @@
 # ssh-keygen コマンド
 
-SSH認証用の鍵ペアを生成、管理、変換します。
+SSH認証用の鍵を生成、管理、変換するコマンドです。
 
 ## 概要
 
-`ssh-keygen`はSSH認証のための公開鍵/秘密鍵ペアを作成します。これらの鍵を使用すると、リモートシステムへのパスワードなしの安全なログインが可能になります。このコマンドは既存の鍵の管理（パスフレーズの変更や鍵フォーマットの変換など）も行えます。
+`ssh-keygen`はSSH認証のための公開鍵/秘密鍵のペアを作成します。これらの鍵により、リモートシステムへのセキュアなパスワードレスログインが可能になります。このコマンドは既存の鍵の管理もでき、パスフレーズの変更や鍵フォーマット間の変換なども行えます。
 
 ## オプション
 
 ### **-t type**
 
-作成する鍵のタイプを指定します。一般的なタイプには rsa、ed25519、dsa、ecdsaがあります。
+作成する鍵のタイプを指定します（rsa、ed25519、dsa、ecdsa）。
 
 ```console
 $ ssh-keygen -t ed25519
 Generating public/private ed25519 key pair.
 Enter file in which to save the key (/home/user/.ssh/id_ed25519): 
-# 鍵ペアを保存するファイルを指定するよう求められている
-```
-
-### **-f filename**
-
-作成または管理する鍵ファイルの名前を指定します。
-
-```console
-$ ssh-keygen -t rsa -f ~/.ssh/my_custom_key
-Generating public/private rsa key pair.
 Enter passphrase (empty for no passphrase): 
-# カスタム名の鍵ファイルを作成している
+Enter same passphrase again: 
+Your identification has been saved in /home/user/.ssh/id_ed25519
+Your public key has been saved in /home/user/.ssh/id_ed25519.pub
 ```
 
 ### **-b bits**
 
-鍵のビット数を指定します。値が大きいほどセキュリティは強化されますが、処理が遅くなる場合があります。
+鍵のビット数を指定します（デフォルトは鍵のタイプによって異なる）。
 
 ```console
 $ ssh-keygen -t rsa -b 4096
 Generating public/private rsa key pair.
 Enter file in which to save the key (/home/user/.ssh/id_rsa): 
-# 4096ビットのRSA鍵を生成している
+```
+
+### **-f filename**
+
+鍵ファイルのファイル名を指定します。
+
+```console
+$ ssh-keygen -t rsa -f ~/.ssh/github_key
+Generating public/private rsa key pair.
+Enter passphrase (empty for no passphrase): 
+```
+
+### **-C comment**
+
+鍵にコメントを付けます。通常はメールアドレスや説明文を入れます。
+
+```console
+$ ssh-keygen -t ed25519 -C "user@example.com"
+Generating public/private ed25519 key pair.
 ```
 
 ### **-p**
@@ -51,23 +61,29 @@ Enter old passphrase:
 Enter new passphrase (empty for no passphrase): 
 Enter same passphrase again: 
 Your identification has been saved with the new passphrase.
-# 既存の鍵のパスフレーズを変更している
 ```
 
-### **-C comment**
+### **-l**
 
-鍵にコメントを追加します。通常、鍵の目的や所有者を識別するために使用されます。
+指定された公開鍵または秘密鍵ファイルのフィンガープリントを表示します。
 
 ```console
-$ ssh-keygen -t ed25519 -C "work laptop"
-Generating public/private ed25519 key pair.
-Enter file in which to save the key (/home/user/.ssh/id_ed25519): 
-# 「work laptop」というコメント付きの鍵を生成している
+$ ssh-keygen -l -f ~/.ssh/id_ed25519
+256 SHA256:AbCdEfGhIjKlMnOpQrStUvWxYz1234567890abcdef user@example.com (ED25519)
+```
+
+### **-y**
+
+秘密鍵ファイルを読み込み、公開鍵を出力します。
+
+```console
+$ ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
+Enter passphrase: 
 ```
 
 ## 使用例
 
-### デフォルトのRSA鍵ペアの作成
+### デフォルトのRSA鍵ペアを作成する
 
 ```console
 $ ssh-keygen
@@ -77,81 +93,59 @@ Enter passphrase (empty for no passphrase):
 Enter same passphrase again: 
 Your identification has been saved in /home/user/.ssh/id_rsa
 Your public key has been saved in /home/user/.ssh/id_rsa.pub
-# オプションなしでデフォルトのRSA鍵を生成している
 ```
 
-### カスタム設定での鍵の生成
+### カスタム設定で鍵を作成する
 
 ```console
-$ ssh-keygen -t ed25519 -b 256 -f ~/.ssh/github_key -C "github access"
+$ ssh-keygen -t ed25519 -C "work laptop" -f ~/.ssh/work_key
 Generating public/private ed25519 key pair.
 Enter passphrase (empty for no passphrase): 
 Enter same passphrase again: 
-Your identification has been saved in /home/user/.ssh/github_key
-Your public key has been saved in /home/user/.ssh/github_key.pub
-# GitHub用のカスタム設定の鍵を生成している
+Your identification has been saved in /home/user/.ssh/work_key
+Your public key has been saved in /home/user/.ssh/work_key.pub
 ```
 
-### 公開鍵のフィンガープリントの表示
+### 鍵を別のフォーマットに変換する
 
 ```console
-$ ssh-keygen -lf ~/.ssh/id_rsa.pub
-3072 SHA256:abcdef1234567890abcdef1234567890 user@hostname (RSA)
-# 公開鍵のフィンガープリントを表示している
+$ ssh-keygen -e -f ~/.ssh/id_rsa.pub > ~/.ssh/id_rsa_openssh.pub
 ```
 
-## ヒント:
+## ヒント
 
-### 適切な鍵タイプの選択
+### 適切な鍵タイプを選ぶ
 
-Ed25519鍵は、小さな鍵サイズで強力なセキュリティを提供するため、ほとんどの最新システムで推奨されています。RSA鍵（最低2048ビット）は古いシステムとの互換性が高いです。
+Ed25519鍵は小さいサイズで強力なセキュリティを提供するため、ほとんどのユーザーにおすすめです。RSA鍵も少なくとも3072ビット以上であれば安全ですが、サイズは大きくなります。
 
-### 強力なパスフレーズの使用
+### 強力なパスフレーズを使用する
 
-秘密鍵にパスフレーズを追加すると、セキュリティの追加層が提供されます。誰かが秘密鍵ファイルを入手しても、使用するにはパスフレーズが必要です。
+鍵にパスフレーズを追加すると、セキュリティの追加層が提供されます。秘密鍵が盗まれた場合でも、パスフレーズがあれば即座に使用されることを防ぎます。
 
-### 鍵のバックアップ
+### 鍵をバックアップする
 
-秘密鍵の安全なバックアップを保管してください。鍵を紛失すると、その鍵を認証に使用しているシステムへのアクセスが失われます。
+秘密鍵は常に安全な場所にバックアップを保管してください。秘密鍵を紛失した場合、新しい鍵ペアを生成し、すべてのサーバーを更新する必要があります。
 
-### 鍵のパーミッションは重要
+### 鍵の保存場所は重要
 
-SSHはファイルのパーミッションに敏感です。秘密鍵のパーミッションは600（所有者のみが読み書き可能）に設定する必要があります。
-
-```console
-$ chmod 600 ~/.ssh/id_rsa
-# 秘密鍵のパーミッションを適切に設定している
-```
+デフォルトでは、SSHは~/.sshディレクトリ内の鍵を探します。標準以外の場所を使用する場合は、sshを使用する際に`-i`オプションで鍵のパスを指定する必要があります。
 
 ## よくある質問
 
-#### Q1. 公開鍵をリモートサーバーにコピーするにはどうすればよいですか？
-A. `ssh-copy-id username@remote-server`を使用して鍵をコピーしインストールします。または、手動で公開鍵をリモートサーバーの`~/.ssh/authorized_keys`ファイルに追加することもできます。
+#### Q1. 公開鍵をサーバーにコピーするにはどうすればよいですか？
+A. `ssh-copy-id user@hostname`を使用して、公開鍵をリモートサーバーのauthorized_keysファイルにコピーできます。
 
-#### Q2. 鍵タイプの違いは何ですか？
-A. RSAは互換性が広いですが、長い鍵が必要です。Ed25519はより新しく、より安全で、短い鍵を使用しますが、古いシステムでは動作しない場合があります。ECDSAとDSAは現在あまり一般的に使用されていません。
+#### Q2. RSA鍵とEd25519鍵の違いは何ですか？
+A. Ed25519鍵は新しく、小さく、一般的にRSA鍵より高速で、同等以上のセキュリティを提供します。
 
-#### Q3. 鍵からパスフレーズを削除するにはどうすればよいですか？
-A. `ssh-keygen -p -f ~/.ssh/id_rsa`を使用し、新しいパスフレーズを求められたときに空のパスフレーズを入力します。
+#### Q3. パスフレーズなしで鍵を生成するにはどうすればよいですか？
+A. 鍵生成時にパスフレーズを求められたら、単にEnterキーを押すだけです。
 
-#### Q4. SSH鍵はどのくらいの頻度で更新すべきですか？
-A. ベストプラクティスとしては、年に1回、またはチームメンバーの退職や潜在的な侵害などのセキュリティ上の懸念がある場合に鍵を更新することをお勧めします。
+#### Q4. 鍵のパスフレーズを変更するにはどうすればよいですか？
+A. `ssh-keygen -p -f ~/.ssh/id_rsa`を使用して、既存の鍵のパスフレーズを変更できます。
 
-## macOSに関する考慮事項
-
-macOSでは、鍵は同じ場所（`~/.ssh/`）に保存されますが、SSHエージェントに鍵を追加する必要がある場合があります：
-
-```console
-$ ssh-add -K ~/.ssh/id_rsa
-# macOS Catalina以前で鍵をキーチェーンに追加している
-```
-
-macOS Monterey（12）以降では、次のように使用します：
-
-```console
-$ ssh-add --apple-use-keychain ~/.ssh/id_rsa
-# macOS Monterey以降で鍵をキーチェーンに追加している
-```
+#### Q5. 鍵のパスフレーズを忘れた場合はどうすればよいですか？
+A. 残念ながら、失われたパスフレーズを回復する方法はありません。新しい鍵ペアを生成する必要があります。
 
 ## 参考資料
 
@@ -159,4 +153,4 @@ https://man.openbsd.org/ssh-keygen.1
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

@@ -1,74 +1,74 @@
 # ping コマンド
 
-ネットワークホストに ICMP ECHO_REQUEST パケットを送信して接続性を確認します。
+ネットワーク接続を確認するために、ICMP ECHO_REQUESTパケットをネットワークホストに送信します。
 
 ## 概要
 
-`ping` コマンドは、IPネットワーク上のホストへの到達性をテストするネットワーク診断ツールです。送信元ホストから宛先コンピュータへのメッセージの往復時間を測定します。pingは、ターゲットホストにインターネット制御メッセージプロトコル（ICMP）エコーリクエストパケットを送信し、ICMPエコー応答を待つことで動作します。
+`ping`コマンドは、指定したホストにインターネット制御メッセージプロトコル（ICMP）エコーリクエストパケットを送信し、応答を待つことでネットワーク接続をテストします。ホストに到達可能かどうかの確認、往復時間の測定、ネットワーク問題の診断によく使用されます。
 
 ## オプション
 
-### **-c 回数** / **--count=回数**
+### **-c count**
 
-指定した回数のECHO_REQUESTパケットを送信（および受信）した後に停止します。
+指定した数（count）のECHO_RESPONSEパケットを送信（および受信）した後に停止します。
 
 ```console
 $ ping -c 4 google.com
-PING google.com (142.250.190.78) 56(84) bytes of data.
-64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=1 ttl=116 time=15.2 ms
-64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=2 ttl=116 time=14.8 ms
-64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=3 ttl=116 time=15.0 ms
-64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=4 ttl=116 time=14.9 ms
+PING google.com (142.250.190.78): 56 data bytes
+64 bytes from 142.250.190.78: icmp_seq=0 ttl=116 time=14.252 ms
+64 bytes from 142.250.190.78: icmp_seq=1 ttl=116 time=14.618 ms
+64 bytes from 142.250.190.78: icmp_seq=2 ttl=116 time=14.465 ms
+64 bytes from 142.250.190.78: icmp_seq=3 ttl=116 time=14.361 ms
 
 --- google.com ping statistics ---
-4 packets transmitted, 4 received, 0% packet loss, time 3005ms
-rtt min/avg/max/mdev = 14.816/14.979/15.201/0.158 ms
+4 packets transmitted, 4 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 14.252/14.424/14.618/0.135 ms
 ```
 
-### **-i 間隔** / **--interval=間隔**
+### **-i interval**
 
-各パケットの送信間隔を秒単位で指定します。デフォルトでは各パケット間に1秒待機します。
+各パケットの送信間隔を指定した秒数（interval）待ちます。デフォルトでは各パケット間に1秒待機します。
 
 ```console
-$ ping -c 3 -i 2 example.com
-PING example.com (93.184.216.34) 56(84) bytes of data.
-64 bytes from 93.184.216.34: icmp_seq=1 ttl=56 time=11.8 ms
-64 bytes from 93.184.216.34: icmp_seq=2 ttl=56 time=12.1 ms
-64 bytes from 93.184.216.34: icmp_seq=3 ttl=56 time=11.9 ms
+$ ping -i 2 -c 3 example.com
+PING example.com (93.184.216.34): 56 data bytes
+64 bytes from 93.184.216.34: icmp_seq=0 ttl=56 time=11.632 ms
+64 bytes from 93.184.216.34: icmp_seq=1 ttl=56 time=11.726 ms
+64 bytes from 93.184.216.34: icmp_seq=2 ttl=56 time=11.978 ms
 
 --- example.com ping statistics ---
-3 packets transmitted, 3 received, 0% packet loss, time 4005ms
-rtt min/avg/max/mdev = 11.823/11.941/12.102/0.115 ms
+3 packets transmitted, 3 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 11.632/11.779/11.978/0.146 ms
 ```
 
-### **-t ttl** / **--ttl=ttl**
+### **-t ttl**
 
-送信パケットのIP Time to Live（TTL）値を設定します。
+送信パケットのIP存続時間（TTL）を設定します。
 
 ```console
-$ ping -c 2 -t 64 github.com
-PING github.com (140.82.114.3) 56(84) bytes of data.
-64 bytes from 140.82.114.3: icmp_seq=1 ttl=64 time=29.7 ms
-64 bytes from 140.82.114.3: icmp_seq=2 ttl=64 time=29.5 ms
+$ ping -t 64 -c 2 github.com
+PING github.com (140.82.121.3): 56 data bytes
+64 bytes from 140.82.121.3: icmp_seq=0 ttl=64 time=15.361 ms
+64 bytes from 140.82.121.3: icmp_seq=1 ttl=64 time=15.244 ms
 
 --- github.com ping statistics ---
-2 packets transmitted, 2 received, 0% packet loss, time 1002ms
-rtt min/avg/max/mdev = 29.532/29.636/29.741/0.104 ms
+2 packets transmitted, 2 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 15.244/15.303/15.361/0.059 ms
 ```
 
-### **-s パケットサイズ** / **--size=パケットサイズ**
+### **-s packetsize**
 
 送信するデータバイト数を指定します。デフォルトは56バイトで、8バイトのICMPヘッダーデータと組み合わせると64バイトのICMPデータになります。
 
 ```console
-$ ping -c 2 -s 100 cloudflare.com
-PING cloudflare.com (104.16.132.229) 100(128) bytes of data.
-108 bytes from 104.16.132.229: icmp_seq=1 ttl=57 time=10.3 ms
-108 bytes from 104.16.132.229: icmp_seq=2 ttl=57 time=10.1 ms
+$ ping -s 100 -c 2 example.com
+PING example.com (93.184.216.34): 100 data bytes
+108 bytes from 93.184.216.34: icmp_seq=0 ttl=56 time=11.632 ms
+108 bytes from 93.184.216.34: icmp_seq=1 ttl=56 time=11.726 ms
 
---- cloudflare.com ping statistics ---
-2 packets transmitted, 2 received, 0% packet loss, time 1001ms
-rtt min/avg/max/mdev = 10.143/10.245/10.348/0.102 ms
+--- example.com ping statistics ---
+2 packets transmitted, 2 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 11.632/11.679/11.726/0.047 ms
 ```
 
 ## 使用例
@@ -77,74 +77,82 @@ rtt min/avg/max/mdev = 10.143/10.245/10.348/0.102 ms
 
 ```console
 $ ping google.com
-PING google.com (142.250.190.78) 56(84) bytes of data.
-64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=1 ttl=116 time=15.2 ms
-64 bytes from lga25s74-in-f14.1e100.net (142.250.190.78): icmp_seq=2 ttl=116 time=14.8 ms
+PING google.com (142.250.190.78): 56 data bytes
+64 bytes from 142.250.190.78: icmp_seq=0 ttl=116 time=14.252 ms
+64 bytes from 142.250.190.78: icmp_seq=1 ttl=116 time=14.618 ms
 ^C
 --- google.com ping statistics ---
-2 packets transmitted, 2 received, 0% packet loss, time 1002ms
-rtt min/avg/max/mdev = 14.816/15.008/15.201/0.192 ms
+2 packets transmitted, 2 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 14.252/14.435/14.618/0.183 ms
 ```
 
-### ネットワークの遅延確認
+### IPアドレスへのping
 
 ```console
-$ ping -c 5 8.8.8.8
-PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
-64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=9.82 ms
-64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=9.75 ms
-64 bytes from 8.8.8.8: icmp_seq=3 ttl=116 time=9.79 ms
-64 bytes from 8.8.8.8: icmp_seq=4 ttl=116 time=9.86 ms
-64 bytes from 8.8.8.8: icmp_seq=5 ttl=116 time=9.80 ms
+$ ping -c 3 8.8.8.8
+PING 8.8.8.8 (8.8.8.8): 56 data bytes
+64 bytes from 8.8.8.8: icmp_seq=0 ttl=116 time=12.252 ms
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=12.618 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=12.465 ms
 
 --- 8.8.8.8 ping statistics ---
-5 packets transmitted, 5 received, 0% packet loss, time 4006ms
-rtt min/avg/max/mdev = 9.752/9.804/9.861/0.039 ms
+3 packets transmitted, 3 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 12.252/12.445/12.618/0.150 ms
 ```
 
-## ヒント:
+### タイムスタンプ付きの継続的なping
 
-### 継続的なping
+```console
+$ ping -D example.com
+PING example.com (93.184.216.34): 56 data bytes
+[1715011234.123456] 64 bytes from 93.184.216.34: icmp_seq=0 ttl=56 time=11.632 ms
+[1715011235.125678] 64 bytes from 93.184.216.34: icmp_seq=1 ttl=56 time=11.726 ms
+^C
+--- example.com ping statistics ---
+2 packets transmitted, 2 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 11.632/11.679/11.726/0.047 ms
+```
 
-デフォルトでは、pingはCtrl+Cで中断されるまで継続します。`-c`オプションを使用して送信するパケット数を制限できます。
+## ヒント
 
-### ネットワーク問題のトラブルシューティング
+### pingを適切に終了する
 
-pingが失敗した場合、ネットワーク接続の問題を示している可能性があります。ネットワーク接続、DNS設定、またはファイアウォールがICMPパケットをブロックしていないか確認してください。
+実行中のpingコマンドを停止するには、Ctrl+Cを押します。これによりping統計の概要が表示されます。
 
-### ネットワーク品質の測定
+### ネットワークの遅延を確認する
 
-pingを使用してパケットロスと遅延を測定できます。高い遅延（100ms以上）やパケットロスは、潜在的なネットワーク問題を示しています。
+ping応答の「time」値に注目してください。値が高いほど遅延が大きいことを示し、ビデオ通話やオンラインゲームなどのリアルタイムアプリケーションに影響を与える可能性があります。
 
-### フラッドping
+### パケットロスを解釈する
 
-`-f`（フラッド）オプションを使用すると、可能な限り速くパケットを送信できますが、root権限が必要であり、ネットワークに負荷をかける可能性があるため注意して使用してください。
+パケットロス（統計に表示される）はネットワークの問題を示します。時折のパケットロス（1-2%）は正常かもしれませんが、一貫した、または高いパケットロスはネットワークの問題を示唆しています。
+
+### トラブルシューティングにpingを使用する
+
+ホストにpingできない場合は、中間デバイスや既知の動作中のホストにpingを試みて、接続問題が発生している可能性のある場所を特定してください。
 
 ## よくある質問
 
-#### Q1. 「Request timeout」や「Destination host unreachable」とはどういう意味ですか？
-A. これらのメッセージは、ターゲットホストが応答していないことを示しています。ホストがオフラインである、ネットワークに問題がある、またはファイアウォールがICMPパケットをブロックしている可能性があります。
+#### Q1. 「Request timeout」とはどういう意味ですか？
+A. ターゲットホストが予想時間内に応答しなかったことを意味します。これはネットワークの輻輳、ファイアウォールのブロック、またはホストがオフラインであることを示している可能性があります。
 
-#### Q2. ping結果をどのように解釈すればよいですか？
-A. 往復時間（RTT）とパケットロスの割合を確認してください。RTT値が低いほど接続状態が良いことを示します。パケットロスがある場合はネットワークに問題がある可能性があります。
+#### Q2. なぜpingはIPアドレスでは機能するが、ドメイン名では機能しないことがあるのですか？
+A. これは通常、DNS解決の問題を示しています。ネットワークはIPアドレスに直接到達できますが、ドメイン名をIPアドレスに変換できません。
 
 #### Q3. pingで特定のポートが開いているかどうかを確認できますか？
-A. いいえ、pingはICMPを使用した基本的な接続テストのみを行います。特定のポートが開いているかテストするには、`telnet`や`nc`（netcat）などのツールを使用してください。
+A. いいえ、pingはICMPを使用した基本的なIP接続のみをテストします。特定のポートが開いているかどうかをテストするには、`telnet`や`nc`（netcat）などのツールを使用してください。
 
-#### Q4. なぜpingが予想とは異なるIPアドレスに解決されることがありますか？
-A. これはDNSロードバランシング、CDN（コンテンツ配信ネットワーク）、またはドメイン名に関連付けられた複数のIPアドレスが原因で発生する可能性があります。
+#### Q4. なぜpingがブロックされることがあるのですか？
+A. 多くのネットワークやサーバーはセキュリティ上の理由からICMPパケットをブロックしています。pingが失敗してもホストがダウンしているとは限りません。
 
-## macOSでの注意点
+## macOSに関する考慮事項
 
-macOSでは、一部のpingオプションがLinuxとは異なります：
-- `-i`オプションで1秒未満の間隔を指定するにはroot権限が必要です
-- `--count`の長いオプション形式はありません。代わりに`-c`を使用してください
-- フラッドping（`-f`）オプションはroot権限が必要で、Linuxとは動作が異なります
+macOSでは、1秒未満の間隔に変更するなど、特定のオプションを使用するためにsudoでpingを実行する必要がある場合があります。また、Linuxバージョンのpingで利用可能な一部のオプションは、macOSでは利用できないか、構文が異なる場合があります。
 
 ## 参考資料
 
-https://linux.die.net/man/8/ping
+https://man.openbsd.org/ping.8
 
 ## 改訂履歴
 
-2025/05/04 初版作成
+- 2025/05/05 初版

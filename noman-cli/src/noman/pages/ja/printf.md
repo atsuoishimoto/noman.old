@@ -1,21 +1,21 @@
 # printf コマンド
 
-指定されたフォーマット文字列に従ってデータを整形し、出力します。
+指定されたフォーマット文字列に従ってデータをフォーマットして表示します。
 
 ## 概要
 
-`printf` コマンドは、フォーマット指定に従ってデータを整形し、標準出力に表示します。C言語のprintf関数と同様に動作し、テキストの配置、数値のフォーマット、文字列操作など、出力形式を細かく制御できます。
+`printf` コマンドは、フォーマット指定に従ってデータをフォーマットし、標準出力に表示します。C プログラミング言語の printf 関数と同様に動作し、テキストの配置、数値のフォーマット、文字列操作など、出力フォーマットを細かく制御できます。
 
 ## オプション
 
-### **-v 変数名**
+### **-v VAR**
 
-出力を標準出力に表示する代わりに、指定したシェル変数に代入します。
+出力を標準出力に表示する代わりに、シェル変数 VAR に割り当てます。
 
 ```console
-$ printf -v greeting "Hello, %s!" "World"
-$ echo $greeting
-Hello, World!
+$ printf -v myvar "Hello, %s" "World"
+$ echo $myvar
+Hello, World
 ```
 
 ### **--help**
@@ -27,6 +27,9 @@ $ printf --help
 Usage: printf FORMAT [ARGUMENT]...
    or: printf OPTION
 Print ARGUMENT(s) according to FORMAT, or execute according to OPTION:
+
+      --help     display this help and exit
+      --version  output version information and exit
 ...
 ```
 
@@ -36,9 +39,13 @@ Print ARGUMENT(s) according to FORMAT, or execute according to OPTION:
 
 ```console
 $ printf --version
-printf (GNU coreutils) 9.0
-Copyright (C) 2021 Free Software Foundation, Inc.
-...
+printf (GNU coreutils) 8.32
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by David MacKenzie.
 ```
 
 ## フォーマット指定子
@@ -46,38 +53,43 @@ Copyright (C) 2021 Free Software Foundation, Inc.
 ### **%s** - 文字列
 
 ```console
-$ printf "名前: %s\n" "太郎"
-名前: 太郎
+$ printf "Hello, %s!\n" "World"
+Hello, World!
 ```
 
-### **%d** または **%i** - 整数
+### **%d** - 10進整数
 
 ```console
-$ printf "数値: %d\n" 42
-数値: 42
+$ printf "Number: %d\n" 42
+Number: 42
 ```
 
 ### **%f** - 浮動小数点数
 
 ```console
-$ printf "価格: ¥%.2f\n" 1980.5
-価格: ¥1980.50
+$ printf "Pi is approximately %.2f\n" 3.14159
+Pi is approximately 3.14
 ```
 
 ### **%c** - 文字
 
 ```console
-$ printf "最初の文字: %c\n" "A"
-最初の文字: A
+$ printf "First letter: %c\n" "A"
+First letter: A
 ```
 
-### **%x** または **%X** - 16進数
+### **%x** - 16進数
 
 ```console
-$ printf "16進数: 0x%x\n" 255
-16進数: 0xff
-$ printf "16進数: 0x%X\n" 255
-16進数: 0xFF
+$ printf "Hex: %x\n" 255
+Hex: ff
+```
+
+### **%%** - パーセント記号そのもの
+
+```console
+$ printf "100%% complete\n"
+100% complete
 ```
 
 ## 使用例
@@ -85,104 +97,107 @@ $ printf "16進数: 0x%X\n" 255
 ### 基本的なテキストフォーマット
 
 ```console
-$ printf "こんにちは、%s！\n" "世界"
-こんにちは、世界！
+$ printf "Name: %s, Age: %d\n" "Alice" 30
+Name: Alice, Age: 30
 ```
 
 ### 複数の引数
 
 ```console
-$ printf "%sは%d歳です。\n" "佐藤" 30
-佐藤は30歳です。
+$ printf "%s %s %s\n" "one" "two" "three"
+one two three
 ```
 
 ### 幅と配置
 
 ```console
-$ printf "%-10s | %10s\n" "左揃え" "右揃え"
-$ printf "%-10s | %10s\n" "テキスト" "テキスト"
-左揃え      |     右揃え
-テキスト    |   テキスト
+$ printf "|%-10s|%10s|\n" "left" "right"
+|left      |     right|
 ```
 
-### 数値フォーマット
+### 浮動小数点数の精度
 
 ```console
-$ printf "整数: %d, 小数: %.2f, 16進数: %x\n" 42 3.14159 255
-整数: 42, 小数: 3.14, 16進数: ff
+$ printf "%.2f %.4f %.0f\n" 3.14159 2.71828 5.999
+3.14 2.7183 6
 ```
 
-### フォーマットの繰り返し
+### 表のフォーマット
 
 ```console
-$ printf "%s\n" ファイル1 ファイル2 ファイル3
-ファイル1
-ファイル2
-ファイル3
+$ printf "%-10s %-8s %s\n" "Name" "Age" "City"
+$ printf "%-10s %-8d %s\n" "Alice" 30 "New York"
+$ printf "%-10s %-8d %s\n" "Bob" 25 "Chicago"
+Name       Age      City
+Alice      30       New York
+Bob        25       Chicago
 ```
 
 ## ヒント:
 
-### エスケープシーケンス
+### エスケープシーケンスを使用する
 
-`\n`（改行）、`\t`（タブ）、`\\`（バックスラッシュ）などのエスケープシーケンスを使用して出力を整形できます：
+一般的なエスケープシーケンスには `\n`（改行）、`\t`（タブ）、`\\`（バックスラッシュ）があります。
 
 ```console
-$ printf "1行目\n2行目\tタブ付き\n"
-1行目
-2行目	タブ付き
+$ printf "Line 1\nLine 2\tTabbed\n"
+Line 1
+Line 2	Tabbed
 ```
 
-### ゼロで数値を埋める
+### 先頭にゼロを付けた数値フォーマット
 
-幅を指定したフォーマット指定子を使用して、数値をゼロで埋めることができます：
+`%0Nd` という形式を使用します。N は合計幅です：
 
 ```console
 $ printf "ID: %04d\n" 42
 ID: 0042
 ```
 
-### リテラルの % 文字を出力する
+### フォーマット引数の再利用
 
-リテラルの % 文字を出力するには、%% を使用します：
+出力位置が引数よりも多い場合、最後の引数が再利用されます：
 
 ```console
-$ printf "割引: 25%%\n"
-割引: 25%
+$ printf "A: %d, B: %d, C: %d\n" 1 2
+A: 1, B: 2, C: 2
 ```
 
-### フォーマットの再利用
+### 改行なしで表示
 
-フォーマット文字列は追加の引数に対して再利用されます：
+`echo` と異なり、`printf` は自動的に改行を追加しません：
 
 ```console
-$ printf "ユーザー: %s\n" 田中 佐藤 鈴木
-ユーザー: 田中
-ユーザー: 佐藤
-ユーザー: 鈴木
+$ printf "No newline"
+No newline$
 ```
 
 ## よくある質問
 
 #### Q1. `printf` と `echo` の違いは何ですか？
-A. `printf` はより精密なフォーマット制御を提供しますが、`echo` はよりシンプルで柔軟性が低いです。`printf` は自動的に改行を追加せず、明示的に `\n` を指定する必要があり、データ型のフォーマット指定子をサポートしています。
+A. `printf` はより正確なフォーマット制御を提供しますが、デフォルトでは改行を追加しません。`echo` はよりシンプルですが、フォーマットオプションが少なく、自動的に改行を追加します。
 
-#### Q2. 小数点以下の桁数を固定するにはどうすればよいですか？
-A. `%f` と精度修飾子を使用します：`printf "%.2f" 3.14159` は `3.14` を出力します。
+#### Q2. `printf` で日付をフォーマットするにはどうすればよいですか？
+A. `printf` で直接日付をフォーマットすることはできません。`date` コマンドを使用してフォーマットされた日付文字列を生成し、それを `printf` に渡します：
+```console
+$ printf "Today is %s\n" "$(date +"%Y-%m-%d")"
+Today is 2025-05-05
+```
 
-#### Q3. `printf` で日付をフォーマットするにはどうすればよいですか？
-A. `printf` で直接日付をフォーマットすることはできません。`date` コマンドを使用してフォーマットされた日付文字列を生成し、それを `printf` に渡します。
+#### Q3. タブや改行などの特殊文字を表示するにはどうすればよいですか？
+A. エスケープシーケンスを使用します：`\t` はタブ、`\n` は改行、`\r` はキャリッジリターン、`\\` はバックスラッシュそのものを表します。
 
-#### Q4. タブや改行などの特殊文字を出力するにはどうすればよいですか？
-A. エスケープシーケンスを使用します：タブには `\t`、改行には `\n`、キャリッジリターンには `\r`、バックスラッシュには `\\` を使用します。
+#### Q4. 数値の小数点以下の桁数をフォーマットするにはどうすればよいですか？
+A. 精度指定子を使用します。例えば `%.2f` は小数点以下2桁を表示します：
+```console
+$ printf "Price: $%.2f\n" 9.99
+Price: $9.99
+```
 
-#### Q5. シェルスクリプトで `printf` を使用できますか？
-A. はい、`printf` はフォーマットされた出力や `-v` オプションを使った変数代入のために、シェルスクリプトでよく使用されます。
-
-## 参考資料
+## 参考文献
 
 https://www.gnu.org/software/coreutils/manual/html_node/printf-invocation.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

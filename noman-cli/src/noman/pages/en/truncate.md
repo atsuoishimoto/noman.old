@@ -4,23 +4,23 @@ Shrink or extend the size of a file to a specified size.
 
 ## Overview
 
-The `truncate` command modifies a file's size by either shrinking it or extending it to a specified length. It can create new files if they don't exist, and can set multiple files to the same size in a single command. This is useful for quickly creating files of specific sizes or truncating log files.
+The `truncate` command modifies the size of a file to a specified length. It can either shrink a file by removing data from the end or extend it by adding null bytes. This command is useful for creating files of specific sizes, clearing file contents while preserving the file, or testing disk space scenarios.
 
 ## Options
 
 ### **-s, --size=SIZE**
 
-Set or adjust the file size to SIZE bytes
+Set or adjust the file size to SIZE. SIZE can be an absolute number or a relative adjustment with a prefix of '+' or '-'.
 
 ```console
 $ truncate -s 100 myfile.txt
 $ ls -l myfile.txt
--rw-r--r-- 1 user group 100 May 4 10:15 myfile.txt
+-rw-r--r-- 1 user group 100 May 5 10:00 myfile.txt
 ```
 
 ### **-c, --no-create**
 
-Do not create files that do not exist
+Do not create files that do not exist.
 
 ```console
 $ truncate -c -s 50 nonexistent.txt
@@ -29,7 +29,7 @@ truncate: cannot open 'nonexistent.txt' for writing: No such file or directory
 
 ### **-o, --io-blocks**
 
-Treat SIZE as number of IO blocks instead of bytes
+Treat SIZE as number of I/O blocks instead of bytes.
 
 ```console
 $ truncate -o -s 2 blockfile.dat
@@ -37,76 +37,93 @@ $ truncate -o -s 2 blockfile.dat
 
 ### **-r, --reference=RFILE**
 
-Base size on RFILE's size
+Base the size on the size of RFILE.
 
 ```console
 $ truncate -r reference.txt target.txt
 ```
 
-## Usage Examples
+### **--help**
 
-### Creating a new empty file of specific size
+Display help information and exit.
 
 ```console
-$ truncate -s 1M largefile.bin
-$ ls -lh largefile.bin
--rw-r--r-- 1 user group 1.0M May 4 10:20 largefile.bin
+$ truncate --help
 ```
 
-### Shrinking an existing file
+### **--version**
+
+Output version information and exit.
 
 ```console
-$ echo "This is a test file with some content" > testfile.txt
+$ truncate --version
+```
+
+## Usage Examples
+
+### Creating an empty file of specific size
+
+```console
+$ truncate -s 1M largefile.dat
+$ ls -lh largefile.dat
+-rw-r--r-- 1 user group 1.0M May 5 10:05 largefile.dat
+```
+
+### Shrinking a file to a smaller size
+
+```console
+$ echo "This is a test file with content" > testfile.txt
 $ truncate -s 10 testfile.txt
 $ cat testfile.txt
 This is a 
 ```
 
+### Extending a file's size
+
+```console
+$ echo "Small" > smallfile.txt
+$ truncate -s 100 smallfile.txt
+$ ls -l smallfile.txt
+-rw-r--r-- 1 user group 100 May 5 10:10 smallfile.txt
+```
+
 ### Using relative sizes
 
 ```console
-$ truncate -s 100 myfile.txt    # Set to exactly 100 bytes
-$ truncate -s +50 myfile.txt    # Add 50 bytes (now 150 bytes)
-$ truncate -s -30 myfile.txt    # Remove 30 bytes (now 120 bytes)
-$ truncate -s %64 myfile.txt    # Round size down to multiple of 64 (96 bytes)
+$ truncate -s 100 myfile.txt
+$ truncate -s +50 myfile.txt  # Add 50 bytes
+$ truncate -s -30 myfile.txt  # Remove 30 bytes
+$ ls -l myfile.txt
+-rw-r--r-- 1 user group 120 May 5 10:15 myfile.txt
 ```
 
-## Tips
+## Tips:
 
-### Zero-filling vs Truncation
+### Create Sparse Files
 
-When extending a file, `truncate` doesn't fill the new space with zeros or any other data - it simply extends the file size. This creates a "sparse file" where the extended portion doesn't actually use disk space until written to.
+When extending a file, `truncate` creates sparse files (files that appear larger than the actual disk space they consume) by adding null bytes. This is useful for testing applications with large files without consuming actual disk space.
 
-### Quick Log Rotation
+### Quickly Empty a File
 
-You can use `truncate -s 0` to quickly empty a log file without deleting it, which preserves file permissions and ownership:
+Use `truncate -s 0 filename` to quickly empty a file without deleting it. This preserves file permissions and ownership while removing all content.
 
-```console
-$ truncate -s 0 /path/to/logfile.log
-```
+### Be Careful with Shrinking
 
-### Creating Test Files
-
-Create test files of specific sizes for testing disk space or file transfer operations:
-
-```console
-$ truncate -s 10M test10mb.bin
-$ truncate -s 1G test1gb.bin
-```
+When shrinking files, data beyond the new size is permanently lost. Always make backups of important files before truncating them.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `truncate` and `touch`?
-A. While `touch` updates timestamps and can create empty files, `truncate` can create files of specific sizes or modify existing file sizes.
+#### Q1. What happens when I truncate a file to a smaller size?
+A. Any data beyond the specified size is permanently deleted. The file will be cut off at exactly the byte position specified.
 
-#### Q2. Does `truncate` actually allocate disk space?
-A. When extending files, `truncate` creates sparse files that don't immediately consume the full disk space until data is written to them.
+#### Q2. Does truncate work on all file types?
+A. `truncate` works on regular files but may not work as expected on special files like devices or sockets. It's primarily designed for regular files.
 
-#### Q3. Can I use `truncate` to append data to a file?
-A. No, `truncate` only changes file size without adding content. To append data, use redirection (`>>`) or tools like `echo` or `cat`.
+#### Q3. How is truncate different from using `> file` redirection?
+A. While `> file` empties a file completely, `truncate` can set a file to any specific size, including extending it or reducing it to a precise byte count.
 
-#### Q4. How do I completely empty a file without deleting it?
-A. Use `truncate -s 0 filename` to reduce the file size to zero while preserving the file itself.
+#### Q4. Can truncate create files with specific content?
+A. No, `truncate` only adjusts file size. When extending files, it adds null bytes (zeros). To create files with specific content, you need to use other commands like `echo` or `cat`.
 
 ## References
 
@@ -114,4 +131,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/truncate-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

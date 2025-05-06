@@ -1,59 +1,74 @@
 # git-rebase command
 
-Reapply commits on top of another base tip.
+Reapply commits on top of another base tip, rewriting the commit history.
 
 ## Overview
 
-`git rebase` is used to change the base of your branch from one commit to another, making it appear as if you created your branch from a different commit. This rewrites the commit history by creating new commits for each commit in the original branch, resulting in a linear project history.
+`git rebase` is used to change the base of your branch from one commit to another, making it appear as if you created your branch from a different commit. It rewrites the commit history by creating new commits for each commit in the original branch, potentially resulting in a cleaner, linear project history.
 
 ## Options
 
 ### **-i, --interactive**
 
-Allows you to edit commits during the rebase process, including reordering, editing, squashing, or dropping commits.
+Start an interactive rebase session, allowing you to edit, squash, reorder, or drop commits.
 
 ```console
 $ git rebase -i HEAD~3
-# An editor will open with something like:
-# pick f7f3f6d Change feature A
-# pick 310154e Fix typo in feature A
-# pick a5f4a0d Add feature B
+# Opens editor with the last 3 commits listed for modification
 ```
 
-### **--onto \<newbase\>**
+### **--onto <newbase>**
 
-Specifies the new base commit onto which the commits will be replayed.
+Specify the new base commit to reapply your changes onto.
 
 ```console
-$ git rebase --onto main feature-branch~3 feature-branch
-# Moves commits from feature-branch~3 to feature-branch onto main
+$ git rebase --onto main feature-branch
+# Reapplies commits from current branch onto main, starting from feature-branch
 ```
 
 ### **--continue**
 
-Continues the rebase operation after resolving conflicts.
+Continue the rebase operation after resolving conflicts.
 
 ```console
 $ git rebase --continue
-# After resolving conflicts and adding the changes
+# Continues the rebase after fixing conflicts
 ```
 
 ### **--abort**
 
-Aborts the rebase operation and returns the branch to its original state.
+Cancel the rebase operation and return to the pre-rebase state.
 
 ```console
 $ git rebase --abort
-# Cancels the rebase and restores the original branch state
+# Cancels the rebase and restores the original state
 ```
 
 ### **--skip**
 
-Skips the current commit and continues with the next one.
+Skip the current patch and continue with the next one.
 
 ```console
 $ git rebase --skip
-# Skips the current problematic commit
+# Skips the current commit and continues with the next one
+```
+
+### **-m, --merge**
+
+Use merging strategies to rebase.
+
+```console
+$ git rebase -m main
+# Uses merge strategy when rebasing onto main
+```
+
+### **-s, --strategy=<strategy>**
+
+Use the given merge strategy.
+
+```console
+$ git rebase -s recursive main
+# Uses recursive strategy when rebasing onto main
 ```
 
 ## Usage Examples
@@ -61,77 +76,64 @@ $ git rebase --skip
 ### Basic Rebasing
 
 ```console
-$ git checkout feature-branch
+$ git checkout feature
 $ git rebase main
-# Rebases feature-branch onto the latest main
+# Reapplies commits from feature branch onto the tip of main
 ```
 
-### Interactive Rebase to Squash Commits
+### Interactive Rebasing to Squash Commits
 
 ```console
-$ git rebase -i HEAD~4
-# In the editor, change some "pick" lines to "squash" or "s"
-# pick 01d1124 Add feature X
-# squash 6340aaa Fix bug in feature X
-# squash ebfd367 Improve feature X
-# pick 30e0ccb Add feature Y
+$ git rebase -i HEAD~5
+# In the editor that opens:
+# pick 01ab234 First commit message
+# squash 56cd789 Second commit message
+# squash 89ef012 Third commit message
+# pick 34gh567 Fourth commit message
+# pick 78ij890 Fifth commit message
 ```
 
 ### Moving a Branch to a Different Base
 
 ```console
-$ git rebase --onto new-base old-base branch-to-move
-# Moves commits between old-base and branch-to-move onto new-base
+$ git rebase --onto main feature-base feature
+# Reapplies commits from feature-base to feature onto main
 ```
 
-## Tips
+## Tips:
 
-### Always Rebase Before Pushing
+### Never Rebase Public Branches
 
-Rebase your local branch before pushing to ensure a clean history. However, never rebase commits that have already been pushed to a shared repository unless you're absolutely sure no one else has based work on them.
+Avoid rebasing commits that have been pushed to public repositories. Rebasing changes commit history, which can cause conflicts for others who have based work on those commits.
+
+### Resolve Conflicts Carefully
+
+When conflicts occur during rebase, Git pauses the operation. Resolve conflicts in each file, then use `git add` to mark them as resolved before continuing with `git rebase --continue`.
 
 ### Create a Backup Branch
 
-Before performing a complex rebase, create a backup branch:
+Before performing a complex rebase, create a backup branch: `git branch backup-branch`. This provides a safety net if the rebase goes wrong.
 
-```console
-$ git branch backup-branch
-```
+### Use Interactive Rebase for Cleanup
 
-### Resolving Conflicts During Rebase
-
-When conflicts occur, Git pauses the rebase. Resolve conflicts, then:
-
-```console
-$ git add <resolved-files>
-$ git rebase --continue
-```
-
-### Using Autosquash
-
-When making fixup commits, use `--fixup` and later rebase with `--autosquash`:
-
-```console
-$ git commit --fixup <commit-hash>
-$ git rebase -i --autosquash <base>
-```
+Interactive rebase (`-i`) is excellent for cleaning up your commit history before sharing your work. You can combine related commits, remove unnecessary ones, and rewrite commit messages.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between merge and rebase?
 A. Merge preserves history and creates a merge commit, while rebase rewrites history by creating new commits, resulting in a linear history.
 
-#### Q2. When should I avoid using rebase?
-A. Avoid rebasing commits that have been pushed to a public repository and might have been pulled by others, as it rewrites history and can cause conflicts for collaborators.
+#### Q2. How do I undo a rebase?
+A. If you haven't pushed the changes, use `git reflog` to find the commit before the rebase and then `git reset --hard <commit-hash>` to return to that state.
 
-#### Q3. How do I undo a rebase?
-A. If you haven't pushed the rebased commits, use `git reflog` to find the commit before the rebase and then `git reset --hard <commit-hash>` to return to that state.
+#### Q3. When should I use rebase instead of merge?
+A. Use rebase for cleaning up your local, unpublished commits or maintaining a linear history. Use merge for integrating public branches.
 
-#### Q4. Can I rebase multiple branches at once?
-A. No, you need to rebase each branch separately.
+#### Q4. How do I resolve conflicts during a rebase?
+A. Edit the conflicted files to resolve the conflicts, then `git add` the resolved files and run `git rebase --continue`.
 
-#### Q5. How do I resolve complex conflicts during a rebase?
-A. Resolve conflicts in each file, `git add` the resolved files, and then use `git rebase --continue`. If a particular commit is too problematic, you can use `git rebase --skip` to skip it.
+#### Q5. Can I rebase multiple branches at once?
+A. No, you must rebase one branch at a time.
 
 ## References
 
@@ -139,4 +141,4 @@ https://git-scm.com/docs/git-rebase
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

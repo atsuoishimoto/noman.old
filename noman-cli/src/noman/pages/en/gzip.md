@@ -1,20 +1,12 @@
 # gzip command
 
-Compress or expand files using the Lempel-Ziv coding (LZ77).
+Compress or expand files using the gzip algorithm.
 
 ## Overview
 
-`gzip` reduces the size of files using Lempel-Ziv compression. By default, it replaces the original file with a compressed version having the `.gz` extension, preserving the original file's ownership, permissions, and timestamps. It's commonly used to compress single files or as part of pipeline operations to compress data streams.
+`gzip` compresses files to reduce their size, creating files with a `.gz` extension. It replaces the original file with a compressed version by default. The command can also decompress files previously compressed with gzip.
 
 ## Options
-
-### **-d, --decompress, --uncompress**
-
-Decompress files instead of compressing them.
-
-```console
-$ gzip -d file.gz
-```
 
 ### **-c, --stdout, --to-stdout**
 
@@ -24,12 +16,20 @@ Write output to standard output and keep original files unchanged.
 $ gzip -c file.txt > file.txt.gz
 ```
 
+### **-d, --decompress, --uncompress**
+
+Decompress a compressed file.
+
+```console
+$ gzip -d file.txt.gz
+```
+
 ### **-f, --force**
 
 Force compression or decompression even if the file has multiple links or the corresponding file already exists.
 
 ```console
-$ gzip -f already_compressed.gz
+$ gzip -f already_exists.txt
 ```
 
 ### **-k, --keep**
@@ -42,7 +42,7 @@ $ gzip -k important_file.txt
 
 ### **-l, --list**
 
-List the compressed size, uncompressed size, ratio, and filename for each compressed file.
+List the compressed and uncompressed size, ratio, and filename for each compressed file.
 
 ```console
 $ gzip -l *.gz
@@ -70,10 +70,10 @@ file.txt:       63.4% -- replaced with file.txt.gz
 
 ### **-[1-9], --fast, --best**
 
-Regulate the speed of compression using the specified digit, where -1 (or --fast) indicates the fastest compression method (less compression) and -9 (or --best) indicates the slowest (best compression). The default compression level is -6.
+Regulate the speed of compression using the specified digit, where -1 (or --fast) indicates the fastest compression method (less compression) and -9 (or --best) indicates the slowest compression method (optimal compression). The default compression level is -6.
 
 ```console
-$ gzip -9 large_file.txt
+$ gzip -9 file.txt
 ```
 
 ## Usage Examples
@@ -81,9 +81,9 @@ $ gzip -9 large_file.txt
 ### Basic Compression
 
 ```console
-$ gzip document.txt
+$ gzip large_file.txt
 $ ls
-document.txt.gz
+large_file.txt.gz
 ```
 
 ### Compressing Multiple Files
@@ -94,74 +94,75 @@ $ ls
 file1.txt.gz file2.txt.gz file3.txt.gz
 ```
 
-### Compressing While Keeping Originals
+### Decompressing Files
 
 ```console
-$ gzip -k important_data.txt
+$ gzip -d archive.gz
 $ ls
-important_data.txt important_data.txt.gz
+archive
 ```
 
 ### Viewing Compressed Files Without Decompressing
 
 ```console
-$ gzip -c file.txt > file.txt.gz
-$ zcat file.txt.gz
-[contents of file.txt displayed]
+$ zcat compressed_file.gz
+[contents of the file displayed without decompression]
 ```
 
-### Compressing Standard Input
+### Compressing While Keeping Original Files
 
 ```console
-$ cat file.txt | gzip > file.txt.gz
+$ gzip -k important_document.txt
+$ ls
+important_document.txt important_document.txt.gz
 ```
 
-## Tips
+## Tips:
 
-### Use With tar for Directory Compression
+### Use zcat, zless, or zgrep for Compressed Files
 
-While `gzip` compresses single files, combine it with `tar` to compress entire directories:
+Instead of decompressing files to view or search their contents, use `zcat`, `zless`, or `zgrep` to work directly with compressed files.
+
+```console
+$ zgrep "search term" file.gz
+```
+
+### Combine with tar for Directory Compression
+
+For compressing entire directories, combine with `tar`:
 
 ```console
 $ tar -czf archive.tar.gz directory/
 ```
 
-### Check Compression Ratio
+### Use gunzip as an Alternative to gzip -d
 
-Use the `-l` option to check how well files have been compressed before deciding whether to keep them:
-
-```console
-$ gzip -l *.gz
-```
-
-### Pipe Through gzip in Scripts
-
-For temporary compression in scripts or data processing, use pipes:
+The `gunzip` command is equivalent to `gzip -d` for decompression:
 
 ```console
-$ cat large_file | gzip | ssh remote_server "gunzip > large_file"
+$ gunzip file.gz
 ```
 
-### Optimal Compression Level
+### Preserve Original Files
 
-For most files, the default compression level (-6) offers a good balance between speed and compression ratio. Use -9 only when file size is critical and processing time isn't a concern.
+Always use `-k` when you want to keep the original files, as gzip removes them by default.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I decompress a .gz file?
-A. Use `gzip -d filename.gz` or the equivalent command `gunzip filename.gz`.
+#### Q1. How do I compress a file with gzip?
+A. Simply run `gzip filename` to compress a file. The original file will be replaced with a compressed version having a `.gz` extension.
 
-#### Q2. Can gzip compress directories?
-A. No, `gzip` only compresses individual files. To compress directories, first use `tar` to create an archive, then compress it with `gzip` (or use `tar` with the `-z` option).
+#### Q2. How do I decompress a gzip file?
+A. Use `gzip -d filename.gz` or `gunzip filename.gz` to decompress the file.
 
-#### Q3. How do I view the contents of a .gz file without decompressing it?
-A. Use `zcat`, `zless`, or `zmore` commands, which are specifically designed for viewing compressed files.
+#### Q3. How can I compress a file without deleting the original?
+A. Use `gzip -k filename` to keep the original file while creating a compressed version.
 
-#### Q4. Does gzip delete the original file after compression?
-A. Yes, by default `gzip` replaces the original file with the compressed version. Use the `-k` option to keep the original.
+#### Q4. What compression level should I use?
+A. Use `-1` for fastest compression (less space savings) or `-9` for best compression (slower). The default level `-6` offers a good balance.
 
-#### Q5. How can I compare compression levels?
-A. Use `gzip -[1-9] -c file > file.gz` with different numbers and then check the resulting file sizes with `ls -l`.
+#### Q5. How do I compress an entire directory?
+A. `gzip` itself doesn't compress directories. Use `tar` with `gzip`: `tar -czf archive.tar.gz directory/`.
 
 ## References
 
@@ -169,4 +170,4 @@ https://www.gnu.org/software/gzip/manual/gzip.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

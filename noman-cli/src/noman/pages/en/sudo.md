@@ -1,16 +1,25 @@
 # sudo command
 
-Execute a command as another user, typically with administrative privileges.
+Execute a command as another user, typically with elevated privileges.
 
 ## Overview
 
-`sudo` (superuser do) allows authorized users to execute commands with the security privileges of another user, by default the superuser (root). This provides a way to perform administrative tasks without logging in as the root user, enhancing system security by limiting privileged access.
+`sudo` (superuser do) allows users to run programs with the security privileges of another user, by default the superuser (root). It provides a way to grant limited root privileges to users listed in the `/etc/sudoers` file without sharing the root password.
 
 ## Options
 
-### **-u, --user=USER**
+### **-b, --background**
 
-Execute the command as a user other than the default target user (root)
+Run the command in the background.
+
+```console
+$ sudo -b apt update
+[1] 12345
+```
+
+### **-u, --user**
+
+Run the command as a user other than the default target user (root).
 
 ```console
 $ sudo -u postgres psql
@@ -20,27 +29,45 @@ Type "help" for help.
 postgres=#
 ```
 
-### **-i, --login**
-
-Run a login shell as the target user; simulates a full login
-
-```console
-$ sudo -i
-[root@hostname ~]#
-```
-
 ### **-s, --shell**
 
-Run the shell specified in the password database entry of the target user
+Run the shell specified in the user's password database entry as a login shell.
 
 ```console
 $ sudo -s
-root@hostname:/home/user#
+root@hostname:~#
+```
+
+### **-i, --login**
+
+Run the shell specified in the target user's password database entry as a login shell.
+
+```console
+$ sudo -i
+root@hostname:~#
+```
+
+### **-k, --reset-timestamp**
+
+Invalidate the user's cached credentials.
+
+```console
+$ sudo -k
+[sudo] password for user:
+```
+
+### **-v, --validate**
+
+Update the user's cached credentials, extending the timeout.
+
+```console
+$ sudo -v
+[sudo] password for user:
 ```
 
 ### **-l, --list**
 
-List the allowed (and forbidden) commands for the invoking user
+List the allowed (and forbidden) commands for the current user.
 
 ```console
 $ sudo -l
@@ -48,32 +75,15 @@ User user may run the following commands on hostname:
     (ALL : ALL) ALL
 ```
 
-### **-v, --validate**
-
-Update the user's cached credentials, extending the sudo timeout
-
-```console
-$ sudo -v
-[sudo] password for user: 
-```
-
-### **-k, --reset-timestamp**
-
-Invalidate the user's cached credentials
-
-```console
-$ sudo -k
-```
-
 ## Usage Examples
 
-### Running a command with root privileges
+### Installing software with elevated privileges
 
 ```console
-$ sudo apt update
+$ sudo apt install nginx
 [sudo] password for user: 
-Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
-Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
+Reading package lists... Done
+Building dependency tree... Done
 ...
 ```
 
@@ -84,50 +94,56 @@ $ sudo nano /etc/hosts
 [sudo] password for user:
 ```
 
-### Running commands as a different user
+### Running a command as a different user
 
 ```console
-$ sudo -u www-data ls -la /var/www/html
-total 16
-drwxr-xr-x 2 www-data www-data 4096 May  4 10:15 .
-drwxr-xr-x 3 root     root     4096 May  4 10:14 ..
--rw-r--r-- 1 www-data www-data  612 May  4 10:15 index.html
+$ sudo -u www-data php /var/www/html/script.php
+[sudo] password for user:
+Script output...
 ```
 
-## Tips
+### Getting a root shell
+
+```console
+$ sudo -i
+[sudo] password for user:
+root@hostname:~#
+```
+
+## Tips:
 
 ### Use `sudo !!` to Repeat the Previous Command with sudo
 
 If you forget to use sudo for a command that requires it, type `sudo !!` to repeat the previous command with sudo privileges.
 
-### Configure sudo Without Password for Specific Commands
+### Configure sudo Without Password
 
-Edit the sudoers file with `sudo visudo` to allow certain commands to run without a password prompt. For example:
-```
-username ALL=(ALL) NOPASSWD: /usr/bin/apt update
-```
+Edit the sudoers file with `sudo visudo` and add a line like `username ALL=(ALL) NOPASSWD: ALL` to allow a user to run sudo commands without entering a password.
 
 ### Use `sudo -E` to Preserve Environment Variables
 
-When you need to run a command with sudo but keep your current environment variables, use the `-E` option.
+When you need to run a command with sudo but keep your current environment variables, use the `-E` flag.
 
-### Always Use `visudo` to Edit the sudoers File
+### Understand the Security Implications
 
-Never edit `/etc/sudoers` directly. Always use `sudo visudo` which checks for syntax errors before saving, preventing you from locking yourself out of sudo access.
+Only grant sudo access to trusted users, and be careful about which commands they're allowed to run. A user with unrestricted sudo access effectively has full control of the system.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `sudo -i` and `sudo -s`?
-A. `sudo -i` simulates a full login and changes to the target user's home directory with their environment. `sudo -s` just starts a shell as the target user but keeps your current environment and working directory.
+#### Q1. What's the difference between `sudo -s` and `sudo -i`?
+A. `sudo -s` starts a shell with root privileges but keeps your current environment. `sudo -i` simulates a full login as root, with root's environment.
 
 #### Q2. How long does sudo authentication last?
-A. By default, sudo caches your credentials for 15 minutes. You can extend this with `sudo -v` or reset it with `sudo -k`.
+A. By default, sudo caches your credentials for 15 minutes. After that, you'll need to enter your password again.
 
-#### Q3. How can I run multiple commands with sudo?
-A. Use `sudo sh -c "command1 && command2"` or start a root shell with `sudo -i` and then run your commands.
+#### Q3. How can I edit the sudo configuration safely?
+A. Always use `sudo visudo` to edit the sudoers file. This command checks for syntax errors before saving, preventing you from locking yourself out.
 
-#### Q4. How do I add a user to sudoers?
-A. Add the user to the sudo group with `usermod -aG sudo username` on Debian/Ubuntu or to the wheel group on RHEL/CentOS systems.
+#### Q4. Can I see what commands other users have run with sudo?
+A. Yes, sudo logs all commands to the system log, typically in `/var/log/auth.log` or `/var/log/secure`.
+
+#### Q5. How do I run a command as root without being prompted for a password?
+A. You need to configure the sudoers file with NOPASSWD option for specific commands or all commands.
 
 ## References
 
@@ -135,4 +151,4 @@ https://www.sudo.ws/docs/man/sudo.man/
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

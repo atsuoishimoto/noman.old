@@ -1,112 +1,125 @@
-# break
+# break コマンド
 
-`break` コマンドはシェルのループ（for, while, until）や switch 文から即座に抜け出すために使用されるシェル組み込みコマンドです。
+シェルスクリプト内の for、while、until、または select ループから抜け出すためのコマンドです。
+
+## 概要
+
+`break` コマンドはシェルスクリプト内で、ループが通常の完了を迎える前に抜け出すために使用されます。実行されると、最も内側のループをすぐに終了し、終了したループの次のコマンドから実行を継続します。オプションの数値引数を使用すると、複数のネストされたループから抜け出すことができます。
 
 ## オプション
 
-### **n（数値）**
+### **n** (数値引数)
 
-数値を指定すると、指定した数のネストされたループから抜け出します。デフォルトは1です。
+n番目の囲まれたループから抜け出します。nが省略された場合、最も内側のループからのみ抜け出します。
 
-```bash
-$ for i in 1 2 3; do
->   echo "外側のループ: $i"
->   for j in a b c; do
->     echo "  内側のループ: $j"
->     if [ "$j" = "b" ]; then
->       break
->     fi
->   done
-> done
-外側のループ: 1
-  内側のループ: a
-  内側のループ: b
-外側のループ: 2
-  内側のループ: a
-  内側のループ: b
-外側のループ: 3
-  内側のループ: a
-  内側のループ: b
-```
-
-### **break 2**
-
-2つのネストされたループから一度に抜け出します。
-
-```bash
-$ for i in 1 2 3; do
->   echo "外側のループ: $i"
->   for j in a b c; do
->     echo "  内側のループ: $j"
->     if [ "$j" = "b" ]; then
->       break 2
->     fi
->   done
-> done
-外側のループ: 1
-  内側のループ: a
-  内側のループ: b
+```console
+$ break 2  # 2レベルのネストされたループから抜け出す
 ```
 
 ## 使用例
 
-### 条件に基づいてループを終了する
+### 単純なループからの脱出
 
-```bash
-$ for file in *.txt; do
->   if [ "$file" = "secret.txt" ]; then
->     echo "秘密ファイルが見つかりました。処理を中止します。"
+```console
+$ for i in 1 2 3 4 5; do
+>   echo "Processing $i"
+>   if [ $i -eq 3 ]; then
+>     echo "Found 3, breaking out of loop"
 >     break
 >   fi
->   echo "処理中: $file"
 > done
-処理中: file1.txt
-処理中: file2.txt
-秘密ファイルが見つかりました。処理を中止します。
+> echo "Loop completed"
+Processing 1
+Processing 2
+Processing 3
+Found 3, breaking out of loop
+Loop completed
 ```
 
-### case文での使用
+### ネストされたループからの脱出
 
-```bash
-$ while true; do
->   read -p "コマンドを入力してください (quit で終了): " cmd
->   case "$cmd" in
->     quit)
->       echo "終了します"
+```console
+$ for i in 1 2 3; do
+>   echo "Outer loop: $i"
+>   for j in a b c; do
+>     echo "  Inner loop: $j"
+>     if [ $j = "b" ] && [ $i -eq 2 ]; then
+>       echo "  Breaking from inner loop"
 >       break
->       ;;
->     help)
->       echo "ヘルプメッセージ"
->       ;;
->     *)
->       echo "不明なコマンド: $cmd"
->       ;;
->   esac
+>     fi
+>   done
 > done
-コマンドを入力してください (quit で終了): help
-ヘルプメッセージ
-コマンドを入力してください (quit で終了): quit
-終了します
+Outer loop: 1
+  Inner loop: a
+  Inner loop: b
+  Inner loop: c
+Outer loop: 2
+  Inner loop: a
+  Inner loop: b
+  Breaking from inner loop
+Outer loop: 3
+  Inner loop: a
+  Inner loop: b
+  Inner loop: c
 ```
+
+### 数値引数を使用した複数レベルからの脱出
+
+```console
+$ for i in 1 2 3; do
+>   echo "Outer loop: $i"
+>   for j in a b c; do
+>     echo "  Inner loop: $j"
+>     if [ $j = "b" ] && [ $i -eq 2 ]; then
+>       echo "  Breaking from both loops"
+>       break 2
+>     fi
+>   done
+> done
+> echo "All loops completed"
+Outer loop: 1
+  Inner loop: a
+  Inner loop: b
+  Inner loop: c
+Outer loop: 2
+  Inner loop: a
+  Inner loop: b
+  Breaking from both loops
+All loops completed
+```
+
+## ヒント:
+
+### breakは控えめに使用する
+`break`の過度な使用はコードの読みやすさとメンテナンス性を低下させる可能性があります。可能な場合はループロジックの再構築を検討しましょう。
+
+### 条件文と組み合わせる
+`break`は特定の条件に基づいてループを終了するために、`if`文と組み合わせると最も効果的です。
+
+### breakとcontinueの違いを覚えておく
+`break`はループ全体を終了しますが、`continue`は現在の反復の残りをスキップして次の反復に移ります。
+
+### ネストされたループには数値引数を使用する
+ネストされたループを扱う場合、複数の`break`文を使用する代わりに`break n`を使用して一度に複数のレベルを終了しましょう。
 
 ## よくある質問
 
-### Q1. `break`と`exit`の違いは何ですか？
-A. `break`はループや条件分岐から抜け出すだけで、スクリプトの実行は継続します。一方、`exit`はスクリプト全体を終了させます。
+#### Q1. `break`と`exit`の違いは何ですか？
+A. `break`は現在のループからのみ抜け出しますが、`exit`はスクリプト全体を終了します。
 
-### Q2. 複数のネストされたループから一度に抜け出すにはどうすればいいですか？
-A. `break n`を使用します。ここで`n`は抜け出したいネストレベルの数です。例えば、`break 2`は2つのネストされたループから抜け出します。
+#### Q2. ループの外で`break`を使用できますか？
+A. いいえ、ループの外で`break`を使用すると「break: only meaningful in a 'for', 'while', or 'until' loop」（breakは'for'、'while'、または'until'ループ内でのみ意味があります）のようなエラーメッセージが表示されます。
 
-### Q3. `break`はすべてのシェルで同じように動作しますか？
-A. 基本的な機能は同じですが、細かい動作はシェル（bash, zsh, sh など）によって異なる場合があります。特に複雑なスクリプトでは、使用しているシェルのドキュメントを確認することをお勧めします。
+#### Q3. 複数のネストされたループから抜け出すにはどうすればよいですか？
+A. `break n`を使用します。nは抜け出したいネストされたループの数です。
 
-## 追加情報
+#### Q4. `break`はすべてのシェルタイプで動作しますか？
+A. はい、`break`はBash、Zsh、KshなどのすべてのPOSIX準拠シェルの標準機能です。
 
-- `break`はシェルの組み込みコマンドであり、外部コマンドではありません。
-- `break`はループ内でのみ意味を持ちます。ループ外で使用すると、エラーになります。
-- 条件付きでループを継続したい場合は、`break`の代わりに`continue`コマンドの使用を検討してください。
-- スクリプトの可読性を高めるために、`break`を使用する条件は明確にコメントしておくことをお勧めします。
+## 参考文献
 
-## 参考情報
+https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html
 
-bash マニュアル: https://www.gnu.org/software/bash/manual/bash.html
+## 改訂履歴
+
+- 2025/05/06 初版

@@ -61,6 +61,16 @@ system.log
 error.log
 ```
 
+### **-o, --only-matching**
+
+パターンに一致する部分のみを表示します
+
+```console
+$ egrep -o "error[0-9]+" logfile.txt
+error404
+error500
+```
+
 ### **-r, --recursive**
 
 各ディレクトリ下のすべてのファイルを再帰的に読み込みます
@@ -155,4 +165,5 @@ https://www.gnu.org/software/grep/manual/grep.html
 
 ## 改訂履歴
 
+- 2025/05/06 -o, --only-matching オプションを追加
 - 2025/05/05 初版

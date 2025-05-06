@@ -4,7 +4,7 @@
 
 ## 概要
 
-`iotop`は、プロセスのリアルタイムディスクI/O使用情報を表示するtopに似たユーティリティです。どのプロセスがディスクを使用しているか、どれだけ読み書きしているか、そしてそのI/O優先度を表示します。このツールは、高いディスクアクティビティを引き起こしているプロセスを特定するのに特に役立ちます。
+`iotop`は、プロセスやスレッドによるI/O使用状況を監視するtopのようなユーティリティです。リアルタイムのディスクI/O統計を表示し、どのプロセスが最もディスクの読み書き帯域幅を使用しているかを示します。このツールは、システムの遅延を引き起こす可能性のあるI/O集約型プロセスを特定するのに特に役立ちます。
 
 ## オプション
 
@@ -14,10 +14,10 @@
 
 ```console
 $ sudo iotop -o
-Total DISK READ:         0.00 B/s | Total DISK WRITE:         7.56 K/s
+Total DISK READ:         0.00 B/s | Total DISK WRITE:         7.63 K/s
 Current DISK READ:       0.00 B/s | Current DISK WRITE:       0.00 B/s
-    PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
-   1234 be/4 root        0.00 B/s    7.56 K/s  0.00 %  0.00 % systemd-journald
+    TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
+   1234 be/4 root        0.00 B/s    7.63 K/s  0.00 %  0.00 % systemd-journald
 ```
 
 ### **-b, --batch**
@@ -25,12 +25,12 @@ Current DISK READ:       0.00 B/s | Current DISK WRITE:       0.00 B/s
 非対話モードで実行します。ログ記録に便利です
 
 ```console
-$ sudo iotop -b -n 3
-Total DISK READ:         0.00 B/s | Total DISK WRITE:        15.69 K/s
+$ sudo iotop -b -n 5
+Total DISK READ:         0.00 B/s | Total DISK WRITE:        15.27 K/s
 Current DISK READ:       0.00 B/s | Current DISK WRITE:       0.00 B/s
-    PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
+    TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
       1 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % systemd
-    346 be/4 root        0.00 B/s    7.84 K/s  0.00 %  0.00 % systemd-journald
+   1234 be/4 root        0.00 B/s   15.27 K/s  0.00 %  0.00 % systemd-journald
 [...]
 ```
 
@@ -40,7 +40,8 @@ Current DISK READ:       0.00 B/s | Current DISK WRITE:       0.00 B/s
 
 ```console
 $ sudo iotop -b -n 2
-[ディスクI/O統計の2回の繰り返しを表示]
+Total DISK READ:         0.00 B/s | Total DISK WRITE:        15.27 K/s
+[...2回分の出力...]
 ```
 
 ### **-d SEC, --delay=SEC**
@@ -49,16 +50,25 @@ $ sudo iotop -b -n 2
 
 ```console
 $ sudo iotop -d 5
-[5秒ごとに表示を更新]
+# デフォルトの1秒ではなく5秒ごとに更新されます
 ```
 
 ### **-p PID, --pid=PID**
 
-指定したプロセスIDのみを監視します
+指定したPIDのプロセスのみを監視します
 
 ```console
 $ sudo iotop -p 1234
-[PID 1234のプロセスのI/O統計のみを表示]
+# PID 1234のプロセスのI/O統計のみを表示します
+```
+
+### **-u USER, --user=USER**
+
+指定したユーザーのプロセスのみを監視します
+
+```console
+$ sudo iotop -u apache
+# 'apache'ユーザーが所有するプロセスのI/O統計のみを表示します
 ```
 
 ### **-a, --accumulated**
@@ -67,7 +77,7 @@ $ sudo iotop -p 1234
 
 ```console
 $ sudo iotop -a
-[iotop起動以降の各プロセスが実行した総I/Oを表示]
+# 現在のレートではなく、プロセス開始以降の合計I/Oを表示します
 ```
 
 ## 使用例
@@ -76,68 +86,72 @@ $ sudo iotop -a
 
 ```console
 $ sudo iotop
-Total DISK READ:         0.00 B/s | Total DISK WRITE:        23.45 K/s
-Current DISK READ:       0.00 B/s | Current DISK WRITE:       7.84 K/s
-    PID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
+Total DISK READ:         0.00 B/s | Total DISK WRITE:        23.47 K/s
+Current DISK READ:       0.00 B/s | Current DISK WRITE:       0.00 B/s
+    TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO>    COMMAND
       1 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % systemd
-    346 be/4 root        0.00 B/s    7.84 K/s  0.00 %  0.00 % systemd-journald
-[...]
+   1234 be/4 root        0.00 B/s   15.27 K/s  0.00 %  0.00 % systemd-journald
+   2345 be/4 mysql       0.00 B/s    8.20 K/s  0.00 %  0.00 % mysqld
 ```
 
-### アクティブなI/Oプロセスのみを監視してファイルにログを記録
+### I/Oアクティビティをファイルに記録する
 
 ```console
-$ sudo iotop -bo -n 60 -d 10 > disk_activity.log
-[I/Oを実行しているプロセスの10秒間隔で60回のスナップショットを記録]
+$ sudo iotop -botq -n 10 > io_log.txt
+# バッチモードで10回分のI/Oアクティビティをログに記録し、I/Oを実行しているプロセスのみを表示し、
+# タイムスタンプを含め、ヘッダー情報なしで出力します
 ```
 
-### 特定のプロセスの監視
+### 特定ユーザーのプロセスを監視する
 
 ```console
-$ sudo iotop -p 1234,5678
-[PID 1234と5678のプロセスのI/O統計のみを表示]
+$ sudo iotop -o -u www-data
+# www-dataユーザーが所有するI/Oアクティブなプロセスのみを表示します
 ```
 
 ## ヒント:
 
+### 対話的コマンド
+
+iotopを対話的に実行している間、以下のキーボードショートカットを使用できます：
+- `o`: --onlyモードの切り替え（I/Oを実行しているプロセスのみを表示）
+- `p`: プロセス表示の切り替え（スレッドとの切り替え）
+- `a`: 累積I/Oモードの切り替え
+- `q`: プログラムの終了
+
 ### sudoで実行
 
-`iotop`はI/O統計にアクセスするためにroot権限が必要です。常に`sudo`を付けるかrootユーザーとして実行してください。
+`iotop`はI/O統計にアクセスするために管理者権限が必要です。常に`sudo`を付けるか、rootユーザーとして実行してください。
 
-### 忙しいシステムでは-oを使用
+### I/Oボトルネックの特定
 
-多くのプロセスが動作しているシステムでは、`-o`オプションを使用して実際にI/O操作を実行しているプロセスのみを表示すると、問題のあるプロセスを特定しやすくなります。
-
-### キーボードショートカット
-
-対話モードで実行中に以下のキーが使えます：
-- `o` --onlyオプションの切り替え
-- `p` プロセス表示の切り替え（スレッドではなく）
-- `a` 累積I/Oモードの切り替え
-- `q` 終了
+`iotop -o`を使用して、現在I/O負荷を引き起こしているプロセスをすばやく特定できます。これはシステムの遅延のトラブルシューティングに役立ちます。
 
 ### ログ記録と組み合わせる
 
-断続的なI/O問題のトラブルシューティングには、`iotop`をバッチモードで実行し、出力をログファイルにリダイレクトして後で分析できるようにしましょう。
+長期的な監視には、`iotop -b -o -n [回数] > ログファイル`を使用して、時間の経過とともにI/O統計を記録します。
 
 ## よくある質問
 
 #### Q1. 「iotop: command not found」と表示されるのはなぜですか？
-A. `iotop`はデフォルトではインストールされていない場合があります。ディストリビューションのパッケージマネージャを使用してインストールしてください（例：Debian/Ubuntuでは`apt install iotop`、RHEL/CentOSでは`yum install iotop`）。
+A. まずiotopをインストールする必要があります。Debian/Ubuntuでは：`sudo apt install iotop`、RHEL/CentOSでは：`sudo yum install iotop`を実行してください。
 
 #### Q2. iotopを実行すると「Permission denied」と表示されるのはなぜですか？
-A. `iotop`はI/O統計にアクセスするためにroot権限が必要です。`sudo iotop`として実行するか、rootユーザーとして実行してください。
+A. iotopは管理者権限が必要です。`sudo iotop`として実行するか、rootユーザーとして実行してください。
 
-#### Q3. ディスクI/Oスパイクを引き起こしているプロセスを確認するにはどうすればよいですか？
-A. `sudo iotop -o`を実行して、アクティブにI/O操作を実行しているプロセスのみを表示します。
+#### Q3. ディスクI/Oを積極的に使用しているプロセスだけを見るにはどうすればよいですか？
+A. `sudo iotop -o`を使用して、実際にI/O操作を実行しているプロセスのみを表示します。
 
-#### Q4. SWAPINとIO列は何を意味していますか？
-A. SWAPINはプロセスがスワップインに費やした時間の割合を示し、IOはプロセスがI/O待ちに費やした時間の割合を示します。
+#### Q4. iotopの出力をファイルに記録できますか？
+A. はい、バッチモードを使用します：`sudo iotop -b -n [繰り返し回数] > ファイル名.log`
 
-## 参考資料
+#### Q5. 特定のプロセスのI/Oを監視するにはどうすればよいですか？
+A. `sudo iotop -p PID`を使用します。PIDは監視したいプロセスIDです。
+
+## 参考文献
 
 https://man7.org/linux/man-pages/man8/iotop.8.html
 
 ## 改訂履歴
 
-- 2025/05/04 初回改訂
+- 2025/05/05 初版

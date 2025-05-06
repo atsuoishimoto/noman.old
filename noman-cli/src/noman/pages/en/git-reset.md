@@ -4,35 +4,35 @@ Reset current HEAD to the specified state.
 
 ## Overview
 
-`git reset` is used to undo changes by moving the current branch pointer to a different commit. It can also modify the staging area (index) and optionally the working directory, depending on the mode used. This command is commonly used to unstage files, undo commits, or completely revert to a previous state in your Git history.
+`git reset` is used to undo changes by moving the HEAD and current branch to a different commit. It can also modify the staging area (index) and optionally the working directory, allowing you to undo commits, unstage files, or completely discard changes.
 
 ## Options
 
 ### **--soft**
 
-Moves HEAD to the specified commit but leaves the index and working directory unchanged. This effectively undoes commits while keeping all changes staged.
+Reset HEAD to specified commit but leave staging area and working directory unchanged.
 
 ```console
 $ git reset --soft HEAD~1
 ```
 
-### **--mixed (default)**
+### **--mixed**
 
-Moves HEAD to the specified commit and updates the index to match, but leaves the working directory unchanged. This unstages changes while preserving them in your working directory.
+Default mode. Reset HEAD and staging area but leave working directory unchanged.
 
 ```console
-$ git reset HEAD file.txt
+$ git reset HEAD~1
 ```
 
 ### **--hard**
 
-Moves HEAD to the specified commit and updates both the index and working directory to match. This discards all changes in the staging area and working directory.
+Reset HEAD, staging area, and working directory to match the specified commit.
 
 ```console
-$ git reset --hard HEAD~2
+$ git reset --hard HEAD~1
 ```
 
-### **--patch (-p)**
+### **-p, --patch**
 
 Interactively select hunks of changes to reset.
 
@@ -40,12 +40,12 @@ Interactively select hunks of changes to reset.
 $ git reset -p
 ```
 
-### **--keep**
+### **<commit>**
 
-Resets index entries but keeps files that are different between the index and working tree.
+The commit to reset to. Can be a commit hash, branch name, tag, or relative reference.
 
 ```console
-$ git reset --keep HEAD~1
+$ git reset abc123f
 ```
 
 ## Usage Examples
@@ -54,74 +54,67 @@ $ git reset --keep HEAD~1
 
 ```console
 $ git add file.txt
-$ git status
-On branch main
-Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
-        modified:   file.txt
-
 $ git reset file.txt
-$ git status
-On branch main
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-        modified:   file.txt
+Unstaged changes after reset:
+M       file.txt
 ```
 
-### Undoing the last commit but keeping changes
+### Undoing the last commit but keeping changes staged
 
 ```console
 $ git reset --soft HEAD~1
 ```
 
-### Completely discarding recent commits and changes
+### Completely discarding the last three commits
 
 ```console
 $ git reset --hard HEAD~3
-HEAD is now at a1b2c3d Message from 3 commits ago
+HEAD is now at 1a2b3c4 Previous commit message
 ```
 
 ### Resetting to a specific commit
 
 ```console
-$ git reset --mixed 5a78ef2
+$ git reset --mixed 1a2b3c4
+Unstaged changes after reset:
+M       file1.txt
+M       file2.txt
 ```
 
-## Tips
+## Tips:
 
-### Safely Experiment with Reset
+### Use `--soft` for Amending Commits
 
-Before using `git reset --hard`, consider creating a backup branch with `git branch backup-branch` so you can recover if needed.
+When you want to add more changes to your last commit or change the commit message, use `git reset --soft HEAD~1` to undo the commit but keep all changes staged.
 
-### Recover from Hard Reset
+### Recover from a Hard Reset
 
-If you accidentally reset too far with `--hard`, you can use `git reflog` to find the commit you want to return to, then `git reset --hard COMMIT_HASH` to go back.
+If you accidentally reset with `--hard`, you can often recover using `git reflog` to find the commit you reset from, then `git reset --hard` to that commit hash.
 
-### Unstage All Files
+### Understand the Three Reset Modes
 
-Use `git reset` without arguments to unstage all files while keeping your working directory changes.
+Think of the three reset modes as levels of impact:
+- `--soft`: Only moves HEAD (safest)
+- `--mixed`: Moves HEAD and updates staging area
+- `--hard`: Moves HEAD, updates staging area, and working directory (most destructive)
 
-### Selective Unstaging
+### Use `git reset` Instead of `git checkout` for Branches
 
-Use `git reset -p` for interactive unstaging, allowing you to select specific parts of files to unstage.
+When switching to a different branch, prefer `git switch` or `git checkout` over `git reset`. Using reset to switch branches can lead to unexpected results.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `git reset` and `git revert`?
-A. `git reset` changes history by moving the branch pointer, while `git revert` creates a new commit that undoes previous changes, preserving history.
+A. `git reset` changes history by moving HEAD to a previous commit, while `git revert` creates a new commit that undoes changes from a previous commit, preserving history.
 
 #### Q2. How do I undo a `git reset --hard`?
-A. Use `git reflog` to find the commit hash before the reset, then `git reset --hard COMMIT_HASH` to restore to that point.
+A. Use `git reflog` to find the commit hash before the reset, then `git reset --hard <commit-hash>` to return to that state.
 
-#### Q3. Can I use `git reset` on a public branch?
-A. It's not recommended to use `git reset` on branches you've already pushed to a shared repository, as it rewrites history. Use `git revert` instead.
+#### Q3. How can I unstage all files?
+A. Use `git reset` with no arguments to unstage all files.
 
-#### Q4. How do I unstage all files?
-A. Run `git reset` without any arguments to unstage all files.
-
-#### Q5. What does `HEAD~1` mean in `git reset HEAD~1`?
-A. `HEAD~1` refers to the commit before the current HEAD (one commit back in history).
+#### Q4. Can I reset only specific files?
+A. Yes, use `git reset <filename>` to unstage specific files or `git reset -p` to interactively select parts of files to unstage.
 
 ## References
 
@@ -129,4 +122,4 @@ https://git-scm.com/docs/git-reset
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

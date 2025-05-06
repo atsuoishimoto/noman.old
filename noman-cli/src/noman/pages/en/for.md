@@ -1,89 +1,88 @@
 # for command
 
-Executes a command or set of commands for each item in a list.
+Execute a command for each item in a list.
 
 ## Overview
 
-The `for` command is a shell loop construct that iterates through a list of values, executing specified commands once for each value. It's commonly used in shell scripts for batch processing, automation, and repetitive tasks. The loop variable takes on each value in the list sequentially, allowing you to perform operations on multiple items with a single command structure.
+The `for` command is a shell construct that allows you to iterate through a list of values and execute a command or set of commands for each item. It's commonly used in shell scripts for batch processing, automation, and repetitive tasks.
 
 ## Options
 
-The `for` command is a shell built-in and doesn't have traditional command-line options like standalone programs. Instead, it has different syntax variations:
+The `for` command is a shell built-in and doesn't have traditional command-line options. Instead, it follows specific syntax patterns:
 
-### **Basic Syntax**
-
-The standard form that iterates over a list of words.
+### Basic Syntax
 
 ```console
-$ for i in one two three; do echo "Number: $i"; done
-Number: one
-Number: two
-Number: three
+$ for variable in list; do commands; done
 ```
 
-### **C-style Syntax**
-
-A C-like syntax available in bash and some other shells for numeric iterations.
+### C-style Syntax (Bash)
 
 ```console
-$ for ((i=1; i<=3; i++)); do echo "Count: $i"; done
-Count: 1
-Count: 2
-Count: 3
+$ for ((initialization; condition; increment)); do commands; done
 ```
 
 ## Usage Examples
 
-### Iterating Over Files
+### Iterating Through a List of Values
 
 ```console
-$ for file in *.txt; do echo "Processing $file"; cat "$file"; done
-Processing notes.txt
-This is the content of notes.txt
-Processing readme.txt
-This is the content of readme.txt
+$ for name in Alice Bob Charlie; do
+>   echo "Hello, $name!"
+> done
+Hello, Alice!
+Hello, Bob!
+Hello, Charlie!
 ```
 
-### Iterating Over Command Output
+### Processing Files in a Directory
 
 ```console
-$ for user in $(cut -d: -f1 /etc/passwd | head -3); do echo "User: $user"; done
-User: root
-User: daemon
-User: bin
+$ for file in *.txt; do
+>   echo "Processing $file..."
+>   wc -l "$file"
+> done
+Processing document.txt...
+      45 document.txt
+Processing notes.txt...
+      12 notes.txt
 ```
 
-### Iterating Over a Range of Numbers
+### Using C-style Loop (Bash)
 
 ```console
-$ for i in {1..5}; do echo "Number $i"; done
-Number 1
-Number 2
-Number 3
-Number 4
-Number 5
+$ for ((i=1; i<=5; i++)); do
+>   echo "Number: $i"
+> done
+Number: 1
+Number: 2
+Number: 3
+Number: 4
+Number: 5
 ```
 
-### Iterating with Step Values
+### Using Command Substitution
 
 ```console
-$ for i in {0..10..2}; do echo "Even number: $i"; done
-Even number: 0
-Even number: 2
-Even number: 4
-Even number: 6
-Even number: 8
-Even number: 10
+$ for user in $(cat users.txt); do
+>   echo "Creating home directory for $user"
+>   mkdir -p /home/$user
+> done
+Creating home directory for john
+Creating home directory for sarah
+Creating home directory for mike
 ```
 
 ## Tips:
 
 ### Use Proper Quoting
 
-Always quote variables within the loop to handle filenames or values with spaces correctly:
+Always quote variables inside the loop to handle filenames with spaces or special characters:
 
 ```console
-$ for file in *.txt; do echo "Processing '$file'"; done
+$ for file in *.txt; do
+>   cp "$file" "/backup/$(date +%Y%m%d)_$file"
+> done
 ```
 
 ### Break and Continue
@@ -104,43 +103,32 @@ $ for i in {1..10}; do
 7
 ```
 
-### Nested Loops
+### Sequence Generation
 
-You can nest `for` loops for more complex iterations:
+Use brace expansion for numeric sequences:
 
 ```console
-$ for i in {1..3}; do
->   for j in a b c; do
->     echo "$i-$j"
->   done
-> done
-1-a
-1-b
-1-c
-2-a
-2-b
-2-c
-3-a
-3-b
-3-c
+$ for i in {1..5}; do echo $i; done
+1
+2
+3
+4
+5
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. How do I iterate over a range of numbers?
+#### Q1. What's the difference between `for` and `while` loops?
+A. `for` loops iterate over a predefined list of items, while `while` loops continue as long as a condition remains true.
+
+#### Q2. How do I loop through numbers in a range?
 A. Use brace expansion: `for i in {1..10}; do echo $i; done` or C-style syntax: `for ((i=1; i<=10; i++)); do echo $i; done`.
 
-#### Q2. How can I process each line of a file?
-A. While `for` can be used, it's better to use a `while` loop with `read`: `while read line; do echo "$line"; done < file.txt`.
+#### Q3. How can I loop through lines in a file?
+A. Use a `while` loop with `read`: `while read line; do echo "$line"; done < file.txt` or `for` with command substitution: `for line in $(cat file.txt); do echo "$line"; done` (note that the latter doesn't preserve whitespace).
 
-#### Q3. How do I iterate over array elements?
+#### Q4. How do I iterate through array elements?
 A. Use `for element in "${array[@]}"; do echo "$element"; done`.
-
-#### Q4. Can I use `for` to iterate over command output?
-A. Yes, use command substitution: `for item in $(command); do echo "$item"; done`.
-
-#### Q5. How do I specify a step value in a numeric range?
-A. Use extended brace expansion: `for i in {start..end..step}; do echo $i; done`.
 
 ## References
 
@@ -148,4 +136,4 @@ https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

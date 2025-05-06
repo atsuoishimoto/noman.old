@@ -4,53 +4,53 @@ Change user password.
 
 ## Overview
 
-The `passwd` command allows users to change their own password or, for system administrators, to change or administer passwords for other users. It modifies the `/etc/passwd` and `/etc/shadow` files that store user account information and encrypted passwords.
+The `passwd` command allows users to change their own password or, for system administrators, to change or administer other users' passwords. It modifies the `/etc/passwd` and `/etc/shadow` files that store user account information and encrypted passwords.
 
 ## Options
 
-### **-d, --delete**
+### **-d**
 
-Delete a user's password (make it empty)
+Delete a user's password (make it empty). This option is restricted to root.
 
 ```console
 $ sudo passwd -d username
 passwd: password expiry information changed.
 ```
 
-### **-e, --expire**
+### **-l**
 
-Force password to expire immediately, requiring the user to change it at next login
-
-```console
-$ sudo passwd -e username
-passwd: password expiry information changed.
-```
-
-### **-l, --lock**
-
-Lock the specified account by adding a '!' character at the beginning of the password, disabling the account
+Lock the specified account by prefixing the encrypted password with an exclamation mark. This prevents the user from logging in.
 
 ```console
 $ sudo passwd -l username
 passwd: password expiry information changed.
 ```
 
-### **-u, --unlock**
+### **-u**
 
-Unlock a previously locked account by removing the '!' character from the password
+Unlock a locked password by removing the exclamation mark prefix.
 
 ```console
 $ sudo passwd -u username
 passwd: password expiry information changed.
 ```
 
-### **-S, --status**
+### **-e**
 
-Display account status information for a user
+Expire a user's password, forcing them to change it at next login.
+
+```console
+$ sudo passwd -e username
+passwd: password expiry information changed.
+```
+
+### **-S**
+
+Display password status information for an account.
 
 ```console
 $ passwd -S username
-username PS 2023-05-04 0 99999 7 -1
+username PS 2025-04-01 0 99999 7 -1
 ```
 
 ## Usage Examples
@@ -59,7 +59,7 @@ username PS 2023-05-04 0 99999 7 -1
 
 ```console
 $ passwd
-Changing password for user1.
+Changing password for user.
 Current password: 
 New password: 
 Retype new password: 
@@ -75,40 +75,46 @@ Retype new password:
 passwd: all authentication tokens updated successfully.
 ```
 
-### Checking password status for a user
+### Locking and unlocking an account
 
 ```console
-$ sudo passwd -S username
-username PS 2023-05-04 0 99999 7 -1
+$ sudo passwd -l username
+passwd: password expiry information changed.
+$ sudo passwd -u username
+passwd: password expiry information changed.
 ```
 
 ## Tips:
 
-### Understanding Password Status Output
+### Password Complexity Requirements
 
-When using `passwd -S`, the output format is: `username PASSWORD-STATUS CHANGE-DATE MIN-DAYS MAX-DAYS WARN-DAYS INACTIVE-DAYS EXPIRE-DATE`. The PASSWORD-STATUS field can be PS (usable password), LK (locked password), or NP (no password).
+Most systems enforce password complexity rules. A strong password typically needs to:
+- Be at least 8 characters long
+- Include uppercase and lowercase letters
+- Include numbers and special characters
+- Not be based on dictionary words or personal information
 
-### Secure Password Practices
+### Check Password Status
 
-When creating passwords, use a mix of uppercase, lowercase, numbers, and special characters. The system may enforce password complexity requirements depending on your configuration.
+Use `passwd -S username` to check if a password is locked, expired, or when it was last changed.
 
-### Password Files Location
+### Password Files
 
-The encrypted passwords are stored in `/etc/shadow`, which is only readable by root. This provides better security than the older method of storing hashed passwords in the world-readable `/etc/passwd` file.
+The actual encrypted passwords are stored in `/etc/shadow`, not in `/etc/passwd`. The shadow file is only readable by root for security reasons.
 
 ## Frequently Asked Questions
 
 #### Q1. How do I change my own password?
-A. Simply type `passwd` without any options and follow the prompts to enter your current password and then your new password twice.
+A. Simply type `passwd` and follow the prompts to enter your current password and then your new password twice.
 
-#### Q2. Why does the system reject my new password?
-A. Most systems have password complexity requirements. Your password might be rejected if it's too short, too simple, based on a dictionary word, or reuses too many characters from your previous password.
+#### Q2. How can I force a user to change their password at next login?
+A. Use `sudo passwd -e username` to expire a user's password.
 
-#### Q3. How can I force a user to change their password at next login?
-A. Use `sudo passwd -e username` to expire the user's password, forcing them to change it when they next log in.
+#### Q3. What does "authentication token manipulation error" mean?
+A. This usually indicates a system problem with the password files or insufficient permissions. Only root can change other users' passwords.
 
-#### Q4. What's the difference between locking an account and deleting its password?
-A. Locking an account (`passwd -l`) prevents login while preserving the password hash. Deleting a password (`passwd -d`) removes the password entirely, which might allow passwordless login depending on system configuration.
+#### Q4. How do I create a user without a password?
+A. First create the user with a normal password, then use `sudo passwd -d username` to delete the password.
 
 ## References
 
@@ -116,4 +122,4 @@ https://man7.org/linux/man-pages/man1/passwd.1.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

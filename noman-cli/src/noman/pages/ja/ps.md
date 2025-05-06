@@ -4,150 +4,154 @@
 
 ## 概要
 
-`ps` コマンドはシステム上で現在実行中のプロセスのスナップショットを表示します。プロセスID（PID）、CPU使用率、メモリ消費量、その他のプロセス関連情報の詳細を提供します。このコマンドは多数のオプションで高度にカスタマイズでき、必要に応じて出力をフィルタリングしたりフォーマットしたりすることができます。
+`ps` コマンドは、システム上で現在実行中のプロセスのスナップショットを表示します。プロセスID（PID）、CPU使用率、メモリ消費量、その他のプロセス関連情報の詳細を提供します。デフォルトでは、`ps` は現在のユーザーが所有し、現在の端末に関連付けられたプロセスのみを表示します。
 
 ## オプション
 
-### **-e, --everyone**
+### **-e**
 
-すべてのプロセスに関する情報を表示します（-Aと同等）
+すべてのプロセスに関する情報を表示します（-Aと同等）。
 
 ```console
 $ ps -e
   PID TTY          TIME CMD
     1 ?        00:00:03 systemd
-    2 ?        00:00:00 kthreadd
-   11 ?        00:00:00 rcu_sched
-  950 ?        00:00:00 sshd
- 1050 ?        00:00:01 bash
- 1234 ?        00:00:00 ps
+  546 ?        00:00:00 systemd-journal
+  578 ?        00:00:00 systemd-udevd
+  933 ?        00:00:00 sshd
+ 1028 tty1     00:00:00 bash
+ 1892 tty1     00:00:00 ps
 ```
 
-### **-f, --forest**
+### **-f**
 
-プロセス階層をツリー状のフォーマットで表示します
+UID、PID、PPID、CPU使用率などを表示する完全なフォーマットのリストを表示します。
 
 ```console
-$ ps -ef
+$ ps -f
 UID        PID  PPID  C STIME TTY          TIME CMD
-root         1     0  0 May01 ?        00:00:03 /sbin/init
-root         2     0  0 May01 ?        00:00:00 [kthreadd]
-user      1050   950  0 May01 pts/0    00:00:01 bash
-user      1234  1050  0 10:15 pts/0    00:00:00 ps -ef
+user      1028  1027  0 10:30 tty1     00:00:00 bash
+user      1893  1028  0 10:35 tty1     00:00:00 ps -f
 ```
 
-### **-u, --user**
+### **-l**
 
-特定のユーザーのプロセスを表示します
+優先度、状態コード、メモリ使用量などの詳細情報を含む長いフォーマットで表示します。
 
 ```console
-$ ps -u username
+$ ps -l
+F S   UID   PID  PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000  1028  1027  0  80   0 -  2546 wait   tty1     00:00:00 bash
+0 R  1000  1894  1028  0  80   0 -  2715 -      tty1     00:00:00 ps
+```
+
+### **-u username**
+
+指定したユーザーに属するプロセスを表示します。
+
+```console
+$ ps -u john
   PID TTY          TIME CMD
- 1050 pts/0    00:00:01 bash
- 1234 pts/0    00:00:00 ps
- 1500 pts/1    00:00:03 vim
+ 1028 tty1     00:00:00 bash
+ 1895 tty1     00:00:00 ps
+ 2156 ?        00:00:01 firefox
 ```
 
-### **-a, --all**
+### **-aux**
 
-セッションリーダーと端末に関連付けられていないプロセスを除く、すべてのユーザーのプロセスを表示します
-
-```console
-$ ps -a
-  PID TTY          TIME CMD
- 1234 pts/0    00:00:00 ps
- 1500 pts/1    00:00:03 vim
-```
-
-### **-x, --all**
-
-制御端末のないプロセスも含めます
+すべてのプロセスに関する詳細情報を表示します（BSDスタイル）。
 
 ```console
-$ ps -ax
-  PID TTY      STAT   TIME COMMAND
-    1 ?        Ss     0:03 /sbin/init
-    2 ?        S      0:00 [kthreadd]
- 1050 pts/0    Ss     0:01 bash
- 1234 pts/0    R+     0:00 ps -ax
+$ ps aux
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.1 168940  9128 ?        Ss   May04   0:03 /sbin/init
+root       546  0.0  0.1  55492  8456 ?        Ss   May04   0:00 /lib/systemd/systemd-journald
+user      1028  0.0  0.0  21712  5312 tty1     Ss   10:30   0:00 bash
+user      1896  0.0  0.0  37364  3328 tty1     R+   10:36   0:00 ps aux
 ```
 
 ## 使用例
 
-### 詳細情報付きでプロセスを表示する
+### 名前でプロセスを検索する
 
 ```console
 $ ps -ef | grep firefox
-user      2345  1050  2 10:20 ?        00:00:45 /usr/lib/firefox/firefox
-user      2346  2345  0 10:20 ?        00:00:02 /usr/lib/firefox/firefox-bin
+user      2156  1028  2 10:15 ?        00:01:23 /usr/lib/firefox/firefox
+user      1897  1028  0 10:36 tty1     00:00:00 grep --color=auto firefox
 ```
 
-### メモリ使用量でソートしたプロセスを表示する
+### プロセスツリーを表示する
+
+```console
+$ ps -ejH
+  PID  PGID   SID TTY          TIME CMD
+    1     1     1 ?        00:00:03 systemd
+  546   546   546 ?        00:00:00   systemd-journal
+  578   578   578 ?        00:00:00   systemd-udevd
+  933   933   933 ?        00:00:00   sshd
+ 1027  1027  1027 tty1     00:00:00   login
+ 1028  1028  1028 tty1     00:00:00     bash
+ 1898  1898  1028 tty1     00:00:00       ps
+```
+
+### メモリ使用量でプロセスをソートする
 
 ```console
 $ ps aux --sort=-%mem
 USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-user      2345  2.0  5.4 1254208 220800 ?      Sl   10:20   0:45 /usr/lib/firefox/firefox
-mysql     1234  1.2  3.2  987654 130400 ?      Ssl  May01   2:34 /usr/sbin/mysqld
-```
-
-### 特定ユーザーのプロセスツリーを表示する
-
-```console
-$ ps -f --forest -u username
-UID        PID  PPID  C STIME TTY          TIME CMD
-user      1050   950  0 May01 pts/0    00:00:01 bash
-user      2345  1050  2 10:20 ?        00:00:45  \_ firefox
-user      2346  2345  0 10:20 ?        00:00:02      \_ firefox-bin
-user      1500  1050  0 10:15 pts/0    00:00:03  \_ vim document.txt
+user      2156  2.0  8.5 1854036 348216 ?      Sl   10:15   1:23 /usr/lib/firefox/firefox
+user      2201  0.5  2.3 1123460 95684 ?       Sl   10:18   0:15 /usr/lib/thunderbird/thunderbird
+root       546  0.0  0.1  55492  8456 ?        Ss   May04   0:00 /lib/systemd/systemd-journald
 ```
 
 ## ヒント:
 
-### 出力フォーマットのカスタマイズ
+### 出力フィールドをカスタマイズする
 
-`-o` オプションを使用して、表示したい列を正確に指定できます：
+`-o` オプションを使用して表示するフィールドを指定します：
+
 ```console
-$ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem
+$ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu
+  PID  PPID CMD                         %MEM %CPU
+ 2156  1028 /usr/lib/firefox/firefox     8.5  2.0
+ 2201  1028 /usr/lib/thunderbird/thun    2.3  0.5
+    1     0 /sbin/init                   0.1  0.0
 ```
 
-### リソースを大量に消費するプロセスを見つける
+### プロセスをリアルタイムで監視する
 
-`ps` と `sort` を組み合わせて、最もリソースを消費しているプロセスを特定できます：
+`ps` と `watch` を組み合わせてプロセスをリアルタイムで監視します：
+
 ```console
-$ ps aux | sort -nrk 3 | head -5  # CPU使用率の高い上位5つのプロセス
+$ watch -n 1 'ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head -10'
 ```
 
-### grepでフィルタリングする
+### 親子プロセスの関係を見つける
 
-`ps` の出力を `grep` にパイプして特定のプロセスを見つけることができます：
-```console
-$ ps -ef | grep nginx
-```
-grep プロセス自体を除外するには：`ps -ef | grep [n]ginx` を使用するとよい
+`ps -f` を使用して PPID（親プロセスID）列を確認し、プロセス間の関係を理解します。
 
 ## よくある質問
 
-#### Q1. 特定のプロセスのPIDを見つけるにはどうすればよいですか？
-A. `ps -C プロセス名` または `ps -ef | grep プロセス名` を使用して特定のプロセスのPIDを見つけることができます。
+#### Q1. `ps aux` と `ps -ef` の違いは何ですか？
+A. どちらもすべてのプロセスを表示しますが、`ps aux` は BSD スタイルの出力で、`ps -ef` は UNIX スタイルの出力です。`ps aux` は %CPU と %MEM の使用率を表示し、`ps -ef` は PPID（親プロセスID）を表示します。
 
-#### Q2. 端末を持たないプロセスを含むすべてのプロセスを表示するにはどうすればよいですか？
-A. `ps aux` または `ps -ef` を使用してシステム上のすべてのプロセスを表示できます。
+#### Q2. CPU を最も消費しているプロセスを見つけるにはどうすればよいですか？
+A. `ps aux --sort=-%cpu` を使用して、CPU 使用率の降順でプロセスをソートします。
 
-#### Q3. プロセスをリアルタイムで監視するにはどうすればよいですか？
-A. `ps` はスナップショットを提供しますが、プロセスのリアルタイム監視には `top` または `htop` を使用します。
+#### Q3. メモリを最も消費しているプロセスを見つけるにはどうすればよいですか？
+A. `ps aux --sort=-%mem` を使用して、メモリ使用率の降順でプロセスをソートします。
 
-#### Q4. ps aux と ps -ef の違いは何ですか？
-A. どちらもすべてのプロセスを表示しますが、`ps aux` はBSD構文を使用し、%CPUと%MEM列を含み、`ps -ef` はUNIX構文を使用し、PPID（親プロセスID）を表示します。
+#### Q4. 特定のユーザーのプロセスだけを表示するにはどうすればよいですか？
+A. `ps -u ユーザー名` を使用して、特定のユーザーが所有するプロセスのみを表示します。
 
-## macOSに関する注意点
+## macOSに関する考慮事項
 
-macOSでは、`ps` コマンドはLinuxとは若干異なるオプションを持っています。BSD形式のオプション（ダッシュなし）がより一般的に使用されます。例えば、`ps aux` はmacOSで動作しますが、`--forest` のようなGNU固有のオプションは利用できない場合があります。
+macOSでは、一部のBSDスタイルのオプションがLinuxとは異なります。例えば、`-e` は利用できませんが、`ps -A` を使用してすべてのプロセスを表示できます。また、メモリレポートの列はLinuxシステムとは異なる値を表示する場合があります。
 
-## 参考資料
+## 参考文献
 
 https://man7.org/linux/man-pages/man1/ps.1.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

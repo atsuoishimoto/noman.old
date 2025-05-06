@@ -4,7 +4,7 @@ Determine file type by examining file contents.
 
 ## Overview
 
-The `file` command examines each file argument to classify its type. It performs a series of tests to determine if the file is text, executable, data, or another format. Unlike many commands that rely on file extensions, `file` looks at the actual content of files to identify their types.
+The `file` command identifies the type of a file by examining its contents, rather than relying on filename extensions. It performs various tests to determine whether files are text, executable binaries, data files, or other types. This is particularly useful when working with files that have missing or misleading extensions.
 
 ## Options
 
@@ -19,7 +19,7 @@ ASCII text
 
 ### **-i, --mime**
 
-Display MIME type strings instead of traditional descriptions.
+Display MIME type instead of traditional file type description.
 
 ```console
 $ file -i document.txt
@@ -55,7 +55,7 @@ $ file -s /dev/sda1
 
 ## Usage Examples
 
-### Basic file identification
+### Checking multiple files at once
 
 ```console
 $ file document.txt image.png script.sh
@@ -64,69 +64,60 @@ image.png:    PNG image data, 1920 x 1080, 8-bit/color RGB, non-interlaced
 script.sh:    Bourne-Again shell script, ASCII text executable
 ```
 
-### Examining multiple files
+### Examining a binary file
 
 ```console
-$ file *
-document.txt:  ASCII text
-image.png:     PNG image data, 1920 x 1080, 8-bit/color RGB, non-interlaced
-script.sh:     Bourne-Again shell script, ASCII text executable
-archive.tar:   POSIX tar archive (GNU)
-binary:        ELF 64-bit LSB executable, x86-64
+$ file /bin/ls
+/bin/ls: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=2f15ad836be3339dec0e2e6a3c637e08e48aacbd, for GNU/Linux 3.2.0, stripped
 ```
 
-### Examining a directory
+### Checking file encoding
 
 ```console
-$ file projects/
-projects/: directory
+$ file --mime-encoding document.txt
+document.txt: us-ascii
 ```
 
-## Tips
+## Tips:
 
-### Use with Pipes
+### Use with find command
 
-You can pipe output from other commands to `file` using the special `-` argument to read from stdin:
-
-```console
-$ cat unknown_file | file -
-/dev/stdin: ASCII text
-```
-
-### Recursive File Type Identification
-
-Combine with `find` to identify file types recursively:
+Combine with `find` to identify file types in a directory structure:
 
 ```console
 $ find . -type f -exec file {} \;
 ```
 
-### Identifying Executables
+### Examining disk partitions
 
-The `file` command can help determine if a binary is 32-bit or 64-bit, and what architecture it's compiled for:
+Use `file -s` to examine disk partitions and filesystems:
 
 ```console
-$ file /bin/ls
-/bin/ls: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32
+$ sudo file -s /dev/sd*
+```
+
+### Checking file encoding
+
+When working with international text, use `file --mime-encoding` to determine character encoding:
+
+```console
+$ file --mime-encoding international_text.txt
+international_text.txt: utf-8
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. How does the `file` command determine file types?
-A. `file` uses "magic" tests - examining the first few bytes of a file and comparing them against known patterns in a database (usually located at `/usr/share/file/magic`).
+#### Q1. How accurate is the file command?
+A. The `file` command is generally accurate but not infallible. It uses "magic" tests that examine file contents for patterns, but some file types may be misidentified, especially custom or obscure formats.
 
-#### Q2. Can `file` identify all file types?
-A. While `file` can identify many common file types, it may not recognize specialized or proprietary formats. It provides its best guess based on file content.
+#### Q2. Can file detect encrypted files?
+A. Yes, `file` can often detect encrypted files, but it may only identify them as "data" or "encrypted data" without specifying the encryption method.
 
-#### Q3. Why does `file` sometimes report text files as having specific encodings?
-A. `file` analyzes character patterns to detect text encodings like UTF-8, ASCII, or other character sets.
+#### Q3. How does file differ from using file extensions?
+A. Unlike relying on file extensions (which can be changed or misleading), `file` examines the actual content of files to determine their type, providing more reliable identification.
 
-#### Q4. How can I get just the MIME type without the filename?
-A. Use `file -b -i filename` to get only the MIME type without the filename prefix.
-
-## macOS Considerations
-
-On macOS, the `file` command works similarly to Linux versions but may have slightly different output formats or detection capabilities. The magic database location is typically at `/usr/share/file/magic` or `/etc/magic`.
+#### Q4. Can file identify programming language source code?
+A. Yes, `file` can identify many programming language source files, though it may sometimes only identify them generically as "ASCII text" or similar.
 
 ## References
 
@@ -134,4 +125,4 @@ https://man7.org/linux/man-pages/man1/file.1.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

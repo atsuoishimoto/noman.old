@@ -4,131 +4,115 @@ Count lines, words, and bytes in files.
 
 ## Overview
 
-The `wc` (word count) command counts the number of lines, words, and bytes in specified files. It's commonly used to get statistics about text files, check file sizes, or count specific elements in text data. By default, it displays line count, word count, and byte count for each file, followed by the filename.
+The `wc` (word count) command counts and displays the number of lines, words, bytes, or characters in specified files. It's commonly used in text processing to analyze file content or as part of pipelines to count output from other commands.
 
 ## Options
 
-### **-c, --bytes**
-
-Count bytes in the file.
-
-```console
-$ wc -c file.txt
-    1234 file.txt
-```
-
-### **-m, --chars**
-
-Count characters in the file.
-
-```console
-$ wc -m file.txt
-    1234 file.txt
-```
-
 ### **-l, --lines**
 
-Count lines in the file.
+Count the number of lines in a file.
 
 ```console
 $ wc -l file.txt
-     100 file.txt
+      42 file.txt
 ```
 
 ### **-w, --words**
 
-Count words in the file.
+Count the number of words in a file.
 
 ```console
 $ wc -w file.txt
-     234 file.txt
+     320 file.txt
+```
+
+### **-c, --bytes**
+
+Count the number of bytes in a file.
+
+```console
+$ wc -c file.txt
+    1872 file.txt
+```
+
+### **-m, --chars**
+
+Count the number of characters in a file (may differ from bytes in multibyte encodings).
+
+```console
+$ wc -m file.txt
+    1850 file.txt
 ```
 
 ### **-L, --max-line-length**
 
-Display the length of the longest line.
+Display the length of the longest line in a file.
 
 ```console
 $ wc -L file.txt
-      80 file.txt
+      78 file.txt
 ```
 
 ## Usage Examples
 
-### Default output (lines, words, bytes)
+### Basic Usage (Default Output)
 
 ```console
 $ wc file.txt
-     100     234    1234 file.txt
+      42     320    1872 file.txt
 ```
 
-### Counting lines in multiple files
+The output shows lines, words, and bytes (in that order).
+
+### Multiple Files
 
 ```console
-$ wc -l file1.txt file2.txt
-     100 file1.txt
-     150 file2.txt
-     250 total
+$ wc file1.txt file2.txt
+      42     320    1872 file1.txt
+      10      85     492 file2.txt
+      52     405    2364 total
 ```
 
-### Using with pipes to count output from other commands
+### Using wc in a Pipeline
 
 ```console
-$ ls -l | wc -l
-      12
+$ cat file.txt | grep "error" | wc -l
+       5
 ```
 
-### Counting words in all text files in a directory
+This counts the number of lines containing "error" in file.txt.
 
-```console
-$ wc -w *.txt
-     234 file1.txt
-     345 file2.txt
-     579 total
-```
+## Tips:
 
-## Tips
+### Counting Words in Multiple Files
 
-### Count Non-Empty Lines
+Use wildcards to count words across multiple files: `wc -w *.txt` will show word counts for all text files in the current directory.
 
-To count only non-empty lines, you can combine `grep` with `wc`:
+### Counting Files in a Directory
 
-```console
-$ grep -c . file.txt
-```
+Combine with `ls` to count files: `ls -1 | wc -l` counts the number of entries in the current directory.
 
-### Quick File Size Check
+### Memory Usage
 
-Use `wc -c` for a quick check of file size in bytes, which is faster than using `ls -l` when you only need the size.
+For very large files, `wc` is more memory-efficient than loading files into text editors to check size.
 
-### Count Specific Patterns
+### Ignoring Line Count Headers
 
-Combine with `grep` to count specific patterns:
-
-```console
-$ grep "error" logfile.txt | wc -l
-```
-
-### Handling Large Files
-
-For very large files, `wc` is efficient as it streams the file rather than loading it entirely into memory.
+When using `wc -l` in scripts, use `awk` to extract just the number: `wc -l file.txt | awk '{print $1}'`
 
 ## Frequently Asked Questions
 
-#### Q1. What does the output of `wc` mean?
-A. The default output shows three numbers followed by the filename: line count, word count, and byte count.
+#### Q1. What does wc stand for?
+A. `wc` stands for "word count."
 
-#### Q2. How do I count only the number of lines in a file?
-A. Use `wc -l filename`.
+#### Q2. How do I count only the characters in a file?
+A. Use `wc -m` to count characters. For bytes, use `wc -c` (they're the same for ASCII files).
 
-#### Q3. Can I count characters instead of bytes?
-A. Yes, use `wc -m filename` to count characters, which may differ from bytes in UTF-8 encoded files.
+#### Q3. Why are the line counts different from what I see in my text editor?
+A. `wc` counts newline characters, so the count may differ if the last line doesn't end with a newline or if your editor displays "virtual lines" for wrapped text.
 
-#### Q4. How do I count words in text from standard input?
-A. Pipe the text to `wc -w`, for example: `echo "hello world" | wc -w`.
-
-#### Q5. Why might line counts from `wc -l` and `grep -c` differ?
-A. `wc -l` counts all newlines, while `grep -c` without options counts matching lines. Empty lines affect this difference.
+#### Q4. How can I get just the number without the filename?
+A. Either pipe the content: `cat file.txt | wc -l` or use awk: `wc -l file.txt | awk '{print $1}'`
 
 ## References
 
@@ -136,4 +120,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/wc-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

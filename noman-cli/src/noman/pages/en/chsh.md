@@ -4,110 +4,111 @@ Change the login shell for a user.
 
 ## Overview
 
-The `chsh` command allows users to change their login shell - the command interpreter that starts when they log in. It modifies the user's entry in the password file to set which shell program runs when they log into the system. Regular users can only change their own shell, while the superuser (root) can change any user's shell.
+The `chsh` command allows users to change their login shell - the command interpreter that starts when they log in. It modifies the user's entry in the password file to set which shell program runs when they log in to the system.
 
 ## Options
 
-### **-s, --shell SHELL**
+### **-s, --shell**
 
-Specify the login shell to use. The shell must be listed in the /etc/shells file, unless you're the superuser.
+Specify the login shell to use. The shell must be listed in the /etc/shells file, unless the invoking user is the superuser.
 
 ```console
-$ chsh -s /bin/bash
+$ chsh -s /bin/zsh
 Password: 
 Shell changed.
 ```
 
 ### **-l, --list-shells**
 
-Print the list of shells listed in /etc/shells and exit.
+Display the list of shells listed in the /etc/shells file.
 
 ```console
 $ chsh -l
 /bin/sh
 /bin/bash
-/bin/rbash
-/bin/dash
 /bin/zsh
-/usr/bin/zsh
-/usr/bin/fish
+/bin/fish
 ```
 
 ### **-h, --help**
 
-Display help message and exit.
+Display help information and exit.
 
 ```console
 $ chsh --help
 Usage: chsh [options] [LOGIN]
 
 Options:
-  -h, --help                    display this help message and exit
-  -s, --shell SHELL             specify login shell
-  -l, --list-shells             print list of shells and exit
+  -s, --shell SHELL         specify login shell
+  -l, --list-shells         list shells and exit
+  -h, --help                display this help and exit
+  -v, --version             display version information and exit
+```
 
-For more details see chsh(1).
+### **-v, --version**
+
+Display version information and exit.
+
+```console
+$ chsh --version
+chsh from util-linux 2.38.1
 ```
 
 ## Usage Examples
 
-### Changing your shell to zsh
+### Changing your own shell
 
 ```console
-$ chsh -s /usr/bin/zsh
+$ chsh -s /bin/zsh
 Password: 
 Shell changed.
+```
+
+### Viewing your current shell
+
+```console
+$ grep "^$(whoami):" /etc/passwd
+username:x:1000:1000:User Name:/home/username:/bin/zsh
 ```
 
 ### Changing another user's shell (requires root privileges)
 
 ```console
-$ sudo chsh -s /bin/bash username
-[sudo] password for current_user: 
+$ sudo chsh -s /bin/bash otheruser
 Shell changed.
 ```
 
-### Checking your current shell
+## Tips:
 
-```console
-$ echo $SHELL
-/bin/bash
-```
+### Check Available Shells First
 
-## Tips
+Always use `chsh -l` or check `/etc/shells` to see what shells are available on your system before changing your shell.
 
-### Verify Available Shells First
+### Logout Required
 
-Always use `chsh -l` to check which shells are available on your system before changing your shell. Only shells listed in `/etc/shells` can be set as login shells (unless you're root).
+Changes to your login shell won't take effect until you log out and log back in.
 
-### Shell Change Takes Effect on Next Login
+### Shell Must Be in /etc/shells
 
-The shell change doesn't take effect until you log out and log back in. Your current terminal session will continue using the previous shell.
+The shell you choose must be listed in the `/etc/shells` file, unless you're the superuser. This is a security measure to prevent users from setting arbitrary programs as their login shell.
 
-### Avoid Setting Incompatible Shells
+### Reverting Changes
 
-Be careful not to set a shell that doesn't exist on your system or that you're not familiar with. If you set an invalid shell, you might have trouble logging in.
-
-### Backup Your Configuration
-
-Before changing shells, back up any shell-specific configuration files (like `.bashrc` or `.zshrc`) so you can restore your settings if needed.
+If you change to a shell that doesn't work for you, you can always change back using the same command with your previous shell.
 
 ## Frequently Asked Questions
 
-#### Q1. How do I know which shell I'm currently using?
-A. Run `echo $SHELL` to see your current login shell. Note that this shows your configured login shell, not necessarily the shell of your current session.
+#### Q1. What is the difference between login shell and current shell?
+A. The login shell is the shell that starts when you log in to the system. The current shell is the shell you're currently using, which might be different if you've started another shell from your login shell.
 
-#### Q2. Can I use any program as my shell?
-A. No, for security reasons, you can only use shells listed in the `/etc/shells` file (unless you're the superuser).
+#### Q2. How do I know what my current shell is?
+A. Run `echo $SHELL` to see your login shell, or `ps -p $$` to see what shell you're currently using.
 
-#### Q3. How do I add a new shell to the available options?
-A. Install the shell package, then add its path to `/etc/shells` (requires root privileges).
+#### Q3. Can I use any program as my shell?
+A. No, for security reasons, regular users can only use shells listed in `/etc/shells`. Only the superuser can set arbitrary programs as shells.
 
 #### Q4. What happens if I set an invalid shell?
-A. If you set a shell that doesn't exist or isn't executable, you might be unable to log in through normal means. You'd need to fix this from a recovery mode or have an administrator change it back.
-
-#### Q5. Do I need to restart my computer after changing my shell?
-A. No, you only need to log out and log back in for the change to take effect.
+A. If you set a shell that doesn't exist or doesn't work properly, you might be unable to log in normally. In such cases, you would need to use recovery methods or ask a system administrator to fix it.
 
 ## References
 
@@ -115,4 +116,4 @@ https://man7.org/linux/man-pages/man1/chsh.1.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

@@ -1,26 +1,26 @@
-# xargs コマンド
+# xargsコマンド
 
-標準入力から引数を受け取り、コマンドを実行します。
+標準入力から引数を受け取ってコマンドを実行します。
 
 ## 概要
 
-`xargs` は標準入力からアイテムを読み取り、それらを引数として使用してコマンド（デフォルトでは `/bin/echo`）を実行するコマンドラインユーティリティです。標準入力のアイテムは空白または改行で区切られます。これは他のコマンドの出力を処理し、複数のファイルやデータストリームに対して操作を適用する場合に特に便利です。
+`xargs`は標準入力からアイテムを読み取り、それらをコマンドの引数として実行します。他のコマンドの出力からコマンドラインを構築したり、大きな引数リストを処理したり、データをバッチで処理したりする場合に特に便利です。
 
 ## オプション
 
 ### **-0, --null**
 
-入力アイテムが空白ではなくヌル文字で終了するものとして扱います。入力に空白や改行が含まれる可能性がある場合に便利です。
+入力アイテムは空白ではなくnull文字で区切られます。入力にスペースや改行が含まれる可能性がある場合に便利です。
 
 ```console
-$ find . -name "*.txt" -print0 | xargs -0 grep "example"
-./file1.txt:example text here
-./path with spaces/file2.txt:another example
+$ find . -name "*.txt" -print0 | xargs -0 grep "pattern"
+./file1.txt:pattern found here
+./path with spaces/file2.txt:pattern also here
 ```
 
-### **-I, --replace[=REPLACE]**
+### **-I, --replace[=R]**
 
-初期引数内の REPLACE（デフォルトは {}）の出現を標準入力から読み取った名前で置き換えます。
+初期引数内のR（デフォルトは{}）の出現を標準入力から読み取った名前に置き換えます。
 
 ```console
 $ echo "file1.txt file2.txt" | xargs -I {} cp {} backup/
@@ -28,7 +28,7 @@ $ echo "file1.txt file2.txt" | xargs -I {} cp {} backup/
 
 ### **-n, --max-args=MAX-ARGS**
 
-コマンドラインごとに最大 MAX-ARGS 個の引数を使用します。
+コマンドラインごとに最大MAX-ARGS個の引数を使用します。
 
 ```console
 $ echo "1 2 3 4" | xargs -n 2 echo
@@ -38,19 +38,21 @@ $ echo "1 2 3 4" | xargs -n 2 echo
 
 ### **-P, --max-procs=MAX-PROCS**
 
-最大 MAX-PROCS 個のプロセスを同時に実行します。
+最大MAX-PROCSのプロセスを同時に実行します。
 
 ```console
 $ find . -name "*.jpg" | xargs -P 4 -I {} convert {} {}.png
 ```
 
-### **-t, --verbose**
+### **-d, --delimiter=DELIM**
 
-実行前にコマンドを表示します。
+入力アイテムは空白ではなくDELIM文字で区切られます。
 
 ```console
-$ echo "file1.txt file2.txt" | xargs -t rm
-rm file1.txt file2.txt
+$ echo "file1.txt:file2.txt:file3.txt" | xargs -d ":" ls -l
+-rw-r--r-- 1 user group 123 May 5 10:00 file1.txt
+-rw-r--r-- 1 user group 456 May 5 10:01 file2.txt
+-rw-r--r-- 1 user group 789 May 5 10:02 file3.txt
 ```
 
 ### **-p, --interactive**
@@ -58,78 +60,74 @@ rm file1.txt file2.txt
 各コマンドを実行する前にユーザーに確認を求めます。
 
 ```console
-$ echo "file1.txt file2.txt" | xargs -p rm
-rm file1.txt file2.txt ?...
+$ echo "important_file.txt" | xargs -p rm
+rm important_file.txt ?...
 ```
 
 ## 使用例
 
-### 名前に空白を含むファイルの処理
+### ファイルの検索と削除
 
 ```console
-$ find . -name "*.txt" -print0 | xargs -0 grep "pattern"
-./document.txt:pattern found here
-./notes with spaces.txt:another pattern example
+$ find . -name "*.tmp" | xargs rm
 ```
 
-### ファイルのバッチ処理
+### 複数の引数によるバッチ処理
 
 ```console
-$ find . -name "*.jpg" | xargs -P 4 -I {} convert {} {}.png
+$ cat file_list.txt | xargs -n 3 tar -czf archive.tar.gz
 ```
 
-### ファイルにリストされたファイルの削除
+### grepと組み合わせて複数のファイルを検索
 
 ```console
-$ cat files_to_delete.txt | xargs rm
+$ find . -name "*.py" | xargs grep "import requests"
+./script1.py:import requests
+./utils/http.py:import requests as req
 ```
 
-### 各入力に対して複数のコマンドを実行
+### スペースを含むファイル名の処理
 
 ```console
-$ echo "file1 file2" | xargs -I {} sh -c 'echo {}; wc -l {}'
-file1
-      42 file1
-file2
-      18 file2
+$ find . -name "*.jpg" -print0 | xargs -0 -I {} mv {} ./images/
 ```
 
 ## ヒント:
 
-### find -print0 と xargs -0 を組み合わせる
+### 空の入力でのコマンド実行を防止する
 
-空白、改行、その他の特殊文字を含むファイル名を扱う場合は、常に `find -print0` と `xargs -0` をペアで使用して、適切に処理されるようにしましょう。
+`xargs --no-run-if-empty`を使用すると、標準入力が空の場合にコマンドが実行されるのを防ぎ、予期しない動作を防止できます。
 
-### コマンドインジェクションを防ぐ
+### 実行前にコマンドをプレビューする
 
-ユーザー提供の入力を xargs で使用する場合は注意が必要です。コマンドインジェクションの脆弱性を避けるために、プレースホルダーを使用した `-I` オプションを使用しましょう。
+`xargs -t`を使用すると、実行前に各コマンドが表示されるため、対話モードを使用せずに何が実行されるかを確認できます。
 
-### -t オプションでコマンドをプレビュー
+### 特殊文字を含むファイル名の処理
 
-特に `rm` のような破壊的な操作を行う場合は、`-t` オプションを使用して実行前にどのようなコマンドが実行されるかを確認しましょう。
+スペース、改行、その他の特殊文字を含む可能性のあるファイル名を扱う場合は、常に`find`と一緒に`-print0`を、`xargs`と一緒に`-0`を使用してください。
 
-### 並列処理の制御
+### 大規模な操作のためのバッチサイズの制限
 
-CPU負荷の高いタスクの場合、`-P` オプションにCPUコア数を指定することで、システムに負荷をかけすぎずにパフォーマンスを最適化できます。
+多数のファイルを処理する場合は、`-n`を使用してコマンド実行ごとの引数の数を制限し、「引数リストが長すぎる」エラーを回避します。
 
 ## よくある質問
 
-#### Q1. パイプでコマンドに送る方法と xargs を使用する方法の違いは何ですか？
-A. パイプ（`|`）は、あるコマンドの出力を別のコマンドの入力として送りますが、`xargs` は入力をコマンドの引数に変換します。多くのコマンドはファイル名として標準入力からの入力を受け付けないため、そのような場合に xargs が必要になります。
+#### Q1. パイプでコマンドに送る方法とxargsを使用する方法の違いは何ですか？
+A. パイプ（`|`）は出力を次のコマンドの標準入力として送りますが、`xargs`は入力をコマンドライン引数に変換します。`rm`や`cp`などの多くのコマンドは標準入力ではなく引数を期待しています。
 
-#### Q2. 空白を含むファイル名を xargs で処理するにはどうすればよいですか？
-A. `find -print0` と `xargs -0` を使用して、空白、改行、その他の特殊文字を含むファイル名を適切に処理できます。
+#### Q2. ファイル名を途中に必要とするコマンドでxargsを使用するにはどうすればよいですか？
+A. プレースホルダーと共に`-I`オプションを使用します：`find . -name "*.txt" | xargs -I {} mv {} {}.bak`
 
-#### Q3. 各入力に対して複数のコマンドを実行することはできますか？
-A. はい、`-I` オプションと `sh -c` を使用して複数のコマンドを実行できます：`xargs -I {} sh -c 'command1 {}; command2 {}'`
+#### Q3. 多数のファイルに対してxargsをより速く実行するにはどうすればよいですか？
+A. 複数のプロセスを並行して実行するために`-P`オプションを使用します：`xargs -P 4`は最大4つのプロセスを同時に実行します。
 
-#### Q4. コマンドごとの引数の数を制限するにはどうすればよいですか？
-A. `-n` オプションの後に最大引数数を指定します：`xargs -n 5 command`
+#### Q4. xargsが時々入力を予期せず分割するのはなぜですか？
+A. デフォルトでは、xargsは空白で分割します。異なる区切り文字を指定するには`-d`を使用するか、null終端の入力には`-0`を使用してください。
 
-## 参考資料
+## 参考文献
 
 https://www.gnu.org/software/findutils/manual/html_node/find_html/xargs-options.html
 
 ## 改訂履歴
 
-- 2025/05/04 初回改訂
+- 2025/05/05 初版

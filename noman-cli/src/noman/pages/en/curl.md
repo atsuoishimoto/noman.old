@@ -1,50 +1,38 @@
 # curl command
 
-Transfer data from or to a server using various protocols including HTTP, HTTPS, FTP, and more.
+Transfer data from or to a server using various protocols.
 
 ## Overview
 
-`curl` is a command-line tool for transferring data with URLs. It supports numerous protocols including HTTP, HTTPS, FTP, FTPS, SCP, SFTP, LDAP, and more. It's commonly used for downloading files, testing APIs, sending HTTP requests, and debugging network issues. `curl` is non-interactive and designed to work without user intervention, making it ideal for scripts and automation.
+`curl` is a command-line tool for transferring data with URLs using various protocols (HTTP, HTTPS, FTP, SFTP, SCP, etc.). It's designed to work without user interaction and can be used for downloading files, API requests, testing endpoints, and more. `curl` supports numerous options for customizing requests, handling authentication, and controlling data transfer.
 
 ## Options
 
-### **-o, --output \<file>**
+### **-o, --output \<file\>**
 
-Save the output to a file instead of displaying it on the screen
+Write output to a file instead of stdout.
 
 ```console
 $ curl -o example.html https://example.com
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100  1256  100  1256    0     0   9664      0 --:--:-- --:--:-- --:--:--  9663
+100  1256  100  1256    0     0   7503      0 --:--:-- --:--:-- --:--:--  7503
 ```
 
 ### **-O, --remote-name**
 
-Save the output using the remote file name from the URL
+Write output to a local file named like the remote file.
 
 ```console
-$ curl -O https://example.com/sample.zip
+$ curl -O https://example.com/file.zip
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100 10.2M  100 10.2M    0     0  5.1MB/s      0 --:--:-- 0:00:02 --:--:-- 5.1MB
-```
-
-### **-L, --location**
-
-Follow HTTP redirects (3XX responses)
-
-```console
-$ curl -L http://github.com
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   142  100   142    0     0    573      0 --:--:-- --:--:-- --:--:--   573
-100  5891    0  5891    0     0  13090      0 --:--:-- --:--:-- --:--:-- 13090
+100 10.2M  100 10.2M    0     0  5.1M      0  0:00:02  0:00:02 --:--:-- 5.1M
 ```
 
 ### **-s, --silent**
 
-Silent mode; don't show progress meter or error messages
+Silent or quiet mode, don't show progress meter or error messages.
 
 ```console
 $ curl -s https://example.com > example.html
@@ -52,60 +40,92 @@ $ curl -s https://example.com > example.html
 
 ### **-I, --head**
 
-Fetch HTTP headers only (HEAD request)
+Fetch the HTTP headers only.
 
 ```console
 $ curl -I https://example.com
 HTTP/2 200 
 content-type: text/html; charset=UTF-8
-date: Tue, 04 May 2025 12:00:00 GMT
-expires: Tue, 11 May 2025 12:00:00 GMT
+date: Mon, 05 May 2025 12:00:00 GMT
+expires: Mon, 12 May 2025 12:00:00 GMT
 cache-control: public, max-age=604800
 server: ECS (dcb/7F84)
 content-length: 1256
 ```
 
-### **-X, --request \<command>**
+### **-L, --location**
 
-Specify the HTTP request method to use (GET, POST, PUT, DELETE, etc.)
+Follow redirects if the server reports that the requested page has moved.
+
+```console
+$ curl -L http://github.com
+```
+
+### **-X, --request \<command\>**
+
+Specify request method to use (GET, POST, PUT, DELETE, etc.).
 
 ```console
 $ curl -X POST https://api.example.com/data
 ```
 
-### **-H, --header \<header>**
+### **-H, --header \<header\>**
 
-Add a custom header to the request
+Pass custom header(s) to server.
 
 ```console
-$ curl -H "Content-Type: application/json" https://api.example.com
+$ curl -H "Content-Type: application/json" -H "Authorization: Bearer token123" https://api.example.com
 ```
 
-### **-d, --data \<data>**
+### **-d, --data \<data\>**
 
-Send data in the request body (typically used with POST)
+Send specified data in a POST request.
 
 ```console
 $ curl -X POST -d "name=John&age=30" https://api.example.com/users
 ```
 
-### **-A, --user-agent \<agent string>**
+### **--data-binary \<data\>**
 
-Specify the User-Agent string to send to the server
+Send data exactly as specified with no extra processing.
 
 ```console
-$ curl -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" https://example.com
+$ curl --data-binary @filename.json https://api.example.com/upload
+```
+
+### **-F, --form \<name=content\>**
+
+For multipart/form-data uploading (e.g., file uploads).
+
+```console
+$ curl -F "profile=@photo.jpg" https://api.example.com/upload
+```
+
+### **-u, --user \<user:password\>**
+
+Specify user and password for server authentication.
+
+```console
+$ curl -u username:password https://api.example.com/secure
+```
+
+### **-k, --insecure**
+
+Allow insecure server connections when using SSL.
+
+```console
+$ curl -k https://self-signed-certificate.com
 ```
 
 ## Usage Examples
 
-### Downloading a file and saving it with a specific name
+### Downloading a file
 
 ```console
-$ curl -o linux-distro.iso https://example.com/downloads/linux.iso
+$ curl -o output.html https://example.com
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100 1500M  100 1500M    0     0  10.2M/s      0  0:02:27  0:02:27 --:--:-- 10.5M
+100  1256  100  1256    0     0  12560      0 --:--:-- --:--:-- --:--:-- 12560
 ```
 
 ### Making a POST request with JSON data
@@ -115,28 +135,28 @@ $ curl -X POST -H "Content-Type: application/json" -d '{"name":"John","age":30}'
 {"id": 123, "status": "created"}
 ```
 
-### Downloading multiple files with authentication
-
-```console
-$ curl -u username:password -O https://example.com/file1.txt -O https://example.com/file2.txt
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100  1256  100  1256    0     0  12560      0 --:--:-- --:--:-- --:--:-- 12560
-100  2048  100  2048    0     0  20480      0 --:--:-- --:--:-- --:--:-- 20480
-```
-
 ### Uploading a file
 
 ```console
-$ curl -F "file=@localfile.jpg" https://example.com/upload
-{"status": "success", "url": "https://example.com/uploads/image123.jpg"}
+$ curl -F "file=@document.pdf" https://api.example.com/upload
+{"status": "success", "fileId": "abc123"}
+```
+
+### Following redirects and saving output
+
+```console
+$ curl -L -o result.html https://website-with-redirect.com
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   256  100   256    0     0   1024      0 --:--:-- --:--:-- --:--:--  1024
+100  5120  100  5120    0     0  10240      0 --:--:-- --:--:-- --:--:-- 10240
 ```
 
 ## Tips
 
 ### Use Verbose Mode for Debugging
 
-When troubleshooting, use `-v` (verbose) or `-vv` (very verbose) to see detailed information about the request and response:
+When troubleshooting, use `-v` (verbose) or `-vv` (more verbose) to see the complete request and response details:
 
 ```console
 $ curl -v https://example.com
@@ -144,24 +164,24 @@ $ curl -v https://example.com
 
 ### Save Cookies and Use Them Later
 
-To handle sessions that require cookies:
+For sessions that require cookies:
 
 ```console
 $ curl -c cookies.txt https://example.com/login -d "user=name&password=secret"
 $ curl -b cookies.txt https://example.com/protected-area
 ```
 
-### Limit Download Speed
+### Limit Transfer Rate
 
-To avoid consuming all available bandwidth:
+To avoid consuming all bandwidth:
 
 ```console
-$ curl --limit-rate 1M -O https://example.com/large-file.zip
+$ curl --limit-rate 100K -O https://example.com/large-file.zip
 ```
 
 ### Resume Interrupted Downloads
 
-If a download gets interrupted, you can resume it:
+If a download gets interrupted, resume it with `-C -`:
 
 ```console
 $ curl -C - -O https://example.com/large-file.zip
@@ -169,40 +189,48 @@ $ curl -C - -O https://example.com/large-file.zip
 
 ### Test API Endpoints Quickly
 
-For quick API testing, combine with tools like `jq` to format JSON responses:
+For quick API testing without writing scripts:
 
 ```console
-$ curl -s https://api.example.com/users | jq
+$ curl -s https://api.example.com/data | jq
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. How do I download a file with curl?
-A. Use `curl -O URL` to download and save with the original filename, or `curl -o filename URL` to specify a different filename.
-
-#### Q2. How can I make a POST request with curl?
-A. Use `curl -X POST -d "key=value" URL` for form data or `curl -X POST -H "Content-Type: application/json" -d '{"key":"value"}' URL` for JSON data.
-
-#### Q3. How do I follow redirects with curl?
-A. Use the `-L` or `--location` option to follow HTTP redirects.
-
-#### Q4. How can I see the HTTP headers in the response?
-A. Use `curl -I URL` to see only headers, or `curl -v URL` to see both headers and body.
-
-#### Q5. How do I authenticate with curl?
-A. For basic authentication, use `curl -u username:password URL`. For OAuth or token-based auth, use `curl -H "Authorization: Bearer YOUR_TOKEN" URL`.
-
-## macOS Considerations
-
-On macOS, the default `curl` is typically older than on Linux distributions. Some newer features might not be available. Additionally, macOS's `curl` is built with Secure Transport (Apple's SSL/TLS implementation) rather than OpenSSL, which can occasionally cause subtle differences in behavior, especially with SSL certificates.
-
-If you need the latest version with all features, consider installing `curl` via Homebrew:
-
+#### Q1. How do I download multiple files with curl?
+A. Use multiple `-O` options or a bash loop:
 ```console
-$ brew install curl
+$ curl -O https://example.com/file1.txt -O https://example.com/file2.txt
+```
+Or:
+```console
+$ for url in https://example.com/file{1..5}.txt; do curl -O "$url"; done
 ```
 
-After installation, you may need to use `/usr/local/opt/curl/bin/curl` or add it to your PATH to use the Homebrew version instead of the system version.
+#### Q2. How can I see the HTTP response code only?
+A. Use the `-s` and `-o /dev/null` options with `-w` to format the output:
+```console
+$ curl -s -o /dev/null -w "%{http_code}" https://example.com
+200
+```
+
+#### Q3. How do I send a request with a specific timeout?
+A. Use the `--connect-timeout` and `--max-time` options:
+```console
+$ curl --connect-timeout 5 --max-time 10 https://example.com
+```
+
+#### Q4. How can I make curl ignore SSL certificate errors?
+A. Use the `-k` or `--insecure` option, but be aware of security implications:
+```console
+$ curl -k https://self-signed-certificate.com
+```
+
+#### Q5. How do I use curl with a proxy?
+A. Use the `-x` or `--proxy` option:
+```console
+$ curl -x http://proxy-server:8080 https://example.com
+```
 
 ## References
 
@@ -210,4 +238,4 @@ https://curl.se/docs/manpage.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

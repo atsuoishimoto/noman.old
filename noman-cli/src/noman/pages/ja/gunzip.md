@@ -1,16 +1,16 @@
-# gunzip コマンド
+# gunzipコマンド
 
 gzipで圧縮されたファイルを展開します。
 
 ## 概要
 
-`gunzip`は、`gzip`プログラムで以前に圧縮されたファイルを展開するユーティリティです。デフォルトでは、元のファイルを復元し、圧縮されたバージョンを削除します。`.gz`、`.z`、`.taz`、`.tgz`、`.tz`などの拡張子を持つファイルに対応しています。
+`gunzip`はgzip圧縮で圧縮されたファイルを展開するユーティリティです。`.gz`拡張子を削除して元のファイルを復元します。デフォルトでは、`-k`オプションを使用しない限り、gunzipは元の圧縮ファイルを保持しません。
 
 ## オプション
 
 ### **-c, --stdout, --to-stdout**
 
-出力を標準出力に書き込み、元のファイルを変更せずに保持します。
+出力を標準出力に書き込み、元のファイルを変更しません。
 
 ```console
 $ gunzip -c archive.gz > extracted_file
@@ -18,7 +18,7 @@ $ gunzip -c archive.gz > extracted_file
 
 ### **-f, --force**
 
-ファイルに複数のリンクがある場合や、対応するファイルがすでに存在する場合でも強制的に展開します。
+ファイルに複数のリンクがある場合や、対応するファイルがすでに存在する場合でも、強制的に展開します。
 
 ```console
 $ gunzip -f already_exists.gz
@@ -26,12 +26,12 @@ $ gunzip -f already_exists.gz
 
 ### **-k, --keep**
 
-展開中に入力ファイルを保持（削除しない）します。
+展開中に入力ファイルを保持します（削除しません）。
 
 ```console
-$ gunzip -k archive.gz
+$ gunzip -k data.gz
 $ ls
-archive  archive.gz
+data  data.gz
 ```
 
 ### **-l, --list**
@@ -41,7 +41,7 @@ archive  archive.gz
 ```console
 $ gunzip -l archive.gz
          compressed        uncompressed  ratio uncompressed_name
-                547                 1213  54.9% archive
+                 220                 356  38.2% archive
 ```
 
 ### **-q, --quiet**
@@ -49,7 +49,7 @@ $ gunzip -l archive.gz
 すべての警告を抑制します。
 
 ```console
-$ gunzip -q archive.gz
+$ gunzip -q noisy.gz
 ```
 
 ### **-r, --recursive**
@@ -57,7 +57,7 @@ $ gunzip -q archive.gz
 ディレクトリ内のファイルを再帰的に展開します。
 
 ```console
-$ gunzip -r directory_with_gz_files/
+$ gunzip -r ./compressed_directory/
 ```
 
 ### **-t, --test**
@@ -73,8 +73,8 @@ $ gunzip -t archive.gz
 展開された各ファイルの名前と圧縮率を表示します。
 
 ```console
-$ gunzip -v archive.gz
-archive.gz:	 54.9% -- replaced with archive
+$ gunzip -v data.gz
+data.gz:	 65.3% -- replaced with data
 ```
 
 ## 使用例
@@ -95,70 +95,57 @@ $ ls
 file1 file2 file3
 ```
 
-### 元のファイルを保持しながら展開
+### 標準出力への展開
 
 ```console
-$ gunzip -k important_backup.gz
-$ ls
-important_backup important_backup.gz
+$ gunzip -c config.gz | grep "setting"
+default_setting=true
+advanced_setting=false
 ```
 
-### アーカイブの整合性テスト
+### 展開せずに圧縮ファイルをテスト
 
 ```console
-$ gunzip -tv archive.gz
-archive.gz: OK
+$ gunzip -tv *.gz
+archive1.gz: OK
+archive2.gz: OK
+data.gz: OK
 ```
 
 ## ヒント:
 
 ### tarファイルとの使用
 
-`.tar.gz`や`.tgz`ファイルの場合、`gunzip`の後に`tar`を使用できます：
-
-```console
-$ gunzip archive.tar.gz
-$ tar xf archive.tar
-```
-
-あるいは、より効率的に`tar`の`z`オプションを直接使用します：
-
-```console
-$ tar xzf archive.tar.gz
-```
-
-### 他のコマンドに直接パイプする
-
-`-c`を使用して、中間ファイルを作成せずに展開して別のコマンドにパイプできます：
-
-```console
-$ gunzip -c logs.gz | grep "error"
-```
+多くのtarアーカイブはgzipで圧縮されています（.tar.gzまたは.tgz拡張子）。最初にgunzipを使用する代わりに、`tar -xzf`を使用して一度に展開できます。
 
 ### 複数の圧縮形式の処理
 
-圧縮形式が不明な場合は、複数の形式に対応する`zcat`の使用を検討してください：
+圧縮形式が不明な場合は、様々な圧縮形式で動作する`zcat`の使用を検討するか、zipファイル用のより汎用性の高い`unzip`を試してみてください。
 
-```console
-$ zcat file.gz > uncompressed_file
-```
+### タイムスタンプの保持
+
+gunzipはデフォルトで元のファイルのタイムスタンプを保持します。これによりファイル履歴情報を維持できます。
+
+### パイプの使用
+
+大きなファイルを扱う場合は、`-c`オプションを使用して中間ファイルを作成せずに出力を別のコマンドに直接パイプすることができます。
 
 ## よくある質問
 
-#### Q1. `gunzip`と`gzip -d`の違いは何ですか？
-A. 機能的には同等です。`gunzip`は基本的に`gzip -d`へのシンボリックリンクです。
+#### Q1. gunzipとgzip -dの違いは何ですか？
+A. 機能的に同等です。`gunzip file.gz`は`gzip -d file.gz`と同じです。
 
-#### Q2. 元の圧縮ファイルを削除せずにファイルを展開するにはどうすればよいですか？
+#### Q2. 元のファイルを削除せずにファイルを展開するにはどうすればよいですか？
 A. `-k`または`--keep`オプションを使用します：`gunzip -k file.gz`
 
-#### Q3. `gunzip`は複数の圧縮形式を処理できますか？
-A. いいえ、`gunzip`は特にgzip圧縮ファイル用です。他の形式には、`bunzip2`（bzip2用）や`unxz`（xz用）などのツールを使用してください。
+#### Q3. gunzipは.zipファイルを処理できますか？
+A. いいえ、gunzipはgzip圧縮ファイル（.gz）のみを処理します。.zipファイルの場合は、`unzip`コマンドを使用してください。
 
-#### Q4. 展開せずにgzipファイルの内容を確認するにはどうすればよいですか？
-A. `gunzip -l file.gz`を使用して、圧縮ファイルに関する情報を一覧表示します。
+#### Q4. 複数のファイルを一度に展開するにはどうすればよいですか？
+A. すべてのファイルをリストするだけです：`gunzip file1.gz file2.gz file3.gz`またはワイルドカードを使用します：`gunzip *.gz`
 
-#### Q5. ファイルを別の名前に展開するにはどうすればよいですか？
-A. `-c`オプションを使用して出力をリダイレクトします：`gunzip -c file.gz > newname`
+#### Q5. 展開せずに.gzファイルの内容を確認するにはどうすればよいですか？
+A. `gunzip -l file.gz`を使用して内容を一覧表示するか、`zcat file.gz | less`を使用して内容を表示します。
 
 ## 参考文献
 
@@ -166,4 +153,4 @@ https://www.gnu.org/software/gzip/manual/gzip.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

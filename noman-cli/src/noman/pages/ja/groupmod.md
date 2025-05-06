@@ -4,37 +4,37 @@
 
 ## 概要
 
-`groupmod` コマンドは、Linux や Unix システム上の既存のグループの属性を変更するために使用されます。グループ名（GID）や数値グループ ID を変更することができます。このコマンドは、通常、システム管理者がユーザーとグループアカウントを管理する際に使用されます。
+`groupmod` コマンドは、Unix/Linuxシステム上の既存のグループの属性を変更するために使用されます。グループ名（GID）や数値ID（GID）を変更でき、管理者がグループアカウントを効率的に管理できるようにします。
 
 ## オプション
 
 ### **-g, --gid GID**
 
-グループ ID を指定された値に変更します。
+グループIDを指定した値に変更します。
 
 ```console
-$ sudo groupmod -g 1005 developers
+$ sudo groupmod -g 1001 developers
 ```
 
-### **-n, --new-name 新グループ名**
+### **-n, --new-name NEW_GROUP**
 
-グループの名前を新しい名前に変更します。
+グループの名前をGROUPからNEW_GROUPに変更します。
 
 ```console
-$ sudo groupmod -n programmers developers
+$ sudo groupmod -n engineering developers
 ```
 
 ### **-o, --non-unique**
 
-重複するGIDの使用を許可します（通常、GIDは一意である必要があります）。
+一意でないGIDの使用を許可します（通常、GIDは一意である必要があります）。
 
 ```console
-$ sudo groupmod -g 1005 -o testers
+$ sudo groupmod -g 1001 -o marketing
 ```
 
-### **-p, --password パスワード**
+### **-p, --password PASSWORD**
 
-グループのパスワードを暗号化されたパスワードに変更します。
+グループのパスワードを暗号化されたPASSWORDに変更します。
 
 ```console
 $ sudo groupmod -p encrypted_password developers
@@ -42,10 +42,10 @@ $ sudo groupmod -p encrypted_password developers
 
 ### **-R, --root CHROOT_DIR**
 
-CHROOT_DIR ディレクトリ内で変更を適用し、CHROOT_DIR ディレクトリから設定ファイルを使用します。
+CHROOT_DIRディレクトリ内で変更を適用し、CHROOT_DIRディレクトリから設定ファイルを使用します。
 
 ```console
-$ sudo groupmod -R /mnt/system -n programmers developers
+$ sudo groupmod -R /mnt/system -n engineering developers
 ```
 
 ## 使用例
@@ -53,63 +53,65 @@ $ sudo groupmod -R /mnt/system -n programmers developers
 ### グループ名の変更
 
 ```console
-$ sudo groupmod -n engineering developers
+$ sudo groupmod -n developers programmers
 ```
 
-これにより、グループ名が「developers」から「engineering」に変更されますが、同じ GID が維持されます。
-
-### グループの GID の変更
+### グループのGIDの変更
 
 ```console
-$ sudo groupmod -g 2000 engineering
+$ sudo groupmod -g 2000 developers
 ```
 
-これにより、「engineering」グループの GID が 2000 に変更されます。
-
-### 名前と GID の両方を変更
+### 名前とGIDの両方を変更
 
 ```console
-$ sudo groupmod -n tech-team -g 2500 engineering
+$ sudo groupmod -g 2000 -n engineering developers
 ```
-
-これにより、グループ名が「engineering」から「tech-team」に変更され、GID が 2500 に変更されます。
 
 ## ヒント:
 
-### 変更前にグループ情報を確認する
+### グループの変更を確認する
 
-変更を行う前に、`getent group グループ名`を使用して現在のグループ情報を確認し、正しい情報を持っていることを確認しましょう。
+グループを変更した後、`getent group`コマンドを使用して変更を確認します：
 
-### GID 変更後にファイル所有権を更新する
+```console
+$ getent group engineering
+```
 
-グループの GID を変更した後、`find /path -group 古いgid -exec chgrp 新しいgid {} \;`を使用してファイル所有権を更新し、ファイルへの適切なアクセスを維持する必要があるかもしれません。
+### ファイルの所有権を考慮する
 
-### 変更前にバックアップを取る
+グループのGIDを変更する場合、古いGIDが所有するファイルは自動的に更新されません。`find`と`chgrp`を使用してファイルの所有権を更新します：
 
-重要なシステムでは、`groupmod`で変更を行う前に、`/etc/group`と`/etc/gshadow`ファイルをバックアップすることを検討してください。
+```console
+$ find /path/to/directory -group old_gid -exec chgrp new_gid {} \;
+```
 
-### 注意して使用する
+### 実行中のプロセスを確認する
 
-グループ ID の変更は、システム全体のファイルのアクセス権と権限に影響を与える可能性があります。可能であれば、メンテナンス時間中に変更を行いましょう。
+実行中のプロセスが使用しているグループを変更する前に、そのグループを使用しているプロセスがあるかどうかを確認します：
+
+```console
+$ ps -eo group | grep groupname
+```
 
 ## よくある質問
 
-#### Q1. GID を変更すると、そのグループが所有するファイルはどうなりますか？
-A. ファイルは新しい GID ではなく、古い GID 番号を参照し続けます。`chgrp`コマンドを使用して手動でファイルの所有権を更新する必要があります。
-
-#### Q2. グループ名と GID を同時に変更できますか？
+#### Q1. グループの名前とGIDを同時に変更できますか？
 A. はい、`-n`と`-g`オプションを1つのコマンドで一緒に使用できます。
 
-#### Q3. グループがユーザーによって使用されているかどうかを確認するにはどうすればよいですか？
-A. `grep グループ名 /etc/group /etc/passwd`を使用して、グループが任意のユーザーの主要または二次グループとしてリストされているかどうかを確認できます。
+#### Q2. GIDを変更した場合、そのグループが所有するファイルはどうなりますか？
+A. ファイルは引き続き古いGID番号を参照します。`chgrp`などのコマンドを使用して、ファイルの所有権を手動で更新する必要があります。
 
-#### Q4. 既に存在する名前にグループの名前を変更しようとするとどうなりますか？
-A. コマンドは失敗し、グループがすでに存在することを示すエラーメッセージが表示されます。
+#### Q3. グループのGIDを別のグループと同じにすることはできますか？
+A. はい、`-o`（非一意）オプションを使用する場合のみ可能です。ただし、混乱を招く可能性があるため、一般的には推奨されません。
 
-## 参考資料
+#### Q4. グループ名を変更すると、そのグループのメンバーであるユーザーに影響しますか？
+A. いいえ、グループ名の変更はそのメンバーシップには影響しません。古いグループ名のメンバーだったユーザーは、自動的に新しいグループ名のメンバーになります。
 
-https://www.man7.org/linux/man-pages/man8/groupmod.8.html
+## 参考文献
+
+https://man7.org/linux/man-pages/man8/groupmod.8.html
 
 ## 改訂履歴
 
-- 2025/05/04 初回改訂
+- 2025/05/05 初版

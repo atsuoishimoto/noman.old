@@ -1,29 +1,29 @@
 # git コマンド
 
-分散型バージョン管理システムで、ソフトウェア開発中のソースコードの変更を追跡します。
+ソフトウェア開発中のソースコードの変更を追跡するための分散型バージョン管理システムです。
 
 ## 概要
 
-Gitは分散型バージョン管理システムで、複数の開発者が同時にプロジェクトで作業することを可能にします。ファイルの変更を追跡し、修正履歴を維持し、異なるソースからの変更をマージすることでコラボレーションを促進します。Gitは主にローカルリポジトリを通じて操作し、リモートリポジトリと同期する機能を持っています。
+Gitは分散型バージョン管理システムで、複数の開発者が同時にプロジェクトに取り組むことを可能にします。ファイルの変更を追跡し、修正の履歴を維持し、異なるソースからの変更をマージできるようにすることでコラボレーションを促進します。Gitは主にローカルリポジトリを通じて動作し、リモートリポジトリと同期する機能を持っています。
 
 ## オプション
 
-### **-v, --version**
+### **--version**
 
-インストールされているGitのバージョンを表示します
+インストールされているGitのバージョンを表示します。
 
 ```console
 $ git --version
 git version 2.39.2
 ```
 
-### **-h, --help**
+### **--help**
 
-GitまたはGitの特定のコマンドのヘルプ情報を表示します
+GitまたはGitの特定のコマンドに関するヘルプ情報を表示します。
 
 ```console
 $ git --help
-usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]
+usage: git [--version] [--help] [-C <path>] [-c <name>=<value>]
            [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
            [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]
            [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
@@ -31,51 +31,49 @@ usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]
            <command> [<args>]
 ```
 
-### **-C, --work-tree=<path>**
+### **-C \<path\>**
 
-指定されたパスでgitが起動されたかのようにコマンドを実行します
+指定されたパスで起動されたかのようにGitを実行します。
 
 ```console
-$ git -C /path/to/repository status
+$ git -C /path/to/repo status
 On branch main
 Your branch is up to date with 'origin/main'.
-
-nothing to commit, working tree clean
 ```
 
-### **-c, --config-env=<name>=<value>**
+### **-c \<name\>=\<value\>**
 
-単一のコマンドに対して設定変数を設定します
+コマンドの実行中のみ有効な設定変数を設定します。
 
 ```console
-$ git -c user.name="Temporary User" commit -m "One-time commit with different user"
-[main 1a2b3c4] One-time commit with different user
- 1 file changed, 5 insertions(+)
+$ git -c user.name="Temporary User" commit -m "Temporary commit"
+[main 1a2b3c4] Temporary commit
+ 1 file changed, 2 insertions(+)
 ```
 
 ## 使用例
 
-### 新しいリポジトリの初期化
+### リポジトリの初期化
 
 ```console
 $ git init
 Initialized empty Git repository in /path/to/project/.git/
 ```
 
-### 既存のリポジトリのクローン
+### リポジトリのクローン
 
 ```console
 $ git clone https://github.com/username/repository.git
 Cloning into 'repository'...
-remote: Enumerating objects: 1463, done.
-remote: Counting objects: 100% (1463/1463), done.
-remote: Compressing objects: 100% (750/750), done.
-remote: Total 1463 (delta 713), reused 1463 (delta 713), pack-reused 0
-Receiving objects: 100% (1463/1463), 2.56 MiB | 5.12 MiB/s, done.
-Resolving deltas: 100% (713/713), done.
+remote: Enumerating objects: 125, done.
+remote: Counting objects: 100% (125/125), done.
+remote: Compressing objects: 100% (80/80), done.
+remote: Total 125 (delta 40), reused 120 (delta 35), pack-reused 0
+Receiving objects: 100% (125/125), 2.01 MiB | 3.50 MiB/s, done.
+Resolving deltas: 100% (40/40), done.
 ```
 
-### 基本的なワークフロー例
+### 基本的なワークフロー
 
 ```console
 $ git add file.txt
@@ -89,13 +87,12 @@ Counting objects: 100% (4/4), done.
 Delta compression using up to 8 threads
 Compressing objects: 100% (2/2), done.
 Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
-Total 3 (delta 1), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
 To https://github.com/username/repository.git
-   a1b2c3d..1a2b3c4  main -> main
+   7f8d922..1a2b3c4  main -> main
 ```
 
-### リポジトリのステータス確認
+### ステータスと履歴の確認
 
 ```console
 $ git status
@@ -107,59 +104,82 @@ Changes not staged for commit:
   (use "git restore <file>..." to discard changes in working directory)
         modified:   README.md
 
-no changes added to commit (use "git add" and/or "git commit -a")
+$ git log
+commit 1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0 (HEAD -> main, origin/main)
+Author: User Name <user@example.com>
+Date:   Mon May 5 10:00:00 2025 -0700
+
+    Add new file
 ```
 
-## ヒント:
+## ヒント
 
-### 個人情報の設定
+### よく使うコマンドにエイリアスを設定する
 
-コミットする前に名前とメールアドレスを設定しましょう：
-
-```console
-$ git config --global user.name "Your Name"
-$ git config --global user.email "your.email@example.com"
-```
-
-### よく使うコマンドのエイリアス作成
-
-頻繁に使用するコマンドのショートカットを作成して時間を節約できます：
+頻繁に使用するコマンドにエイリアスを設定して時間を節約しましょう：
 
 ```console
 $ git config --global alias.co checkout
 $ git config --global alias.br branch
+$ git config --global alias.ci commit
 $ git config --global alias.st status
 ```
 
-### .gitignoreファイルの使用
+### 変更を一時的に退避する
 
-リポジトリに`.gitignore`ファイルを作成して、ビルド成果物、一時ファイル、機密情報など、Gitが無視すべきファイルを指定しましょう。
+ブランチを切り替える必要があるがまだコミットする準備ができていない場合：
 
-### アトミックなコミット
+```console
+$ git stash
+Saved working directory and index state WIP on main: 1a2b3c4 Latest commit
+$ git stash pop
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   file.txt
+```
 
-複数の無関係な変更を混ぜた大きなコミットではなく、単一の論理的な変更に対応する小さな焦点を絞ったコミットを行いましょう。
+### 履歴をクリーンにするためのインタラクティブリベースを使用する
+
+プッシュする前にコミットを結合、編集、または並べ替えます：
+
+```console
+$ git rebase -i HEAD~3
+```
+
+### .gitignoreファイルを作成する
+
+不要なファイルが追跡されるのを防ぎます：
+
+```console
+$ echo "node_modules/" > .gitignore
+$ echo "*.log" >> .gitignore
+$ git add .gitignore
+$ git commit -m "Add gitignore file"
+```
 
 ## よくある質問
 
 #### Q1. 最後のコミットを取り消すにはどうすればよいですか？
-A. 変更を保持したままコミットを取り消すには`git reset HEAD~1`を、変更を完全に破棄するには`git reset --hard HEAD~1`を使用します。
+A. 変更を保持したまま最後のコミットを取り消すには `git reset HEAD~1` を使用し、変更を完全に破棄するには `git reset --hard HEAD~1` を使用します。
 
 #### Q2. 新しいブランチを作成するにはどうすればよいですか？
-A. `git branch ブランチ名`でブランチを作成し、`git checkout ブランチ名`で切り替えます。または、`git checkout -b ブランチ名`で作成と切り替えを一度に行うこともできます。
+A. `git branch ブランチ名` でブランチを作成し、`git checkout ブランチ名` で切り替えるか、`git checkout -b ブランチ名` で両方を一度に行います。
 
-#### Q3. あるブランチから別のブランチに変更をマージするにはどうすればよいですか？
-A. まず`git checkout ターゲットブランチ`でターゲットブランチに切り替え、次に`git merge ソースブランチ`でマージします。
+#### Q3. ブランチをマージするにはどうすればよいですか？
+A. まず `git checkout main` でターゲットブランチをチェックアウトし、次に `git merge 機能ブランチ` で機能ブランチからの変更をマージします。
 
 #### Q4. マージの競合を解決するにはどうすればよいですか？
-A. 競合が発生した場合、競合したファイルを編集して差異を解決し、`git add`で解決済みとマークし、最後に`git commit`でマージを完了します。
+A. 競合が発生した場合、競合したファイルを編集して差異を解決し、`git add` で解決したファイルを追加し、`git commit` でマージを完了します。
 
 #### Q5. ローカルリポジトリをリモートの変更で更新するにはどうすればよいですか？
-A. `git pull`を使用して変更を取得してマージするか、より制御したい場合は`git fetch`の後に`git merge`を使用します。
+A. リモートの変更をフェッチしてマージするには `git pull` を使用するか、より制御したい場合は `git fetch` の後に `git merge` を使用します。
 
-## 参考資料
+## 参考文献
 
-https://git-scm.com/docs/git
+https://git-scm.com/docs
 
 ## 改訂履歴
 
-2025/05/04 初回改訂
+- 2025/05/05 初版

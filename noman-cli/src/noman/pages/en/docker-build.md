@@ -20,16 +20,16 @@ $ docker build -t myapp:1.0 .
  => [internal] load .dockerignore                                          0.0s
  => => transferring context: 2B                                            0.0s
  => [internal] load metadata for docker.io/library/node:14                 1.2s
- => [1/5] FROM docker.io/library/node:14@sha256:123abc...                  0.0s
- => [internal] load build context                                          0.1s
- => => transferring context: 32.5kB                                        0.0s
- => [2/5] WORKDIR /app                                                     0.3s
+ => [1/5] FROM docker.io/library/node:14@sha256:fcb6...                    0.0s
+ => [internal] load build context                                          0.0s
+ => => transferring context: 32B                                           0.0s
+ => CACHED [2/5] WORKDIR /app                                              0.0s
  => [3/5] COPY package*.json ./                                            0.1s
- => [4/5] RUN npm install                                                  7.5s
+ => [4/5] RUN npm install                                                  8.5s
  => [5/5] COPY . .                                                         0.1s
- => exporting to image                                                     1.1s
- => => exporting layers                                                    1.1s
- => => writing image sha256:def456...                                      0.0s
+ => exporting to image                                                     0.5s
+ => => exporting layers                                                    0.4s
+ => => writing image sha256:a72d...                                        0.0s
  => => naming to docker.io/library/myapp:1.0                               0.0s
 ```
 
@@ -56,13 +56,27 @@ $ docker build --no-cache -t myapp .
 ...
 ```
 
+### **--pull**
+
+Always attempt to pull a newer version of the image.
+
+```console
+$ docker build --pull -t myapp .
+[+] Building 15.2s (10/10) FINISHED
+ => [internal] load build definition from Dockerfile                       0.1s
+ => [internal] load .dockerignore                                          0.0s
+ => [internal] load metadata for docker.io/library/node:14                 1.5s
+ => [1/5] FROM docker.io/library/node:14@sha256:fcb6... DONE              10.2s
+...
+```
+
 ### **--build-arg**
 
-Set build-time variables defined in the Dockerfile using ARG instructions.
+Set build-time variables defined in the Dockerfile with ARG instructions.
 
 ```console
 $ docker build --build-arg NODE_ENV=production -t myapp .
-[+] Building 11.2s (10/10) FINISHED
+[+] Building 11.8s (10/10) FINISHED
  => [internal] load build definition from Dockerfile                       0.1s
 ...
 ```
@@ -77,7 +91,11 @@ $ docker build --target development -t myapp:dev .
  => [internal] load build definition from Dockerfile                       0.1s
  => [internal] load .dockerignore                                          0.0s
  => [internal] load metadata for docker.io/library/node:14                 1.2s
- => [development 1/4] FROM docker.io/library/node:14@sha256:123abc...      0.0s
+ => [1/5] FROM docker.io/library/node:14@sha256:fcb6...                    0.0s
+ => [2/5] WORKDIR /app                                                     0.1s
+ => [3/5] COPY package*.json ./                                            0.1s
+ => [4/5] RUN npm install                                                  6.5s
+ => exporting to image                                                     0.3s
 ...
 ```
 
@@ -94,24 +112,27 @@ $ docker build -t myapp:latest .
 ### Building with multiple tags
 
 ```console
-$ docker build -t myapp:latest -t myapp:1.0 -t registry.example.com/myapp:latest .
-[+] Building 14.8s (10/10) FINISHED
+$ docker build -t myapp:latest -t myapp:1.0 -t registry.example.com/myapp:1.0 .
+[+] Building 14.7s (10/10) FINISHED
+...
+=> => naming to docker.io/library/myapp:latest                             0.0s
+=> => naming to docker.io/library/myapp:1.0                                0.0s
+=> => naming to registry.example.com/myapp:1.0                             0.0s
+```
+
+### Building from a specific Dockerfile and context
+
+```console
+$ docker build -f ./docker/Dockerfile.prod -t myapp:prod ./app
+[+] Building 18.3s (10/10) FINISHED
 ...
 ```
 
-### Building from a specific context
+### Building with build arguments
 
 ```console
-$ docker build -t myapp https://github.com/user/repo.git#main
-[+] Building 22.5s (10/10) FINISHED
-...
-```
-
-### Building with a specific Dockerfile and target stage
-
-```console
-$ docker build -f Dockerfile.multistage --target production -t myapp:prod .
-[+] Building 18.7s (12/12) FINISHED
+$ docker build --build-arg VERSION=1.0.0 --build-arg ENV=staging -t myapp:staging .
+[+] Building 16.5s (10/10) FINISHED
 ...
 ```
 
@@ -123,32 +144,42 @@ Create a `.dockerignore` file to exclude files and directories from the build co
 
 ### Leverage Build Cache
 
-Docker caches intermediate layers. Order your Dockerfile commands from least to most frequently changing to maximize cache usage. For example, install dependencies before copying application code.
+Docker caches intermediate layers. Order your Dockerfile instructions to maximize cache usage - put instructions that change frequently (like copying source code) after instructions that change less frequently (like installing dependencies).
 
-### Use Multi-stage Builds
+### Multi-stage Builds
 
-Multi-stage builds allow you to use multiple FROM statements in your Dockerfile. This is useful for creating smaller production images by copying only necessary artifacts from a build stage.
+Use multi-stage builds to create smaller production images. The first stage can include build tools and dependencies, while the final stage contains only what's needed to run the application.
+
+```dockerfile
+FROM node:14 AS build
+WORKDIR /app
+COPY . .
+RUN npm ci && npm run build
+
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+```
 
 ### Minimize Layer Count
 
-Combine related commands with `&&` in a single RUN instruction to reduce the number of layers, which helps create smaller images.
+Combine related commands in a single RUN instruction using `&&` to reduce the number of layers in your image.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `docker build` and `docker image build`?
-A. They are the same command. `docker image build` is the more explicit form that was introduced with Docker's command restructuring, but `docker build` is still supported and more commonly used.
+A. They are the same command. `docker image build` is the more explicit form, but `docker build` is more commonly used.
 
-#### Q2. How do I build an image without using cache?
-A. Use the `--no-cache` option: `docker build --no-cache -t myapp .`
+#### Q2. How do I build an image from a remote Git repository?
+A. Use `docker build` with a Git URL: `docker build https://github.com/username/repo.git#branch:folder`
 
-#### Q3. How can I pass environment variables to the build process?
-A. Use the `--build-arg` option: `docker build --build-arg VAR_NAME=value -t myapp .`
+#### Q3. How can I reduce the size of my Docker images?
+A. Use multi-stage builds, smaller base images (like Alpine), clean up in the same layer where you install packages, and use `.dockerignore` to exclude unnecessary files.
 
 #### Q4. How do I specify which stage to build in a multi-stage Dockerfile?
-A. Use the `--target` option: `docker build --target stage_name -t myapp .`
+A. Use the `--target` flag: `docker build --target stage-name -t myimage .`
 
-#### Q5. Can I build from a Git repository?
-A. Yes, you can specify a Git repository URL as the build context: `docker build -t myapp https://github.com/user/repo.git`
+#### Q5. Can I build ARM images on an x86 machine?
+A. Yes, use the `--platform` flag: `docker build --platform linux/arm64 -t myimage .` (requires Docker BuildKit)
 
 ## References
 
@@ -156,4 +187,4 @@ https://docs.docker.com/engine/reference/commandline/build/
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

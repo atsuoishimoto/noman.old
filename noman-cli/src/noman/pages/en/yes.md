@@ -1,27 +1,12 @@
 # yes command
 
-Repeatedly outputs a string until interrupted.
+Output a string repeatedly until killed.
 
 ## Overview
 
-The `yes` command continuously outputs a string (by default "y") followed by a newline until it is terminated. It's primarily used to automatically respond to command prompts that require confirmation, allowing scripts to run without manual intervention.
+The `yes` command continuously outputs a string (by default "y") until it is terminated. It's commonly used to automatically respond to prompts in scripts or commands that require confirmation.
 
 ## Options
-
-### **-V, --version**
-
-Display version information and exit.
-
-```console
-$ yes --version
-yes (GNU coreutils) 9.0
-Copyright (C) 2021 Free Software Foundation, Inc.
-License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
-
-Written by David MacKenzie.
-```
 
 ### **--help**
 
@@ -37,9 +22,24 @@ Repeatedly output a line with all specified STRING(s), or 'y'.
       --version  output version information and exit
 ```
 
+### **--version**
+
+Output version information and exit.
+
+```console
+$ yes --version
+yes (GNU coreutils) 9.0
+Copyright (C) 2021 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by David MacKenzie.
+```
+
 ## Usage Examples
 
-### Default behavior (outputting "y")
+### Default Usage (Output "y" Repeatedly)
 
 ```console
 $ yes
@@ -47,76 +47,72 @@ y
 y
 y
 y
-[continues until interrupted with Ctrl+C]
+y
+^C
 ```
 
-### Outputting a custom string
+### Custom String Output
 
 ```console
 $ yes "I agree"
 I agree
 I agree
 I agree
-[continues until interrupted with Ctrl+C]
+I agree
+^C
 ```
 
-### Automatically answering prompts in scripts
+### Piping to Another Command
 
 ```console
 $ yes | rm -i *.txt
-rm: remove regular file 'file1.txt'? rm: remove regular file 'file2.txt'?
+rm: remove regular file 'file1.txt'? rm: remove regular file 'file2.txt'? 
 ```
 
-### Providing multiple inputs to a command
+## Tips:
+
+### Automatically Confirm Multiple Prompts
+
+When you need to confirm multiple operations without manual intervention, pipe `yes` to the command:
 
 ```console
-$ yes n y | rm -i file1.txt file2.txt
-rm: remove regular file 'file1.txt'? rm: remove regular file 'file2.txt'?
+$ yes | apt-get install package1 package2 package3
 ```
 
-## Tips
+### Limit Output with head
 
-### Stopping the Command
-
-Always remember that `yes` runs indefinitely until you stop it with Ctrl+C. Forgetting to terminate it can consume system resources unnecessarily.
-
-### Limiting Output
-
-If you need to limit the number of outputs, pipe `yes` to `head`:
+If you need a specific number of repetitions, use `head`:
 
 ```console
-$ yes | head -n 5
-y
-y
-y
-y
-y
+$ yes "Hello" | head -n 5
+Hello
+Hello
+Hello
+Hello
+Hello
 ```
 
-### Performance Testing
+### Generate Test Files
 
-The `yes` command can be used for simple performance testing or generating load on a system, as it produces output at maximum speed.
+Create test files of specific sizes by redirecting output:
 
-### Caution with Destructive Commands
-
-Be careful when using `yes` with destructive commands like `rm -rf`. Always test with a safe command first to ensure the behavior is as expected.
+```console
+$ yes "data" | head -c 1M > testfile.txt
+```
 
 ## Frequently Asked Questions
 
-#### Q1. What is the purpose of the `yes` command?
-A. The primary purpose is to automatically respond to interactive prompts in scripts, typically answering "y" to confirmation questions.
-
-#### Q2. How do I stop the `yes` command?
+#### Q1. How do I stop the `yes` command?
 A. Press Ctrl+C to terminate the command.
 
-#### Q3. Can I make `yes` output something other than "y"?
-A. Yes, simply provide your desired string as an argument: `yes "custom text"`.
+#### Q2. Can I output multiple strings with `yes`?
+A. Yes, you can provide multiple arguments: `yes word1 word2` will output "word1 word2" repeatedly.
 
-#### Q4. Is there a way to limit how many times `yes` outputs its string?
-A. The command itself doesn't have this option, but you can pipe it to `head` with the `-n` option: `yes | head -n 10`.
+#### Q3. What's the purpose of the `yes` command?
+A. It's primarily used to automatically answer "y" to confirmation prompts in scripts or commands.
 
-#### Q5. Does `yes` consume a lot of system resources?
-A. It can consume significant CPU resources as it generates output as fast as possible. Always terminate it when no longer needed.
+#### Q4. Does `yes` consume a lot of system resources?
+A. It can generate output very quickly and might consume CPU resources, so it's best used when piped to another command that controls the flow.
 
 ## References
 
@@ -124,4 +120,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/yes-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

@@ -1,65 +1,79 @@
 # sftp command
 
-Securely transfer files between hosts over an encrypted connection.
+Securely transfer files between hosts over an encrypted SSH connection.
 
 ## Overview
 
-SFTP (Secure File Transfer Protocol) is a network protocol for securely transferring files between computers. It runs over SSH, providing encryption and authentication. The `sftp` command provides an interactive file transfer program similar to FTP but with SSH encryption.
+SFTP (Secure File Transfer Protocol) is a network protocol that provides file access, file transfer, and file management over a secure connection. The `sftp` command is an interactive file transfer program similar to FTP, but it performs all operations over an encrypted SSH transport.
 
 ## Options
 
-### **-b** / **--batch** *batchfile*
+### **-b** *batchfile*
 
-Processes a batch file of sftp commands instead of running interactively.
+Process batch file of sftp commands.
 
 ```console
 $ sftp -b commands.txt user@remote.server
 Connecting to remote.server...
-Batch file commands.txt processed
+sftp> get file.txt
+Fetching /home/user/file.txt to file.txt
+sftp> exit
 ```
 
-### **-P** / **--port** *port*
+### **-F** *ssh_config*
+
+Specifies an alternative per-user configuration file for ssh.
+
+```console
+$ sftp -F ~/.ssh/custom_config user@remote.server
+Connecting to remote.server...
+```
+
+### **-i** *identity_file*
+
+Selects the file from which the identity (private key) for public key authentication is read.
+
+```console
+$ sftp -i ~/.ssh/private_key user@remote.server
+Connecting to remote.server...
+```
+
+### **-l** *limit*
+
+Limits the used bandwidth, specified in Kbit/s.
+
+```console
+$ sftp -l 100 user@remote.server
+Connecting to remote.server...
+```
+
+### **-P** *port*
 
 Specifies the port to connect to on the remote host.
 
 ```console
 $ sftp -P 2222 user@remote.server
-Connecting to remote.server port 2222...
-sftp>
-```
-
-### **-i** / **--identity** *identity_file*
-
-Selects the file from which the identity (private key) for public key authentication is read.
-
-```console
-$ sftp -i ~/.ssh/my_key user@remote.server
 Connecting to remote.server...
-sftp>
 ```
 
-### **-r** / **--recursive**
+### **-r**
 
-Recursively copy entire directories when uploading or downloading.
+Recursively copy entire directories.
 
 ```console
 $ sftp user@remote.server
 sftp> get -r remote_directory
-Fetching /remote_directory/ to remote_directory
-sftp>
 ```
 
-### **-v** / **--verbose**
+### **-v**
 
-Raises the logging level, providing verbose debugging output.
+Raises the logging level, causing sftp to print debugging messages about its progress.
 
 ```console
 $ sftp -v user@remote.server
-OpenSSH_8.9p1, LibreSSL 3.3.6
+OpenSSH_8.1p1, LibreSSL 2.7.3
 debug1: Reading configuration data /etc/ssh/ssh_config
-debug1: Connecting to remote.server port 22.
 ...
-sftp>
 ```
 
 ## Usage Examples
@@ -76,8 +90,8 @@ sftp>
 
 ```console
 $ sftp user@remote.server
-sftp> get remote_file.txt
-Fetching /home/user/remote_file.txt to remote_file.txt
+sftp> get remote_file.txt local_file.txt
+Fetching /home/user/remote_file.txt to local_file.txt
 sftp>
 ```
 
@@ -85,8 +99,8 @@ sftp>
 
 ```console
 $ sftp user@remote.server
-sftp> put local_file.txt
-Uploading local_file.txt to /home/user/local_file.txt
+sftp> put local_file.txt remote_file.txt
+Uploading local_file.txt to /home/user/remote_file.txt
 sftp>
 ```
 
@@ -97,54 +111,66 @@ $ sftp user@remote.server
 sftp> pwd
 Remote working directory: /home/user
 sftp> cd documents
+sftp> pwd
+Remote working directory: /home/user/documents
+sftp> lcd ~/downloads
 sftp> lpwd
-Local working directory: /Users/localuser
-sftp> lcd Downloads
+Local working directory: /Users/localuser/downloads
 ```
 
-## Tips
+### Listing Files
+
+```console
+$ sftp user@remote.server
+sftp> ls
+file1.txt  file2.txt  documents/  images/
+sftp> lls
+local_file1.txt  local_file2.txt  downloads/
+```
+
+## Tips:
 
 ### Use Tab Completion
 
-SFTP supports tab completion for both local and remote files, making it easier to navigate without typing full paths.
+SFTP supports tab completion for both local and remote files, making it easier to navigate and transfer files without typing full paths.
 
-### Interactive Commands
+### Create Aliases for Common Connections
 
-- `ls` - List remote files
-- `lls` - List local files
-- `cd` - Change remote directory
-- `lcd` - Change local directory
-- `mkdir` - Create remote directory
-- `rmdir` - Remove remote directory
-- `rm` - Delete remote files
-- `help` or `?` - Show available commands
+Add aliases to your shell configuration file for frequently used SFTP connections:
+```bash
+alias work-sftp='sftp user@work-server.com'
+```
 
-### Batch Mode for Automation
+### Use Wildcards for Multiple File Transfers
 
-Create a text file with sftp commands and use the `-b` option for automated transfers in scripts.
-
-### Use Wildcards for Multiple Files
-
-```console
+Transfer multiple files at once using wildcards:
+```
 sftp> get *.txt
+```
+
+### Enable Compression for Slow Connections
+
+Use the `-C` option to enable compression, which can speed up transfers on slow connections:
+```
+$ sftp -C user@remote.server
 ```
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between SFTP and SCP?
-A. SFTP is an interactive file transfer protocol that runs over SSH, while SCP is a non-interactive command for secure copying. SFTP offers more functionality like resuming transfers and directory listings.
+#### Q1. What's the difference between SFTP and FTP?
+A. SFTP uses SSH for secure, encrypted file transfers, while traditional FTP sends data (including passwords) in plaintext, making it vulnerable to interception.
 
 #### Q2. How do I transfer an entire directory?
-A. Use the `-r` (recursive) option with the get or put command: `get -r remote_directory` or `put -r local_directory`.
+A. Use the recursive option with get or put: `get -r remote_directory` or `put -r local_directory`.
 
-#### Q3. Can I use SFTP in scripts?
-A. Yes, use the `-b` option with a batch file containing SFTP commands: `sftp -b commands.txt user@remote.server`.
+#### Q3. Can I automate SFTP transfers?
+A. Yes, use the `-b` option with a batch file containing SFTP commands, or consider using `scp` for simple transfers in scripts.
 
-#### Q4. How do I change permissions of remote files?
-A. Use the `chmod` command within the SFTP session: `chmod 644 remote_file.txt`.
+#### Q4. How do I exit the SFTP session?
+A. Type `exit` or `quit` at the sftp prompt, or press Ctrl+D.
 
-#### Q5. How can I resume an interrupted file transfer?
-A. Use the `reget` command to resume downloading a file or `reput` to resume uploading.
+#### Q5. How can I see what commands are available in SFTP?
+A. Type `help` or `?` at the sftp prompt to see a list of available commands.
 
 ## References
 
@@ -152,4 +178,4 @@ https://man.openbsd.org/sftp.1
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

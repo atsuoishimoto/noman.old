@@ -4,136 +4,154 @@
 
 ## 概要
 
-`git pull` は、リモートリポジトリからの変更を現在のローカル作業ブランチに更新するGitコマンドです。このコマンドは2つの操作を組み合わせています：`git fetch`（リモートリポジトリからコンテンツをダウンロード）と`git merge`（取得したコンテンツをローカルブランチに統合）です。このコマンドは、他の人が行った変更とローカルリポジトリを同期させるために不可欠です。
+`git pull` は、リモートリポジトリから変更を取得し、現在のブランチに統合するコマンドです。基本的には `git fetch` の後に `git merge` または `git rebase`（設定による）を実行することと同じです。このコマンドは、他の人が行った変更でローカルリポジトリを更新するために一般的に使用されます。
 
 ## オプション
 
-### **-r, --rebase[=false|true|merges|interactive]**
+### **--all**
 
-マージの代わりに、フェッチ後にアップストリームブランチの上に現在のブランチをリベースします。
-
-```console
-$ git pull -r origin main
-From github.com:user/repo
- * branch            main       -> FETCH_HEAD
-Successfully rebased and updated refs/heads/feature.
-```
-
-### **--ff, --no-ff, --ff-only**
-
-マージの処理方法を制御します：
-- `--ff`：早送り（fast-forward）マージを許可（デフォルト）
-- `--no-ff`：早送りが可能な場合でもマージコミットを作成
-- `--ff-only`：早送りマージのみを許可し、不可能な場合は中止
+すべてのリモートから取得します。
 
 ```console
-$ git pull --ff-only origin main
-From github.com:user/repo
- * branch            main       -> FETCH_HEAD
-Updating 5ab1c2d..8ef9a3b
+$ git pull --all
+Fetching origin
+Updating 3e4f123..8a9b012
 Fast-forward
  README.md | 5 +++++
  1 file changed, 5 insertions(+)
 ```
 
-### **-q, --quiet**
+### **-r, --rebase[=false|true|merges|interactive]**
 
-進行状況のレポートを抑制して静かに操作します。
+取得後、マージする代わりに現在のブランチをアップストリームブランチの上にリベースします。
 
 ```console
-$ git pull -q origin main
+$ git pull --rebase
+Successfully rebased and updated refs/heads/main.
 ```
 
 ### **-v, --verbose**
 
-より詳細な情報を表示し、フェッチとマージ操作に関する詳細情報を表示します。
+より詳細な情報を表示します。
 
 ```console
-$ git pull -v origin main
-From github.com:user/repo
+$ git pull -v
+From https://github.com/user/repo
  * branch            main       -> FETCH_HEAD
-Updating 5ab1c2d..8ef9a3b
+Updating 3e4f123..8a9b012
 Fast-forward
  README.md | 5 +++++
  1 file changed, 5 insertions(+)
 ```
 
-### **--autostash**
+### **--ff, --no-ff**
 
-pull操作の前後に未コミットの変更を自動的にスタッシュして復元します。
+マージがfast-forwardで解決できる場合、マージコミットを作成せずにブランチポインタのみを更新します。--no-ffを使用すると、マージがfast-forwardで解決できる場合でもマージコミットを作成します。
 
 ```console
-$ git pull --autostash origin main
-Created autostash: 73a4e9d
-Applied autostash.
+$ git pull --no-ff
+From https://github.com/user/repo
+ * branch            main       -> FETCH_HEAD
+Merge made by the 'recursive' strategy.
+ README.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+```
+
+### **--ff-only**
+
+fast-forwardが可能な場合のみ実行します。不可能な場合は、非ゼロステータスで終了します。
+
+```console
+$ git pull --ff-only
+fatal: Not possible to fast-forward, aborting.
+```
+
+### **-q, --quiet**
+
+静かに実行します。エラーのみを報告します。
+
+```console
+$ git pull -q
 ```
 
 ## 使用例
 
-### リモートからの基本的なプル
+### 基本的なoriginからのpull
 
 ```console
-$ git pull origin main
-From github.com:user/repo
+$ git pull
+From https://github.com/user/repo
  * branch            main       -> FETCH_HEAD
-Updating 5ab1c2d..8ef9a3b
+Updating 3e4f123..8a9b012
 Fast-forward
  README.md | 5 +++++
  1 file changed, 5 insertions(+)
 ```
 
-### リベースを使用したプル
+### 特定のリモートとブランチからpull
 
 ```console
-$ git pull --rebase origin feature
-From github.com:user/repo
- * branch            feature    -> FETCH_HEAD
-Successfully rebased and updated refs/heads/feature.
+$ git pull upstream feature-branch
+From https://github.com/upstream/repo
+ * branch            feature-branch -> FETCH_HEAD
+Updating 3e4f123..8a9b012
+Fast-forward
+ feature.js | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 ```
 
-### アップストリームブランチからのプル
+### マージの代わりにリベースを使用したpull
 
 ```console
-$ git pull
-Already up to date.
+$ git pull --rebase origin main
+From https://github.com/user/repo
+ * branch            main       -> FETCH_HEAD
+Successfully rebased and updated refs/heads/main.
 ```
 
 ## ヒント:
 
-### トラッキングブランチの設定
+### pullする前に変更をコミットまたはスタッシュする
 
-`git branch --set-upstream-to=origin/branch-name` でローカルブランチがリモートブランチを追跡するように設定できます。これにより、リモートとブランチを指定せずに単に `git pull` を使用できるようになります。
+コミットされていない変更との競合を避けるため、`git pull`を実行する前に作業ディレクトリがクリーンであることを確認してください。
 
-### 公開ブランチでは注意してプルを使用する
+### クリーンな履歴のために`--rebase`を使用する
 
-共有ブランチで作業する場合は、`git pull` の代わりに `git fetch` の後に `git merge` または `git rebase` を使用して、統合プロセスをより細かく制御することを検討してください。
+`git pull --rebase`を使用すると、マージコミットなしの線形的な履歴が作成され、コミット履歴が追いやすくなります。
 
-### 競合を適切に解決する
+### デフォルトのpull動作を設定する
 
-`git pull` がマージ競合を引き起こした場合は、それらを正しく解決するために時間をかけてください。`git status` を使用して競合したファイルを確認し、`git mergetool` を使用して解決を支援します。
+デフォルトのpull戦略を以下のように設定できます：
+```console
+$ git config --global pull.rebase true  # リベース用
+$ git config --global pull.ff only      # fast-forwardのみ
+```
 
-### 作業中の変更には `--autostash` を使用する
+### 先に何がpullされるかを確認する
 
-コミットされていない変更があるが更新をプルする必要がある場合、`--autostash` を使用すると変更を自動的に保存して復元できます。
+実際にpullする前に、`git fetch`の後に`git log HEAD..origin/main`を使用して、どの変更がpullされるかを確認できます。
 
 ## よくある質問
 
-#### Q1. `git pull` と `git fetch` の違いは何ですか？
-A. `git fetch` はリモートリポジトリから新しいデータをダウンロードするだけで、作業ファイルに変更を統合しません。`git pull` は両方を行います：フェッチしてから自動的に変更を現在のブランチにマージします。
+#### Q1. `git pull`と`git fetch`の違いは何ですか？
+A. `git fetch`はリモートリポジトリから新しいデータをダウンロードするだけで、作業ファイルに変更を統合しません。`git pull`は両方を行います：取得した後、自動的にマージまたはリベースします。
 
-#### Q2. `git pull` を元に戻すにはどうすればよいですか？
-A. 追加の変更を行っていない場合は、`git reset --hard ORIG_HEAD` を使用してプル前の状態に戻すことができます。
+#### Q2. git pullを元に戻すにはどうすればよいですか？
+A. `git reset --hard ORIG_HEAD`を使用して、最後のpullを元に戻し、ブランチをpull前の状態にリセットできます。
 
-#### Q3. マージせずにプルするにはどうすればよいですか？
-A. `git pull` の代わりに `git fetch` を使用します。これにより、ローカルブランチを変更せずにリモート追跡ブランチが更新されます。
+#### Q3. pullするときにマージ競合が発生するのはなぜですか？
+A. 競合は、ファイルの同じ部分がリモートとローカルの両方で変更された場合に発生します。競合したファイルを手動で編集して、これらの競合を解決する必要があります。
 
-#### Q4. `git pull` のコンテキストでの「fast-forward（早送り）」とは何ですか？
-A. 早送りマージは、現在のブランチのポインタが単にマージされるブランチの最新コミットに移動し、新しいマージコミットを作成しない場合に発生します。これは、現在のブランチに分岐した変更がない場合に可能です。
+#### Q4. マージせずにpullするにはどうすればよいですか？
+A. `git pull`の代わりに`git fetch`を使用して、マージせずに変更をダウンロードします。
 
-## 参考資料
+#### Q5. git pullでの「fast-forward」とは何ですか？
+A. fast-forwardマージは、現在のブランチのポインタを単に前方に移動して、マージコミットを作成する必要なく、入ってくるコミットを指すようにできる場合に発生します。
+
+## 参考文献
 
 https://git-scm.com/docs/git-pull
 
 ## 改訂履歴
 
-- 2025/05/04 初回改訂
+- 2025/05/05 初版

@@ -1,16 +1,16 @@
 # git push コマンド
 
-リモートリポジトリに対してローカルの参照と関連オブジェクトを更新します。
+リモートレフを関連するオブジェクトと共に更新します。
 
 ## 概要
 
-`git push`はローカルブランチのコミットを対応するリモートリポジトリに送信します。リモート参照（ブランチやタグなど）を更新し、リポジトリを同期させるために必要なオブジェクトを転送します。このコマンドは、あなたの作業を他の人と共有したり、ローカルの変更をリモートリポジトリにバックアップしたりする際に不可欠です。
+`git push` はローカルのコミットをリモートリポジトリに送信します。リモートブランチをローカルブランチと一致するように更新し、更新を完了するために必要なすべてのオブジェクトをアップロードします。このコマンドは、変更を他の人と共有したり、作業をリモートリポジトリにバックアップしたりするために不可欠です。
 
 ## オプション
 
 ### **-u, --set-upstream**
 
-現在のブランチに対してアップストリームを設定し、今後のプッシュで同じリモートブランチを指定せずに使用できるようにします。
+現在のブランチのアップストリームを設定し、追跡関係を確立します。
 
 ```console
 $ git push -u origin main
@@ -28,7 +28,7 @@ Branch 'main' set up to track remote branch 'main' from 'origin'.
 
 ### **-f, --force**
 
-非fast-forwardの更新になる場合でも、ローカルブランチでリモートブランチを強制的に更新します。リモート上の変更を上書きする可能性があるため、注意して使用してください。
+リモートブランチの状態を上書きして強制的に更新します。データ損失を引き起こす可能性があるため、細心の注意を払って使用してください。
 
 ```console
 $ git push -f origin main
@@ -39,15 +39,34 @@ Compressing objects: 100% (3/3), done.
 Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
 Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
 remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:username/repository.git
  + a1b2c3d...e4f5g6h main -> main (forced update)
+```
+
+### **--all**
+
+すべてのブランチをリモートリポジトリにプッシュします。
+
+```console
+$ git push --all origin
+Enumerating objects: 8, done.
+Counting objects: 100% (8/8), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (6/6), 584 bytes | 584.00 KiB/s, done.
+Total 6 (delta 4), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+To github.com:username/repository.git
+   a1b2c3d..e4f5g6h  main -> main
+   b2c3d4e..f5g6h7i  feature -> feature
 ```
 
 ### **--tags**
 
-すべてのローカルタグをリモートリポジトリにプッシュします。
+すべてのタグをリモートリポジトリにプッシュします。
 
 ```console
-$ git push --tags
+$ git push --tags origin
 Enumerating objects: 1, done.
 Counting objects: 100% (1/1), done.
 Writing objects: 100% (1/1), 160 bytes | 160.00 KiB/s, done.
@@ -57,44 +76,26 @@ To github.com:username/repository.git
  * [new tag]         v1.1.0 -> v1.1.0
 ```
 
-### **--delete**
+### **-d, --delete**
 
-指定したブランチをリモートリポジトリから削除します。
+指定したリモートブランチを削除します。
 
 ```console
-$ git push origin --delete feature-branch
+$ git push -d origin feature-branch
 To github.com:username/repository.git
  - [deleted]         feature-branch
 ```
 
-### **--dry-run**
-
-実際にプッシュせずに、何が行われるかを表示します。
-
-```console
-$ git push --dry-run origin main
-To github.com:username/repository.git
-   a1b2c3d..e4f5g6h  main -> main
-```
-
 ## 使用例
 
-### デフォルトのリモートブランチへのプッシュ
+### デフォルトのリモートにプッシュする
 
 ```console
 $ git push
-Enumerating objects: 5, done.
-Counting objects: 100% (5/5), done.
-Delta compression using up to 8 threads
-Compressing objects: 100% (3/3), done.
-Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
-Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
-To github.com:username/repository.git
-   a1b2c3d..e4f5g6h  main -> main
+Everything up-to-date
 ```
 
-### 特定のブランチを特定のリモートにプッシュ
+### 特定のブランチを特定のリモートにプッシュする
 
 ```console
 $ git push origin feature-branch
@@ -109,7 +110,7 @@ To github.com:username/repository.git
    a1b2c3d..e4f5g6h  feature-branch -> feature-branch
 ```
 
-### ローカルブランチを異なる名前のリモートブランチにプッシュ
+### 異なるリモートブランチ名にプッシュする
 
 ```console
 $ git push origin local-branch:remote-branch
@@ -126,43 +127,43 @@ To github.com:username/repository.git
 
 ## ヒント:
 
-### トラッキングブランチの設定
+### 追跡ブランチの設定
 
-新しいブランチを作成する際は、`git push -u origin ブランチ名`を使用してトラッキングを設定しましょう。これにより、毎回リモートとブランチを指定せずに`git pull`や`git push`を使用できるようになります。
+新しいブランチを作成する際は、`git push -u origin branch-name` を使用して追跡を設定しましょう。これにより、毎回リモートとブランチを指定せずに `git pull` や `git push` を使用できるようになります。
 
-### すべてのブランチをプッシュ
+### `--force` の代わりに `--force-with-lease` を使用する
 
-`git push --all origin`を使用すると、すべてのローカルブランチをリモートリポジトリにプッシュできます。すべての作業をバックアップしたい場合に便利です。
+`--force-with-lease` は `--force` よりも安全です。まだ見ていない他の人の変更を上書きしないことを保証します。リモートブランチが予期した状態にある場合にのみプッシュを強制します。
 
-### プッシュが拒否された場合の対処
+### 特定のタグのみをプッシュする
 
-リモートにあなたが持っていない作業が含まれているためにプッシュが拒否された場合は、`git pull`を使用してリモートの変更を統合してから再度プッシュしてください。あるいは、あなたの変更が優先されるべきと確信している場合は、`git push --force`を（注意して）使用してください。
+`--tags` ですべてのタグをプッシュする代わりに、`git push origin tag-name` を使用して特定のタグをプッシュできます。
 
-### 特定のコミットのみをプッシュ
+### 強制プッシュする前に確認する
 
-特定の時点までのコミットのみをプッシュするには、`git push origin <コミットハッシュ>:ブランチ名`を使用します。作業の一部だけを共有したい場合に便利です。
+強制プッシュする前に、必ず `git log origin/branch..branch` を実行して、リモートで上書きしようとしているコミットを確認しましょう。
 
 ## よくある質問
 
-#### Q1. `git push`と`git push origin main`の違いは何ですか？
-A. `git push`は、設定されている場合、現在のブランチをそのアップストリームブランチにプッシュします。`git push origin main`は、現在どのブランチにいるかに関係なく、ローカルのmainブランチをoriginリモートのmainブランチに明示的にプッシュします。
+#### Q1. `git push` と `git push origin main` の違いは何ですか？
+A. `git push` は、設定されている場合、現在のブランチをそのアップストリームブランチにプッシュします。`git push origin main` は、現在のブランチに関係なく、ローカルの main ブランチを origin リモートの main ブランチに明示的にプッシュします。
 
 #### Q2. 新しいローカルブランチをリモートリポジトリにプッシュするにはどうすればよいですか？
-A. `git push -u origin ブランチ名`を使用して、新しいブランチをプッシュしトラッキングを設定します。
+A. `git push -u origin branch-name` を使用して、新しいブランチを作成してプッシュし、同時に追跡を設定します。
 
-#### Q3. プッシュを取り消すにはどうすればよいですか？
-A. プッシュを直接「取り消す」ことはできません。代わりに、ローカルで変更を元に戻し（`git revert`や`git reset`を使用）、その後`git push --force`で新しい状態をプッシュする必要があります。force pushは他の人の作業を上書きする可能性があるため注意してください。
+#### Q3. プッシュ時に「rejected」エラーが発生します。どうすればよいですか？
+A. これは通常、リモートにローカルにない変更があることを意味します。まず `git pull` を実行して変更を統合し、コンフリクトがあれば解決してから、再度プッシュしてください。
 
-#### Q4. なぜプッシュが拒否されるのですか？
-A. プッシュが拒否される一般的な理由は、リモートブランチにあなたのローカルブランチにないコミットがある場合です。これは他の誰かが同じブランチに変更をプッシュした場合に発生します。`git pull`を使用して彼らの変更を統合してからプッシュしてください。
+#### Q4. プッシュを元に戻すにはどうすればよいですか？
+A. `git revert` で変更を元に戻してそのリバートをプッシュするか、以前のコミットにリセットした後に `git push -f` を使用します（注意して使用してください）。
 
-#### Q5. 複数のリモートに一度にプッシュするにはどうすればよいですか？
-A. Gitには複数のリモートに同時にプッシュする組み込みの方法はありません。各リモートに個別にプッシュするか、複数のURLを指すリモートを設定する必要があります。
+#### Q5. 「non-fast-forward updates were rejected」とはどういう意味ですか？
+A. ローカルリポジトリがリモートより古いことを意味します。プッシュする前に最新の変更を取得する必要があります。または、リモートを上書きしたい場合は `--force` を使用します（共有ブランチでは推奨されません）。
 
-## 参考資料
+## 参考文献
 
 https://git-scm.com/docs/git-push
 
 ## 改訂履歴
 
-2025/05/04 初版作成
+- 2025/05/05 初版

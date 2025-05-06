@@ -4,11 +4,11 @@
 
 ## 概要
 
-`dirname` コマンドはパス名から最後のコンポーネント（ファイル名部分）を削除し、ディレクトリパスのみを残します。シェルスクリプトでファイルパスからディレクトリ部分を抽出するために一般的に使用され、ファイルの場所に移動したり、同じディレクトリ内のファイルを処理したりする際に役立ちます。
+`dirname` コマンドはパス名から最後のコンポーネントを削除し、ディレクトリパスのみを残します。シェルスクリプトでファイルパスからディレクトリ部分を抽出するために一般的に使用され、特定のディレクトリへの移動や同じ場所にあるファイルを処理する際に便利です。
 
 ## オプション
 
-### **-z, --zero**
+### **--zero, -z**
 
 各パス名の後に改行ではなくゼロバイト（ASCII NUL）を出力します。
 
@@ -17,11 +17,9 @@ $ dirname -z /usr/bin/zip
 /usr/bin$
 ```
 
-注意: 出力は `$` プロンプトで終わるように見えますが、実際には改行の代わりにヌル文字が含まれています。
-
 ### **--help**
 
-ヘルプメッセージを表示して終了します。
+ヘルプ情報を表示して終了します。
 
 ```console
 $ dirname --help
@@ -45,8 +43,8 @@ Examples:
 
 ```console
 $ dirname --version
-dirname (GNU coreutils) 8.32
-Copyright (C) 2020 Free Software Foundation, Inc.
+dirname (GNU coreutils) 9.0
+Copyright (C) 2021 Free Software Foundation, Inc.
 License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -83,8 +81,8 @@ $ dirname file.txt
 
 ```console
 $ script_dir=$(dirname "$0")
-$ echo "このスクリプトの場所: $script_dir"
-このスクリプトの場所: .
+$ echo "This script is located in: $script_dir"
+This script is located in: /path/to/script/directory
 ```
 
 ## ヒント:
@@ -97,23 +95,24 @@ $ echo "このスクリプトの場所: $script_dir"
 $ path="/home/user/documents/report.pdf"
 $ dir=$(dirname "$path")
 $ file=$(basename "$path")
-$ echo "ディレクトリ: $dir, ファイル: $file"
-ディレクトリ: /home/user/documents, ファイル: report.pdf
+$ echo "Directory: $dir, File: $file"
+Directory: /home/user/documents, File: report.pdf
 ```
 
-### 変数は常に引用符で囲む
+### スペースを含むパスの処理
 
-スクリプトで変数と共に `dirname` を使用する場合、スペースを含むパスを正しく処理するために、常に変数を引用符で囲みましょう：
+スペースを含むパスを正しく処理するために、`dirname` を使用する際は常に変数を引用符で囲みます：
 
 ```console
 $ path="/home/user/my documents/report.pdf"
-$ dirname "$path"  # 正しい方法
+$ dir=$(dirname "$path")  # 引用符が重要
+$ echo "$dir"
 /home/user/my documents
 ```
 
-### コマンド置換での使用
+### cd と一緒に使用する
 
-`dirname` の出力をコマンド置換で取得して、ファイルのディレクトリに移動できます：
+`cd` と組み合わせてファイルのディレクトリに移動できます：
 
 ```console
 $ cd "$(dirname "/path/to/file.txt")"
@@ -121,22 +120,22 @@ $ cd "$(dirname "/path/to/file.txt")"
 
 ## よくある質問
 
-#### Q1. パスなしのファイル名を渡すと `dirname` は何を返しますか？
+#### Q1. パスなしでファイル名を渡すと、`dirname` は何を返しますか？
 A. `.`（カレントディレクトリ）を返します。
 
 #### Q2. `dirname` は一度に複数のパスを処理できますか？
 A. はい、複数の引数を渡すことができ、それぞれを個別に処理します。
 
 #### Q3. `dirname` は末尾のスラッシュをどのように処理しますか？
-A. 処理前に末尾のスラッシュを削除するので、`/usr/bin/` は `/usr` になります。
+A. パスを処理する前に末尾のスラッシュを削除します。
 
-#### Q4. `dirname` と `basedir` の違いは何ですか？
-A. 標準的なUnixコマンドとして `basedir` は存在しません。おそらく `basename` のことを指していると思われます。`basename` はパスからファイル名部分を抽出し、`dirname` はディレクトリ部分を抽出します。
+#### Q4. `dirname` と `basename` の違いは何ですか？
+A. `dirname` はパスのディレクトリ部分を返し、`basename` はファイル名部分を返します。
 
-## 参考資料
+## 参考文献
 
 https://www.gnu.org/software/coreutils/manual/html_node/dirname-invocation.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

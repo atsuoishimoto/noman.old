@@ -4,51 +4,33 @@ Copy files and directories from source to destination.
 
 ## Overview
 
-The `cp` command copies files and directories. It can copy a single file to another file, multiple files to a directory, or entire directories with their contents. By default, `cp` will not overwrite existing files unless the `-f` option is used, and it won't copy directories recursively unless the `-R` or `-r` option is specified.
+The `cp` command copies files and directories. It can copy a single file to another file, multiple files to a directory, or entire directory structures. By default, `cp` will not overwrite existing files unless forced with options, and it preserves the original file's timestamps and permissions.
 
 ## Options
-
-### **-a, --archive**
-
-Archive mode that preserves all file attributes and recursively copies directories. Equivalent to `-dR --preserve=all`.
-
-```console
-$ cp -a documents/ backup/
-```
 
 ### **-r, -R, --recursive**
 
 Copy directories recursively, including all subdirectories and their contents.
 
 ```console
-$ cp -r projects/ backup/
+$ cp -r Documents/ Backup/
 ```
 
 ### **-i, --interactive**
 
-Prompt before overwriting existing files, allowing you to decide for each file.
+Prompt before overwriting existing files.
 
 ```console
-$ cp -i report.txt backup/
-cp: overwrite 'backup/report.txt'? y
+$ cp -i file.txt destination/
+cp: overwrite 'destination/file.txt'? y
 ```
 
 ### **-f, --force**
 
-Force the copy by removing the destination file if it cannot be opened for writing.
+Force the copy by removing the destination file if needed, without prompting.
 
 ```console
-$ cp -f important.txt backup/
-```
-
-### **-v, --verbose**
-
-Display the name of each file before copying it, showing what's being processed.
-
-```console
-$ cp -v *.txt documents/
-'report.txt' -> 'documents/report.txt'
-'notes.txt' -> 'documents/notes.txt'
+$ cp -f important.txt destination/
 ```
 
 ### **-p, --preserve**
@@ -59,12 +41,30 @@ Preserve file attributes like mode, ownership, and timestamps.
 $ cp -p config.ini backup/
 ```
 
-### **-u, --update**
+### **-v, --verbose**
 
-Copy only when the source file is newer than the destination file or when the destination file doesn't exist.
+Display the name of each file being copied.
 
 ```console
-$ cp -u *.txt backup/
+$ cp -v *.txt Documents/
+'file1.txt' -> 'Documents/file1.txt'
+'file2.txt' -> 'Documents/file2.txt'
+```
+
+### **-u, --update**
+
+Copy only when the source file is newer than the destination file or when the destination file is missing.
+
+```console
+$ cp -u *.log archive/
+```
+
+### **-a, --archive**
+
+Preserve all file attributes and copy directories recursively (equivalent to -dR --preserve=all).
+
+```console
+$ cp -a source_dir/ destination_dir/
 ```
 
 ## Usage Examples
@@ -72,63 +72,76 @@ $ cp -u *.txt backup/
 ### Copying a Single File
 
 ```console
-$ cp report.txt backup/report.txt
+$ cp report.pdf ~/Documents/
 ```
 
 ### Copying Multiple Files to a Directory
 
 ```console
-$ cp file1.txt file2.txt file3.txt destination/
+$ cp file1.txt file2.txt file3.txt ~/Backup/
 ```
 
-### Recursive Copy with Verbose Output
+### Copying a Directory with All Contents
 
 ```console
-$ cp -rv projects/ backup/
-'projects/main.c' -> 'backup/projects/main.c'
-'projects/lib/utils.c' -> 'backup/projects/lib/utils.c'
-'projects/lib/utils.h' -> 'backup/projects/lib/utils.h'
+$ cp -r Projects/ ~/Backup/Projects/
 ```
 
-### Copying with Preservation of Attributes
+### Copying with Verbose Output and Preservation
 
 ```console
-$ cp -ap documents/ archive/
+$ cp -vp important.conf /etc/
+'important.conf' -> '/etc/important.conf'
 ```
 
-## Tips
+## Tips:
 
-### Use Trailing Slashes Carefully
+### Use Wildcards for Multiple Files
 
-When copying directories, a trailing slash on the source means "copy the contents of this directory" rather than the directory itself:
-- `cp -r dir1 dir2` creates dir2/dir1 if dir2 exists
-- `cp -r dir1/ dir2` copies contents of dir1 into dir2
+Use wildcards to copy multiple files matching a pattern:
+```console
+$ cp *.jpg ~/Pictures/
+```
 
 ### Backup Before Overwriting
 
-Use the `--backup` option to create backups of files before overwriting them:
-
+Create backups of existing files by using the `-b` option:
 ```console
-$ cp --backup=numbered important.txt destination/
+$ cp -b config.ini /etc/
 ```
+This creates a backup file named `config.ini~` before overwriting.
 
-### Symbolic Links Handling
+### Copy Only If Newer
 
-By default, `cp` follows symbolic links. Use `-P` or `--no-dereference` to copy the links themselves instead of what they point to.
+Use `-u` to update files only if the source is newer than the destination:
+```console
+$ cp -u -r source_dir/ destination_dir/
+```
+This is useful for synchronizing directories.
+
+### Preserve Symbolic Links
+
+Use `-d` or `--no-dereference` to preserve symbolic links as links rather than copying the files they point to:
+```console
+$ cp -d link.txt destination/
+```
 
 ## Frequently Asked Questions
 
 #### Q1. How do I copy a file without overwriting an existing file?
-A. Use `cp -n source destination` which prevents overwriting existing files.
+A. Use `cp -n source destination` where the `-n` option prevents overwriting existing files.
 
 #### Q2. How do I copy hidden files?
-A. Hidden files (starting with a dot) are copied normally. To copy all files including hidden ones, use patterns like `cp -r .* * destination/` or explicitly name the hidden files.
+A. Hidden files (starting with `.`) are copied normally. To copy all files including hidden ones, use wildcards like `cp -r source/. destination/`.
 
-#### Q3. How do I copy only the directory structure without the files?
-A. There's no direct option in `cp`. You might need to use `find` with `mkdir` or `rsync --include='*/' --exclude='*'`.
+#### Q3. How do I copy a file and maintain its permissions?
+A. Use `cp -p source destination` to preserve mode, ownership, and timestamps.
 
-#### Q4. How do I copy files while preserving permissions?
-A. Use `cp -p` to preserve mode, ownership, and timestamps, or `cp -a` to preserve all attributes.
+#### Q4. How do I copy a directory with all its contents?
+A. Use `cp -r source_directory destination_directory` to recursively copy the directory and all its contents.
+
+#### Q5. How do I copy only specific file types from a directory?
+A. Use wildcards: `cp source_directory/*.txt destination_directory/` to copy only text files.
 
 ## References
 
@@ -136,4 +149,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/cp-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

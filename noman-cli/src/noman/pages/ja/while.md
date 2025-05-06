@@ -4,139 +4,109 @@
 
 ## 概要
 
-`while` コマンドはシェルの構文で、指定された条件が真である限り、一連のコマンドを繰り返し実行するループを作成します。ファイルを1行ずつ処理したり、カウントダウンタイマーを実装したりするなど、特定の条件が満たされるまで繰り返す必要があるタスクのシェルスクリプトでよく使用されます。
+`while` コマンドはシェルの構文で、指定された条件が真と評価される限り、一連のコマンドを繰り返し実行するループを作成します。固定回数の繰り返し、入力を1行ずつ処理する、または特定の条件が変わるまでコマンドを実行するなどの用途によく使われます。
 
 ## オプション
 
-`while` コマンド自体は、独立したUnixコマンドのようなオプションを持ちません。代わりに、特定の構文を持つシェルの制御構造です：
-
-```bash
-while 条件; do
-  コマンド
-done
-```
+`while` コマンドは独立したプログラムではなくシェル組み込みの構文であるため、従来のコマンドラインオプションはありません。
 
 ## 使用例
 
-### カウンターを使用した基本的なwhileループ
+### 基本的な while ループ
 
 ```console
 $ i=1
 $ while [ $i -le 5 ]; do
->   echo "カウント: $i"
+>   echo "Count: $i"
 >   i=$((i+1))
 > done
-カウント: 1
-カウント: 2
-カウント: 3
-カウント: 4
-カウント: 5
+Count: 1
+Count: 2
+Count: 3
+Count: 4
+Count: 5
 ```
 
 ### ファイルを1行ずつ読み込む
 
 ```console
-$ cat names.txt
-Alice
-Bob
-Charlie
-$ while read name; do
->   echo "こんにちは、$name さん！"
-> done < names.txt
-こんにちは、Alice さん！
-こんにちは、Bob さん！
-こんにちは、Charlie さん！
+$ while read line; do
+>   echo "Line: $line"
+> done < file.txt
+Line: This is the first line
+Line: This is the second line
+Line: This is the third line
 ```
 
-### break条件付きの無限ループ
+### break 条件付きの無限ループ
 
 ```console
-$ i=1
 $ while true; do
->   echo "繰り返し $i"
->   if [ $i -eq 3 ]; then
->     echo "ループを抜けます"
+>   echo "Enter a number (0 to exit):"
+>   read num
+>   if [ "$num" -eq 0 ]; then
 >     break
 >   fi
->   i=$((i+1))
+>   echo "You entered: $num"
 > done
-繰り返し 1
-繰り返し 2
-繰り返し 3
-ループを抜けます
+Enter a number (0 to exit):
+5
+You entered: 5
+Enter a number (0 to exit):
+0
 ```
 
-### 条件が満たされるまで待機
+### コマンド出力の処理
 
 ```console
-$ while [ ! -f /tmp/ready.txt ]; do
->   echo "ファイルが現れるのを待っています..."
->   sleep 1
+$ ls -1 *.txt | while read file; do
+>   echo "Processing $file"
+>   wc -l "$file"
 > done
-ファイルが現れるのを待っています...
-ファイルが現れるのを待っています...
-ファイルが現れるのを待っています...
+Processing document.txt
+      10 document.txt
+Processing notes.txt
+       5 notes.txt
 ```
 
 ## ヒント:
 
-### `break` を使って早期に終了する
+### Control-C で無限ループを終了する
 
-`break` コマンドを while ループ内で使用すると、条件に関係なく即座に終了できます：
+無限ループ（`while true; do...`など）を作成し、終了する必要がある場合は、Control-C を押してループを終了します。
 
-```bash
-while 条件; do
-  if [別の条件]; then
-    break  # ループを終了する
-  fi
-  # コマンド
-done
+### ポーリングのために sleep と組み合わせる
+
+`while` を `sleep` コマンドと一緒に使用して、定期的に条件をチェックします：
+
+```console
+$ while ! ping -c 1 server.example.com &>/dev/null; do
+>   echo "Server not reachable, waiting..."
+>   sleep 5
+> done
 ```
 
-### `continue` を使って繰り返しをスキップする
+### 一般的な落とし穴を避ける
 
-`continue` コマンドは現在の繰り返しの残りをスキップして、条件チェックに戻ります：
+決して偽にならない可能性のある条件には注意してください。無限ループが発生する可能性があります。常に条件が最終的に偽と評価される方法があることを確認してください。
 
-```bash
-while 条件; do
-  if [スキップ条件]; then
-    continue  # 次の繰り返しにスキップ
-  fi
-  # continueが実行されると実行されないコマンド
-done
-```
+### continue を使用して反復をスキップする
 
-### 無限ループを避ける
-
-while ループには必ず終了する方法を確保してください。最終的に偽になる条件を含めるか、`break` ステートメントを使用します。誤って無限ループを作成した場合は、Ctrl+Cを押して終了できます。
-
-### タイムドループには `sleep` を使用する
-
-条件をポーリングする場合は、過剰なCPU使用を防ぐために `sleep` コマンドを使用します：
-
-```bash
-while [ 条件 ]; do
-  # コマンド
-  sleep 1  # 再度チェックする前に1秒待機
-done
-```
+`continue` ステートメントは `while` ループ内で使用して、現在の反復の残りをスキップし、次の反復に移動することができます。
 
 ## よくある質問
 
 #### Q1. `while` と `until` の違いは何ですか？
-A. `while` は条件が真である限りコマンドを実行しますが、`until` は条件が偽である限り（真になるまで）コマンドを実行します。
+A. `while` は条件が真である限りコマンドを実行しますが、`until` は条件が偽である限りコマンドを実行します。
 
-#### Q2. whileループでファイルを1行ずつ読み込むにはどうすればよいですか？
-A. `while read line; do コマンド; done < file.txt` を使用して、ファイルの各行を処理できます。
+#### Q2. `while` を使って標準入力から読み込むことはできますか？
+A. はい、リダイレクションなしで `while read line; do ...; done` を使用すると、標準入力から読み込みます。
 
-#### Q3. 無限ループを作成するにはどうすればよいですか？
-A. `while true; do コマンド; done` または `while :; do コマンド; done` を使用して無限ループを作成できます。ループを終了する方法（`break` ステートメントなど）を含めることを忘れないでください。
+#### Q3. `while` でカウントダウンタイマーを作るにはどうすればよいですか？
+A. 減少するカウンターを使用します：`count=10; while [ $count -gt 0 ]; do echo $count; count=$((count-1)); sleep 1; done; echo "Done!"`
 
-#### Q4. whileループをネストできますか？
-A. はい、whileループを他のwhileループ内にネストできます。各ループには独自の `do` と `done` キーワードが必要です。
-
-#### Q5. whileをコマンド出力と一緒に使用するにはどうすればよいですか？
-A. コマンド出力をwhileループにパイプできます：`command | while read line; do 何か処理; done`
+#### Q4. 各反復で複数の値を処理するにはどうすればよいですか？
+A. read コマンドで複数の変数を使用します：`while read name age; do echo "$name is $age years old"; done < data.txt`
 
 ## 参考文献
 
@@ -144,4 +114,4 @@ https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html
 
 ## 改訂履歴
 
-2025/05/04 初版作成
+- 2025/05/05 初版

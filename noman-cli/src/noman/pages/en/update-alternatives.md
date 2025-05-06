@@ -4,11 +4,11 @@ Manages symbolic links determining default commands in the alternatives system.
 
 ## Overview
 
-`update-alternatives` creates, removes, maintains, and displays information about symbolic links in the alternatives system. This system allows multiple versions of the same program to coexist on a system, with one version designated as the default. It's commonly used in Debian-based Linux distributions to manage which version of a program is executed when a user runs a command.
+`update-alternatives` creates, removes, maintains, and displays information about symbolic links that determine which commands are run when a user enters a particular command name. It's part of the Debian alternatives system that allows multiple versions of the same program to coexist on a system, with one version designated as the default.
 
 ## Options
 
-### **--install** (`-i`)
+### **--install**
 
 Creates a new alternative link group
 
@@ -17,34 +17,25 @@ $ sudo update-alternatives --install /usr/bin/editor editor /usr/bin/vim 50
 update-alternatives: using /usr/bin/vim to provide /usr/bin/editor (editor) in auto mode
 ```
 
-### **--remove** (`-r`)
+### **--config**
 
-Removes an alternative from the system
-
-```console
-$ sudo update-alternatives --remove editor /usr/bin/vim
-update-alternatives: removing editor (/usr/bin/vim) from auto mode
-```
-
-### **--config** (`-c`)
-
-Shows available alternatives for a link group and allows interactive selection
+Configures which alternative to use for a link group
 
 ```console
 $ sudo update-alternatives --config editor
 There are 3 choices for the alternative editor (providing /usr/bin/editor).
 
-  Selection    Path              Priority   Status
+  Selection    Path                Priority   Status
 ------------------------------------------------------------
-* 0            /usr/bin/vim       50        auto mode
-  1            /usr/bin/nano      40        manual mode
-  2            /usr/bin/emacs     30        manual mode
-  3            /usr/bin/vim       50        manual mode
+* 0            /usr/bin/vim         50        auto mode
+  1            /usr/bin/emacs       40        manual mode
+  2            /usr/bin/nano        30        manual mode
+  3            /usr/bin/vim         50        manual mode
 
 Press <enter> to keep the current choice[*], or type selection number:
 ```
 
-### **--display** (`-d`)
+### **--display**
 
 Displays information about a link group
 
@@ -56,27 +47,21 @@ editor - auto mode
   link editor is /usr/bin/editor
   slave editor.1.gz is /usr/share/man/man1/editor.1.gz
   slave editor.fr.1.gz is /usr/share/man/fr/man1/editor.1.gz
-  slave editor.it.1.gz is /usr/share/man/it/man1/editor.1.gz
-  slave editor.pl.1.gz is /usr/share/man/pl/man1/editor.1.gz
-  slave editor.ru.1.gz is /usr/share/man/ru/man1/editor.1.gz
-/usr/bin/vim - priority 50
-  slave editor.1.gz: /usr/share/man/man1/vim.1.gz
-  slave editor.fr.1.gz: /usr/share/man/fr/man1/vim.1.gz
-  slave editor.it.1.gz: /usr/share/man/it/man1/vim.1.gz
-  slave editor.pl.1.gz: /usr/share/man/pl/man1/vim.1.gz
-  slave editor.ru.1.gz: /usr/share/man/ru/man1/vim.1.gz
+  /usr/bin/emacs - priority 40
+  /usr/bin/nano - priority 30
+  /usr/bin/vim - priority 50
 ```
 
-### **--auto** (`-a`)
+### **--remove**
 
-Sets the link group to automatic mode (highest priority alternative is used)
+Removes an alternative from a link group
 
 ```console
-$ sudo update-alternatives --auto editor
-update-alternatives: using /usr/bin/vim to provide /usr/bin/editor (editor) in auto mode
+$ sudo update-alternatives --remove editor /usr/bin/emacs
+update-alternatives: removing editor (/usr/bin/emacs) from auto mode
 ```
 
-### **--set** (`-s`)
+### **--set**
 
 Sets a specific alternative as the selected one for a link group
 
@@ -85,75 +70,78 @@ $ sudo update-alternatives --set editor /usr/bin/nano
 update-alternatives: using /usr/bin/nano to provide /usr/bin/editor (editor) in manual mode
 ```
 
+### **--auto**
+
+Sets a link group to automatic mode (highest priority alternative is used)
+
+```console
+$ sudo update-alternatives --auto editor
+update-alternatives: using /usr/bin/vim to provide /usr/bin/editor (editor) in auto mode
+```
+
 ## Usage Examples
 
-### Adding a new Java version to alternatives
+### Setting up Java alternatives
 
 ```console
 $ sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-11-openjdk/bin/java 1100
 update-alternatives: using /usr/lib/jvm/java-11-openjdk/bin/java to provide /usr/bin/java (java) in auto mode
-```
 
-### Switching between different Java versions
+$ sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-8-openjdk/bin/java 1000
+update-alternatives: using /usr/lib/jvm/java-11-openjdk/bin/java to provide /usr/bin/java (java) in auto mode
 
-```console
 $ sudo update-alternatives --config java
-There are 3 choices for the alternative java (providing /usr/bin/java).
+There are 2 choices for the alternative java (providing /usr/bin/java).
 
-  Selection    Path                                           Priority   Status
+  Selection    Path                                      Priority   Status
 ------------------------------------------------------------
-* 0            /usr/lib/jvm/java-11-openjdk/bin/java          1100      auto mode
-  1            /usr/lib/jvm/java-8-openjdk/bin/java           1080      manual mode
-  2            /usr/lib/jvm/java-17-openjdk/bin/java          1170      manual mode
-  3            /usr/lib/jvm/java-11-openjdk/bin/java          1100      manual mode
+* 0            /usr/lib/jvm/java-11-openjdk/bin/java     1100      auto mode
+  1            /usr/lib/jvm/java-8-openjdk/bin/java      1000      manual mode
+  2            /usr/lib/jvm/java-11-openjdk/bin/java     1100      manual mode
 
-Press <enter> to keep the current choice[*], or type selection number: 2
-update-alternatives: using /usr/lib/jvm/java-17-openjdk/bin/java to provide /usr/bin/java (java) in manual mode
+Press <enter> to keep the current choice[*], or type selection number:
 ```
 
-### Listing all alternatives for a specific command
+### Checking which alternatives are available for a command
 
 ```console
-$ update-alternatives --list java
-/usr/lib/jvm/java-8-openjdk/bin/java
-/usr/lib/jvm/java-11-openjdk/bin/java
-/usr/lib/jvm/java-17-openjdk/bin/java
+$ update-alternatives --list editor
+/usr/bin/emacs
+/usr/bin/nano
+/usr/bin/vim
 ```
 
 ## Tips
 
 ### Understanding Priority Values
 
-Higher priority values (like 100 vs 50) determine which alternative is selected in automatic mode. When installing a new alternative, assign it a higher priority than existing ones if you want it to become the default.
+Higher priority values (like 100 vs 50) make an alternative more likely to be chosen in automatic mode. When setting up alternatives, assign higher numbers to preferred versions.
 
 ### Managing Groups of Related Commands
 
-For programs like Java that have multiple related commands (java, javac, jar), you can manage them together using the `--slave` option when installing alternatives.
+For programs with multiple commands (like Java's java, javac, jar), create alternatives for each command to ensure consistent versioning across all tools.
 
-### Checking Current Default
+### Automatic vs Manual Mode
 
-Before making changes, use `--display` to see the current configuration of an alternatives group. This helps avoid unintended changes to your system.
+In automatic mode, the system selects the alternative with the highest priority. In manual mode, the system keeps your selected choice even if a higher priority alternative is installed later.
 
-### Auto vs Manual Mode
+### Slave Links
 
-In auto mode, the system automatically selects the alternative with the highest priority. In manual mode, the system keeps your manually selected alternative regardless of priority.
+Use slave links (with `--slave` option) to manage related files like man pages that should change together with the main alternative.
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between update-alternatives and symbolic links?
-A. `update-alternatives` is a higher-level system that manages symbolic links in a standardized way. It provides a consistent interface for switching between program versions and tracks which alternatives are available.
+#### Q1. What's the difference between automatic and manual mode?
+A. In automatic mode, the system selects the alternative with the highest priority. In manual mode, your selected choice remains until you explicitly change it.
 
-#### Q2. How do I know which programs use the alternatives system?
-A. You can list all managed alternatives with `update-alternatives --get-selections`.
+#### Q2. How do I see all available alternatives for a command?
+A. Use `update-alternatives --list command_name` to see all alternatives, or `update-alternatives --display command_name` for more detailed information.
 
-#### Q3. Can I remove an alternative completely from the system?
-A. Yes, use `update-alternatives --remove-all <name>` to remove all alternatives for a specific command.
+#### Q3. How do I completely remove an alternative?
+A. Use `update-alternatives --remove link_name path` to remove a specific alternative from a group.
 
-#### Q4. What happens if I install a new package that provides an alternative?
-A. Package managers typically call `update-alternatives` during installation to add the new alternative to the system, usually with a predefined priority.
-
-#### Q5. How do I fix broken alternatives?
-A. If an alternative points to a non-existent file, you can remove it with `--remove` and then reinstall the correct alternative.
+#### Q4. What priority number should I use when installing alternatives?
+A. Priority can be any integer. Higher numbers (like 100) have higher priority than lower numbers (like 10). Choose values that reflect your preference order.
 
 ## References
 
@@ -161,4 +149,4 @@ https://manpages.debian.org/bullseye/dpkg/update-alternatives.1.en.html
 
 ## Revisions
 
-2025/05/04 First revision
+- 2025/05/05 First revision

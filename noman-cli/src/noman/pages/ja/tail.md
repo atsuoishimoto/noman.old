@@ -4,42 +4,41 @@
 
 ## 概要
 
-`tail` コマンドはファイルの末尾（tail）部分を出力します。デフォルトでは、指定された各ファイルの最後の10行を標準出力に表示します。ログファイルの最新エントリの確認、ファイルの変更をリアルタイムで監視、またはテキストファイルの末尾を確認するのによく使用されます。
+`tail` コマンドは、1つ以上のファイルの末尾部分（デフォルトでは10行）を出力します。ログファイルの最新エントリの確認、ファイル変更のリアルタイム監視、またはファイル全体を開かずにテキストファイルの末尾を確認するのによく使用されます。
 
 ## オプション
 
 ### **-n, --lines=NUM**
 
-デフォルトの10行ではなく、最後のNUM行を出力します
+末尾からNUM行を出力します（デフォルトは10行）
 
 ```console
 $ tail -n 5 /var/log/syslog
-May  3 21:45:12 hostname systemd[1]: Started Daily apt download activities.
-May  3 21:45:12 hostname systemd[1]: apt-daily.service: Succeeded.
-May  3 22:17:01 hostname CRON[12345]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
-May  3 23:17:01 hostname CRON[12346]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
-May  4 00:17:01 hostname CRON[12347]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+May  5 10:15:22 hostname service[1234]: Processing request
+May  5 10:15:23 hostname service[1234]: Request completed
+May  5 10:15:25 hostname service[1234]: New connection from 192.168.1.5
+May  5 10:15:26 hostname service[1234]: Processing request
+May  5 10:15:27 hostname service[1234]: Request completed
 ```
 
 ### **-f, --follow**
 
-ファイルが成長するにつれて追加されたデータを出力します。ファイルの末尾を追跡します
+ファイルが成長するにつれて追加されたデータを出力します。ログファイルの監視に便利です
 
 ```console
-$ tail -f /var/log/syslog
-May  4 00:17:01 hostname CRON[12347]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
-May  4 01:17:01 hostname CRON[12348]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
-May  4 02:17:01 hostname CRON[12349]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
-[ファイルに追加されると、新しいエントリがリアルタイムで表示される]
+$ tail -f /var/log/apache2/access.log
+192.168.1.5 - - [05/May/2025:10:15:22 +0000] "GET /index.html HTTP/1.1" 200 2326
+192.168.1.6 - - [05/May/2025:10:15:25 +0000] "GET /images/logo.png HTTP/1.1" 200 4589
+192.168.1.7 - - [05/May/2025:10:15:27 +0000] "POST /login HTTP/1.1" 302 -
 ```
 
 ### **-c, --bytes=NUM**
 
-最後の10行ではなく、最後のNUMバイトを出力します
+末尾からNUMバイトを出力します
 
 ```console
-$ tail -c 50 file.txt
-ファイルの最後の50バイトがここに表示されます。
+$ tail -c 20 file.txt
+end of the file.
 ```
 
 ### **-q, --quiet, --silent**
@@ -48,87 +47,86 @@ $ tail -c 50 file.txt
 
 ```console
 $ tail -q file1.txt file2.txt
-[ヘッダーなしで各ファイルの最後の10行を表示する]
+Last line of file1
+Last line of file2
+```
+
+### **--pid=PID**
+
+-fと共に使用すると、プロセスID（PID）が終了した後に終了します
+
+```console
+$ tail -f --pid=1234 logfile.txt
 ```
 
 ## 使用例
 
-### ログファイルをリアルタイムで監視する
-
-```console
-$ tail -f /var/log/apache2/access.log
-192.168.1.1 - - [04/May/2025:10:15:32 +0000] "GET /index.html HTTP/1.1" 200 1234
-192.168.1.2 - - [04/May/2025:10:15:45 +0000] "GET /images/logo.png HTTP/1.1" 200 5678
-[新しいエントリが表示され続ける]
-```
-
-### 複数ファイルの最後の20行を表示する
-
-```console
-$ tail -n 20 file1.txt file2.txt
-==> file1.txt <==
-[file1.txtの最後の20行]
-
-==> file2.txt <==
-[file2.txtの最後の20行]
-```
-
-### 複数のファイルを同時に追跡する
+### 複数のログファイルを同時に監視する
 
 ```console
 $ tail -f /var/log/syslog /var/log/auth.log
 ==> /var/log/syslog <==
-[syslogの最後の10行]
+May  5 10:20:22 hostname service[1234]: Processing request
 
 ==> /var/log/auth.log <==
-[auth.logの最後の10行]
-[両方のファイルからの新しいエントリが表示され続ける]
+May  5 10:20:25 hostname sshd[5678]: Accepted publickey for user from 192.168.1.10
+```
+
+### 行番号付きで末尾20行を表示する
+
+```console
+$ tail -n 20 file.txt | nl
+     1  Line content here
+     2  More content here
+     ...
+     20 Last line here
+```
+
+### プロセスが終了したときに停止するログファイルの監視
+
+```console
+$ tail -f --pid=$(pgrep apache2) /var/log/apache2/access.log
 ```
 
 ## ヒント:
 
 ### grepと組み合わせてフィルタリングする
 
-`tail`と`grep`を組み合わせて、ログファイルから特定のエントリをフィルタリングできます：
+`tail -f logfile.txt | grep ERROR` を使用して、ログファイルをリアルタイムで監視しながら「ERROR」を含む行のみを表示します。
 
-```console
-$ tail -f /var/log/syslog | grep ERROR
-```
+### headと組み合わせて中間部分を取得する
 
-### ファイルがローテーションされても追跡を続ける
+`head -n 20 file.txt | tail -n 10` でファイルの中間部分（11〜20行目）を抽出できます。
 
-`-f`の代わりに`tail -F`（大文字のF）を使用すると、ファイルがローテーションされたり再作成されたりしても追跡を続けることができます：
+### 複数ファイルを効率的に監視する
 
-```console
-$ tail -F /var/log/application.log
-```
+`tail -f` で複数のログファイルを監視する場合、`--retry` を使用するとファイルが一時的にアクセス不能になり、後で再表示された場合も継続して監視できます。
 
-### 行数を省略形で指定する
+### フォローモードを適切に終了する
 
-`-n`とスペースなしで数字を使用できます：
-
-```console
-$ tail -n50 file.txt
-```
+監視が終わったら、Ctrl+Cを押してtailのフォローモードを終了します。
 
 ## よくある質問
 
-#### Q1. `tail -f`と`tail -F`の違いは何ですか？
-A. `tail -f`はファイル記述子を追跡するため、ファイルの名前が変更されると停止する場合があります。`tail -F`はファイル名を追跡し、ファイルがローテーションされたり再作成されたりしても内容の表示を継続します。
+#### Q1. ファイルの最後の10行を表示するにはどうすればよいですか？
+A. 単に `tail ファイル名` または `tail -n 10 ファイル名` を使用します。
 
-#### Q2. `tail -f`を終了するにはどうすればよいですか？
-A. Ctrl+Cを押すとコマンドが終了し、プロンプトに戻ります。
+#### Q2. ログファイルの変更をリアルタイムで監視するにはどうすればよいですか？
+A. `tail -f logfile.txt` を使用して、新しいコンテンツが追加されるとリアルタイムでファイルを監視します。
 
-#### Q3. ファイルの先頭と末尾の両方を見ることはできますか？
-A. いいえ、`tail`は末尾のみを表示します。先頭を見るには`head`を使用するか、パイプで組み合わせます：`head -n 5 file.txt && tail -n 5 file.txt`。
+#### Q3. 複数のファイルを一度に監視できますか？
+A. はい、`tail -f file1.txt file2.txt` を使用して複数のファイルを同時に監視できます。
 
-#### Q4. 複数のログファイルを一度に監視するにはどうすればよいですか？
-A. `tail -f`コマンドの後にすべてのファイルをリストするだけです：`tail -f file1.log file2.log file3.log`。
+#### Q4. 末尾から特定の行数を表示するにはどうすればよいですか？
+A. `tail -n 数字 ファイル名` を使用します。「数字」は表示したい行数です。
 
-## 参考資料
+#### Q5. tailのフォローモードを終了するにはどうすればよいですか？
+A. フォローモード中にCtrl+Cを押してtailコマンドを終了します。
+
+## 参考文献
 
 https://www.gnu.org/software/coreutils/manual/html_node/tail-invocation.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

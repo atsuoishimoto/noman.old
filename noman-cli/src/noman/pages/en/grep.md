@@ -4,61 +4,58 @@ Search for patterns in files.
 
 ## Overview
 
-`grep` is a powerful text search utility that searches for lines matching a specified pattern in files or standard input. It's commonly used to find specific text within files, filter command output, or search through large datasets. The name comes from "global regular expression print."
+`grep` searches for text patterns in files or standard input. It's primarily used to find lines that match a specified pattern and display them. The command is essential for searching through logs, code, and text files, making it one of the most frequently used text-processing tools in Unix/Linux systems.
 
 ## Options
 
 ### **-i, --ignore-case**
 
-Perform case-insensitive matching.
+Ignore case distinctions in patterns and input data
 
 ```console
-$ grep -i "hello" file.txt
-Hello World
-HELLO everyone
-hello there
+$ grep -i "error" log.txt
+ERROR: Connection failed
+error: file not found
+Warning: Some errors were detected
 ```
 
 ### **-v, --invert-match**
 
-Invert the match, showing lines that don't match the pattern.
+Select non-matching lines
 
 ```console
 $ grep -v "error" log.txt
-Starting application
-Loading configuration
-Application running
-Shutting down
+Connection established
+Process completed successfully
+System started
 ```
 
 ### **-r, --recursive**
 
-Search recursively through directories.
+Read all files under each directory, recursively
 
 ```console
-$ grep -r "TODO" ./src/
-./src/main.c:// TODO: Implement error handling
-./src/utils.h:/* TODO: Add documentation */
-./src/config.c:// TODO: Fix configuration parsing
+$ grep -r "function" /path/to/project
+/path/to/project/file1.js:function calculateTotal() {
+/path/to/project/lib/utils.js:function formatDate(date) {
 ```
 
 ### **-l, --files-with-matches**
 
-Only print filenames of files containing matches.
+Print only names of files containing matches
 
 ```console
-$ grep -l "function" *.js
-utils.js
-main.js
-helpers.js
+$ grep -l "error" *.log
+app.log
+system.log
 ```
 
 ### **-n, --line-number**
 
-Show line numbers for matching lines.
+Prefix each line of output with the line number within its input file
 
 ```console
-$ grep -n "import" app.py
+$ grep -n "import" script.py
 3:import os
 5:import sys
 12:import datetime
@@ -66,44 +63,55 @@ $ grep -n "import" app.py
 
 ### **-c, --count**
 
-Print only the count of matching lines per file.
+Print only a count of matching lines per file
 
 ```console
 $ grep -c "error" *.log
 app.log:15
-system.log:3
-access.log:0
+system.log:7
+debug.log:0
+```
+
+### **-o, --only-matching**
+
+Print only the matched parts of matching lines
+
+```console
+$ grep -o "error" log.txt
+error
+error
+error
 ```
 
 ### **-A NUM, --after-context=NUM**
 
-Show NUM lines after each match.
+Print NUM lines of trailing context after matching lines
 
 ```console
-$ grep -A 2 "function main" main.c
-function main() {
-  int x = 5;
-  printf("Starting program\n");
+$ grep -A 2 "Exception" error.log
+Exception in thread "main" java.lang.NullPointerException
+    at com.example.Main.process(Main.java:24)
+    at com.example.Main.main(Main.java:5)
 ```
 
 ### **-B NUM, --before-context=NUM**
 
-Show NUM lines before each match.
+Print NUM lines of leading context before matching lines
 
 ```console
-$ grep -B 1 "Exception" error.log
-2023-05-04 15:30:22 Processing request
-2023-05-04 15:30:23 Exception: Invalid input
+$ grep -B 1 "fatal" system.log
+May 4 15:30:22 server application[1234]: Critical error detected
+May 4 15:30:23 server application[1234]: fatal: system halted
 ```
 
 ### **-E, --extended-regexp**
 
-Use extended regular expressions.
+Interpret pattern as an extended regular expression
 
 ```console
-$ grep -E "(error|warning)" log.txt
-System error: disk full
-Warning: connection timeout
+$ grep -E "error|warning" log.txt
+error: file not found
+warning: disk space low
 ```
 
 ## Usage Examples
@@ -111,18 +119,18 @@ Warning: connection timeout
 ### Basic Pattern Search
 
 ```console
-$ grep "password" config.txt
-password=mysecretpassword
-# default password is 'admin'
+$ grep "function" script.js
+function calculateTotal() {
+function displayResults() {
 ```
 
 ### Combining Multiple Options
 
 ```console
-$ grep -in "todo" --color *.py
-utils.py:45:# TODO: Refactor this function
-helpers.py:23:# todo: Add error handling
-main.py:102:# TODO: Implement caching
+$ grep -in "error" --color=auto log.txt
+15:Error: Unable to connect to database
+42:error: invalid configuration
+78:ERROR: Service unavailable
 ```
 
 ### Using Regular Expressions
@@ -134,51 +142,66 @@ $ grep "^[0-9]" data.txt
 789 Pine Rd
 ```
 
-### Piping Command Output to grep
+### Searching Multiple Files
 
 ```console
-$ ps aux | grep "firefox"
-user     12345  2.5  1.8 3458196 298796 ?      Sl   09:15   0:45 /usr/lib/firefox/firefox
+$ grep "TODO" *.py
+main.py:# TODO: Implement error handling
+utils.py:# TODO: Optimize this algorithm
+config.py:# TODO: Add configuration validation
 ```
 
-## Tips
+### Displaying Only Filenames with Matches
 
-### Use Context for Better Understanding
+```console
+$ grep -l "error" logs/*.log
+logs/app.log
+logs/system.log
+```
 
-Combine `-A`, `-B`, or `-C` (for both before and after context) to see the surrounding lines of a match, which helps understand the context of the match.
+## Tips:
 
-### Colorize Matches for Visibility
+### Use Color Highlighting
 
-Use `--color=auto` to highlight matching text in color, making it easier to spot in large outputs. Many systems alias grep to include this by default.
+The `--color=auto` option highlights matching text in color, making it easier to spot matches in large outputs.
 
-### Exclude Directories
+### Pipe with Other Commands
 
-When searching recursively, use `--exclude-dir=PATTERN` to skip directories matching PATTERN, which can significantly speed up searches in large codebases.
+Combine grep with other commands using pipes for powerful filtering:
+```console
+$ ps aux | grep "nginx"
+```
 
-### Search for Exact Words
+### Use Word Boundaries
 
-Use `-w` or `--word-regexp` to match only whole words, preventing partial matches within larger words.
+The `-w` option matches whole words only, preventing partial matches:
+```console
+$ grep -w "log" file.txt  # Matches "log" but not "login" or "catalog"
+```
 
 ### Quiet Mode for Scripts
 
-Use `-q` or `--quiet` in scripts to suppress output and just use the exit status to determine if a match was found.
+Use `-q` for quiet mode when you only need to check if a pattern exists (returns exit status 0 if found):
+```console
+$ grep -q "error" log.txt && echo "Errors found!"
+```
 
 ## Frequently Asked Questions
 
 #### Q1. How do I search for a pattern in multiple files?
-A. Simply list the files after the pattern: `grep "pattern" file1.txt file2.txt file3.txt` or use wildcards: `grep "pattern" *.txt`.
+A. Simply list the files after the pattern: `grep "pattern" file1 file2 file3` or use wildcards: `grep "pattern" *.txt`.
 
 #### Q2. How can I search for a pattern that contains spaces?
 A. Enclose the pattern in quotes: `grep "hello world" file.txt`.
 
-#### Q3. How do I search for a pattern that includes special characters?
-A. Escape special characters with a backslash or use single quotes: `grep 'pattern\*' file.txt` or `grep "pattern\*" file.txt`.
+#### Q3. How do I search for lines that don't contain a pattern?
+A. Use the `-v` option: `grep -v "pattern" file.txt`.
 
 #### Q4. Can grep search for multiple patterns at once?
-A. Yes, use the `-e` option multiple times or use extended regex with `-E`: `grep -e "pattern1" -e "pattern2" file.txt` or `grep -E "pattern1|pattern2" file.txt`.
+A. Yes, use the `-E` option with the pipe symbol: `grep -E "pattern1|pattern2" file.txt` or use `egrep "pattern1|pattern2" file.txt`.
 
 #### Q5. How do I make grep show only the matching part of a line?
-A. Use the `-o` or `--only-matching` option: `grep -o "pattern" file.txt`.
+A. Use the `-o` option: `grep -o "pattern" file.txt`.
 
 ## References
 
@@ -186,4 +209,5 @@ https://www.gnu.org/software/grep/manual/grep.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/06 Added -o option for displaying only matched parts of lines.
+- 2025/05/05 First revision

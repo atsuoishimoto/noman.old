@@ -1,22 +1,22 @@
 # egrep command
 
-Search for patterns in text using extended regular expressions.
+Search for patterns using extended regular expressions.
 
 ## Overview
 
-`egrep` is a pattern-matching tool that searches for lines in files or standard input that match a specified pattern. It's functionally equivalent to `grep -E`, using extended regular expressions which provide more powerful pattern matching capabilities than basic grep. This command is commonly used for searching through code, logs, and text files.
+`egrep` is a pattern-matching tool that searches for text patterns in files using extended regular expressions. It's functionally equivalent to `grep -E` and provides more powerful pattern matching capabilities than standard `grep`. The command prints lines that match the specified pattern.
 
 ## Options
 
 ### **-i, --ignore-case**
 
-Perform case-insensitive matching
+Ignore case distinctions in patterns and input data
 
 ```console
 $ egrep -i "error" logfile.txt
-ERROR: Connection failed
-error: file not found
-Warning: Some errors were detected
+Error: Connection refused
+WARNING: error in line 42
+System error detected
 ```
 
 ### **-v, --invert-match**
@@ -24,15 +24,15 @@ Warning: Some errors were detected
 Select non-matching lines
 
 ```console
-$ egrep -v "success" logfile.txt
-ERROR: Connection failed
-Warning: operation incomplete
-Process terminated unexpectedly
+$ egrep -v "error" logfile.txt
+Connection established successfully
+System started at 10:00 AM
+All processes running normally
 ```
 
 ### **-c, --count**
 
-Print only a count of matching lines
+Print only a count of matching lines per file
 
 ```console
 $ egrep -c "error" logfile.txt
@@ -41,18 +41,18 @@ $ egrep -c "error" logfile.txt
 
 ### **-n, --line-number**
 
-Prefix each line of output with its line number in the input file
+Prefix each line of output with the line number within its input file
 
 ```console
 $ egrep -n "error" logfile.txt
 5:error: file not found
-12:error: permission denied
-27:error: timeout occurred
+12:system error occurred
+27:error code: 404
 ```
 
 ### **-l, --files-with-matches**
 
-Print only the names of files containing matches
+Print only names of files containing matches
 
 ```console
 $ egrep -l "error" *.log
@@ -61,82 +61,103 @@ system.log
 error.log
 ```
 
+### **-o, --only-matching**
+
+Show only the part of a line matching the pattern
+
+```console
+$ egrep -o "error[0-9]+" logfile.txt
+error404
+error500
+```
+
 ### **-r, --recursive**
 
 Read all files under each directory, recursively
 
 ```console
 $ egrep -r "password" /home/user/
-/home/user/config.txt:password=12345
-/home/user/notes/secret.txt:my password hint
+/home/user/config.txt:password=123456
+/home/user/notes/secret.txt:my password is qwerty
 ```
 
 ## Usage Examples
 
-### Using Extended Regular Expressions
+### Basic Pattern Matching
 
 ```console
-$ egrep "(error|warning)" logfile.txt
-error: file not found
-warning: disk space low
-error: permission denied
+$ egrep "apple|orange" fruits.txt
+apple
+orange
+mixed apple juice
+fresh orange
 ```
 
-### Matching Multiple Patterns
+### Using Character Classes
 
 ```console
-$ egrep "user[0-9]+" users.txt
-user123 logged in at 14:30
-user456 account created
-user789 password changed
+$ egrep "[0-9]+" numbers.txt
+42
+123
+7890
 ```
 
-### Combining Options
+### Using Quantifiers
 
 ```console
-$ egrep -in "fail(ed|ure)" *.log
-app.log:15:Connection failed to server
-system.log:42:System failure detected
-network.log:7:Authentication failed for user admin
+$ egrep "a{2,}" words.txt
+aardvark
+baaad
+shaaa
+```
+
+### Combining Multiple Options
+
+```console
+$ egrep -in "error|warning" --color=auto logfile.txt
+3:WARNING: disk space low
+7:error: connection timeout
+15:WARNING: memory usage high
+22:error: invalid input
 ```
 
 ## Tips:
 
-### Use Word Boundaries for Precise Matching
+### Use Extended Regular Expressions
 
-Use `\b` to match word boundaries for more precise results:
+`egrep` supports powerful regex features like `+`, `?`, `|`, `()`, and `{}` without escaping, making complex pattern matching easier.
 
+### Colorize Matches
+
+Use `--color=auto` to highlight matching text in color, making it easier to spot matches in large outputs.
+
+### Combine with Other Commands
+
+Pipe the output of other commands to `egrep` to filter results:
+```console
+$ ps aux | egrep "(firefox|chrome)"
+```
+
+### Use Word Boundaries
+
+To match whole words only, use word boundaries `\b`:
 ```console
 $ egrep "\berror\b" logfile.txt
 ```
 
-This matches "error" but not "errors" or "errorless".
-
-### Colorize Matches for Better Visibility
-
-Most modern implementations of egrep automatically colorize matches, but you can ensure this with:
-
-```console
-$ egrep --color "pattern" file.txt
-```
-
-### Remember egrep is Equivalent to grep -E
-
-`egrep` is deprecated in some systems in favor of `grep -E`. They function identically, but `grep -E` is more portable.
-
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between grep and egrep?
-A. `egrep` uses extended regular expressions by default, which is equivalent to `grep -E`. Extended regex syntax allows special characters like `+`, `?`, `|`, `()` without escaping them.
+#### Q1. What's the difference between `grep` and `egrep`?
+A. `egrep` is equivalent to `grep -E`, which uses extended regular expressions. Extended regex supports additional metacharacters like `+`, `?`, and `|` without requiring backslashes.
 
-#### Q2. How do I search for a pattern in multiple files?
-A. Simply list the files after the pattern: `egrep "pattern" file1.txt file2.txt` or use wildcards: `egrep "pattern" *.txt`.
+#### Q2. How do I search for multiple patterns?
+A. Use the pipe symbol (`|`) to search for alternative patterns: `egrep "pattern1|pattern2" file.txt`
 
-#### Q3. How can I exclude certain patterns from my search?
-A. Use the `-v` option: `egrep -v "pattern_to_exclude" file.txt`.
+#### Q3. How can I search for a pattern in all files in a directory?
+A. Use the recursive option: `egrep -r "pattern" directory/`
 
-#### Q4. Can egrep search compressed files?
-A. No, not directly. For compressed files, use specialized tools like `zgrep` for gzipped files.
+#### Q4. How do I exclude certain files from the search?
+A. Use `--exclude` or `--exclude-dir` options: `egrep -r "pattern" --exclude="*.log" directory/`
 
 ## References
 
@@ -144,4 +165,5 @@ https://www.gnu.org/software/grep/manual/grep.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/06 Added -o, --only-matching option
+- 2025/05/05 First revision

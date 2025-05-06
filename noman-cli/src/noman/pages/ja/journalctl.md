@@ -4,158 +4,200 @@ systemdジャーナルからメッセージを検索して表示します。
 
 ## 概要
 
-`journalctl`は、systemdジャーナルログを表示・検索するためのコマンドラインユーティリティです。systemdジャーナルは、カーネル、システムサービス、アプリケーションなど様々なソースからログデータを収集・保存する集中型ログシステムです。システムの問題をトラブルシューティングするための強力なフィルタリング機能を提供しています。
+`journalctl`は、systemdジャーナルシステムによって収集されたログを検索・表示するためのコマンドラインユーティリティです。システムログの閲覧、様々な条件によるエントリのフィルタリング、リアルタイムでのログの追跡などが可能です。systemdジャーナルは、構造化されたインデックス付きの形式でログデータを保存するため、特定の情報を効率的に検索・取得できます。
 
 ## オプション
 
 ### **-f, --follow**
 
-リアルタイムでジャーナルを追跡します（`tail -f`と同様）
+ジャーナルをフォローし、新しいエントリが追加されるたびに表示します。
 
 ```console
 $ journalctl -f
-May 04 14:32:15 hostname systemd[1]: Started Daily apt download activities.
-May 04 14:32:16 hostname CRON[12345]: (root) CMD (command being executed)
-May 04 14:32:20 hostname sshd[12346]: Accepted publickey for user from 192.168.1.10
+May 05 14:32:10 hostname systemd[1]: Started Daily apt download activities.
+May 05 14:32:15 hostname CRON[12345]: (root) CMD (command_from_crontab)
+-- Logs begin at Mon 2025-05-05 14:32:10 UTC. --
 ```
 
-### **-u, --unit=UNIT**
+### **-n, --lines=**
 
-特定のsystemdユニット（サービス）のログを表示します
-
-```console
-$ journalctl -u ssh
-May 03 09:15:22 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.
-May 03 09:15:22 hostname sshd[1234]: Server listening on :: port 22.
-May 04 10:23:45 hostname sshd[5678]: Accepted password for user from 192.168.1.5
-```
-
-### **-b, --boot[=ID]**
-
-現在の起動時または特定の起動時のログを表示します
-
-```console
-$ journalctl -b
-[最新の起動以降のすべてのログを表示]
-
-$ journalctl -b -1
-[前回の起動時のログを表示]
-```
-
-### **-n, --lines=N**
-
-最新のN行のログを表示します
+指定した数の最新ジャーナルエントリを表示します。
 
 ```console
 $ journalctl -n 5
-May 04 14:45:10 hostname systemd[1]: Starting Daily apt upgrade and clean activities...
-May 04 14:45:11 hostname systemd[1]: Started Daily apt upgrade and clean activities.
-May 04 14:45:12 hostname CRON[12347]: (root) CMD (apt-get update)
-May 04 14:45:15 hostname kernel: [12345.678901] USB disconnect, device number 5
-May 04 14:45:20 hostname NetworkManager[789]: Connectivity established
+May 05 14:30:10 hostname systemd[1]: Started Session 42 of user username.
+May 05 14:30:15 hostname sshd[12345]: Accepted publickey for username from 192.168.1.10
+May 05 14:31:20 hostname sudo[12346]: username : TTY=pts/0 ; PWD=/home/username ; USER=root ; COMMAND=/usr/bin/apt update
+May 05 14:31:45 hostname systemd[1]: Starting Daily apt upgrade and clean activities...
+May 05 14:32:10 hostname systemd[1]: Started Daily apt download activities.
 ```
 
-### **--since=DATE, --until=DATE**
+### **-u, --unit=**
 
-指定した日時より新しいまたは古いエントリを表示します
+指定したsystemdユニットからのログを表示します。
 
 ```console
-$ journalctl --since="2025-05-03 10:00:00" --until="2025-05-03 11:00:00"
-[2025年5月3日の午前10時から11時までのログを表示]
+$ journalctl -u ssh
+May 05 08:15:20 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.
+May 05 08:15:20 hostname sshd[1234]: Server listening on :: port 22.
+May 05 14:30:15 hostname sshd[12345]: Accepted publickey for username from 192.168.1.10
 ```
 
-### **-p, --priority=PRIORITY**
+### **-b, --boot**
 
-メッセージの優先度でフィルタリングします（0-7または「err」などの名前）
+現在の起動からのログを表示します。前回の起動は -b -1、その前の起動は -b -2 などと指定します。
+
+```console
+$ journalctl -b
+May 05 08:00:01 hostname kernel: Linux version 5.15.0-generic
+May 05 08:00:05 hostname systemd[1]: System Initialization.
+May 05 08:00:10 hostname systemd[1]: Started Journal Service.
+...
+```
+
+### **--since=, --until=**
+
+指定した日時より新しい、または古いエントリを表示します。
+
+```console
+$ journalctl --since="2025-05-05 10:00:00" --until="2025-05-05 11:00:00"
+May 05 10:00:05 hostname systemd[1]: Started Scheduled task.
+May 05 10:15:30 hostname nginx[1234]: 192.168.1.100 - - [05/May/2025:10:15:30 +0000] "GET / HTTP/1.1" 200 612
+May 05 10:45:22 hostname kernel: [UFW BLOCK] IN=eth0 OUT= MAC=00:11:22:33:44:55 SRC=203.0.113.1
+```
+
+### **-p, --priority=**
+
+メッセージの優先度でフィルタリングします（0-7またはdebug、info、notice、warning、err、crit、alert、emerg）。
 
 ```console
 $ journalctl -p err
-May 02 15:30:45 hostname kernel: [12345.678901] CPU: 2 PID: 1234 Comm: process Tainted: G        W  5.15.0-91-generic
-May 03 08:12:33 hostname application[5678]: Error: Failed to connect to database
-May 04 02:45:12 hostname systemd[1]: Failed to start Apache Web Server.
+May 05 09:12:34 hostname application[1234]: Failed to connect to database: Connection refused
+May 05 11:23:45 hostname kernel: CPU: 2 PID: 1234 Comm: process Tainted: G        W  O 5.15.0-generic
 ```
 
-### **-o, --output=FORMAT**
+### **-k, --dmesg**
 
-出力形式を制御します（short、verbose、jsonなど）
+`dmesg`コマンドの出力と同様に、カーネルメッセージのみを表示します。
 
 ```console
-$ journalctl -o json -n 1
-{"_BOOT_ID":"abcdef123456789","_MACHINE_ID":"fedcba987654321","MESSAGE":"System startup complete","PRIORITY":"6","SYSLOG_FACILITY":"3","SYSLOG_IDENTIFIER":"systemd","_UID":"0","_GID":"0","_COMM":"systemd","_PID":"1","_SOURCE_REALTIME_TIMESTAMP":"1714896000000000"}
+$ journalctl -k
+May 05 08:00:01 hostname kernel: Linux version 5.15.0-generic
+May 05 08:00:02 hostname kernel: Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-generic
+May 05 08:00:03 hostname kernel: Memory: 16384MB available
+```
+
+### **-o, --output=**
+
+出力形式を制御します（short、short-precise、verbose、json、json-prettyなど）。
+
+```console
+$ journalctl -n 1 -o json-pretty
+{
+    "__CURSOR" : "s=6c081a8b9c4b4f91a4a5f5c9d8e7f6a5;i=1234;b=5a4b3c2d1e0f;m=9876543210;t=5e4d3c2b1a09;x=abcdef0123456789",
+    "__REALTIME_TIMESTAMP" : "1714924330000000",
+    "__MONOTONIC_TIMESTAMP" : "9876543210",
+    "_BOOT_ID" : "5a4b3c2d1e0f",
+    "PRIORITY" : "6",
+    "_MACHINE_ID" : "0123456789abcdef0123456789abcdef",
+    "_HOSTNAME" : "hostname",
+    "MESSAGE" : "Started Daily apt download activities.",
+    "_PID" : "1",
+    "_COMM" : "systemd",
+    "_EXE" : "/usr/lib/systemd/systemd",
+    "_SYSTEMD_CGROUP" : "/init.scope",
+    "_SYSTEMD_UNIT" : "init.scope"
+}
 ```
 
 ## 使用例
 
-### 特定の期間のログを表示する
+### 特定のサービスのログを表示する
+
+```console
+$ journalctl -u nginx.service
+May 05 08:10:15 hostname systemd[1]: Started A high performance web server and a reverse proxy server.
+May 05 08:10:16 hostname nginx[1234]: nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+May 05 08:10:16 hostname nginx[1234]: nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
+### 時間範囲でログをフィルタリングする
 
 ```console
 $ journalctl --since yesterday --until today
-[昨日から今日の現在時刻までのすべてのログを表示]
+May 04 00:00:10 hostname systemd[1]: Starting Daily Cleanup of Temporary Directories...
+May 04 00:01:15 hostname systemd[1]: Finished Daily Cleanup of Temporary Directories.
+...
+May 04 23:59:45 hostname systemd[1]: Starting Daily apt upgrade and clean activities...
 ```
 
-### 実行ファイルでログをフィルタリングする
+### 特定の実行ファイルからのログを表示する
 
 ```console
-$ journalctl _COMM=sshd
-May 01 08:15:22 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.
-May 01 08:15:22 hostname sshd[1234]: Server listening on :: port 22.
-May 02 14:23:45 hostname sshd[5678]: Accepted publickey for user from 192.168.1.10
+$ journalctl /usr/bin/sshd
+May 05 08:15:20 hostname sshd[1234]: Server listening on 0.0.0.0 port 22.
+May 05 08:15:20 hostname sshd[1234]: Server listening on :: port 22.
+May 05 14:30:15 hostname sshd[12345]: Accepted publickey for username from 192.168.1.10
 ```
 
 ### 複数のフィルターを組み合わせる
 
 ```console
-$ journalctl -u nginx -p err --since today
-May 04 03:15:22 hostname nginx[1234]: 2025/05/04 03:15:22 [error] 1234#0: *123 open() "/var/www/html/favicon.ico" failed (2: No such file or directory)
-```
-
-### カーネルメッセージを表示する
-
-```console
-$ journalctl -k
-May 04 00:00:01 hostname kernel: Linux version 5.15.0-91-generic (buildd@ubuntu) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0)
-May 04 00:00:01 hostname kernel: Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-91-generic root=UUID=abcdef-1234-5678 ro quiet splash
+$ journalctl -u apache2.service --since today -p err
+May 05 09:45:12 hostname apache2[2345]: [error] [client 192.168.1.50] File does not exist: /var/www/html/favicon.ico
+May 05 13:22:30 hostname apache2[2345]: [error] [client 192.168.1.60] PHP Fatal error: Uncaught Error: Call to undefined function in /var/www/html/index.php:42
 ```
 
 ## ヒント:
 
-### ページャーコントロールを使用する
+### 永続的なストレージを使用する
 
-大量のログを表示する際、journalctlはページャー（lessのような）を使用します。`/パターン`で検索、`n`で次の一致、`g`で先頭へ移動、`G`で末尾へ移動、`q`で終了できます。
+デフォルトでは、ジャーナルログは再起動後に失われる可能性があります。再起動後もログを永続化するには、`/var/log/journal`ディレクトリを作成します：
 
-### 永続的なジャーナルストレージ
+```console
+$ sudo mkdir -p /var/log/journal
+$ sudo systemd-tmpfiles --create --prefix /var/log/journal
+```
 
-デフォルトでは、ジャーナルログはメモリにのみ保存される場合があります。再起動後もログを保持するには、`/etc/systemd/journald.conf`に`Storage=persistent`が設定されていることと、`/var/log/journal/`ディレクトリが存在することを確認してください。
+### ジャーナルサイズを制限する
 
-### ディスク容量の管理
+`journalctl --vacuum-size=1G`でストレージを1GBに制限したり、`journalctl --vacuum-time=1month`で1ヶ月より古いエントリを削除したりして、ジャーナルサイズを制御できます。
 
-ジャーナルログは大量のディスク容量を消費する可能性があります。`journalctl --disk-usage`で使用容量を確認し、`journalctl --vacuum-size=1G`でジャーナルサイズを1GBに制限できます。
+### フィールドフィルタリングによる高速検索
+
+パフォーマンス向上のためにフィールド固有の検索を使用します：
+```console
+$ journalctl _SYSTEMD_UNIT=ssh.service _PID=1234
+```
 
 ### 分析用にログをエクスポートする
 
-`journalctl -o export`を使用してログをエクスポートし、別のマシンに転送して`journalctl --file=exported.journal`でインポートすることができます。
+さらなる分析や共有のためにログをファイルにエクスポートします：
+```console
+$ journalctl -u nginx --since today > nginx-logs.txt
+```
 
 ## よくある質問
 
-#### Q1. 現在の起動時のログだけを見るにはどうすればよいですか？
-A. `journalctl -b`を使用すると、現在の起動時のログのみを表示できます。
+#### Q1. 現在の起動からのログのみを表示するにはどうすればよいですか？
+A. `journalctl -b`を使用して、現在の起動からのログを表示します。
 
-#### Q2. 特定のサービスのログを見るにはどうすればよいですか？
-A. `journalctl -u サービス名`を使用します。例えば、SSHサービスのログを見るには`journalctl -u ssh`を使用します。
+#### Q2. リアルタイムでログを表示するには（tail -fのように）？
+A. `journalctl -f`を使用してジャーナルをフォローし、新しいエントリが到着したときに表示します。
 
-#### Q3. 重要度レベルでログをフィルタリングするにはどうすればよいですか？
-A. `journalctl -p 優先度`を使用します。優先度は数字（0-7）または名前（emerg、alert、crit、err、warning、notice、info、debug）で指定できます。
+#### Q3. 古いジャーナルエントリを消去するにはどうすればよいですか？
+A. `journalctl --vacuum-time=2d`を使用して2日より古いエントリを削除するか、`journalctl --vacuum-size=500M`でジャーナルサイズを500MBに制限します。
 
-#### Q4. 古いジャーナルログをクリアするにはどうすればよいですか？
-A. `journalctl --vacuum-time=2d`で2日より古いエントリを削除するか、`journalctl --vacuum-size=500M`で合計サイズを500MBに制限できます。
+#### Q4. 特定のアプリケーションからのログを表示するにはどうすればよいですか？
+A. systemdサービスの場合は`journalctl -u サービス名.service`を、特定のバイナリの場合は`journalctl /実行ファイルへのパス`を使用します。
 
-#### Q5. リアルタイムでログを追跡するにはどうすればよいですか？
-A. `journalctl -f`を使用すると、`tail -f`と同様に、書き込まれるログをリアルタイムで追跡できます。
+#### Q5. カーネルメッセージのみを表示するにはどうすればよいですか？
+A. `journalctl -k`または`journalctl --dmesg`を使用して、カーネルメッセージのみを表示します。
 
-## 参考資料
+## 参考文献
 
 https://www.freedesktop.org/software/systemd/man/journalctl.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/05 初版

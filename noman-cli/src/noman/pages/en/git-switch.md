@@ -4,11 +4,11 @@ Switch branches or restore working tree files.
 
 ## Overview
 
-The `git switch` command is used to switch between branches in a Git repository. It was introduced in Git 2.23 as a more user-friendly alternative to certain uses of `git checkout`. While `git checkout` serves multiple purposes, `git switch` is specifically designed for branch operations, making it clearer and less error-prone.
+The `git switch` command is used to switch between branches in a Git repository. It was introduced in Git 2.23 as a more user-friendly alternative to certain uses of `git checkout`. While `git checkout` serves multiple purposes, `git switch` is specifically designed for branch operations, making the command structure more intuitive.
 
 ## Options
 
-### **-c, --create \<branch>**
+### **-c, --create**
 
 Create a new branch and switch to it.
 
@@ -22,21 +22,11 @@ Switched to a new branch 'feature-login'
 Switch to a commit in detached HEAD state.
 
 ```console
-$ git switch --detach HEAD~3
-Note: switching to 'HEAD~3'.
+$ git switch -d 1a2b3c4
+Note: switching to '1a2b3c4'.
 
 You are in 'detached HEAD' state...
-HEAD is now at a1b2c3d Previous commit message
-```
-
-### **-t, --track**
-
-When creating a new branch, set up "upstream" configuration.
-
-```console
-$ git switch -c feature-auth --track origin/feature-auth
-Branch 'feature-auth' set up to track remote branch 'feature-auth' from 'origin'.
-Switched to a new branch 'feature-auth'
+HEAD is now at 1a2b3c4 Add login functionality
 ```
 
 ### **--discard-changes**
@@ -48,13 +38,41 @@ $ git switch --discard-changes main
 Switched to branch 'main'
 ```
 
+### **-f, --force**
+
+Force switch even if the index or working tree differs from HEAD.
+
+```console
+$ git switch -f main
+Switched to branch 'main'
+```
+
 ### **-m, --merge**
 
-Merge local modifications into the new branch.
+Perform a three-way merge between the current branch, your working tree contents, and the new branch.
 
 ```console
 $ git switch -m feature-branch
 Switched to branch 'feature-branch'
+```
+
+### **--orphan**
+
+Create a new orphan branch (a branch with no history).
+
+```console
+$ git switch --orphan new-root
+Switched to a new branch 'new-root'
+```
+
+### **-t, --track**
+
+When creating a new branch, set up "upstream" configuration.
+
+```console
+$ git switch -c feature-branch -t origin/feature-branch
+Branch 'feature-branch' set up to track remote branch 'feature-branch' from 'origin'.
+Switched to a new branch 'feature-branch'
 ```
 
 ### **-**
@@ -78,8 +96,8 @@ Switched to branch 'main'
 ### Creating and Switching to a New Branch
 
 ```console
-$ git switch -c new-feature
-Switched to a new branch 'new-feature'
+$ git switch -c feature-auth
+Switched to a new branch 'feature-auth'
 ```
 
 ### Switching to a Remote Branch
@@ -90,40 +108,50 @@ Branch 'feature-branch' set up to track remote branch 'feature-branch' from 'ori
 Switched to a new branch 'feature-branch'
 ```
 
+### Switching to a Specific Commit
+
+```console
+$ git switch -d 1a2b3c4
+Note: switching to '1a2b3c4'.
+
+You are in 'detached HEAD' state...
+HEAD is now at 1a2b3c4 Add login functionality
+```
+
 ## Tips:
 
-### Use `git switch -` to Toggle Between Branches
+### Use `-` to Toggle Between Branches
 
-Similar to `cd -` in Unix, `git switch -` allows you to quickly toggle between the current and previous branch, which is useful during development when you need to frequently switch contexts.
+The dash shorthand (`git switch -`) allows you to quickly toggle between the current and previous branch, similar to `cd -` in the shell.
 
-### Prefer `git switch` Over `git checkout` for Branch Operations
+### Combine with `git branch` for Better Workflow
 
-`git switch` is more explicit and safer than `git checkout` when working with branches, as it avoids the confusion of `checkout`'s dual purpose (switching branches and restoring files).
+Use `git branch` to see available branches before switching: `git branch` followed by `git switch branch-name`.
 
-### Use `--discard-changes` with Caution
+### Prefer `switch` Over `checkout` for Branch Operations
 
-The `--discard-changes` option will discard all local modifications. Make sure you don't need those changes before using this option, as they cannot be recovered.
+`git switch` is more intuitive than `git checkout` for branch operations, as it's specifically designed for this purpose and has clearer semantics.
 
 ### Create Tracking Branches Automatically
 
-When switching to a remote branch that doesn't exist locally, Git will automatically create a tracking branch. This saves you from having to use the `-c` and `--track` options explicitly.
+When switching to a remote branch that doesn't exist locally, Git will automatically create a tracking branch if the branch name exists on a single remote.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `git switch` and `git checkout`?
-A. `git switch` focuses solely on branch operations, while `git checkout` has multiple purposes including branch switching and file restoration. `git switch` was introduced to provide clearer, more focused commands.
+A. `git switch` is focused solely on branch operations, while `git checkout` has multiple purposes including branch switching, file restoration, and more. `git switch` was introduced to provide clearer, more specific commands.
 
-#### Q2. How do I create a new branch from a specific commit?
-A. Use `git switch -c <new-branch> <commit-hash>` to create and switch to a new branch starting from a specific commit.
+#### Q2. How do I create a new branch and switch to it?
+A. Use `git switch -c new-branch-name` to create and switch to a new branch in one command.
 
-#### Q3. Can I switch branches with uncommitted changes?
-A. Yes, if the changes don't conflict with the target branch. If there are conflicts, Git will prevent the switch. You can use `--discard-changes` to discard modifications or `--merge` to merge them into the target branch.
+#### Q3. How can I discard local changes when switching branches?
+A. Use `git switch --discard-changes branch-name` to discard local modifications before switching.
 
-#### Q4. How do I switch to a remote branch?
-A. Simply use `git switch branch-name`. If the branch exists on a remote but not locally, Git will create a tracking branch automatically.
+#### Q4. How do I switch back to my previous branch?
+A. Use `git switch -` to switch to the previously checked out branch.
 
-#### Q5. How can I switch to a specific tag?
-A. Use `git switch --detach tag-name` to switch to the commit that the tag points to in a detached HEAD state.
+#### Q5. What happens if I have uncommitted changes when switching branches?
+A. Git will prevent you from switching if there are conflicts. You can either commit your changes, stash them with `git stash`, or use the `--discard-changes` or `--merge` options.
 
 ## References
 
@@ -131,4 +159,4 @@ https://git-scm.com/docs/git-switch
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

@@ -1,73 +1,73 @@
 # du command
 
-Estimate file space usage for files and directories.
+Estimate file space usage for directories and files.
 
 ## Overview
 
-The `du` (disk usage) command estimates and displays the disk space used by files and directories. It's useful for finding large files or directories that consume significant disk space, helping you manage storage efficiently.
+The `du` (disk usage) command estimates and displays the disk space used by files and directories. It's particularly useful for finding which directories are consuming the most space on your system, helping you identify areas for cleanup.
 
 ## Options
 
 ### **-h, --human-readable**
 
-Display sizes in human-readable format (e.g., 1K, 234M, 2G) instead of blocks.
+Display sizes in human-readable format (e.g., 1K, 234M, 2G)
 
 ```console
 $ du -h Documents
-16K     Documents/notes
-4.0K    Documents/templates
-24K     Documents
+4.0K    Documents/notes
+16K     Documents/projects/code
+24K     Documents/projects
+28K     Documents
 ```
 
 ### **-s, --summarize**
 
-Display only a total for each argument (summarize).
+Display only a total for each argument
 
 ```console
 $ du -s Documents
-24      Documents
-```
-
-### **-a, --all**
-
-Show counts for all files, not just directories.
-
-```console
-$ du -a Documents
-4       Documents/notes/todo.txt
-8       Documents/notes/meeting.txt
-16      Documents/notes
-4       Documents/templates/letter.txt
-4       Documents/templates
-24      Documents
+28      Documents
 ```
 
 ### **-c, --total**
 
-Produce a grand total of all arguments after all arguments have been processed.
+Produce a grand total of all arguments
 
 ```console
 $ du -c Documents Downloads
-24      Documents
+28      Documents
 156     Downloads
-180     total
+184     total
+```
+
+### **-a, --all**
+
+Show sizes for files as well as directories
+
+```console
+$ du -a Documents
+4       Documents/notes/todo.txt
+4       Documents/notes
+8       Documents/projects/code/script.py
+16      Documents/projects/code
+24      Documents/projects
+28      Documents
 ```
 
 ### **--max-depth=N**
 
-Print the total for a directory only if it is N or fewer levels below the command line argument.
+Print the total for a directory only if it is N or fewer levels below the command line argument
 
 ```console
-$ du --max-depth=1 /home/user
-24      /home/user/Documents
-156     /home/user/Downloads
-84      /home/user/Pictures
-1024    /home/user
+$ du --max-depth=1 Documents
+4       Documents/notes
+24      Documents/projects
+28      Documents
 ```
 
 ### **-x, --one-file-system**
 
-Skip directories on different file systems.
+Skip directories on different file systems
 
 ```console
 $ du -x /home
@@ -79,11 +79,11 @@ $ du -x /home
 
 ```console
 $ du -h --max-depth=1 /home/user | sort -hr
-1.0G    /home/user
-450M    /home/user/Videos
-350M    /home/user/Downloads
-120M    /home/user/Pictures
-24M     /home/user/Documents
+1.2G    /home/user
+650M    /home/user/Downloads
+320M    /home/user/Videos
+200M    /home/user/Documents
+45M     /home/user/.cache
 ```
 
 ### Checking specific directory size with human-readable output
@@ -93,63 +93,62 @@ $ du -sh /var/log
 156M    /var/log
 ```
 
-### Finding the 5 largest files/directories
+### Finding large files in the current directory
 
 ```console
-$ du -ha /home/user | sort -hr | head -5
-1.0G    /home/user
-450M    /home/user/Videos
-350M    /home/user/Downloads
-200M    /home/user/Videos/movie.mp4
-120M    /home/user/Pictures
+$ du -ah . | sort -hr | head -n 10
+1.2G    .
+650M    ./Downloads
+320M    ./Videos
+200M    ./Documents
+150M    ./Downloads/ubuntu.iso
+100M    ./Videos/lecture.mp4
+45M     ./.cache
+25M     ./Documents/thesis.pdf
+20M     ./Pictures
+15M     ./Music
 ```
 
 ## Tips:
 
 ### Combine with sort for better insights
 
-Pipe `du` output to `sort` with the `-h` (human-readable) and `-r` (reverse) options to list directories by size in descending order.
-
+Pipe `du` output to `sort -hr` to list directories by size in descending order:
 ```console
-$ du -h --max-depth=1 | sort -hr
+$ du -h | sort -hr
+```
+
+### Use with find to target specific file types
+
+Combine with `find` to analyze space used by specific file types:
+```console
+$ find . -name "*.log" -exec du -ch {} \; | grep total$
 ```
 
 ### Exclude certain directories
 
-Use the `--exclude` option to skip specific directories:
-
+Use with `grep -v` to exclude directories from analysis:
 ```console
-$ du -h --exclude="node_modules" --max-depth=1
+$ du -h | grep -v "node_modules"
 ```
 
-### Use with grep to find specific patterns
+### On macOS
 
-Combine with `grep` to filter results:
-
-```console
-$ du -ha | grep "\.mp4$"
-```
+The BSD version of `du` on macOS has slightly different options. Use `brew install coreutils` and then `gdu` to get GNU-compatible behavior.
 
 ## Frequently Asked Questions
 
 #### Q1. What's the difference between `du` and `df`?
-A. `du` shows disk usage of files and directories, while `df` shows disk space usage of entire filesystems.
+A. `du` shows disk usage of files and directories, while `df` shows available and used disk space on mounted filesystems.
 
-#### Q2. Why does `du` sometimes show different sizes than what I see in a file manager?
-A. `du` measures disk space used (including filesystem overhead), while file managers often show file size. Also, block sizes and allocation methods can cause differences.
+#### Q2. Why does `du` report different sizes than what I see in a file manager?
+A. `du` measures disk space used (including filesystem overhead), while file managers often show logical file sizes.
 
-#### Q3. How can I make `du` run faster on large directories?
-A. Use `du -s` to only get summaries, or `--max-depth=N` to limit recursion depth.
+#### Q3. How can I exclude certain directories from the calculation?
+A. Use the `--exclude=PATTERN` option: `du --exclude=node_modules`.
 
-#### Q4. Why do I get "permission denied" errors with `du`?
-A. You need read permissions for all directories you're checking. Try running with `sudo` if you need to check system directories.
-
-## macOS Considerations
-
-On macOS, the BSD version of `du` has slightly different options:
-- Use `-d` instead of `--max-depth`
-- Some GNU options like `--exclude` are not available
-- For human-readable output, you may need to use `du -h | awk '{print $1, $2}'` to get cleaner output
+#### Q4. Why is `du` slow on large directories?
+A. `du` needs to traverse the entire directory structure to calculate sizes. For large directories, consider using `du -s` for summary only.
 
 ## References
 
@@ -157,4 +156,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/du-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

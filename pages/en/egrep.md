@@ -61,6 +61,16 @@ system.log
 error.log
 ```
 
+### **-o, --only-matching**
+
+Show only the part of a line matching the pattern
+
+```console
+$ egrep -o "error[0-9]+" logfile.txt
+error404
+error500
+```
+
 ### **-r, --recursive**
 
 Read all files under each directory, recursively
@@ -155,4 +165,5 @@ https://www.gnu.org/software/grep/manual/grep.html
 
 ## Revisions
 
+- 2025/05/06 Added -o, --only-matching option
 - 2025/05/05 First revision

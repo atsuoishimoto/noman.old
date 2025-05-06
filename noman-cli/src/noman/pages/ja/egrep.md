@@ -1,22 +1,22 @@
 # egrep コマンド
 
-テキスト内で拡張正規表現を使用してパターンを検索します。
+拡張正規表現を使用してパターンを検索します。
 
 ## 概要
 
-`egrep` はパターンマッチングツールで、ファイルや標準入力から指定されたパターンに一致する行を検索します。機能的には `grep -E` と同等で、基本的な grep よりも強力なパターンマッチング機能を提供する拡張正規表現を使用します。このコマンドは、コード、ログ、テキストファイルの検索によく使用されます。
+`egrep` はファイル内のテキストパターンを拡張正規表現を使って検索するパターンマッチングツールです。機能的には `grep -E` と同等であり、標準の `grep` よりも強力なパターンマッチング機能を提供します。このコマンドは指定されたパターンに一致する行を出力します。
 
 ## オプション
 
 ### **-i, --ignore-case**
 
-大文字と小文字を区別せずにマッチングを行います
+パターンと入力データの大文字と小文字の区別を無視します
 
 ```console
 $ egrep -i "error" logfile.txt
-ERROR: Connection failed
-error: file not found
-Warning: Some errors were detected
+Error: Connection refused
+WARNING: error in line 42
+System error detected
 ```
 
 ### **-v, --invert-match**
@@ -24,15 +24,15 @@ Warning: Some errors were detected
 一致しない行を選択します
 
 ```console
-$ egrep -v "success" logfile.txt
-ERROR: Connection failed
-Warning: operation incomplete
-Process terminated unexpectedly
+$ egrep -v "error" logfile.txt
+Connection established successfully
+System started at 10:00 AM
+All processes running normally
 ```
 
 ### **-c, --count**
 
-一致する行の数だけを表示します
+ファイルごとに一致する行数のみを表示します
 
 ```console
 $ egrep -c "error" logfile.txt
@@ -41,13 +41,13 @@ $ egrep -c "error" logfile.txt
 
 ### **-n, --line-number**
 
-出力の各行の前に入力ファイル内の行番号を付けます
+出力の各行の先頭に入力ファイル内の行番号を付けます
 
 ```console
 $ egrep -n "error" logfile.txt
 5:error: file not found
-12:error: permission denied
-27:error: timeout occurred
+12:system error occurred
+27:error code: 404
 ```
 
 ### **-l, --files-with-matches**
@@ -61,87 +61,109 @@ system.log
 error.log
 ```
 
+### **-o, --only-matching**
+
+パターンに一致する部分のみを表示します
+
+```console
+$ egrep -o "error[0-9]+" logfile.txt
+error404
+error500
+```
+
 ### **-r, --recursive**
 
 各ディレクトリ下のすべてのファイルを再帰的に読み込みます
 
 ```console
 $ egrep -r "password" /home/user/
-/home/user/config.txt:password=12345
-/home/user/notes/secret.txt:my password hint
+/home/user/config.txt:password=123456
+/home/user/notes/secret.txt:my password is qwerty
 ```
 
 ## 使用例
 
-### 拡張正規表現の使用
+### 基本的なパターンマッチング
 
 ```console
-$ egrep "(error|warning)" logfile.txt
-error: file not found
-warning: disk space low
-error: permission denied
+$ egrep "apple|orange" fruits.txt
+apple
+orange
+mixed apple juice
+fresh orange
 ```
 
-### 複数のパターンのマッチング
+### 文字クラスの使用
 
 ```console
-$ egrep "user[0-9]+" users.txt
-user123 logged in at 14:30
-user456 account created
-user789 password changed
+$ egrep "[0-9]+" numbers.txt
+42
+123
+7890
 ```
 
-### オプションの組み合わせ
+### 量指定子の使用
 
 ```console
-$ egrep -in "fail(ed|ure)" *.log
-app.log:15:Connection failed to server
-system.log:42:System failure detected
-network.log:7:Authentication failed for user admin
+$ egrep "a{2,}" words.txt
+aardvark
+baaad
+shaaa
+```
+
+### 複数のオプションの組み合わせ
+
+```console
+$ egrep -in "error|warning" --color=auto logfile.txt
+3:WARNING: disk space low
+7:error: connection timeout
+15:WARNING: memory usage high
+22:error: invalid input
 ```
 
 ## ヒント:
 
-### 単語境界を使用して正確なマッチングを行う
+### 拡張正規表現を使用する
 
-より正確な結果を得るために `\b` を使用して単語境界にマッチさせます：
+`egrep` は `+`、`?`、`|`、`()`、`{}` などの強力な正規表現機能をエスケープせずにサポートしているため、複雑なパターンマッチングが容易になります。
 
+### 一致箇所を色付けする
+
+`--color=auto` を使用して一致するテキストを色付けすることで、大量の出力の中で一致箇所を見つけやすくなります。
+
+### 他のコマンドと組み合わせる
+
+他のコマンドの出力を `egrep` にパイプして結果をフィルタリングできます：
+```console
+$ ps aux | egrep "(firefox|chrome)"
+```
+
+### 単語境界を使用する
+
+完全な単語のみを一致させるには、単語境界 `\b` を使用します：
 ```console
 $ egrep "\berror\b" logfile.txt
 ```
 
-これは "error" にマッチしますが、"errors" や "errorless" にはマッチしません。
-
-### マッチを色付けして視認性を向上させる
-
-最近の egrep の実装では自動的にマッチを色付けしますが、以下のコマンドで確実に色付けできます：
-
-```console
-$ egrep --color "pattern" file.txt
-```
-
-### egrep は grep -E と同等であることを覚えておく
-
-`egrep` は一部のシステムでは非推奨となり、代わりに `grep -E` が推奨されています。両者は同じ機能を持ちますが、`grep -E` の方が移植性が高いです。
-
 ## よくある質問
 
-#### Q1. grep と egrep の違いは何ですか？
-A. `egrep` はデフォルトで拡張正規表現を使用し、これは `grep -E` と同等です。拡張正規表現の構文では、`+`、`?`、`|`、`()` などの特殊文字をエスケープせずに使用できます。
+#### Q1. `grep` と `egrep` の違いは何ですか？
+A. `egrep` は `grep -E` と同等で、拡張正規表現を使用します。拡張正規表現では、バックスラッシュを必要とせずに `+`、`?`、`|` などの追加のメタ文字をサポートしています。
 
-#### Q2. 複数のファイルでパターンを検索するにはどうすればよいですか？
-A. パターンの後にファイルを列挙するだけです：`egrep "pattern" file1.txt file2.txt` またはワイルドカードを使用します：`egrep "pattern" *.txt`。
+#### Q2. 複数のパターンを検索するにはどうすればよいですか？
+A. パイプ記号（`|`）を使用して代替パターンを検索します：`egrep "pattern1|pattern2" file.txt`
 
-#### Q3. 検索から特定のパターンを除外するにはどうすればよいですか？
-A. `-v` オプションを使用します：`egrep -v "除外するパターン" file.txt`。
+#### Q3. ディレクトリ内のすべてのファイルでパターンを検索するにはどうすればよいですか？
+A. 再帰オプションを使用します：`egrep -r "pattern" directory/`
 
-#### Q4. egrep は圧縮ファイルを検索できますか？
-A. 直接はできません。圧縮ファイルの場合、gzip 圧縮ファイル用の `zgrep` などの専用ツールを使用してください。
+#### Q4. 特定のファイルを検索から除外するにはどうすればよいですか？
+A. `--exclude` または `--exclude-dir` オプションを使用します：`egrep -r "pattern" --exclude="*.log" directory/`
 
-## 参照
+## 参考文献
 
 https://www.gnu.org/software/grep/manual/grep.html
 
 ## 改訂履歴
 
-- 2025/05/04 初版作成
+- 2025/05/06 -o, --only-matching オプションを追加
+- 2025/05/05 初版

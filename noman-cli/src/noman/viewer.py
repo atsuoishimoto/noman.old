@@ -1,3 +1,4 @@
+import json
 import locale
 import argparse
 import curses
@@ -94,6 +95,13 @@ parser.add_argument(
 parser.add_argument("name", nargs="?", help="Name of the page to view")
 
 
+def pager(s):
+    p = subprocess.Popen(["less", "-R"], stdin=subprocess.PIPE)
+    p.stdin.write(s.encode())
+    p.stdin.close()
+    sys.exit(p.wait())
+
+
 def main():
     args = parser.parse_args()
 
@@ -113,21 +121,46 @@ def main():
 
     root = resources.files() / "pages" / lang
 
+    pages = []
+    summary = json.loads((root/"summary.json").read_text())
+    filenames = {}
+
+    for name, rec in summary:
+        command = rec.get("command", None)
+        if command:
+            names = [command]
+        else:
+            names = [name]
+        names.extend(rec.get("alias", []))
+        for cmdname in names:
+            pages.append((cmdname, rec.get("summary", "")))
+            filenames[cmdname] = name
+
+    pages.sort()
+
     if args.list:
-        print("List of available pages:")
-        for p in sorted(root.glob("*.md")):
-            print(f"{p.stem}")
+        s = ("List of available pages:\n" + 
+             "\n".join([f"{name}:\t{summary.strip()}" for name, summary in pages]))
+
+        if args.no_pager:
+            print(s)
+        else:
+            pager(s)
+
         sys.exit(0)
 
     if not args.name:
         parser.print_help()
         sys.exit(2)
 
-    file = (root / args.name).with_suffix(".md")
+    argname = args.name.strip()
+    filename = filenames.get(argname, argname)
+    file = (root / filename).with_suffix(".md")
 
     if not file.exists():
         candidates = defaultdict(list)
-        for name in [n.stem for n in root.iterdir()]:
+        names = [name for name, _ in pages]
+        for name in sorted(names):
             d = levenshtein_distance(name, args.name)
             candidates[d].append(name)
 
@@ -145,10 +178,7 @@ def main():
     if args.no_pager:
         print(s)
     else:
-        p = subprocess.Popen(["less", "-R"], stdin=subprocess.PIPE)
-        p.stdin.write(s.encode())
-        p.stdin.close()
-        sys.exit(p.wait())
+        pager(s)
 
 
 if __name__ == "__main__":

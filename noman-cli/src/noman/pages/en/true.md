@@ -1,58 +1,26 @@
 # true command
 
-Returns a successful exit status (0) regardless of its input.
+Return a successful exit status (0).
 
 ## Overview
 
-The `true` command is a simple utility that does nothing except return a successful exit status (0). It's commonly used in shell scripts, conditionals, and loops where a command that always succeeds is needed.
+The `true` command does nothing except return a successful exit status (0). It's primarily used in shell scripts for creating infinite loops, as a placeholder, or for testing conditional logic.
 
 ## Options
 
-The `true` command doesn't have any functional options as its sole purpose is to exit with a success status.
-
-### **--help**
-
-Display help information and exit.
-
-```console
-$ true --help
-Usage: true [ignored command line arguments]
-  or:  true OPTION
-Exit with a status code indicating success.
-
-      --help     display this help and exit
-      --version  output version information and exit
-
-NOTE: your shell may have its own version of true, which usually supersedes
-the version described here.  Please refer to your shell's documentation
-for details about the options it supports.
-```
-
-### **--version**
-
-Output version information and exit.
-
-```console
-$ true --version
-true (GNU coreutils) 8.32
-Copyright (C) 2020 Free Software Foundation, Inc.
-License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
-
-Written by Jim Meyering.
-```
+The `true` command doesn't have any options as its sole purpose is to exit with a success status code.
 
 ## Usage Examples
 
-### In conditional statements
+### Basic usage
 
 ```console
-$ if true; then echo "This will always execute"; fi
-This will always execute
+$ true
+$ echo $?
+0
 ```
 
-### In loops
+### Creating an infinite loop in a shell script
 
 ```console
 $ while true; do echo "Press Ctrl+C to exit"; sleep 1; done
@@ -62,43 +30,47 @@ Press Ctrl+C to exit
 ^C
 ```
 
-### As a placeholder
+### Using as a placeholder in conditional statements
 
 ```console
-$ true || echo "This will never execute"
-$
+$ if [ "$DEBUG" = "yes" ]; then echo "Debugging info"; else true; fi
 ```
 
-## Tips
+### Using in a logical OR operation
 
-### Creating Infinite Loops
-
-`while true; do [commands]; done` creates an infinite loop that must be manually terminated with Ctrl+C or by a break statement within the loop.
-
-### Suppressing Errors
-
-Use `command || true` to ensure a script continues even if a command fails, as the `true` command will always return success.
-
-### Empty Functions
-
-In shell scripts, you can use `true` as the body of a function that needs to exist but doesn't need to do anything:
-```bash
-empty_function() { true; }
+```console
+$ true || echo "This won't be printed"
+$ false || echo "This will be printed"
+This will be printed
 ```
+
+## Tips:
+
+### Difference Between `true` and `:`
+
+Both `true` and `:` (colon) commands do essentially the same thing - they return a successful exit status. The colon is a shell builtin that's slightly more efficient, but `true` is more readable and explicit.
+
+### Use in Conditional Execution
+
+`true` is useful in conditional execution with `&&` and `||` operators. For example, `command && true` ensures the overall command succeeds regardless of whether the first command succeeds.
+
+### Creating Empty Files
+
+While not its primary purpose, `true > filename` can be used to create an empty file (similar to `touch`).
 
 ## Frequently Asked Questions
 
-#### Q1. What's the difference between `true` and `:`?
-A. In most shells, `:` (colon) is a built-in command that also returns success (0), similar to `true`. The colon is often preferred in scripts because it's a shell builtin and doesn't require executing an external command.
+#### Q1. What's the difference between `true` and `false` commands?
+A. `true` always exits with status code 0 (success), while `false` always exits with status code 1 (failure).
 
-#### Q2. Can I use `true` to create an empty file?
-A. No, use `touch filename` instead. While `true > filename` would create an empty file, it's not the intended use of the command.
+#### Q2. Is `true` a shell builtin or an external command?
+A. Most shells implement `true` as a builtin for efficiency, but there's also an external `/bin/true` command that does the same thing.
 
-#### Q3. How do I create an infinite loop with `true`?
-A. Use `while true; do commands; done`. Remember to include a way to break out of the loop or it will run forever.
+#### Q3. Why would I use `true` instead of just a comment?
+A. Unlike comments, `true` is an actual command that executes, making it useful in places where syntax requires a command, like in loop constructs or as a placeholder in conditional branches.
 
-#### Q4. What is the exit status of `true`?
-A. The exit status is always 0, indicating success.
+#### Q4. Can `true` be used to suppress errors?
+A. Yes, `command || true` will ensure the overall command returns success even if the first command fails.
 
 ## References
 
@@ -106,4 +78,4 @@ https://www.gnu.org/software/coreutils/manual/html_node/true-invocation.html
 
 ## Revisions
 
-- 2025/05/04 First revision
+- 2025/05/05 First revision

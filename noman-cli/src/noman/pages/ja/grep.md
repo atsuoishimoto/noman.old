@@ -1,64 +1,61 @@
-# grep コマンド
+# grepコマンド
 
 ファイル内のパターンを検索します。
 
 ## 概要
 
-`grep`は、ファイルや標準入力から指定したパターンに一致する行を検索する強力なテキスト検索ユーティリティです。特定のテキストをファイル内で見つけたり、コマンド出力をフィルタリングしたり、大規模なデータセットを検索したりするのによく使用されます。名前は「global regular expression print（グローバル正規表現プリント）」に由来しています。
+`grep`はファイルや標準入力からテキストパターンを検索します。主に指定されたパターンに一致する行を見つけて表示するために使用されます。このコマンドはログ、コード、テキストファイルを検索するのに不可欠であり、Unix/Linuxシステムで最も頻繁に使用されるテキスト処理ツールの一つです。
 
 ## オプション
 
 ### **-i, --ignore-case**
 
-大文字と小文字を区別せずに検索します。
+パターンと入力データの大文字小文字の区別を無視します
 
 ```console
-$ grep -i "hello" file.txt
-Hello World
-HELLO everyone
-hello there
+$ grep -i "error" log.txt
+ERROR: Connection failed
+error: file not found
+Warning: Some errors were detected
 ```
 
 ### **-v, --invert-match**
 
-一致を反転させ、パターンに一致しない行を表示します。
+一致しない行を選択します
 
 ```console
 $ grep -v "error" log.txt
-Starting application
-Loading configuration
-Application running
-Shutting down
+Connection established
+Process completed successfully
+System started
 ```
 
 ### **-r, --recursive**
 
-ディレクトリを再帰的に検索します。
+各ディレクトリ下のすべてのファイルを再帰的に読み込みます
 
 ```console
-$ grep -r "TODO" ./src/
-./src/main.c:// TODO: Implement error handling
-./src/utils.h:/* TODO: Add documentation */
-./src/config.c:// TODO: Fix configuration parsing
+$ grep -r "function" /path/to/project
+/path/to/project/file1.js:function calculateTotal() {
+/path/to/project/lib/utils.js:function formatDate(date) {
 ```
 
 ### **-l, --files-with-matches**
 
-一致を含むファイルの名前のみを表示します。
+一致を含むファイル名のみを表示します
 
 ```console
-$ grep -l "function" *.js
-utils.js
-main.js
-helpers.js
+$ grep -l "error" *.log
+app.log
+system.log
 ```
 
 ### **-n, --line-number**
 
-一致する行の行番号を表示します。
+出力の各行の前に入力ファイル内の行番号を付けます
 
 ```console
-$ grep -n "import" app.py
+$ grep -n "import" script.py
 3:import os
 5:import sys
 12:import datetime
@@ -66,44 +63,55 @@ $ grep -n "import" app.py
 
 ### **-c, --count**
 
-ファイルごとに一致する行数のみを表示します。
+ファイルごとに一致する行数のみを表示します
 
 ```console
 $ grep -c "error" *.log
 app.log:15
-system.log:3
-access.log:0
+system.log:7
+debug.log:0
+```
+
+### **-o, --only-matching**
+
+一致した部分のみを表示します
+
+```console
+$ grep -o "error" log.txt
+error
+error
+error
 ```
 
 ### **-A NUM, --after-context=NUM**
 
-各一致の後にNUM行を表示します。
+一致する行の後にNUM行の後続コンテキストを表示します
 
 ```console
-$ grep -A 2 "function main" main.c
-function main() {
-  int x = 5;
-  printf("Starting program\n");
+$ grep -A 2 "Exception" error.log
+Exception in thread "main" java.lang.NullPointerException
+    at com.example.Main.process(Main.java:24)
+    at com.example.Main.main(Main.java:5)
 ```
 
 ### **-B NUM, --before-context=NUM**
 
-各一致の前にNUM行を表示します。
+一致する行の前にNUM行の先行コンテキストを表示します
 
 ```console
-$ grep -B 1 "Exception" error.log
-2023-05-04 15:30:22 Processing request
-2023-05-04 15:30:23 Exception: Invalid input
+$ grep -B 1 "fatal" system.log
+May 4 15:30:22 server application[1234]: Critical error detected
+May 4 15:30:23 server application[1234]: fatal: system halted
 ```
 
 ### **-E, --extended-regexp**
 
-拡張正規表現を使用します。
+パターンを拡張正規表現として解釈します
 
 ```console
-$ grep -E "(error|warning)" log.txt
-System error: disk full
-Warning: connection timeout
+$ grep -E "error|warning" log.txt
+error: file not found
+warning: disk space low
 ```
 
 ## 使用例
@@ -111,18 +119,18 @@ Warning: connection timeout
 ### 基本的なパターン検索
 
 ```console
-$ grep "password" config.txt
-password=mysecretpassword
-# default password is 'admin'
+$ grep "function" script.js
+function calculateTotal() {
+function displayResults() {
 ```
 
 ### 複数のオプションの組み合わせ
 
 ```console
-$ grep -in "todo" --color *.py
-utils.py:45:# TODO: Refactor this function
-helpers.py:23:# todo: Add error handling
-main.py:102:# TODO: Implement caching
+$ grep -in "error" --color=auto log.txt
+15:Error: Unable to connect to database
+42:error: invalid configuration
+78:ERROR: Service unavailable
 ```
 
 ### 正規表現の使用
@@ -134,56 +142,72 @@ $ grep "^[0-9]" data.txt
 789 Pine Rd
 ```
 
-### コマンド出力をgrepにパイプする
+### 複数ファイルの検索
 
 ```console
-$ ps aux | grep "firefox"
-user     12345  2.5  1.8 3458196 298796 ?      Sl   09:15   0:45 /usr/lib/firefox/firefox
+$ grep "TODO" *.py
+main.py:# TODO: Implement error handling
+utils.py:# TODO: Optimize this algorithm
+config.py:# TODO: Add configuration validation
+```
+
+### 一致を含むファイル名のみの表示
+
+```console
+$ grep -l "error" logs/*.log
+logs/app.log
+logs/system.log
 ```
 
 ## ヒント:
 
-### コンテキストを使用して理解を深める
+### カラーハイライトを使用する
 
-`-A`、`-B`、または両方の前後のコンテキストを表示する`-C`を組み合わせて、一致の周囲の行を確認することで、一致の文脈をより理解しやすくなります。
+`--color=auto`オプションを使用すると、一致するテキストが色付けされ、大量の出力の中で一致箇所を見つけやすくなります。
 
-### 一致を色付けして視認性を高める
+### 他のコマンドとパイプで連携する
 
-`--color=auto`を使用して一致するテキストを色付けすると、大量の出力の中で見つけやすくなります。多くのシステムではデフォルトでこのオプションを含むようにgrepにエイリアスが設定されています。
+grepを他のコマンドとパイプで組み合わせることで、強力なフィルタリングが可能です:
+```console
+$ ps aux | grep "nginx"
+```
 
-### ディレクトリを除外する
+### 単語境界を使用する
 
-再帰的に検索する際に`--exclude-dir=PATTERN`を使用してPATTERNに一致するディレクトリをスキップすると、大規模なコードベースでの検索が大幅に高速化されます。
+`-w`オプションは完全な単語のみに一致させ、部分一致を防ぎます:
+```console
+$ grep -w "log" file.txt  # "log"には一致するが、"login"や"catalog"には一致しない
+```
 
-### 完全一致の単語を検索する
+### スクリプト用の静かモード
 
-`-w`または`--word-regexp`を使用して完全な単語のみを一致させ、より大きな単語内の部分一致を防ぎます。
-
-### スクリプト用の静かなモード
-
-スクリプトでは`-q`または`--quiet`を使用して出力を抑制し、終了ステータスのみを使用して一致が見つかったかどうかを判断します。
+パターンが存在するかどうかだけを確認したい場合は、`-q`を使用します（見つかった場合は終了ステータス0を返します）:
+```console
+$ grep -q "error" log.txt && echo "Errors found!"
+```
 
 ## よくある質問
 
 #### Q1. 複数のファイルでパターンを検索するにはどうすればよいですか？
-A. パターンの後にファイルを列挙するだけです：`grep "pattern" file1.txt file2.txt file3.txt`、またはワイルドカードを使用します：`grep "pattern" *.txt`。
+A. パターンの後にファイルを列挙するだけです: `grep "pattern" file1 file2 file3` またはワイルドカードを使用します: `grep "pattern" *.txt`。
 
 #### Q2. スペースを含むパターンを検索するにはどうすればよいですか？
-A. パターンを引用符で囲みます：`grep "hello world" file.txt`。
+A. パターンを引用符で囲みます: `grep "hello world" file.txt`。
 
-#### Q3. 特殊文字を含むパターンを検索するにはどうすればよいですか？
-A. 特殊文字をバックスラッシュでエスケープするか、シングルクォートを使用します：`grep 'pattern\*' file.txt`または`grep "pattern\*" file.txt`。
+#### Q3. パターンを含まない行を検索するにはどうすればよいですか？
+A. `-v`オプションを使用します: `grep -v "pattern" file.txt`。
 
-#### Q4. grepで一度に複数のパターンを検索できますか？
-A. はい、`-e`オプションを複数回使用するか、`-E`で拡張正規表現を使用します：`grep -e "pattern1" -e "pattern2" file.txt`または`grep -E "pattern1|pattern2" file.txt`。
+#### Q4. grepで複数のパターンを一度に検索できますか？
+A. はい、`-E`オプションとパイプ記号を使用します: `grep -E "pattern1|pattern2" file.txt` または `egrep "pattern1|pattern2" file.txt` を使用します。
 
 #### Q5. grepで行の一致部分のみを表示するにはどうすればよいですか？
-A. `-o`または`--only-matching`オプションを使用します：`grep -o "pattern" file.txt`。
+A. `-o`オプションを使用します: `grep -o "pattern" file.txt`。
 
-## 参考資料
+## 参考文献
 
 https://www.gnu.org/software/grep/manual/grep.html
 
 ## 改訂履歴
 
-- 2025/05/04 初回改訂
+- 2025/05/06 行の一致部分のみを表示する-oオプションを追加。
+- 2025/05/05 初版
