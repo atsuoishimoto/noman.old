@@ -277,4 +277,4 @@ def build_cli():
         Path(f"noman-cli/src/noman/pages/{lang}/summary.json").write_text(
             json.dumps(summary, ensure_ascii=False, indent=2)
        )
-    #run("uv build", cwd="noman-cli")
+    run("uv build", cwd="noman-cli")

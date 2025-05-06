@@ -369,9 +369,6 @@ pages = {
     "summary": "Execute commands from a file or script in the current shell environment.",
     "alias": [
       "."
-    ],
-    "seealso": [
-      "test"
     ]
   },
   "split": {
